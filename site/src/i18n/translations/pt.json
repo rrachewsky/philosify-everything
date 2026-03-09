@@ -408,6 +408,34 @@
     "analyzingContent": "Analisando conteúdo filosófico...",
     "analysisComplete": "Análise concluída!"
   },
+  "home": {
+    "subtitle": "Análise Filosófica de Tudo",
+    "comingSoon": "Em Breve",
+    "startAnalysis": "Iniciar Análise",
+    "categories": {
+      "music": {
+        "title": "Música",
+        "description": "Analise os temas filosóficos em músicas e álbuns"
+      },
+      "books": {
+        "title": "Livros",
+        "description": "Explore as ideias por trás da literatura e não-ficção"
+      },
+      "films": {
+        "title": "Filmes",
+        "description": "Descubra narrativas filosóficas no cinema"
+      },
+      "news": {
+        "title": "Notícias",
+        "description": "Examine eventos atuais por uma lente filosófica"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "Estamos trabalhando para trazer análise filosófica de livros. Aguarde!",
+      "films": "Estamos trabalhando para trazer análise filosófica de filmes. Aguarde!",
+      "news": "Estamos trabalhando para trazer análise filosófica de notícias. Aguarde!"
+    }
+  },
   "nav": {
     "backToHome": "Voltar ao Início"
   },

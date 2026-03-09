@@ -34,8 +34,106 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const MusicAnalysis = lazy(() => import('./pages/MusicAnalysis'));
 const LandingScreen = lazy(() => import('./components/LandingScreen'));
+const HomePage = lazy(() => import('./pages/HomePage'));
+const BooksAnalysis = lazy(() =>
+  import('./pages/ComingSoon').then((m) => ({ default: m.BooksAnalysis }))
+);
+const FilmsAnalysis = lazy(() =>
+  import('./pages/ComingSoon').then((m) => ({ default: m.FilmsAnalysis }))
+);
+const NewsAnalysis = lazy(() =>
+  import('./pages/ComingSoon').then((m) => ({ default: m.NewsAnalysis }))
+);
 
-// Landing page wrapper with navigation and auth modals
+// Home page wrapper (4-category grid) with auth modals
+function HomePageWrapper({ onCommunity }) {
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const loginModal = useModal();
+  const signupModal = useModal();
+  const forgotPasswordModal = useModal();
+  const paymentModal = useModal();
+  const historyModal = useModal();
+
+  const handleViewCachedAnalysis = async (analysisId) => {
+    logger.log('[Router] Viewing cached analysis:', analysisId);
+    try {
+      const response = await fetch(`${API_URL}/api/analysis/${analysisId}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
+      historyModal.close();
+      navigate('/app', { state: { analysisResult: formattedResult } });
+    } catch (err) {
+      logger.error('[Router] Failed to load analysis:', err);
+    }
+  };
+
+  const handleSwitchToSignup = () => {
+    loginModal.close();
+    signupModal.open();
+  };
+
+  const handleSwitchToLogin = () => {
+    signupModal.close();
+    loginModal.open();
+  };
+
+  const handleSwitchToForgotPassword = () => {
+    loginModal.close();
+    forgotPasswordModal.open();
+  };
+
+  const handleBackToLogin = () => {
+    forgotPasswordModal.close();
+    loginModal.open();
+  };
+
+  return (
+    <>
+      <HomePage
+        onSignIn={loginModal.open}
+        onSignUp={signupModal.open}
+        onLogout={signOut}
+        onBuyCredits={paymentModal.open}
+        onHistory={historyModal.open}
+        onCommunity={onCommunity}
+      />
+      <LoginModal
+        isOpen={loginModal.isOpen}
+        onClose={loginModal.close}
+        onSwitchToSignup={handleSwitchToSignup}
+        onSwitchToForgotPassword={handleSwitchToForgotPassword}
+      />
+      <SignupModal
+        isOpen={signupModal.isOpen}
+        onClose={signupModal.close}
+        onSwitchToLogin={handleSwitchToLogin}
+      />
+      <ForgotPasswordModal
+        isOpen={forgotPasswordModal.isOpen}
+        onClose={forgotPasswordModal.close}
+        onBackToLogin={handleBackToLogin}
+      />
+      <PaymentModal isOpen={paymentModal.isOpen} onClose={paymentModal.close} />
+      <AccountModal
+        isOpen={historyModal.isOpen}
+        onClose={historyModal.close}
+        user={user}
+        onViewAnalysis={handleViewCachedAnalysis}
+      />
+    </>
+  );
+}
+
+// Landing page wrapper with navigation and auth modals (Music analysis)
 function LandingPage({ onCommunity, onOpenDebate, onViewDebate }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -271,9 +369,12 @@ export function Router() {
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Landing Page - Main entry point at philosify.org */}
+          {/* Home Page - 4 category grid (Music, Books, Films, News) */}
+          <Route path="/" element={<HomePageWrapper onCommunity={community.open} />} />
+
+          {/* Music Analysis - Original landing screen */}
           <Route
-            path="/"
+            path="/music"
             element={
               <LandingPage
                 onCommunity={community.open}
@@ -282,6 +383,11 @@ export function Router() {
               />
             }
           />
+
+          {/* Coming Soon pages */}
+          <Route path="/books" element={<BooksAnalysis />} />
+          <Route path="/films" element={<FilmsAnalysis />} />
+          <Route path="/news" element={<NewsAnalysis />} />
 
           {/* Main App - Full analysis experience */}
           <Route path="/app" element={<App />} />
