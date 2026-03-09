@@ -1,0 +1,5083 @@
+{
+  "lastRun": "2025-12-27T18:08:37.764Z",
+  "lastIndex": 2990,
+  "report": {
+    "total": 2930,
+    "success": 1872,
+    "failed": 724,
+    "skipped": 0,
+    "cached": 334,
+    "noLyrics": 60,
+    "errors": [
+      {
+        "song": "The Twist",
+        "artist": "Chubby Checker",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "How Do I Live",
+        "artist": "LeAnn Rimes",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "You Light Up My Life",
+        "artist": "Debby Boone",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Blinding Lights",
+        "artist": "The Weeknd",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "As It Was",
+        "artist": "Harry Styles",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Perfect",
+        "artist": "Ed Sheeran",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Thinking Out Loud",
+        "artist": "Ed Sheeran",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Roar",
+        "artist": "Katy Perry",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Irreplaceable",
+        "artist": "Beyoncé",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Fantasy",
+        "artist": "Mariah Carey",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Hero",
+        "artist": "Mariah Carey",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Like a Virgin",
+        "artist": "Madonna",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Billie Jean",
+        "artist": "Michael Jackson",
+        "lang": "en",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWU2Lu2zYVZRyKkg8KDdQ\"}"
+      },
+      {
+        "song": "Beat It",
+        "artist": "Michael Jackson",
+        "lang": "en",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWU2Yvyf8MCi6Rt7AZevU\"}"
+      },
+      {
+        "song": "Kiss",
+        "artist": "Prince",
+        "lang": "en",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Evidências",
+        "artist": "Chitãozinho & Xororó",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Desconhecido\""
+      },
+      {
+        "song": "Aquarela do Brasil",
+        "artist": "Gal Costa",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Travessia",
+        "artist": "Milton Nascimento",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Oceano",
+        "artist": "Djavan",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Sina",
+        "artist": "Djavan",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Sozinho",
+        "artist": "Caetano Veloso",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Desconhecido\""
+      },
+      {
+        "song": "Coisinha do Pai",
+        "artist": "Beth Carvalho",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Que País É Este",
+        "artist": "Legião Urbana",
+        "lang": "pt",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Música Urbana",
+        "artist": "Capital Inicial",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Codinome Beija-Flor",
+        "artist": "Cazuza",
+        "lang": "pt",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bete Balanço",
+        "artist": "Barão Vermelho",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Por Enquanto",
+        "artist": "Cássia Eller",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Desconhecido\""
+      },
+      {
+        "song": "Ciumeira",
+        "artist": "Marília Mendonça",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Todo Mundo Vai Sofrer",
+        "artist": "Marília Mendonça",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Milu",
+        "artist": "Gusttavo Lima",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Milu",
+        "artist": "Gusttavo Lima",
+        "lang": "pt",
+        "model": "deepseek",
+        "error": "fetch failed"
+      },
+      {
+        "song": "Cem Mil",
+        "artist": "Gusttavo Lima",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Na Hora de Amar",
+        "artist": "Gusttavo Lima",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Atrasadinha",
+        "artist": "Felipe Araújo feat. Ferrugem",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Largado às Traças",
+        "artist": "Zé Neto & Cristiano",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Notificação Preferida",
+        "artist": "Zé Neto & Cristiano",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Notificação Preferida",
+        "artist": "Zé Neto & Cristiano",
+        "lang": "pt",
+        "model": "deepseek",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Sorte Que Cê Beija Bem",
+        "artist": "Maiara & Maraisa",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "10%",
+        "artist": "Maiara & Maraisa",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "A Noite",
+        "artist": "Tiê",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Trevo (Tu)",
+        "artist": "Anavitória feat. Tiago Iorc",
+        "lang": "pt",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Brisa",
+        "artist": "IZA",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Ginga",
+        "artist": "IZA feat. Falcão",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Paradinha",
+        "artist": "Anitta",
+        "lang": "pt",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Combatchy",
+        "artist": "Anitta, Lexa, Luísa Sonza feat. MC Rebecca",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Combatchy",
+        "artist": "Anitta, Lexa, Luísa Sonza feat. MC Rebecca",
+        "lang": "pt",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Modo Turbo",
+        "artist": "Luísa Sonza, Pabllo Vittar feat. Anitta",
+        "lang": "pt",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "K.O.",
+        "artist": "Pabllo Vittar",
+        "lang": "pt",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "K.O.",
+        "artist": "Pabllo Vittar",
+        "lang": "pt",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Corpo Sensual",
+        "artist": "Pabllo Vittar feat. Mateus Carrilho",
+        "lang": "pt",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Despacito",
+        "artist": "Luis Fonsi & Daddy Yankee",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Bamba",
+        "artist": "Ritchie Valens",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bailando",
+        "artist": "Enrique Iglesias feat. Descemer Bueno & Gente De Zona",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Rosas",
+        "artist": "La Oreja de Van Gogh",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Camisa Negra",
+        "artist": "Juanes",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Livin' la Vida Loca",
+        "artist": "Ricky Martin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Eres Tú",
+        "artist": "Mocedades",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Hips Don't Lie (Spanish Version)",
+        "artist": "Shakira",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Querida",
+        "artist": "Juan Gabriel",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Querida",
+        "artist": "Juan Gabriel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Gasolina",
+        "artist": "Daddy Yankee",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bésame Mucho",
+        "artist": "Consuelo Velázquez",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "El Rey",
+        "artist": "Vicente Fernández",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "El Rey",
+        "artist": "Vicente Fernández",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "A Dios le Pido",
+        "artist": "Juanes",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Rayando el Sol",
+        "artist": "Maná",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Corazón Partío",
+        "artist": "Alejandro Sanz",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Malamente",
+        "artist": "ROSALÍA",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Oye Como Va",
+        "artist": "Santana",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Como La Flor",
+        "artist": "Selena",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Vivir Mi Vida",
+        "artist": "Marc Anthony",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mi Gente",
+        "artist": "J Balvin & Willy William",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Amor Prohibido",
+        "artist": "Selena",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bidi Bidi Bom Bom",
+        "artist": "Selena",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "El Perdedor",
+        "artist": "Enrique Iglesias feat. Marco Antonio Solís",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Súbeme la Radio",
+        "artist": "Enrique Iglesias feat. Descemer Bueno & Zion & Lennox",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Duele el Corazón",
+        "artist": "Enrique Iglesias feat. Wisin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Hero (Spanish Version)",
+        "artist": "Enrique Iglesias",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Escapade",
+        "artist": "Enrique Iglesias",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Vuelve",
+        "artist": "Ricky Martin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "María",
+        "artist": "Ricky Martin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Copa de la Vida",
+        "artist": "Ricky Martin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "She Bangs (Spanish Version)",
+        "artist": "Ricky Martin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ciega, Sordomuda",
+        "artist": "Shakira",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Estoy Aquí",
+        "artist": "Shakira",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Antología",
+        "artist": "Shakira",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ojos Así",
+        "artist": "Shakira",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Suerte",
+        "artist": "Shakira",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Tortura",
+        "artist": "Shakira feat. Alejandro Sanz",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Waka Waka (Esto es África)",
+        "artist": "Shakira",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Me Enamora",
+        "artist": "Juanes",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Es Por Ti",
+        "artist": "Juanes",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Es Por Ti",
+        "artist": "Juanes",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Fotografía",
+        "artist": "Juanes feat. Nelly Furtado",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Labios Compartidos",
+        "artist": "Maná",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Oye Mi Amor",
+        "artist": "Maná",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mariposa Traicionera",
+        "artist": "Maná",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "En El Muelle de San Blas",
+        "artist": "Maná",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Amiga Mía",
+        "artist": "Alejandro Sanz",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mi Persona Favorita",
+        "artist": "Alejandro Sanz feat. Camila Cabello",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Looking for Paradise",
+        "artist": "Alejandro Sanz feat. Alicia Keys",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Looking for Paradise",
+        "artist": "Alejandro Sanz feat. Alicia Keys",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "No Me Compares",
+        "artist": "Alejandro Sanz",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Y ¿Si Fuera Ella?",
+        "artist": "Alejandro Sanz",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Hawái",
+        "artist": "Maluma",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Felices los 4",
+        "artist": "Maluma",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Chantaje",
+        "artist": "Shakira feat. Maluma",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tusa",
+        "artist": "KAROL G & Nicki Minaj",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Provenza",
+        "artist": "KAROL G",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Provenza",
+        "artist": "KAROL G",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bichota",
+        "artist": "KAROL G",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Dakiti",
+        "artist": "Bad Bunny & Jhay Cortez",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Yonaguni",
+        "artist": "Bad Bunny",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tití Me Preguntó",
+        "artist": "Bad Bunny",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Callaita",
+        "artist": "Bad Bunny feat. Tainy",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "X",
+        "artist": "Nicky Jam & J Balvin",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "X",
+        "artist": "Nicky Jam & J Balvin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "El Perdón",
+        "artist": "Nicky Jam & Enrique Iglesias",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Travesuras",
+        "artist": "Nicky Jam",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Travesuras",
+        "artist": "Nicky Jam",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ay Vamos",
+        "artist": "J Balvin",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Ay Vamos",
+        "artist": "J Balvin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ginza",
+        "artist": "J Balvin",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Ginza",
+        "artist": "J Balvin",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Safari",
+        "artist": "J Balvin feat. Pharrell Williams, BIA & Sky",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Con Calma",
+        "artist": "Daddy Yankee feat. Snow",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Shaky Shaky",
+        "artist": "Daddy Yankee",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Dura",
+        "artist": "Daddy Yankee",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Limbo",
+        "artist": "Daddy Yankee",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Limbo",
+        "artist": "Daddy Yankee",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bailar",
+        "artist": "Deorro feat. Elvis Crespo",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Bailar",
+        "artist": "Deorro feat. Elvis Crespo",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Suavemente",
+        "artist": "Elvis Crespo",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Vida Es Un Carnaval",
+        "artist": "Celia Cruz",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Guantanamera",
+        "artist": "Celia Cruz",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Desconocido\""
+      },
+      {
+        "song": "Guantanamera",
+        "artist": "Celia Cruz",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Quimbara",
+        "artist": "Celia Cruz & Johnny Pacheco",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Quimbara",
+        "artist": "Celia Cruz & Johnny Pacheco",
+        "lang": "es",
+        "model": "deepseek",
+        "error": "TypeError: fetch failed"
+      },
+      {
+        "song": "Pedro Navaja",
+        "artist": "Willie Colón & Rubén Blades",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Vivir lo Nuestro",
+        "artist": "Marc Anthony & La India",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Valió la Pena",
+        "artist": "Marc Anthony",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tu Amor Me Hace Bien",
+        "artist": "Marc Anthony",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Flor Pálida",
+        "artist": "Marc Anthony",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Desconocido\""
+      },
+      {
+        "song": "Flor Pálida",
+        "artist": "Marc Anthony",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sabor a Mí",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Sabor a Mí",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Barca",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "La Barca",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "No Sé Tú",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "No Sé Tú",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Incondicional",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Culpable o No",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Culpable o No",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "deepseek",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Entrégate",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Si Nos Dejan",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Si Nos Dejan",
+        "artist": "Luis Miguel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Amor Eterno",
+        "artist": "Rocío Dúrcal",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Gata Bajo la Lluvia",
+        "artist": "Rocío Dúrcal",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "La Gata Bajo la Lluvia",
+        "artist": "Rocío Dúrcal",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Costumbres",
+        "artist": "Rocío Dúrcal",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Costumbres",
+        "artist": "Rocío Dúrcal",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Como Tu Mujer",
+        "artist": "Rocío Dúrcal",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Como Tu Mujer",
+        "artist": "Rocío Dúrcal",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Así Fue",
+        "artist": "Juan Gabriel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Hasta Que Te Conocí",
+        "artist": "Juan Gabriel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "No Tengo Dinero",
+        "artist": "Juan Gabriel",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "No Tengo Dinero",
+        "artist": "Juan Gabriel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Abrázame Muy Fuerte",
+        "artist": "Juan Gabriel",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "El Destino",
+        "artist": "Juan Gabriel & Rocío Dúrcal",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "El Destino",
+        "artist": "Juan Gabriel & Rocío Dúrcal",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Por Mujeres Como Tú",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Por Mujeres Como Tú",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Miedo",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Miedo",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Miedo",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "deepseek",
+        "error": "invalid input syntax for type integer: \"Desconocido\""
+      },
+      {
+        "song": "Directo Al Corazón",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Directo Al Corazón",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Directo Al Corazón",
+        "artist": "Pepe Aguilar",
+        "lang": "es",
+        "model": "deepseek",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Recuérdame",
+        "artist": "Natalia Lafourcade",
+        "lang": "es",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Nel blu, dipinto di blu (Volare)",
+        "artist": "Domenico Modugno",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Con te partirò",
+        "artist": "Andrea Bocelli",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'italiano",
+        "artist": "Toto Cutugno",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Zitti e Buoni",
+        "artist": "Måneskin",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Zitti e Buoni",
+        "artist": "Måneskin",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Caruso",
+        "artist": "Lucio Dalla",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "O Sole Mio",
+        "artist": "Luciano Pavarotti",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "O Sole Mio",
+        "artist": "Luciano Pavarotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Parole Parole",
+        "artist": "Mina",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Gloria",
+        "artist": "Umberto Tozzi",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Gloria",
+        "artist": "Umberto Tozzi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ti Amo",
+        "artist": "Umberto Tozzi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Azzurro",
+        "artist": "Adriano Celentano",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Il Ragazzo della Via Gluck",
+        "artist": "Adriano Celentano",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Solitudine",
+        "artist": "Laura Pausini",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Strani Amori",
+        "artist": "Laura Pausini",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tra te e il mare",
+        "artist": "Laura Pausini",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Vivimi",
+        "artist": "Laura Pausini",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Laura non c'è",
+        "artist": "Nek",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Laura non c'è",
+        "artist": "Nek",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bella Ciao",
+        "artist": "Manu Pilas",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Bella Ciao",
+        "artist": "Manu Pilas",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bella Ciao",
+        "artist": "Manu Pilas",
+        "lang": "it",
+        "model": "deepseek",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "E Tu",
+        "artist": "Claudio Baglioni",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "E Tu",
+        "artist": "Claudio Baglioni",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Piccolo Grande Amore",
+        "artist": "Claudio Baglioni",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Almeno tu nell'universo",
+        "artist": "Mia Martini",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Senza una donna",
+        "artist": "Zucchero",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Baila (Sexy Thing)",
+        "artist": "Zucchero",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Baila (Sexy Thing)",
+        "artist": "Zucchero",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Il Volo",
+        "artist": "Zucchero",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Il Volo",
+        "artist": "Zucchero",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Cose della vita",
+        "artist": "Eros Ramazzotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Più bella cosa",
+        "artist": "Eros Ramazzotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Se bastasse una canzone",
+        "artist": "Eros Ramazzotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Un'altra te",
+        "artist": "Eros Ramazzotti",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Un'altra te",
+        "artist": "Eros Ramazzotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Terra Promessa",
+        "artist": "Eros Ramazzotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Perdere l'amore",
+        "artist": "Massimo Ranieri",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Rose Rosse",
+        "artist": "Massimo Ranieri",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Rose Rosse",
+        "artist": "Massimo Ranieri",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Il cielo in una stanza",
+        "artist": "Gino Paoli",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Il cielo in una stanza",
+        "artist": "Gino Paoli",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sapore di sale",
+        "artist": "Gino Paoli",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Grande, grande, grande",
+        "artist": "Mina",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Se telefonando",
+        "artist": "Mina",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Se telefonando",
+        "artist": "Mina",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tintarella di luna",
+        "artist": "Mina",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Via con me",
+        "artist": "Paolo Conte",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'emozione non ha voce",
+        "artist": "Adriano Celentano",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Sconosciuto\""
+      },
+      {
+        "song": "L'emozione non ha voce",
+        "artist": "Adriano Celentano",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Prisencolinensinainciusol",
+        "artist": "Adriano Celentano",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Svalutation",
+        "artist": "Adriano Celentano",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Felicità",
+        "artist": "Al Bano & Romina Power",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Felicità",
+        "artist": "Al Bano & Romina Power",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ci sarà",
+        "artist": "Al Bano & Romina Power",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ci sarà",
+        "artist": "Al Bano & Romina Power",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sharazan",
+        "artist": "Al Bano & Romina Power",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sará perché ti amo",
+        "artist": "Ricchi e Poveri",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sará perché ti amo",
+        "artist": "Ricchi e Poveri",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mamma Maria",
+        "artist": "Ricchi e Poveri",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Sconosciuto\""
+      },
+      {
+        "song": "Mamma Maria",
+        "artist": "Ricchi e Poveri",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Che sarà",
+        "artist": "Ricchi e Poveri",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Vacanze Romane",
+        "artist": "Matia Bazar",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Vacanze Romane",
+        "artist": "Matia Bazar",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ti sento",
+        "artist": "Matia Bazar",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ti sento",
+        "artist": "Matia Bazar",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Solo noi",
+        "artist": "Toto Cutugno",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Gente di mare",
+        "artist": "Umberto Tozzi & Raf",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Self Control",
+        "artist": "Raf",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Cosa resterà degli anni '80",
+        "artist": "Raf",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Cosa resterà degli anni '80",
+        "artist": "Raf",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Non me lo so spiegare",
+        "artist": "Tiziano Ferro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sere nere",
+        "artist": "Tiziano Ferro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Perdono",
+        "artist": "Tiziano Ferro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ti scatterò una foto",
+        "artist": "Tiziano Ferro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Alla mia età",
+        "artist": "Tiziano Ferro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'essenziale",
+        "artist": "Marco Mengoni",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Due Vite",
+        "artist": "Marco Mengoni",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Due Vite",
+        "artist": "Marco Mengoni",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Guerriero",
+        "artist": "Marco Mengoni",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ti vorrei sollevare",
+        "artist": "Elisa feat. Giuliano Sangiorgi",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ti vorrei sollevare",
+        "artist": "Elisa feat. Giuliano Sangiorgi",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Ti vorrei sollevare",
+        "artist": "Elisa feat. Giuliano Sangiorgi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Luce (Tramonti a nord est)",
+        "artist": "Elisa",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Luce (Tramonti a nord est)",
+        "artist": "Elisa",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "O forse sei tu",
+        "artist": "Elisa",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "O forse sei tu",
+        "artist": "Elisa",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mentre tutto scorre",
+        "artist": "Negramaro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Estate",
+        "artist": "Negramaro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Nuvole e lenzuola",
+        "artist": "Negramaro",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Nuvole e lenzuola",
+        "artist": "Negramaro",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "A te",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "A te",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "A te",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'ombelico del mondo",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "L'ombelico del mondo",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bella",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bella",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sabato",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Baciami ancora",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Baciami ancora",
+        "artist": "Jovanotti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Vivere",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Albachiara",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Albachiara",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sally",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sally",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Vita Spericolata",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Un senso",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Gli angeli",
+        "artist": "Vasco Rossi",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Certe Notti",
+        "artist": "Ligabue",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Urlando contro il cielo",
+        "artist": "Ligabue",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Urlando contro il cielo",
+        "artist": "Ligabue",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Piccola stella senza cielo",
+        "artist": "Ligabue",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Piccola stella senza cielo",
+        "artist": "Ligabue",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tra palco e realtà",
+        "artist": "Ligabue",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Tra palco e realtà",
+        "artist": "Ligabue",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La donna cannone",
+        "artist": "Francesco De Gregori",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Rimmel",
+        "artist": "Francesco De Gregori",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Generale",
+        "artist": "Francesco De Gregori",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Generale",
+        "artist": "Francesco De Gregori",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Piazza Grande",
+        "artist": "Lucio Dalla",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Attenti al lupo",
+        "artist": "Lucio Dalla",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Attenti al lupo",
+        "artist": "Lucio Dalla",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "4 marzo 1943",
+        "artist": "Lucio Dalla",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Centro di gravità permanente",
+        "artist": "Franco Battiato",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La cura",
+        "artist": "Franco Battiato",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Cuccurucucù",
+        "artist": "Franco Battiato",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Cuccurucucù",
+        "artist": "Franco Battiato",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "I Giardini di Marzo",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La canzone del sole",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La canzone del sole",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Il mio canto libero",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "E penso a te",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "E penso a te",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Un'avventura",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Acqua azzurra, acqua chiara",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Acqua azzurra, acqua chiara",
+        "artist": "Lucio Battisti",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Brividi",
+        "artist": "Mahmood & Blanco",
+        "lang": "it",
+        "model": "openai",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Brividi",
+        "artist": "Mahmood & Blanco",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Soldi",
+        "artist": "Mahmood",
+        "lang": "it",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWV9tVqatFPLQn8svxas\"}"
+      },
+      {
+        "song": "Soldi",
+        "artist": "Mahmood",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Occidentali's Karma",
+        "artist": "Francesco Gabbani",
+        "lang": "it",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWVFWc8KwBzprCdMLrJX\"}"
+      },
+      {
+        "song": "Occidentali's Karma",
+        "artist": "Francesco Gabbani",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Occidentali's Karma",
+        "artist": "Francesco Gabbani",
+        "lang": "it",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Fai Rumore",
+        "artist": "Diodato",
+        "lang": "it",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWVS6VMcFb5D18EnV2mB\"}"
+      },
+      {
+        "song": "Fai Rumore",
+        "artist": "Diodato",
+        "lang": "it",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Vie en Rose",
+        "artist": "Edith Piaf",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWVYQ8v9HsLYzqdkNut3\"}"
+      },
+      {
+        "song": "La Vie en Rose",
+        "artist": "Edith Piaf",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Non, je ne regrette rien",
+        "artist": "Edith Piaf",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWVfgxQ4KgZ5GLjgVjt3\"}"
+      },
+      {
+        "song": "Non, je ne regrette rien",
+        "artist": "Edith Piaf",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ne me quitte pas",
+        "artist": "Jacques Brel",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWVoaHXgFSu9vmwB6Lm2\"}"
+      },
+      {
+        "song": "Ne me quitte pas",
+        "artist": "Jacques Brel",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tous les mêmes",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWW24ENkmfroRnDcZ6uJ\"}"
+      },
+      {
+        "song": "Tous les mêmes",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Papaoutai",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWW862wRt929UksKSwp1\"}"
+      },
+      {
+        "song": "Papaoutai",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Alors on danse",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWWFKBQPw2N9J5ouV4kH\"}"
+      },
+      {
+        "song": "Alors on danse",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Formidable",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWWMwpDi1i2xcRXK5uqc\"}"
+      },
+      {
+        "song": "Formidable",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Formidable",
+        "artist": "Stromae",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Dernière Danse",
+        "artist": "Indila",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWWeniWS8TNhYsNfFkpv\"}"
+      },
+      {
+        "song": "Dernière Danse",
+        "artist": "Indila",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tourner dans le vide",
+        "artist": "Indila",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWWktThgpnF2xzkW9nC3\"}"
+      },
+      {
+        "song": "Tourner dans le vide",
+        "artist": "Indila",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Tourner dans le vide",
+        "artist": "Indila",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Je t'aime... moi non plus",
+        "artist": "Serge Gainsbourg & Jane Birkin",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWWsj8ZZ46bfyw13aDxK\"}"
+      },
+      {
+        "song": "Je t'aime... moi non plus",
+        "artist": "Serge Gainsbourg & Jane Birkin",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Javanaise",
+        "artist": "Serge Gainsbourg",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWWyeujTjezJk43zdSsh\"}"
+      },
+      {
+        "song": "La Javanaise",
+        "artist": "Serge Gainsbourg",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bonnie and Clyde",
+        "artist": "Serge Gainsbourg & Brigitte Bardot",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWX6jchKraq4CkXoDKfs\"}"
+      },
+      {
+        "song": "Bonnie and Clyde",
+        "artist": "Serge Gainsbourg & Brigitte Bardot",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mistral Gagnant",
+        "artist": "Renaud",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWXEZtXZacyQuth4jnfL\"}"
+      },
+      {
+        "song": "Mistral Gagnant",
+        "artist": "Renaud",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Je l'aime à mourir",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWXMLaXkdmF9meGaGqMj\"}"
+      },
+      {
+        "song": "Je l'aime à mourir",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Corrida",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWXVYufPrSonxFC638sW\"}"
+      },
+      {
+        "song": "La Corrida",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "La Corrida",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'encre de tes yeux",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWXiJph6s8tfU2PnH2hg\"}"
+      },
+      {
+        "song": "L'encre de tes yeux",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "L'encre de tes yeux",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Petite Marie",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWXpUK7pp8A5RYsrd9AZ\"}"
+      },
+      {
+        "song": "Petite Marie",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Petite Marie",
+        "artist": "Francis Cabrel",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Pour que tu m'aimes encore",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWXwBBRautEayaKHPbyo\"}"
+      },
+      {
+        "song": "Pour que tu m'aimes encore",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "D'amour ou d'amitié",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWY4Y7DC8uQFYejfSNgj\"}"
+      },
+      {
+        "song": "D'amour ou d'amitié",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "D'amour ou d'amitié",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "deepseek",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Parler à mon père",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWYAwNcB1NwaSSX4cMB2\"}"
+      },
+      {
+        "song": "Parler à mon père",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "S'il suffisait d'aimer",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWYJ9X3gfv5AiQkb3jwA\"}"
+      },
+      {
+        "song": "S'il suffisait d'aimer",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Encore un soir",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWYQfL6k6Ld6gbGP11gA\"}"
+      },
+      {
+        "song": "Encore un soir",
+        "artist": "Celine Dion",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Elle m'a dit",
+        "artist": "Mika",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWYXzsnQL1gaRo3z1CsY\"}"
+      },
+      {
+        "song": "Elle m'a dit",
+        "artist": "Mika",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Je veux",
+        "artist": "Zaz",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWYgPVYgwaxkyBANqsBL\"}"
+      },
+      {
+        "song": "Je veux",
+        "artist": "Zaz",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Éblouie par la nuit",
+        "artist": "Zaz",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWYnjKa81iU51UuFEPie\"}"
+      },
+      {
+        "song": "Éblouie par la nuit",
+        "artist": "Zaz",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "On ira",
+        "artist": "Zaz",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZ1jdnYTZxYZmc8LEam\"}"
+      },
+      {
+        "song": "On ira",
+        "artist": "Zaz",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Joe le taxi",
+        "artist": "Vanessa Paradis",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZBatx9xiKqwAmLeW5E\"}"
+      },
+      {
+        "song": "Joe le taxi",
+        "artist": "Vanessa Paradis",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Seine",
+        "artist": "Vanessa Paradis & M",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZDgniWFL19FHKTSRvt\"}"
+      },
+      {
+        "song": "La Seine",
+        "artist": "Vanessa Paradis & M",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Quelqu'un m'a dit",
+        "artist": "Carla Bruni",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZKrhghxeUcZaMHpDto\"}"
+      },
+      {
+        "song": "Quelqu'un m'a dit",
+        "artist": "Carla Bruni",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Emmenez-moi",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZTNvZoipdZn8JUB9n6\"}"
+      },
+      {
+        "song": "Emmenez-moi",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La Bohème",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZbRJQt5ZR4H6Uf6TPT\"}"
+      },
+      {
+        "song": "La Bohème",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "La Bohème",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "She (Tous les visages de l'amour)",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZj3nL6rVof4zSMJsQ2\"}"
+      },
+      {
+        "song": "She (Tous les visages de l'amour)",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "She (Tous les visages de l'amour)",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Hier encore",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZr8igwmJPXYamQrzhq\"}"
+      },
+      {
+        "song": "Hier encore",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Que c'est triste Venise",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWZy66d7U8iuhW72hoL1\"}"
+      },
+      {
+        "song": "Que c'est triste Venise",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Que c'est triste Venise",
+        "artist": "Charles Aznavour",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Désenchantée",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWa5YRKmuZ2rQiHLfvMt\"}"
+      },
+      {
+        "song": "Désenchantée",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sans contrefaçon",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWaC6R5k9dQ9vS2jeiQs\"}"
+      },
+      {
+        "song": "Sans contrefaçon",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Libertine",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWaJvmbYXEAZNnstHDk3\"}"
+      },
+      {
+        "song": "Libertine",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Pourvu qu'elles soient douces",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWaT9Z1k1XLtXShW9MYF\"}"
+      },
+      {
+        "song": "Pourvu qu'elles soient douces",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "California",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWadoDDFQhhPrvvAEYs7\"}"
+      },
+      {
+        "song": "California",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "California",
+        "artist": "Mylène Farmer",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'Amour à la plage",
+        "artist": "Niagara",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWakmpKAvHATccnYzx83\"}"
+      },
+      {
+        "song": "L'Amour à la plage",
+        "artist": "Niagara",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Voyage Voyage",
+        "artist": "Desireless",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWarpFKxKwcKKJGQw6NZ\"}"
+      },
+      {
+        "song": "Voyage Voyage",
+        "artist": "Desireless",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ella, elle l'a",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWb5urY4tbw24DczkfjR\"}"
+      },
+      {
+        "song": "Ella, elle l'a",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Poupée de cire, poupée de son",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWb87SbpqVYAq3KtUe3s\"}"
+      },
+      {
+        "song": "Poupée de cire, poupée de son",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Résiste",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWbEUGQQYoVirTbxn7gA\"}"
+      },
+      {
+        "song": "Résiste",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Il jouait du piano debout",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWbN87vfxK7cezA8FQA2\"}"
+      },
+      {
+        "song": "Il jouait du piano debout",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Il jouait du piano debout",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Si, maman si",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWbZWT9p7nXBPJ5Su1Yf\"}"
+      },
+      {
+        "song": "Si, maman si",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Si, maman si",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Babacar",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWbfXU5vgXNpX9W4htwb\"}"
+      },
+      {
+        "song": "Babacar",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Babacar",
+        "artist": "France Gall",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Message personnel",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWbnYa1MwLjSnaTrbyNr\"}"
+      },
+      {
+        "song": "Message personnel",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Comment te dire adieu",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWc1DqzUK76QpYgoDsnN\"}"
+      },
+      {
+        "song": "Comment te dire adieu",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tous les garçons et les filles",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWc7RZcJUnK7HGANboaL\"}"
+      },
+      {
+        "song": "Tous les garçons et les filles",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Tous les garçons et les filles",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mon amie la rose",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWcEFRc59yC3aWvyRSBx\"}"
+      },
+      {
+        "song": "Mon amie la rose",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Mon amie la rose",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Le temps de l'amour",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWcLHtMimmD9cY39LNAJ\"}"
+      },
+      {
+        "song": "Le temps de l'amour",
+        "artist": "Françoise Hardy",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Comme d'habitude",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWcU3X91LZNGEG66iCSg\"}"
+      },
+      {
+        "song": "Comme d'habitude",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Comme d'habitude",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Comme d'habitude",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Alexandrie Alexandra",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWcfpV9LtaCW6i7RBjhw\"}"
+      },
+      {
+        "song": "Alexandrie Alexandra",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Le téléphone pleure",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWcmbgd3kaXgL58EJTWk\"}"
+      },
+      {
+        "song": "Le téléphone pleure",
+        "artist": "Claude François",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Belle",
+        "artist": "Garou, Daniel Lavoie & Patrick Fiori",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWcv9ndxEGYgJGqbte4m\"}"
+      },
+      {
+        "song": "Belle",
+        "artist": "Garou, Daniel Lavoie & Patrick Fiori",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Le Temps des cathédrales",
+        "artist": "Bruno Pelletier",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWd4PMwNCWY7oW5rwN5e\"}"
+      },
+      {
+        "song": "Le Temps des cathédrales",
+        "artist": "Bruno Pelletier",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'Envie d'aimer",
+        "artist": "Daniel Lévi",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWdAY8T5EnbnvyepZs8C\"}"
+      },
+      {
+        "song": "L'Envie d'aimer",
+        "artist": "Daniel Lévi",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "L'Envie d'aimer",
+        "artist": "Daniel Lévi",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Allumer le feu",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWdGdbXiUpFcTytSiCZA\"}"
+      },
+      {
+        "song": "Allumer le feu",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Que je t'aime",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWdU1XSixL2VyWpWpG6T\"}"
+      },
+      {
+        "song": "Que je t'aime",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Que je t'aime",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Marie",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWda9v92DvExgKMQT89s\"}"
+      },
+      {
+        "song": "Marie",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Marie",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Gabrielle",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWdhgqC9XtSATYMgCMDQ\"}"
+      },
+      {
+        "song": "Gabrielle",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Gabrielle",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Le Pénitencier",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWdprHerQNhmfGLNVoFp\"}"
+      },
+      {
+        "song": "Le Pénitencier",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Je te promets",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWdwBfQ6jJjzbNCEnjxV\"}"
+      },
+      {
+        "song": "Je te promets",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Je te promets",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "L'Envie",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWe3kjeWfaStxsWqeV4e\"}"
+      },
+      {
+        "song": "L'Envie",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "L'Envie",
+        "artist": "Johnny Hallyday",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "San Francisco",
+        "artist": "Maxime Le Forestier",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWWm9avH3ft3yC7A51kon\"}"
+      },
+      {
+        "song": "San Francisco",
+        "artist": "Maxime Le Forestier",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "San Francisco",
+        "artist": "Maxime Le Forestier",
+        "lang": "fr",
+        "model": "deepseek",
+        "error": "fetch failed"
+      },
+      {
+        "song": "Double Je",
+        "artist": "Christophe Willem",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXJEG7gjJXdF6dpCXRhj\"}"
+      },
+      {
+        "song": "Double Je",
+        "artist": "Christophe Willem",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Jacques a dit",
+        "artist": "Christophe Willem",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXJMbgNHWXcp3NGAgqGW\"}"
+      },
+      {
+        "song": "Jacques a dit",
+        "artist": "Christophe Willem",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Balance ton quoi",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXJTkKBzxKAT3TKqQ4vk\"}"
+      },
+      {
+        "song": "Balance ton quoi",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tout oublier",
+        "artist": "Angèle feat. Roméo Elvis",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXJaqtzV4gqayzuFZCgv\"}"
+      },
+      {
+        "song": "Tout oublier",
+        "artist": "Angèle feat. Roméo Elvis",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Oui ou Non",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXJnAcvsKRVoBgP2qNUT\"}"
+      },
+      {
+        "song": "Oui ou Non",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Oui ou Non",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ta Reine",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXJwN9UF7fcqvMnrNESK\"}"
+      },
+      {
+        "song": "Ta Reine",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bruxelles je t'aime",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXK57E1sUmfeduaedVc5\"}"
+      },
+      {
+        "song": "Bruxelles je t'aime",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Bruxelles je t'aime",
+        "artist": "Angèle",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Fever",
+        "artist": "Dua Lipa & Angèle",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXKAnFupUasgcipWjQq3\"}"
+      },
+      {
+        "song": "Fever",
+        "artist": "Dua Lipa & Angèle",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Fever",
+        "artist": "Dua Lipa & Angèle",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sur ma route",
+        "artist": "Black M",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXKGa3s4isCmAgEDHGuB\"}"
+      },
+      {
+        "song": "Sur ma route",
+        "artist": "Black M",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Sur ma route",
+        "artist": "Black M",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sapés comme jamais",
+        "artist": "Maître Gims feat. Niska",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXKPvsSqb1PPH79Khh5Q\"}"
+      },
+      {
+        "song": "Sapés comme jamais",
+        "artist": "Maître Gims feat. Niska",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Sapés comme jamais",
+        "artist": "Maître Gims feat. Niska",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bella",
+        "artist": "Maître Gims",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXKX6hEfizcetwF9bFJu\"}"
+      },
+      {
+        "song": "Bella",
+        "artist": "Maître Gims",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "J'me tire",
+        "artist": "Maître Gims",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXKfqZQioUrokK5gzQUg\"}"
+      },
+      {
+        "song": "J'me tire",
+        "artist": "Maître Gims",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Est-ce que tu m'aimes?",
+        "artist": "Maître Gims",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXKnCKFJMrSkF71MCrtB\"}"
+      },
+      {
+        "song": "Est-ce que tu m'aimes?",
+        "artist": "Maître Gims",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Est-ce que tu m'aimes?",
+        "artist": "Maître Gims",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Pas là",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXKtPpU42cH3qD9xkehn\"}"
+      },
+      {
+        "song": "Pas là",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Pas là",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Beau-papa",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXL9EXXtY2sPMPFoKfRc\"}"
+      },
+      {
+        "song": "Beau-papa",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Je m'en vais",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXLBUTFATubmDaaZfE8m\"}"
+      },
+      {
+        "song": "Je m'en vais",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Je m'en vais",
+        "artist": "Vianney",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Dernière Danse",
+        "artist": "Kyo",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXLJE6zBpwyyEiEsfPiA\"}"
+      },
+      {
+        "song": "Dernière Danse",
+        "artist": "Kyo",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Dernière Danse",
+        "artist": "Kyo",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Le Chemin",
+        "artist": "Kyo feat. Sita",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXLR7AiHjkbnAmEVNzeX\"}"
+      },
+      {
+        "song": "Le Chemin",
+        "artist": "Kyo feat. Sita",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Un homme debout",
+        "artist": "Claudio Capéo",
+        "lang": "fr",
+        "model": "claude",
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CWXLYNgZdfKJKfgmnbx5L\"}"
+      },
+      {
+        "song": "Un homme debout",
+        "artist": "Claudio Capéo",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Un homme debout",
+        "artist": "Claudio Capéo",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ça va ça va",
+        "artist": "Claudio Capéo",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Ça va ça va",
+        "artist": "Claudio Capéo",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mercy",
+        "artist": "Madame Monsieur",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Andalouse",
+        "artist": "Kendji Girac",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Color Gitano",
+        "artist": "Kendji Girac",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Color Gitano",
+        "artist": "Kendji Girac",
+        "lang": "fr",
+        "model": "deepseek",
+        "error": "fetch failed"
+      },
+      {
+        "song": "Morgane de toi",
+        "artist": "Renaud",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "La groupie du pianiste",
+        "artist": "Michel Berger",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Paradis blanc",
+        "artist": "Michel Berger",
+        "lang": "fr",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Inconnu\""
+      },
+      {
+        "song": "Paradis blanc",
+        "artist": "Michel Berger",
+        "lang": "fr",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "99 Luftballons",
+        "artist": "Nena",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Du Hast",
+        "artist": "Rammstein",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Rock Me Amadeus",
+        "artist": "Falco",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Komet",
+        "artist": "Udo Lindenberg & Apache 207",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Komet",
+        "artist": "Udo Lindenberg & Apache 207",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sonne",
+        "artist": "Rammstein",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Engel",
+        "artist": "Rammstein",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Engel",
+        "artist": "Rammstein",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Deutschland",
+        "artist": "Rammstein",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ausländer",
+        "artist": "Rammstein",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Hier kommt Alex",
+        "artist": "Die Toten Hosen",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Hier kommt Alex",
+        "artist": "Die Toten Hosen",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Tage wie diese",
+        "artist": "Die Toten Hosen",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Alles aus Liebe",
+        "artist": "Die Toten Hosen",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Männer",
+        "artist": "Herbert Grönemeyer",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bochum",
+        "artist": "Herbert Grönemeyer",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Flugzeuge im Bauch",
+        "artist": "Herbert Grönemeyer",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mensch",
+        "artist": "Herbert Grönemeyer",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Der Weg",
+        "artist": "Herbert Grönemeyer",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Der Weg",
+        "artist": "Herbert Grönemeyer",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Zeit, dass sich was dreht",
+        "artist": "Herbert Grönemeyer",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Major Tom (Völlig losgelöst)",
+        "artist": "Peter Schilling",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Skandal im Sperrbezirk",
+        "artist": "Spider Murphy Gang",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sternenhimmel",
+        "artist": "Hubert Kah",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Sternenhimmel",
+        "artist": "Hubert Kah",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Einmal um die Welt",
+        "artist": "Cro",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Einmal um die Welt",
+        "artist": "Cro",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Easy",
+        "artist": "Cro",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Easy",
+        "artist": "Cro",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Traum",
+        "artist": "Cro",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Traum",
+        "artist": "Cro",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bye Bye",
+        "artist": "Cro",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Lila Wolken",
+        "artist": "Marteria, Yasha & Miss Platnum",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Verstrahlt",
+        "artist": "Marteria feat. Yasha",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Verstrahlt",
+        "artist": "Marteria feat. Yasha",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Kids (2 Finger an den Kopf)",
+        "artist": "Marteria",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Kids (2 Finger an den Kopf)",
+        "artist": "Marteria",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Roller",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Roller",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bläulicht",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Bläulicht",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "200 km/h",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "200 km/h",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Unterwegs",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Unterwegs",
+        "artist": "Apache 207",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Durch den Monsun",
+        "artist": "Tokio Hotel",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Rette mich",
+        "artist": "Tokio Hotel",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Der letzte Tag",
+        "artist": "Tokio Hotel",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "An Tagen wie diesen",
+        "artist": "Fettes Brot",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "An Tagen wie diesen",
+        "artist": "Fettes Brot",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Jein",
+        "artist": "Fettes Brot",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Emanuela",
+        "artist": "Fettes Brot",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Emanuela",
+        "artist": "Fettes Brot",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bettina, zieh dir bitte etwas an",
+        "artist": "Fettes Brot",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Bettina, zieh dir bitte etwas an",
+        "artist": "Fettes Brot",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "MFG",
+        "artist": "Die Fantastischen Vier",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Sie ist weg",
+        "artist": "Die Fantastischen Vier",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Die da!?!",
+        "artist": "Die Fantastischen Vier",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Zusammen",
+        "artist": "Die Fantastischen Vier feat. Clueso",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Zusammen",
+        "artist": "Die Fantastischen Vier feat. Clueso",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Gewinner",
+        "artist": "Clueso",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Gewinner",
+        "artist": "Clueso",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Cello",
+        "artist": "Udo Lindenberg feat. Clueso",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Cello",
+        "artist": "Udo Lindenberg feat. Clueso",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Stadtaffe",
+        "artist": "Peter Fox",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Haus am See",
+        "artist": "Peter Fox",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Alles Neu",
+        "artist": "Peter Fox",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Schwarz zu Blau",
+        "artist": "Peter Fox",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Schüttel deinen Speck",
+        "artist": "Peter Fox",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Zukunft Pink",
+        "artist": "Peter Fox feat. Inéz",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Zukunft Pink",
+        "artist": "Peter Fox feat. Inéz",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Dickes B",
+        "artist": "Seeed",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Dickes B",
+        "artist": "Seeed",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Ding",
+        "artist": "Seeed",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Ding",
+        "artist": "Seeed",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Augenbling",
+        "artist": "Seeed",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Augenbling",
+        "artist": "Seeed",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Aufstehn!",
+        "artist": "Seeed feat. CeeLo Green",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Aufstehn!",
+        "artist": "Seeed feat. CeeLo Green",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Molle mit Korn",
+        "artist": "Seeed",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Aurelie",
+        "artist": "Wir sind Helden",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Aurelie",
+        "artist": "Wir sind Helden",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Guten Tag",
+        "artist": "Wir sind Helden",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Denkmal",
+        "artist": "Wir sind Helden",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Denkmal",
+        "artist": "Wir sind Helden",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Nur ein Wort",
+        "artist": "Wir sind Helden",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Nur ein Wort",
+        "artist": "Wir sind Helden",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Das Beste",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Das Beste",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Symphonie",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Symphonie",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Symphonie",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Irgendwas bleibt",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Irgendwas bleibt",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Leichtes Gepäck",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Leichtes Gepäck",
+        "artist": "Silbermond",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Geile Zeit",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Geile Zeit",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Perfekte Welle",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Perfekte Welle",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Elektrisches Gefühl",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Elektrisches Gefühl",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Dieses Leben",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Dieses Leben",
+        "artist": "Juli",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Söhne Stammheim",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Söhne Stammheim",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Männer sind Schweine",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Männer sind Schweine",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Schrei nach Liebe",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Schrei nach Liebe",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Zu spät",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Zu spät",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Westerland",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Westerland",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Junge",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Junge",
+        "artist": "Die Ärzte",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Willst du",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Willst du",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Willst du",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Du bist schön",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Du bist schön",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Trostpreis",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Trostpreis",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Trostpreis",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Soll das so",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Soll das so",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Soll das so",
+        "artist": "Alligatoah",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Astronaut",
+        "artist": "Sido feat. Andreas Bourani",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Astronaut",
+        "artist": "Sido feat. Andreas Bourani",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Astronaut",
+        "artist": "Sido feat. Andreas Bourani",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bilder im Kopf",
+        "artist": "Sido",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Bilder im Kopf",
+        "artist": "Sido",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bilder im Kopf",
+        "artist": "Sido",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Einer dieser Steine",
+        "artist": "Sido feat. Mark Forster",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Einer dieser Steine",
+        "artist": "Sido feat. Mark Forster",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Einer dieser Steine",
+        "artist": "Sido feat. Mark Forster",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mein Block",
+        "artist": "Sido",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Mein Block",
+        "artist": "Sido",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Mein Block",
+        "artist": "Sido",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Au Revoir",
+        "artist": "Mark Forster feat. Sido",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Au Revoir",
+        "artist": "Mark Forster feat. Sido",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Au Revoir",
+        "artist": "Mark Forster feat. Sido",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Chöre",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Chöre",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Chöre",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Wir sind groß",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Wir sind groß",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Wir sind groß",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Übermorgen",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Übermorgen",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Übermorgen",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bauch und Kopf",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Bauch und Kopf",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Bauch und Kopf",
+        "artist": "Mark Forster",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Auf uns",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Auf uns",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Nur in meinem Kopf",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Nur in meinem Kopf",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Nur in meinem Kopf",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Eisberg",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Eisberg",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Eisberg",
+        "artist": "Andreas Bourani",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Herz über Kopf",
+        "artist": "Joris",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Herz über Kopf",
+        "artist": "Joris",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Herz über Kopf",
+        "artist": "Joris",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "80 Millionen",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "80 Millionen",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "80 Millionen",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Wenn sie tanzt",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Wenn sie tanzt",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Wenn sie tanzt",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Legenden",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Legenden",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Legenden",
+        "artist": "Max Giesinger",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Feuerwerk",
+        "artist": "Wincent Weiss",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      },
+      {
+        "song": "Feuerwerk",
+        "artist": "Wincent Weiss",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Feuerwerk",
+        "artist": "Wincent Weiss",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Musik sein",
+        "artist": "Wincent Weiss",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Musik sein",
+        "artist": "Wincent Weiss",
+        "lang": "de",
+        "model": "deepseek",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "An Wunder",
+        "artist": "Wincent Weiss",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "An Wunder",
+        "artist": "Wincent Weiss",
+        "lang": "de",
+        "model": "grok",
+        "error": "Failed to parse AI response as JSON"
+      },
+      {
+        "song": "Lieblingsmensch",
+        "artist": "Namika",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Je ne parle pas français",
+        "artist": "Namika",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unknown\""
+      },
+      {
+        "song": "Alles was zählt",
+        "artist": "Namika",
+        "lang": "de",
+        "model": "gemini",
+        "error": "invalid input syntax for type integer: \"Unbekannt\""
+      }
+    ]
+  },
+  "resumeCommand": "node scripts/batch-analyze.js   2990"
+}

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Philosify - Auth Modals Demo</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "EB Garamond", Georgia, serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Background animado */
+    .demo-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a0a1e 0%, #0a0514 50%, #1a0a1e 100%);
+      z-index: -1;
+    }
+
+    .demo-background::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(226, 0, 122, 0.1) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-25%, -25%) scale(1); }
+      50% { transform: translate(-25%, -25%) scale(1.1); }
+    }
+
+    /* Demo Controls */
+    .demo-controls {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px 30px;
+      border-radius: 50px;
+      border: 2px solid #e2007a;
+      box-shadow: 0 10px 40px rgba(226, 0, 122, 0.3);
+    }
+
+    .demo-btn {
+      padding: 12px 24px;
+      background: linear-gradient(90deg, #db2777, #e2007a);
+      border: none;
+      border-radius: 24px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .demo-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(226, 0, 122, 0.5);
+    }
+
+    .demo-title {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 1;
+    }
+
+    .demo-title h1 {
+      font-size: 48px;
+      color: #e2007a;
+      margin-bottom: 10px;
+      text-shadow: 0 0 30px rgba(226, 0, 122, 0.5);
+    }
+
+    .demo-title p {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* ============================================================ */
+    /* MODAIS DE AUTENTICAÇÃO */
+    /* ============================================================ */
+    
+    .auth-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .auth-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .auth-modal {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #e2007a;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(226, 0, 122, 0.4);
+      position: relative;
+      animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .auth-modal h2 {
+      color: #e2007a;
+      font-size: 32px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: 700;
+      text-shadow: 0 0 20px rgba(226, 0, 122, 0.3);
+    }
+
+    .auth-modal > p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      margin-left: 4px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #e2007a;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 0 4px rgba(226, 0, 122, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .form-button {
+      padding: 16px;
+      background: linear-gradient(90deg, #db2777, #e2007a);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .form-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(226, 0, 122, 0.6);
+    }
+
+    .form-button:active {
+      transform: translateY(-1px);
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .auth-switch a {
+      color: #e2007a;
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .auth-switch a:hover {
+      text-decoration: underline;
+      color: #ff1a8c;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 32px;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      line-height: 1;
+      border-radius: 50%;
+    }
+
+    .close-modal:hover {
+      color: #e2007a;
+      transform: rotate(90deg);
+      background: rgba(226, 0, 122, 0.1);
+    }
+
+    /* Credits Modal */
+    .credits-modal {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #e2007a;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 20px 60px rgba(226, 0, 122, 0.4);
+    }
+
+    .credits-modal h2 {
+      color: #e2007a;
+      font-size: 32px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: 700;
+      text-shadow: 0 0 20px rgba(226, 0, 122, 0.3);
+    }
+
+    .credits-modal .subtitle {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .current-balance {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+      border: 1px solid rgba(226, 0, 122, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .current-balance::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(226, 0, 122, 0.1) 0%, transparent 70%);
+      animation: shine 3s linear infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .current-balance-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .current-balance-amount {
+      font-size: 42px;
+      font-weight: 700;
+      color: #e2007a;
+      text-shadow: 0 0 30px rgba(226, 0, 122, 0.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    .credits-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .credit-option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .credit-option::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(226, 0, 122, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .credit-option:hover::before {
+      left: 100%;
+    }
+
+    .credit-option:hover {
+      border-color: #e2007a;
+      background: rgba(226, 0, 122, 0.15);
+      transform: translateX(10px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(226, 0, 122, 0.3);
+    }
+
+    .credit-option:active {
+      transform: translateX(8px) scale(1);
+    }
+
+    .credit-option-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .credit-amount {
+      font-size: 26px;
+      font-weight: 700;
+      color: #e2007a;
+      text-shadow: 0 0 10px rgba(226, 0, 122, 0.3);
+    }
+
+    .credit-analyses {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .credit-price {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: linear-gradient(135deg, #ff006e, #e2007a);
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(226, 0, 122, 0.4);
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @media (max-width: 768px) {
+      .demo-controls {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px 20px;
+      }
+
+      .demo-title h1 {
+        font-size: 32px;
+      }
+
+      .auth-modal,
+      .credits-modal {
+        padding: 30px 20px;
+        max-width: 95%;
+      }
+
+      .auth-modal h2,
+      .credits-modal h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background animado -->
+  <div class="demo-background"></div>
+
+  <!-- Controles da Demo -->
+  <div class="demo-controls">
+    <button class="demo-btn" onclick="openModal('login')">🔐 Login Modal</button>
+    <button class="demo-btn" onclick="openModal('signup')">✨ Signup Modal</button>
+    <button class="demo-btn" onclick="openModal('credits')">💳 Add Credits</button>
+  </div>
+
+  <!-- Título da Demo -->
+  <div class="demo-title">
+    <h1>Philosify Auth Modals</h1>
+    <p>Click the buttons above to see each modal</p>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="auth-overlay">
+    <div class="auth-modal">
+      <button class="close-modal" onclick="closeModal('login')">&times;</button>
+      <h2>Welcome Back</h2>
+      <p>Sign in to continue analyzing music</p>
+      
+      <form class="auth-form" onsubmit="return false;">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input 
+            type="email" 
+            id="loginEmail" 
+            class="form-input" 
+            placeholder="your@email.com" 
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input 
+            type="password" 
+            id="loginPassword" 
+            class="form-input" 
+            placeholder="••••••••" 
+          />
+        </div>
+        
+        <button type="submit" class="form-button">
+          Sign In
+        </button>
+      </form>
+      
+      <div class="auth-switch">
+        Don't have an account? 
+        <a onclick="switchModal('login', 'signup')">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="auth-overlay">
+    <div class="auth-modal">
+      <button class="close-modal" onclick="closeModal('signup')">&times;</button>
+      <h2>Create Account</h2>
+      <p>Get 2 free analyses to start!</p>
+      
+      <form class="auth-form" onsubmit="return false;">
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input 
+            type="email" 
+            id="signupEmail" 
+            class="form-input" 
+            placeholder="your@email.com" 
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input 
+            type="password" 
+            id="signupPassword" 
+            class="form-input" 
+            placeholder="••••••••" 
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="signupPasswordConfirm">Confirm Password</label>
+          <input 
+            type="password" 
+            id="signupPasswordConfirm" 
+            class="form-input" 
+            placeholder="••••••••" 
+          />
+        </div>
+        
+        <button type="submit" class="form-button">
+          Create Account
+        </button>
+      </form>
+      
+      <div class="auth-switch">
+        Already have an account? 
+        <a onclick="switchModal('signup', 'login')">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Credits Modal -->
+  <div id="creditsModal" class="auth-overlay">
+    <div class="credits-modal">
+      <button class="close-modal" onclick="closeModal('credits')">&times;</button>
+      <h2>Add Credits</h2>
+      <p class="subtitle">Choose a package to continue analyzing</p>
+      
+      <div class="current-balance">
+        <div class="current-balance-label">Current Balance</div>
+        <div class="current-balance-amount">$0.00</div>
+      </div>
+      
+      <div class="credits-options">
+        <div class="credit-option" onclick="alert('Selected: $6.00 package')">
+          <div class="credit-option-left">
+            <div class="credit-amount">10 Analyses</div>
+            <div class="credit-analyses">$0.60 per analysis</div>
+          </div>
+          <div class="credit-price">$6.00</div>
+        </div>
+        
+        <div class="credit-option" onclick="alert('Selected: $12.00 package')" style="position: relative;">
+          <span class="badge">Popular</span>
+          <div class="credit-option-left">
+            <div class="credit-amount">20 Analyses</div>
+            <div class="credit-analyses">$0.60 per analysis</div>
+          </div>
+          <div class="credit-price">$12.00</div>
+        </div>
+        
+        <div class="credit-option" onclick="alert('Selected: $30.00 package')">
+          <div class="credit-option-left">
+            <div class="credit-amount">50 Analyses</div>
+            <div class="credit-analyses">$0.60 per analysis</div>
+          </div>
+          <div class="credit-price">$30.00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(type) {
+      document.getElementById(type + 'Modal').classList.add('active');
+    }
+
+    function closeModal(type) {
+      document.getElementById(type + 'Modal').classList.remove('active');
+    }
+
+    function switchModal(from, to) {
+      closeModal(from);
+      setTimeout(() => openModal(to), 200);
+    }
+
+    // Fechar ao clicar no overlay
+    document.querySelectorAll('.auth-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active');
+        }
+      });
+    });
+
+    // Atalhos de teclado
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.auth-overlay').forEach(overlay => {
+          overlay.classList.remove('active');
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

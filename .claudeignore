@@ -1,0 +1,17 @@
+# Ignore sensitive files from Claude Code
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+secrets.json
+secrets.yaml
+secrets.yml
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+api/.dev.vars
+api/.dev.vars.*
+site/.env.local

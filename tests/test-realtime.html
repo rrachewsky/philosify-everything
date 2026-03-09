@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Supabase Realtime</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <h1>Supabase Realtime Test</h1>
+  <p>Open console to see results</p>
+
+  <div id="status"></div>
+  <div id="updates"></div>
+
+  <script>
+    // Replace with your actual Supabase credentials
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const TEST_USER_ID = 'YOUR_USER_ID'; // Replace with real user ID
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const statusDiv = document.getElementById('status');
+    const updatesDiv = document.getElementById('updates');
+
+    console.log('Setting up Realtime subscription...');
+    statusDiv.innerHTML = '<p style="color: orange;">⏳ Connecting to Realtime...</p>';
+
+    const channel = supabase
+      .channel('test-user-credits')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'user_credits',
+          filter: `user_id=eq.${TEST_USER_ID}`
+        },
+        (payload) => {
+          console.log('✅ Realtime UPDATE received:', payload);
+
+          const update = document.createElement('div');
+          update.style.background = '#10b981';
+          update.style.padding = '10px';
+          update.style.margin = '5px 0';
+          update.style.borderRadius = '5px';
+          update.innerHTML = `
+            <strong>Update Received!</strong><br>
+            Purchased: ${payload.new.purchased_credits}<br>
+            Free: ${payload.new.free_credits_remaining}<br>
+            Total: ${payload.new.total_credits}
+          `;
+          updatesDiv.prepend(update);
+        }
+      )
+      .subscribe((status) => {
+        console.log('Subscription status:', status);
+
+        if (status === 'SUBSCRIBED') {
+          statusDiv.innerHTML = '<p style="color: green;">✅ Connected! Listening for updates...</p>';
+          console.log('✅ Successfully subscribed to user_credits changes');
+          console.log('Now try updating credits in Supabase SQL Editor:');
+          console.log(`UPDATE user_credits SET purchased_credits = purchased_credits + 1 WHERE user_id = '${TEST_USER_ID}';`);
+        } else if (status === 'CHANNEL_ERROR') {
+          statusDiv.innerHTML = '<p style="color: red;">❌ Connection failed! Check if Realtime is enabled on user_credits table</p>';
+        } else {
+          statusDiv.innerHTML = `<p style="color: orange;">⏳ Status: ${status}</p>`;
+        }
+      });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      supabase.removeChannel(channel);
+    });
+  </script>
+</body>
+</html>

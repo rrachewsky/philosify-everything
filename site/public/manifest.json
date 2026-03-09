@@ -1,0 +1,42 @@
+{
+  "name": "Philosify - Philosophical Music Analysis",
+  "short_name": "Philosify",
+  "description": "Analysis of music based in objective reality, logical reasoning, individualistic ethics, justice and liberty principles, own life and happiness as moral standards.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0020",
+  "theme_color": "#D90B91",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["music", "education", "philosophy"],
+  "shortcuts": [
+    {
+      "name": "Analyze Song",
+      "short_name": "Analyze",
+      "description": "Search and analyze a song",
+      "url": "/?action=analyze",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    }
+  ]
+}

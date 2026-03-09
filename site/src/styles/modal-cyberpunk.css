@@ -1,0 +1,637 @@
+/* ============================================================
+   MODAL-CYBERPUNK.CSS - Glassmorphism + Cyberpunk Neon Auth Modals
+   Palette: Cyan primary, soft whites, subtle purples
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&display=swap');
+
+/* ===== MODAL OVERLAY (BACKDROP) ===== */
+.auth-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 0, 32, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+.auth-overlay.active {
+  display: flex;
+}
+
+/* ===== MODAL CONTAINER ===== */
+.auth-modal {
+  background: rgba(12, 5, 30, 0.97);
+  border: 1px solid rgba(120, 100, 180, 0.25);
+  border-radius: 14px;
+  padding: 18px 16px 20px;
+  max-width: 320px;
+  width: 100%;
+  position: relative;
+  animation: fadeInModal 0.3s ease;
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  box-shadow:
+    0 0 30px rgba(80, 60, 140, 0.15),
+    0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Modal Header - Cyan accent */
+.auth-modal h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: #00e0f0;
+  font-size: 18px;
+  margin: 0 0 2px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(0, 220, 240, 0.4);
+}
+
+/* Modal Subtitle - Soft white */
+.auth-modal > p {
+  font-family: 'Orbitron', sans-serif;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 9px;
+  margin: 0 0 10px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.auth-modal .google-signin-button {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+/* ===== CLOSE BUTTON - Subtle ===== */
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  inset-inline-end: 10px;
+  inset-inline-start: auto;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 16px;
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.close-modal:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== FORM STRUCTURE ===== */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.forgot-password-link {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  color: rgba(0, 200, 220, 0.6);
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 2px;
+  align-self: flex-end;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+  color: #00d8e8;
+}
+
+/* Form Labels - Soft white/gray */
+.form-group label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* Form Inputs - Subtle purple border */
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(15, 8, 35, 0.9);
+  border: 1px solid rgba(120, 100, 180, 0.25);
+  border-radius: 8px;
+  color: #fff;
+  font-family:
+    'Inter',
+    -apple-system,
+    sans-serif;
+  font-size: 16px;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 38px;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgba(0, 200, 220, 0.5);
+}
+
+/* ===== PASSWORD INPUT ===== */
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrapper .form-input {
+  padding-right: 38px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus {
+  outline: none;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ===== SUBMIT BUTTON - Cyan accent ===== */
+.form-button {
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(0, 180, 200, 0.5);
+  border-radius: 8px;
+  color: #00d0e0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  height: 38px;
+  margin-top: 2px;
+}
+
+.form-button:hover,
+.form-button:active {
+  background: rgba(0, 180, 200, 0.1);
+  border-color: rgba(0, 200, 220, 0.7);
+  box-shadow: 0 0 15px rgba(0, 180, 200, 0.2);
+}
+
+.form-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== GOOGLE SIGN-IN BUTTON - Neutral ===== */
+.google-signin-button {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+}
+
+.google-signin-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.google-signin-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.google-signin-button svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== AUTH DIVIDER - Subtle purple ===== */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(120, 100, 180, 0.3), transparent);
+}
+
+.auth-divider span {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* ===== AUTH SWITCH ===== */
+.auth-switch {
+  text-align: center;
+  margin-top: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.3px;
+}
+
+.auth-switch a {
+  color: #00d0e0;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.auth-switch a:hover {
+  color: #00f0ff;
+}
+
+/* ===== DISCLAIMER - Muted ===== */
+.auth-disclaimer {
+  text-align: center;
+  margin-top: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+.auth-disclaimer a {
+  color: rgba(180, 160, 220, 0.6);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.auth-disclaimer a:hover {
+  color: rgba(180, 160, 220, 0.9);
+}
+
+/* ===== ERROR MESSAGE ===== */
+.auth-error {
+  background: rgba(255, 80, 80, 0.08);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  color: #ff7070;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  margin-bottom: 8px;
+  display: none;
+  letter-spacing: 0.3px;
+}
+
+.auth-error.active {
+  display: block;
+}
+
+.auth-error:empty {
+  display: none !important;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== STRIPE BUTTONS - Purple accent ===== */
+.stripe-powered-button {
+  width: 100%;
+  padding: 10px;
+  background: rgba(120, 100, 200, 0.08);
+  border: 1px solid rgba(120, 100, 200, 0.25);
+  border-radius: 8px;
+  color: #b0a0e0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+}
+
+.stripe-powered-button:hover {
+  background: rgba(120, 100, 200, 0.15);
+  border-color: rgba(120, 100, 200, 0.4);
+}
+
+.stripe-powered-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stripe-powered-badge {
+  width: 100%;
+  padding: 10px;
+  background: rgba(120, 100, 200, 0.05);
+  border: 1px solid rgba(120, 100, 200, 0.2);
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+}
+
+/* ===== AUTH PAGE (STANDALONE) ===== */
+.auth-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0020;
+  padding: 16px;
+}
+
+.auth-page .auth-modal {
+  max-width: 320px;
+  width: 100%;
+}
+
+/* ===== SCROLLBAR (fallback) ===== */
+.auth-modal::-webkit-scrollbar {
+  width: 3px;
+}
+
+.auth-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.auth-modal::-webkit-scrollbar-thumb {
+  background: rgba(120, 100, 180, 0.2);
+  border-radius: 2px;
+}
+
+/* ===== SMALL SCREENS ===== */
+@media (max-height: 600px) {
+  .auth-modal {
+    padding: 14px 14px 16px;
+  }
+
+  .auth-modal h2 {
+    font-size: 16px;
+  }
+
+  .auth-form {
+    gap: 6px;
+  }
+
+  .form-input,
+  .form-button,
+  .google-signin-button {
+    height: 36px;
+    padding: 8px 10px;
+  }
+
+  .auth-divider {
+    margin: 6px 0;
+  }
+
+  .auth-switch {
+    margin-top: 8px;
+  }
+
+  .auth-disclaimer {
+    margin-top: 8px;
+  }
+}
+
+/* ===== EMAIL SENT CONFIRMATION (Post-Signup) ===== */
+.auth-email-sent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 0 8px;
+  gap: 16px;
+  animation: fadeInEmailSent 0.5s ease-out;
+}
+
+@keyframes fadeInEmailSent {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icon container with floating glow */
+.auth-email-sent__icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+}
+
+.auth-email-sent__icon-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%);
+  animation: email-glow-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes email-glow-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+.auth-email-sent__icon {
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5)) drop-shadow(0 0 20px rgba(0, 240, 255, 0.2));
+  animation: email-icon-float 3s ease-in-out infinite;
+}
+
+@keyframes email-icon-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Checkmark badge */
+.auth-email-sent__check {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(12, 5, 30, 0.95);
+  border: 1.5px solid rgba(0, 240, 255, 0.4);
+  border-radius: 50%;
+  padding: 3px;
+  box-shadow:
+    0 0 10px rgba(0, 240, 255, 0.4),
+    0 0 20px rgba(0, 240, 255, 0.15);
+  animation: check-pop 0.4s ease-out 0.3s both;
+}
+
+@keyframes check-pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.auth-email-sent__message {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+  margin: 0;
+  max-width: 300px;
+}
+
+/* Email address container with neon border */
+.auth-email-sent__email-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  background: rgba(0, 240, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 10px;
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.03);
+}
+
+.auth-email-sent__email-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 7px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.auth-email-sent__email {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #00f0ff;
+  text-shadow:
+    0 0 10px rgba(0, 240, 255, 0.5),
+    0 0 20px rgba(0, 240, 255, 0.2);
+  margin: 0;
+  word-break: break-all;
+  animation: cyber-text-glow 2s ease-in-out infinite;
+}
+
+.auth-email-sent__hint {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.4px;
+  margin: 0;
+  max-width: 280px;
+  line-height: 1.6;
+}

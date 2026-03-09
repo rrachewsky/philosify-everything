@@ -1,0 +1,49 @@
+/* Skeleton Loading Component Styles */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base, #2a2a2a) 0%,
+    var(--skeleton-highlight, #3a3a3a) 50%,
+    var(--skeleton-base, #2a2a2a) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Dark mode support */
+[data-theme='dark'] .skeleton,
+.dark .skeleton {
+  --skeleton-base: #4a4a4a;
+  --skeleton-highlight: #5a5a5a;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Utility classes for skeleton spacing */
+.skeleton.mt-1 {
+  margin-top: 6px;
+}
+
+.skeleton.mb-2 {
+  margin-bottom: 8px;
+}
+
+.skeleton.mb-4 {
+  margin-bottom: 16px;
+}

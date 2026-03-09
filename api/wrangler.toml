@@ -1,0 +1,229 @@
+name = "philosify-everything-api"
+main = "index.js"
+compatibility_date = "2025-11-17"
+
+# Allow importing `.txt` files as text (used for the v2.7 LITE guide bundled in the Worker)
+[[rules]]
+type = "Text"
+globs = ["**/*.txt"]
+
+# ============================================================
+# TOP-LEVEL CONFIG = LOCAL DEVELOPMENT ONLY
+# ============================================================
+# Used by: wrangler dev
+# Never deployed to Cloudflare
+# Secrets loaded from .dev.vars
+
+[vars]
+ENVIRONMENT = "development"
+
+# AI Models - Latest Reasoning Versions (Dec 2025)
+CLAUDE_MODEL = "claude-opus-4-5-20251101"  # Claude Opus 4.5 (or claude-sonnet-4-5-20251022 for cheaper)
+OPENAI_MODEL = "gpt-4.1"
+GEMINI_MODEL = "gemini-2.0-flash"  # Gemini 2.0 Flash
+GROK_MODEL = "grok-4-1-fast-reasoning"  # Grok 4.1 Fast (95% cheaper than Grok 3)
+DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
+
+# Localhost origins for local dev
+VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
+ALLOWED_ORIGINS = "https://everything.philosify.org https://www.everything.philosify.org https://philosify.org https://www.philosify.org http://localhost:8787 http://localhost:3000 http://localhost:3001 http://localhost:3002 http://localhost:3003 http://localhost:5173"
+CHECKOUT_SUCCESS_URL = "http://localhost:3000/payment/success"
+CHECKOUT_CANCEL_URL = "http://localhost:3000/payment/cancel"
+R2_PUBLIC_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"
+
+[[kv_namespaces]]
+binding = "PHILOSIFY_KV"
+id = "6ececc5beba846a9a33d47ada0890fa6"
+preview_id = "6ececc5beba846a9a33d47ada0890fa6"  # Same as prod for dev convenience
+
+# Native Rate Limiting (no KV operations)
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }  # 10 requests per 60 seconds (general endpoints)
+
+# Stricter rate limit for /api/analyze (costs real LLM API money)
+[[ratelimits]]
+name = "ANALYZE_RATE_LIMITER"
+namespace_id = "1002"
+simple = { limit = 3, period = 60 }  # 3 requests per 60 seconds (expensive AI calls)
+
+# R2 Bucket for TTS Audio Cache (local dev)
+[[r2_buckets]]
+binding = "TTS_CACHE"
+bucket_name = "philosify-tts"
+
+# ============================================================
+# PRODUCTION ENVIRONMENT
+# ============================================================
+# Used by: wrangler deploy --env production
+# Deploys as: philosify-api-production
+# ============================================================
+
+[env.production]
+
+# Custom domain (bypasses zone security rules - required for API)
+[[env.production.custom_domains]]
+name = "api-everything.philosify.org"
+zone_name = "philosify.org"
+
+# Email routing - receives emails to bob@philosify.org
+# Note: Email routing must be configured in Cloudflare Dashboard
+# Go to: Email > Email Routing > Add address > bob@philosify.org > Send to Worker
+
+# Production-only origins (NO localhost)
+[env.production.vars]
+ENVIRONMENT = "production"
+
+# AI Models - Latest Reasoning Versions (Dec 2025)
+CLAUDE_MODEL = "claude-opus-4-5-20251101"  # Claude Opus 4.5 (or claude-sonnet-4-5-20251022 for cheaper)
+OPENAI_MODEL = "gpt-4.1"
+GEMINI_MODEL = "gemini-2.0-flash"  # Gemini 2.0 Flash
+GROK_MODEL = "grok-4-1-fast-reasoning"  # Grok 4.1 Fast (95% cheaper than Grok 3)
+DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
+VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
+ALLOWED_ORIGINS = "https://everything.philosify.org https://www.everything.philosify.org"
+CHECKOUT_SUCCESS_URL = "https://everything.philosify.org/payment/success"
+CHECKOUT_CANCEL_URL = "https://everything.philosify.org/payment/cancel"
+R2_PUBLIC_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"
+
+# KV Namespaces (must be explicitly defined per environment)
+[[env.production.kv_namespaces]]
+binding = "PHILOSIFY_KV"
+id = "6ececc5beba846a9a33d47ada0890fa6"
+
+# Native Rate Limiting (no KV operations)
+[[env.production.ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }  # 10 requests per 60 seconds (general endpoints)
+
+# Stricter rate limit for /api/analyze (costs real LLM API money)
+[[env.production.ratelimits]]
+name = "ANALYZE_RATE_LIMITER"
+namespace_id = "1002"
+simple = { limit = 3, period = 60 }  # 3 requests per 60 seconds (expensive AI calls)
+
+# Cron Triggers - Colloquium + QOTD + Top 10 + User-proposed philosopher stagger
+# Cloudflare free plan allows max 5 cron triggers, so we consolidate:
+# 1) */5 * * * *     -> Check pending user-proposed philosopher replies (every 5 min)
+# 2) 0 8,11 * * *   -> Daily colloquium create (8) + philosopher reply (11)
+# 3) 0 12 * * *     -> QOTD + Top 10 (Sundays)
+# 4) 0 14,17,20 * * * -> Daily philosopher replies (consolidated)
+# 5) 0 23 * * *     -> Daily colloquium verdict + auto-verdict for user-proposed
+[env.production.triggers]
+crons = ["*/5 * * * *", "0 8,11 * * *", "0 12 * * *", "0 14,17,20 * * *", "0 23 * * *"]
+
+# R2 Bucket for TTS Audio Cache
+[[env.production.r2_buckets]]
+binding = "TTS_CACHE"
+bucket_name = "philosify-tts"
+
+# Secrets Store bindings (production only)
+[[env.production.secrets_store_secrets]]
+binding = "OPENAI_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "OPENAI_API_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "GEMINI_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "GEMINI_API_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "ANTHROPIC_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "ANTHROPIC_API_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "GROK_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "GROK_API_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "STRIPE_SECRET_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "STRIPE_SECRET_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "STRIPE_WEBHOOK_SECRET"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "STRIPE_WEBHOOK_SECRET"
+
+[[env.production.secrets_store_secrets]]
+binding = "SUPABASE_URL"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "SUPABASE_URL"
+
+[[env.production.secrets_store_secrets]]
+binding = "SUPABASE_SERVICE_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "SUPABASE_SERVICE_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "SUPABASE_ANON_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "SUPABASE_ANON_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "GENIUS_ACCESS_TOKEN"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "GENIUS_ACCESS_TOKEN"
+
+[[env.production.secrets_store_secrets]]
+binding = "SPOTIFY_CLIENT_ID"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "SPOTIFY_CLIENT_ID"
+
+[[env.production.secrets_store_secrets]]
+binding = "SPOTIFY_CLIENT_SECRET"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "SPOTIFY_CLIENT_SECRET"
+
+[[env.production.secrets_store_secrets]]
+binding = "ADMIN_SECRET"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "ADMIN_SECRET"
+
+[[env.production.secrets_store_secrets]]
+binding = "STRIPE_PRICE_ID_10"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "STRIPE_PRICE_ID_10"
+
+[[env.production.secrets_store_secrets]]
+binding = "STRIPE_PRICE_ID_20"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "STRIPE_PRICE_ID_20"
+
+[[env.production.secrets_store_secrets]]
+binding = "STRIPE_PRICE_ID_50"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "STRIPE_PRICE_ID_50"
+
+[[env.production.secrets_store_secrets]]
+binding = "DEEPSEEK_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "DEEPSEEK_API_KEY"
+
+[[env.production.secrets_store_secrets]]
+binding = "RESEND_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "RESEND_API_KEY"
+
+# GUIDE_PROOF_SECRET - Guide proof generation
+[[env.production.secrets_store_secrets]]
+binding = "GUIDE_PROOF_SECRET"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "GUIDE_PROOF_SECRET"
+
+# VAPID_PRIVATE_KEY - Web Push VAPID signing
+[[env.production.secrets_store_secrets]]
+binding = "VAPID_PRIVATE_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "VAPID_PRIVATE_KEY"
+
+# SUPABASE_AUTH_HOOK_SECRET - Auth email webhook signature verification
+[[env.production.secrets_store_secrets]]
+binding = "SUPABASE_AUTH_HOOK_SECRET"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "SUPABASE_AUTH_HOOK_SECRET"

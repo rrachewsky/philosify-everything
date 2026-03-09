@@ -1,0 +1,546 @@
+/* ============================================================
+   UI.CSS - Buttons, User Menu, Loading Animation
+   ============================================================
+   
+   ⚠️  LAYOUT CRÍTICO - PROTECTED FILE ⚠️
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Este arquivo contém regras de layout críticas que foram
+   cuidadosamente ajustadas. NÃO MODIFIQUE sem:
+   
+   1. Consultar LAYOUT_SPECS.md para medidas exatas
+   2. Comparar com screenshots em docs/layout-reference/
+   3. Testar em DESKTOP e MOBILE antes de commitar
+   4. Obter aprovação do responsável pelo layout
+   
+   Última revisão: 23/12/2025
+   Aprovado por: Bob Rach
+   
+   ELEMENTOS PROTEGIDOS:
+   - .user-menu (posição e dimensões)
+   - .user-profile-buttons (layout vertical)
+   - .user-profile__username (posição acima do balance)
+   - .user-profile__balance (margem e espaçamento)
+   - .user-profile__refill-btn (Buy Credits button)
+   - .auth-buttons (Sign In/Sign Up)
+   - .logout-btn (posição e estilo)
+   
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ============================================================ */
+
+/* ===== ANALYZE BUTTON ===== */
+.analyze-button-container {
+  position: relative;
+  display: inline-block;
+  width: clamp(195px, 30vw, 300px);
+}
+
+.button {
+  width: 100%;
+  height: 48px;
+  border: 1px solid rgba(124, 58, 237, 0.5);
+  border-radius: 24px; /* More rounded like the image */
+  padding: 12px 24px; /* Adjusted for perfect centering */
+  color: #fff;
+  font-family: Georgia, serif !important;
+  font-size: 13px;
+  font-weight: 700 !important;
+  background: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #a855f7 50%,
+    #ec4899 100%
+  ) !important; /* Vibrant purple to pink gradient */
+  opacity: 1 !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 4px 20px rgba(168, 85, 247, 0.5),
+    0 0 30px rgba(124, 58, 237, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  line-height: 1 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.button:hover {
+  background: linear-gradient(
+    135deg,
+    #8b5cf6 0%,
+    #b366f9 50%,
+    #f472b6 100%
+  ) !important; /* Brighter gradient */
+  box-shadow:
+    0 6px 25px rgba(168, 85, 247, 0.6),
+    0 0 40px rgba(124, 58, 237, 0.5),
+    0 0 60px rgba(236, 72, 153, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  border-color: rgba(168, 85, 247, 0.8);
+}
+
+.button:active {
+  transform: translateY(0px);
+  box-shadow: 0 4px 16px rgba(226, 0, 122, 0.5);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(226, 0, 122, 0.3);
+}
+
+/* ===== ANALYZE CANCEL BUTTON (X) ===== */
+.analyze-cancel-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0;
+  z-index: 1;
+}
+
+.analyze-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.btn-spinner {
+  display: none;
+}
+
+/* ===== USER MENU ===== */
+.user-menu {
+  position: absolute;
+  top: calc(
+    21px + 15px + 38px - 38px + 28px - 0.8cm
+  ); /* +28px for ticker height, -0.8cm moved up */
+  right: calc(20px + 0.5cm); /* 0.5cm more to the left */
+  left: auto;
+  display: flex;
+  align-items: flex-end; /* Align to right edge */
+  flex-direction: column; /* Stack vertically */
+  gap: 0; /* No gap - spacing handled by user-profile-buttons */
+  z-index: 100010; /* Above search elements */
+  font-size: 13px; /* Desktop size - overridden by responsive.css for mobile */
+  background: transparent; /* Ensure no background interferes with backdrop-filter */
+  direction: ltr; /* Keep layout in LTR position regardless of text direction */
+}
+
+/* Auth buttons container (for non-authenticated) */
+.auth-buttons {
+  display: flex;
+  flex-direction: column; /* Vertical layout */
+  align-items: flex-end; /* Align to right edge */
+  gap: 8px; /* 0.2cm gap between buttons */
+  direction: ltr; /* Keep buttons in LTR order even in RTL mode */
+  margin-top: -0.8cm; /* Move 0.8cm up */
+}
+
+/* User profile buttons container when authenticated - vertical layout, right-aligned */
+.user-profile-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align all buttons by their right edge */
+  gap: 4px; /* Converted from 0.1cm */
+  position: relative;
+  width: 100%; /* Ensure full width for proper alignment */
+  isolation: isolate; /* Create new stacking context for backdrop-filter */
+  direction: ltr; /* Keep layout in LTR position regardless of text direction */
+  margin-top: -0.8cm; /* Move 0.8cm up */
+}
+
+/* All 4 profile elements: consistent width (3.0cm), background and border */
+/* High specificity to override utilities.css and responsive.css */
+.user-menu .user-profile-buttons > .logout-btn,
+.user-menu .user-profile-buttons > .user-profile__balance,
+.user-menu .user-profile-buttons > .user-profile__refill-btn,
+.user-menu .user-profile-buttons > .user-profile__username,
+.user-profile-buttons > .logout-btn,
+.user-profile-buttons > .user-profile__balance,
+.user-profile-buttons > .user-profile__refill-btn,
+.user-profile-buttons > .user-profile__username {
+  width: 3cm !important;
+  min-width: 3cm !important;
+  max-width: 3cm !important;
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.8) 0%,
+    rgba(168, 85, 247, 0.7) 50%,
+    rgba(236, 72, 153, 0.6) 100%
+  ) !important; /* Glassmorphism gradient */
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  box-shadow:
+    0 4px 15px rgba(124, 58, 237, 0.4),
+    0 0 20px rgba(168, 85, 247, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Username - top position */
+.user-profile-buttons > .user-profile__username {
+  margin-top: 0 !important;
+}
+
+/* Logout button - positioned below username */
+.user-profile-buttons > .logout-btn {
+  margin-top: 0 !important; /* No extra margin, uses gap from container */
+}
+
+/* Buy Credits button - positioned below logout */
+.user-profile-buttons > .user-profile__refill-btn {
+  margin-top: 0 !important; /* No extra margin, uses gap from container */
+}
+
+/* Balance button - positioned at bottom */
+.user-profile-buttons > .user-profile__balance {
+  margin-top: 0 !important; /* No extra margin, uses gap from container */
+}
+
+.balance-display {
+  background: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #a855f7 50%,
+    #ec4899 100%
+  ) !important; /* Vibrant purple to pink gradient */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none !important;
+  width: 3cm !important;
+  min-width: 3cm !important;
+  max-width: 3cm !important;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+}
+
+/* Ensure balance-display in user-menu also gets 3.0cm width */
+.user-menu .balance-display {
+  width: 3cm !important;
+  min-width: 3cm !important;
+  max-width: 3cm !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  font-weight: 700; /* Highlighted/bold */
+  min-height: 32px; /* Fixed minimum height */
+  height: 32px; /* Fixed height for consistency */
+  box-sizing: border-box;
+  line-height: 1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 1 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  isolation: isolate; /* Ensure backdrop-filter works */
+  direction: ltr; /* Keep button layout in LTR position, text direction handled by browser */
+}
+
+.balance-display:hover {
+  background: linear-gradient(
+    135deg,
+    #8b5cf6 0%,
+    #b366f9 50%,
+    #f472b6 100%
+  ) !important; /* Brighter gradient */
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+  transform: translateY(-2px);
+}
+
+.balance-display:focus,
+.balance-display:active,
+.balance-display:focus-visible {
+  outline: none;
+  border-color: #e2007a;
+  background: rgba(226, 0, 122, 0.15) !important;
+}
+
+.balance-amount {
+  font-weight: 700; /* Highlighted/bold */
+  color: #ffffff; /* White text */
+  font-size: 13px;
+}
+
+/* Sign in button only - positioned separately */
+/* Removed custom positioning to keep buttons aligned with gap */
+
+.auth-btn {
+  background: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #a855f7 50%,
+    #ec4899 100%
+  ) !important; /* Vibrant purple to pink gradient */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none !important;
+  padding: 10px 18px;
+  border-radius: 12px;
+  color: #ffffff; /* White text */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  -webkit-tap-highlight-color: rgba(168, 85, 247, 0.3);
+  touch-action: manipulation;
+  user-select: none;
+  text-align: center;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 3cm !important;
+  min-width: 3cm !important;
+  max-width: 3cm !important;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+}
+
+/* Ensure auth buttons in auth-buttons container also get 3.0cm width */
+.user-menu .auth-buttons .auth-btn {
+  width: 3cm !important;
+  min-width: 3cm !important;
+  max-width: 3cm !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 1 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  isolation: isolate; /* Ensure backdrop-filter works */
+  white-space: nowrap; /* Prevent text wrapping */
+  direction: ltr; /* Keep button layout in LTR position, text direction handled by browser */
+}
+
+/* Reduce font size for French and Spanish to prevent line breaks */
+html[lang='fr'] .auth-btn,
+html[lang='es'] .auth-btn,
+[data-lang='fr'] .auth-btn,
+[data-lang='es'] .auth-btn {
+  font-size: 11px !important;
+}
+
+.auth-btn:hover {
+  background: linear-gradient(
+    135deg,
+    #8b5cf6 0%,
+    #b366f9 50%,
+    #f472b6 100%
+  ) !important; /* Brighter gradient */
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+  transform: translateY(-2px);
+}
+
+.auth-btn:focus,
+.auth-btn:active,
+.auth-btn:focus-visible {
+  outline: none;
+  border-color: #e2007a;
+  background: rgba(226, 0, 122, 0.15) !important;
+}
+
+.logout-btn {
+  background: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #a855f7 50%,
+    #ec4899 100%
+  ) !important; /* Vibrant purple to pink gradient */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none !important;
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: #ffffff; /* White text */
+  font-size: 13px;
+  font-weight: 700; /* Highlighted/bold */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  width: 3cm !important;
+  min-width: 3cm !important;
+  max-width: 3cm !important;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+}
+
+/* Ensure logout-btn in user-menu also gets 3.0cm width */
+.user-menu .logout-btn {
+  width: 3cm !important;
+  min-width: 3cm !important;
+  max-width: 3cm !important;
+  min-height: 32px; /* Fixed minimum height */
+  height: 32px; /* Fixed height for consistency */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 1 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  isolation: isolate; /* Ensure backdrop-filter works */
+  direction: ltr; /* Keep button layout in LTR position, text direction handled by browser */
+}
+
+.logout-btn:hover {
+  background: linear-gradient(
+    135deg,
+    #8b5cf6 0%,
+    #b366f9 50%,
+    #f472b6 100%
+  ) !important; /* Brighter gradient */
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+  transform: translateY(-2px);
+}
+
+.logout-btn:focus,
+.logout-btn:active,
+.logout-btn:focus-visible {
+  outline: none;
+  border-color: #e2007a;
+  background: rgba(226, 0, 122, 0.15) !important;
+}
+
+/* ===== LOADING STRIPE ANIMATION ===== */
+.loading-stripe-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4px; /* 0.1cm below analyze button */
+  /* Never allow RTL direction to flip the progress UI */
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.loading-stripe-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: clamp(195px, 30vw, 300px); /* Same width as analyze button */
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.loading-stripe {
+  width: 100%;
+  height: 30px; /* Same height as analyze button in mobile (0.8cm) */
+  background: rgba(26, 10, 62, 0.9); /* Dark purple matching theme */
+  border: none;
+  border-radius: 24px; /* Match button radius */
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.loading-stripe-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #7c3aed 0%,
+    #a855f7 50%,
+    #ec4899 100%
+  ); /* Purple to pink gradient matching buttons */
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: width 1s linear;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  /* Ensure fill always grows LTR */
+  transform-origin: left center;
+}
+
+.loading-stripe-progress {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #7c3aed 0%,
+    #a855f7 25%,
+    #ec4899 50%,
+    #a855f7 75%,
+    #7c3aed 100%
+  ); /* Purple to pink shimmer effect */
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  position: absolute;
+  width: 100%;
+  opacity: 0.3;
+}
+
+/* Chronometer centered in timer bar */
+.loading-stripe-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  color: #ffffff;
+  z-index: 10;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.loading-stripe-scale {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+  font-weight: 600;
+  font-family: Georgia, serif;
+  opacity: 0.9;
+  padding: 0 2px;
+  direction: ltr;
+  unicode-bidi: isolate;
+  flex-direction: row;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -1,0 +1,38 @@
+/* ============================================================
+   GLOBAL.CSS - Main stylesheet that imports all modules
+   Philosify - Algorithmic Philosophical Music Analysis System
+   ============================================================ */
+
+/* Base: Variables, Reset, Typography */
+@import './base.css';
+
+/* Layout: Header, Hero, Footer, Guide Modal */
+@import './layout.css';
+
+/* Search: Input, Model Selector, Carousel, Flip Window */
+@import './search.css';
+
+/* UI: Buttons, User Menu, Loading Animation */
+@import './ui.css';
+
+/* Results: Section, Cards, Scorecard, Tech Specs */
+@import './results.css';
+
+/* Modal Base: Glassmorphism + Cyberpunk Neon (Cyan) */
+@import './modal-cyberpunk.css';
+
+/* Modal Features: Credits, Account, Legal */
+@import './modal-features.css';
+
+/* Responsive: Media Queries for All Breakpoints (mobile/tablet) */
+@import './responsive.css';
+
+/* Desktop: Desktop-only styles (min-width: 769px) */
+@import './desktop.css';
+
+/* Utilities: Inline style migration classes */
+@import './utilities.css';
+
+/* 🔒 LAYOUT LOCKED: Critical layout rules - DO NOT MODIFY without approval */
+/* This file loads LAST to ensure !important rules override everything */
+@import './layout-locked.css';

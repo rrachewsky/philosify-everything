@@ -1,0 +1,43 @@
+{
+  "song": "Imagine — John Lennon",
+  "schools_of_thought": {
+    "primary": [
+      {
+        "school": "Marxism",
+        "evidence_level": 1,
+        "justification": "Abolition of private property (e.g., \"Imagine no possessions\") and utopian collectivist premises."
+      }
+    ],
+    "secondary": [
+      {
+        "school": "Secular Humanism",
+        "evidence_level": 2,
+        "justification": "Collective humanity as moral standard (e.g., \"a brotherhood of man\")."
+      }
+    ],
+    "peripheral": [
+      {
+        "school": "Kantian Idealism",
+        "evidence_level": 3,
+        "justification": "Abstract universalism: imagining moral conditions independently of incentives/human nature."
+      },
+      {
+        "school": "Postmodernism",
+        "evidence_level": 3,
+        "justification": "Minor trace: property/nations/religion treated as social constructs to be wished away."
+      }
+    ],
+    "excluded": [
+      "Objectivism",
+      "Stoicism",
+      "Utilitarianism"
+    ],
+    "final_order": [
+      "Marxism",
+      "Secular Humanism",
+      "Kantian Idealism",
+      "Postmodernism"
+    ]
+  }
+}
+

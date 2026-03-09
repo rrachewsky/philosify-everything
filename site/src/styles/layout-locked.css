@@ -1,0 +1,352 @@
+/* ============================================================
+   LAYOUT-LOCKED.CSS - REGRAS DE LAYOUT CRÍTICAS
+   ============================================================
+   
+   🔒 ARQUIVO BLOQUEADO - NÃO MODIFICAR 🔒
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Este arquivo contém APENAS as regras de layout mais críticas
+   que NUNCA devem ser alteradas sem aprovação explícita.
+   
+   As regras aqui têm !important para garantir que não sejam
+   sobrescritas acidentalmente por outros estilos.
+   
+   ANTES DE MODIFICAR:
+   1. Leia LAYOUT_SPECS.md
+   2. Compare com screenshots em docs/layout-reference/
+   3. Obtenha aprovação por escrito
+   4. Teste em TODOS os breakpoints
+   
+   Última revisão: 23/12/2025
+   Aprovado por: Bob Rach
+   
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ============================================================ */
+
+/* ============================================================
+   DESKTOP LAYOUT (> 768px)
+   ============================================================ */
+
+/* Desktop-only media query to ensure these rules only apply on desktop */
+@media (min-width: 769px) {
+  /* User Profile Container - Desktop */
+  .user-profile-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 4px !important; /* 0.1cm */
+    position: relative !important;
+    margin-top: -0.8cm !important; /* Move 0.8cm up */
+  }
+
+  /* All 4 profile buttons - Desktop: 3.0cm width */
+  .user-profile-buttons > .logout-btn,
+  .user-profile-buttons > .user-profile__balance,
+  .user-profile-buttons > .user-profile__refill-btn,
+  .user-profile-buttons > .user-profile__username {
+    width: 3cm !important;
+    min-width: 3cm !important;
+    max-width: 3cm !important;
+  }
+
+  /* Username - Desktop: Positioned ABOVE balance */
+  .user-profile__username {
+    position: absolute !important;
+    top: calc(38px - 4px) !important; /* 34px */
+    right: 0 !important;
+    transform: translateY(-100%) !important;
+    height: 32px !important;
+    min-height: 32px !important;
+  }
+
+  /* Balance - Desktop: No extra margin, uses gap from container */
+  .user-profile-buttons > .user-profile__balance {
+    margin-top: 0 !important;
+  }
+
+  /* Auth buttons container - Desktop: Move 0.8cm up */
+  .auth-buttons {
+    margin-top: -0.8cm !important;
+  }
+
+  /* Auth buttons - Desktop: 3.0cm width */
+  .auth-buttons .auth-btn {
+    width: 3cm !important;
+    min-width: 3cm !important;
+    max-width: 3cm !important;
+  }
+
+  /* Balance display - Desktop: 3.0cm width */
+  .balance-display {
+    width: 3cm !important;
+    min-width: 3cm !important;
+    max-width: 3cm !important;
+  }
+
+  /* Logout button - Desktop: 3.0cm width */
+  .logout-btn {
+    width: 3cm !important;
+    min-width: 3cm !important;
+    max-width: 3cm !important;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE LAYOUT (≤ 768px)
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* User Profile Container - Mobile: 2x2 grid layout */
+  .user-profile-buttons {
+    display: grid !important;
+    grid-template-columns: auto auto !important;
+    grid-template-rows: auto auto !important;
+    gap: 4px !important; /* Equal gap between all buttons (columns and rows) */
+    justify-items: center !important;
+    align-items: center !important;
+    margin-top: 0 !important;
+  }
+
+  /* Username - Mobile: Grid position row 1, col 1 */
+  .user-profile__username {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+    order: unset !important;
+    align-self: auto !important;
+    margin-bottom: 0 !important;
+    height: 28px !important;
+    min-height: 28px !important;
+  }
+
+  /* Logout - Mobile: Grid position row 1, col 2 (swapped with balance) */
+  .logout-btn {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+
+  /* Buy Credits - Mobile: Grid position row 2, col 1 */
+  .user-profile__refill-btn {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+
+  /* Balance - Mobile: Grid position row 2, col 2 (swapped with logout) */
+  .user-profile-buttons > .user-profile__balance {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    margin-top: 0 !important;
+    height: 28px !important;
+    min-height: 28px !important;
+  }
+
+  /* All buttons - Mobile dimensions and consistent styling */
+  /* High specificity selectors to override utilities.css */
+  .user-profile__balance,
+  .user-profile__refill-btn,
+  .user-profile__username,
+  .logout-btn,
+  .user-menu .user-profile__balance,
+  .user-menu .user-profile__refill-btn,
+  .user-menu .user-profile__username,
+  .user-menu .logout-btn,
+  .user-profile-buttons > .user-profile__balance,
+  .user-profile-buttons > .user-profile__refill-btn,
+  .user-profile-buttons > .user-profile__username,
+  .user-profile-buttons > .logout-btn {
+    width: 3.5cm !important;
+    min-width: 3.5cm !important;
+    max-width: 3.5cm !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 6px 12px !important;
+    font-size: 8px !important;
+    background: linear-gradient(
+      135deg,
+      #7c3aed 0%,
+      #a855f7 50%,
+      #ec4899 100%
+    ) !important; /* Vibrant purple to pink gradient */
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4) !important;
+  }
+
+  /* User Menu Position - Mobile: move 0.2cm up */
+  /* Ticker at: 14px + 0.4cm, ticker height: 24px */
+  /* User menu: ticker top + ticker height - 0.1cm gap */
+  .user-menu {
+    position: fixed !important;
+    top: calc(14px + 24px - 0.1cm) !important; /* 0.1cm above ticker base */
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    z-index: 100011 !important;
+    display: flex !important;
+    flex-direction: row !important; /* Side by side */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    height: auto !important;
+  }
+
+  /* Auth buttons - horizontal layout */
+  .auth-buttons {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important; /* Same gap as profile buttons */
+    margin-top: 0 !important; /* Remove desktop negative margin in mobile */
+  }
+
+  /* Auth buttons (Sign In / Sign Up) - same dimensions and styling as profile buttons */
+  .auth-buttons .auth-btn,
+  .user-menu .auth-buttons .auth-btn {
+    width: 3.5cm !important;
+    min-width: 3.5cm !important;
+    max-width: 3.5cm !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 6px 12px !important;
+    font-size: 8px !important;
+    background: linear-gradient(
+      135deg,
+      #7c3aed 0%,
+      #a855f7 50%,
+      #ec4899 100%
+    ) !important; /* Vibrant purple to pink gradient */
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4) !important;
+  }
+
+  /* Force 10px font on all user profile elements - override utilities.css */
+  .user-profile__balance,
+  .user-profile__balance-text,
+  .balance-amount,
+  .user-profile__refill-btn,
+  .user-profile__username,
+  .logout-btn,
+  .balance-display,
+  .auth-btn {
+    font-size: 10px !important;
+  }
+}
+
+/* ============================================================
+   ELEMENT ORDER REFERENCE (for debugging)
+   ============================================================
+   
+   Desktop (position absolute):
+   ┌─────────────────┐
+   │    USERNAME     │  ← position: absolute, translateY(-100%)
+   ├─────────────────┤
+   │    BALANCE      │  ← margin-top: 38px (1cm)
+   ├─────────────────┤
+   │  BUY CREDITS    │
+   ├─────────────────┤
+   │    LOGOUT       │
+   └─────────────────┘
+   
+   Mobile (flex order):
+   ┌─────────────────┐
+   │    USERNAME     │  ← order: -1 (first)
+   ├─────────────────┤  ← gap: 0.4px (0.1mm)
+   │    BALANCE      │  ← margin-top: 0
+   ├─────────────────┤
+   │  BUY CREDITS    │
+   ├─────────────────┤
+   │    LOGOUT       │
+   └─────────────────┘
+   
+   ============================================================ */
+
+/* ============================================================
+   FINAL OVERRIDE - MAXIMUM SPECIFICITY FOR DESKTOP
+   ============================================================ */
+/* These rules MUST be at the end to override everything */
+
+@media (min-width: 769px) {
+  /* Force 3.0cm width on ALL buttons in user-menu - maximum specificity */
+  body .user-menu .user-profile-buttons > .logout-btn,
+  body .user-menu .user-profile-buttons > .user-profile__balance,
+  body .user-menu .user-profile-buttons > .user-profile__refill-btn,
+  body .user-menu .user-profile-buttons > .user-profile__username,
+  body .user-menu .auth-buttons .auth-btn,
+  body .user-menu .balance-display,
+  body .user-menu .logout-btn {
+    width: 3cm !important;
+    min-width: 3cm !important;
+    max-width: 3cm !important;
+  }
+
+  /* Force positioning - move buttons 0.8cm up */
+  body .user-menu .user-profile-buttons {
+    margin-top: -0.8cm !important;
+  }
+
+  body .user-menu .auth-buttons {
+    margin-top: -0.8cm !important;
+  }
+}
+
+/* ============================================================
+   FINAL OVERRIDE - MAXIMUM SPECIFICITY FOR MOBILE (≤ 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Force width on buttons in mobile - maximum specificity with body */
+  body .user-profile__refill-btn,
+  body .user-profile__username,
+  body .logout-btn,
+  body .user-menu .user-profile__refill-btn,
+  body .user-menu .user-profile__username,
+  body .user-menu .logout-btn,
+  body .user-menu .user-profile-buttons > .user-profile__refill-btn,
+  body .user-menu .user-profile-buttons > .user-profile__username,
+  body .user-menu .user-profile-buttons > .logout-btn,
+  body .auth-buttons .auth-btn,
+  body .user-menu .auth-buttons .auth-btn {
+    width: 3.5cm !important;
+    min-width: 3.5cm !important;
+    max-width: 3.5cm !important;
+  }
+
+  /* Balance field needs wider width to fit "Balance: XX Credits" */
+  body .user-profile__balance,
+  body .user-menu .user-profile__balance,
+  body .user-menu .user-profile-buttons > .user-profile__balance {
+    width: 4.5cm !important;
+    min-width: 4.5cm !important;
+    max-width: 4.5cm !important;
+  }
+
+  /* FORCE 10px font on ALL user profile elements - MAXIMUM SPECIFICITY */
+  body .user-profile__balance,
+  body .user-profile__balance-text,
+  body .balance-amount,
+  body .user-profile__refill-btn,
+  body .user-profile__username,
+  body .logout-btn,
+  body .balance-display,
+  body .auth-btn,
+  body .user-menu .user-profile__balance,
+  body .user-menu .user-profile__balance-text,
+  body .user-menu .balance-amount,
+  body .user-menu .user-profile__refill-btn,
+  body .user-menu .user-profile__username,
+  body .user-menu .logout-btn,
+  body .user-menu .balance-display,
+  body .user-menu .auth-btn,
+  body .user-menu .user-profile-buttons .user-profile__balance,
+  body .user-menu .user-profile-buttons .user-profile__balance-text,
+  body .user-menu .user-profile-buttons .balance-amount,
+  body .user-menu .user-profile-buttons .user-profile__refill-btn,
+  body .user-menu .user-profile-buttons .user-profile__username,
+  body .user-menu .user-profile-buttons .logout-btn {
+    font-size: 10px !important;
+  }
+}

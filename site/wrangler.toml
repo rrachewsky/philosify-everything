@@ -1,0 +1,12 @@
+# Cloudflare Pages Configuration
+name = "philosify-everything-frontend"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-11-17"
+
+# Custom domain configuration is managed in Cloudflare Dashboard
+# Production: https://everything.philosify.org
+
+# Environment variables (inlined at build time by Vite)
+[vars]
+VITE_API_URL = "https://api-everything.philosify.org"
+VITE_CDN_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"

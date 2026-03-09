@@ -1,0 +1,99 @@
+# ============================================================
+# LOCAL DEVELOPMENT ENVIRONMENT VARIABLES
+# ============================================================
+#
+# SETUP INSTRUCTIONS:
+# 1. Copy this file: cp .dev.vars.example .dev.vars
+# 2. Fill in your actual API keys below
+# 3. NEVER commit .dev.vars to git (already in .gitignore)
+# 4. For production, use Cloudflare Secrets Store:
+#    https://dash.cloudflare.com → Workers & Pages → Secrets Store
+#
+# SECURITY WARNING:
+# - .dev.vars contains sensitive credentials
+# - Keep it secure on your local machine
+# - Rotate keys immediately if exposed
+# - Use test keys (sk_test_) for Stripe in development
+#
+# ============================================================
+
+# ============================================================
+# SUPABASE - Database & Authentication
+# ============================================================
+# Get from: https://supabase.com/dashboard → Project Settings → API
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=eyJhbGc...your-supabase-anon-jwt-here
+SUPABASE_SERVICE_KEY=eyJhbGc...your-supabase-service-role-jwt-here
+
+# ============================================================
+# SPOTIFY - Music Metadata & Search
+# ============================================================
+# Get from: https://developer.spotify.com/dashboard
+SPOTIFY_CLIENT_ID=your-spotify-client-id-here
+SPOTIFY_CLIENT_SECRET=your-spotify-client-secret-here
+
+# ============================================================
+# AI MODELS - Philosophical Analysis Engines (5 Models)
+# ============================================================
+# All models configured to use the most reliable versions as of 2025
+
+# 1. CHATGPT - OpenAI o1 (Latest reasoning model)
+# Get from: https://platform.openai.com/api-keys
+# Model: o1 (reasoning model with enhanced philosophical analysis)
+OPENAI_API_KEY=sk-proj-your-openai-api-key-here
+
+# 2. CLAUDE - Anthropic Claude Sonnet 4 (Extended thinking)
+# Get from: https://console.anthropic.com/settings/keys
+# Model: claude-sonnet-4-20250514 (most reliable Sonnet version)
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
+
+# 3. GEMINI - Google Gemini
+# Get from: https://aistudio.google.com/apikey
+# Model configured in wrangler.toml (not here - it's not a secret)
+GEMINI_API_KEY=your-gemini-api-key-here
+
+# 4. GROK - xAI Grok 3 (Latest version)
+# Get from: https://console.x.ai/
+# Model: grok-3 (most reliable Grok version)
+GROK_API_KEY=xai-your-grok-api-key-here
+
+# 5. DEEPSEEK - DeepSeek R1 (Best value reasoning model)
+# Get from: https://platform.deepseek.com/api_keys
+# Model: deepseek-reasoner (R1 - most reliable version)
+DEEPSEEK_API_KEY=sk-your-deepseek-api-key-here
+
+# ============================================================
+# STRIPE - Payment Processing
+# ============================================================
+# Get from: https://dashboard.stripe.com/apikeys
+# IMPORTANT: Use TEST keys (sk_test_) for local development!
+STRIPE_SECRET_KEY=sk_test_your-stripe-test-secret-key-here
+STRIPE_WEBHOOK_SECRET=whsec_your-stripe-webhook-secret-here
+
+# Stripe Product Price IDs (created in Dashboard → Products)
+STRIPE_PRICE_ID_10=price_your-10-credits-price-id-here
+STRIPE_PRICE_ID_20=price_your-20-credits-price-id-here
+STRIPE_PRICE_ID_50=price_your-50-credits-price-id-here
+
+# Checkout redirect URLs (localhost for development)
+CHECKOUT_SUCCESS_URL=http://localhost:3001/payment/success
+CHECKOUT_CANCEL_URL=http://localhost:3001/payment/cancel
+
+# ============================================================
+# GENIUS - Lyrics Provider
+# ============================================================
+# Get from: https://genius.com/api-clients
+GENIUS_ACCESS_TOKEN=your-genius-access-token-here
+
+# ============================================================
+# ADMIN - Internal Operations
+# ============================================================
+# Generate a secure random string (minimum 32 characters)
+# Example: openssl rand -hex 32
+ADMIN_SECRET=your-admin-secret-minimum-32-chars-here
+
+# ============================================================
+# CORS - Allowed Origins (Development)
+# ============================================================
+# Add any additional localhost ports you use for development
+ALLOWED_ORIGINS=http://localhost:3000 http://localhost:3001 http://localhost:5173 http://localhost:8787 https://philosify.org https://www.philosify.org

@@ -1,0 +1,218 @@
+/* ============================================================
+   TOP 50 TICKER - Spotify Top 50 Scrolling Banner
+   ============================================================ */
+
+.top-ten-ticker {
+  position: fixed;
+  top: 0; /* At the very top of the page */
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 32px;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 10, 62, 0.95) 0%,
+    rgba(45, 27, 105, 0.9) 50%,
+    rgba(26, 10, 62, 0.95) 100%
+  ); /* Purple gradient with transparency */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: 100020; /* Above user-menu when scrolling */
+  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  box-shadow: 0 2px 15px rgba(124, 58, 237, 0.2);
+  direction: ltr !important; /* Force LTR - no RTL on ticker */
+}
+
+/* TOP 50 Label */
+.ticker-label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px; /* reduced from 14px - 0.1cm narrower */
+  margin-left: -4px; /* 0.1cm left */
+  background: linear-gradient(
+    135deg,
+    #be185d 0%,
+    #7c3aed 50%,
+    #5b21b6 100%
+  ); /* Darker pink to purple gradient */
+  height: 100%;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #fff;
+  text-transform: uppercase;
+  z-index: 2;
+  box-shadow: 2px 0 10px rgba(190, 24, 93, 0.2);
+}
+
+.ticker-icon {
+  font-size: 14px;
+}
+
+/* Scrolling track area */
+.ticker-track {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 100%;
+  cursor: grab;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.ticker-track::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.ticker-track:active {
+  cursor: grabbing;
+}
+
+.ticker-content {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 0;
+  width: max-content;
+  animation: ticker-scroll linear infinite;
+}
+
+.ticker-content.paused {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.3333%);
+  }
+}
+
+/* Individual song item */
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: inherit;
+  color: #ffffff; /* White text */
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ticker-item:hover {
+  background: rgba(168, 85, 247, 0.3) !important; /* Purple glow on hover */
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Rank number - pink/magenta */
+.ticker-rank {
+  color: #f472b6; /* Pink color like image */
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Song title - white */
+.ticker-song {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 12px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Separator dash */
+.ticker-separator {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+/* Artist name - white/light */
+.ticker-artist {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* FREE badge - green */
+.ticker-free {
+  background: #22c55e;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   RESPONSIVE - Mobile (max-width: 768px)
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .top-ten-ticker {
+    top: 0 !important; /* At the very top on mobile too */
+    height: 28px;
+  }
+
+  .ticker-label {
+    padding: 0 8px;
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .ticker-icon {
+    font-size: 12px;
+  }
+
+  .ticker-item {
+    padding: 2px 8px;
+    gap: 4px;
+  }
+
+  .ticker-rank {
+    font-size: 10px;
+  }
+
+  .ticker-song {
+    font-size: 10px;
+    max-width: 120px;
+  }
+
+  .ticker-separator {
+    font-size: 10px;
+  }
+
+  .ticker-artist {
+    font-size: 10px;
+    max-width: 100px;
+  }
+
+  .ticker-free {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+
+  .ticker-content {
+    gap: 0;
+  }
+}

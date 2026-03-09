@@ -1,0 +1,3798 @@
+<!DOCTYPE html>
+<!--
+================================================
+PHILOSIFY - VERSÃO COM AUTENTICAÇÃO
+================================================
+
+CONFIGURAÇÕES NECESSÁRIAS:
+
+1. No JavaScript (procure por "const SUPABASE_URL"), substitua:
+   - SUPABASE_URL: Sua URL do Supabase
+   - SUPABASE_ANON_KEY: Sua chave pública (anon)
+   - API_URL: URL do seu backend (https://api.philosify.org)
+
+2. Função de análise:
+   - A lógica de análise DEVE verificar autenticação
+   - DEVE enviar JWT no header Authorization
+   - DEVE tratar erros 401 (não autenticado) e 402 (saldo insuficiente)
+   
+   PROCURE NO CÓDIGO POR COMENTÁRIOS "⚠️" PARA VER O QUE MODIFICAR!
+
+================================================
+-->
+<html lang="en">
+<head>
+
+<link rel="stylesheet" href="philosify.css?v=3">
+
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Philosify</title>
+
+  <!-- Fonte -->
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+      font-family: "EB Garamond", Garamond, Georgia, serif;
+    }
+    body {
+      background: #f6f6f7;
+      color: #111;
+    }
+
+    /* ====== Banner de vídeo no header (layout sobreposto) ====== */
+    .site-header{
+      position: relative;
+      overflow: hidden;
+      height: 100vh;          /* ocupa viewport inteira */
+      min-height: 100vh;      /* garante 100% da viewport */
+      max-height: 100vh;      /* não ultrapassa viewport */
+      width: 100%;
+      max-width: 100vw;
+    }
+    .bg-video{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;      /* cobre sem distorcer (pode cortar nas bordas) */
+      object-position: center;
+      z-index: 0;             /* atrás de tudo */
+      background: #000;       /* fallback se vídeo não carregar */
+    }
+    
+    /* Garantir que vídeo apareça em mobile */
+    @media (max-width: 768px) {
+      .bg-video {
+        display: block !important;
+        min-height: 100%;
+      }
+    }
+
+    /* Faixa superior (idiomas + guide) */
+    .top-strip{
+      position: absolute;
+      top: 8; left: 0; right: 0;
+      height: 16px;                   /* barra estreita aprovada */
+      display: flex; align-items: center; justify-content: flex-end;  /* idiomas à direita */
+      padding: 0 8px;
+      background: linear-gradient(to left, 
+        rgba(255,255,255,0.95) 0%,      /* 95% opaco na direita (idiomas) */
+        rgba(255,255,255,0.7) 40%,      /* vai reduzindo */
+        rgba(255,255,255,0.4) 70%,      /* continua reduzindo */
+        rgba(255,255,255,0) 100%);      /* transparente total na esquerda */
+      backdrop-filter: blur(2px);
+      z-index: 3;                     /* acima do conteúdo */
+      font-family: "EB Garamond", Garamond, Georgia, serif;
+      line-height: 1;
+    }
+    .strip-right{ display: flex; gap: 2mm; }
+    .lang-item{
+      background: transparent; border: none; padding: 0; height: 16px;
+      color: #e2007a; font-weight: 700; font-size: 12px; cursor: pointer;
+      text-decoration: none; text-transform: uppercase;
+    }
+    .lang-item:hover{
+      text-decoration: underline;
+    }
+    .lang-item.active{
+      text-decoration: underline;
+    }
+
+    /* Conteúdo central sobre o vídeo */
+    .header-content{
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;                         /* sem gap automático */
+      padding: 24px;
+      z-index: 2;
+      text-align: center;
+    }
+    .logo{
+      width: clamp(180px, 22vw, 280px);
+      height: auto; display: block; user-select: none;
+      filter: none;
+      margin: 0;
+      padding: 0;
+    }
+    .tagline{
+      margin: 0;
+      margin-top: 0.4cm;
+      padding: 0;
+      line-height: 1.2;
+      font-weight: 700;               /* bold */
+      color: #ffffff;
+      text-shadow: none;              /* sem sombra */
+      background: transparent;        /* sem background/pill */
+      font-family: "EB Garamond", Garamond, Georgia, serif;
+      font-size: 20pt;
+    }
+
+    .search-wrap{
+      display: flex;
+      gap: 1mm;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      margin-top: 0.4cm;
+      padding: 0;
+    }
+    .input{
+      width: 7cm;
+      height: 48px;                       /* mesma altura do botão */
+      background: rgba(255,255,255,0.3); color: #fff; border: none;
+      border-radius: 8px; padding: 0 14px; outline: none;
+      font-family: "EB Garamond", Garamond, Georgia, serif;
+      box-shadow: none;
+    }
+    .input::placeholder{
+      color: rgba(255,255,255,0.85);
+    }
+    .button{
+      width: 3cm;
+      height: 48px;                       /* mesma altura do input */
+      border-radius: 8px; 
+      padding: 0 16px;                    /* padding horizontal apenas */
+      color: #ffffff; 
+      font-weight: 700;
+      border: none;                       /* sem borda */
+      background: linear-gradient(90deg, #ec4899, #db2777); /* magenta do logo */
+      cursor: pointer;
+      font-family: "EB Garamond", Garamond, Georgia, serif;
+      box-shadow: 0 4px 12px rgba(219, 39, 119, 0.4), 
+                  0 2px 4px rgba(0, 0, 0, 0.2);  /* efeito elevado */
+      transition: all 0.2s ease;
+    }
+    .button:hover{
+      box-shadow: 0 6px 16px rgba(219, 39, 119, 0.5), 
+                  0 3px 6px rgba(0, 0, 0, 0.25);
+      transform: translateY(-1px);        /* levanta um pouco ao hover */
+    }
+    .button:active{
+      box-shadow: 0 2px 8px rgba(219, 39, 119, 0.4), 
+                  0 1px 2px rgba(0, 0, 0, 0.2);
+      transform: translateY(0px);         /* volta ao pressionar */
+    }
+    .model-selector{
+      height: 48px;
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      padding: 0 12px;
+      outline: none;
+      font-family: "EB Garamond", Garamond, Georgia, serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 100px;
+      box-shadow: none;
+      transition: all 0.2s ease;
+    }
+    .model-selector:hover{
+      background: rgba(226, 0, 122, 0.3);
+      border-color: #e2007a;
+    }
+    .model-selector:focus{
+      background: rgba(226, 0, 122, 0.2);
+      border-color: #e2007a;
+      outline: 2px solid #e2007a;
+      outline-offset: 2px;
+    }
+    .model-selector option{
+      background: #1a1a1a;
+      color: #fff;
+    }
+    
+    /* Dropdown de busca de músicas */
+    /* Dropdown de busca de músicas (vertical) */
+    .search-carousel-wrapper {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 4px;
+      z-index: 9999;
+    }
+    
+    .search-carousel {
+      background: rgba(0, 0, 0, 0.98);
+      border: 2px solid #e2007a;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(226, 0, 122, 0.3);
+    }
+    
+    .carousel-header {
+      display: none; /* Remover "Escolha a música" */
+    }
+    
+    .carousel-container {
+      display: block; /* Sem navegação */
+    }
+    
+    .carousel-nav {
+      display: none; /* Sem botões de navegação */
+    }
+    
+    .carousel-track {
+      overflow: visible; /* Sem scroll horizontal */
+    }
+    
+    .carousel-items {
+      display: flex;
+      flex-direction: column; /* Vertical */
+      gap: 0;
+      transition: none;
+    }
+    
+    .carousel-card {
+      flex: none;
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    /* RTL para hebraico */
+    [dir="rtl"] .carousel-card {
+      direction: rtl;
+    }
+    
+    [dir="rtl"] .carousel-card-info {
+      text-align: right;
+    }
+    
+    .carousel-card:hover {
+      background: rgba(226, 0, 122, 0.2);
+      border-bottom-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .carousel-card.selected {
+      background: rgba(226, 0, 122, 0.3);
+      border-bottom-color: #e2007a;
+    }
+    
+    .carousel-card:last-child {
+      border-bottom: none;
+    }
+    
+    .carousel-card-image {
+      width: 48px;
+      height: 48px;
+      aspect-ratio: 1;
+      border-radius: 4px;
+      object-fit: cover;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    
+    .carousel-card-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .carousel-card-song {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .carousel-card-artist {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .carousel-card-year {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 11px;
+    }
+    
+    .search-loading {
+      padding: 20px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+    
+    .search-container {
+      position: relative;
+    }
+
+    /* Corpo abaixo do header não deve “subir por cima” */
+    main, .ph-main, #root{ position: relative; z-index: 0; margin-top: 0; }
+
+    /* Oculta o header React interno (se existir) para evitar duplicidade) */
+    .ph-header{ display: none !important; }
+
+    /* ===== RESPONSIVIDADE ===== */
+    
+    /* Tablets e telas médias */
+    @media (max-width: 768px){
+      .logo{
+        width: clamp(140px, 25vw, 200px);
+      }
+      .tagline{
+        font-size: 18pt;
+        margin-top: 0.3cm;
+      }
+      .search-wrap{
+        margin-top: 0.3cm;
+      }
+      .input{
+        width: 6cm;
+      }
+      .button{
+        width: 2.5cm;
+      }
+      .model-selector{
+        min-width: 90px;
+        font-size: 13px;
+      }
+    }
+
+    /* Mobile landscape e telas pequenas */
+    @media (max-width: 640px){
+      .header-content{
+        padding: 16px;
+      }
+      .logo{
+        width: clamp(120px, 28vw, 160px);
+      }
+      .tagline{
+        font-size: 16pt;
+        line-height: 1.1;
+        margin-top: 0.25cm;
+      }
+      .search-wrap{
+        margin-top: 0.25cm;
+        gap: 0.2cm;
+      }
+      .input{
+        width: min(85%, 300px);
+        height: 44px;
+        font-size: 14px;
+      }
+      .button{
+        width: min(85%, 300px);
+        height: 44px;
+        font-size: 14px;
+      }
+      .model-selector{
+        width: min(85%, 300px);
+        height: 44px;
+        font-size: 14px;
+        min-width: auto;
+      }
+    }
+
+    /* Mobile portrait */
+    @media (max-width: 560px){
+      .top-strip{
+        font-size: 10px;
+        height: 14px;
+      }
+      .guide-link, .lang-item{
+        font-size: 10px;
+      }
+      .header-content{
+        padding: 12px;
+        gap: 0;
+      }
+      .logo{
+        width: clamp(100px, 30vw, 140px);
+      }
+      .tagline{
+        font-size: 14pt;
+        margin-top: 0.2cm;
+      }
+      .search-wrap{ 
+        flex-direction: column;
+        margin-top: 0.2cm;
+        gap: 0.15cm;
+      }
+      .input{ 
+        width: min(90%, 280px);
+        height: 42px;
+        font-size: 14px;
+        padding: 0 12px;
+      }
+      .button{ 
+        width: min(90%, 280px);
+        height: 42px;
+        font-size: 14px;
+        padding: 0 12px;
+      }
+      .model-selector{
+        width: min(90%, 280px);
+        height: 42px;
+        font-size: 14px;
+        min-width: auto;
+      }
+    }
+
+    /* Mobile muito pequeno */
+    @media (max-width: 380px){
+      .logo{
+        width: clamp(80px, 32vw, 120px);
+      }
+      .tagline{
+        font-size: 12pt;
+        margin-top: 0.15cm;
+      }
+      .search-wrap{
+        margin-top: 0.15cm;
+        gap: 0.1cm;
+      }
+      .input, .button, .model-selector{
+        height: 38px;
+        font-size: 13px;
+        width: min(95%, 250px);
+      }
+    }
+
+    /* Landscape mobile */
+    @media (max-height: 500px) and (orientation: landscape){
+      .site-header{
+        height: 100vh;
+        min-height: 100vh;
+      }
+      .header-content{
+        padding: 8px;
+      }
+      .logo{
+        width: clamp(70px, 20vw, 100px);
+      }
+      .tagline{
+        font-size: 11pt;
+        margin-top: 0.1cm;
+      }
+      .search-wrap{
+        margin-top: 0.1cm;
+        gap: 0.1cm;
+        flex-direction: row;
+      }
+      .input{
+        width: 5cm;
+        height: 36px;
+        font-size: 12px;
+      }
+      .button{
+        width: 2cm;
+        height: 36px;
+        font-size: 12px;
+        padding: 0 8px;
+      }
+      .model-selector{
+        width: 2.5cm;
+        height: 36px;
+        font-size: 12px;
+      }
+    }
+
+    /* ===== MODAL GUIDE ===== */
+
+    /* === ÁREA DE RESULTADOS === */
+    .results-container {
+      background: #fff0f6;
+      padding: 37.8px;                /* 1cm de margem */
+      min-height: 100vh;
+    }
+    
+    .result-card {
+      background: #ffffff;
+      border: 2px solid #e2007a;      /* borda magenta */
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 18.9px;
+      margin-bottom: 18.9px;          /* ~0.5cm entre cards */
+    }
+    
+    .result-card-title {
+      font-weight: bold;
+      font-size: 18.67px;
+      color: #000000;
+      margin: 0 0 12px 0;
+      text-align: left;
+    }
+    
+    .result-card-text {
+      font-size: 15px;                /* alterado de 14.67px para 15px */
+      font-weight: normal;
+      color: #000000;
+      text-align: justify;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    .result-card-text p {
+      margin: 0 0 8px 0;
+    }
+    
+    .result-two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18.9px;                    /* ~0.5cm horizontal */
+      margin-bottom: 18.9px;          /* ~0.5cm vertical */
+    }
+    
+    .result-two-columns .result-card {
+      margin-bottom: 0;
+      height: 100%;
+    }
+    
+    .tech-specs-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 12px;
+      font-size: 15px;                /* alterado de 14.67px para 15px */
+    }
+    
+    .tech-specs-label {
+      font-weight: bold;
+      color: #000000;
+    }
+    
+    .tech-specs-value {
+      color: #000000;
+    }
+    
+    /* === TABELA DO SCORECARD === */
+    .scorecard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      table-layout: fixed;          /* layout fixo para posições exatas */
+    }
+    
+    .scorecard-table th {
+      background: #f0f0f0;
+      padding: 12px;
+      font-weight: bold;
+      font-size: 15px;
+      border-bottom: 2px solid #e2007a;
+    }
+    
+    .scorecard-table th:nth-child(1) {
+      text-align: left;
+      width: 6cm;                   /* Ramo/Branch: 0-6cm */
+    }
+    
+    .scorecard-table th:nth-child(2) {
+      text-align: center;           /* Pontuação centralizada */
+      width: 4cm;                   /* Pontuação: 6-10cm */
+    }
+    
+    .scorecard-table th:nth-child(3) {
+      text-align: center;           /* Justificativa centralizada */
+      width: auto;                  /* Justificativa: 10cm+ */
+    }
+    
+    .scorecard-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+      font-size: 15px;
+    }
+    
+    .scorecard-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .scorecard-axis {
+      font-weight: bold;
+      color: #000;
+      text-align: left;
+    }
+    
+    .scorecard-score {
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+      font-size: 16px;
+    }
+    
+    .scorecard-justification {
+      text-align: justify;           /* justificado */
+      line-height: 1.6;
+    }
+    
+    .final-analysis {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #e2007a;
+      border-radius: 4px;
+    }
+    
+    .final-analysis-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #000;
+    }
+    
+    .final-analysis-text {
+      text-align: justify;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    
+    @media (max-width: 768px) {
+      .result-two-columns {
+        grid-template-columns: 1fr;
+        gap: 18.9px;              /* manter espaçamento */
+      }
+      
+      .result-card-title {
+        font-size: 16px;
+      }
+      
+      .result-card-text {
+        font-size: 14px;          /* um pouco menor no mobile */
+      }
+      
+      .tech-specs-grid {
+        font-size: 14px;          /* um pouco menor no mobile */
+      }
+      
+      /* Tabela do scorecard em mobile - empilhar verticalmente */
+      .scorecard-table, .scorecard-table thead, .scorecard-table tbody, 
+      .scorecard-table th, .scorecard-table td, .scorecard-table tr {
+        display: block;
+      }
+      
+      .scorecard-table thead tr {
+        display: none;
+      }
+      
+      .scorecard-table tr {
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px;
+      }
+      
+      .scorecard-table td {
+        border: none;
+        padding: 8px 0;
+        text-align: left !important;
+      }
+      
+      .scorecard-table td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 4px;
+      }
+    }
+/* ============================================================ */
+/* ESTILOS DE AUTENTICAÇÃO - Adicionar dentro do <style> */
+/* ============================================================ */
+
+.auth-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-overlay.active {
+  display: flex;
+}
+
+.auth-modal {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 2px solid #e2007a;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(226, 0, 122, 0.4);
+  position: relative;
+  animation: fadeInModal 0.3s ease;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.auth-modal h2 {
+  color: #e2007a;
+  font-size: 32px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.auth-modal > p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #e2007a;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 0 3px rgba(226, 0, 122, 0.1);
+}
+
+.form-button {
+  padding: 14px;
+  background: linear-gradient(90deg, #db2777, #e2007a);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(226, 0, 122, 0.5);
+}
+
+.form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.auth-switch a {
+  color: #e2007a;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+.auth-error {
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.5);
+  color: #fca5a5;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.auth-error.active {
+  display: block;
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 32px;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.close-modal:hover {
+  color: #e2007a;
+  transform: rotate(90deg);
+}
+
+/* User Menu */
+.user-menu {
+  position: absolute;
+  top: 10px;
+  right: 130px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 5;
+  font-size: 13px;
+}
+
+.balance-display {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 1px solid #e2007a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.balance-display:hover {
+  background: rgba(226, 0, 122, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(226, 0, 122, 0.3);
+}
+
+.balance-amount {
+  font-weight: 700;
+  color: #e2007a;
+  font-size: 14px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 18px;
+  border-radius: 24px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.auth-btn:hover {
+  background: rgba(226, 0, 122, 0.3);
+  border-color: #e2007a;
+  transform: translateY(-1px);
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px 16px;
+  border-radius: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.logout-btn:hover {
+  border-color: #dc2626;
+  color: #fca5a5;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+/* Credits Modal */
+.credits-modal {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 2px solid #e2007a;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  animation: fadeInModal 0.3s ease;
+}
+
+.credits-modal h2 {
+  color: #e2007a;
+  font-size: 32px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.credits-modal .subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.current-balance {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.current-balance-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.current-balance-amount {
+  font-size: 36px;
+  font-weight: 700;
+  color: #e2007a;
+}
+
+.credits-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.credit-option {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.credit-option:hover {
+  border-color: #e2007a;
+  background: rgba(226, 0, 122, 0.15);
+  transform: translateX(8px);
+  box-shadow: 0 4px 20px rgba(226, 0, 122, 0.2);
+}
+
+.credit-option-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.credit-amount {
+  font-size: 26px;
+  font-weight: 700;
+  color: #e2007a;
+}
+
+.credit-analyses {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.credit-price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .user-menu {
+    right: 10px;
+    font-size: 11px;
+    gap: 8px;
+  }
+  
+  .balance-display {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  
+  .auth-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+  }
+  
+  .auth-modal,
+  .credits-modal {
+    padding: 30px 20px;
+    max-width: 95%;
+  }
+  
+  .auth-modal h2,
+  .credits-modal h2 {
+    font-size: 24px;
+  }
+}
+  </style>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+
+  <!-- React/ReactDOM/Babel (o seu script usa type="text/babel") -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+
+<!-- ============================================================ -->
+<!-- MODAIS DE AUTENTICAÇÃO - Copiar logo após <body> -->
+<!-- ============================================================ -->
+
+<!-- Login Modal -->
+<div id="loginModal" class="auth-overlay">
+  <div class="auth-modal">
+    <button class="close-modal" onclick="closeAuthModals()">&times;</button>
+    <h2>Welcome Back</h2>
+    <p>Sign in to continue analyzing music</p>
+    
+    <div id="loginError" class="auth-error"></div>
+    
+    <form class="auth-form" onsubmit="handleLogin(event); return false;">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input 
+          type="email" 
+          id="loginEmail" 
+          class="form-input" 
+          placeholder="your@email.com" 
+          required
+          autocomplete="email"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input 
+          type="password" 
+          id="loginPassword" 
+          class="form-input" 
+          placeholder="••••••••" 
+          required
+          autocomplete="current-password"
+        />
+      </div>
+      
+      <button type="submit" class="form-button" id="loginButton">
+        Sign In
+      </button>
+    </form>
+    
+    <div class="auth-switch">
+      Don't have an account? 
+      <a onclick="switchToSignup()">Sign Up</a>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<div id="signupModal" class="auth-overlay">
+  <div class="auth-modal">
+    <button class="close-modal" onclick="closeAuthModals()">&times;</button>
+    <h2>Create Account</h2>
+    <p>Get 2 free analyses to start!</p>
+    
+    <div id="signupError" class="auth-error"></div>
+    
+    <form class="auth-form" onsubmit="handleSignup(event); return false;">
+      <div class="form-group">
+        <label for="signupEmail">Email</label>
+        <input 
+          type="email" 
+          id="signupEmail" 
+          class="form-input" 
+          placeholder="your@email.com" 
+          required
+          autocomplete="email"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input 
+          type="password" 
+          id="signupPassword" 
+          class="form-input" 
+          placeholder="••••••••" 
+          required
+          minlength="6"
+          autocomplete="new-password"
+        />
+      </div>
+      
+      <div class="form-group">
+        <label for="signupPasswordConfirm">Confirm Password</label>
+        <input 
+          type="password" 
+          id="signupPasswordConfirm" 
+          class="form-input" 
+          placeholder="••••••••" 
+          required
+          minlength="6"
+          autocomplete="new-password"
+        />
+      </div>
+      
+      <button type="submit" class="form-button" id="signupButton">
+        Create Account
+      </button>
+    </form>
+    
+    <div class="auth-switch">
+      Already have an account? 
+      <a onclick="switchToLogin()">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<!-- Add Credits Modal -->
+<div id="creditsModal" class="auth-overlay">
+  <div class="credits-modal">
+    <button class="close-modal" onclick="closeCreditsModal()">&times;</button>
+    <h2>Add Credits</h2>
+    <p class="subtitle">Choose a package to continue analyzing</p>
+    
+    <div class="current-balance">
+      <div class="current-balance-label">Current Balance</div>
+      <div class="current-balance-amount" id="modalBalance">$0.00</div>
+    </div>
+    
+    <div class="credits-options">
+      <div class="credit-option" onclick="selectCreditPackage(6.00)">
+        <div class="credit-option-left">
+          <div class="credit-amount">10 Analyses</div>
+          <div class="credit-analyses">$0.60 per analysis</div>
+        </div>
+        <div class="credit-price">$6.00</div>
+      </div>
+      
+      <div class="credit-option" onclick="selectCreditPackage(12.00)">
+        <div class="credit-option-left">
+          <div class="credit-amount">20 Analyses</div>
+          <div class="credit-analyses">$0.60 per analysis</div>
+        </div>
+        <div class="credit-price">$12.00</div>
+      </div>
+      
+      <div class="credit-option" onclick="selectCreditPackage(30.00)">
+        <div class="credit-option-left">
+          <div class="credit-amount">50 Analyses</div>
+          <div class="credit-analyses">$0.60 per analysis</div>
+        </div>
+        <div class="credit-price">$30.00</div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- HEADER (visual aprovado) -->
+  <header class="site-header">
+    <!-- Vídeo de fundo -->
+    <video class="bg-video" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080'%3E%3Crect fill='%23000' width='1920' height='1080'/%3E%3C/svg%3E">
+      <source src="https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/banner.mp4" type="video/mp4"/>
+    </video>
+
+    <!-- Faixa superior (idiomas) -->
+
+    <!-- User Menu -->
+    <div class="user-menu" id="userMenu">
+      <div class="auth-buttons" id="authButtons">
+        <button class="auth-btn" onclick="openLogin()">Sign In</button>
+        <button class="auth-btn" onclick="openSignup()">Sign Up</button>
+      </div>
+      <div class="balance-display" id="balanceDisplay" style="display: none;" onclick="openCreditsModal()">
+        <span class="balance-amount" id="userBalance">$0.00</span>
+        <span style="color: rgba(255, 255, 255, 0.5);">•</span>
+        <span id="freeAnalysesInfo" style="color: rgba(255, 255, 255, 0.85); font-size: 12px;"></span>
+      </div>
+      <button class="logout-btn" id="logoutBtn" style="display: none;" onclick="handleLogout()">Logout</button>
+    </div>
+
+    <div class="top-strip" role="navigation" aria-label="Language selection">
+      <div class="strip-right" id="langBar">
+        <button class="lang-item" data-lang="en" type="button">EN</button>
+        <button class="lang-item" data-lang="pt" type="button">PT</button>
+        <button class="lang-item" data-lang="es" type="button">ES</button>
+        <button class="lang-item" data-lang="fr" type="button">FR</button>
+        <button class="lang-item" data-lang="it" type="button">IT</button>
+        <button class="lang-item" data-lang="hu" type="button">HU</button>
+        <button class="lang-item" data-lang="ru" type="button">RU</button>
+        <button class="lang-item" data-lang="zh" type="button">ZH</button>
+        <button class="lang-item" data-lang="ko" type="button">KO</button>
+        <button class="lang-item" data-lang="he" type="button">HE</button>
+        <button class="lang-item" data-lang="ja" type="button">JA</button>
+        <button class="lang-item" data-lang="de" type="button">DE</button>
+      </div>
+    </div>
+
+    <!-- Conteúdo central sobre o vídeo -->
+    <div class="header-content">
+      <img src="https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/logo.png" alt="Philosify Logo" class="logo">
+      <p id="tagline" class="tagline">Discover the philosophy behind every song</p>
+      <div class="search-wrap">
+        <select id="modelSelector" class="model-selector">
+          <option value="gpt4">GPT-4</option>
+          <option value="claude">Claude</option>
+          <option value="gemini">Gemini</option>
+          <option value="grok">Grok</option>
+        </select>
+        <div class="search-container">
+          <input id="songInput" class="input" type="text" placeholder="" autocomplete="off">
+          <div id="searchCarousel" class="search-carousel-wrapper" style="display: none;">
+            <div class="search-carousel">
+              <div class="carousel-items" id="carouselItems"></div>
+            </div>
+          </div>
+        </div>
+        <button id="analyzeBtn" class="button" type="button">
+          <span id="analyzeText">Analyze</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Raiz do App React -->
+  <div id="root"></div>
+
+  <!-- Bridge: header estático <-> App React -->
+  <script>
+// ============================================================
+// FUNÇÕES DE AUTENTICAÇÃO - Adicionar no início do <script>
+// ============================================================
+
+// ⚠️ CONFIGURAÇÃO - SUBSTITUIR COM SUAS CREDENCIAIS
+const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // Ex: https://xxxxx.supabase.co
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Ex: eyJhbGci...
+const API_URL = 'https://api.philosify.org'; // URL do seu backend
+
+// Variáveis globais
+let supabase = null;
+let currentUser = null;
+let userBalance = null;
+
+// Inicializar Supabase
+if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} else {
+  console.warn('[Auth] Supabase credentials not configured');
+}
+
+// ============================================================
+// VERIFICAR AUTENTICAÇÃO
+// ============================================================
+
+async function checkAuth() {
+  if (!supabase) {
+    console.warn('[Auth] Supabase not configured');
+    showAuthButtons();
+    return;
+  }
+  
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (session) {
+      currentUser = session.user;
+      console.log('[Auth] User logged in:', currentUser.email);
+      await updateUserUI();
+    } else {
+      console.log('[Auth] No active session');
+      showAuthButtons();
+    }
+  } catch (error) {
+    console.error('[Auth] Error checking session:', error);
+    showAuthButtons();
+  }
+}
+
+// ============================================================
+// ATUALIZAR UI DO USUÁRIO
+// ============================================================
+
+async function updateUserUI() {
+  if (!currentUser) return;
+  
+  // Esconder botões de auth
+  document.getElementById('authButtons').style.display = 'none';
+  
+  // Buscar saldo do backend
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session.access_token;
+    
+    const response = await fetch(`${API_URL}/api/balance`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      userBalance = data;
+      
+      console.log('[Balance] Fetched:', data);
+      
+      // Atualizar display de saldo
+      document.getElementById('userBalance').textContent = `$${data.balance.toFixed(2)}`;
+      
+      // Mostrar info de análises grátis ou quantidade disponível
+      const freeInfo = document.getElementById('freeAnalysesInfo');
+      if (data.free_analyses_remaining > 0) {
+        freeInfo.textContent = `${data.free_analyses_remaining} free`;
+        freeInfo.style.color = '#4ade80'; // Verde
+      } else {
+        const analysesCount = Math.floor(data.balance / 0.60);
+        freeInfo.textContent = `${analysesCount} analyses`;
+        freeInfo.style.color = 'rgba(255, 255, 255, 0.85)';
+      }
+      
+      // Mostrar elementos de usuário logado
+      document.getElementById('balanceDisplay').style.display = 'flex';
+      document.getElementById('logoutBtn').style.display = 'block';
+    } else {
+      console.error('[Balance] Failed to fetch:', response.status);
+      showAuthButtons();
+    }
+  } catch (error) {
+    console.error('[Balance] Error:', error);
+    showAuthButtons();
+  }
+}
+
+function showAuthButtons() {
+  document.getElementById('authButtons').style.display = 'flex';
+  document.getElementById('balanceDisplay').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
+}
+
+// ============================================================
+// CONTROLES DE MODAIS
+// ============================================================
+
+function openLogin() {
+  document.getElementById('loginModal').classList.add('active');
+  setTimeout(() => document.getElementById('loginEmail').focus(), 100);
+}
+
+function openSignup() {
+  document.getElementById('signupModal').classList.add('active');
+  setTimeout(() => document.getElementById('signupEmail').focus(), 100);
+}
+
+function closeAuthModals() {
+  document.getElementById('loginModal').classList.remove('active');
+  document.getElementById('signupModal').classList.remove('active');
+  // Limpar erros
+  document.getElementById('loginError').classList.remove('active');
+  document.getElementById('signupError').classList.remove('active');
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('signupError').textContent = '';
+}
+
+function switchToSignup() {
+  closeAuthModals();
+  setTimeout(() => openSignup(), 150);
+}
+
+function switchToLogin() {
+  closeAuthModals();
+  setTimeout(() => openLogin(), 150);
+}
+
+function openCreditsModal() {
+  if (userBalance) {
+    document.getElementById('modalBalance').textContent = `$${userBalance.balance.toFixed(2)}`;
+  }
+  document.getElementById('creditsModal').classList.add('active');
+}
+
+function closeCreditsModal() {
+  document.getElementById('creditsModal').classList.remove('active');
+}
+
+// Fechar modal ao clicar fora
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('auth-overlay')) {
+    if (e.target.id === 'loginModal' || e.target.id === 'signupModal') {
+      closeAuthModals();
+    } else if (e.target.id === 'creditsModal') {
+      closeCreditsModal();
+    }
+  }
+});
+
+// ============================================================
+// HANDLE LOGIN
+// ============================================================
+
+async function handleLogin(event) {
+  event.preventDefault();
+  
+  if (!supabase) {
+    alert('Authentication not configured. Please check console.');
+    return;
+  }
+  
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errorDiv = document.getElementById('loginError');
+  const button = document.getElementById('loginButton');
+  
+  // Disable button
+  button.disabled = true;
+  button.textContent = 'Signing in...';
+  errorDiv.classList.remove('active');
+  
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    
+    if (error) throw error;
+    
+    console.log('[Login] Success:', data.user.email);
+    currentUser = data.user;
+    closeAuthModals();
+    await updateUserUI();
+    
+    // Limpar formulário
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    
+  } catch (error) {
+    console.error('[Login] Error:', error);
+    errorDiv.textContent = error.message || 'Failed to sign in. Please check your credentials.';
+    errorDiv.classList.add('active');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Sign In';
+  }
+}
+
+// ============================================================
+// HANDLE SIGNUP
+// ============================================================
+
+async function handleSignup(event) {
+  event.preventDefault();
+  
+  if (!supabase) {
+    alert('Authentication not configured. Please check console.');
+    return;
+  }
+  
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const confirmPassword = document.getElementById('signupPasswordConfirm').value;
+  const errorDiv = document.getElementById('signupError');
+  const button = document.getElementById('signupButton');
+  
+  // Validar senhas
+  if (password !== confirmPassword) {
+    errorDiv.textContent = 'Passwords do not match';
+    errorDiv.classList.add('active');
+    return;
+  }
+  
+  if (password.length < 6) {
+    errorDiv.textContent = 'Password must be at least 6 characters';
+    errorDiv.classList.add('active');
+    return;
+  }
+  
+  // Disable button
+  button.disabled = true;
+  button.textContent = 'Creating account...';
+  errorDiv.classList.remove('active');
+  
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+        data: {
+          created_at: new Date().toISOString()
+        }
+      }
+    });
+    
+    if (error) throw error;
+    
+    console.log('[Signup] Success:', data);
+    
+    // Verificar se precisa confirmar email
+    if (data.user && !data.session) {
+      alert('Account created! Please check your email to confirm your account.');
+      switchToLogin();
+    } else {
+      // Auto-login (se email confirmation estiver desabilitado)
+      currentUser = data.user;
+      closeAuthModals();
+      await updateUserUI();
+      alert('Welcome to Philosify! You have 2 free analyses to start.');
+    }
+    
+    // Limpar formulário
+    document.getElementById('signupEmail').value = '';
+    document.getElementById('signupPassword').value = '';
+    document.getElementById('signupPasswordConfirm').value = '';
+    
+  } catch (error) {
+    console.error('[Signup] Error:', error);
+    errorDiv.textContent = error.message || 'Failed to create account. Please try again.';
+    errorDiv.classList.add('active');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Create Account';
+  }
+}
+
+// ============================================================
+// HANDLE LOGOUT
+// ============================================================
+
+async function handleLogout() {
+  if (!supabase) return;
+  
+  try {
+    await supabase.auth.signOut();
+    console.log('[Logout] User logged out');
+    currentUser = null;
+    userBalance = null;
+    showAuthButtons();
+    
+    // Limpar análise se estiver sendo exibida
+    const rootDiv = document.getElementById('root');
+    if (rootDiv) rootDiv.innerHTML = '';
+    
+    alert('You have been logged out.');
+  } catch (error) {
+    console.error('[Logout] Error:', error);
+  }
+}
+
+// ============================================================
+// ADICIONAR CRÉDITOS (STRIPE)
+// ============================================================
+
+async function selectCreditPackage(amount) {
+  if (!supabase || !currentUser) {
+    alert('Please sign in first');
+    openLogin();
+    return;
+  }
+  
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session.access_token;
+    
+    console.log('[Credits] Requesting checkout for $' + amount);
+    
+    // Chamar backend para criar checkout session
+    const response = await fetch(`${API_URL}/api/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ amount })
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to create checkout session');
+    }
+    
+    const data = await response.json();
+    console.log('[Credits] Redirecting to Stripe:', data.url);
+    
+    // Redirecionar para Stripe Checkout
+    window.location.href = data.url;
+    
+  } catch (error) {
+    console.error('[Credits] Error:', error);
+    alert('Failed to process payment request. Please try again.');
+  }
+}
+
+// ============================================================
+// INICIALIZAÇÃO NO DOMCONTENTLOADED
+// ============================================================
+// ⚠️ ADICIONAR ESTA LINHA NO INÍCIO DO DOMCONTENTLOADED EXISTENTE:
+// await checkAuth();
+
+
+    // Traduções da tagline no header
+    const TAGLINES = {
+      en:"Discover the philosophy behind every song",
+      es:"Descubre la filosofía detrás de cada canción",
+      de:"Entdecke die Philosophie hinter jedem Lied",
+      fr:"Découvrez la philosophie derrière chaque chanson",
+      it:"Scopri la filosofia dietro ogni canzone",
+      hu:"Fedezd fel minden dal mögötti filozófiát",
+      pt:"Descubra a filosofia por trás de cada canção",
+      zh:"发现每首歌背后的哲学",
+      ja:"あらゆる楽曲の背後にある哲学を見つけよう",
+      ko:"모든 노래 뒤에 숨은 철학을 발견하세요",
+      ru:"Откройте философию каждой песни",
+      he:"גלו את הפילוסופיה שמאחורי כל שיר"
+    };
+
+    // Traduções do placeholder
+    const PLACEHOLDERS = {
+      en:"type a song/singer or band",
+      es:"escribe canción/cantante o banda",
+      de:"Lied/Sänger oder Band eingeben",
+      fr:"tapez chanson/chanteur ou groupe",
+      it:"digita canzone/cantante o band",
+      hu:"dal/előadó vagy banda",
+      pt:"digite música/cantor ou banda",
+      zh:"输入歌曲/歌手或乐队",
+      ja:"曲/歌手またはバンド",
+      ko:"노래/가수 또는 밴드",
+      ru:"песня/певец или группа",
+      he:"שיר/זמר או להקה"
+    };
+
+    // Traduções do botão Analyze
+    const ANALYZE_BUTTON = {
+      en:"Analyze",
+      es:"Analizar",
+      de:"Analysieren",
+      fr:"Analyser",
+      it:"Analizza",
+      hu:"Elemzés",
+      pt:"Analisar",
+      zh:"分析",
+      ja:"分析する",
+      ko:"분석",
+      ru:"Анализ",
+      he:"נתח"
+    };
+
+    // Traduções do estado "Analyzing..."
+    const ANALYZING_BUTTON = {
+      en:"Analyzing...",
+      es:"Analizando...",
+      de:"Analysiere...",
+      fr:"Analyse en cours...",
+      it:"Analisi in corso...",
+      hu:"Elemzés folyamatban...",
+      pt:"Analisando...",
+      zh:"分析中...",
+      ja:"分析中...",
+      ko:"분석 중...",
+      ru:"Анализ...",
+      he:"מנתח..."
+    };
+
+    // Traduções do conteúdo do GUIDE
+    const GUIDE_CONTENT = {
+      en: {
+        title: "Philosify Guide",
+        intro: "This guide presents an algorithmic system for analyzing musical works (and potentially other art forms) based on objectivist principles. The goal is to transform integrated philosophical concepts into quantifiable and reproducible criteria, enabling consistent and scalable evaluation of cultural content.",
+        objectives: "System Objectives:",
+        obj1: "Map objectivist concepts into numerical values",
+        obj2: "Detect patterns from the most evident to the most subtle",
+        obj3: "Integrate multiple philosophical dimensions with appropriate weights",
+        obj4: "Produce scores accompanied by conceptual interpretation",
+        obj5: "Maintain consistency and reproducibility in evaluations",
+        centralPrinciple: "Central Principle:",
+        centralText: "Philosophical content determines aesthetic value. Technical quality or formal innovation are irrelevant to the moral and aesthetic evaluation of a work. \"Poison in a golden chalice remains poison.\"",
+        fundamentals: "Fundamental Objectivist Principles",
+        coercion: "Principle of Coercion",
+        coercionEvil: "EVIL: Initiating coercion (force or fraud) - regardless of intention, objective, or who benefits.",
+        coercionGood: "GOOD: Retaliating against coercion (stopping evil) - self-defense, protection of rights, justice.",
+        sacrifice: "Principle of Sacrifice",
+        sacrificeText: "Sacrifice = trading GREATER value for LESSER value, or trading VALUE for NON-VALUE.",
+        sacrificeEvil: "All sacrifice is bad. Hierarchy of evil:",
+        sacrifice1: "Voluntary Sacrifice (WORST): Person chooses to destroy their own values. Conscious moral self-annihilation.",
+        sacrifice2: "Imposed Sacrifice: Victim has no choice but may be resisting internally. Maintains their moral values.",
+        sacrificeNote: "Important: Investing time/effort to achieve GREATER value is not sacrifice.",
+        heroMartyr: "Hero vs Martyr",
+        concept: "CONCEPT",
+        hero: "HERO",
+        martyr: "MARTYR",
+        motivation: "Motivation",
+        motivationHero: "Reason, values",
+        motivationMartyr: "Faith, duty",
+        beneficiary: "Beneficiary",
+        beneficiaryHero: "Oneself",
+        beneficiaryMartyr: "Others",
+        method: "Method",
+        methodHero: "Competence",
+        methodMartyr: "Sacrifice",
+        result: "Result",
+        resultHero: "Lives and prospers",
+        resultMartyr: "Dies \"nobly\"",
+        epistemology: "Epistemology",
+        epistemologyHero: "Empirical/Objectivist",
+        epistemologyMartyr: "Mystical/Fideist",
+        ethics: "Ethics",
+        ethicsHero: "Rational egoism",
+        ethicsMartyr: "Altruism",
+        heroNote: "CRITICAL: There is no \"faith-based heroism\". That is martyrdom. The difference between hero and martyr lies in epistemology (reason vs faith) and ethics (egoism vs altruism).",
+        criteria: "Weighted Philosophical Criteria",
+        criteriaIntro: "To ensure fair, accurate analysis that deals with the nuances and contradictions of works, we adopt a weighted system. Each song will be evaluated on five philosophical axes derived from the foundational texts. Ethics receives the greatest weight, as it is the branch that integrates the others and serves as the main indicator of a work's moral code.",
+        axes: "Analysis Axes and Scoring System",
+        axesIntro: "Each axis will be scored on a scale from -10 (Extremely Conformist) to +10 (Extremely Revolutionary).",
+        ethics40: "Ethics (Weight: 40%)",
+        ethicsEval: "Evaluates: The central value code of the music.",
+        ethicsRev: "Revolutionary Pole (+): Defense of rational self-interest, individual life as the standard of value, pride, independence, and the pursuit of happiness as purpose.",
+        ethicsConf: "Conformist Pole (-): Exaltation of altruism (self-sacrifice), duty to the collective, guilt, dependence, and servitude.",
+        metaphysics20: "Metaphysics (Weight: 20%)",
+        metaphysicsEval: "Evaluates: The worldview (vision of reality and man).",
+        metaphysicsRev: "Revolutionary Pole (+): Affirmation of objective reality (A=A), causality, and a benevolent universe (where happiness is possible through action).",
+        metaphysicsConf: "Conformist Pole (-): Promotion of mysticism, fatalism, determinism, or a malevolent worldview (where suffering is inevitable and life has no meaning).",
+        epistemology20: "Epistemology (Weight: 20%)",
+        epistemologyEval: "Evaluates: The method of knowledge and guide for action.",
+        epistemologyRev: "Revolutionary Pole (+): Defense of reason, focused thinking, logic, and objectivity as guides for action.",
+        epistemologyConf: "Conformist Pole (-): Appeal to faith, dogma, sentimentalism (emotions as cognitive tools), or evasion of reality.",
+        politics10: "Politics (Weight: 10%)",
+        politicsEval: "Evaluates: The vision of social organization and rights.",
+        politicsRev: "Revolutionary Pole (+): Defense of individual freedom, property rights, laissez-faire capitalism, and a government strictly limited to protecting these rights.",
+        politicsConf: "Conformist Pole (-): Defense of collectivism, statism, tribalism, anarchy, or abolition of property and borders.",
+        aesthetics10: "Aesthetics (Weight: 10%)",
+        aestheticsEval: "Evaluates: The integration between form and content and the projection of values.",
+        aestheticsRev: "Revolutionary Pole (+): Presentation of a heroic vision of man (Romantic Realism), clarity of purpose, beauty and harmony that exalt life.",
+        aestheticsConf: "Conformist Pole (-): Projection of nihilism, disintegration, ugliness as norm, or a vision of man as a powerless and depraved being.",
+        finalScore: "Final Score Calculation",
+        finalFormula: "The final score (from -10 to +10) will be calculated using the following weighted average formula:",
+        formula: "Final Score = (Ethics Score × 0.4) + (Metaphysics Score × 0.2) + (Epistemology Score × 0.2) + (Politics Score × 0.1) + (Aesthetics Score × 0.1)",
+        scale: "Revised Philosophical Evaluation Scale",
+        scaleIntro: "The weighted Final Score will be mapped to the 1 to 10 scale for the final classification:",
+        scale10: "+8.1 to +10.0: Grade 10 (Extremely Revolutionary)",
+        scale9: "+6.1 to +8.0: Grade 9 (Very Revolutionary)",
+        scale8: "+4.1 to +6.0: Grade 8 (Revolutionary)",
+        scale7: "+2.1 to +4.0: Grade 7 (Constructive Criticism)",
+        scale6: "+0.1 to +2.0: Grade 6 (Ambiguous Leaning Toward Realism)",
+        scale5: "-2.0 to 0.0: Grade 5 (Ambiguous Leaning Toward Evasion)",
+        scale4: "-4.0 to -2.1: Grade 4 (Mild Conformist)",
+        scale3: "-6.0 to -4.1: Grade 3 (Direct Conformist)",
+        scale2: "-8.0 to -6.1: Grade 2 (Strongly Conformist)",
+        scale1: "-10.0 to -8.1: Grade 1 (Doctrinaire Conformist)",
+        structure: "Work Structure and Analysis Standard",
+        structureIntro: "The work will be to analyze and evaluate each song submitted to the Philosify system.",
+        analysisPattern: "Individual Analysis Pattern:",
+        analysisIntro: "Each song will be analyzed in standardized format considering:",
+        item1: "Weighted Philosophical Scorecard",
+        item1a: "Ethics: (Score from -10 to +10)",
+        item1b: "Metaphysics: (Score from -10 to +10)",
+        item1c: "Epistemology: (Score from -10 to +10)",
+        item1d: "Politics: (Score from -10 to +10)",
+        item1e: "Aesthetics: (Score from -10 to +10)",
+        item1f: "Weighted Final Score: (Calculation result)",
+        item2: "Philosophical grade: (Grade from 1 to 10, according to the Revised Evaluation Scale)",
+        item3: "Philosophical classification: (Description according to the Revised Evaluation Scale)",
+        item4: "Historical Context",
+        item5: "Creative Process",
+        item6: "Philosophical Analysis (Highlighting the two main passages of the song that define its ideology, which should be translated to Portuguese).",
+        metaphysicsNote: "The analysis follows the fundamentals of Objectivism, focusing on the following axes:",
+        metaphysicsText: "Metaphysics: worldview – affirmation of reality, objectivity, identity, causality. Reality exists, it is not invented. Consciousness is axiomatic and serves to perceive and analyze the universe around us and of which we are part. We are body and mind. There is no duality. That is why we are individuals. There is no supernatural life. There are no gods. There is no life after death. There are no ghosts except as metaphors. The universe has no end or beginning. It has always existed. It was not created by anyone nor did it emerge from nothing. In reality, it doesn't matter. What matters is that it exists and has its own characteristics."
+      },
+      pt: {
+        title: "Guia Philosify",
+        intro: "Este guia apresenta um sistema algorítmico para análise de obras musicais (e potencialmente outras formas de arte) baseado em princípios objetivistas. O objetivo é transformar conceitos filosóficos integrados em critérios quantificáveis e reproduzíveis, permitindo avaliação consistente e escalável de conteúdo cultural.",
+        objectives: "Objetivo do Sistema:",
+        obj1: "Mapear conceitos objetivistas em valores numéricos",
+        obj2: "Detectar padrões desde os mais evidentes até os mais sutis",
+        obj3: "Integrar múltiplas dimensões filosóficas com pesos apropriados",
+        obj4: "Produzir scores acompanhados de interpretação conceitual",
+        obj5: "Manter consistência e reprodutibilidade nas avaliações",
+        centralPrinciple: "Princípio Central:",
+        centralText: "Conteúdo filosófico determina valor estético. Qualidade técnica ou inovação formal são irrelevantes para a avaliação moral e estética de uma obra. \"Veneno em cálice de ouro continua sendo veneno.\"",
+        fundamentals: "Princípios Fundamentais Objetivistas",
+        coercion: "Princípio da Coerção",
+        coercionEvil: "MAL: Iniciar coerção (força ou fraude) - não importa a intenção, o objetivo ou quem se beneficia.",
+        coercionGood: "BEM: Retaliar coerção (parar o mal) - auto-defesa, proteção de direitos, justiça.",
+        sacrifice: "Princípio do Sacrifício",
+        sacrificeText: "Sacrifício = trocar valor MAIOR por valor MENOR, ou trocar VALOR por NÃO-VALOR.",
+        sacrificeEvil: "Todo sacrifício é ruim. Hierarquia do mal:",
+        sacrifice1: "Sacrifício Voluntário (PIOR): Pessoa escolhe destruir seus próprios valores. Auto-aniquilação moral consciente.",
+        sacrifice2: "Sacrifício Imposto: Vítima não tem escolha mas pode estar resistindo internamente. Mantém seus valores morais.",
+        sacrificeNote: "Importante: Investir tempo/esforço para alcançar valor MAIOR não é sacrifício.",
+        heroMartyr: "Herói vs Mártir",
+        concept: "CONCEITO",
+        hero: "HERÓI",
+        martyr: "MÁRTIR",
+        motivation: "Motivação",
+        motivationHero: "Razão, valores",
+        motivationMartyr: "Fé, dever",
+        beneficiary: "Beneficiário",
+        beneficiaryHero: "Si mesmo",
+        beneficiaryMartyr: "Outros",
+        method: "Método",
+        methodHero: "Competência",
+        methodMartyr: "Sacrifício",
+        result: "Resultado",
+        resultHero: "Vive e prospera",
+        resultMartyr: "Morre \"nobremente\"",
+        epistemology: "Epistemologia",
+        epistemologyHero: "Empírica/Objetivista",
+        epistemologyMartyr: "Mística/Fideísta",
+        ethics: "Ética",
+        ethicsHero: "Egoísmo racional",
+        ethicsMartyr: "Altruísmo",
+        heroNote: "CRÍTICO: Não existe \"heroísmo baseado em fé\". Isso é martírio. A diferença entre herói e mártir reside na epistemologia (razão vs fé) e ética (egoísmo vs altruísmo).",
+        criteria: "Critérios Filosóficos Ponderados",
+        criteriaIntro: "Para garantir uma análise justa, precisa e que lide com as nuances e contradições das obras, adotamos um sistema ponderado. Cada canção será avaliada em cinco eixos filosóficos derivados dos textos-base. A Ética recebe o maior peso, pois é o ramo que integra os demais e serve como o principal indicador do código moral de uma obra.",
+        axes: "Eixos de Análise e Sistema de Pontuação",
+        axesIntro: "Cada eixo será pontuado em uma escala de -10 (Extremamente Conformista) a +10 (Extremamente Revolucionário).",
+        ethics40: "Ética (Peso: 40%)",
+        ethicsEval: "Avalia: O código de valores central da música.",
+        ethicsRev: "Polo Revolucionário (+): Defesa do autointeresse racional, a vida do indivíduo como padrão de valor, orgulho, independência e a busca da felicidade como propósito.",
+        ethicsConf: "Polo Conformista (-): Exaltação do altruísmo (auto-sacrifício), do dever para com o coletivo, da culpa, da dependência e da servidão.",
+        metaphysics20: "Metafísica (Peso: 20%)",
+        metaphysicsEval: "Avalia: A visão de mundo (visão da realidade e do homem).",
+        metaphysicsRev: "Polo Revolucionário (+): Afirmação da realidade objetiva (A=A), da causalidade e de um universo benevolente (onde a felicidade é possível pela ação).",
+        metaphysicsConf: "Polo Conformista (-): Promoção do misticismo, fatalismo, determinismo, ou de uma visão de mundo malevolente (onde o sofrimento é inevitável e a vida não tem sentido).",
+        epistemology20: "Epistemologia (Peso: 20%)",
+        epistemologyEval: "Avalia: O método de conhecimento e guia para a ação.",
+        epistemologyRev: "Polo Revolucionário (+): Defesa da razão, do pensamento focado, da lógica e da objetividade como guias para a ação.",
+        epistemologyConf: "Polo Conformista (-): Apelo à fé, ao dogma, ao sentimentalismo (emoções como ferramentas de cognição) ou à evasão da realidade.",
+        politics10: "Política (Peso: 10%)",
+        politicsEval: "Avalia: A visão sobre a organização social e os direitos.",
+        politicsRev: "Polo Revolucionário (+): Defesa da liberdade individual, dos direitos de propriedade, do capitalismo laissez-faire e de um governo estritamente limitado à proteção desses direitos.",
+        politicsConf: "Polo Conformista (-): Defesa do coletivismo, do estatismo, do tribalismo, da anarquia ou da abolição da propriedade e das fronteiras.",
+        aesthetics10: "Estética (Peso: 10%)",
+        aestheticsEval: "Avalia: A integração entre forma e conteúdo e a projeção de valores.",
+        aestheticsRev: "Polo Revolucionário (+): Apresentação de uma visão heroica do homem (Realismo Romântico), clareza de propósito, beleza e harmonia que exaltam a vida.",
+        aestheticsConf: "Polo Conformista (-): Projeção do niilismo, da desintegração, da feiura como norma ou de uma visão do homem como um ser impotente e depravado.",
+        finalScore: "Cálculo da Nota Final",
+        finalFormula: "A nota final (de -10 a +10) será calculada pela seguinte fórmula de média ponderada:",
+        formula: "Nota Final = (Nota Ética × 0.4) + (Nota Metafísica × 0.2) + (Nota Epistemologia × 0.2) + (Nota Política × 0.1) + (Nota Estética × 0.1)",
+        scale: "Escala de Avaliação Filosófica (Revisada)",
+        scaleIntro: "A Nota Final ponderada será mapeada para a escala de 1 a 10 para a classificação final:",
+        scale10: "+8.1 a +10.0: Nota 10 (Extremamente Revolucionária)",
+        scale9: "+6.1 a +8.0: Nota 9 (Muito Revolucionária)",
+        scale8: "+4.1 a +6.0: Nota 8 (Revolucionária)",
+        scale7: "+2.1 a +4.0: Nota 7 (Crítica Construtiva)",
+        scale6: "+0.1 a +2.0: Nota 6 (Ambígua Inclinada ao Realismo)",
+        scale5: "-2.0 a 0.0: Nota 5 (Ambígua Inclinada à Evasão)",
+        scale4: "-4.0 a -2.1: Nota 4 (Conformista Suave)",
+        scale3: "-6.0 a -4.1: Nota 3 (Conformista Direta)",
+        scale2: "-8.0 a -6.1: Nota 2 (Fortemente Conformista)",
+        scale1: "-10.0 a -8.1: Nota 1 (Conformista Doutrinária)",
+        structure: "Estrutura do Trabalho e Padrão de Análise",
+        structureIntro: "O trabalho será o de analisar e avaliar cada música submetida ao sistema Philosify.",
+        analysisPattern: "Padrão da Análise Individual:",
+        analysisIntro: "Cada música será analisada em formato padronizado considerando:",
+        item1: "Scorecard Filosófico Ponderado",
+        item1a: "Ética: (Nota de -10 a +10)",
+        item1b: "Metafísica: (Nota de -10 a +10)",
+        item1c: "Epistemologia: (Nota de -10 a +10)",
+        item1d: "Política: (Nota de -10 a +10)",
+        item1e: "Estética: (Nota de -10 a +10)",
+        item1f: "Nota Final Ponderada: (Resultado do cálculo)",
+        item2: "Nota filosófica: (Nota de 1 a 10, conforme a Escala de Avaliação Revisada)",
+        item3: "Classificação filosófica: (Descrição conforme a Escala de Avaliação Revisada)",
+        item4: "Contexto Histórico",
+        item5: "Processo Criativo",
+        item6: "Análise Filosófica (Destacando os dois trechos principais da música que definem sua ideologia, que devem ser traduzidos para o português).",
+        metaphysicsNote: "A análise segue os fundamentos do Objetivismo, com foco nos seguintes eixos:",
+        metaphysicsText: "Metafísica: visão de mundo – afirmação da realidade, objetividade, identidade, causalidade. A realidade existe, ela não é inventada. A consciência é axiomática e serve para perceber e analisar o universo que nos cerca e do qual fazemos parte. Somos corpo e mente. Não há dualidade. Por isso somos indivíduos. Não existe vida sobrenatural. Não existem deuses. Não existe vida após a morte. Não existem fantasmas a não ser como metáforas. O universo não tem fim nem começo. Ele sempre existiu. Não foi criado por alguém nem surgiu do nada. Na realidade, não importa. O que importa é que ele existe e tem características próprias."
+      },
+      es: {
+        title: "Guía Philosify",
+        intro: "Esta guía presenta un sistema algorítmico para el análisis de obras musicales (y potencialmente otras formas de arte) basado en principios objetivistas. El objetivo es transformar conceptos filosóficos integrados en criterios cuantificables y reproducibles, permitiendo una evaluación consistente y escalable del contenido cultural.",
+        objectives: "Objetivos del Sistema:",
+        obj1: "Mapear conceptos objetivistas en valores numéricos",
+        obj2: "Detectar patrones desde los más evidentes hasta los más sutiles",
+        obj3: "Integrar múltiples dimensiones filosóficas con pesos apropiados",
+        obj4: "Producir puntuaciones acompañadas de interpretación conceptual",
+        obj5: "Mantener consistencia y reproducibilidad en las evaluaciones",
+        centralPrinciple: "Principio Central:",
+        centralText: "El contenido filosófico determina el valor estético. La calidad técnica o la innovación formal son irrelevantes para la evaluación moral y estética de una obra. \"Veneno en cáliz de oro sigue siendo veneno.\"",
+        fundamentals: "Principios Fundamentales Objetivistas",
+        coercion: "Principio de Coerción",
+        coercionEvil: "MAL: Iniciar coerción (fuerza o fraude) - sin importar la intención, el objetivo o quién se beneficia.",
+        coercionGood: "BIEN: Responder a la coerción (detener el mal) - autodefensa, protección de derechos, justicia.",
+        sacrifice: "Principio del Sacrificio",
+        sacrificeText: "Sacrificio = cambiar valor MAYOR por valor MENOR, o cambiar VALOR por NO-VALOR.",
+        sacrificeEvil: "Todo sacrificio es malo. Jerarquía del mal:",
+        sacrifice1: "Sacrificio Voluntario (PEOR): La persona elige destruir sus propios valores. Auto-aniquilación moral consciente.",
+        sacrifice2: "Sacrificio Impuesto: La víctima no tiene elección pero puede estar resistiendo internamente. Mantiene sus valores morales.",
+        sacrificeNote: "Importante: Invertir tiempo/esfuerzo para alcanzar valor MAYOR no es sacrificio.",
+        heroMartyr: "Héroe vs Mártir",
+        concept: "CONCEPTO",
+        hero: "HÉROE",
+        martyr: "MÁRTIR",
+        motivation: "Motivación",
+        motivationHero: "Razón, valores",
+        motivationMartyr: "Fe, deber",
+        beneficiary: "Beneficiario",
+        beneficiaryHero: "Uno mismo",
+        beneficiaryMartyr: "Otros",
+        method: "Método",
+        methodHero: "Competencia",
+        methodMartyr: "Sacrificio",
+        result: "Resultado",
+        resultHero: "Vive y prospera",
+        resultMartyr: "Muere \"noblemente\"",
+        epistemology: "Epistemología",
+        epistemologyHero: "Empírica/Objetivista",
+        epistemologyMartyr: "Mística/Fideísta",
+        ethics: "Ética",
+        ethicsHero: "Egoísmo racional",
+        ethicsMartyr: "Altruismo",
+        heroNote: "CRÍTICO: No existe \"heroísmo basado en la fe\". Eso es martirio. La diferencia entre héroe y mártir reside en la epistemología (razón vs fe) y ética (egoísmo vs altruismo).",
+        criteria: "Criterios Filosóficos Ponderados",
+        criteriaIntro: "Para garantizar un análisis justo, preciso y que maneje los matices y contradicciones de las obras, adoptamos un sistema ponderado. Cada canción será evaluada en cinco ejes filosóficos derivados de los textos base. La Ética recibe el mayor peso, ya que es la rama que integra las demás y sirve como el principal indicador del código moral de una obra.",
+        axes: "Ejes de Análisis y Sistema de Puntuación",
+        axesIntro: "Cada eje será puntuado en una escala de -10 (Extremadamente Conformista) a +10 (Extremadamente Revolucionario).",
+        ethics40: "Ética (Peso: 40%)",
+        ethicsEval: "Evalúa: El código de valores central de la música.",
+        ethicsRev: "Polo Revolucionario (+): Defensa del interés propio racional, la vida del individuo como estándar de valor, orgullo, independencia y la búsqueda de la felicidad como propósito.",
+        ethicsConf: "Polo Conformista (-): Exaltación del altruismo (auto-sacrificio), del deber hacia el colectivo, de la culpa, de la dependencia y de la servidumbre.",
+        metaphysics20: "Metafísica (Peso: 20%)",
+        metaphysicsEval: "Evalúa: La visión del mundo (visión de la realidad y del hombre).",
+        metaphysicsRev: "Polo Revolucionario (+): Afirmación de la realidad objetiva (A=A), de la causalidad y de un universo benevolente (donde la felicidad es posible mediante la acción).",
+        metaphysicsConf: "Polo Conformista (-): Promoción del misticismo, fatalismo, determinismo, o de una visión del mundo malevolente (donde el sufrimiento es inevitable y la vida no tiene sentido).",
+        epistemology20: "Epistemología (Peso: 20%)",
+        epistemologyEval: "Evalúa: El método de conocimiento y guía para la acción.",
+        epistemologyRev: "Polo Revolucionario (+): Defensa de la razón, del pensamiento enfocado, de la lógica y de la objetividad como guías para la acción.",
+        epistemologyConf: "Polo Conformista (-): Apelación a la fe, al dogma, al sentimentalismo (emociones como herramientas de cognición) o a la evasión de la realidad.",
+        politics10: "Política (Peso: 10%)",
+        politicsEval: "Evalúa: La visión sobre la organización social y los derechos.",
+        politicsRev: "Polo Revolucionario (+): Defensa de la libertad individual, de los derechos de propiedad, del capitalismo laissez-faire y de un gobierno estrictamente limitado a la protección de estos derechos.",
+        politicsConf: "Polo Conformista (-): Defensa del colectivismo, del estatismo, del tribalismo, de la anarquía o de la abolición de la propiedad y las fronteras.",
+        aesthetics10: "Estética (Peso: 10%)",
+        aestheticsEval: "Evalúa: La integración entre forma y contenido y la proyección de valores.",
+        aestheticsRev: "Polo Revolucionario (+): Presentación de una visión heroica del hombre (Realismo Romántico), claridad de propósito, belleza y armonía que exaltan la vida.",
+        aestheticsConf: "Polo Conformista (-): Proyección del nihilismo, de la desintegración, de la fealdad como norma o de una visión del hombre como un ser impotente y depravado.",
+        finalScore: "Cálculo de la Puntuación Final",
+        finalFormula: "La puntuación final (de -10 a +10) se calculará mediante la siguiente fórmula de promedio ponderado:",
+        formula: "Puntuación Final = (Puntuación Ética × 0.4) + (Puntuación Metafísica × 0.2) + (Puntuación Epistemología × 0.2) + (Puntuación Política × 0.1) + (Puntuación Estética × 0.1)",
+        scale: "Escala de Evaluación Filosófica (Revisada)",
+        scaleIntro: "La Puntuación Final ponderada se mapeará a la escala de 1 a 10 para la clasificación final:",
+        scale10: "+8.1 a +10.0: Nota 10 (Extremadamente Revolucionaria)",
+        scale9: "+6.1 a +8.0: Nota 9 (Muy Revolucionaria)",
+        scale8: "+4.1 a +6.0: Nota 8 (Revolucionaria)",
+        scale7: "+2.1 a +4.0: Nota 7 (Crítica Constructiva)",
+        scale6: "+0.1 a +2.0: Nota 6 (Ambigua Inclinada al Realismo)",
+        scale5: "-2.0 a 0.0: Nota 5 (Ambigua Inclinada a la Evasión)",
+        scale4: "-4.0 a -2.1: Nota 4 (Conformista Suave)",
+        scale3: "-6.0 a -4.1: Nota 3 (Conformista Directa)",
+        scale2: "-8.0 a -6.1: Nota 2 (Fuertemente Conformista)",
+        scale1: "-10.0 a -8.1: Nota 1 (Conformista Doctrinaria)",
+        structure: "Estructura del Trabajo y Estándar de Análisis",
+        structureIntro: "El trabajo será analizar y evaluar cada canción sometida al sistema Philosify.",
+        analysisPattern: "Patrón de Análisis Individual:",
+        analysisIntro: "Cada canción será analizada en formato estandarizado considerando:",
+        item1: "Tarjeta de Puntuación Filosófica Ponderada",
+        item1a: "Ética: (Puntuación de -10 a +10)",
+        item1b: "Metafísica: (Puntuación de -10 a +10)",
+        item1c: "Epistemología: (Puntuación de -10 a +10)",
+        item1d: "Política: (Puntuación de -10 a +10)",
+        item1e: "Estética: (Puntuación de -10 a +10)",
+        item1f: "Puntuación Final Ponderada: (Resultado del cálculo)",
+        item2: "Nota filosófica: (Nota de 1 a 10, según la Escala de Evaluación Revisada)",
+        item3: "Clasificación filosófica: (Descripción según la Escala de Evaluación Revisada)",
+        item4: "Contexto Histórico",
+        item5: "Proceso Creativo",
+        item6: "Análisis Filosófico (Destacando los dos pasajes principales de la canción que definen su ideología, que deben traducirse al portugués).",
+        metaphysicsNote: "El análisis sigue los fundamentos del Objetivismo, centrándose en los siguientes ejes:",
+        metaphysicsText: "Metafísica: visión del mundo – afirmación de la realidad, objetividad, identidad, causalidad. La realidad existe, no es inventada. La conciencia es axiomática y sirve para percibir y analizar el universo que nos rodea y del cual somos parte. Somos cuerpo y mente. No hay dualidad. Por eso somos individuos. No existe vida sobrenatural. No existen dioses. No existe vida después de la muerte. No existen fantasmas excepto como metáforas. El universo no tiene fin ni principio. Siempre ha existido. No fue creado por nadie ni surgió de la nada. En realidad, no importa. Lo que importa es que existe y tiene sus propias características."
+      },
+      fr: {
+        title: "Guide Philosify",
+        intro: "Ce guide présente un système algorithmique d'analyse d'œuvres musicales (et potentiellement d'autres formes d'art) basé sur des principes objectivistes.",
+        objectives: "Objectifs du Système:",
+        obj1: "Cartographier les concepts objectivistes en valeurs numériques",
+        obj2: "Détecter les motifs des plus évidents aux plus subtils",
+        obj3: "Intégrer plusieurs dimensions philosophiques avec des poids appropriés",
+        obj4: "Produire des scores accompagnés d'interprétation conceptuelle",
+        obj5: "Maintenir cohérence et reproductibilité dans les évaluations",
+        centralPrinciple: "Principe Central:",
+        centralText: "Le contenu philosophique détermine la valeur esthétique. La qualité technique ou l'innovation formelle sont sans rapport avec l'évaluation morale et esthétique d'une œuvre.",
+        fundamentals: "Principes Fondamentaux Objectivistes",
+        coercion: "Principe de Coercition",
+        coercionEvil: "MAL: Initier la coercition (force ou fraude) - peu importe l'intention, l'objectif ou qui en bénéficie.",
+        coercionGood: "BIEN: Répliquer à la coercition (arrêter le mal) - auto-défense, protection des droits, justice.",
+        sacrifice: "Principe du Sacrifice",
+        sacrificeText: "Sacrifice = échanger une valeur SUPÉRIEURE contre une valeur INFÉRIEURE, ou échanger VALEUR contre NON-VALEUR.",
+        sacrificeEvil: "Tout sacrifice est mauvais. Hiérarchie du mal:",
+        sacrifice1: "Sacrifice Volontaire (PIRE): La personne choisit de détruire ses propres valeurs.",
+        sacrifice2: "Sacrifice Imposé: La victime n'a pas le choix mais peut résister intérieurement.",
+        sacrificeNote: "Important: Investir du temps/efforts pour atteindre une valeur SUPÉRIEURE n'est pas un sacrifice.",
+        heroMartyr: "Héros vs Martyr",
+        concept: "CONCEPT",
+        hero: "HÉROS",
+        martyr: "MARTYR",
+        motivation: "Motivation",
+        motivationHero: "Raison, valeurs",
+        motivationMartyr: "Foi, devoir",
+        beneficiary: "Bénéficiaire",
+        beneficiaryHero: "Soi-même",
+        beneficiaryMartyr: "Autres",
+        method: "Méthode",
+        methodHero: "Compétence",
+        methodMartyr: "Sacrifice",
+        result: "Résultat",
+        resultHero: "Vit et prospère",
+        resultMartyr: "Meurt \"noblement\"",
+        epistemology: "Épistémologie",
+        epistemologyHero: "Empirique/Objectiviste",
+        epistemologyMartyr: "Mystique/Fidéiste",
+        ethics: "Éthique",
+        ethicsHero: "Égoïsme rationnel",
+        ethicsMartyr: "Altruisme",
+        heroNote: "CRITIQUE: Il n'existe pas d'\"héroïsme basé sur la foi\". C'est du martyre.",
+        criteria: "Critères Philosophiques Pondérés",
+        criteriaIntro: "Pour garantir une analyse juste et précise, nous adoptons un système pondéré.",
+        axes: "Axes d'Analyse et Système de Notation",
+        axesIntro: "Chaque axe sera noté sur une échelle de -10 (Extrêmement Conformiste) à +10 (Extrêmement Révolutionnaire).",
+        ethics40: "Éthique (Poids: 40%)",
+        ethicsEval: "Évalue: Le code de valeurs central de la musique.",
+        ethicsRev: "Pôle Révolutionnaire (+): Défense de l'intérêt personnel rationnel, de la fierté, de l'indépendance.",
+        ethicsConf: "Pôle Conformiste (-): Exaltation de l'altruisme, du devoir envers le collectif, de la culpabilité.",
+        metaphysics20: "Métaphysique (Poids: 20%)",
+        metaphysicsEval: "Évalue: La vision du monde.",
+        metaphysicsRev: "Pôle Révolutionnaire (+): Affirmation de la réalité objective, de la causalité.",
+        metaphysicsConf: "Pôle Conformiste (-): Promotion du mysticisme, du fatalisme, du déterminisme.",
+        epistemology20: "Épistémologie (Poids: 20%)",
+        epistemologyEval: "Évalue: La méthode de connaissance.",
+        epistemologyRev: "Pôle Révolutionnaire (+): Défense de la raison, de la pensée focalisée, de la logique.",
+        epistemologyConf: "Pôle Conformiste (-): Appel à la foi, au dogme, au sentimentalisme.",
+        politics10: "Politique (Poids: 10%)",
+        politicsEval: "Évalue: La vision de l'organisation sociale.",
+        politicsRev: "Pôle Révolutionnaire (+): Défense de la liberté individuelle, des droits de propriété.",
+        politicsConf: "Pôle Conformiste (-): Défense du collectivisme, de l'étatisme, du tribalisme.",
+        aesthetics10: "Esthétique (Poids: 10%)",
+        aestheticsEval: "Évalue: L'intégration entre forme et contenu.",
+        aestheticsRev: "Pôle Révolutionnaire (+): Présentation d'une vision héroïque de l'homme.",
+        aestheticsConf: "Pôle Conformiste (-): Projection du nihilisme, de la désintégration.",
+        finalScore: "Calcul du Score Final",
+        finalFormula: "Le score final sera calculé par la formule de moyenne pondérée suivante:",
+        formula: "Score Final = (Score Éthique × 0.4) + (Score Métaphysique × 0.2) + (Score Épistémologie × 0.2) + (Score Politique × 0.1) + (Score Esthétique × 0.1)",
+        scale: "Échelle d'Évaluation Philosophique",
+        scaleIntro: "Le Score Final pondéré sera mappé à l'échelle de 1 à 10:",
+        scale10: "+8.1 à +10.0: Note 10 (Extrêmement Révolutionnaire)",
+        scale9: "+6.1 à +8.0: Note 9 (Très Révolutionnaire)",
+        scale8: "+4.1 à +6.0: Note 8 (Révolutionnaire)",
+        scale7: "+2.1 à +4.0: Note 7 (Critique Constructive)",
+        scale6: "+0.1 à +2.0: Note 6 (Ambigu Penché vers le Réalisme)",
+        scale5: "-2.0 à 0.0: Note 5 (Ambigu Penché vers l'Évasion)",
+        scale4: "-4.0 à -2.1: Note 4 (Conformiste Léger)",
+        scale3: "-6.0 à -4.1: Note 3 (Conformiste Direct)",
+        scale2: "-8.0 à -6.1: Note 2 (Fortement Conformiste)",
+        scale1: "-10.0 à -8.1: Note 1 (Conformiste Doctrinaire)",
+        structure: "Structure du Travail et Standard d'Analyse",
+        structureIntro: "Le travail consistera à analyser et évaluer chaque chanson soumise au système Philosify.",
+        analysisPattern: "Modèle d'Analyse Individuelle:",
+        analysisIntro: "Chaque chanson sera analysée en format standardisé:",
+        item1: "Tableau de Bord Philosophique Pondéré",
+        item1a: "Éthique: (Score de -10 à +10)",
+        item1b: "Métaphysique: (Score de -10 à +10)",
+        item1c: "Épistémologie: (Score de -10 à +10)",
+        item1d: "Politique: (Score de -10 à +10)",
+        item1e: "Esthétique: (Score de -10 à +10)",
+        item1f: "Score Final Pondéré: (Résultat du calcul)",
+        item2: "Note philosophique: (Note de 1 à 10)",
+        item3: "Classification philosophique: (Description selon l'Échelle)",
+        item4: "Contexte Historique",
+        item5: "Processus Créatif",
+        item6: "Analyse Philosophique",
+        metaphysicsNote: "L'analyse suit les fondements de l'Objectivisme:",
+        metaphysicsText: "Métaphysique: vision du monde – affirmation de la réalité, objectivité, identité, causalité. La réalité existe."
+      },
+      de: {
+        title: "Philosify-Leitfaden",
+        intro: "Dieser Leitfaden präsentiert ein algorithmisches System zur Analyse musikalischer Werke basierend auf objektivistischen Prinzipien.",
+        objectives: "Systemziele:",
+        obj1: "Objektivistische Konzepte in numerische Werte abbilden",
+        obj2: "Muster von offensichtlich bis subtil erkennen",
+        obj3: "Mehrere philosophische Dimensionen mit entsprechenden Gewichtungen integrieren",
+        obj4: "Bewertungen mit konzeptioneller Interpretation erzeugen",
+        obj5: "Konsistenz und Reproduzierbarkeit bei Bewertungen aufrechterhalten",
+        centralPrinciple: "Zentrales Prinzip:",
+        centralText: "Philosophischer Inhalt bestimmt den ästhetischen Wert. Technische Qualität oder formale Innovation sind für die moralische und ästhetische Bewertung eines Werkes irrelevant.",
+        fundamentals: "Grundlegende Objektivistische Prinzipien",
+        coercion: "Prinzip des Zwangs",
+        coercionEvil: "BÖSE: Zwang initiieren (Gewalt oder Betrug) - unabhängig von Absicht, Ziel oder wer profitiert.",
+        coercionGood: "GUT: Zwang erwidern (das Böse stoppen) - Selbstverteidigung, Rechtsschutz, Gerechtigkeit.",
+        sacrifice: "Prinzip des Opfers",
+        sacrificeText: "Opfer = GRÖSSEREN Wert gegen KLEINEREN Wert tauschen, oder WERT gegen NICHT-WERT tauschen.",
+        sacrificeEvil: "Jedes Opfer ist schlecht. Hierarchie des Bösen:",
+        sacrifice1: "Freiwilliges Opfer (SCHLIMMSTE): Person wählt, ihre eigenen Werte zu zerstören.",
+        sacrifice2: "Erzwungenes Opfer: Opfer hat keine Wahl, kann aber innerlich widerstehen.",
+        sacrificeNote: "Wichtig: Zeit/Aufwand zu investieren, um GRÖSSEREN Wert zu erreichen, ist kein Opfer.",
+        heroMartyr: "Held vs Märtyrer",
+        concept: "KONZEPT",
+        hero: "HELD",
+        martyr: "MÄRTYRER",
+        motivation: "Motivation",
+        motivationHero: "Vernunft, Werte",
+        motivationMartyr: "Glaube, Pflicht",
+        beneficiary: "Begünstigter",
+        beneficiaryHero: "Sich selbst",
+        beneficiaryMartyr: "Andere",
+        method: "Methode",
+        methodHero: "Kompetenz",
+        methodMartyr: "Opfer",
+        result: "Ergebnis",
+        resultHero: "Lebt und gedeiht",
+        resultMartyr: "Stirbt \"edel\"",
+        epistemology: "Erkenntnistheorie",
+        epistemologyHero: "Empirisch/Objektivistisch",
+        epistemologyMartyr: "Mystisch/Fideistisch",
+        ethics: "Ethik",
+        ethicsHero: "Rationaler Egoismus",
+        ethicsMartyr: "Altruismus",
+        heroNote: "KRITISCH: Es gibt kein \"glaubensbasiertes Heldentum\". Das ist Märtyrertum.",
+        criteria: "Gewichtete Philosophische Kriterien",
+        criteriaIntro: "Um eine faire und präzise Analyse zu gewährleisten, verwenden wir ein gewichtetes System.",
+        axes: "Analyseachsen und Bewertungssystem",
+        axesIntro: "Jede Achse wird auf einer Skala von -10 (Extrem Konformistisch) bis +10 (Extrem Revolutionär) bewertet.",
+        ethics40: "Ethik (Gewichtung: 40%)",
+        ethicsEval: "Bewertet: Den zentralen Wertecodex der Musik.",
+        ethicsRev: "Revolutionärer Pol (+): Verteidigung rationalen Eigeninteresses, Stolz, Unabhängigkeit.",
+        ethicsConf: "Konformistischer Pol (-): Verherrlichung von Altruismus, Pflicht gegenüber dem Kollektiv, Schuld.",
+        metaphysics20: "Metaphysik (Gewichtung: 20%)",
+        metaphysicsEval: "Bewertet: Die Weltanschauung.",
+        metaphysicsRev: "Revolutionärer Pol (+): Bestätigung objektiver Realität, Kausalität.",
+        metaphysicsConf: "Konformistischer Pol (-): Förderung von Mystizismus, Fatalismus, Determinismus.",
+        epistemology20: "Erkenntnistheorie (Gewichtung: 20%)",
+        epistemologyEval: "Bewertet: Die Methode des Wissens.",
+        epistemologyRev: "Revolutionärer Pol (+): Verteidigung von Vernunft, fokussiertem Denken, Logik.",
+        epistemologyConf: "Konformistischer Pol (-): Appell an Glauben, Dogma, Sentimentalismus.",
+        politics10: "Politik (Gewichtung: 10%)",
+        politicsEval: "Bewertet: Die Vision sozialer Organisation.",
+        politicsRev: "Revolutionärer Pol (+): Verteidigung individueller Freiheit, Eigentumsrechte.",
+        politicsConf: "Konformistischer Pol (-): Verteidigung von Kollektivismus, Staatismus, Tribalismus.",
+        aesthetics10: "Ästhetik (Gewichtung: 10%)",
+        aestheticsEval: "Bewertet: Die Integration zwischen Form und Inhalt.",
+        aestheticsRev: "Revolutionärer Pol (+): Darstellung einer heroischen Vision des Menschen.",
+        aestheticsConf: "Konformistischer Pol (-): Projektion von Nihilismus, Desintegration.",
+        finalScore: "Endpunktzahl-Berechnung",
+        finalFormula: "Die Endpunktzahl wird mit folgender gewichteter Durchschnittsformel berechnet:",
+        formula: "Endpunktzahl = (Ethik-Punktzahl × 0.4) + (Metaphysik-Punktzahl × 0.2) + (Erkenntnistheorie-Punktzahl × 0.2) + (Politik-Punktzahl × 0.1) + (Ästhetik-Punktzahl × 0.1)",
+        scale: "Philosophische Bewertungsskala",
+        scaleIntro: "Die gewichtete Endpunktzahl wird auf die Skala von 1 bis 10 abgebildet:",
+        scale10: "+8.1 bis +10.0: Note 10 (Extrem Revolutionär)",
+        scale9: "+6.1 bis +8.0: Note 9 (Sehr Revolutionär)",
+        scale8: "+4.1 bis +6.0: Note 8 (Revolutionär)",
+        scale7: "+2.1 bis +4.0: Note 7 (Konstruktive Kritik)",
+        scale6: "+0.1 bis +2.0: Note 6 (Mehrdeutig zum Realismus Neigend)",
+        scale5: "-2.0 bis 0.0: Note 5 (Mehrdeutig zur Ausweichung Neigend)",
+        scale4: "-4.0 bis -2.1: Note 4 (Leicht Konformistisch)",
+        scale3: "-6.0 bis -4.1: Note 3 (Direkt Konformistisch)",
+        scale2: "-8.0 bis -6.1: Note 2 (Stark Konformistisch)",
+        scale1: "-10.0 bis -8.1: Note 1 (Doktrinär Konformistisch)",
+        structure: "Arbeitsstruktur und Analysestandard",
+        structureIntro: "Die Arbeit besteht darin, jedes dem Philosify-System vorgelegte Lied zu analysieren und zu bewerten.",
+        analysisPattern: "Individuelles Analysemuster:",
+        analysisIntro: "Jedes Lied wird in standardisiertem Format analysiert:",
+        item1: "Gewichtete Philosophische Bewertungskarte",
+        item1a: "Ethik: (Punktzahl von -10 bis +10)",
+        item1b: "Metaphysik: (Punktzahl von -10 bis +10)",
+        item1c: "Erkenntnistheorie: (Punktzahl von -10 bis +10)",
+        item1d: "Politik: (Punktzahl von -10 bis +10)",
+        item1e: "Ästhetik: (Punktzahl von -10 bis +10)",
+        item1f: "Gewichtete Endpunktzahl: (Berechnungsergebnis)",
+        item2: "Philosophische Note: (Note von 1 bis 10)",
+        item3: "Philosophische Klassifikation: (Beschreibung gemäß Skala)",
+        item4: "Historischer Kontext",
+        item5: "Kreativer Prozess",
+        item6: "Philosophische Analyse",
+        metaphysicsNote: "Die Analyse folgt den Grundlagen des Objektivismus:",
+        metaphysicsText: "Metaphysik: Weltanschauung – Bestätigung der Realität, Objektivität, Identität, Kausalität. Die Realität existiert."
+      },
+      it: {
+        title: "Guida Philosify",
+        intro: "Questa guida presenta un sistema algoritmico per l'analisi di opere musicali basato su principi oggettivisti.",
+        objectives: "Obiettivi del Sistema:",
+        obj1: "Mappare concetti oggettivisti in valori numerici",
+        obj2: "Rilevare pattern dai più evidenti ai più sottili",
+        obj3: "Integrare molteplici dimensioni filosofiche con pesi appropriati",
+        obj4: "Produrre punteggi accompagnati da interpretazione concettuale",
+        obj5: "Mantenere coerenza e riproducibilità nelle valutazioni",
+        centralPrinciple: "Principio Centrale:",
+        centralText: "Il contenuto filosofico determina il valore estetico. La qualità tecnica o l'innovazione formale sono irrilevanti per la valutazione morale ed estetica di un'opera.",
+        fundamentals: "Principi Fondamentali Oggettivisti",
+        coercion: "Principio della Coercizione",
+        coercionEvil: "MALE: Iniziare la coercizione (forza o frode) - indipendentemente dall'intenzione, dall'obiettivo o da chi ne beneficia.",
+        coercionGood: "BENE: Rispondere alla coercizione (fermare il male) - autodifesa, protezione dei diritti, giustizia.",
+        sacrifice: "Principio del Sacrificio",
+        sacrificeText: "Sacrificio = scambiare valore MAGGIORE per valore MINORE, o scambiare VALORE per NON-VALORE.",
+        sacrificeEvil: "Ogni sacrificio è male. Gerarchia del male:",
+        sacrifice1: "Sacrificio Volontario (PEGGIORE): La persona sceglie di distruggere i propri valori.",
+        sacrifice2: "Sacrificio Imposto: La vittima non ha scelta ma può resistere internamente.",
+        sacrificeNote: "Importante: Investire tempo/sforzo per raggiungere valore MAGGIORE non è sacrificio.",
+        heroMartyr: "Eroe vs Martire",
+        concept: "CONCETTO",
+        hero: "EROE",
+        martyr: "MARTIRE",
+        motivation: "Motivazione",
+        motivationHero: "Ragione, valori",
+        motivationMartyr: "Fede, dovere",
+        beneficiary: "Beneficiario",
+        beneficiaryHero: "Sé stesso",
+        beneficiaryMartyr: "Altri",
+        method: "Metodo",
+        methodHero: "Competenza",
+        methodMartyr: "Sacrificio",
+        result: "Risultato",
+        resultHero: "Vive e prospera",
+        resultMartyr: "Muore \"nobilmente\"",
+        epistemology: "Epistemologia",
+        epistemologyHero: "Empirica/Oggettivista",
+        epistemologyMartyr: "Mistica/Fideista",
+        ethics: "Etica",
+        ethicsHero: "Egoismo razionale",
+        ethicsMartyr: "Altruismo",
+        heroNote: "CRITICO: Non esiste \"eroismo basato sulla fede\". Questo è martirio.",
+        criteria: "Criteri Filosofici Ponderati",
+        criteriaIntro: "Per garantire un'analisi giusta e precisa, adottiamo un sistema ponderato.",
+        axes: "Assi di Analisi e Sistema di Punteggio",
+        axesIntro: "Ogni asse sarà valutato su una scala da -10 (Estremamente Conformista) a +10 (Estremamente Rivoluzionario).",
+        ethics40: "Etica (Peso: 40%)",
+        ethicsEval: "Valuta: Il codice di valori centrale della musica.",
+        ethicsRev: "Polo Rivoluzionario (+): Difesa dell'interesse personale razionale, orgoglio, indipendenza.",
+        ethicsConf: "Polo Conformista (-): Esaltazione dell'altruismo, del dovere verso il collettivo, della colpa.",
+        metaphysics20: "Metafisica (Peso: 20%)",
+        metaphysicsEval: "Valuta: La visione del mondo.",
+        metaphysicsRev: "Polo Rivoluzionario (+): Affermazione della realtà oggettiva, causalità.",
+        metaphysicsConf: "Polo Conformista (-): Promozione del misticismo, fatalismo, determinismo.",
+        epistemology20: "Epistemologia (Peso: 20%)",
+        epistemologyEval: "Valuta: Il metodo della conoscenza.",
+        epistemologyRev: "Polo Rivoluzionario (+): Difesa della ragione, del pensiero focalizzato, della logica.",
+        epistemologyConf: "Polo Conformista (-): Appello alla fede, al dogma, al sentimentalismo.",
+        politics10: "Politica (Peso: 10%)",
+        politicsEval: "Valuta: La visione dell'organizzazione sociale.",
+        politicsRev: "Polo Rivoluzionario (+): Difesa della libertà individuale, dei diritti di proprietà.",
+        politicsConf: "Polo Conformista (-): Difesa del collettivismo, dello statalismo, del tribalismo.",
+        aesthetics10: "Estetica (Peso: 10%)",
+        aestheticsEval: "Valuta: L'integrazione tra forma e contenuto.",
+        aestheticsRev: "Polo Rivoluzionario (+): Presentazione di una visione eroica dell'uomo.",
+        aestheticsConf: "Polo Conformista (-): Proiezione del nichilismo, della disintegrazione.",
+        finalScore: "Calcolo del Punteggio Finale",
+        finalFormula: "Il punteggio finale sarà calcolato con la seguente formula di media ponderata:",
+        formula: "Punteggio Finale = (Punteggio Etica × 0.4) + (Punteggio Metafisica × 0.2) + (Punteggio Epistemologia × 0.2) + (Punteggio Politica × 0.1) + (Punteggio Estetica × 0.1)",
+        scale: "Scala di Valutazione Filosofica",
+        scaleIntro: "Il Punteggio Finale ponderato sarà mappato sulla scala da 1 a 10:",
+        scale10: "+8.1 a +10.0: Voto 10 (Estremamente Rivoluzionario)",
+        scale9: "+6.1 a +8.0: Voto 9 (Molto Rivoluzionario)",
+        scale8: "+4.1 a +6.0: Voto 8 (Rivoluzionario)",
+        scale7: "+2.1 a +4.0: Voto 7 (Critica Costruttiva)",
+        scale6: "+0.1 a +2.0: Voto 6 (Ambiguo Inclinato al Realismo)",
+        scale5: "-2.0 a 0.0: Voto 5 (Ambiguo Inclinato all'Evasione)",
+        scale4: "-4.0 a -2.1: Voto 4 (Conformista Leggero)",
+        scale3: "-6.0 a -4.1: Voto 3 (Conformista Diretto)",
+        scale2: "-8.0 a -6.1: Voto 2 (Fortemente Conformista)",
+        scale1: "-10.0 a -8.1: Voto 1 (Conformista Dottrinario)",
+        structure: "Struttura del Lavoro e Standard di Analisi",
+        structureIntro: "Il lavoro consisterà nell'analizzare e valutare ogni canzone sottoposta al sistema Philosify.",
+        analysisPattern: "Modello di Analisi Individuale:",
+        analysisIntro: "Ogni canzone sarà analizzata in formato standardizzato:",
+        item1: "Scorecard Filosofica Ponderata",
+        item1a: "Etica: (Punteggio da -10 a +10)",
+        item1b: "Metafisica: (Punteggio da -10 a +10)",
+        item1c: "Epistemologia: (Punteggio da -10 a +10)",
+        item1d: "Politica: (Punteggio da -10 a +10)",
+        item1e: "Estetica: (Punteggio da -10 a +10)",
+        item1f: "Punteggio Finale Ponderato: (Risultato del calcolo)",
+        item2: "Voto filosofico: (Voto da 1 a 10)",
+        item3: "Classificazione filosofica: (Descrizione secondo la Scala)",
+        item4: "Contesto Storico",
+        item5: "Processo Creativo",
+        item6: "Analisi Filosofica",
+        metaphysicsNote: "L'analisi segue i fondamenti dell'Oggettivismo:",
+        metaphysicsText: "Metafisica: visione del mondo – affermazione della realtà, oggettività, identità, causalità. La realtà esiste."
+      },
+      hu: {
+        title: "Philosify Útmutató",
+        intro: "Ez az útmutató egy algoritmikus rendszert mutat be zenei művek elemzésére objektivista elvek alapján.",
+        objectives: "Rendszer Céljai:",
+        obj1: "Objektivista fogalmak leképezése numerikus értékekre",
+        obj2: "Minták felismerése a legnyilvánvalóbbtól a legfinomabbig",
+        obj3: "Több filozófiai dimenzió integrálása megfelelő súlyozással",
+        obj4: "Pontszámok előállítása koncepcionális értelmezéssel",
+        obj5: "Konzisztencia és reprodukálhatóság fenntartása az értékelésekben",
+        centralPrinciple: "Központi Elv:",
+        centralText: "A filozófiai tartalom határozza meg az esztétikai értéket. A technikai minőség vagy formai innováció irreleváns egy mű morális és esztétikai értékeléséhez.",
+        fundamentals: "Alapvető Objektivista Elvek",
+        coercion: "A Kényszer Elve",
+        coercionEvil: "ROSSZ: Kényszer kezdeményezése (erő vagy csalás) - függetlenül a szándéktól, céltól vagy haszonélvezőtől.",
+        coercionGood: "JÓ: Kényszerre válaszolás (a rossz megállítása) - önvédelem, jogok védelme, igazságszolgáltatás.",
+        sacrifice: "Az Áldozat Elve",
+        sacrificeText: "Áldozat = NAGYOBB érték cseréje KISEBB értékre, vagy ÉRTÉK cseréje NEM-ÉRTÉKRE.",
+        sacrificeEvil: "Minden áldozat rossz. A rossz hierarchiája:",
+        sacrifice1: "Önkéntes Áldozat (LEGROSSZABB): A személy úgy dönt, hogy elpusztítja saját értékeit.",
+        sacrifice2: "Kényszerített Áldozat: Az áldozatnak nincs választása, de belülről ellenállhat.",
+        sacrificeNote: "Fontos: Idő/erőfeszítés befektetése NAGYOBB érték elérésére nem áldozat.",
+        heroMartyr: "Hős vs Mártír",
+        concept: "KONCEPCIÓ",
+        hero: "HŐS",
+        martyr: "MÁRTÍR",
+        motivation: "Motiváció",
+        motivationHero: "Értelem, értékek",
+        motivationMartyr: "Hit, kötelesség",
+        beneficiary: "Haszonélvező",
+        beneficiaryHero: "Önmaga",
+        beneficiaryMartyr: "Mások",
+        method: "Módszer",
+        methodHero: "Kompetencia",
+        methodMartyr: "Áldozat",
+        result: "Eredmény",
+        resultHero: "Él és virágzik",
+        resultMartyr: "\"Nemesen\" meghal",
+        epistemology: "Ismeretelmélet",
+        epistemologyHero: "Empirikus/Objektivista",
+        epistemologyMartyr: "Misztikus/Fideista",
+        ethics: "Etika",
+        ethicsHero: "Racionális egoizmus",
+        ethicsMartyr: "Altruizmus",
+        heroNote: "KRITIKUS: Nem létezik \"hiten alapuló hősiesség\". Ez mártíromság.",
+        criteria: "Súlyozott Filozófiai Kritériumok",
+        criteriaIntro: "A méltányos és pontos elemzés biztosítása érdekében súlyozott rendszert alkalmazunk.",
+        axes: "Elemzési Tengelyek és Pontozási Rendszer",
+        axesIntro: "Minden tengely -10-től (Rendkívül Konformista) +10-ig (Rendkívül Forradalmár) skálán kerül pontozásra.",
+        ethics40: "Etika (Súly: 40%)",
+        ethicsEval: "Értékeli: A zene központi értékrendszerét.",
+        ethicsRev: "Forradalmár Pólus (+): A racionális önérdek, büszkeség, függetlenség védelme.",
+        ethicsConf: "Konformista Pólus (-): Az altruizmus, kollektív kötelesség, bűntudat dicsőítése.",
+        metaphysics20: "Metafizika (Súly: 20%)",
+        metaphysicsEval: "Értékeli: A világnézetet.",
+        metaphysicsRev: "Forradalmár Pólus (+): Az objektív valóság, oksági összefüggések megerősítése.",
+        metaphysicsConf: "Konformista Pólus (-): A miszticizmus, fatalizmus, determinizmus népszerűsítése.",
+        epistemology20: "Ismeretelmélet (Súly: 20%)",
+        epistemologyEval: "Értékeli: A tudás módszerét.",
+        epistemologyRev: "Forradalmár Pólus (+): Az értelem, fókuszált gondolkodás, logika védelme.",
+        epistemologyConf: "Konformista Pólus (-): Hivatkozás hitre, dogmára, szentimentalizmusra.",
+        politics10: "Politika (Súly: 10%)",
+        politicsEval: "Értékeli: A társadalmi szerveződésről alkotott nézetet.",
+        politicsRev: "Forradalmár Pólus (+): Az egyéni szabadság, tulajdonjogok védelme.",
+        politicsConf: "Konformista Pólus (-): A kollektivizmus, etatizmus, törzsi gondolkodás védelme.",
+        aesthetics10: "Esztétika (Súly: 10%)",
+        aestheticsEval: "Értékeli: A forma és tartalom integrációját.",
+        aestheticsRev: "Forradalmár Pólus (+): Az ember hősi víziójának bemutatása.",
+        aestheticsConf: "Konformista Pólus (-): A nihilizmus, dezintegráció kivetítése.",
+        finalScore: "Végső Pontszám Számítása",
+        finalFormula: "A végső pontszám a következő súlyozott átlag képlettel kerül kiszámításra:",
+        formula: "Végső Pontszám = (Etika Pontszám × 0.4) + (Metafizika Pontszám × 0.2) + (Ismeretelmélet Pontszám × 0.2) + (Politika Pontszám × 0.1) + (Esztétika Pontszám × 0.1)",
+        scale: "Filozófiai Értékelési Skála",
+        scaleIntro: "A súlyozott Végső Pontszám 1-től 10-ig terjedő skálára kerül leképezésre:",
+        scale10: "+8.1-től +10.0-ig: 10-es Osztályzat (Rendkívül Forradalmár)",
+        scale9: "+6.1-től +8.0-ig: 9-es Osztályzat (Nagyon Forradalmár)",
+        scale8: "+4.1-től +6.0-ig: 8-as Osztályzat (Forradalmár)",
+        scale7: "+2.1-től +4.0-ig: 7-es Osztályzat (Konstruktív Kritika)",
+        scale6: "+0.1-től +2.0-ig: 6-os Osztályzat (Kétértelmű a Realizmus Felé Hajló)",
+        scale5: "-2.0-tól 0.0-ig: 5-ös Osztályzat (Kétértelmű a Kitérés Felé Hajló)",
+        scale4: "-4.0-tól -2.1-ig: 4-es Osztályzat (Enyhén Konformista)",
+        scale3: "-6.0-tól -4.1-ig: 3-as Osztályzat (Közvetlenül Konformista)",
+        scale2: "-8.0-tól -6.1-ig: 2-es Osztályzat (Erősen Konformista)",
+        scale1: "-10.0-tól -8.1-ig: 1-es Osztályzat (Doktriner Konformista)",
+        structure: "Munka Struktúrája és Elemzési Standard",
+        structureIntro: "A munka a Philosify rendszerbe beküldött minden dal elemzéséből és értékeléséből áll.",
+        analysisPattern: "Egyéni Elemzési Minta:",
+        analysisIntro: "Minden dal szabványosított formátumban kerül elemzésre:",
+        item1: "Súlyozott Filozófiai Eredménytábla",
+        item1a: "Etika: (Pontszám -10-től +10-ig)",
+        item1b: "Metafizika: (Pontszám -10-től +10-ig)",
+        item1c: "Ismeretelmélet: (Pontszám -10-től +10-ig)",
+        item1d: "Politika: (Pontszám -10-től +10-ig)",
+        item1e: "Esztétika: (Pontszám -10-től +10-ig)",
+        item1f: "Súlyozott Végső Pontszám: (Számítás eredménye)",
+        item2: "Filozófiai osztályzat: (Osztályzat 1-től 10-ig)",
+        item3: "Filozófiai besorolás: (Leírás a Skála szerint)",
+        item4: "Történelmi Kontextus",
+        item5: "Kreatív Folyamat",
+        item6: "Filozófiai Elemzés",
+        metaphysicsNote: "Az elemzés az Objektivizmus alapjait követi:",
+        metaphysicsText: "Metafizika: világnézet – a valóság, objektivitás, identitás, okság megerősítése. A valóság létezik."
+      },
+      zh: {
+        title: "Philosify 指南",
+        intro: "本指南呈现了一个基于客观主义原则的音乐作品分析算法系统。",
+        objectives: "系统目标:",
+        obj1: "将客观主义概念映射为数值",
+        obj2: "检测从最明显到最微妙的模式",
+        obj3: "整合多个哲学维度并赋予适当权重",
+        obj4: "产生伴随概念解释的分数",
+        obj5: "在评估中保持一致性和可重复性",
+        centralPrinciple: "核心原则:",
+        centralText: "哲学内容决定美学价值。技术质量或形式创新与作品的道德和美学评价无关。",
+        fundamentals: "基本客观主义原则",
+        coercion: "强制原则",
+        coercionEvil: "恶: 发起强制（武力或欺诈）- 无论意图、目标或受益者是谁。",
+        coercionGood: "善: 报复强制（制止恶）- 自卫、保护权利、正义。",
+        sacrifice: "牺牲原则",
+        sacrificeText: "牺牲 = 用更大价值换取较小价值，或用价值换取非价值。",
+        sacrificeEvil: "所有牺牲都是坏的。恶的等级:",
+        sacrifice1: "自愿牺牲（最坏）: 人选择摧毁自己的价值观。",
+        sacrifice2: "强加牺牲: 受害者别无选择但可能内心抵抗。",
+        sacrificeNote: "重要: 投入时间/努力以达到更大价值不是牺牲。",
+        heroMartyr: "英雄 vs 殉道者",
+        concept: "概念",
+        hero: "英雄",
+        martyr: "殉道者",
+        motivation: "动机",
+        motivationHero: "理性、价值观",
+        motivationMartyr: "信仰、责任",
+        beneficiary: "受益者",
+        beneficiaryHero: "自己",
+        beneficiaryMartyr: "他人",
+        method: "方法",
+        methodHero: "能力",
+        methodMartyr: "牺牲",
+        result: "结果",
+        resultHero: "生存并繁荣",
+        resultMartyr: "\"高尚地\"死去",
+        epistemology: "认识论",
+        epistemologyHero: "经验/客观主义",
+        epistemologyMartyr: "神秘/信仰主义",
+        ethics: "伦理学",
+        ethicsHero: "理性利己主义",
+        ethicsMartyr: "利他主义",
+        heroNote: "关键: 不存在\"基于信仰的英雄主义\"。那是殉道。",
+        criteria: "加权哲学标准",
+        criteriaIntro: "为确保公正准确的分析，我们采用加权系统。",
+        axes: "分析轴和评分系统",
+        axesIntro: "每个轴将在-10（极端墨守成规）到+10（极端革命性）的范围内评分。",
+        ethics40: "伦理学（权重：40%）",
+        ethicsEval: "评估: 音乐的核心价值观。",
+        ethicsRev: "革命性极（+）: 捍卫理性自利、骄傲、独立。",
+        ethicsConf: "墨守成规极（-）: 颂扬利他主义、对集体的责任、内疚。",
+        metaphysics20: "形而上学（权重：20%）",
+        metaphysicsEval: "评估: 世界观。",
+        metaphysicsRev: "革命性极（+）: 肯定客观现实、因果关系。",
+        metaphysicsConf: "墨守成规极（-）: 推广神秘主义、宿命论、决定论。",
+        epistemology20: "认识论（权重：20%）",
+        epistemologyEval: "评估: 知识方法。",
+        epistemologyRev: "革命性极（+）: 捍卫理性、专注思考、逻辑。",
+        epistemologyConf: "墨守成规极（-）: 诉诸信仰、教条、感情主义。",
+        politics10: "政治学（权重：10%）",
+        politicsEval: "评估: 社会组织愿景。",
+        politicsRev: "革命性极（+）: 捍卫个人自由、财产权。",
+        politicsConf: "墨守成规极（-）: 捍卫集体主义、国家主义、部落主义。",
+        aesthetics10: "美学（权重：10%）",
+        aestheticsEval: "评估: 形式与内容的整合。",
+        aestheticsRev: "革命性极（+）: 呈现人的英雄愿景。",
+        aestheticsConf: "墨守成规极（-）: 投射虚无主义、解体。",
+        finalScore: "最终分数计算",
+        finalFormula: "最终分数将通过以下加权平均公式计算:",
+        formula: "最终分数 = (伦理学分数 × 0.4) + (形而上学分数 × 0.2) + (认识论分数 × 0.2) + (政治学分数 × 0.1) + (美学分数 × 0.1)",
+        scale: "哲学评估量表",
+        scaleIntro: "加权最终分数将映射到1到10的量表:",
+        scale10: "+8.1 到 +10.0: 评分 10（极端革命性）",
+        scale9: "+6.1 到 +8.0: 评分 9（非常革命性）",
+        scale8: "+4.1 到 +6.0: 评分 8（革命性）",
+        scale7: "+2.1 到 +4.0: 评分 7（建设性批评）",
+        scale6: "+0.1 到 +2.0: 评分 6（模棱两可倾向现实主义）",
+        scale5: "-2.0 到 0.0: 评分 5（模棱两可倾向逃避）",
+        scale4: "-4.0 到 -2.1: 评分 4（轻度墨守成规）",
+        scale3: "-6.0 到 -4.1: 评分 3（直接墨守成规）",
+        scale2: "-8.0 到 -6.1: 评分 2（强烈墨守成规）",
+        scale1: "-10.0 到 -8.1: 评分 1（教条墨守成规）",
+        structure: "工作结构和分析标准",
+        structureIntro: "工作内容是分析和评估提交到Philosify系统的每首歌曲。",
+        analysisPattern: "个人分析模式:",
+        analysisIntro: "每首歌曲将以标准化格式进行分析:",
+        item1: "加权哲学记分卡",
+        item1a: "伦理学: (分数从 -10 到 +10)",
+        item1b: "形而上学: (分数从 -10 到 +10)",
+        item1c: "认识论: (分数从 -10 到 +10)",
+        item1d: "政治学: (分数从 -10 到 +10)",
+        item1e: "美学: (分数从 -10 到 +10)",
+        item1f: "加权最终分数: (计算结果)",
+        item2: "哲学评分: (评分从 1 到 10)",
+        item3: "哲学分类: (根据量表描述)",
+        item4: "历史背景",
+        item5: "创作过程",
+        item6: "哲学分析",
+        metaphysicsNote: "分析遵循客观主义的基本原理:",
+        metaphysicsText: "形而上学: 世界观 – 肯定现实、客观性、同一性、因果关系。现实存在。"
+      },
+      ja: {
+        title: "Philosify ガイド",
+        intro: "このガイドは、客観主義の原則に基づく音楽作品分析のアルゴリズムシステムを提示します。",
+        objectives: "システムの目的:",
+        obj1: "客観主義の概念を数値にマッピング",
+        obj2: "最も明白なものから最も微妙なものまでパターンを検出",
+        obj3: "適切な重み付けで複数の哲学的次元を統合",
+        obj4: "概念的解釈を伴うスコアを生成",
+        obj5: "評価における一貫性と再現性を維持",
+        centralPrinciple: "中心原則:",
+        centralText: "哲学的内容が美的価値を決定します。技術的品質や形式的革新は、作品の道徳的・美的評価とは無関係です。",
+        fundamentals: "基本的な客観主義原則",
+        coercion: "強制の原則",
+        coercionEvil: "悪: 強制を開始する（力または詐欺） - 意図、目的、または恩恵を受ける者に関係なく。",
+        coercionGood: "善: 強制に報復する（悪を止める） - 自己防衛、権利の保護、正義。",
+        sacrifice: "犠牲の原則",
+        sacrificeText: "犠牲 = より大きな価値をより小さな価値と交換する、または価値を非価値と交換する。",
+        sacrificeEvil: "すべての犠牲は悪です。悪の階層:",
+        sacrifice1: "自発的犠牲（最悪）: 人が自分の価値を破壊することを選択する。",
+        sacrifice2: "強制された犠牲: 被害者に選択肢はないが、内面的に抵抗している可能性がある。",
+        sacrificeNote: "重要: より大きな価値を達成するために時間/努力を投資することは犠牲ではありません。",
+        heroMartyr: "英雄 vs 殉教者",
+        concept: "概念",
+        hero: "英雄",
+        martyr: "殉教者",
+        motivation: "動機",
+        motivationHero: "理性、価値観",
+        motivationMartyr: "信仰、義務",
+        beneficiary: "受益者",
+        beneficiaryHero: "自分自身",
+        beneficiaryMartyr: "他者",
+        method: "方法",
+        methodHero: "能力",
+        methodMartyr: "犠牲",
+        result: "結果",
+        resultHero: "生きて繁栄する",
+        resultMartyr: "「高貴に」死ぬ",
+        epistemology: "認識論",
+        epistemologyHero: "経験的/客観主義的",
+        epistemologyMartyr: "神秘的/信仰主義的",
+        ethics: "倫理",
+        ethicsHero: "合理的利己主義",
+        ethicsMartyr: "利他主義",
+        heroNote: "重要: 「信仰に基づく英雄主義」は存在しません。それは殉教です。",
+        criteria: "重み付けされた哲学的基準",
+        criteriaIntro: "公正で正確な分析を保証するため、重み付けシステムを採用しています。",
+        axes: "分析軸とスコアリングシステム",
+        axesIntro: "各軸は-10（極めて順応的）から+10（極めて革命的）のスケールでスコア化されます。",
+        ethics40: "倫理（重み: 40%）",
+        ethicsEval: "評価: 音楽の中核的価値観。",
+        ethicsRev: "革命的極（+）: 合理的自己利益、誇り、独立の擁護。",
+        ethicsConf: "順応的極（-）: 利他主義、集団への義務、罪悪感の称揚。",
+        metaphysics20: "形而上学（重み: 20%）",
+        metaphysicsEval: "評価: 世界観。",
+        metaphysicsRev: "革命的極（+）: 客観的現実、因果関係の肯定。",
+        metaphysicsConf: "順応的極（-）: 神秘主義、運命論、決定論の推進。",
+        epistemology20: "認識論（重み: 20%）",
+        epistemologyEval: "評価: 知識の方法。",
+        epistemologyRev: "革命的極（+）: 理性、集中的思考、論理の擁護。",
+        epistemologyConf: "順応的極（-）: 信仰、教義、感傷主義への訴え。",
+        politics10: "政治学（重み: 10%）",
+        politicsEval: "評価: 社会組織のビジョン。",
+        politicsRev: "革命的極（+）: 個人の自由、財産権の擁護。",
+        politicsConf: "順応的極（-）: 集団主義、国家主義、部族主義の擁護。",
+        aesthetics10: "美学（重み: 10%）",
+        aestheticsEval: "評価: 形式と内容の統合。",
+        aestheticsRev: "革命的極（+）: 人間の英雄的ビジョンの提示。",
+        aestheticsConf: "順応的極（-）: ニヒリズム、崩壊の投影。",
+        finalScore: "最終スコア計算",
+        finalFormula: "最終スコアは次の加重平均式で計算されます:",
+        formula: "最終スコア = (倫理スコア × 0.4) + (形而上学スコア × 0.2) + (認識論スコア × 0.2) + (政治学スコア × 0.1) + (美学スコア × 0.1)",
+        scale: "哲学的評価スケール",
+        scaleIntro: "加重最終スコアは1から10のスケールにマッピングされます:",
+        scale10: "+8.1 から +10.0: グレード 10（極めて革命的）",
+        scale9: "+6.1 から +8.0: グレード 9（非常に革命的）",
+        scale8: "+4.1 から +6.0: グレード 8（革命的）",
+        scale7: "+2.1 から +4.0: グレード 7（建設的批評）",
+        scale6: "+0.1 から +2.0: グレード 6（現実主義に傾く曖昧）",
+        scale5: "-2.0 から 0.0: グレード 5（回避に傾く曖昧）",
+        scale4: "-4.0 から -2.1: グレード 4（軽度の順応的）",
+        scale3: "-6.0 から -4.1: グレード 3（直接的順応的）",
+        scale2: "-8.0 から -6.1: グレード 2（強く順応的）",
+        scale1: "-10.0 から -8.1: グレード 1（教条的順応的）",
+        structure: "作業構造と分析基準",
+        structureIntro: "作業はPhilosifyシステムに提出された各曲を分析および評価することです。",
+        analysisPattern: "個別分析パターン:",
+        analysisIntro: "各曲は標準化された形式で分析されます:",
+        item1: "加重哲学的スコアカード",
+        item1a: "倫理: (スコア -10 から +10)",
+        item1b: "形而上学: (スコア -10 から +10)",
+        item1c: "認識論: (スコア -10 から +10)",
+        item1d: "政治学: (スコア -10 から +10)",
+        item1e: "美学: (スコア -10 から +10)",
+        item1f: "加重最終スコア: (計算結果)",
+        item2: "哲学的グレード: (グレード 1 から 10)",
+        item3: "哲学的分類: (スケールに従った説明)",
+        item4: "歴史的文脈",
+        item5: "創造的プロセス",
+        item6: "哲学的分析",
+        metaphysicsNote: "分析は客観主義の基本原理に従います:",
+        metaphysicsText: "形而上学: 世界観 – 現実、客観性、同一性、因果関係の肯定。現実は存在します。"
+      },
+      ko: {
+        title: "Philosify 가이드",
+        intro: "이 가이드는 객관주의 원칙에 기반한 음악 작품 분석 알고리즘 시스템을 제시합니다.",
+        objectives: "시스템 목표:",
+        obj1: "객관주의 개념을 수치 값으로 매핑",
+        obj2: "가장 명백한 것부터 가장 미묘한 것까지 패턴 감지",
+        obj3: "적절한 가중치로 여러 철학적 차원 통합",
+        obj4: "개념적 해석이 수반된 점수 생성",
+        obj5: "평가의 일관성과 재현성 유지",
+        centralPrinciple: "핵심 원칙:",
+        centralText: "철학적 내용이 미적 가치를 결정합니다. 기술적 품질이나 형식적 혁신은 작품의 도덕적, 미적 평가와 무관합니다.",
+        fundamentals: "기본 객관주의 원칙",
+        coercion: "강제의 원칙",
+        coercionEvil: "악: 강제 시작(힘 또는 사기) - 의도, 목적 또는 수혜자가 누구인지와 관계없이.",
+        coercionGood: "선: 강제에 대한 보복(악을 막음) - 자기방어, 권리 보호, 정의.",
+        sacrifice: "희생의 원칙",
+        sacrificeText: "희생 = 더 큰 가치를 더 작은 가치로 교환, 또는 가치를 비가치로 교환.",
+        sacrificeEvil: "모든 희생은 나쁩니다. 악의 계층:",
+        sacrifice1: "자발적 희생(최악): 사람이 자신의 가치를 파괴하기로 선택.",
+        sacrifice2: "강요된 희생: 피해자에게 선택권이 없지만 내적으로 저항할 수 있음.",
+        sacrificeNote: "중요: 더 큰 가치를 달성하기 위해 시간/노력을 투자하는 것은 희생이 아닙니다.",
+        heroMartyr: "영웅 vs 순교자",
+        concept: "개념",
+        hero: "영웅",
+        martyr: "순교자",
+        motivation: "동기",
+        motivationHero: "이성, 가치",
+        motivationMartyr: "신앙, 의무",
+        beneficiary: "수혜자",
+        beneficiaryHero: "자기 자신",
+        beneficiaryMartyr: "타인",
+        method: "방법",
+        methodHero: "능력",
+        methodMartyr: "희생",
+        result: "결과",
+        resultHero: "살아서 번영함",
+        resultMartyr: "\"고귀하게\" 죽음",
+        epistemology: "인식론",
+        epistemologyHero: "경험적/객관주의적",
+        epistemologyMartyr: "신비적/신앙주의적",
+        ethics: "윤리",
+        ethicsHero: "합리적 이기주의",
+        ethicsMartyr: "이타주의",
+        heroNote: "중요: \"신앙에 기반한 영웅주의\"는 존재하지 않습니다. 그것은 순교입니다.",
+        criteria: "가중 철학적 기준",
+        criteriaIntro: "공정하고 정확한 분석을 보장하기 위해 가중 시스템을 채택합니다.",
+        axes: "분석 축 및 점수 시스템",
+        axesIntro: "각 축은 -10(극도로 순응적)에서 +10(극도로 혁명적)의 척도로 점수가 매겨집니다.",
+        ethics40: "윤리 (가중치: 40%)",
+        ethicsEval: "평가: 음악의 핵심 가치 코드.",
+        ethicsRev: "혁명적 극(+): 합리적 자기 이익, 자부심, 독립 옹호.",
+        ethicsConf: "순응적 극(-): 이타주의, 집단에 대한 의무, 죄책감 찬양.",
+        metaphysics20: "형이상학 (가중치: 20%)",
+        metaphysicsEval: "평가: 세계관.",
+        metaphysicsRev: "혁명적 극(+): 객관적 현실, 인과관계 긍정.",
+        metaphysicsConf: "순응적 극(-): 신비주의, 숙명론, 결정론 촉진.",
+        epistemology20: "인식론 (가중치: 20%)",
+        epistemologyEval: "평가: 지식의 방법.",
+        epistemologyRev: "혁명적 극(+): 이성, 집중적 사고, 논리 옹호.",
+        epistemologyConf: "순응적 극(-): 신앙, 교리, 감상주의에 호소.",
+        politics10: "정치 (가중치: 10%)",
+        politicsEval: "평가: 사회 조직에 대한 비전.",
+        politicsRev: "혁명적 극(+): 개인의 자유, 재산권 옹호.",
+        politicsConf: "순응적 극(-): 집단주의, 국가주의, 부족주의 옹호.",
+        aesthetics10: "미학 (가중치: 10%)",
+        aestheticsEval: "평가: 형식과 내용의 통합.",
+        aestheticsRev: "혁명적 극(+): 인간의 영웅적 비전 제시.",
+        aestheticsConf: "순응적 극(-): 허무주의, 해체 투영.",
+        finalScore: "최종 점수 계산",
+        finalFormula: "최종 점수는 다음 가중 평균 공식으로 계산됩니다:",
+        formula: "최종 점수 = (윤리 점수 × 0.4) + (형이상학 점수 × 0.2) + (인식론 점수 × 0.2) + (정치 점수 × 0.1) + (미학 점수 × 0.1)",
+        scale: "철학적 평가 척도",
+        scaleIntro: "가중 최종 점수는 1에서 10의 척도로 매핑됩니다:",
+        scale10: "+8.1 ~ +10.0: 등급 10 (극도로 혁명적)",
+        scale9: "+6.1 ~ +8.0: 등급 9 (매우 혁명적)",
+        scale8: "+4.1 ~ +6.0: 등급 8 (혁명적)",
+        scale7: "+2.1 ~ +4.0: 등급 7 (건설적 비평)",
+        scale6: "+0.1 ~ +2.0: 등급 6 (현실주의로 기울어진 애매함)",
+        scale5: "-2.0 ~ 0.0: 등급 5 (회피로 기울어진 애매함)",
+        scale4: "-4.0 ~ -2.1: 등급 4 (경미한 순응적)",
+        scale3: "-6.0 ~ -4.1: 등급 3 (직접적 순응적)",
+        scale2: "-8.0 ~ -6.1: 등급 2 (강하게 순응적)",
+        scale1: "-10.0 ~ -8.1: 등급 1 (교조적 순응적)",
+        structure: "작업 구조 및 분석 표준",
+        structureIntro: "작업은 Philosify 시스템에 제출된 각 곡을 분석하고 평가하는 것입니다.",
+        analysisPattern: "개별 분석 패턴:",
+        analysisIntro: "각 곡은 표준화된 형식으로 분석됩니다:",
+        item1: "가중 철학적 스코어카드",
+        item1a: "윤리: (점수 -10 ~ +10)",
+        item1b: "형이상학: (점수 -10 ~ +10)",
+        item1c: "인식론: (점수 -10 ~ +10)",
+        item1d: "정치: (점수 -10 ~ +10)",
+        item1e: "미학: (점수 -10 ~ +10)",
+        item1f: "가중 최종 점수: (계산 결과)",
+        item2: "철학적 등급: (등급 1 ~ 10)",
+        item3: "철학적 분류: (척도에 따른 설명)",
+        item4: "역사적 맥락",
+        item5: "창작 과정",
+        item6: "철학적 분석",
+        metaphysicsNote: "분석은 객관주의의 기본 원리를 따릅니다:",
+        metaphysicsText: "형이상학: 세계관 – 현실, 객관성, 정체성, 인과관계 긍정. 현실은 존재합니다."
+      },
+      ru: {
+        title: "Руководство Philosify",
+        intro: "Это руководство представляет алгоритмическую систему для анализа музыкальных произведений, основанную на объективистских принципах.",
+        objectives: "Цели системы:",
+        obj1: "Отображение объективистских концепций в числовые значения",
+        obj2: "Обнаружение паттернов от самых очевидных до самых тонких",
+        obj3: "Интеграция нескольких философских измерений с соответствующими весами",
+        obj4: "Создание оценок с концептуальной интерпретацией",
+        obj5: "Поддержание согласованности и воспроизводимости в оценках",
+        centralPrinciple: "Центральный принцип:",
+        centralText: "Философское содержание определяет эстетическую ценность. Техническое качество или формальная инновация не имеют отношения к моральной и эстетической оценке произведения.",
+        fundamentals: "Основные объективистские принципы",
+        coercion: "Принцип принуждения",
+        coercionEvil: "ЗЛО: Инициирование принуждения (сила или мошенничество) - независимо от намерения, цели или выгодополучателя.",
+        coercionGood: "ДОБРО: Ответное принуждение (остановка зла) - самооборона, защита прав, справедливость.",
+        sacrifice: "Принцип жертвы",
+        sacrificeText: "Жертва = обмен БОЛЬШЕЙ ценности на МЕНЬШУЮ ценность, или обмен ЦЕННОСТИ на НЕ-ЦЕННОСТЬ.",
+        sacrificeEvil: "Всякая жертва плоха. Иерархия зла:",
+        sacrifice1: "Добровольная жертва (ХУДШАЯ): Человек выбирает уничтожить свои собственные ценности.",
+        sacrifice2: "Навязанная жертва: У жертвы нет выбора, но она может сопротивляться внутренне.",
+        sacrificeNote: "Важно: Инвестирование времени/усилий для достижения БОЛЬШЕЙ ценности не является жертвой.",
+        heroMartyr: "Герой vs Мученик",
+        concept: "КОНЦЕПЦИЯ",
+        hero: "ГЕРОЙ",
+        martyr: "МУЧЕНИК",
+        motivation: "Мотивация",
+        motivationHero: "Разум, ценности",
+        motivationMartyr: "Вера, долг",
+        beneficiary: "Выгодополучатель",
+        beneficiaryHero: "Сам себя",
+        beneficiaryMartyr: "Другие",
+        method: "Метод",
+        methodHero: "Компетентность",
+        methodMartyr: "Жертва",
+        result: "Результат",
+        resultHero: "Живет и процветает",
+        resultMartyr: "Умирает \"благородно\"",
+        epistemology: "Эпистемология",
+        epistemologyHero: "Эмпирическая/Объективистская",
+        epistemologyMartyr: "Мистическая/Фидеистская",
+        ethics: "Этика",
+        ethicsHero: "Рациональный эгоизм",
+        ethicsMartyr: "Альтруизм",
+        heroNote: "КРИТИЧЕСКИ: Не существует \"героизма, основанного на вере\". Это мученичество.",
+        criteria: "Взвешенные философские критерии",
+        criteriaIntro: "Для обеспечения справедливого и точного анализа мы применяем взвешенную систему.",
+        axes: "Оси анализа и система оценки",
+        axesIntro: "Каждая ось оценивается по шкале от -10 (Крайне конформистская) до +10 (Крайне революционная).",
+        ethics40: "Этика (Вес: 40%)",
+        ethicsEval: "Оценивает: Центральный кодекс ценностей музыки.",
+        ethicsRev: "Революционный полюс (+): Защита рационального эгоизма, гордости, независимости.",
+        ethicsConf: "Конформистский полюс (-): Возвеличивание альтруизма, долга перед коллективом, вины.",
+        metaphysics20: "Метафизика (Вес: 20%)",
+        metaphysicsEval: "Оценивает: Мировоззрение.",
+        metaphysicsRev: "Революционный полюс (+): Утверждение объективной реальности, причинности.",
+        metaphysicsConf: "Конформистский полюс (-): Продвижение мистицизма, фатализма, детерминизма.",
+        epistemology20: "Эпистемология (Вес: 20%)",
+        epistemologyEval: "Оценивает: Метод познания.",
+        epistemologyRev: "Революционный полюс (+): Защита разума, сфокусированного мышления, логики.",
+        epistemologyConf: "Конформистский полюс (-): Призыв к вере, догме, сентиментализму.",
+        politics10: "Политика (Вес: 10%)",
+        politicsEval: "Оценивает: Видение социальной организации.",
+        politicsRev: "Революционный полюс (+): Защита индивидуальной свободы, прав собственности.",
+        politicsConf: "Конформистский полюс (-): Защита коллективизма, этатизма, трайбализма.",
+        aesthetics10: "Эстетика (Вес: 10%)",
+        aestheticsEval: "Оценивает: Интеграция формы и содержания.",
+        aestheticsRev: "Революционный полюс (+): Представление героического видения человека.",
+        aestheticsConf: "Конформистский полюс (-): Проекция нигилизма, дезинтеграции.",
+        finalScore: "Расчет финальной оценки",
+        finalFormula: "Финальная оценка рассчитывается по следующей формуле взвешенного среднего:",
+        formula: "Финальная оценка = (Оценка этики × 0.4) + (Оценка метафизики × 0.2) + (Оценка эпистемологии × 0.2) + (Оценка политики × 0.1) + (Оценка эстетики × 0.1)",
+        scale: "Философская шкала оценки",
+        scaleIntro: "Взвешенная финальная оценка отображается на шкалу от 1 до 10:",
+        scale10: "+8.1 до +10.0: Оценка 10 (Крайне революционная)",
+        scale9: "+6.1 до +8.0: Оценка 9 (Очень революционная)",
+        scale8: "+4.1 до +6.0: Оценка 8 (Революционная)",
+        scale7: "+2.1 до +4.0: Оценка 7 (Конструктивная критика)",
+        scale6: "+0.1 до +2.0: Оценка 6 (Неоднозначная, склоняющаяся к реализму)",
+        scale5: "-2.0 до 0.0: Оценка 5 (Неоднозначная, склоняющаяся к уклонению)",
+        scale4: "-4.0 до -2.1: Оценка 4 (Мягко конформистская)",
+        scale3: "-6.0 до -4.1: Оценка 3 (Прямо конформистская)",
+        scale2: "-8.0 до -6.1: Оценка 2 (Сильно конформистская)",
+        scale1: "-10.0 до -8.1: Оценка 1 (Доктринальная конформистская)",
+        structure: "Структура работы и стандарт анализа",
+        structureIntro: "Работа состоит в анализе и оценке каждой песни, представленной в систему Philosify.",
+        analysisPattern: "Индивидуальный паттерн анализа:",
+        analysisIntro: "Каждая песня анализируется в стандартизированном формате:",
+        item1: "Взвешенная философская оценочная карта",
+        item1a: "Этика: (Оценка от -10 до +10)",
+        item1b: "Метафизика: (Оценка от -10 до +10)",
+        item1c: "Эпистемология: (Оценка от -10 до +10)",
+        item1d: "Политика: (Оценка от -10 до +10)",
+        item1e: "Эстетика: (Оценка от -10 до +10)",
+        item1f: "Взвешенная финальная оценка: (Результат расчета)",
+        item2: "Философская оценка: (Оценка от 1 до 10)",
+        item3: "Философская классификация: (Описание согласно шкале)",
+        item4: "Исторический контекст",
+        item5: "Творческий процесс",
+        item6: "Философский анализ",
+        metaphysicsNote: "Анализ следует основам объективизма:",
+        metaphysicsText: "Метафизика: мировоззрение – утверждение реальности, объективности, идентичности, причинности. Реальность существует."
+      },
+      he: {
+        title: "מדריך Philosify",
+        intro: "מדריך זה מציג מערכת אלגוריתמית לניתוח יצירות מוזיקליות המבוססת על עקרונות אובייקטיביסטיים.",
+        objectives: "מטרות המערכת:",
+        obj1: "מיפוי מושגים אובייקטיביסטיים לערכים מספריים",
+        obj2: "זיהוי דפוסים מהברורים ביותר ועד העדינים ביותר",
+        obj3: "שילוב מימדים פילוסופיים מרובים עם משקלים מתאימים",
+        obj4: "הפקת ציונים המלווים בפרשנות רעיונית",
+        obj5: "שמירה על עקביות ושחזוריות בהערכות",
+        centralPrinciple: "עיקרון מרכזי:",
+        centralText: "תוכן פילוסופי קובע ערך אסתטי. איכות טכנית או חידוש פורמלי אינם רלוונטיים להערכה המוסרית והאסתטית של יצירה.",
+        fundamentals: "עקרונות אובייקטיביסטיים יסודיים",
+        coercion: "עקרון הכפייה",
+        coercionEvil: "רע: יזום כפייה (כוח או הונאה) - ללא קשר לכוונה, למטרה או למי שנהנה.",
+        coercionGood: "טוב: תגובה לכפייה (עצירת הרע) - הגנה עצמית, הגנה על זכויות, צדק.",
+        sacrifice: "עקרון ההקרבה",
+        sacrificeText: "הקרבה = החלפת ערך גדול יותר בערך קטן יותר, או החלפת ערך בלא-ערך.",
+        sacrificeEvil: "כל הקרבה היא רעה. היררכיית הרע:",
+        sacrifice1: "הקרבה מרצון (הגרועה ביותר): האדם בוחר להשמיד את הערכים שלו.",
+        sacrifice2: "הקרבה כפויה: לקורבן אין ברירה אך הוא עשוי להתנגד פנימית.",
+        sacrificeNote: "חשוב: השקעת זמן/מאמץ להשגת ערך גדול יותר אינה הקרבה.",
+        heroMartyr: "גיבור מול קדוש מעונה",
+        concept: "מושג",
+        hero: "גיבור",
+        martyr: "קדוש מעונה",
+        motivation: "מוטיבציה",
+        motivationHero: "תבונה, ערכים",
+        motivationMartyr: "אמונה, חובה",
+        beneficiary: "נהנה",
+        beneficiaryHero: "עצמו",
+        beneficiaryMartyr: "אחרים",
+        method: "שיטה",
+        methodHero: "יכולת",
+        methodMartyr: "הקרבה",
+        result: "תוצאה",
+        resultHero: "חי ומשגשג",
+        resultMartyr: "מת \"באצילות\"",
+        epistemology: "אפיסטמולוגיה",
+        epistemologyHero: "אמפירית/אובייקטיביסטית",
+        epistemologyMartyr: "מיסטית/פידאיסטית",
+        ethics: "אתיקה",
+        ethicsHero: "אגואיזם רציונלי",
+        ethicsMartyr: "אלטרואיזם",
+        heroNote: "קריטי: אין דבר כזה \"גבורה מבוססת אמונה\". זו קדושת מעונה.",
+        criteria: "קריטריונים פילוסופיים משוקללים",
+        criteriaIntro: "כדי להבטיח ניתוח הוגן ומדויק, אנו מאמצים מערכת משוקללת.",
+        axes: "צירי ניתוח ומערכת ניקוד",
+        axesIntro: "כל ציר מדורג בסולם מ--10 (קונפורמיסטי ביותר) עד +10 (מהפכני ביותר).",
+        ethics40: "אתיקה (משקל: 40%)",
+        ethicsEval: "מעריך: קוד הערכים המרכזי של המוזיקה.",
+        ethicsRev: "קוטב מהפכני (+): הגנה על אינטרס עצמי רציונלי, גאווה, עצמאות.",
+        ethicsConf: "קוטב קונפורמיסטי (-): הפגנת אלטרואיזם, חובה כלפי הקולקטיב, אשמה.",
+        metaphysics20: "מטאפיזיקה (משקל: 20%)",
+        metaphysicsEval: "מעריך: השקפת העולם.",
+        metaphysicsRev: "קוטב מהפכני (+): אישור המציאות האובייקטיבית, סיבתיות.",
+        metaphysicsConf: "קוטב קונפורמיסטי (-): קידום מיסטיציזם, פטליזם, דטרמיניזם.",
+        epistemology20: "אפיסטמולוגיה (משקל: 20%)",
+        epistemologyEval: "מעריך: שיטת הידע.",
+        epistemologyRev: "קוטב מהפכני (+): הגנה על תבונה, חשיבה ממוקדת, היגיון.",
+        epistemologyConf: "קוטב קונפורמיסטי (-): פנייה לאמונה, דוגמה, סנטימנטליזם.",
+        politics10: "פוליטיקה (משקל: 10%)",
+        politicsEval: "מעריך: החזון לארגון חברתי.",
+        politicsRev: "קוטב מהפכני (+): הגנה על חופש הפרט, זכויות קניין.",
+        politicsConf: "קוטב קונפורמיסטי (-): הגנה על קולקטיביזם, אטטיזם, טריבליזם.",
+        aesthetics10: "אסתטיקה (משקל: 10%)",
+        aestheticsEval: "מעריך: האינטגרציה בין צורה ותוכן.",
+        aestheticsRev: "קוטב מהפכני (+): הצגת חזון הירואי של האדם.",
+        aestheticsConf: "קוטב קונפורמיסטי (-): הקרנת ניהיליזם, התפוררות.",
+        finalScore: "חישוב ציון סופי",
+        finalFormula: "הציון הסופי יחושב לפי נוסחת ממוצע משוקלל הבאה:",
+        formula: "ציון סופי = (ציון אתיקה × 0.4) + (ציון מטאפיזיקה × 0.2) + (ציון אפיסטמולוגיה × 0.2) + (ציון פוליטיקה × 0.1) + (ציון אסתטיקה × 0.1)",
+        scale: "סולם הערכה פילוסופי",
+        scaleIntro: "הציון הסופי המשוקלל ימופה לסולם מ-1 עד 10:",
+        scale10: "+8.1 עד +10.0: ציון 10 (מהפכני ביותר)",
+        scale9: "+6.1 עד +8.0: ציון 9 (מהפכני מאוד)",
+        scale8: "+4.1 עד +6.0: ציון 8 (מהפכני)",
+        scale7: "+2.1 עד +4.0: ציון 7 (ביקורת בונה)",
+        scale6: "+0.1 עד +2.0: ציון 6 (דו-משמעי נוטה לריאליזם)",
+        scale5: "-2.0 עד 0.0: ציון 5 (דו-משמעי נוטה להתחמקות)",
+        scale4: "-4.0 עד -2.1: ציון 4 (קונפורמיסטי קל)",
+        scale3: "-6.0 עד -4.1: ציון 3 (קונפורמיסטי ישיר)",
+        scale2: "-8.0 עד -6.1: ציון 2 (קונפורמיסטי חזק)",
+        scale1: "-10.0 עד -8.1: ציון 1 (קונפורמיסטי דוקטרינרי)",
+        structure: "מבנה עבודה ותקן ניתוח",
+        structureIntro: "העבודה היא לנתח ולהעריך כל שיר שהוגש למערכת Philosify.",
+        analysisPattern: "דגם ניתוח אישי:",
+        analysisIntro: "כל שיר ינותח בפורמט סטנדרטי:",
+        item1: "כרטיס ניקוד פילוסופי משוקלל",
+        item1a: "אתיקה: (ציון מ--10 עד +10)",
+        item1b: "מטאפיזיקה: (ציון מ--10 עד +10)",
+        item1c: "אפיסטמולוגיה: (ציון מ--10 עד +10)",
+        item1d: "פוליטיקה: (ציון מ--10 עד +10)",
+        item1e: "אסתטיקה: (ציון מ--10 עד +10)",
+        item1f: "ציון סופי משוקלל: (תוצאת החישוב)",
+        item2: "ציון פילוסופי: (ציון מ-1 עד 10)",
+        item3: "סיווג פילוסופי: (תיאור לפי הסולם)",
+        item4: "הקשר היסטורי",
+        item5: "תהליך יצירתי",
+        item6: "ניתוח פילוסופי",
+        metaphysicsNote: "הניתוח עוקב אחר יסודות האובייקטיביזם:",
+        metaphysicsText: "מטאפיזיקה: השקפת עולם – אישור המציאות, אובייקטיביות, זהות, סיבתיות. המציאות קיימת."
+      }
+    };
+
+    // Estado global mínimo para conectar header e App
+    window.PREFERRED_LANG = "en";
+
+    // Garantir que vídeo de background funcione em mobile
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Verificar autenticação ao carregar página
+      await checkAuth();
+
+      const video = document.querySelector('.bg-video');
+      if (video) {
+        // Forçar play do vídeo (importante para mobile)
+        video.play().catch(err => {
+          console.log('Autoplay bloqueado:', err);
+          // Se autoplay falhar, tentar no primeiro toque/clique
+          document.addEventListener('click', function playOnInteraction() {
+            video.play();
+            document.removeEventListener('click', playOnInteraction);
+          }, { once: true });
+        });
+      }
+    });
+
+    // Aguardar DOM estar pronto
+    document.addEventListener('DOMContentLoaded', function() {
+      // Marcar idioma inicial como ativo
+      const initialLang = window.PREFERRED_LANG || "en";
+      const initialBtn = document.querySelector(`.lang-item[data-lang="${initialLang}"]`);
+      if (initialBtn) {
+        initialBtn.classList.add("active");
+      }
+      
+      // Aplicar placeholder inicial
+      const input = document.getElementById("songInput");
+      if (input) {
+        input.placeholder = PLACEHOLDERS[initialLang] || PLACEHOLDERS.en;
+      }
+    });
+
+    // Clique nos idiomas (faixa) - delegação funciona antes do DOM
+    document.addEventListener("click", (ev)=>{
+      const btn = ev.target.closest(".lang-item");
+      if(!btn) return;
+      const code = btn.getAttribute("data-lang") || "en";
+      window.PREFERRED_LANG = code;
+
+      // Remove classe active de todos os botões de idioma
+      document.querySelectorAll(".lang-item").forEach(b => b.classList.remove("active"));
+      // Adiciona classe active ao botão clicado
+      btn.classList.add("active");
+
+      // Atualiza o html/dir
+      document.documentElement.lang = code;
+      document.documentElement.dir = (code === "he") ? "rtl" : "ltr";
+
+      // Atualiza tagline no header
+      const tag = document.getElementById("tagline");
+      tag.textContent = TAGLINES[code] || TAGLINES.en;
+
+      // Atualiza placeholder do campo de busca
+      const input = document.getElementById("songInput");
+      input.placeholder = PLACEHOLDERS[code] || PLACEHOLDERS.en;
+
+      // Atualiza texto do botão Analyze
+      const analyzeText = document.getElementById("analyzeText");
+      if(analyzeText && !analyzeText.dataset.analyzing) {
+        analyzeText.textContent = ANALYZE_BUTTON[code] || ANALYZE_BUTTON.en;
+      }
+
+      // Dispara evento para o App React assumir o idioma
+      window.dispatchEvent(new CustomEvent("ph-set-lang", { detail: code }));
+
+      // Se houver última consulta (campo header), dispara análise
+      const q = (document.getElementById("songInput").value || "").trim();
+      if(q) window.dispatchEvent(new CustomEvent("ph-analyze", { detail: q }));
+    });
+
+    // Botão Analyze do header
+    document.getElementById("analyzeBtn").addEventListener("click", ()=>{
+      const q = (document.getElementById("songInput").value || "").trim();
+      if(!q) return;
+      
+      // Atualiza botão para estado "Analyzing..."
+      const btn = document.getElementById("analyzeBtn");
+      const analyzeText = document.getElementById("analyzeText");
+      const lang = window.PREFERRED_LANG || "en";
+      
+      analyzeText.textContent = ANALYZING_BUTTON[lang] || ANALYZING_BUTTON.en;
+      analyzeText.dataset.analyzing = "true";
+      btn.disabled = true;
+      btn.style.opacity = "0.7";
+      btn.style.cursor = "wait";
+      
+      window.dispatchEvent(new CustomEvent("ph-analyze", { detail: q }));
+    });
+
+    // Escuta eventos de loading do React app para restaurar botão
+    window.addEventListener("ph-analysis-complete", ()=>{
+      const btn = document.getElementById("analyzeBtn");
+      const analyzeText = document.getElementById("analyzeText");
+      const lang = window.PREFERRED_LANG || "en";
+      
+      analyzeText.textContent = ANALYZE_BUTTON[lang] || ANALYZE_BUTTON.en;
+      delete analyzeText.dataset.analyzing;
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.cursor = "pointer";
+    });
+  </script>
+
+  <!-- App React (idêntico ao seu, com pequenos ajustes de integração e JSX) -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // UI labels (12 idiomas)
+    const UI = {
+      en:{ analyze:"Analyze", analyzing:"Analyzing...", placeholder:"Enter song name...",
+           listenOn:"Listen on Spotify", scorecard:"Weighted Philosophical Scorecard",
+           finalWeighted:"Weighted Final Score", philScore:"Philosophical Score",
+           classification:"Philosophical Classification",
+           branch:"Branch", integrated:"Integrated Philosophical Analysis",
+           score:"Score (-10 to +10)", justification:"Justification", weight:"weight",
+           ethics:"Ethics", metaphysics:"Metaphysics", epistemology:"Epistemology", politics:"Politics", aesthetics:"Aesthetics",
+           ambivalence:"Ambivalence", tech:"Technical Specifications", context:"Historical Context",
+           process:"Creative Process", analysis:"Philosophical Analysis",
+           footer1:"Philosify - Algorithmic Philosophical System for Musical Analysis",
+           footer2:"©2025 Bob Rach Productions",
+           footer3:"All rights reserved",
+           footer4:"bob@philosify.org",
+           footer5:"Powered by AI",
+           // Classificações
+           extremelyRevolutionary:"Extremely Revolutionary",
+           revolutionary:"Revolutionary",
+           moderatelyRevolutionary:"Moderately Revolutionary",
+           neutral:"Neutral",
+           moderatelyConformist:"Moderately Conformist",
+           conformist:"Conformist",
+           doctrinaireConformist:"Doctrinaire Conformist" },
+      es:{ analyze:"Analizar", analyzing:"Analizando...", placeholder:"Ingrese el nombre de la canción...",
+           listenOn:"Escuchar en Spotify", scorecard:"Marcador Filosófico Ponderado",
+           finalWeighted:"Puntuación Final Ponderada", philScore:"Puntuación Filosófica",
+           classification:"Clasificación Filosófica",
+           branch:"Rama", integrated:"Análisis Filosófico Integrado",
+           score:"Puntuación (-10 a +10)", justification:"Justificación", weight:"peso",
+           ethics:"Ética", metaphysics:"Metafísica", epistemology:"Epistemología", politics:"Política", aesthetics:"Estética",
+           ambivalence:"Ambivalencia", tech:"Especificaciones Técnicas", context:"Contexto Histórico",
+           process:"Proceso Creativo", analysis:"Análisis Filosófico",
+           footer1:"Philosify - Sistema Filosófico Algorítmico de Análisis Musical", footer2:"©2025 Bob Rach Productions", footer3:"Todos los derechos reservados", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"Extremadamente Revolucionaria", revolutionary:"Revolucionaria", moderatelyRevolutionary:"Moderadamente Revolucionaria", neutral:"Neutral", moderatelyConformist:"Moderadamente Conformista", conformist:"Conformista", doctrinaireConformist:"Conformista Doctrinaria" },
+      de:{ analyze:"Analysieren", analyzing:"Analysiere...", placeholder:"Songtitel eingeben...",
+           listenOn:"Auf Spotify anhören", scorecard:"Gewichtete philosophische Bewertung",
+           finalWeighted:"Gewichtete Endnote", philScore:"Philosophische Note",
+           classification:"Philosophische Klassifikation",
+           branch:"Zweig", integrated:"Integrierte philosophische Analyse",
+           score:"Bewertung (-10 bis +10)", justification:"Begründung", weight:"Gewicht",
+           ethics:"Ethik", metaphysics:"Metaphysik", epistemology:"Erkenntnistheorie", politics:"Politik", aesthetics:"Ästhetik",
+           ambivalence:"Ambivalenz", tech:"Technische Angaben", context:"Historischer Kontext",
+           process:"Kreativer Prozess", analysis:"Philosophische Analyse",
+           footer1:"Philosify - Algorithmisches Philosophisches System für Musikanalyse", footer2:"©2025 Bob Rach Productions", footer3:"Alle Rechte vorbehalten", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"Extrem Revolutionär", revolutionary:"Revolutionär", moderatelyRevolutionary:"Mäßig Revolutionär", neutral:"Neutral", moderatelyConformist:"Mäßig Konformistisch", conformist:"Konformistisch", doctrinaireConformist:"Doktrinär Konformistisch" },
+      fr:{ analyze:"Analyser", analyzing:"Analyse en cours...", placeholder:"Saisissez le titre de la chanson...",
+           listenOn:"Écouter sur Spotify", scorecard:"Score philosophique pondéré",
+           finalWeighted:"Score final pondéré", philScore:"Score philosophique",
+           classification:"Classification philosophique",
+           branch:"Branche", integrated:"Analyse philosophique intégrée",
+           score:"Score (-10 à +10)", justification:"Justification", weight:"poids",
+           ethics:"Éthique", metaphysics:"Métaphysique", epistemology:"Épistémologie", politics:"Politique", aesthetics:"Esthétique",
+           ambivalence:"Ambivalence", tech:"Fiche technique", context:"Contexte historique",
+           process:"Processus créatif", analysis:"Analyse philosophique",
+           footer1:"Philosify - Système Philosophique Algorithmique d'Analyse Musicale", footer2:"©2025 Bob Rach Productions", footer3:"Tous droits réservés", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"Extrêmement Révolutionnaire", revolutionary:"Révolutionnaire", moderatelyRevolutionary:"Modérément Révolutionnaire", neutral:"Neutre", moderatelyConformist:"Modérément Conformiste", conformist:"Conformiste", doctrinaireConformist:"Conformiste Doctrinaire" },
+      it:{ analyze:"Analizza", analyzing:"Analisi in corso...", placeholder:"Inserisci il titolo della canzone...",
+           listenOn:"Ascolta su Spotify", scorecard:"Scheda filosofica ponderata",
+           finalWeighted:"Punteggio finale ponderato", philScore:"Punteggio filosofico",
+           classification:"Classificazione filosofica",
+           branch:"Ramo", integrated:"Analisi filosofica integrata",
+           score:"Punteggio (-10 a +10)", justification:"Giustificazione", weight:"peso",
+           ethics:"Etica", metaphysics:"Metafisica", epistemology:"Epistemologia", politics:"Politica", aesthetics:"Estetica",
+           ambivalence:"Ambivalenza", tech:"Specifiche tecniche", context:"Contesto storico",
+           process:"Processo creativo", analysis:"Analisi filosofica",
+           footer1:"Philosify - Sistema Filosofico Algoritmico di Analisi Musicale", footer2:"©2025 Bob Rach Productions", footer3:"Tutti i diritti riservati", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"Estremamente Rivoluzionaria", revolutionary:"Rivoluzionaria", moderatelyRevolutionary:"Moderatamente Rivoluzionaria", neutral:"Neutrale", moderatelyConformist:"Moderatamente Conformista", conformist:"Conformista", doctrinaireConformist:"Conformista Dottrinaria" },
+      hu:{ analyze:"Elemzés", analyzing:"Elemzés folyamatban...", placeholder:"Írja be a dal címét...",
+           listenOn:"Lejátszás Spotifyon", scorecard:"Súlyozott filozófiai pontozás",
+           finalWeighted:"Súlyozott végső pont", philScore:"Filozófiai pontszám",
+           classification:"Filozófiai besorolás",
+           branch:"Ág", integrated:"Integrált filozófiai elemzés",
+           score:"Pontszám (-10 és +10 között)", justification:"Indoklás", weight:"súly",
+           ethics:"Etika", metaphysics:"Metafizika", epistemology:"Ismeretelmélet", politics:"Politika", aesthetics:"Esztétika",
+           ambivalence:"Ambivalencia", tech:"Műszaki adatok", context:"Történelmi kontextus",
+           process:"Kreatív folyamat", analysis:"Filozófiai elemzés",
+           footer1:"Philosify - Algoritmikus Filozófiai Zeneelemző Rendszer", footer2:"©2025 Bob Rach Productions", footer3:"Minden jog fenntartva", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"Rendkívül Forradalmi", revolutionary:"Forradalmi", moderatelyRevolutionary:"Mérsékelten Forradalmi", neutral:"Semleges", moderatelyConformist:"Mérsékelten Konformista", conformist:"Konformista", doctrinaireConformist:"Doktriner Konformista" },
+      pt:{ analyze:"Analisar", analyzing:"Analisando...", placeholder:"Digite o nome da música...",
+           listenOn:"Ouvir no Spotify", scorecard:"Scorecard Filosófico Ponderado",
+           finalWeighted:"Nota Final Ponderada", philScore:"Nota Filosófica",
+           classification:"Classificação Filosófica",
+           branch:"Ramo", integrated:"Análise Filosófica Integrada",
+           score:"Pontuação (-10 a +10)", justification:"Justificativa", weight:"peso",
+           ethics:"Ética", metaphysics:"Metafísica", epistemology:"Epistemologia", politics:"Política", aesthetics:"Estética",
+           ambivalence:"Ambivalência", tech:"Ficha Técnica", context:"Contexto Histórico",
+           process:"Processo Criativo", analysis:"Análise Filosófica",
+           footer1:"Philosify - Sistema Filosófico Algorítmico de Análise Musical",
+           footer2:"©2025 Bob Rach Productions",
+           footer3:"Todos os direitos reservados",
+           footer4:"bob@philosify.org",
+           footer5:"Powered by AI",
+           // Classificações
+           extremelyRevolutionary:"Extremamente Revolucionária",
+           revolutionary:"Revolucionária",
+           moderatelyRevolutionary:"Moderadamente Revolucionária",
+           neutral:"Neutra",
+           moderatelyConformist:"Moderadamente Conformista",
+           conformist:"Conformista",
+           doctrinaireConformist:"Conformista Doutrinária" },
+      zh:{ analyze:"分析", analyzing:"分析中...", placeholder:"输入歌曲名称...",
+           listenOn:"在 Spotify 上收听", scorecard:"哲学加权评分卡",
+           finalWeighted:"加权最终分数", philScore:"哲学分数",
+           classification:"哲学分类",
+           branch:"分支", integrated:"综合哲学分析",
+           score:"分数 (-10 至 +10)", justification:"理由", weight:"权重",
+           ethics:"伦理学", metaphysics:"形而上学", epistemology:"认识论", politics:"政治学", aesthetics:"美学",
+           ambivalence:"矛盾性", tech:"技术规格", context:"历史背景",
+           process:"创作过程", analysis:"哲学分析",
+           footer1:"Philosify - 音乐分析算法哲学系统", footer2:"©2025 Bob Rach Productions", footer3:"保留所有权利", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"极度革命性", revolutionary:"革命性", moderatelyRevolutionary:"适度革命性", neutral:"中立", moderatelyConformist:"适度守旧", conformist:"守旧", doctrinaireConformist:"教条守旧" },
+      ja:{ analyze:"分析する", analyzing:"分析中...", placeholder:"曲名を入力...",
+           listenOn:"Spotifyで聴く", scorecard:"加重哲学スコアカード",
+           finalWeighted:"加重最終スコア", philScore:"哲学スコア",
+           classification:"哲学的分類",
+           branch:"分野", integrated:"統合哲学分析",
+           score:"スコア (-10 から +10)", justification:"正当化", weight:"重み",
+           ethics:"倫理", metaphysics:"形而上学", epistemology:"認識論", politics:"政治", aesthetics:"美学",
+           ambivalence:"両義性", tech:"技術仕様", context:"歴史的背景",
+           process:"制作過程", analysis:"哲学的分析",
+           footer1:"Philosify - 音楽分析のためのアルゴリズム哲学システム", footer2:"©2025 Bob Rach Productions", footer3:"All rights reserved", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"極めて革命的", revolutionary:"革命的", moderatelyRevolutionary:"やや革命的", neutral:"中立", moderatelyConformist:"やや保守的", conformist:"保守的", doctrinaireConformist:"教条的保守" },
+      ko:{ analyze:"분석", analyzing:"분석 중...", placeholder:"노래 제목을 입력하세요...",
+           listenOn:"Spotify에서 듣기", scorecard:"가중 철학 스코어카드",
+           finalWeighted:"가중 최종 점수", philScore:"철학 점수",
+           classification:"철학적 분류",
+           branch:"분야", integrated:"통합 철학 분석",
+           score:"점수 (-10에서 +10)", justification:"정당화", weight:"가중치",
+           ethics:"윤리", metaphysics:"형이상학", epistemology:"인식론", politics:"정치", aesthetics:"미학",
+           ambivalence:"양가성", tech:"기술 정보", context:"역사적 맥락",
+           process:"창작 과정", analysis:"철학적 분석",
+           footer1:"Philosify - 음악 분석을 위한 알고리즘 철학 시스템", footer2:"©2025 Bob Rach Productions", footer3:"All rights reserved", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"극도로 혁명적", revolutionary:"혁명적", moderatelyRevolutionary:"적당히 혁명적", neutral:"중립", moderatelyConformist:"적당히 순응적", conformist:"순응적", doctrinaireConformist:"교조적 순응" },
+      ru:{ analyze:"Анализировать", analyzing:"Анализ...", placeholder:"Введите название песни...",
+           listenOn:"Слушать в Spotify", scorecard:"Философская взвешенная оценка",
+           finalWeighted:"Итоговый взвешенный балл", philScore:"Философская оценка",
+           classification:"Философская классификация",
+           branch:"Ветвь", integrated:"Интегрированный философский анализ",
+           score:"Оценка (от -10 до +10)", justification:"Обоснование", weight:"вес",
+           ethics:"Этика", metaphysics:"Метафизика", epistemology:"Эпистемология", politics:"Политика", aesthetics:"Эстетика",
+           ambivalence:"Двойственность", tech:"Технические характеристики", context:"Исторический контекст",
+           process:"Творческий процесс", analysis:"Философский анализ",
+           footer1:"Philosify - Алгоритмическая Философская Система Музыкального Анализа", footer2:"©2025 Bob Rach Productions", footer3:"Все права защищены", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"Крайне Революционная", revolutionary:"Революционная", moderatelyRevolutionary:"Умеренно Революционная", neutral:"Нейтральная", moderatelyConformist:"Умеренно Конформистская", conformist:"Конформистская", doctrinaireConformist:"Доктринально Конформистская" },
+      he:{ analyze:"נתח", analyzing:"מנתח...", placeholder:"הזן שם שיר...",
+           listenOn:"האזינו ב־Spotify", scorecard:"כרטיס ניקוד פילוסופי משוקלל",
+           finalWeighted:"ציון סופי משוקלל", philScore:"ציון פילוסופי",
+           classification:"סיווג פילוסופי",
+           branch:"ענף", integrated:"ניתוח פילוסופי משולב",
+           score:"ציון (-10 עד +10)", justification:"הצדקה", weight:"משקל",
+           ethics:"אתיקה", metaphysics:"מטאפיזיקה", epistemology:"אפיסטמולוגיה", politics:"פוליטיקה", aesthetics:"אסתטיקה",
+           ambivalence:"דואליות", tech:"מפרט טכני", context:"הקשר היסטורי",
+           process:"תהליך יצירתי", analysis:"ניתוח פילוסופי",
+           footer1:"Philosify - מערכת פילוסופית אלגוריתמית לניתוח מוזיקלי", footer2:"©2025 Bob Rach Productions", footer3:"כל הזכויות שמורות", footer4:"bob@philosify.org", footer5:"Powered by AI",
+           extremelyRevolutionary:"מהפכני ביותר", revolutionary:"מהפכני", moderatelyRevolutionary:"מהפכני במידה", neutral:"ניטרלי", moderatelyConformist:"קונפורמי במידה", conformist:"קונפורמי", doctrinaireConformist:"קונפורמי דוקטרינרי" }
+    };
+
+    function App(){
+      const [lang, setLang] = useState(window.PREFERRED_LANG || "en"); // EN default
+      const [q, setQ] = useState("");
+      const [isLoading, setLoading] = useState(false);
+      const [result, setResult] = useState(null);
+      const lastQueryRef = useRef("");
+      
+      // Novos estados para busca inteligente
+      const [searchOptions, setSearchOptions] = useState([]);
+      const [selectedTrack, setSelectedTrack] = useState(null);
+      const [showDropdown, setShowDropdown] = useState(false);
+      const [isSearching, setIsSearching] = useState(false);
+
+      // Ouve eventos do header
+      useEffect(()=>{
+        const onSetLang = (ev)=> setLang(ev.detail || "en");
+        const onAnalyze = (ev)=>{
+          const val = (ev.detail || "").toString().trim();
+          if(val) analyze(val);
+        };
+        window.addEventListener("ph-set-lang", onSetLang);
+        window.addEventListener("ph-analyze", onAnalyze);
+        return ()=>{
+          window.removeEventListener("ph-set-lang", onSetLang);
+          window.removeEventListener("ph-analyze", onAnalyze);
+        };
+      }, []);
+
+      // Ajusta lang/dir do documento
+      useEffect(()=>{
+        document.documentElement.lang = lang;
+        document.documentElement.dir = (lang === "he") ? "rtl" : "ltr";
+      }, [lang]);
+
+      // Atualiza texto do botão baseado em isLoading e idioma
+      useEffect(()=>{
+        const analyzeText = document.getElementById("analyzeText");
+        if (analyzeText) {
+          analyzeText.textContent = isLoading ? t.analyzing : t.analyze;
+        }
+      }, [isLoading, lang, t]);
+
+      const t = UI[lang] || UI.en;
+
+      // Função para traduzir classificações filosóficas
+      function translateClassification(classification) {
+        if (!classification) return "";
+        const classMap = {
+          "Extremely Revolutionary": "extremelyRevolutionary",
+          "Revolutionary": "revolutionary",
+          "Moderately Revolutionary": "moderatelyRevolutionary",
+          "Neutral": "neutral",
+          "Moderately Conformist": "moderatelyConformist",
+          "Conformist": "conformist",
+          "Doctrinaire Conformist": "doctrinaireConformist",
+          // Português
+          "Extremamente Revolucionária": "extremelyRevolutionary",
+          "Revolucionária": "revolutionary",
+          "Moderadamente Revolucionária": "moderatelyRevolutionary",
+          "Neutra": "neutral",
+          "Moderadamente Conformista": "moderatelyConformist",
+          "Conformista": "conformist",
+          "Conformista Doutrinária": "doctrinaireConformist"
+        };
+        const key = classMap[classification];
+        return key ? t[key] : classification;
+      }
+
+      // Função de busca inteligente
+      const searchTimeoutRef = useRef(null);
+      
+      async function searchSongs(query) {
+        if (!query || query.length < 2) {
+          setSearchOptions([]);
+          setShowDropdown(false);
+          return;
+        }
+        
+        setIsSearching(true);
+        
+        try {
+          const res = await fetch("https://api.philosify.org/api/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query })
+          });
+          
+          const data = await res.json();
+          
+          if (data.options && data.options.length > 0) {
+            setSearchOptions(data.options);
+            setShowDropdown(true);
+          } else {
+            setSearchOptions([]);
+            setShowDropdown(false);
+          }
+        } catch (error) {
+          console.error("Search error:", error);
+          setSearchOptions([]);
+          setShowDropdown(false);
+        } finally {
+          setIsSearching(false);
+        }
+      }
+      
+      // Debounce para busca
+      function handleInputChange(value) {
+        setQ(value);
+        setSelectedTrack(null); // Limpa seleção ao digitar
+        
+        // Cancela busca anterior
+        if (searchTimeoutRef.current) {
+          clearTimeout(searchTimeoutRef.current);
+        }
+        
+        // Agenda nova busca
+        searchTimeoutRef.current = setTimeout(() => {
+          searchSongs(value);
+        }, 500); // 500ms de debounce
+      }
+      
+      // Selecionar música do dropdown
+      function selectTrack(track) {
+        setSelectedTrack(track);
+        setShowDropdown(false);
+        setQ(`${track.song} - ${track.artist}`);
+      }
+
+      async function analyze(withQuery){
+        const query = (withQuery ?? q ?? "").toString().trim() || lastQueryRef.current;
+        if(!query) return;
+        
+        // Se tem música selecionada, usar ela; senão usar query
+        let song, artist;
+        
+        // Prioridade: selectedTrack do React > window.SELECTED_TRACK do header > parse do query
+        if (selectedTrack) {
+          song = selectedTrack.song;
+          artist = selectedTrack.artist;
+        } else if (window.SELECTED_TRACK) {
+          song = window.SELECTED_TRACK.song;
+          artist = window.SELECTED_TRACK.artist;
+        } else if (query.includes(' - ')) {
+          [song, artist] = query.split(' - ').map(s => s.trim());
+        } else {
+          song = query;
+          artist = '';
+        }
+        
+        setLoading(true); setResult(null);
+        try{
+          // Preparar body com spotify_id se disponível
+          const requestBody = { 
+  song,
+  artist,
+  model: document.getElementById('modelSelector')?.value || 'gpt4',
+  lang: window.PREFERRED_LANG || 'en'  // ← CORRIGIDO
+};
+          
+          // Se tem spotify_id (veio do dropdown), incluir
+          if (selectedTrack?.id) {
+            requestBody.spotify_id = selectedTrack.id;
+          } else if (window.SELECTED_TRACK?.id) {
+            requestBody.spotify_id = window.SELECTED_TRACK.id;
+          }
+          
+          const res = await fetch("https://api.philosify.org/api/analyze", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody)
+          });
+          const data = await res.json();
+          setResult(data);
+          const s = (data && (data.song || data.title)) ? (data.song || data.title) : query;
+          if (s) lastQueryRef.current = s;
+        }catch(e){
+          setResult({ error: "Network error" });
+        }finally{
+          setLoading(false);
+          // Notifica o header que a análise terminou
+          window.dispatchEvent(new CustomEvent("ph-analysis-complete"));
+        }
+      }
+
+      // UI do App (conteúdo abaixo do header)
+      return (
+        <div className="min-h-screen">
+          {/* Header React oculto por CSS (.ph-header) para evitar duplicidade */}
+          <header className="ph-header"></header>
+
+          <main className="ph-main">
+            <div className="container mx-auto px-4">
+              {result && !result.error && (
+                <div className="results-container">
+                  {/* Card 1 e 2: Ficha Técnica + Spotify lado a lado */}
+                  <div className="result-two-columns">
+                    {/* Card 1: Ficha Técnica */}
+                    <div className="result-card">
+                      <div className="result-card-title">{t.tech}</div>
+                      <div className="tech-specs-grid">
+                        <div className="tech-specs-label">Título:</div>
+                        <div className="tech-specs-value">{result.song || ""}</div>
+                        
+                        <div className="tech-specs-label">Autor(es):</div>
+                        <div className="tech-specs-value">{result.author || result.artist || ""}</div>
+                        
+                        <div className="tech-specs-label">Principal Intérprete:</div>
+                        <div className="tech-specs-value">{result.artist || ""}</div>
+                        
+                        <div className="tech-specs-label">País:</div>
+                        <div className="tech-specs-value">{result.country || ""}</div>
+                        
+                        <div className="tech-specs-label">Ano:</div>
+                        <div className="tech-specs-value">{result.release_year || result.year || ""}</div>
+                        
+                        <div className="tech-specs-label">Gênero:</div>
+                        <div className="tech-specs-value">{result.genre || ""}</div>
+                      </div>
+                    </div>
+                    
+                    {/* Card 2: Spotify */}
+                    {result.spotify_id && (
+                      <div className="result-card">
+                        <div className="result-card-title">{t.listenOn}</div>
+                        <iframe
+                          style={{ borderRadius: 8, width: '100%' }}
+                          height="352"
+                          frameBorder="0"
+                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                          src={`https://open.spotify.com/embed/track/${result.spotify_id}?utm_source=generator`}
+                        ></iframe>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card 3: Contexto Histórico */}
+                  {result.context && (
+                    <div className="result-card">
+                      <div className="result-card-title">{t.context}</div>
+                      <div className="result-card-text" dangerouslySetInnerHTML={{ __html: result.context }}></div>
+                    </div>
+                  )}
+
+                  {/* Card 4: Processo Criativo */}
+                  {result.creative_process && (
+                    <div className="result-card">
+                      <div className="result-card-title">{t.process}</div>
+                      <div className="result-card-text" dangerouslySetInnerHTML={{ __html: result.creative_process }}></div>
+                    </div>
+                  )}
+
+                  {/* Card 5: Scorecard Filosófico Ponderado Unificado */}
+                  <div className="result-card">
+                    <div className="result-card-title">{t.scorecard}</div>
+                    
+                    {/* Tabela com Ramos, Pontuações e Justificativas */}
+                    <table className="scorecard-table">
+                      <thead>
+                        <tr>
+                          <th>{t.branch}</th>
+                          <th style={{ textAlign: 'center' }}>{t.score}</th>
+                          <th style={{ textAlign: 'center' }}>{t.justification}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="scorecard-axis">{t.ethics} ({t.weight} 40%)</td>
+                          <td className="scorecard-score">{fmt(result.scorecard?.ethics?.score)}</td>
+                          <td className="scorecard-justification">
+                            {result.scorecard?.ethics?.justification || ""}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="scorecard-axis">{t.metaphysics} ({t.weight} 20%)</td>
+                          <td className="scorecard-score">{fmt(result.scorecard?.metaphysics?.score)}</td>
+                          <td className="scorecard-justification">
+                            {result.scorecard?.metaphysics?.justification || ""}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="scorecard-axis">{t.epistemology} ({t.weight} 20%)</td>
+                          <td className="scorecard-score">{fmt(result.scorecard?.epistemology?.score)}</td>
+                          <td className="scorecard-justification">
+                            {result.scorecard?.epistemology?.justification || ""}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="scorecard-axis">{t.politics} ({t.weight} 10%)</td>
+                          <td className="scorecard-score">{fmt(result.scorecard?.politics?.score)}</td>
+                          <td className="scorecard-justification">
+                            {result.scorecard?.politics?.justification || ""}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="scorecard-axis">{t.aesthetics} ({t.weight} 10%)</td>
+                          <td className="scorecard-score">{fmt(result.scorecard?.aesthetics?.score)}</td>
+                          <td className="scorecard-justification">
+                            {result.scorecard?.aesthetics?.justification || ""}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    {/* Nota Final Ponderada e Classificação */}
+                    <div style={{ textAlign: 'center', marginTop: '30px', paddingTop: '20px', borderTop: '2px solid #e2007a' }}>
+                      <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>
+                        {t.finalWeighted}: <span style={{ color: '#000' }}>{fmt(result.scorecard?.final_score)}</span>
+                      </div>
+                      <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>
+                        {t.philScore}: <span style={{ color: '#000' }}>{fmt(result.philosophical_note)}</span>
+                      </div>
+                      <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                        {t.classification}: {translateClassification(result.classification || "")}
+                      </div>
+                    </div>
+
+                    {/* Análise Final Integrada */}
+                    {result.philosophical_analysis && (
+                      <div className="final-analysis">
+                        <div className="final-analysis-title">{t.integrated}</div>
+                        <div className="final-analysis-text" dangerouslySetInnerHTML={{ __html: result.philosophical_analysis }}></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {result?.error && (
+                <div className="max-w-3xl mx-auto mt-6 rounded-2xl bg-white border border-pink-200 p-4 text-center text-red-600">
+                  {String(result.error)}
+                </div>
+              )}
+            </div>
+          </main>
+
+          {/* Rodapé final - tarja magenta com texto branco */}
+          <footer style={{ 
+            background: '#e2007a', 
+            color: '#ffffff', 
+            textAlign: 'center', 
+            padding: '30px 20px',
+            marginTop: '40px',
+            lineHeight: '1.8',
+            fontSize: '15px'
+          }}>
+            <div>
+              <p style={{ margin: 0 }}>{t.footer1}</p>
+              <p style={{ margin: 0 }}>{t.footer2}</p>
+              <p style={{ margin: 0 }}>{t.footer3}</p>
+              <p style={{ margin: 0 }}>
+                <a href="mailto:bob@philosify.org" style={{ color: '#ffffff', textDecoration: 'none' }}>
+                  {t.footer4}
+                </a>
+              </p>
+              <p style={{ margin: 0 }}>{t.footer5}</p>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    function fmt(v){ return (v===null||v===undefined) ? "" : (typeof v==="number" ? v.toString() : String(v)); }
+
+    function RowKV({k, v, big}){
+      return (
+        <div className="flex justify-between items-center">
+          <span className="text-xl font-bold text-gray-800">{k}</span>
+          <span className={big ? "text-4xl font-black" : "text-2xl font-bold"} style={{ color:"#db2777" }}>
+            {v}
+          </span>
+        </div>
+      );
+    }
+
+    function ScoreBar({label, value}){
+      const percent = typeof value === "number" ? Math.max(0, Math.min(100, ((value+10)/20)*100)) : 0;
+      const display = typeof value === "number" ? value.toFixed(1) : "";
+      return (
+        <div className="mb-4">
+          <div className="flex justify-between mb-2">
+            <span className="font-semibold text-gray-700">{label}</span>
+            <span className="font-bold" style={{ color:"#db2777" }}>{display}</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full" style={{ height: "12px" }}>
+            <div className="h-full rounded-full" style={{ width: `${percent}%`, background:"linear-gradient(90deg,#ec4899,#db2777)" }}></div>
+          </div>
+        </div>
+      );
+    }
+
+    function Card({title, text}){
+      return (
+        <div className="bg-white rounded-3xl shadow-2xl p-8" style={{ border: "2px solid #fbcfe8" }}>
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">{title}</h3>
+          <p className="text-gray-700 leading-relaxed">{text}</p>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+  </script>
+
+  <script>
+    // Função global para atualizar conteúdo do GUIDE
+
+    // Aguardar o DOM estar pronto para adicionar event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Carregar modelo salvo do localStorage
+      const modelSelector = document.getElementById('modelSelector');
+      const savedModel = localStorage.getItem('preferred_model');
+      if (savedModel && modelSelector) {
+        modelSelector.value = savedModel;
+      }
+      
+      // Salvar quando usuário mudar
+      if (modelSelector) {
+        modelSelector.addEventListener('change', function() {
+          localStorage.setItem('preferred_model', this.value);
+        });
+      }
+      
+      // ============================================================
+      // SISTEMA DE BUSCA INTELIGENTE COM DROPDOWN VERTICAL
+      // ============================================================
+      const songInput = document.getElementById('songInput');
+      const searchCarousel = document.getElementById('searchCarousel');
+      const carouselItems = document.getElementById('carouselItems');
+      
+      let searchTimeout = null;
+      let selectedTrack = null;
+      
+      // Função de busca
+      async function searchSongs(query) {
+        if (!query || query.length < 2) {
+          searchCarousel.style.display = 'none';
+          return;
+        }
+        
+        try {
+          carouselItems.innerHTML = '<div class="search-loading">Buscando...</div>';
+          searchCarousel.style.display = 'block';
+          
+          const res = await fetch('https://api.philosify.org/api/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query })
+          });
+          
+          const data = await res.json();
+          
+          if (data.options && data.options.length > 0) {
+            renderDropdown(data.options);
+          } else {
+            carouselItems.innerHTML = '<div class="search-loading">Nenhuma música encontrada</div>';
+            setTimeout(() => {
+              searchCarousel.style.display = 'none';
+            }, 2000);
+          }
+        } catch (error) {
+          console.error('Search error:', error);
+          searchCarousel.style.display = 'none';
+        }
+      }
+      
+      // Renderizar dropdown vertical
+      function renderDropdown(options) {
+        carouselItems.innerHTML = '';
+        
+        options.forEach((option) => {
+          const card = document.createElement('div');
+          card.className = 'carousel-card';
+          if (selectedTrack && selectedTrack.id === option.id) {
+            card.classList.add('selected');
+          }
+          
+          // Layout: imagem esquerda, info direita
+          card.innerHTML = `
+            ${option.image ? `<img src="${option.image}" class="carousel-card-image" alt="${option.song}">` : '<div class="carousel-card-image" style="background: #333;"></div>'}
+            <div class="carousel-card-info">
+              <div class="carousel-card-song">${option.song}</div>
+              <div class="carousel-card-artist">${option.artist}</div>
+              <div class="carousel-card-year">${option.year || ''}</div>
+            </div>
+          `;
+          
+          card.addEventListener('click', () => {
+            selectTrack(option);
+          });
+          
+          carouselItems.appendChild(card);
+        });
+        
+        searchCarousel.style.display = 'block';
+      }
+      
+      // Selecionar música
+      function selectTrack(track) {
+        selectedTrack = track;
+        songInput.value = `${track.song} - ${track.artist}`;
+        searchCarousel.style.display = 'none';
+        
+        // Armazenar para o React usar
+        window.SELECTED_TRACK = track;
+      }
+      
+      // Input com debounce
+      if (songInput) {
+        songInput.addEventListener('input', function(e) {
+          selectedTrack = null;
+          window.SELECTED_TRACK = null;
+          
+          if (searchTimeout) {
+            clearTimeout(searchTimeout);
+          }
+          
+          searchTimeout = setTimeout(() => {
+            searchSongs(e.target.value);
+          }, 500);
+        });
+        
+        // Fechar carrossel ao clicar fora
+        document.addEventListener('click', function(e) {
+          if (!songInput.contains(e.target) && !searchCarousel.contains(e.target)) {
+            searchCarousel.style.display = 'none';
+          }
+        });
+      }
+      
+    }); // Fim DOMContentLoaded
+  </script>
+</body>
+</html>

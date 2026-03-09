@@ -1,0 +1,42 @@
+{
+  "name": "philosify-api",
+  "version": "2.0.0",
+  "description": "Philosify Backend - Análise Filosófica Objetivista de Músicas",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "tail": "wrangler tail",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:integration": "curl -X POST http://localhost:8787/analyze -H 'Content-Type: application/json' -d '{\"song\": \"My Way - Frank Sinatra\", \"lang\": \"en\"}'",
+    "rollback": "wrangler rollback"
+  },
+  "keywords": [
+    "philosify",
+    "music",
+    "analysis",
+    "objectivism",
+    "cloudflare",
+    "workers"
+  ],
+  "author": "Philosify Team",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.89.0",
+    "jose": "^6.1.3",
+    "openai": "^6.15.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251205.0",
+    "@vitest/coverage-v8": "^4.0.15",
+    "miniflare": "^4.20251202.1",
+    "vitest": "^4.0.15"
+  }
+}

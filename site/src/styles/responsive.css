@@ -1,0 +1,2073 @@
+/* ============================================================
+   RESPONSIVE.CSS - Media Queries for All Breakpoints
+   ============================================================
+   
+   ⚠️  LAYOUT CRÍTICO - PROTECTED FILE ⚠️
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Este arquivo contém regras de layout RESPONSIVO críticas.
+   NÃO MODIFIQUE sem:
+   
+   1. Consultar LAYOUT_SPECS.md para medidas exatas
+   2. Comparar com screenshots em docs/layout-reference/
+   3. Testar em MÚLTIPLOS TAMANHOS DE TELA antes de commitar
+   4. Obter aprovação do responsável pelo layout
+   
+   Última revisão: 23/12/2025
+   Aprovado por: Bob Rach
+   
+   BREAKPOINTS:
+   - max-width: 768px (tablet/mobile)
+   - max-width: 560px (small mobile)
+   - max-width: 480px (extra small)
+   
+   ELEMENTOS PROTEGIDOS NO RESPONSIVO:
+   - .user-menu (top: calc(94px - 9px), right: 12px)
+   - .user-profile-buttons (margin-top: 4px, gap: 2px)
+   - .user-profile__username (order: -1, margin-bottom: 0.4px)
+   - .user-profile__balance (margin-top: 0 no responsivo)
+   - Todos os botões: height 28px, font-size 9px
+   
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ============================================================ */
+
+/* Prevent text size adjustment on iOS */
+* {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Hide all scrollbars in responsive environment */
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Exception: Account history and security need visible scrollbar for navigation */
+.account-history,
+.account-security {
+  scrollbar-width: thin !important; /* Firefox */
+  -ms-overflow-style: auto !important; /* IE and Edge */
+}
+
+.account-history::-webkit-scrollbar,
+.account-security::-webkit-scrollbar {
+  display: block !important; /* Chrome, Safari, Opera */
+  width: 10px !important;
+  height: auto !important;
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 560px) {
+  button,
+  a,
+  input,
+  select {
+    min-height: 44px; /* Apple's recommended minimum touch target */
+    -webkit-tap-highlight-color: rgba(217, 11, 145, 0.3);
+  }
+}
+
+/* ===== TABLET (max-width: 768px) ===== */
+@media (max-width: 768px) {
+  /* Fixed dark strip background - removed since ticker is now at top with its own background */
+  .site-header::before {
+    content: none !important; /* Disabled - ticker handles its own background */
+  }
+
+  /* Hide desktop-centered elements on mobile - use search-wrap instead */
+  .search-container-wrapper.desktop-centered,
+  .analyze-button-wrapper.desktop-centered {
+    display: none !important;
+  }
+
+  /* Logo - hide desktop, show mobile circuit version */
+  .logo-desktop {
+    display: none !important;
+  }
+
+  .logo.logo-mobile {
+    display: block !important;
+    position: absolute !important;
+    top: calc(50% - 1cm) !important; /* Center in responsive viewport, moved 1cm up */
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    width: 4cm !important; /* Fixed size for mobile logo */
+    height: auto !important;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45)) !important;
+    z-index: 10 !important;
+  }
+
+  /* Tagline positioned 0.2cm below mobile logo + 2.2cm down - 0.8cm up - 0.2cm up */
+  .header-content .tagline {
+    position: absolute !important;
+    top: calc(50% + 0.2cm + 2.2cm - 0.8cm - 0.2cm) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* Header spacing - no top strip in responsive */
+  .header-content {
+    padding: 24px 24px 80px;
+    gap: 1.5rem;
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .logo:not(.logo-mobile) {
+    width: clamp(120px, 20vw, 160px);
+    position: absolute !important;
+    left: 16px !important; /* Converted from 0.2cm + 2mm (8px) right */
+    top: calc(75.6px + 16px) !important; /* Below 2cm strip + padding */
+    margin: 0 !important;
+    z-index: 1001;
+    filter: drop-shadow(0 38px 75px rgba(0, 0, 0, 0.75))
+      drop-shadow(0 23px 45px rgba(0, 0, 0, 0.675)) drop-shadow(0 11px 23px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)) !important;
+  }
+
+  .tagline {
+    font-family: 'League Gothic', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: clamp(
+      16px,
+      3.5vw,
+      24px
+    ) !important; /* Responsive font size - reduced min to prevent cutting */
+    color: #000 !important; /* Black text for white background */
+    position: absolute !important;
+    left: 50% !important; /* Center horizontally */
+    top: calc(75.6px + 24px + 2.2cm) !important; /* Below 2cm strip + padding + 2.2cm down */
+    transform: translate(-50%, 0) !important; /* Center horizontally only */
+    margin: 0 !important;
+    padding: 0 clamp(8px, 1.6vw, 12px) !important; /* Responsive horizontal padding */
+    text-align: center !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-transform: uppercase !important;
+    text-shadow: none !important; /* No shadow on white background */
+    letter-spacing: clamp(0.1px, 0.05vw, 0.3px) !important; /* Responsive letter spacing */
+    max-width: calc(
+      100% - clamp(16px, 3.2vw, 24px)
+    ) !important; /* Prevent overflow with responsive margins */
+  }
+
+  /* Reduce font size for RU, KO, JA to fit within boundaries */
+  .tagline[data-lang='ru'],
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(13px, 2.8vw, 17px) !important; /* Responsive reduced for KO and JA */
+    letter-spacing: 0.1px !important; /* Tighter spacing */
+  }
+
+  /* Further reduce KO and JA */
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(12px, 2.5vw, 16px) !important; /* Responsive reduced by 1-2px */
+  }
+
+  /* Reduce FR by 2px */
+  .tagline[data-lang='fr'] {
+    font-size: clamp(18px, 4.5vw, 22px) !important; /* Responsive reduced by 2px from default */
+  }
+
+  /* Hebrew text (RTL language) - keep left aligned */
+  .tagline[data-lang='he'] {
+    text-align: left !important;
+    direction: ltr !important; /* Force LTR for alignment */
+  }
+
+  /* Better search container - positioned 0.2cm below tagline + 2.2cm down - 0.2cm up */
+  /* Tagline at 50% + 0.2cm + 2.2cm, tagline height ~30px (0.8cm), gap 0.2cm */
+  .search-wrap {
+    margin-top: 0;
+    gap: 4px !important; /* 0.1cm vertical gap between elements */
+    flex-direction: column !important;
+    align-items: stretch !important; /* Stretch children to same width */
+    justify-content: center;
+    padding: 0;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0;
+    width: auto;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: none;
+    position: absolute !important;
+    top: calc(
+      50% + 0.2cm + 0.8cm + 0.2cm - 0.5cm + 2.2cm - 0.2cm
+    ) !important; /* Tagline top + tagline height + gap - 0.5cm up + 2.2cm down - 0.2cm up */
+    bottom: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* Timer bar - move up 3.0cm */
+  .status-overlay {
+    margin-top: -3cm !important;
+  }
+
+  /* Footer - keep below fold, only visible by scrolling */
+  footer.footer,
+  footer {
+    margin-top: auto !important;
+    position: relative !important;
+  }
+
+  /* Ensure main content fills viewport so footer stays below */
+  .site-header {
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+  }
+
+  /* Status overlay should push footer down when visible */
+  .status-overlay {
+    min-height: 20vh !important;
+    margin-bottom: 30vh !important;
+  }
+
+  /* Reset absolute positioning for tablet */
+  .model-selector-dropdown,
+  .search-container-wrapper,
+  .analyze-button-wrapper {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important; /* Align number and element on same line */
+    justify-content: flex-start;
+    gap: 8px !important; /* Horizontal gap between number and element */
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure all three elements have the same width - widest content determines size - increased by 4cm total */
+  .model-selector-dropdown .model-selector-wrapper,
+  .search-container-wrapper .search-container,
+  .analyze-button-wrapper .analyze-button-container {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 283.5px !important; /* 7.5cm */
+    max-width: 283.5px !important; /* 7.5cm */
+  }
+
+  .model-selector-dropdown .model-selector,
+  .search-container-wrapper .input,
+  .analyze-button-wrapper .button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Elements are now aligned horizontally in rows */
+
+  .step-number {
+    position: relative !important;
+    transform: none !important;
+    font-size: clamp(14px, 2.3vw, 18px) !important; /* Responsive font size */
+    color: #fff !important;
+    font-weight: 700;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    flex-shrink: 0;
+    width: clamp(40px, 6.25vw, 48px) !important; /* Responsive width */
+    height: 30px !important; /* 0.8cm */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: clamp(6px, 1vw, 8px) !important; /* Responsive border radius */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.85) !important;
+    border: 1px solid #e2007a !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Number 3 - same colors as analyze button */
+  .analyze-button-wrapper .step-number {
+    background: #d90b91 !important;
+    border: 1px solid #e2007a !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(217, 11, 145, 0.5) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .analyze-button-wrapper .step-number:hover {
+    background: #a0066a !important;
+    box-shadow:
+      0 8px 32px rgba(213, 8, 134, 0.8),
+      0 0 20px rgba(213, 8, 134, 0.5) !important;
+  }
+
+  .step-wrapper {
+    flex-direction: row !important;
+    align-items: center !important; /* Align number and input/button on same line */
+    gap: 8px !important; /* Horizontal gap between number and element */
+    margin: 0 !important;
+  }
+
+  /* Make all three elements same width - determined by widest content */
+  .input,
+  .button,
+  .model-selector {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Increase width of three elements wrapper */
+  .model-selector-dropdown .model-selector-wrapper,
+  .search-container-wrapper .search-container,
+  .analyze-button-wrapper .analyze-button-container {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: 283.5px !important; /* 7.5cm */
+    max-width: 283.5px !important; /* 7.5cm */
+  }
+
+  /* Override base.css input[type="text"] rule */
+  input[type='text'],
+  input[type='search'] {
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+  }
+
+  /* Override search-placeholder-overlay font size to match model-selector */
+  .search-placeholder-overlay {
+    height: 30px !important; /* Match input height */
+    left: clamp(12px, 2.1vw, 16px) !important; /* Match input left padding */
+    right: clamp(
+      12px,
+      2.1vw,
+      16px
+    ) !important; /* Match input right padding (symmetric for centering) */
+    padding: 0 !important; /* Remove any padding */
+  }
+
+  .search-placeholder-overlay,
+  .search-placeholder-overlay > div {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    text-align: center !important; /* Ensure text is centered */
+  }
+
+  .input,
+  input[type='text'].input,
+  input[type='search'].input,
+  .search-container-wrapper .input,
+  .search-container-wrapper input[type='text'],
+  .search-container-wrapper input[type='search'] {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(12px, 2.1vw, 16px) !important; /* Responsive padding */
+  }
+
+  .input::placeholder,
+  input[type='text'].input::placeholder,
+  input[type='search'].input::placeholder,
+  .search-container-wrapper .input::placeholder,
+  .search-container-wrapper input[type='text']::placeholder,
+  .search-container-wrapper input[type='search']::placeholder {
+    font-size: 8px !important; /* Fixed 8px placeholder font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .button {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(16px, 2.6vw, 20px) !important; /* Responsive padding */
+  }
+
+  /* Loading stripe (timer bar) - same width as analyze button */
+  .loading-stripe-wrapper {
+    width: 283.5px !important; /* 7.5cm - same as analyze button */
+    max-width: 283.5px !important;
+  }
+
+  .model-selector {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: clamp(10px, 1.4vw, 11px) !important; /* Responsive font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(12px, 2.1vw, 16px) !important; /* Responsive padding */
+  }
+
+  .model-option {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  /* Top strip - HIDDEN on mobile (languages not shown) */
+  .top-strip {
+    display: none !important; /* Hidden on mobile - ticker is at top */
+  }
+
+  /* Language selector inside top strip - also hidden */
+  .top-strip .strip-right {
+    display: none !important;
+  }
+
+  /* Ensure language items are hidden in responsive */
+  .top-strip .strip-right button.lang-item,
+  .top-strip .lang-item,
+  .top-strip .guide-link {
+    display: none !important;
+  }
+
+  .top-strip .lang-item.active {
+    display: none !important;
+  }
+
+  .top-strip .lang-item:hover {
+    display: none !important;
+  }
+
+  /* User menu - positioned below ticker (ticker is now at top: 0, height: 28px) */
+  .user-menu {
+    position: absolute !important;
+    top: calc(28px + 12px) !important; /* Ticker height (28px) + gap (12px) */
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important; /* Center horizontally */
+    height: auto !important;
+    display: flex !important;
+    flex-direction: row !important; /* Side by side */
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 9px !important;
+    gap: 8px !important;
+    z-index: 100011 !important; /* Above everything */
+    background: transparent !important;
+  }
+
+  /* User profile buttons - 2x2 grid layout */
+  .user-profile-buttons {
+    display: grid !important;
+    grid-template-columns: auto auto !important; /* 2 columns */
+    grid-template-rows: auto auto !important; /* 2 rows */
+    gap: 4px !important; /* Equal gap between all buttons */
+    justify-items: center !important;
+    align-items: center !important;
+  }
+
+  /* Order elements: Username + Balance on top, Buy + Logout on bottom */
+  .user-profile__username {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    order: unset !important;
+  }
+
+  .user-profile__balance {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+
+  .user-profile__refill-btn {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+
+  .logout-btn {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+  }
+
+  .balance-display {
+    padding: 6px 12px;
+    font-size: 8px !important;
+  }
+
+  /* Auth buttons - horizontal layout, centered below icons */
+  .auth-buttons {
+    display: flex !important;
+    flex-direction: row !important; /* Horizontal layout */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  .auth-btn {
+    padding: 6px 14px;
+    font-size: 8px !important;
+    height: auto !important;
+    margin: 0 !important;
+  }
+
+  /* Sign in button - no special positioning needed */
+  .auth-buttons .auth-btn:first-child {
+    top: auto !important;
+  }
+
+  .user-profile__balance,
+  .user-profile__refill-btn,
+  .user-profile__username,
+  .user-profile__balance-text,
+  .balance-amount,
+  .logout-btn {
+    font-size: 10px !important;
+  }
+
+  .user-profile__balance,
+  .user-profile__refill-btn,
+  .user-profile__username,
+  .logout-btn {
+    min-height: 28px !important;
+    height: 28px !important;
+    padding: 6px 12px !important;
+    position: relative !important;
+    margin: 0 !important;
+  }
+
+  .result-two-columns {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 16px;
+  }
+
+  .result-card-title {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .result-card-text {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .tech-specs-grid {
+    font-size: 14px;
+    gap: 12px;
+  }
+
+  /* Scorecard table mobile layout */
+  .scorecard-table,
+  .scorecard-table thead,
+  .scorecard-table tbody,
+  .scorecard-table th,
+  .scorecard-table td,
+  .scorecard-table tr {
+    display: block;
+  }
+
+  .scorecard-table thead tr {
+    display: none;
+  }
+
+  .scorecard-table tr {
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .scorecard-table td {
+    border: none;
+    padding: 8px 0;
+    text-align: left !important;
+  }
+
+  .scorecard-table td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Modal responsive */
+  .auth-modal,
+  .credits-modal,
+  .legal-modal {
+    padding: 30px 20px;
+    max-width: 95%;
+  }
+
+  .auth-modal h2,
+  .credits-modal h2,
+  .legal-modal h1 {
+    font-size: 24px;
+  }
+}
+
+/* ===== SMALL TABLET (max-width: 640px) ===== */
+@media (max-width: 640px) {
+  .header-content {
+    padding: 90px 20px 50px;
+    gap: 1.25rem;
+  }
+
+  .logo:not(.logo-mobile),
+  .logo-as-button {
+    width: clamp(100px, 18vw, 140px);
+    position: absolute !important;
+    left: 16px !important; /* Converted from 0.2cm + 2mm (8px) right */
+    top: calc(85px + 38px - 28px - 4px) !important; /* Aligned with username top */
+    margin: 0 !important;
+    z-index: 1001;
+    filter: drop-shadow(0 38px 75px rgba(0, 0, 0, 0.75))
+      drop-shadow(0 23px 45px rgba(0, 0, 0, 0.675)) drop-shadow(0 11px 23px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)) !important;
+  }
+
+  .tagline {
+    font-family: 'League Gothic', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: clamp(
+      18px,
+      4.2vw,
+      42px
+    ) !important; /* Responsive font size - reduced min to prevent cutting */
+    color: #000 !important; /* Black text for white background */
+    position: absolute !important;
+    left: 50% !important; /* Center horizontally */
+    top: 58.5px !important; /* Vertically centered: (top-strip bottom 26px + logo/username top 91px) / 2 */
+    transform: translate(-50%, -50%) !important; /* Center both horizontally and vertically */
+    margin: 0 !important;
+    padding: 0 clamp(8px, 1.6vw, 12px) !important; /* Responsive horizontal padding */
+    text-align: center !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-transform: uppercase !important;
+    text-shadow: none !important; /* No shadow on white background */
+    letter-spacing: clamp(0.1px, 0.05vw, 0.3px) !important; /* Responsive letter spacing */
+    max-width: calc(
+      100% - clamp(16px, 3.2vw, 24px)
+    ) !important; /* Prevent overflow with responsive margins */
+  }
+
+  /* Reduce font size for RU, KO, JA to fit within boundaries */
+  .tagline[data-lang='ru'],
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(17px, 3.8vw, 31px) !important; /* Responsive reduced for KO and JA */
+    letter-spacing: 0.1px !important; /* Tighter spacing */
+  }
+
+  /* Further reduce KO and JA */
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(16px, 3.5vw, 30px) !important; /* Responsive reduced by 1-2px */
+  }
+
+  /* Reduce FR by 2px */
+  .tagline[data-lang='fr'] {
+    font-size: clamp(22px, 5.5vw, 40px) !important; /* Responsive reduced by 2px from default */
+  }
+
+  /* Hebrew text (RTL language) - keep left aligned */
+  .tagline[data-lang='he'] {
+    text-align: left !important;
+    direction: ltr !important; /* Force LTR for alignment */
+  }
+
+  .search-wrap {
+    margin-top: 0;
+    gap: 4px !important; /* 0.1cm vertical gap between elements */
+    flex-direction: column !important;
+    align-items: stretch !important; /* Stretch children to same width */
+    justify-content: center;
+    padding: 0;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0;
+    width: auto;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: none;
+    position: absolute !important;
+    top: calc(
+      50% + 0.2cm + 0.8cm + 0.2cm - 0.5cm + 2.2cm
+    ) !important; /* Tagline top + tagline height + gap - 0.5cm up + 2.2cm down */
+    bottom: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* Reset absolute positioning */
+  .model-selector-dropdown,
+  .search-container-wrapper,
+  .analyze-button-wrapper {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important; /* Align number and element on same line */
+    justify-content: center;
+    gap: 0.625rem;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure all three elements have the same width - widest content determines size - increased by 4cm total */
+  .model-selector-dropdown .model-selector-wrapper,
+  .search-container-wrapper .search-container,
+  .analyze-button-wrapper .analyze-button-container {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 283.5px !important; /* 7.5cm */
+    max-width: 283.5px !important; /* 7.5cm */
+  }
+
+  .model-selector-dropdown .model-selector,
+  .search-container-wrapper .input,
+  .analyze-button-wrapper .button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .step-number {
+    position: relative !important;
+    transform: none !important;
+    font-size: 1.125rem; /* Converted from 18pt, approximately 18px */
+    color: #fff !important;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+    width: 46px !important; /* Increased from 38px */
+    height: 30px !important; /* 0.8cm */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.85) !important;
+    border: 1px solid #e2007a !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Number 3 - same colors as analyze button */
+  .analyze-button-wrapper .step-number {
+    background: #d90b91 !important;
+    border: 1px solid #e2007a !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(217, 11, 145, 0.5) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .analyze-button-wrapper .step-number:hover {
+    background: #a0066a !important;
+    box-shadow:
+      0 8px 32px rgba(213, 8, 134, 0.8),
+      0 0 20px rgba(213, 8, 134, 0.5) !important;
+  }
+
+  .step-wrapper {
+    flex-direction: row !important;
+    align-items: center !important; /* Align number and input/button on same line */
+    gap: 8px !important; /* Horizontal gap between number and element */
+    margin: 0 !important;
+  }
+
+  /* Override base.css input[type="text"] rule */
+  input[type='text'],
+  input[type='search'] {
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+  }
+
+  /* Override search-placeholder-overlay font size to match model-selector */
+  .search-placeholder-overlay {
+    height: 30px !important; /* Match input height */
+    left: clamp(12px, 2.9vw, 16px) !important; /* Match input left padding */
+    right: clamp(
+      12px,
+      2.9vw,
+      16px
+    ) !important; /* Match input right padding (symmetric for centering) */
+    padding: 0 !important; /* Remove any padding */
+  }
+
+  .search-placeholder-overlay,
+  .search-placeholder-overlay > div {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    text-align: center !important; /* Ensure text is centered */
+  }
+
+  .input,
+  input[type='text'].input,
+  input[type='search'].input,
+  .search-container-wrapper .input,
+  .search-container-wrapper input[type='text'],
+  .search-container-wrapper input[type='search'] {
+    width: 100%;
+    max-width: 100%;
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(12px, 2.9vw, 16px) !important; /* Responsive padding */
+  }
+
+  .input::placeholder,
+  input[type='text'].input::placeholder,
+  input[type='search'].input::placeholder,
+  .search-container-wrapper .input::placeholder,
+  .search-container-wrapper input[type='text']::placeholder,
+  .search-container-wrapper input[type='search']::placeholder {
+    font-size: 8px !important; /* Fixed 8px placeholder font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .button {
+    width: 100%;
+    max-width: 100%;
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: clamp(
+      11px,
+      2.25vw,
+      12.6px
+    ) !important; /* Responsive font size - matches model-selector exactly */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(14px, 3.2vw, 18px) !important; /* Responsive padding */
+  }
+
+  .model-selector {
+    width: 100%;
+    max-width: 100%;
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: clamp(11px, 2.25vw, 12.6px) !important; /* Responsive font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    min-width: auto;
+    padding: 0 clamp(12px, 2.9vw, 16px) !important; /* Responsive padding */
+  }
+
+  .model-option {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+}
+
+/* ===== MOBILE (max-width: 560px) ===== */
+@media (max-width: 560px) {
+  /* Base typography improvements */
+  body {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Top strip (language selector) - HIDDEN on mobile */
+  .top-strip {
+    display: none !important;
+  }
+
+  .top-strip::-webkit-scrollbar,
+  .strip-right::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .strip-right {
+    display: none !important;
+  }
+
+  /* Hide language items on mobile */
+  .top-strip .strip-right button.lang-item,
+  .top-strip .lang-item,
+  .top-strip .guide-link {
+    display: none !important;
+  }
+
+  .guide-link,
+  .lang-item {
+    display: none !important;
+  }
+
+  .header-content {
+    padding: 70px 12px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.25rem;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .header-left-positioned {
+    left: 12px;
+    top: 90px;
+    width: calc(100% - 24px);
+    align-items: center;
+  }
+
+  .header-right-positioned {
+    right: 12px;
+    top: auto;
+    bottom: 30px;
+    transform: none;
+  }
+
+  .search-container-left {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Reset absolute positioning for mobile */
+  .model-selector-dropdown,
+  .search-container-wrapper,
+  .analyze-button-wrapper {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important; /* Align number and element on same line */
+    justify-content: flex-start;
+    gap: 8px !important; /* Horizontal gap between number and element */
+    margin: 0 !important;
+  }
+
+  /* Ensure all three elements have the same width - increased by 2cm */
+  .model-selector-dropdown .model-selector-wrapper,
+  .search-container-wrapper .search-container,
+  .analyze-button-wrapper .analyze-button-container {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 283.5px !important; /* 7.5cm */
+    max-width: 283.5px !important; /* 7.5cm */
+  }
+
+  .step-number {
+    position: relative !important;
+    transform: none !important;
+    font-size: clamp(13px, 2vw, 16px) !important; /* Responsive font size */
+    color: #fff !important;
+    font-weight: 700;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    flex-shrink: 0;
+    width: clamp(38px, 5.9vw, 48px) !important; /* Responsive width */
+    height: 30px !important; /* 0.8cm */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: clamp(6px, 0.9vw, 8px) !important; /* Responsive border radius */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.85) !important;
+    border: 1px solid #e2007a !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Number 3 - same colors as analyze button */
+  .analyze-button-wrapper .step-number {
+    background: #d90b91 !important;
+    border: 1px solid #e2007a !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(217, 11, 145, 0.5) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .analyze-button-wrapper .step-number:hover {
+    background: #a0066a !important;
+    box-shadow:
+      0 8px 32px rgba(213, 8, 134, 0.8),
+      0 0 20px rgba(213, 8, 134, 0.5) !important;
+  }
+
+  .step-wrapper {
+    flex-direction: row !important;
+    align-items: center !important; /* Align number and input/button on same line */
+    gap: 8px !important; /* Horizontal gap between number and element */
+    margin: 0 !important;
+  }
+
+  /* Override step-wrapper gap from search.css */
+  .search-wrap .step-wrapper {
+    gap: 8px !important; /* Horizontal gap */
+    margin-bottom: 4px !important; /* 0.1cm vertical gap between elements */
+  }
+
+  .search-wrap .step-wrapper:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .logo:not(.logo-mobile),
+  .logo-as-button {
+    width: clamp(90px, 22vw, 130px);
+    position: absolute !important;
+    left: 16px !important; /* Converted from 0.2cm + 2mm (8px) right */
+    top: calc(85px + 38px - 28px - 4px) !important; /* Aligned with username top */
+    margin: 0 !important;
+    z-index: 1001;
+    filter: drop-shadow(0 38px 75px rgba(0, 0, 0, 0.75))
+      drop-shadow(0 23px 45px rgba(0, 0, 0, 0.675)) drop-shadow(0 11px 23px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)) !important;
+  }
+
+  .tagline {
+    font-family: 'League Gothic', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: clamp(
+      16px,
+      3.8vw,
+      36px
+    ) !important; /* Responsive font size - reduced min to prevent cutting */
+    color: #000 !important; /* Black text for white background */
+    position: absolute !important;
+    left: 50% !important; /* Center horizontally */
+    top: 58.5px !important; /* Vertically centered: (top-strip bottom 26px + logo/username top 91px) / 2 */
+    transform: translate(-50%, -50%) !important; /* Center both horizontally and vertically */
+    margin: 0 !important;
+    padding: 0 clamp(8px, 1.6vw, 12px) !important; /* Responsive horizontal padding */
+    text-align: center !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-transform: uppercase !important;
+    text-shadow: none !important; /* No shadow on white background */
+    letter-spacing: clamp(0.1px, 0.05vw, 0.3px) !important; /* Responsive letter spacing */
+    max-width: calc(
+      100% - clamp(16px, 3.2vw, 24px)
+    ) !important; /* Prevent overflow with responsive margins */
+  }
+
+  /* Reduce font size for RU, KO, JA to fit within boundaries */
+  .tagline[data-lang='ru'],
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(13px, 3.3vw, 27px) !important; /* Responsive reduced for KO and JA */
+    letter-spacing: 0.1px !important; /* Tighter spacing */
+  }
+
+  /* Further reduce KO and JA */
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(12px, 3vw, 26px) !important; /* Responsive reduced by 1-2px */
+  }
+
+  /* Reduce FR by 2px */
+  .tagline[data-lang='fr'] {
+    font-size: clamp(18px, 4.5vw, 34px) !important; /* Responsive reduced by 2px from default */
+  }
+
+  /* Hebrew text (RTL language) - keep left aligned */
+  .tagline[data-lang='he'] {
+    text-align: left !important;
+    direction: ltr !important; /* Force LTR for alignment */
+  }
+
+  .search-wrap {
+    flex-direction: column !important;
+    margin-top: 0;
+    gap: 4px !important; /* 0.1cm vertical gap between elements */
+    padding: 0;
+    position: absolute !important;
+    top: calc(
+      50% + 0.2cm + 0.8cm + 0.2cm - 0.5cm + 2.2cm - 0.2cm
+    ) !important; /* Tagline top + tagline height + gap - 0.5cm up + 2.2cm down - 0.2cm up */
+    bottom: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    align-items: stretch !important; /* Stretch children to same width */
+    justify-content: center;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0;
+    width: auto;
+    max-width: calc(100% - 24px);
+    box-shadow: none;
+    border: none;
+  }
+
+  /* Ensure all three elements have the same width - widest content determines size - increased by 4cm total */
+  .model-selector-dropdown .model-selector-wrapper,
+  .search-container-wrapper .search-container,
+  .analyze-button-wrapper .analyze-button-container {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 283.5px !important; /* 7.5cm */
+    max-width: 283.5px !important; /* 7.5cm */
+  }
+
+  .model-selector-dropdown .model-selector,
+  .search-container-wrapper .input,
+  .analyze-button-wrapper .button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Make all three elements same width - determined by widest content */
+  .input,
+  .button,
+  .model-selector {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Override base.css input[type="text"] rule */
+  input[type='text'],
+  input[type='search'] {
+    font-size: clamp(
+      11px,
+      2vw,
+      12.6px
+    ) !important; /* Responsive font size - matches model-selector exactly */
+  }
+
+  /* Override search-placeholder-overlay font size to match model-selector */
+  .search-placeholder-overlay {
+    height: 30px !important; /* Match input height */
+    left: clamp(11px, 2.5vw, 14px) !important; /* Match input left padding */
+    right: clamp(
+      11px,
+      2.5vw,
+      14px
+    ) !important; /* Match input right padding (symmetric for centering) */
+    padding: 0 !important; /* Remove any padding */
+  }
+
+  .search-placeholder-overlay,
+  .search-placeholder-overlay > div {
+    font-size: clamp(11px, 2vw, 12.6px) !important; /* Match model-selector font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    text-align: center !important; /* Ensure text is centered */
+  }
+
+  .input,
+  input[type='text'].input,
+  input[type='search'].input,
+  .search-container-wrapper .input,
+  .search-container-wrapper input[type='text'],
+  .search-container-wrapper input[type='search'] {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(11px, 2.5vw, 14px) !important; /* Responsive padding */
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #fff !important;
+    border: 1px solid #e2007a !important;
+    border-radius: clamp(8px, 1.3vw, 10px) !important; /* Responsive border radius */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .input::placeholder,
+  input[type='text'].input::placeholder,
+  input[type='search'].input::placeholder,
+  .search-container-wrapper .input::placeholder,
+  .search-container-wrapper input[type='text']::placeholder,
+  .search-container-wrapper input[type='search']::placeholder {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-size: 8px !important; /* Fixed 8px placeholder font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .button {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: clamp(
+      11px,
+      2vw,
+      12.6px
+    ) !important; /* Responsive font size - matches model-selector exactly */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(14px, 2.8vw, 18px) !important; /* Responsive padding */
+    background: #d90b91 !important;
+    color: #fff !important;
+    border: 1px solid #e2007a !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(217, 11, 145, 0.5);
+    border-radius: clamp(6px, 1vw, 8px) !important; /* Responsive border radius */
+    transition: all 0.3s ease;
+  }
+
+  .button:active {
+    transform: scale(0.98);
+    box-shadow: 0 3px 10px rgba(217, 11, 145, 0.4);
+  }
+
+  .model-selector {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: clamp(11px, 2vw, 12.6px) !important; /* Responsive font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(12px, 2.5vw, 16px) !important; /* Responsive padding */
+  }
+
+  .model-option {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  /* Flap selector (search dropdown) mobile fixes */
+  .search-flip-window {
+    position: absolute !important; /* Open downward from search input */
+    top: calc(100% + 4px) !important; /* Position below search input */
+    bottom: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 999999 !important;
+    background: #d90b91 !important; /* Same magenta as analyze button */
+    border: 2px solid #d90b91 !important;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(217, 11, 145, 0.6) !important;
+    padding: 6px 12px !important; /* 1.2cm total height (46px - 2px border = 44px content, ~6px padding top/bottom) */
+    max-height: 46px !important; /* 1.2cm total height */
+  }
+
+  .search-flip-content {
+    font-size: 11px !important; /* Reduced font size */
+    color: #fff !important;
+    padding: 2px !important; /* Restore padding for visibility */
+    margin: 0 !important; /* Remove margin */
+    text-align: center;
+    line-height: 1.3 !important; /* Restore line height */
+    display: flex !important;
+    flex-direction: row !important; /* Single line - row instead of column */
+    align-items: center !important; /* Center items vertically */
+    justify-content: center !important; /* Center content horizontally */
+    max-height: 1.3em !important; /* Single line only */
+    overflow: hidden !important;
+    white-space: nowrap !important; /* Force single line */
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -moz-hyphens: none !important;
+  }
+
+  .search-flip-song {
+    font-size: 11px !important; /* Reduced font size */
+    font-weight: 700;
+    color: #fff !important;
+    display: inline !important; /* Inline to stay on same line */
+    margin-bottom: 0 !important;
+    line-height: 1.3 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    flex-shrink: 1 !important; /* Allow shrinking if needed */
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -moz-hyphens: none !important;
+  }
+
+  .search-flip-separator {
+    display: inline !important; /* Show separator inline */
+    margin: 0 4px !important;
+  }
+
+  .search-flip-artist {
+    font-size: 10px !important; /* Reduced font size */
+    color: rgba(255, 255, 255, 0.9) !important;
+    display: inline !important; /* Inline to stay on same line */
+    line-height: 1.3 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    flex-shrink: 1 !important; /* Allow shrinking if needed */
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -moz-hyphens: none !important;
+  }
+
+  .search-flip-footer {
+    margin-top: 0 !important; /* Remove margin to move up */
+    padding-top: 0 !important; /* Remove padding */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px !important; /* Reduced gap */
+    border-top: none !important; /* Remove border to save space */
+  }
+
+  .search-nav-arrow {
+    width: 23px !important; /* 0.6cm width */
+    height: 23px !important; /* 0.6cm height */
+    font-size: 14px !important; /* Reduced font size */
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.2) !important; /* Lighter on magenta background */
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  }
+
+  .search-flip-counter {
+    font-size: 10px !important; /* Reduced font size */
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 600;
+  }
+
+  /* User menu mobile fixes - below ticker (ticker is now at top: 0, height: 28px) */
+  .user-menu {
+    position: absolute !important;
+    top: calc(28px + 12px) !important; /* Ticker height (28px) + gap (12px) */
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important; /* Center horizontally */
+    font-size: 9px !important;
+    justify-content: center !important;
+    z-index: 100011 !important; /* Above everything */
+    flex-direction: row !important; /* Side by side */
+    display: flex !important;
+    height: auto !important;
+    gap: 8px !important;
+  }
+
+  /* Auth buttons - horizontal layout */
+  .auth-buttons {
+    display: flex !important;
+    flex-direction: row !important; /* Horizontal layout */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  /* Form inputs and buttons mobile fixes */
+  .form-input {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    min-height: 48px !important;
+    padding: 12px 16px !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+
+  .form-button {
+    min-height: 48px !important;
+    font-size: 16px !important;
+    -webkit-tap-highlight-color: rgba(226, 0, 122, 0.3) !important;
+    touch-action: manipulation !important;
+  }
+
+  .auth-btn,
+  .logout-btn,
+  .balance-display,
+  .user-profile__balance,
+  .user-profile__refill-btn,
+  .user-profile__username,
+  .user-profile__balance-text,
+  .balance-amount {
+    font-size: 8px !important;
+  }
+
+  /* User profile buttons - 2x2 grid layout (inherited from 768px breakpoint) */
+
+  .auth-btn,
+  .logout-btn,
+  .balance-display {
+    padding: 6px 12px !important;
+    min-height: 28px !important;
+    color: #fff !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    -webkit-tap-highlight-color: rgba(226, 0, 122, 0.3) !important;
+    touch-action: manipulation !important;
+    border: 2px solid #e2007a !important;
+  }
+
+  /* Reduce font size for French and Spanish on mobile */
+  html[lang='fr'] .auth-btn,
+  html[lang='es'] .auth-btn {
+    font-size: 8px !important;
+  }
+}
+
+/* ===== SMALL MOBILE (max-width: 380px) ===== */
+@media (max-width: 380px) {
+  .top-strip {
+    height: 14px !important; /* 0.4cm total */
+    min-height: 14px !important; /* Override base min-height */
+    padding: 0 4px;
+    gap: 6px;
+    overflow: hidden;
+    border: none !important; /* No borders */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    position: fixed !important;
+    top: 12px !important; /* Moved 2mm (8px) down from 4px */
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100025 !important; /* Above user-menu when scrolling */
+    box-sizing: border-box !important;
+  }
+
+  .strip-right {
+    gap: 10.74px !important; /* Base + 3.74 increment */
+    flex-wrap: nowrap;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .guide-link,
+  .lang-item {
+    font-size: clamp(9px, 2.2vw, 11px);
+    padding: 3px 5px !important;
+    color: rgba(255, 255, 255, 0.8) !important; /* White for dark background */
+    white-space: nowrap;
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
+    border-radius: 4px !important;
+  }
+
+  .user-menu {
+    position: absolute !important;
+    top: calc(28px + 12px) !important; /* Ticker height (28px) + gap (12px) */
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important; /* Center horizontally */
+    gap: 8px !important;
+    justify-content: center !important;
+    z-index: 100011 !important; /* Above everything */
+    flex-direction: row !important; /* Side by side */
+    display: flex !important;
+    height: auto !important;
+  }
+
+  /* Auth buttons - horizontal layout */
+  .auth-buttons {
+    display: flex !important;
+    flex-direction: row !important; /* Horizontal layout */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  .auth-btn {
+    padding: 5px 10px;
+    font-size: 8px !important;
+  }
+
+  /* Reset absolute positioning for small mobile */
+  .model-selector-dropdown,
+  .search-container-wrapper,
+  .analyze-button-wrapper {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important; /* Changed from column to row */
+    align-items: center !important; /* Align number and element on same line */
+    gap: 8px !important; /* Horizontal gap between number and element */
+  }
+
+  .search-wrap {
+    margin-top: 6px; /* Converted from 0.15cm */
+    gap: 4px !important; /* 0.1cm vertical gap between elements */
+    padding: 10px 12px;
+    position: relative;
+    align-items: stretch !important; /* Stretch children to same width */
+    flex-direction: column;
+  }
+
+  .step-number {
+    position: relative !important;
+    transform: none !important;
+    font-size: clamp(12px, 2.1vw, 16px) !important; /* Responsive font size */
+    color: #fff !important;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+    width: clamp(30px, 4.7vw, 36px) !important; /* Responsive width */
+    height: 30px !important; /* 0.8cm */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: clamp(6px, 1vw, 8px) !important; /* Responsive border radius */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.85) !important;
+    border: 1px solid #e2007a !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .step-wrapper {
+    flex-direction: row !important;
+    align-items: center !important; /* Align number and input/button on same line */
+    gap: 8px !important; /* Horizontal gap between number and element */
+    margin: 0 !important;
+  }
+
+  .logo:not(.logo-mobile),
+  .logo-as-button {
+    width: clamp(80px, 28vw, 110px);
+    position: absolute !important;
+    left: 16px !important; /* Converted from 0.2cm + 2mm (8px) right */
+    top: calc(85px + 38px - 28px - 4px) !important; /* Aligned with username top */
+    margin: 0 !important;
+    z-index: 1001;
+    filter: drop-shadow(0 38px 75px rgba(0, 0, 0, 0.75))
+      drop-shadow(0 23px 45px rgba(0, 0, 0, 0.675)) drop-shadow(0 11px 23px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)) !important;
+  }
+
+  .header-content {
+    padding: 70px 12px 40px;
+  }
+
+  .header-left-positioned {
+    left: 12px;
+    top: 80px;
+    width: calc(100% - 24px);
+    align-items: center;
+  }
+
+  .header-right-positioned {
+    right: 12px;
+    top: auto;
+    bottom: 20px;
+    transform: none;
+  }
+
+  .search-container-left {
+    width: 100%;
+  }
+
+  .tagline {
+    font-family: 'League Gothic', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: clamp(
+      18px,
+      3.5vw,
+      32px
+    ) !important; /* Responsive font size - reduced min to prevent cutting */
+    color: #000 !important; /* Black text for white background */
+    position: absolute !important;
+    left: 50% !important; /* Center horizontally */
+    top: 58.5px !important; /* Vertically centered: (top-strip bottom 26px + logo/username top 91px) / 2 */
+    transform: translate(-50%, -50%) !important; /* Center both horizontally and vertically */
+    margin: 0 !important;
+    padding: 0 clamp(8px, 1.6vw, 12px) !important; /* Responsive horizontal padding */
+    text-align: center !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-transform: uppercase !important;
+    text-shadow: none !important; /* No shadow on white background */
+    letter-spacing: clamp(0.1px, 0.05vw, 0.3px) !important; /* Responsive letter spacing */
+    max-width: calc(
+      100% - clamp(16px, 3.2vw, 24px)
+    ) !important; /* Prevent overflow with responsive margins */
+  }
+
+  /* Reduce font size for RU, KO, JA to fit within boundaries */
+  .tagline[data-lang='ru'],
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(17px, 2.3vw, 23px) !important; /* Responsive reduced for KO and JA */
+    letter-spacing: 0.1px !important; /* Tighter spacing */
+  }
+
+  /* Further reduce KO and JA */
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(16px, 2vw, 22px) !important; /* Responsive reduced by 1-2px */
+  }
+
+  /* Reduce FR by 2px */
+  .tagline[data-lang='fr'] {
+    font-size: clamp(22px, 4vw, 30px) !important; /* Responsive reduced by 2px from default */
+  }
+
+  /* Hebrew text (RTL language) - keep left aligned */
+  .tagline[data-lang='he'] {
+    text-align: left !important;
+    direction: ltr !important; /* Force LTR for alignment */
+  }
+
+  .search-wrap {
+    margin-top: 6px; /* Converted from 0.15cm */
+    gap: 4px !important; /* 0.1cm vertical gap between elements */
+    padding: 10px 12px;
+    position: relative;
+    align-items: stretch !important; /* Stretch children to same width */
+    flex-direction: column;
+  }
+
+  /* Ensure all three elements have the same width - widest content determines size - increased by 4cm total */
+  .model-selector-dropdown .model-selector-wrapper,
+  .search-container-wrapper .search-container,
+  .analyze-button-wrapper .analyze-button-container {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 283.5px !important; /* 7.5cm */
+    max-width: 283.5px !important; /* 7.5cm */
+  }
+
+  .model-selector-dropdown .model-selector,
+  .search-container-wrapper .input,
+  .analyze-button-wrapper .button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Make all three elements same width - determined by widest content */
+  .input,
+  .button,
+  .model-selector {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Override base.css input[type="text"] rule */
+  input[type='text'],
+  input[type='search'] {
+    font-size: clamp(
+      10px,
+      3.1vw,
+      11.7px
+    ) !important; /* Responsive font size - matches model-selector exactly */
+  }
+
+  /* Override search-placeholder-overlay font size to match model-selector */
+  .search-placeholder-overlay {
+    height: 30px !important; /* Match input height */
+    left: 0 !important; /* Match input left padding (no padding specified in this breakpoint) */
+    right: 0 !important; /* Match input right padding (no padding specified in this breakpoint) */
+    padding: 0 !important; /* Remove any padding */
+  }
+
+  .search-placeholder-overlay,
+  .search-placeholder-overlay > div {
+    font-size: clamp(10px, 3.1vw, 11.7px) !important; /* Match model-selector font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    text-align: center !important; /* Ensure text is centered */
+  }
+
+  .input,
+  input[type='text'].input,
+  input[type='search'].input,
+  .search-container-wrapper .input,
+  .search-container-wrapper input[type='text'],
+  .search-container-wrapper input[type='search'] {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .input::placeholder,
+  input[type='text'].input::placeholder,
+  input[type='search'].input::placeholder,
+  .search-container-wrapper .input::placeholder,
+  .search-container-wrapper input[type='text']::placeholder,
+  .search-container-wrapper input[type='search']::placeholder {
+    font-size: 8px !important; /* Fixed 8px placeholder font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .button,
+  .model-selector {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .model-option {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+}
+
+/* ===== LANDSCAPE MODE (max-height: 500px) ===== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .site-header {
+    height: auto; /* Changed from 100vh to prevent content cutoff with keyboard */
+    min-height: auto; /* Changed from 100vh to prevent content cutoff with keyboard */
+  }
+
+  .top-strip {
+    height: 14px !important; /* 0.4cm total */
+    min-height: 14px !important; /* Override base min-height */
+    padding: 0 12px;
+    border: none !important; /* No borders */
+    position: fixed !important;
+    top: 12px !important; /* Moved 2mm (8px) down from 4px */
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100025 !important; /* Above user-menu when scrolling */
+    box-sizing: border-box !important;
+  }
+
+  .header-content {
+    padding: 50px 12px 40px;
+  }
+
+  .header-left-positioned {
+    left: 12px;
+    top: 70px;
+    width: calc(100% - 24px);
+    align-items: center;
+  }
+
+  .header-right-positioned {
+    right: 12px;
+    top: auto;
+    bottom: 20px;
+    transform: none;
+  }
+
+  .search-container-left {
+    width: 100%;
+  }
+
+  .logo:not(.logo-mobile),
+  .logo-as-button {
+    width: clamp(70px, 20vw, 100px);
+    position: absolute !important;
+    left: 16px !important; /* Converted from 0.2cm + 2mm (8px) right */
+    top: calc(85px + 38px - 28px - 4px) !important; /* Aligned with username top */
+    margin: 0 !important;
+    z-index: 1001;
+    filter: drop-shadow(0 38px 75px rgba(0, 0, 0, 0.75))
+      drop-shadow(0 23px 45px rgba(0, 0, 0, 0.675)) drop-shadow(0 11px 23px rgba(0, 0, 0, 0.6))
+      drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45)) !important;
+  }
+
+  .tagline {
+    font-family: 'League Gothic', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: clamp(
+      18px,
+      3vw,
+      28px
+    ) !important; /* Responsive font size - reduced min to prevent cutting */
+    color: #000 !important; /* Black text for white background */
+    position: absolute !important;
+    left: 50% !important; /* Center horizontally */
+    top: 58.5px !important; /* Vertically centered: (top-strip bottom 26px + logo/username top 91px) / 2 */
+    transform: translate(-50%, -50%) !important; /* Center both horizontally and vertically */
+    margin: 0 !important;
+    padding: 0 clamp(8px, 1.6vw, 12px) !important; /* Responsive horizontal padding */
+    text-align: center !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-transform: uppercase !important;
+    text-shadow: none !important; /* No shadow on white background */
+    letter-spacing: clamp(0.1px, 0.05vw, 0.3px) !important; /* Responsive letter spacing */
+    max-width: calc(
+      100% - clamp(16px, 3.2vw, 24px)
+    ) !important; /* Prevent overflow with responsive margins */
+  }
+
+  /* Reduce font size for RU, KO, JA to fit within boundaries */
+  .tagline[data-lang='ru'],
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(17px, 1.8vw, 21px) !important; /* Responsive reduced for KO and JA */
+    letter-spacing: 0.1px !important; /* Tighter spacing */
+  }
+
+  /* Further reduce KO and JA */
+  .tagline[data-lang='ko'],
+  .tagline[data-lang='ja'] {
+    font-size: clamp(16px, 1.5vw, 20px) !important; /* Responsive reduced by 1-2px */
+  }
+
+  /* Reduce FR by 2px */
+  .tagline[data-lang='fr'] {
+    font-size: clamp(22px, 3.5vw, 26px) !important; /* Responsive reduced by 2px from default */
+  }
+
+  /* Hebrew text (RTL language) - keep left aligned */
+  .tagline[data-lang='he'] {
+    text-align: left !important;
+    direction: ltr !important; /* Force LTR for alignment */
+  }
+
+  .search-wrap {
+    margin-top: 4px; /* Converted from 0.1cm */
+    gap: 4px; /* Converted from 0.1cm */
+    flex-direction: row;
+    padding: 10px 16px;
+    align-items: stretch !important; /* Stretch children to same width */
+  }
+
+  /* Ensure all three elements have the same width - widest content determines size - increased by 4cm total */
+  .model-selector-dropdown .model-selector-wrapper,
+  .search-container-wrapper .search-container,
+  .analyze-button-wrapper .analyze-button-container {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: 283.5px !important; /* 7.5cm */
+    max-width: 283.5px !important; /* 7.5cm */
+  }
+
+  .model-selector-dropdown .model-selector,
+  .search-container-wrapper .input,
+  .analyze-button-wrapper .button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Make all three elements same width - determined by widest content */
+  .input,
+  .button,
+  .model-selector {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Override base.css input[type="text"] rule */
+  input[type='text'],
+  input[type='search'] {
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+  }
+
+  /* Override search-placeholder-overlay font size to match model-selector */
+  .search-placeholder-overlay {
+    height: 30px !important; /* Match input height */
+    left: clamp(6px, 1.6vw, 8px) !important; /* Match input left padding */
+    right: clamp(
+      6px,
+      1.6vw,
+      8px
+    ) !important; /* Match input right padding (symmetric for centering) */
+    padding: 0 !important; /* Remove any padding */
+  }
+
+  .search-placeholder-overlay,
+  .search-placeholder-overlay > div {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    text-align: center !important; /* Ensure text is centered */
+  }
+
+  .input,
+  input[type='text'].input,
+  input[type='search'].input,
+  .search-container-wrapper .input,
+  .search-container-wrapper input[type='text'],
+  .search-container-wrapper input[type='search'] {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: 16px !important; /* 16px prevents iOS auto-zoom */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .input::placeholder,
+  input[type='text'].input::placeholder,
+  input[type='search'].input::placeholder,
+  .search-container-wrapper .input::placeholder,
+  .search-container-wrapper input[type='text']::placeholder,
+  .search-container-wrapper input[type='search']::placeholder {
+    font-size: 8px !important; /* Fixed 8px placeholder font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .button {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: clamp(
+      9px,
+      2.2vw,
+      10.8px
+    ) !important; /* Responsive font size - matches model-selector exactly */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+    padding: 0 clamp(6px, 1.6vw, 8px) !important; /* Responsive padding */
+  }
+
+  .model-selector {
+    height: 30px !important; /* 0.8cm */
+    min-height: 30px !important; /* 0.8cm */
+    max-height: 30px !important; /* 0.8cm */
+    font-size: clamp(9px, 2.2vw, 10.8px) !important; /* Responsive font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .model-option {
+    font-size: 8px !important; /* Fixed 8px font size */
+    font-family: Georgia, serif !important; /* Match model-selector font-family */
+    font-weight: 700 !important; /* Match model-selector font-weight */
+    line-height: 1 !important; /* Match model-selector line-height */
+    -webkit-font-smoothing: antialiased !important; /* Match model-selector font-smoothing */
+    -moz-osx-font-smoothing: grayscale !important; /* Match model-selector font-smoothing */
+  }
+
+  .step-number {
+    width: clamp(30px, 7vw, 36px) !important; /* Responsive width */
+    height: 30px !important; /* 0.8cm */
+  }
+
+  .step-wrapper {
+    align-items: center !important; /* Align number and input/button on same line */
+  }
+}
