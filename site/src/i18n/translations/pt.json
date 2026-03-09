@@ -438,12 +438,19 @@
         "description": "Examine eventos atuais por uma lente filosófica",
         "searchPlaceholder": "Cole a URL da notícia...",
         "analyzeButton": "Analisar Artigo"
+      },
+      "ideas": {
+        "title": "Ideias",
+        "description": "Explore e debata conceitos filosóficos",
+        "searchPlaceholder": "Digite uma ideia ou conceito...",
+        "analyzeButton": "Analisar Ideia"
       }
     },
     "comingSoonDesc": {
       "books": "Estamos trabalhando para trazer análise filosófica de livros. Aguarde!",
       "films": "Estamos trabalhando para trazer análise filosófica de filmes. Aguarde!",
-      "news": "Estamos trabalhando para trazer análise filosófica de notícias. Aguarde!"
+      "news": "Estamos trabalhando para trazer análise filosófica de notícias. Aguarde!",
+      "ideas": "Estamos trabalhando para trazer exploração filosófica de ideias. Aguarde!"
     }
   },
   "nav": {

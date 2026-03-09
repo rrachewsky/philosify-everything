@@ -44,6 +44,9 @@ const FilmsAnalysis = lazy(() =>
 const NewsAnalysis = lazy(() =>
   import('./pages/ComingSoon').then((m) => ({ default: m.NewsAnalysis }))
 );
+const IdeasAnalysis = lazy(() =>
+  import('./pages/ComingSoon').then((m) => ({ default: m.IdeasAnalysis }))
+);
 
 // Home page wrapper (4-category grid) with auth modals
 function HomePageWrapper({ onCommunity }) {
@@ -388,6 +391,7 @@ export function Router() {
           <Route path="/books" element={<BooksAnalysis />} />
           <Route path="/films" element={<FilmsAnalysis />} />
           <Route path="/news" element={<NewsAnalysis />} />
+          <Route path="/ideas" element={<IdeasAnalysis />} />
 
           {/* Main App - Full analysis experience */}
           <Route path="/app" element={<App />} />

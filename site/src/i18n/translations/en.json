@@ -438,12 +438,19 @@
         "description": "Examine current events through a philosophical lens",
         "searchPlaceholder": "Paste news URL...",
         "analyzeButton": "Analyze Article"
+      },
+      "ideas": {
+        "title": "Ideas",
+        "description": "Explore and debate philosophical concepts",
+        "searchPlaceholder": "Enter an idea or concept...",
+        "analyzeButton": "Analyze Idea"
       }
     },
     "comingSoonDesc": {
       "books": "We are working to bring philosophical analysis to books. Stay tuned!",
       "films": "We are working to bring philosophical analysis to films. Stay tuned!",
-      "news": "We are working to bring philosophical analysis to news. Stay tuned!"
+      "news": "We are working to bring philosophical analysis to news. Stay tuned!",
+      "ideas": "We are working to bring philosophical exploration of ideas. Stay tuned!"
     }
   },
   "nav": {
