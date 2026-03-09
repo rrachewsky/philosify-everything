@@ -104,15 +104,12 @@ name = "ANALYZE_RATE_LIMITER"
 namespace_id = "1002"
 simple = { limit = 3, period = 60 }  # 3 requests per 60 seconds (expensive AI calls)
 
-# Cron Triggers - Colloquium + QOTD + Top 10 + User-proposed philosopher stagger
-# Cloudflare free plan allows max 5 cron triggers, so we consolidate:
-# 1) */5 * * * *     -> Check pending user-proposed philosopher replies (every 5 min)
-# 2) 0 8,11 * * *   -> Daily colloquium create (8) + philosopher reply (11)
-# 3) 0 12 * * *     -> QOTD + Top 10 (Sundays)
-# 4) 0 14,17,20 * * * -> Daily philosopher replies (consolidated)
-# 5) 0 23 * * *     -> Daily colloquium verdict + auto-verdict for user-proposed
-[env.production.triggers]
-crons = ["*/5 * * * *", "0 8,11 * * *", "0 12 * * *", "0 14,17,20 * * *", "0 23 * * *"]
+# Cron Triggers - DISABLED for philosify-everything
+# The original philosify-api worker handles all cron jobs (colloquium, QOTD, etc.)
+# Both workers share the same Supabase database, so crons only need to run once.
+# Cloudflare free plan limit: 5 crons per account (already used by philosify-api)
+# [env.production.triggers]
+# crons = ["*/5 * * * *", "0 8,11 * * *", "0 12 * * *", "0 14,17,20 * * *", "0 23 * * *"]
 
 # R2 Bucket for TTS Audio Cache
 [[env.production.r2_buckets]]
