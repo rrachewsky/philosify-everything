@@ -6,7 +6,13 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { ShareAnalysisToDMModal } from '../messages/ShareAnalysisToDMModal.jsx';
 import { Toast } from '../common';
 
-export function ShareToDMButton({ analysisId, songName, artist, finalScore, classification }) {
+export function ShareToDMButton({
+  analysisId,
+  songName,
+  artist,
+  philosophicalNote,
+  classification,
+}) {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -18,7 +24,7 @@ export function ShareToDMButton({ analysisId, songName, artist, finalScore, clas
     analysisId,
     songName,
     artist,
-    finalScore: finalScore ?? null,
+    philosophicalNote: philosophicalNote || null,
     classification: classification || null,
   };
 

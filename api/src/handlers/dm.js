@@ -1931,7 +1931,7 @@ export async function handleShareAnalysis(
       analysisId,
       songName,
       artist,
-      finalScore,
+      philosophicalNote,
       classification,
       shareSlug,
     } = body;
@@ -1971,7 +1971,7 @@ export async function handleShareAnalysis(
       analysisId,
       songName,
       artist,
-      finalScore: finalScore != null ? Number(finalScore) : null,
+      philosophicalNote: philosophicalNote || null,
       classification: classification || null,
       shareSlug: shareSlug || null,
     };

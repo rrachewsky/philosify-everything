@@ -357,12 +357,20 @@ export async function toggleReaction(conversationId, messageId, reactionType) {
 
 /** Share an analysis as a rich card message in a DM conversation */
 export async function shareAnalysis(conversationId, analysisData) {
-  const { analysisId, songName, artist, finalScore, classification, shareSlug } = analysisData;
+  const { analysisId, songName, artist, philosophicalNote, classification, shareSlug } =
+    analysisData;
   const res = await fetch(`${API_BASE}/dm/conversations/${conversationId}/share-analysis`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ analysisId, songName, artist, finalScore, classification, shareSlug }),
+    body: JSON.stringify({
+      analysisId,
+      songName,
+      artist,
+      philosophicalNote,
+      classification,
+      shareSlug,
+    }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));

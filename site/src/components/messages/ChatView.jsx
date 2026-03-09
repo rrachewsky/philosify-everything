@@ -125,7 +125,7 @@ const REACTIONS = [
 // Analysis share card - renders a rich preview card for shared analyses
 function AnalysisShareCard({ metadata, t }) {
   if (!metadata) return null;
-  const { songName, artist, finalScore, classification, analysisId, shareSlug } = metadata;
+  const { songName, artist, philosophicalNote, classification, analysisId, shareSlug } = metadata;
 
   const handleViewAnalysis = () => {
     // Navigate to the shared analysis page
@@ -142,9 +142,15 @@ function AnalysisShareCard({ metadata, t }) {
       <div className="dm-analysis-card__content">
         <div className="dm-analysis-card__song">{songName}</div>
         <div className="dm-analysis-card__artist">{artist}</div>
-        {(finalScore != null || classification) && (
+        {(philosophicalNote || classification) && (
           <div className="dm-analysis-card__stats">
-            {finalScore != null && <span className="dm-analysis-card__score">{finalScore}</span>}
+            {philosophicalNote && (
+              <span className="dm-analysis-card__note">
+                {philosophicalNote.length > 80
+                  ? philosophicalNote.substring(0, 80) + '...'
+                  : philosophicalNote}
+              </span>
+            )}
             {classification && (
               <span className="dm-analysis-card__classification">{classification}</span>
             )}

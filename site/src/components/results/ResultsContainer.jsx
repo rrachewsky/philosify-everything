@@ -402,7 +402,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
             analysisId={result.id}
             songName={result.song || result.song_name || result.title}
             artist={result.artist}
-            finalScore={result.scorecard?.final_score ?? result.final_score ?? result.overall_grade}
+            philosophicalNote={result.philosophical_note}
             classification={result.classification}
           />
           <ShareToCommunityButton

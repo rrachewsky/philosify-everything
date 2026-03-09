@@ -3633,7 +3633,8 @@
   border-radius: 16px;
   width: 100%;
   max-width: 380px;
-  max-height: 80vh;
+  height: 70vh; /* Fixed height to ensure scrolling works */
+  max-height: 500px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -3646,6 +3647,7 @@
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid rgba(120, 100, 180, 0.15);
+  flex-shrink: 0;
 }
 
 .group-members-modal__title {
@@ -3744,7 +3746,8 @@
 
 /* Member list */
 .group-members-modal__list {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0; /* Required for overflow in flex containers */
   overflow-y: auto;
   padding: 8px 12px;
 }
@@ -3854,8 +3857,9 @@
     -apple-system,
     sans-serif;
   font-size: 12px;
-  margin-bottom: 8px;
+  margin: 8px 12px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .group-members-modal__search:focus {
@@ -4098,6 +4102,15 @@
   border-radius: 6px;
 }
 
+.dm-analysis-card__note {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+  font-style: italic;
+  display: block;
+  width: 100%;
+}
+
 .dm-analysis-card__classification {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.7);
@@ -4122,6 +4135,7 @@
   margin: 0 0 8px;
   background: rgba(90, 30, 160, 0.15);
   border-left: 3px solid #8a2be2;
+  flex-shrink: 0;
 }
 
 .dm-share-analysis-preview__icon {

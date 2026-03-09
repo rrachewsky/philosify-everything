@@ -513,6 +513,11 @@
       "shareAnalysis": "Compartir Analisis",
       "shareViaDM": "Compartir via DM",
       "shareTo": "Buscar personas para compartir...",
+      "searchPeople": "Buscar personas...",
+      "selected": "seleccionados",
+      "sending": "Enviando...",
+      "selectRecipients": "Seleccionar destinatarios",
+      "shareFailed": "Error al compartir analisis",
       "viewAnalysis": "Ver Analisis",
       "score": "Puntuacion",
       "analysisShared": "Analisis compartido con {{name}}"
