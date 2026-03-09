@@ -412,22 +412,32 @@
     "subtitle": "Análise Filosófica de Tudo",
     "comingSoon": "Em Breve",
     "startAnalysis": "Iniciar Análise",
+    "analyze": "Analisar",
+    "searchDefault": "Buscar...",
     "categories": {
       "music": {
         "title": "Música",
-        "description": "Analise os temas filosóficos em músicas e álbuns"
+        "description": "Analise os temas filosóficos em músicas e álbuns",
+        "searchPlaceholder": "Buscar uma música...",
+        "analyzeButton": "Analisar Música"
       },
       "books": {
         "title": "Livros",
-        "description": "Explore as ideias por trás da literatura e não-ficção"
+        "description": "Explore as ideias por trás da literatura e não-ficção",
+        "searchPlaceholder": "Buscar um livro...",
+        "analyzeButton": "Analisar Livro"
       },
       "films": {
         "title": "Filmes",
-        "description": "Descubra narrativas filosóficas no cinema"
+        "description": "Descubra narrativas filosóficas no cinema",
+        "searchPlaceholder": "Buscar um filme...",
+        "analyzeButton": "Analisar Filme"
       },
       "news": {
         "title": "Notícias",
-        "description": "Examine eventos atuais por uma lente filosófica"
+        "description": "Examine eventos atuais por uma lente filosófica",
+        "searchPlaceholder": "Cole a URL da notícia...",
+        "analyzeButton": "Analisar Artigo"
       }
     },
     "comingSoonDesc": {

@@ -412,22 +412,32 @@
     "subtitle": "Philosophical Analysis of Everything",
     "comingSoon": "Coming Soon",
     "startAnalysis": "Start Analysis",
+    "analyze": "Analyze",
+    "searchDefault": "Search...",
     "categories": {
       "music": {
         "title": "Music",
-        "description": "Analyze the philosophical themes in songs and albums"
+        "description": "Analyze the philosophical themes in songs and albums",
+        "searchPlaceholder": "Search for a song...",
+        "analyzeButton": "Scan Music"
       },
       "books": {
         "title": "Books",
-        "description": "Explore the ideas behind literature and non-fiction"
+        "description": "Explore the ideas behind literature and non-fiction",
+        "searchPlaceholder": "Search for a book...",
+        "analyzeButton": "Analyze Book"
       },
       "films": {
         "title": "Films",
-        "description": "Discover philosophical narratives in cinema"
+        "description": "Discover philosophical narratives in cinema",
+        "searchPlaceholder": "Search for a film...",
+        "analyzeButton": "Analyze Film"
       },
       "news": {
         "title": "News",
-        "description": "Examine current events through a philosophical lens"
+        "description": "Examine current events through a philosophical lens",
+        "searchPlaceholder": "Paste news URL...",
+        "analyzeButton": "Analyze Article"
       }
     },
     "comingSoonDesc": {

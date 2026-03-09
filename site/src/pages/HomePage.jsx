@@ -1,8 +1,8 @@
-// HomePage - Main landing page with 4 category boxes
-// Music, Books, Films, News - each leading to their respective analysis pages
+// HomePage - Main landing page with 4 category mini-landings
+// Each box has: Logo + Search field + Analyze button
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks';
 import { useCreditsContext } from '@/contexts';
@@ -31,62 +31,105 @@ const LANDING_LANGUAGES = [
   { code: 'fa', label: 'FA', name: 'فارسی' },
 ];
 
-// Category definitions with icons (SVG paths)
+// Category configurations
 const CATEGORIES = [
-  {
-    id: 'music',
-    route: '/music',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M9 18V5l12-2v13" />
-        <circle cx="6" cy="18" r="3" />
-        <circle cx="18" cy="16" r="3" />
-      </svg>
-    ),
-    available: true,
-  },
-  {
-    id: 'books',
-    route: '/books',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-        <path d="M8 7h8M8 11h6" />
-      </svg>
-    ),
-    available: false,
-  },
-  {
-    id: 'films',
-    route: '/films',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <rect x="2" y="2" width="20" height="20" rx="2.18" />
-        <path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5" />
-      </svg>
-    ),
-    available: false,
-  },
-  {
-    id: 'news',
-    route: '/news',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
-        <path d="M7 10h6M7 14h3" />
-      </svg>
-    ),
-    available: false,
-  },
+  { id: 'music', available: true },
+  { id: 'books', available: false },
+  { id: 'films', available: false },
+  { id: 'news', available: false },
 ];
+
+// Mini Landing Box Component
+function CategoryBox({ category, t, onAnalyze, isAuthenticated }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const inputRef = useRef(null);
+
+  const handleAnalyze = () => {
+    if (!category.available) return;
+    onAnalyze(category.id, searchQuery);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      handleAnalyze();
+    }
+  };
+
+  const placeholderKey = `home.categories.${category.id}.searchPlaceholder`;
+  const placeholder = t(placeholderKey, t('home.searchDefault', 'Search...'));
+  const buttonText = t(
+    `home.categories.${category.id}.analyzeButton`,
+    t('home.analyze', 'Analyze')
+  );
+
+  return (
+    <motion.div
+      className={`category-box ${!category.available ? 'category-box--disabled' : ''}`}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Coming Soon Overlay */}
+      {!category.available && (
+        <div className="category-box__overlay">
+          <span className="category-box__badge">{t('home.comingSoon', 'Coming Soon')}</span>
+        </div>
+      )}
+
+      {/* Logo/Video */}
+      <div className="category-box__logo">
+        <video
+          className="category-box__video"
+          src="/logovideo.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+      </div>
+
+      {/* Category Title */}
+      <h2 className="category-box__title">
+        {t(`home.categories.${category.id}.title`, category.id)}
+      </h2>
+
+      {/* Search Field */}
+      <div className="category-box__search">
+        <input
+          ref={inputRef}
+          type="text"
+          className="category-box__input"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          disabled={!category.available}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck="false"
+        />
+      </div>
+
+      {/* Analyze Button */}
+      <motion.button
+        className="category-box__button"
+        onClick={handleAnalyze}
+        disabled={!category.available || !searchQuery.trim()}
+        whileHover={category.available && searchQuery.trim() ? { scale: 1.02 } : {}}
+        whileTap={category.available && searchQuery.trim() ? { scale: 0.98 } : {}}
+      >
+        {buttonText}
+      </motion.button>
+    </motion.div>
+  );
+}
 
 export function HomePage({ onSignIn, onSignUp, onLogout, onBuyCredits, onHistory }) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { balance } = useCreditsContext();
   const { t, i18n } = useTranslation();
-  const [isVideoLoaded, setIsVideoLoaded] = useState(true);
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
   const bgVideoRef = useRef(null);
 
@@ -97,188 +140,127 @@ export function HomePage({ onSignIn, onSignUp, onLogout, onBuyCredits, onHistory
     i18n.changeLanguage(langCode);
   };
 
-  const handleCategoryClick = (category) => {
-    if (category.available) {
-      navigate(category.route);
+  const handleAnalyze = (categoryId, query) => {
+    if (categoryId === 'music') {
+      // Navigate to music page with the search query
+      navigate('/music', { state: { initialQuery: query } });
     }
-    // Coming soon categories don't navigate
+    // Other categories will be handled when implemented
   };
 
-  // Start video on load
+  // Start background video
   useEffect(() => {
     if (bgVideoRef.current) {
-      bgVideoRef.current.play().catch(() => {
-        // Autoplay blocked
-      });
+      bgVideoRef.current.play().catch(() => {});
     }
   }, []);
 
   return (
-    <>
-      <div className="home-screen">
-        {/* Loading Overlay */}
-        <AnimatePresence>
-          {!isVideoLoaded && (
-            <motion.div
-              className="loading-overlay"
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="loading-spinner" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+    <div className="home-page">
+      {/* Background */}
+      <div className="home-page__bg">
+        <video
+          ref={bgVideoRef}
+          className="home-page__bg-video"
+          src="/logovideo.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        <div className="home-page__bg-overlay" />
+      </div>
 
-        {/* Auth Bar */}
-        <motion.div
-          className="home-auth-bar"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
+      {/* Auth Bar */}
+      <header className="home-page__header">
+        <div className="home-page__header-left">
           <InstallButton />
+        </div>
+        <div className="home-page__header-right">
           {!user ? (
             <>
-              <button className="home-auth-link" onClick={onSignUp}>
+              <button className="home-page__auth-link" onClick={onSignUp}>
                 {t('auth.signUp')}
               </button>
-              <button className="home-auth-link" onClick={onSignIn}>
+              <button className="home-page__auth-link" onClick={onSignIn}>
                 {t('auth.signIn')}
               </button>
             </>
           ) : (
-            <div className="home-user-profile">
-              <div className="home-user-top">
-                <span className="home-username">{displayName}</span>
-              </div>
-              <div className="home-user-middle">
-                <span className="home-balance">
-                  {balance?.total ?? '...'} {t('userProfile.credits')}
-                </span>
-                <button className="home-auth-link home-buy-link" onClick={onBuyCredits}>
-                  {t('userProfile.buyCredits')}
-                </button>
-              </div>
-              <div className="home-user-bottom">
-                <button className="home-auth-link" onClick={onHistory}>
-                  {t('account.history')}
-                </button>
-                <button className="home-auth-link" onClick={onLogout || signOut}>
-                  {t('userProfile.logout')}
-                </button>
-              </div>
+            <div className="home-page__user">
+              <span className="home-page__username">{displayName}</span>
+              <span className="home-page__balance">
+                {balance?.total ?? '...'} {t('userProfile.credits')}
+              </span>
+              <button
+                className="home-page__auth-link home-page__auth-link--buy"
+                onClick={onBuyCredits}
+              >
+                {t('userProfile.buyCredits')}
+              </button>
+              <button className="home-page__auth-link" onClick={onHistory}>
+                {t('account.history')}
+              </button>
+              <button className="home-page__auth-link" onClick={onLogout || signOut}>
+                {t('userProfile.logout')}
+              </button>
             </div>
           )}
-        </motion.div>
-
-        {/* Background Video */}
-        <div className="home-bg-video-layer">
-          <video
-            ref={bgVideoRef}
-            className="home-bg-video"
-            src="/logovideo.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            onLoadedData={() => setIsVideoLoaded(true)}
-            onError={() => setIsVideoLoaded(true)}
-          />
-          <div className="home-bg-overlay" />
         </div>
+      </header>
 
-        {/* Language Selector */}
-        <motion.div
-          className="home-language-icons"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-        >
-          <div className="home-language-row">
-            {LANDING_LANGUAGES.slice(0, 9).map((lang) => (
-              <button
-                key={lang.code}
-                className={`home-language-icon ${selectedLang === lang.code ? 'selected' : ''}`}
-                onClick={() => handleLanguageChange(lang.code)}
-                title={lang.name}
-              >
-                {lang.label}
-              </button>
-            ))}
-          </div>
-          <div className="home-language-row">
-            {LANDING_LANGUAGES.slice(9, 18).map((lang) => (
-              <button
-                key={lang.code}
-                className={`home-language-icon ${selectedLang === lang.code ? 'selected' : ''}`}
-                onClick={() => handleLanguageChange(lang.code)}
-                title={lang.name}
-              >
-                {lang.label}
-              </button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Main Content */}
-        <div className="home-content">
-          {/* Logo/Title */}
-          <motion.div
-            className="home-header"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h1 className="home-title">PHILOSIFY</h1>
-            <p className="home-subtitle">
-              {t('home.subtitle', 'Philosophical Analysis of Everything')}
-            </p>
-          </motion.div>
-
-          {/* Category Grid */}
-          <motion.div
-            className="home-categories"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            {CATEGORIES.map((category, index) => (
-              <motion.div
-                key={category.id}
-                className={`home-category-card ${!category.available ? 'home-category-card--disabled' : ''}`}
-                onClick={() => handleCategoryClick(category)}
-                whileHover={category.available ? { scale: 1.03, y: -5 } : {}}
-                whileTap={category.available ? { scale: 0.98 } : {}}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-              >
-                <div className="home-category-icon">{category.icon}</div>
-                <h2 className="home-category-title">
-                  {t(`home.categories.${category.id}.title`, category.id)}
-                </h2>
-                <p className="home-category-desc">
-                  {t(`home.categories.${category.id}.description`, '')}
-                </p>
-                {!category.available && (
-                  <span className="home-category-badge">{t('home.comingSoon', 'Coming Soon')}</span>
-                )}
-                {category.available && (
-                  <span className="home-category-cta">
-                    {t('home.startAnalysis', 'Start Analysis')} &rarr;
-                  </span>
-                )}
-              </motion.div>
-            ))}
-          </motion.div>
+      {/* Language Selector */}
+      <div className="home-page__languages">
+        <div className="home-page__lang-row">
+          {LANDING_LANGUAGES.slice(0, 9).map((lang) => (
+            <button
+              key={lang.code}
+              className={`home-page__lang-btn ${selectedLang === lang.code ? 'home-page__lang-btn--active' : ''}`}
+              onClick={() => handleLanguageChange(lang.code)}
+              title={lang.name}
+            >
+              {lang.label}
+            </button>
+          ))}
+        </div>
+        <div className="home-page__lang-row">
+          {LANDING_LANGUAGES.slice(9, 18).map((lang) => (
+            <button
+              key={lang.code}
+              className={`home-page__lang-btn ${selectedLang === lang.code ? 'home-page__lang-btn--active' : ''}`}
+              onClick={() => handleLanguageChange(lang.code)}
+              title={lang.name}
+            >
+              {lang.label}
+            </button>
+          ))}
         </div>
       </div>
 
+      {/* Main Title */}
+      <div className="home-page__title-section">
+        <h1 className="home-page__title">PHILOSIFY</h1>
+        <p className="home-page__subtitle">
+          {t('home.subtitle', 'Philosophical Analysis of Everything')}
+        </p>
+      </div>
+
+      {/* Category Grid */}
+      <main className="home-page__grid">
+        {CATEGORIES.map((category) => (
+          <CategoryBox
+            key={category.id}
+            category={category}
+            t={t}
+            onAnalyze={handleAnalyze}
+            isAuthenticated={!!user}
+          />
+        ))}
+      </main>
+
       {/* Footer */}
-      <div className="home-footer-section">
-        <footer className="home-footer">
+      <footer className="home-page__footer">
+        <div className="home-page__footer-content">
           {t('footer0')}
           <br />
           {t('footer1')}
@@ -292,9 +274,9 @@ export function HomePage({ onSignIn, onSignUp, onLogout, onBuyCredits, onHistory
           {t('footer4')}
           <br />
           <a href="/pp">{t('privacyLink')}</a> - <a href="/tos">{t('termsLink')}</a>
-        </footer>
-      </div>
-    </>
+        </div>
+      </footer>
+    </div>
   );
 }
 
