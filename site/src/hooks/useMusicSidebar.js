@@ -83,12 +83,12 @@ export function useMusicSidebar() {
   const openWithPendingAction = useCallback(() => {
     const pending = getPendingAction();
     if (pending?.type === 'analysis' && pending.track) {
+      spotify.selectTrack(pending.track);
       setSelectedTrack(pending.track);
       setAnalysisResult(null);
       setIsAnalyzing(false);
       setAnalysisError(null);
       setElapsedTime(0);
-      spotify.clearAll();
       clearPendingAction();
       setIsOpen(true);
     } else {
