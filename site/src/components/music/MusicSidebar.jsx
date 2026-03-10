@@ -94,9 +94,15 @@ export function MusicSidebar({
 
     const onTouchStart = (e) => {
       // Only forward if touch starts outside content (header, ticker, etc.)
-      // but NOT inside the ticker (let horizontal swipe work naturally)
+      // but NOT inside the ticker (let horizontal swipe work)
+      // and NOT on interactive elements (buttons, links, inputs must still receive taps)
       const ticker = sidebar.querySelector('.music-sidebar__ticker');
-      if (!content.contains(e.target) && (!ticker || !ticker.contains(e.target))) {
+      const isInteractive = e.target.closest('button, a, input, [role="button"]');
+      if (
+        !content.contains(e.target) &&
+        (!ticker || !ticker.contains(e.target)) &&
+        !isInteractive
+      ) {
         touchStartY = e.touches[0].clientY;
         forwarding = true;
       } else {
