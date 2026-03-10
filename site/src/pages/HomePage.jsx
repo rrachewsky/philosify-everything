@@ -210,11 +210,11 @@ export function HomePage({
                 </button>
               </div>
               <div className="landing-user-bottom">
-                <button className="landing-auth-link" onClick={onLogout || signOut}>
-                  {t('userProfile.logout')}
-                </button>
                 <button className="landing-auth-link" onClick={onHistory}>
                   {t('account.history')}
+                </button>
+                <button className="landing-auth-link" onClick={onLogout || signOut}>
+                  {t('userProfile.logout')}
                 </button>
               </div>
             </div>
