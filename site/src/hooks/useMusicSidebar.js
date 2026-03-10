@@ -8,6 +8,7 @@ import { useState, useCallback, useRef } from 'react';
 import { useSpotifySearch, useAuth } from '@/hooks';
 import { useCreditsContext } from '@/contexts';
 import { config } from '@/config';
+import { getPendingAction, clearPendingAction } from '@/utils/pendingAction.js';
 
 /**
  * Music sidebar state management hook.
@@ -77,6 +78,24 @@ export function useMusicSidebar() {
     },
     [spotify]
   );
+
+  // Open sidebar restoring track from a pending credit action (after payment return)
+  const openWithPendingAction = useCallback(() => {
+    const pending = getPendingAction();
+    if (pending?.type === 'analysis' && pending.track) {
+      setSelectedTrack(pending.track);
+      setAnalysisResult(null);
+      setIsAnalyzing(false);
+      setAnalysisError(null);
+      setElapsedTime(0);
+      spotify.clearAll();
+      clearPendingAction();
+      setIsOpen(true);
+    } else {
+      // No valid pending action — just open fresh
+      open();
+    }
+  }, [spotify, open]);
 
   // Toggle sidebar
   const toggle = useCallback(() => {
@@ -253,6 +272,7 @@ export function useMusicSidebar() {
     close,
     toggle,
     openWithResult,
+    openWithPendingAction,
 
     // Search state (from useSpotifySearch)
     query: spotify.query,

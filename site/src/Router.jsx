@@ -1,6 +1,14 @@
 // Router - React Router v6 setup for Philosify with sidebar architecture
 import { Suspense, lazy, useState, useEffect, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useParams,
+  useLocation,
+} from 'react-router-dom';
 import App from './App';
 import { Spinner } from './components/common';
 import {
@@ -16,7 +24,7 @@ import { MusicSidebar } from './components/music/MusicSidebar';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
 import { useModal, useAuth, useMusicSidebar, useIdeas } from './hooks';
 import { useCommunity } from './hooks/useCommunity.js';
-import { logger } from './utils';
+import { logger, getPendingAction, clearPendingAction } from './utils';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://api-everything.philosify.org';
 
@@ -165,6 +173,33 @@ function PushNavigateListener() {
   return null;
 }
 
+// Handles return from PaymentSuccess — reads location.state and opens the correct sidebar
+function PaymentReturnHandler({ onOpenMusic, onOpenCommunity, onOpenIdeas, onOpenDebate }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const state = location.state;
+    if (!state) return;
+
+    if (state.openMusic) {
+      // Open music sidebar — it will read pending action from localStorage to restore track
+      onOpenMusic?.();
+    } else if (state.openDebate) {
+      onOpenDebate?.(state.openDebate);
+    } else if (state.openIdeas) {
+      onOpenIdeas?.();
+    } else if (state.openCommunity) {
+      onOpenCommunity?.(state.openCommunity);
+    }
+
+    // Clear state so it doesn't re-trigger on back/forward navigation
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenCommunity, onOpenIdeas, onOpenDebate]);
+
+  return null;
+}
+
 // Deep link handler for /debate/:debateId — redirects to home and opens Ideas sidebar
 function DebateDeepLink({ onOpenDebate }) {
   const navigate = useNavigate();
@@ -274,6 +309,14 @@ export function Router() {
 
         {/* Push notification in-app navigation listener */}
         <PushNavigateListener />
+
+        {/* Payment return — opens correct sidebar after credit purchase */}
+        <PaymentReturnHandler
+          onOpenMusic={music.openWithPendingAction}
+          onOpenCommunity={community.open}
+          onOpenIdeas={ideas.open}
+          onOpenDebate={ideas.openWithDebate}
+        />
 
         {/* Community Hub Sidebar */}
         <CommunityHub

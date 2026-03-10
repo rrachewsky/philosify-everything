@@ -6,7 +6,7 @@ import { Modal } from '../components/common';
 import { useAuth } from '../hooks';
 import { useCreditsContext } from '../contexts';
 import { verifyPayment } from '../services/api';
-import { logger, getPendingAction } from '../utils';
+import { logger, getPendingAction, clearPendingAction } from '../utils';
 
 export function PaymentSuccess() {
   const { t } = useTranslation();
@@ -165,17 +165,20 @@ export function PaymentSuccess() {
   const handleReturn = () => {
     const pending = getPendingAction();
     if (pending) {
-      // Colloquium actions with a threadId — open community hub + colloquium
+      // Don't clear yet — consuming components read it to restore context.
+      // They call clearPendingAction() after consuming.
+
+      // Colloquium actions with a threadId — open ideas sidebar + debate
       if (pending.threadId && pending.type?.startsWith('colloquium:')) {
-        navigate('/', { state: { openColloquiumId: pending.threadId } });
+        navigate('/', { state: { openDebate: pending.threadId } });
         return;
       }
-      // Colloquium propose / open-debate — open community hub to debates tab
+      // Colloquium propose / open-debate — open ideas sidebar
       if (
         pending.type === 'colloquium:propose' ||
         pending.type === 'colloquium:proposeOpenDebate'
       ) {
-        navigate('/', { state: { openCommunity: 'debates' } });
+        navigate('/', { state: { openIdeas: true } });
         return;
       }
       // Space unlock — open community hub to that space tab
@@ -183,9 +186,9 @@ export function PaymentSuccess() {
         navigate('/', { state: { openCommunity: pending.space || 'underground' } });
         return;
       }
-      // Analysis — return home (track is restored from pending action)
+      // Analysis — open music sidebar (track restored from pending action in localStorage)
       if (pending.type === 'analysis') {
-        navigate('/');
+        navigate('/', { state: { openMusic: true } });
         return;
       }
     }
