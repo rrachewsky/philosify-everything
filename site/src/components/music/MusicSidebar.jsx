@@ -367,6 +367,7 @@ export function MusicSidebar({
           <div className="music-sidebar__modals">
             {loginModal.isOpen && (
               <LoginModal
+                isOpen={true}
                 onClose={loginModal.close}
                 onSwitchToSignup={() => {
                   loginModal.close();
@@ -380,6 +381,7 @@ export function MusicSidebar({
             )}
             {signupModal.isOpen && (
               <SignupModal
+                isOpen={true}
                 onClose={signupModal.close}
                 onSwitchToLogin={() => {
                   signupModal.close();
@@ -389,6 +391,7 @@ export function MusicSidebar({
             )}
             {forgotPasswordModal.isOpen && (
               <ForgotPasswordModal
+                isOpen={true}
                 onClose={forgotPasswordModal.close}
                 onSwitchToLogin={() => {
                   forgotPasswordModal.close();
@@ -396,7 +399,7 @@ export function MusicSidebar({
                 }}
               />
             )}
-            {paymentModal.isOpen && <PaymentModal onClose={paymentModal.close} />}
+            {paymentModal.isOpen && <PaymentModal isOpen={true} onClose={paymentModal.close} />}
           </div>
         )}
       </div>
