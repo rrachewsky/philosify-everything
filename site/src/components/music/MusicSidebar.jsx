@@ -33,6 +33,8 @@ export function MusicSidebar({
   const { t, i18n } = useTranslation();
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const inputRef = useRef(null);
+  const sidebarRef = useRef(null);
+  const contentRef = useRef(null);
 
   // Internal modals (rendered inside sidebar)
   const loginModal = useModal();
@@ -65,6 +67,60 @@ export function MusicSidebar({
       document.body.style.right = '';
       document.body.style.overflow = '';
       if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    };
+  }, [isOpen]);
+
+  // Forward scroll/touch events from header/ticker to the content area.
+  // Browsers only propagate scroll to ancestors, never siblings — so we
+  // intercept on the sidebar panel and programmatically scroll content.
+  useEffect(() => {
+    if (!isOpen) return;
+    const sidebar = sidebarRef.current;
+    const content = contentRef.current;
+    if (!sidebar || !content) return;
+
+    // Wheel (desktop / trackpad)
+    const onWheel = (e) => {
+      if (!content.contains(e.target)) {
+        content.scrollTop += e.deltaY;
+        e.preventDefault();
+      }
+    };
+
+    // Touch (mobile) — track Y delta and apply to content
+    let touchStartY = 0;
+    let forwarding = false;
+
+    const onTouchStart = (e) => {
+      // Only forward if touch starts outside content (header, ticker, etc.)
+      // but NOT inside the ticker (let horizontal swipe work naturally)
+      const ticker = sidebar.querySelector('.music-sidebar__ticker');
+      if (!content.contains(e.target) && (!ticker || !ticker.contains(e.target))) {
+        touchStartY = e.touches[0].clientY;
+        forwarding = true;
+      } else {
+        forwarding = false;
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (forwarding) {
+        const currentY = e.touches[0].clientY;
+        const deltaY = touchStartY - currentY;
+        touchStartY = currentY;
+        content.scrollTop += deltaY;
+        e.preventDefault();
+      }
+    };
+
+    sidebar.addEventListener('wheel', onWheel, { passive: false });
+    sidebar.addEventListener('touchstart', onTouchStart, { passive: true });
+    sidebar.addEventListener('touchmove', onTouchMove, { passive: false });
+
+    return () => {
+      sidebar.removeEventListener('wheel', onWheel);
+      sidebar.removeEventListener('touchstart', onTouchStart);
+      sidebar.removeEventListener('touchmove', onTouchMove);
     };
   }, [isOpen]);
 
@@ -159,6 +215,7 @@ export function MusicSidebar({
         onClick={handleBackdropClick}
       />
       <div
+        ref={sidebarRef}
         className={`music-sidebar ${isOpen ? 'music-sidebar--open' : ''}`}
         role="dialog"
         aria-modal="true"
@@ -180,7 +237,7 @@ export function MusicSidebar({
           </div>
         )}
 
-        <div className="music-sidebar__content">
+        <div ref={contentRef} className="music-sidebar__content">
           <div className="music-search">
             <div className="music-search__input-wrapper">
               <input

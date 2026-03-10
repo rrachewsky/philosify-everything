@@ -130,12 +130,11 @@ i18n.on('languageChanged', async (lng) => {
   document.documentElement.lang = lng;
   document.documentElement.setAttribute('data-rtl', RTL_LANGUAGES.includes(lng) ? 'true' : 'false');
 
-  // Load translations if not already loaded
-  if (lng !== 'en' && !i18n.hasResourceBundle(lng, 'translation')) {
+  // Always reload translations (deep merge + overwrite) so new keys from
+  // fresh deployments are picked up without requiring a hard refresh.
+  if (lng !== 'en') {
     const translations = await loadTranslation(lng);
     i18n.addResourceBundle(lng, 'translation', translations, true, true);
-    // Trigger re-render with new translations
-    i18n.changeLanguage(lng);
   }
 });
 
