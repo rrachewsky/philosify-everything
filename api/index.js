@@ -2715,8 +2715,10 @@ export default {
           );
         }
 
-        // Cleanup any stale reservations for THIS user (handles previous timeouts)
-        await cleanupUserStaleReservations(env, user.userId, 5); // 5 minute timeout
+        // Cleanup ALL pending reservations for THIS user (handles cancel-and-retry)
+        // Using 0 minutes ensures cancelled request reservations are freed immediately
+        // so the user isn't double-charged on retry
+        await cleanupUserStaleReservations(env, user.userId, 0);
 
         // SECURITY: Atomic deduplication lock to prevent race conditions
         // Uses Supabase INSERT ON CONFLICT for true atomicity (KV is eventually consistent)
