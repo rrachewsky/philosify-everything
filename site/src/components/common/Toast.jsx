@@ -47,7 +47,7 @@ export function Toast({
     padding: '16px 24px',
     borderRadius: '4px',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    zIndex: 9999,
+    zIndex: 200020,
     minWidth: '250px',
     maxWidth: '500px',
     display: 'flex',

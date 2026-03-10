@@ -1,14 +1,6 @@
 // Router - React Router v6 setup for Philosify with sidebar architecture
 import { Suspense, lazy, useState, useEffect, useCallback } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-  useLocation,
-  useParams,
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import App from './App';
 import { Spinner } from './components/common';
 import {
@@ -19,9 +11,10 @@ import {
   AccountModal,
 } from './components';
 import { CommunityHub } from './components/community';
+import { IdeasHub } from './components/ideas';
 import { MusicSidebar } from './components/music/MusicSidebar';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
-import { useModal, useAuth, useMusicSidebar } from './hooks';
+import { useModal, useAuth, useMusicSidebar, useIdeas } from './hooks';
 import { useCommunity } from './hooks/useCommunity.js';
 import { logger } from './utils';
 
@@ -37,8 +30,15 @@ const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 
 // Home page wrapper with auth modals
-function HomePageWrapper({ onCommunity, onOpenMusic, onOpenCategory, onSignUp, onBuyCredits }) {
-  const navigate = useNavigate();
+function HomePageWrapper({
+  onCommunity,
+  onOpenMusic,
+  onOpenCategory,
+  onSignUp,
+  onBuyCredits,
+  onViewAnalysis,
+  onViewDebate,
+}) {
   const { user, signOut } = useAuth();
   const loginModal = useModal();
   const signupModal = useModal();
@@ -61,9 +61,20 @@ function HomePageWrapper({ onCommunity, onOpenMusic, onOpenCategory, onSignUp, o
       const data = await response.json();
       const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
       historyModal.close();
-      navigate('/app', { state: { analysisResult: formattedResult } });
+      // Open MusicSidebar with the result instead of navigating
+      if (onViewAnalysis) {
+        onViewAnalysis(formattedResult);
+      }
     } catch (err) {
       logger.error('[Router] Failed to load analysis:', err);
+    }
+  };
+
+  const handleViewDebate = (threadId) => {
+    logger.log('[Router] Viewing debate from history:', threadId);
+    historyModal.close();
+    if (onViewDebate) {
+      onViewDebate(threadId);
     }
   };
 
@@ -121,6 +132,7 @@ function HomePageWrapper({ onCommunity, onOpenMusic, onOpenCategory, onSignUp, o
         onClose={historyModal.close}
         user={user}
         onViewAnalysis={handleViewCachedAnalysis}
+        onViewDebate={handleViewDebate}
       />
     </>
   );
@@ -153,7 +165,7 @@ function PushNavigateListener() {
   return null;
 }
 
-// Deep link handler for /debate/:debateId — redirects to home and opens community sidebar
+// Deep link handler for /debate/:debateId — redirects to home and opens Ideas sidebar
 function DebateDeepLink({ onOpenDebate }) {
   const navigate = useNavigate();
   const { debateId } = useParams();
@@ -170,8 +182,8 @@ function DebateDeepLink({ onOpenDebate }) {
 
 export function Router() {
   const community = useCommunity();
+  const ideas = useIdeas();
   const music = useMusicSidebar();
-  const [deepLinkDebateId, setDeepLinkDebateId] = useState(null);
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
   // Global modals for sidebars (signup/payment triggered from MusicSidebar)
@@ -180,23 +192,25 @@ export function Router() {
   const loginModal = useModal();
   const forgotPasswordModal = useModal();
 
+  // Handle deep link to a debate - opens Ideas sidebar
   const handleOpenDebate = useCallback(
     (debateId) => {
-      setDeepLinkDebateId(debateId);
-      community.open('debates');
+      ideas.openWithDebate(debateId);
     },
-    [community]
+    [ideas]
   );
 
-  // Clear deep link after DebatePanel consumes it
-  const clearDeepLinkDebate = useCallback(() => {
-    setDeepLinkDebateId(null);
-  }, []);
-
-  // Open ComingSoon sidebar for a category (books, films, news, ideas)
-  const openComingSoon = useCallback((category) => {
-    setComingSoonCategory(category);
-  }, []);
+  // Open category sidebar - Ideas has its own sidebar, others use ComingSoon
+  const openCategory = useCallback(
+    (category) => {
+      if (category === 'ideas') {
+        ideas.open();
+      } else {
+        setComingSoonCategory(category);
+      }
+    },
+    [ideas]
+  );
 
   // Close ComingSoon sidebar
   const closeComingSoon = useCallback(() => {
@@ -235,9 +249,11 @@ export function Router() {
               <HomePageWrapper
                 onCommunity={community.open}
                 onOpenMusic={music.open}
-                onOpenCategory={openComingSoon}
+                onOpenCategory={openCategory}
                 onSignUp={music.isOpen ? null : undefined}
                 onBuyCredits={music.isOpen ? null : undefined}
+                onViewAnalysis={music.openWithResult}
+                onViewDebate={ideas.openWithDebate}
               />
             }
           />
@@ -289,8 +305,14 @@ export function Router() {
           onTabChange={community.switchTab}
           isSpaceLocked={community.isSpaceLocked}
           refreshAccess={community.refreshAccess}
-          deepLinkDebateId={deepLinkDebateId}
-          clearDeepLinkDebate={clearDeepLinkDebate}
+        />
+
+        {/* Ideas Hub Sidebar (Debates & Colloquiums) */}
+        <IdeasHub
+          isOpen={ideas.isOpen}
+          onClose={ideas.close}
+          deepLinkDebateId={ideas.deepLinkDebateId}
+          clearDeepLinkDebate={ideas.clearDeepLinkDebate}
         />
 
         {/* Music Sidebar */}

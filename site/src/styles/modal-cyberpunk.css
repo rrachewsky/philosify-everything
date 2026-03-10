@@ -635,3 +635,51 @@
   max-width: 280px;
   line-height: 1.6;
 }
+
+/* ===== SIDEBAR-SCOPED MODALS ===== */
+/* When modals are rendered inside a sidebar, confine them to sidebar bounds */
+
+.music-sidebar .auth-overlay,
+.community-hub .auth-overlay,
+.coming-soon-sidebar .auth-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10; /* Relative to sidebar, not global */
+}
+
+.music-sidebar .auth-modal,
+.community-hub .auth-modal,
+.coming-soon-sidebar .auth-modal {
+  max-width: 90%;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/* Payment modal inside sidebar */
+.music-sidebar .payment-modal-overlay,
+.community-hub .payment-modal-overlay,
+.coming-soon-sidebar .payment-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.music-sidebar .payment-modal,
+.community-hub .payment-modal,
+.coming-soon-sidebar .payment-modal {
+  max-width: 90%;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+}

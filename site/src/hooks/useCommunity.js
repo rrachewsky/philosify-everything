@@ -4,16 +4,19 @@
 // Manages the sidebar open/close, active tab, and space access.
 //
 // Spaces:
-//   - agora        (free)    Global open chat (click username to DM)
+//   - people       (free)    Browse users online
 //   - messages     (free)    Direct messages (peer-to-peer)
+//   - agora        (free)    Global open chat (click username to DM)
 //   - collective   (free*)   Artist fan groups (*creating costs 1 credit)
 //   - underground  (gated)   Anonymous confessions (3 credits to unlock)
+//
+// Note: Debates/Colloquiums moved to Ideas sidebar
 
 import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from './useAuth.js';
 import { config } from '@/config';
 
-const TABS = ['people', 'messages', 'agora', 'collective', 'debates', 'underground'];
+const TABS = ['people', 'messages', 'agora', 'collective', 'underground'];
 
 // Tab labels and subtitles are now handled via i18n in CommunityTabs.jsx and CommunityHub.jsx
 // Keys: community.tabs.agora, community.subtitles.agora, etc.
@@ -40,11 +43,10 @@ export function useCommunity() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('people');
   const [spaceAccess, setSpaceAccess] = useState({
-    agora: true,
-    messages: true,
-    collective: true,
     people: true,
-    debates: true,
+    messages: true,
+    agora: true,
+    collective: true,
     underground: false,
   });
   const [accessLoading, setAccessLoading] = useState(false);

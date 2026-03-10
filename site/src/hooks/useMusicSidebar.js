@@ -56,6 +56,26 @@ export function useMusicSidebar() {
     setIsOpen(false);
   }, []);
 
+  // Open sidebar with a pre-loaded result (for history clicks)
+  const openWithResult = useCallback(
+    (analysisData) => {
+      // Set the track info from the analysis
+      const track = {
+        song: analysisData.song || analysisData.title,
+        artist: analysisData.artist,
+        spotify_id: analysisData.spotify_id,
+      };
+      setSelectedTrack(track);
+      setAnalysisResult(analysisData);
+      setIsAnalyzing(false);
+      setAnalysisError(null);
+      setElapsedTime(0);
+      spotify.clearAll();
+      setIsOpen(true);
+    },
+    [spotify]
+  );
+
   // Toggle sidebar
   const toggle = useCallback(() => {
     if (isOpen) {
@@ -197,6 +217,7 @@ export function useMusicSidebar() {
     open,
     close,
     toggle,
+    openWithResult,
 
     // Search state (from useSpotifySearch)
     query: spotify.query,

@@ -140,6 +140,7 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
   const { songName, artist, philosophicalNote } = analysisData || {};
 
   // Render as portal to body for proper overlay
+  // z-index must be higher than sidebar (200001) to overlay on top
   const modalContent = (
     <div
       className="group-members-overlay"
@@ -151,7 +152,7 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
         right: 0,
         bottom: 0,
         background: 'rgba(0, 0, 0, 0.7)',
-        zIndex: 9999,
+        zIndex: 200010,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

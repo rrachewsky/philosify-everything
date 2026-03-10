@@ -1,4 +1,5 @@
 // ScorecardTable - Weighted philosophical scorecard with 5 branches
+// Layout: Branch title row + 2-column body (score | justification)
 import { useTranslation } from 'react-i18next';
 import DOMPurify from 'dompurify';
 
@@ -24,59 +25,44 @@ export function ScorecardTable({ scorecard }) {
   };
 
   return (
-    <div className="result-card">
+    <div className="result-card scorecard-card">
       <h3 className="result-card-title">
         {t('scorecard', { defaultValue: 'Weighted Philosophical Scorecard' })}
       </h3>
 
-      <table className="scorecard-table">
-        <thead>
-          <tr>
-            <th>{t('branch', { defaultValue: 'Branch' })}</th>
-            <th>{t('scoreRange', { defaultValue: 'Score Range\n(-10 to +10)' })}</th>
-            <th>{t('justification', { defaultValue: 'Philosophical Justification' })}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {BRANCH_ORDER.map((branch) => {
-            const branchData = scorecard[branch];
-            if (!branchData) return null;
+      <div className="scorecard-sections">
+        {BRANCH_ORDER.map((branch) => {
+          const branchData = scorecard[branch];
+          if (!branchData) return null;
 
-            const score = branchData.score;
-            const justification = branchData.justification || '';
-            const weight = WEIGHTS[branch];
+          const score = branchData.score;
+          const justification = branchData.justification || '';
+          const weight = WEIGHTS[branch];
+          const branchName =
+            t(`branches.${branch}`) || branch.charAt(0).toUpperCase() + branch.slice(1);
 
-            return (
-              <tr key={branch}>
-                <td className="scorecard-axis">
-                  {t(`branches.${branch}`) || branch.charAt(0).toUpperCase() + branch.slice(1)}
-                  <div
-                    style={{
-                      fontSize: '13px',
-                      color: '#000',
-                      marginTop: '4px',
-                      fontWeight: 'normal',
-                    }}
-                  >
-                    ({t('weight', { defaultValue: 'weight' })} {weight}%)
-                  </div>
-                </td>
-                <td className="scorecard-score">
+          return (
+            <div key={branch} className="scorecard-branch">
+              <div className="scorecard-branch__title">
+                <span className="scorecard-branch__name">
+                  {branchName.toUpperCase()} ({weight}%)
+                </span>
+                <span className="scorecard-branch__score">
                   {score > 0 ? '+' : ''}
                   {score}
-                </td>
-                <td className="scorecard-justification">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(stripTrailingWordCount(justification)),
-                    }}
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                </span>
+              </div>
+              <div className="scorecard-branch__justification">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(stripTrailingWordCount(justification)),
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

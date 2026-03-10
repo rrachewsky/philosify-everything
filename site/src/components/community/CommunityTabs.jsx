@@ -1,8 +1,9 @@
-// CommunityTabs - Tab navigation for the 6 community spaces (2 rows)
+// CommunityTabs - Tab navigation for the 5 community spaces (2 rows)
+// Debates moved to Ideas sidebar
 import { useTranslation } from 'react-i18next';
 
-const ROW_1 = ['people', 'messages', 'collective'];
-const ROW_2 = ['agora', 'debates', 'underground'];
+const ROW_1 = ['people', 'messages', 'agora'];
+const ROW_2 = ['collective', 'underground'];
 
 export function CommunityTabs({ activeTab, onTabChange, isSpaceLocked, dmUnreadCount = 0 }) {
   const { t } = useTranslation();

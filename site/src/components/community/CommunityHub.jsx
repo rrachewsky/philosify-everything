@@ -1,7 +1,8 @@
 // ============================================================
 // CommunityHub - Slide-out Sidebar for Philosify Community Spaces
 // ============================================================
-// Five tabs: The Agora, Messages, The Collective, The Underground, The Forum
+// Five tabs: People, Messages, Agora, Collective, Underground
+// (Debates/Colloquiums moved to Ideas sidebar)
 // Renders at Router level so it's accessible from every page.
 // Initializes E2E encryption when user is authenticated.
 
@@ -14,7 +15,6 @@ import { MessagesPanel } from '../messages/MessagesPanel.jsx';
 import { CollectivePanel } from '../collective/CollectivePanel.jsx';
 import { PeoplePanel } from './PeoplePanel.jsx';
 import { UndergroundFeed } from '../underground/UndergroundFeed.jsx';
-import { DebatePanel } from './DebatePanel.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
 import { useCrypto } from '../../hooks/useCrypto.js';
 import { useDMUnreadCount } from '../../hooks/useDMUnreadCount.js';
@@ -38,8 +38,6 @@ export function CommunityHub({
   onTabChange,
   isSpaceLocked,
   refreshAccess,
-  deepLinkDebateId,
-  clearDeepLinkDebate,
 }) {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
@@ -218,13 +216,6 @@ export function CommunityHub({
       case 'people':
         return (
           <PeoplePanel onStartDM={handleStartDM} isOnline={isOnline} onlineCount={onlineCount} />
-        );
-      case 'debates':
-        return (
-          <DebatePanel
-            deepLinkDebateId={deepLinkDebateId}
-            clearDeepLinkDebate={clearDeepLinkDebate}
-          />
         );
       case 'underground':
         return <UndergroundFeed />;

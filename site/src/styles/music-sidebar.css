@@ -623,3 +623,131 @@
 .music-analysis__results-wrapper .listen-section {
   margin: 12px 0;
 }
+
+/* ===== TOP 50 TICKER IN SIDEBAR ===== */
+.music-sidebar__ticker {
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(120, 100, 180, 0.12);
+  overflow: hidden;
+}
+
+.music-sidebar__ticker .top-ten-ticker {
+  margin: 0;
+  padding: 8px 0;
+}
+
+.music-sidebar__ticker .ticker-label {
+  padding-left: 16px;
+}
+
+/* ===== SCORECARD SECTIONS LAYOUT ===== */
+/* Score is now in the title row, no separate score column */
+.scorecard-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scorecard-branch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scorecard-branch__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #00f0ff;
+  letter-spacing: 1px;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), transparent);
+  border-left: 3px solid #00f0ff;
+  border-radius: 0 4px 4px 0;
+}
+
+.scorecard-branch__name {
+  flex: 1;
+}
+
+.scorecard-branch__score {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ec4899;
+  margin-left: 12px;
+}
+
+.scorecard-branch__justification {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0 12px;
+}
+
+.scorecard-branch__justification p {
+  margin: 0 0 8px 0;
+}
+
+.scorecard-branch__justification p:last-child {
+  margin-bottom: 0;
+}
+
+/* Override for sidebar context */
+.music-analysis__results-wrapper .scorecard-card {
+  padding: 12px;
+}
+
+.music-analysis__results-wrapper .scorecard-sections {
+  gap: 12px;
+}
+
+.music-analysis__results-wrapper .scorecard-branch__title {
+  font-size: 10px;
+  padding: 6px 10px;
+}
+
+.music-analysis__results-wrapper .scorecard-branch__score {
+  font-size: 14px;
+}
+
+.music-analysis__results-wrapper .scorecard-branch__justification {
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+/* ===== SIDEBAR-SCOPED MODALS ===== */
+.music-sidebar__modals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 200002;
+}
+
+.music-sidebar__modals > * {
+  pointer-events: auto;
+}
+
+/* Override modal styles when inside sidebar */
+.music-sidebar__modals .modal-backdrop,
+.music-sidebar__modals .modal-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.music-sidebar__modals .modal-container,
+.music-sidebar__modals .modal-content,
+.music-sidebar__modals .auth-modal,
+.music-sidebar__modals .payment-modal {
+  position: absolute;
+  max-width: 100%;
+  width: 100%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
