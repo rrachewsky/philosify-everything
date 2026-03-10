@@ -7,6 +7,7 @@ import { ResultsContainer } from '../results/ResultsContainer';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import TopTenTicker from '../TopTenTicker';
 import { useModal } from '../../hooks';
+import { setPendingAction } from '../../utils/pendingAction.js';
 import '../../styles/music-sidebar.css';
 
 export function MusicSidebar({
@@ -157,7 +158,10 @@ export function MusicSidebar({
       signupModal.open();
       return;
     }
-    if (balance?.total !== undefined && balance.total <= 0) paymentModal.open();
+    if (balance?.total !== undefined && balance.total <= 0) {
+      setPendingAction({ type: 'analysis', track });
+      paymentModal.open();
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -184,6 +188,9 @@ export function MusicSidebar({
     }
     // Check if balance is not loaded yet or has zero credits
     if (!balance || balance.total === undefined || balance.total <= 0) {
+      if (selectedTrack) {
+        setPendingAction({ type: 'analysis', track: selectedTrack });
+      }
       paymentModal.open();
       return;
     }
@@ -202,6 +209,7 @@ export function MusicSidebar({
         return;
       }
       if (balance?.total !== undefined && balance.total <= 0) {
+        setPendingAction({ type: 'analysis', track });
         paymentModal.open();
       }
     },
