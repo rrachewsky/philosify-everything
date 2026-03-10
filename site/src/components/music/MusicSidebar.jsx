@@ -293,41 +293,47 @@ export function MusicSidebar({
           )}
         </div>
 
-        {/* Internal modals - render inside sidebar for proper scoping */}
-        <div className="music-sidebar__modals">
-          {loginModal.isOpen && (
-            <LoginModal
-              onClose={loginModal.close}
-              onSwitchToSignup={() => {
-                loginModal.close();
-                signupModal.open();
-              }}
-              onSwitchToForgot={() => {
-                loginModal.close();
-                forgotPasswordModal.open();
-              }}
-            />
-          )}
-          {signupModal.isOpen && (
-            <SignupModal
-              onClose={signupModal.close}
-              onSwitchToLogin={() => {
-                signupModal.close();
-                loginModal.open();
-              }}
-            />
-          )}
-          {forgotPasswordModal.isOpen && (
-            <ForgotPasswordModal
-              onClose={forgotPasswordModal.close}
-              onSwitchToLogin={() => {
-                forgotPasswordModal.close();
-                loginModal.open();
-              }}
-            />
-          )}
-          {paymentModal.isOpen && <PaymentModal onClose={paymentModal.close} />}
-        </div>
+        {/* Internal modals - only render wrapper when a modal is open
+            to avoid invisible overlay blocking touch scroll events */}
+        {(loginModal.isOpen ||
+          signupModal.isOpen ||
+          forgotPasswordModal.isOpen ||
+          paymentModal.isOpen) && (
+          <div className="music-sidebar__modals">
+            {loginModal.isOpen && (
+              <LoginModal
+                onClose={loginModal.close}
+                onSwitchToSignup={() => {
+                  loginModal.close();
+                  signupModal.open();
+                }}
+                onSwitchToForgot={() => {
+                  loginModal.close();
+                  forgotPasswordModal.open();
+                }}
+              />
+            )}
+            {signupModal.isOpen && (
+              <SignupModal
+                onClose={signupModal.close}
+                onSwitchToLogin={() => {
+                  signupModal.close();
+                  loginModal.open();
+                }}
+              />
+            )}
+            {forgotPasswordModal.isOpen && (
+              <ForgotPasswordModal
+                onClose={forgotPasswordModal.close}
+                onSwitchToLogin={() => {
+                  forgotPasswordModal.close();
+                  loginModal.open();
+                }}
+              />
+            )}
+            {paymentModal.isOpen && <PaymentModal onClose={paymentModal.close} />}
+          </div>
+        )}
       </div>
     </>
   );
