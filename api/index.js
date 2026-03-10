@@ -2729,6 +2729,16 @@ export default {
             .substring(0, 50);
         const dedupKey = `${user.userId}:${normalizeForKey(song)}:${normalizeForKey(artist)}:${model}:${lang}`;
 
+        // Force-release any stale lock left by a cancelled request
+        // Safe: UI disables Analyze button while isAnalyzing is true
+        try {
+          await callRpc(env, "release_analysis_lock", {
+            p_lock_key: dedupKey,
+          });
+        } catch (e) {
+          // No-op if no lock exists
+        }
+
         // Atomic lock acquisition - only one concurrent request wins
         const lockAcquired = await callRpc(env, "acquire_analysis_lock", {
           p_lock_key: dedupKey,
