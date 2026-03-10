@@ -209,18 +209,6 @@ export function LandingScreen({
     // If user is not logged in, open sign up modal
     if (!user) {
       onSignUp?.();
-      return;
-    }
-
-    // If user is logged in but has no credits, open buy credits modal
-    if (balance !== null && balance <= 0) {
-      setPendingAction({
-        type: 'analysis',
-        track: { song: track.song, artist: track.artist, spotify_id: track.spotify_id },
-        model: selectedModel,
-        lang: selectedLang,
-      });
-      onBuyCredits?.();
     }
   };
 

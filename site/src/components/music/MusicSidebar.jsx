@@ -156,11 +156,6 @@ export function MusicSidebar({
     setFocusedIndex(-1);
     if (!user) {
       signupModal.open();
-      return;
-    }
-    if (balance?.total !== undefined && balance.total <= 0) {
-      setPendingAction({ type: 'analysis', track });
-      paymentModal.open();
     }
   };
 
@@ -206,14 +201,9 @@ export function MusicSidebar({
       selectTrack(track);
       if (!user) {
         signupModal.open();
-        return;
-      }
-      if (balance?.total !== undefined && balance.total <= 0) {
-        setPendingAction({ type: 'analysis', track });
-        paymentModal.open();
       }
     },
-    [selectTrack, user, balance, signupModal, paymentModal]
+    [selectTrack, user, signupModal]
   );
 
   return (
