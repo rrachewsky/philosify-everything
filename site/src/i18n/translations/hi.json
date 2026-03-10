@@ -406,7 +406,8 @@
     "scanMusic": "संगीत विश्लेषण",
     "scanning": "विश्लेषण हो रहा है...",
     "analyzingContent": "दार्शनिक सामग्री का विश्लेषण...",
-    "analysisComplete": "विश्लेषण पूर्ण!"
+    "analysisComplete": "विश्लेषण पूर्ण!",
+    "analyzeAnother": "एक और गाना विश्लेषण करें"
   },
   "home": {
     "subtitle": "हर चीज़ का दार्शनिक विश्लेषण",

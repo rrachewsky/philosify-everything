@@ -406,7 +406,8 @@
     "scanMusic": "נתח מוזיקה",
     "scanning": "סורק...",
     "analyzingContent": "מנתח תוכן פילוסופי...",
-    "analysisComplete": "הניתוח הושלם!"
+    "analysisComplete": "הניתוח הושלם!",
+    "analyzeAnother": "נתח שיר אחר"
   },
   "home": {
     "subtitle": "ניתוח פילוסופי של הכל",

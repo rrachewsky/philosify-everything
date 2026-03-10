@@ -406,7 +406,8 @@
     "scanMusic": "分析音乐",
     "scanning": "分析中...",
     "analyzingContent": "分析哲学内容...",
-    "analysisComplete": "分析完成！"
+    "analysisComplete": "分析完成！",
+    "analyzeAnother": "分析另一首歌曲"
   },
   "home": {
     "subtitle": "万物的哲学分析",

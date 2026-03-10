@@ -406,7 +406,8 @@
     "scanMusic": "음악 분석",
     "scanning": "분석 중...",
     "analyzingContent": "철학적 내용 분석 중...",
-    "analysisComplete": "분석 완료!"
+    "analysisComplete": "분석 완료!",
+    "analyzeAnother": "다른 노래 분석하기"
   },
   "home": {
     "subtitle": "모든 것의 철학적 분석",

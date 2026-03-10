@@ -406,7 +406,8 @@
     "scanMusic": "تحليل الموسيقى",
     "scanning": "جاري التحليل...",
     "analyzingContent": "تحليل المحتوى الفلسفي...",
-    "analysisComplete": "اكتمل التحليل!"
+    "analysisComplete": "اكتمل التحليل!",
+    "analyzeAnother": "تحليل أغنية أخرى"
   },
   "home": {
     "subtitle": "التحليل الفلسفي لكل شيء",

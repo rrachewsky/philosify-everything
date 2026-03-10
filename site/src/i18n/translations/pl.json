@@ -406,7 +406,8 @@
     "scanMusic": "Analizuj Muzykę",
     "scanning": "Analizowanie...",
     "analyzingContent": "Analizowanie treści filozoficznych...",
-    "analysisComplete": "Analiza zakończona!"
+    "analysisComplete": "Analiza zakończona!",
+    "analyzeAnother": "Przeanalizuj inną piosenkę"
   },
   "home": {
     "subtitle": "Filozoficzna Analiza Wszystkiego",

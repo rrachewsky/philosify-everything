@@ -406,7 +406,8 @@
     "scanMusic": "Müzik Analiz Et",
     "scanning": "Analiz ediliyor...",
     "analyzingContent": "Felsefi içerik analiz ediliyor...",
-    "analysisComplete": "Analiz tamamlandı!"
+    "analysisComplete": "Analiz tamamlandı!",
+    "analyzeAnother": "Başka bir şarkıyı analiz et"
   },
   "home": {
     "subtitle": "Her Şeyin Felsefi Analizi",

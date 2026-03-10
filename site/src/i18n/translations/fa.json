@@ -406,7 +406,8 @@
     "scanMusic": "تحلیل موسیقی",
     "scanning": "در حال تحلیل...",
     "analyzingContent": "تحلیل محتوای فلسفی...",
-    "analysisComplete": "تحلیل کامل شد!"
+    "analysisComplete": "تحلیل کامل شد!",
+    "analyzeAnother": "تحلیل آهنگ دیگر"
   },
   "home": {
     "subtitle": "تحلیل فلسفی همه چیز",

@@ -406,7 +406,8 @@
     "scanMusic": "音楽を分析",
     "scanning": "分析中...",
     "analyzingContent": "哲学的内容を分析中...",
-    "analysisComplete": "分析完了！"
+    "analysisComplete": "分析完了！",
+    "analyzeAnother": "別の曲を分析する"
   },
   "home": {
     "subtitle": "すべての哲学的分析",

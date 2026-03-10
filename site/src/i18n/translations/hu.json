@@ -406,7 +406,8 @@
     "scanMusic": "Zene Elemzése",
     "scanning": "Elemzés...",
     "analyzingContent": "Filozófiai tartalom elemzése...",
-    "analysisComplete": "Elemzés kész!"
+    "analysisComplete": "Elemzés kész!",
+    "analyzeAnother": "Másik dal elemzése"
   },
   "home": {
     "subtitle": "Minden Filozófiai Elemzése",
