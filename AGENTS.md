@@ -41,16 +41,16 @@ npx vitest run --coverage src/utils/validation.test.js  # With coverage
 
 ### Full Paths Required
 
-| Context | Full Path                                                     |
-| ------- | ------------------------------------------------------------- |
-| API     | `C:\Users\r_rac\onedrive\documents\github\philosify-web\api`  |
-| Site    | `C:\Users\r_rac\onedrive\documents\github\philosify-web\site` |
-| Root    | `C:\Users\r_rac\onedrive\documents\github\philosify-web`      |
+| Context | Full Path                                                              |
+| ------- | ---------------------------------------------------------------------- |
+| API     | `C:\Users\r_rac\OneDrive\Documents\GitHub\philosify-everything\api`    |
+| Site    | `C:\Users\r_rac\OneDrive\Documents\GitHub\philosify-everything\site`   |
+| Root    | `C:\Users\r_rac\OneDrive\Documents\GitHub\philosify-everything`        |
 
 ### Correct Example
 
 ```
-workdir: C:\Users\r_rac\onedrive\documents\github\philosify-web\api
+workdir: C:\Users\r_rac\OneDrive\Documents\GitHub\philosify-everything\api
 command: npm run dev
 ```
 
@@ -71,7 +71,7 @@ cd api && npm run dev
 
 - Push to ALL branches: `development`, `main`, `production`
 - Deploy API: `npm run deploy:prod` (workdir: api)
-- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-frontend --branch=production` (workdir: site)
+- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-everything-frontend --branch=production` (workdir: site)
 
 ```bash
 # Push to all branches for production deploy
