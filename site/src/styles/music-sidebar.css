@@ -99,6 +99,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+  overscroll-behavior: contain; /* Prevent scroll chaining to background */
 }
 
 /* ===== SEARCH ===== */
@@ -106,6 +108,13 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex-shrink: 0; /* Never compress — always show full search/track info */
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(10, 4, 28, 0.98); /* Match sidebar background so content scrolls behind */
+  margin: -16px -16px 0; /* Bleed to edges */
+  padding: 16px 16px 12px;
 }
 
 .music-search__input-wrapper {
@@ -246,6 +255,7 @@
 .music-results {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0; /* Don't compress — let parent scroll */
 }
 
 .music-results__header {
@@ -314,6 +324,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .music-analyze__button {
@@ -434,6 +445,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex-shrink: 0; /* Don't compress — let parent scroll */
 }
 
 .music-analysis__header {
@@ -574,7 +586,7 @@
 /* ===== RESULTS CONTAINER WRAPPER ===== */
 .music-analysis__results-wrapper {
   margin: 16px 0;
-  /* No max-height or overflow here - let parent .music-sidebar__content handle scrolling */
+  flex-shrink: 0; /* Don't compress — parent scrolls */
 }
 
 /* Override ResultsContainer styles for sidebar context */
