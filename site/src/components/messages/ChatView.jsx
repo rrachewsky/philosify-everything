@@ -146,13 +146,16 @@ function AnalysisShareCard({ metadata, t }) {
           <div className="dm-analysis-card__stats">
             {philosophicalNote && (
               <span className="dm-analysis-card__note">
+                <strong>{t('philosophicalNote')}:</strong>{' '}
                 {philosophicalNote.length > 80
                   ? philosophicalNote.substring(0, 80) + '...'
                   : philosophicalNote}
               </span>
             )}
             {classification && (
-              <span className="dm-analysis-card__classification">{classification}</span>
+              <span className="dm-analysis-card__classification">
+                <strong>{t('philosophicalClassification')}:</strong> {classification}
+              </span>
             )}
           </div>
         )}

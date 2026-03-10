@@ -92,6 +92,7 @@
 /* ===== CONTENT ===== */
 .music-sidebar__content {
   flex: 1;
+  min-height: 0; /* Critical: allows flex child to scroll instead of expanding */
   overflow-y: auto;
   overflow-x: hidden;
   padding: 16px;
@@ -573,9 +574,7 @@
 /* ===== RESULTS CONTAINER WRAPPER ===== */
 .music-analysis__results-wrapper {
   margin: 16px 0;
-  max-height: 60vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* No max-height or overflow here - let parent .music-sidebar__content handle scrolling */
 }
 
 /* Override ResultsContainer styles for sidebar context */

@@ -376,7 +376,7 @@ html[lang='es'] .auth-btn,
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   border: none !important;
-  padding: 10px 16px 10px 24px; /* Extra left padding to shift text right, align with Buy Credits */
+  padding: 10px 16px; /* Symmetric padding to match Buy Credits */
   border-radius: 12px;
   color: #ffffff; /* White text */
   font-size: 13px;
@@ -401,7 +401,7 @@ html[lang='es'] .auth-btn,
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 8px; /* Shift text right to align with Buy Credits */
+  padding: 10px 16px; /* Symmetric padding to match Buy Credits */
   line-height: 1;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   opacity: 1 !important;

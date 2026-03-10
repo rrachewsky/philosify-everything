@@ -1,7 +1,7 @@
 // ShareAnalysisToDMModal - Share an analysis as a rich card via DM
 // Multi-select: user can pick multiple recipients, then click Send
+// NOTE: Modal scoping rule - renders in place (no portal) so sidebar CSS can confine it
 import { useState, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { config } from '../../config';
 import { dmService } from '../../services/api/dm.js';
@@ -137,28 +137,12 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
     ? people.filter((p) => (p.displayName || '').toLowerCase().includes(filter.toLowerCase()))
     : people;
 
-  const { songName, artist, philosophicalNote } = analysisData || {};
+  const { songName, artist, philosophicalNote, classification } = analysisData || {};
 
-  // Render as portal to body for proper overlay
-  // z-index must be higher than sidebar (200001) to overlay on top
-  const modalContent = (
-    <div
-      className="group-members-overlay"
-      onClick={onClose}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'rgba(0, 0, 0, 0.7)',
-        zIndex: 200010,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
-      }}
-    >
+  // Render in place (no portal) - sidebar CSS will confine it when inside sidebar
+  // Default: position fixed (full screen), but .music-sidebar .share-dm-modal-overlay → absolute
+  return (
+    <div className="share-dm-modal-overlay" onClick={onClose}>
       <div
         className="group-members-modal"
         onClick={(e) => e.stopPropagation()}
@@ -249,9 +233,17 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
                 <div
                   style={{ color: '#00e0f0', fontSize: '11px', marginTop: '4px', lineHeight: 1.3 }}
                 >
+                  <strong>{t('philosophicalNote')}:</strong>{' '}
                   {philosophicalNote.length > 60
                     ? philosophicalNote.substring(0, 60) + '...'
                     : philosophicalNote}
+                </div>
+              )}
+              {classification && (
+                <div
+                  style={{ color: '#a78bfa', fontSize: '11px', marginTop: '2px', lineHeight: 1.3 }}
+                >
+                  <strong>{t('philosophicalClassification')}:</strong> {classification}
                 </div>
               )}
             </div>
@@ -463,9 +455,6 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
       </div>
     </div>
   );
-
-  // Use portal to render at body level
-  return createPortal(modalContent, document.body);
 }
 
 export default ShareAnalysisToDMModal;

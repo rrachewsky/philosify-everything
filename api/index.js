@@ -1601,6 +1601,72 @@ export default {
         );
       }
 
+      // Cancel analysis - release lock + credit reservation when user cancels
+      if (
+        url.pathname === "/api/cancel-analysis" &&
+        request.method === "POST"
+      ) {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
+
+        try {
+          const body = await request.json();
+          const { song, artist, model, lang } = body;
+
+          // Reconstruct the same lock key the analysis endpoint uses
+          const normalizeForKey = (str) =>
+            (str || "")
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/[^a-z0-9]/g, "")
+              .substring(0, 50);
+          const dedupKey = `${user.userId}:${normalizeForKey(song)}:${normalizeForKey(artist)}:${model}:${lang}`;
+
+          // Release the analysis lock so user can retry immediately
+          try {
+            await callRpc(env, "release_analysis_lock", {
+              p_lock_key: dedupKey,
+            });
+            console.log(
+              `[Cancel] Analysis lock released for ${user.userId}: ${song} by ${artist}`,
+            );
+          } catch (lockErr) {
+            // Lock may already be released by the finishing backend request - that's fine
+            console.log(
+              `[Cancel] Lock release skipped (may already be released): ${lockErr.message}`,
+            );
+          }
+
+          // Also clean up any pending credit reservations
+          const result = await cleanupUserStaleReservations(
+            env,
+            user.userId,
+            0,
+          );
+
+          console.log(
+            `[Cancel] Cleanup for user ${user.userId}: released ${result.releasedCount} reservations`,
+          );
+
+          return jsonResponse(
+            {
+              success: true,
+              releasedCount: result.releasedCount,
+            },
+            200,
+            origin,
+            env,
+          );
+        } catch (error) {
+          console.error("[Cancel] Error during cancel-analysis:", error);
+          // Return success anyway - don't block the user from retrying
+          return jsonResponse({ success: true }, 200, origin, env);
+        }
+      }
+
       // Create Stripe checkout
       if (
         url.pathname === "/api/create-checkout" &&

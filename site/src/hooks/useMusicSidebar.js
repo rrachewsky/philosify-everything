@@ -28,6 +28,7 @@ export function useMusicSidebar() {
   const abortControllerRef = useRef(null);
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
+  const lastAnalysisParamsRef = useRef(null);
 
   // Open the sidebar (resets state to fresh)
   const open = useCallback(() => {
@@ -53,6 +54,7 @@ export function useMusicSidebar() {
       cancelAnimationFrame(timerRef.current);
       timerRef.current = null;
     }
+    setIsAnalyzing(false);
     setIsOpen(false);
   }, []);
 
@@ -144,40 +146,60 @@ export function useMusicSidebar() {
       startTimer();
 
       abortControllerRef.current = new AbortController();
+      lastAnalysisParamsRef.current = { song: selectedTrack.song, artist: selectedTrack.artist, model, lang };
 
       try {
-        const response = await fetch(`${config.apiUrl}/api/analyze`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            song: selectedTrack.song,
-            artist: selectedTrack.artist,
-            spotify_id: selectedTrack.spotify_id,
-            model,
-            lang,
-          }),
-          signal: abortControllerRef.current.signal,
-        });
+        // Retry logic for 409 (lock still held from cancelled request)
+        const maxRetries = 3;
+        const retryDelay = 2000; // 2 seconds between retries
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Analysis failed');
-        }
-
-        setAnalysisResult(data);
-
-        // Update balance from response
-        if (data.balance && typeof data.balance.total !== 'undefined') {
-          setBalance({
-            total: data.balance.total,
-            credits: data.balance.credits,
-            freeRemaining: data.balance.freeRemaining,
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+          const response = await fetch(`${config.apiUrl}/api/analyze`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              song: selectedTrack.song,
+              artist: selectedTrack.artist,
+              spotify_id: selectedTrack.spotify_id,
+              model,
+              lang,
+            }),
+            signal: abortControllerRef.current.signal,
           });
+
+          // Handle 409 - analysis lock still held (e.g., from cancelled request)
+          if (response.status === 409 && attempt < maxRetries) {
+            console.log(
+              `[Analyze] Lock held, retrying in ${retryDelay}ms (attempt ${attempt + 1}/${maxRetries})`
+            );
+            await new Promise((resolve) => setTimeout(resolve, retryDelay));
+            continue; // Retry
+          }
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Analysis failed');
+          }
+
+          setAnalysisResult(data);
+
+          // Update balance from response
+          if (data.balance && typeof data.balance.total !== 'undefined') {
+            setBalance({
+              total: data.balance.total,
+              credits: data.balance.credits,
+              freeRemaining: data.balance.freeRemaining,
+            });
+          }
+
+          return { success: true, data };
         }
 
-        return { success: true, data };
+        // All retries exhausted
+        setAnalysisError('Analysis failed - please try again');
+        return { success: false, error: 'Analysis failed after retries' };
       } catch (error) {
         if (error.name === 'AbortError') {
           return { success: false, error: 'cancelled' };
@@ -197,10 +219,23 @@ export function useMusicSidebar() {
   const cancelAnalysis = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
     setIsAnalyzing(false);
     stopTimer();
     setAnalysisError(null);
+
+    // Tell the backend to release the analysis lock so user can retry immediately
+    const params = lastAnalysisParamsRef.current;
+    if (params) {
+      lastAnalysisParamsRef.current = null;
+      fetch(`${config.apiUrl}/api/cancel-analysis`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      }).catch(() => {}); // Fire-and-forget
+    }
   }, [stopTimer]);
 
   // Format elapsed time as MM:SS.ms

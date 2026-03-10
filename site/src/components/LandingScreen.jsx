@@ -291,44 +291,64 @@ export function LandingScreen({
     try {
       const { config } = await import('@/config');
 
-      const response = await fetch(`${config.apiUrl}/api/analyze`, {
-        method: 'POST',
-        credentials: 'include', // Send HttpOnly cookie for auth
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          song: selectedTrack.song,
-          artist: selectedTrack.artist,
-          spotify_id: selectedTrack.spotify_id,
-          model: selectedModel,
-          lang: selectedLang,
-        }),
-        signal: abortControllerRef.current.signal,
-      });
+      // Retry logic for 409 (lock still held from cancelled request)
+      const maxRetries = 3;
+      const retryDelay = 2000; // 2 seconds between retries
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Analysis failed');
-      }
-
-      setAnalysisResult(data);
-      setAnalysisComplete(true);
-
-      // Update balance immediately from response (no extra API call needed)
-      if (data.balance && typeof data.balance.total !== 'undefined') {
-        setBalance({
-          total: data.balance.total,
-          credits: data.balance.credits,
-          freeRemaining: data.balance.freeRemaining,
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        const response = await fetch(`${config.apiUrl}/api/analyze`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            song: selectedTrack.song,
+            artist: selectedTrack.artist,
+            spotify_id: selectedTrack.spotify_id,
+            model: selectedModel,
+            lang: selectedLang,
+          }),
+          signal: abortControllerRef.current.signal,
         });
+
+        // Handle 409 - analysis lock still held (e.g., from cancelled request)
+        if (response.status === 409 && attempt < maxRetries) {
+          console.log(
+            `[Analyze] Lock held, retrying in ${retryDelay}ms (attempt ${attempt + 1}/${maxRetries})`
+          );
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
+          continue;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Analysis failed');
+        }
+
+        setAnalysisResult(data);
+        setAnalysisComplete(true);
+
+        // Update balance immediately from response (no extra API call needed)
+        if (data.balance && typeof data.balance.total !== 'undefined') {
+          setBalance({
+            total: data.balance.total,
+            credits: data.balance.credits,
+            freeRemaining: data.balance.freeRemaining,
+          });
+        }
+
+        // Auto-navigate to results page when analysis completes
+        if (onViewAnalysis) {
+          onViewAnalysis(data);
+        }
+
+        return; // Success - exit the function
       }
 
-      // Auto-navigate to results page when analysis completes
-      if (onViewAnalysis) {
-        onViewAnalysis(data);
-      }
+      // All retries exhausted
+      setAnalysisError('Analysis failed - please try again');
     } catch (error) {
       // Don't show error if it was a cancellation
       if (error.name === 'AbortError') {
@@ -344,13 +364,34 @@ export function LandingScreen({
     }
   };
 
-  const handleCancelAnalysis = () => {
+  const handleCancelAnalysis = async () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
     setIsAnalyzing(false);
     setElapsedTime(0);
-    setAnalysisError(null); // Clear any existing error message
+    setAnalysisError(null);
+
+    // Tell the backend to release the analysis lock so user can retry immediately
+    if (selectedTrack) {
+      try {
+        const { config } = await import('@/config');
+        fetch(`${config.apiUrl}/api/cancel-analysis`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            song: selectedTrack.song,
+            artist: selectedTrack.artist,
+            model: selectedModel,
+            lang: selectedLang,
+          }),
+        }).catch(() => {}); // Fire-and-forget, don't block the UI
+      } catch {
+        // Ignore errors - this is best-effort cleanup
+      }
+    }
   };
 
   const isButtonDisabled = !selectedTrack || (!user && !analysisComplete);

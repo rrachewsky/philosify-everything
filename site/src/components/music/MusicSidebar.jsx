@@ -126,14 +126,16 @@ export function MusicSidebar({
       signupModal.open();
       return;
     }
-    if (balance?.total !== undefined && balance.total <= 0) {
+    // Check if balance is not loaded yet or has zero credits
+    if (!balance || balance.total === undefined || balance.total <= 0) {
       paymentModal.open();
       return;
     }
     await analyze(lang || i18n.language || 'en');
   };
 
-  const canAnalyze = selectedTrack && user && !isAnalyzing;
+  // Button enabled when track selected and not analyzing (auth/balance checked in handleAnalyze)
+  const canAnalyze = selectedTrack && !isAnalyzing;
 
   // Handle song selection from Top 50 ticker
   const handleTickerSelect = useCallback(
@@ -289,52 +291,43 @@ export function MusicSidebar({
               </button>
             </div>
           )}
-
-          {!user && selectedTrack && (
-            <div className="music-auth-required">
-              <p>{t('community.signInRequired')}</p>
-              <button className="music-auth-required__btn" onClick={() => signupModal.open()}>
-                {t('auth.signUp')}
-              </button>
-            </div>
-          )}
         </div>
-      </div>
 
-      {/* Internal modals - render inside sidebar for proper scoping */}
-      <div className="music-sidebar__modals">
-        {loginModal.isOpen && (
-          <LoginModal
-            onClose={loginModal.close}
-            onSwitchToSignup={() => {
-              loginModal.close();
-              signupModal.open();
-            }}
-            onSwitchToForgot={() => {
-              loginModal.close();
-              forgotPasswordModal.open();
-            }}
-          />
-        )}
-        {signupModal.isOpen && (
-          <SignupModal
-            onClose={signupModal.close}
-            onSwitchToLogin={() => {
-              signupModal.close();
-              loginModal.open();
-            }}
-          />
-        )}
-        {forgotPasswordModal.isOpen && (
-          <ForgotPasswordModal
-            onClose={forgotPasswordModal.close}
-            onSwitchToLogin={() => {
-              forgotPasswordModal.close();
-              loginModal.open();
-            }}
-          />
-        )}
-        {paymentModal.isOpen && <PaymentModal onClose={paymentModal.close} />}
+        {/* Internal modals - render inside sidebar for proper scoping */}
+        <div className="music-sidebar__modals">
+          {loginModal.isOpen && (
+            <LoginModal
+              onClose={loginModal.close}
+              onSwitchToSignup={() => {
+                loginModal.close();
+                signupModal.open();
+              }}
+              onSwitchToForgot={() => {
+                loginModal.close();
+                forgotPasswordModal.open();
+              }}
+            />
+          )}
+          {signupModal.isOpen && (
+            <SignupModal
+              onClose={signupModal.close}
+              onSwitchToLogin={() => {
+                signupModal.close();
+                loginModal.open();
+              }}
+            />
+          )}
+          {forgotPasswordModal.isOpen && (
+            <ForgotPasswordModal
+              onClose={forgotPasswordModal.close}
+              onSwitchToLogin={() => {
+                forgotPasswordModal.close();
+                loginModal.open();
+              }}
+            />
+          )}
+          {paymentModal.isOpen && <PaymentModal onClose={paymentModal.close} />}
+        </div>
       </div>
     </>
   );

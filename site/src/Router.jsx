@@ -186,11 +186,10 @@ export function Router() {
   const music = useMusicSidebar();
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
-  // Global modals for sidebars (signup/payment triggered from MusicSidebar)
-  const signupModal = useModal();
-  const paymentModal = useModal();
-  const loginModal = useModal();
-  const forgotPasswordModal = useModal();
+  // NOTE: Modal Scoping Rule
+  // - Modals triggered from SIDEBAR → render INSIDE sidebar (confined to 520px)
+  // - Modals triggered from LANDING SCREEN → render at component level (full screen)
+  // Each component (MusicSidebar, HomePageWrapper) manages its own modals internally.
 
   // Handle deep link to a debate - opens Ideas sidebar
   const handleOpenDebate = useCallback(
@@ -216,27 +215,6 @@ export function Router() {
   const closeComingSoon = useCallback(() => {
     setComingSoonCategory(null);
   }, []);
-
-  // Modal switch handlers
-  const handleSwitchToSignup = useCallback(() => {
-    loginModal.close();
-    signupModal.open();
-  }, [loginModal, signupModal]);
-
-  const handleSwitchToLogin = useCallback(() => {
-    signupModal.close();
-    loginModal.open();
-  }, [signupModal, loginModal]);
-
-  const handleSwitchToForgotPassword = useCallback(() => {
-    loginModal.close();
-    forgotPasswordModal.open();
-  }, [loginModal, forgotPasswordModal]);
-
-  const handleBackToLogin = useCallback(() => {
-    forgotPasswordModal.close();
-    loginModal.open();
-  }, [forgotPasswordModal, loginModal]);
 
   return (
     <BrowserRouter>
@@ -335,8 +313,6 @@ export function Router() {
           formatTime={music.formatTime}
           user={music.user}
           balance={music.balance}
-          onSignUp={signupModal.open}
-          onBuyCredits={paymentModal.open}
         />
 
         {/* Coming Soon Sidebar (Books, Films, News, Ideas) */}
@@ -345,25 +321,6 @@ export function Router() {
           onClose={closeComingSoon}
           category={comingSoonCategory}
         />
-
-        {/* Global Auth Modals (triggered from MusicSidebar) */}
-        <LoginModal
-          isOpen={loginModal.isOpen}
-          onClose={loginModal.close}
-          onSwitchToSignup={handleSwitchToSignup}
-          onSwitchToForgotPassword={handleSwitchToForgotPassword}
-        />
-        <SignupModal
-          isOpen={signupModal.isOpen}
-          onClose={signupModal.close}
-          onSwitchToLogin={handleSwitchToLogin}
-        />
-        <ForgotPasswordModal
-          isOpen={forgotPasswordModal.isOpen}
-          onClose={forgotPasswordModal.close}
-          onBackToLogin={handleBackToLogin}
-        />
-        <PaymentModal isOpen={paymentModal.isOpen} onClose={paymentModal.close} />
       </Suspense>
     </BrowserRouter>
   );

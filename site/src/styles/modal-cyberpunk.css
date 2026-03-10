@@ -683,3 +683,41 @@
   max-height: 85vh;
   overflow-y: auto;
 }
+
+/* ===== SHARE DM MODAL ===== */
+/* Default: Full screen overlay (when triggered outside sidebar) */
+.share-dm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 200010;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Inside sidebar: Confine to sidebar bounds */
+.music-sidebar .share-dm-modal-overlay,
+.community-hub .share-dm-modal-overlay,
+.coming-soon-sidebar .share-dm-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.music-sidebar .share-dm-modal-overlay .group-members-modal,
+.community-hub .share-dm-modal-overlay .group-members-modal,
+.coming-soon-sidebar .share-dm-modal-overlay .group-members-modal {
+  max-width: 90%;
+  width: 90%;
+  max-height: 85vh;
+}
