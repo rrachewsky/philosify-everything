@@ -30,6 +30,14 @@ const CATEGORY_ICONS = {
       <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z" />
     </svg>
   ),
+  community: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z" />
+      <path d="M12 2C6.48 2 2 6.48 2 12c0 2.76 1.12 5.26 2.93 7.07l1.41-1.41C4.9 16.22 4 14.22 4 12c0-4.42 3.58-8 8-8s8 3.58 8 8c0 2.22-.9 4.22-2.34 5.66l1.41 1.41C20.88 17.26 22 14.76 22 12c0-5.52-4.48-10-10-10z" />
+      <path d="M12 6c-3.31 0-6 2.69-6 6 0 1.66.67 3.16 1.76 4.24l1.41-1.41C8.45 14.11 8 13.11 8 12c0-2.21 1.79-4 4-4s4 1.79 4 4c0 1.11-.45 2.11-1.17 2.83l1.41 1.41C17.33 15.16 18 13.66 18 12c0-3.31-2.69-6-6-6z" />
+      <circle cx="12" cy="12" r="2" />
+    </svg>
+  ),
 };
 
 export function ComingSoon({ category = 'books' }) {
@@ -204,6 +212,10 @@ export function NewsAnalysis() {
 
 export function IdeasAnalysis() {
   return <ComingSoon category="ideas" />;
+}
+
+export function CommunityAnalysis() {
+  return <ComingSoon category="community" />;
 }
 
 export default ComingSoon;

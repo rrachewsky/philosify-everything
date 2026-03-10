@@ -408,6 +408,58 @@
     "analyzingContent": "Filozófiai tartalom elemzése...",
     "analysisComplete": "Elemzés kész!"
   },
+  "home": {
+    "subtitle": "Minden Filozófiai Elemzése",
+    "comingSoon": "Hamarosan",
+    "startAnalysis": "Elemzés Indítása",
+    "analyze": "Elemzés",
+    "searchDefault": "Keresés...",
+    "categories": {
+      "music": {
+        "title": "Zene",
+        "description": "Elemezd a dalok és albumok filozófiai témáit",
+        "searchPlaceholder": "Dal keresése...",
+        "analyzeButton": "Zene Elemzése"
+      },
+      "books": {
+        "title": "Könyvek",
+        "description": "Fedezd fel az irodalom és a nem-fikció mögötti gondolatokat",
+        "searchPlaceholder": "Könyv keresése...",
+        "analyzeButton": "Könyv Elemzése"
+      },
+      "films": {
+        "title": "Filmek",
+        "description": "Fedezd fel a filozófiai narratívákat a filmekben",
+        "searchPlaceholder": "Film keresése...",
+        "analyzeButton": "Film Elemzése"
+      },
+      "news": {
+        "title": "Hírek",
+        "description": "Vizsgáld meg az aktuális eseményeket filozófiai szemszögből",
+        "searchPlaceholder": "Illeszd be a hír URL-jét...",
+        "analyzeButton": "Cikk Elemzése"
+      },
+      "ideas": {
+        "title": "Ötletek",
+        "description": "Fedezd fel és vitasd meg a filozófiai koncepciókat",
+        "searchPlaceholder": "Adj meg egy ötletet vagy koncepciót...",
+        "analyzeButton": "Ötlet Elemzése"
+      },
+      "community": {
+        "title": "Közösség",
+        "description": "Kapcsolódj gondolkodókkal és oszd meg filozófiai meglátásaidat",
+        "searchPlaceholder": "Keresés a közösségben...",
+        "analyzeButton": "Közösség Felfedezése"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "Dolgozunk azon, hogy filozófiai elemzést hozzunk a könyvekhez. Maradj velünk!",
+      "films": "Dolgozunk azon, hogy filozófiai elemzést hozzunk a filmekhez. Maradj velünk!",
+      "news": "Dolgozunk azon, hogy filozófiai elemzést hozzunk a hírekhez. Maradj velünk!",
+      "ideas": "Dolgozunk azon, hogy filozófiai felfedezést hozzunk az ötletekhez. Maradj velünk!",
+      "community": "Dolgozunk a közösségi funkciókon. Maradj velünk!"
+    }
+  },
   "nav": {
     "backToHome": "Vissza a főoldalra"
   },

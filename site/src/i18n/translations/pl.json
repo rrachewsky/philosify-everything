@@ -408,6 +408,58 @@
     "analyzingContent": "Analizowanie treści filozoficznych...",
     "analysisComplete": "Analiza zakończona!"
   },
+  "home": {
+    "subtitle": "Filozoficzna Analiza Wszystkiego",
+    "comingSoon": "Wkrótce",
+    "startAnalysis": "Rozpocznij Analizę",
+    "analyze": "Analizuj",
+    "searchDefault": "Szukaj...",
+    "categories": {
+      "music": {
+        "title": "Muzyka",
+        "description": "Analizuj filozoficzne tematy w utworach i albumach",
+        "searchPlaceholder": "Szukaj utworu...",
+        "analyzeButton": "Analizuj Muzykę"
+      },
+      "books": {
+        "title": "Książki",
+        "description": "Odkryj idee stojące za literaturą i non-fiction",
+        "searchPlaceholder": "Szukaj książki...",
+        "analyzeButton": "Analizuj Książkę"
+      },
+      "films": {
+        "title": "Filmy",
+        "description": "Odkryj filozoficzne narracje w kinie",
+        "searchPlaceholder": "Szukaj filmu...",
+        "analyzeButton": "Analizuj Film"
+      },
+      "news": {
+        "title": "Wiadomości",
+        "description": "Analizuj bieżące wydarzenia przez pryzmat filozofii",
+        "searchPlaceholder": "Wklej URL wiadomości...",
+        "analyzeButton": "Analizuj Artykuł"
+      },
+      "ideas": {
+        "title": "Idee",
+        "description": "Odkrywaj i dyskutuj o koncepcjach filozoficznych",
+        "searchPlaceholder": "Wpisz ideę lub koncepcję...",
+        "analyzeButton": "Analizuj Ideę"
+      },
+      "community": {
+        "title": "Społeczność",
+        "description": "Połącz się z myślicielami i dziel się filozoficznymi spostrzeżeniami",
+        "searchPlaceholder": "Szukaj w społeczności...",
+        "analyzeButton": "Odkryj Społeczność"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "Pracujemy nad wprowadzeniem analizy filozoficznej książek. Bądź na bieżąco!",
+      "films": "Pracujemy nad wprowadzeniem analizy filozoficznej filmów. Bądź na bieżąco!",
+      "news": "Pracujemy nad wprowadzeniem analizy filozoficznej wiadomości. Bądź na bieżąco!",
+      "ideas": "Pracujemy nad wprowadzeniem eksploracji filozoficznej idei. Bądź na bieżąco!",
+      "community": "Pracujemy nad wprowadzeniem funkcji społecznościowych. Bądź na bieżąco!"
+    }
+  },
   "nav": {
     "backToHome": "Powrót do Strony Głównej"
   },

@@ -1,4 +1,4 @@
-// Router - React Router v6 setup for Philosify with code splitting
+// Router - React Router v6 setup for Philosify with sidebar architecture
 import { Suspense, lazy, useState, useEffect, useCallback } from 'react';
 import {
   BrowserRouter,
@@ -19,7 +19,9 @@ import {
   AccountModal,
 } from './components';
 import { CommunityHub } from './components/community';
-import { useModal, useAuth } from './hooks';
+import { MusicSidebar } from './components/music/MusicSidebar';
+import { ComingSoonSidebar } from './components/ComingSoonSidebar';
+import { useModal, useAuth, useMusicSidebar } from './hooks';
 import { useCommunity } from './hooks/useCommunity.js';
 import { logger } from './utils';
 
@@ -32,24 +34,10 @@ const SharedAnalysis = lazy(() => import('./pages/SharedAnalysis'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
-const MusicAnalysis = lazy(() => import('./pages/MusicAnalysis'));
-const LandingScreen = lazy(() => import('./components/LandingScreen'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const BooksAnalysis = lazy(() =>
-  import('./pages/ComingSoon').then((m) => ({ default: m.BooksAnalysis }))
-);
-const FilmsAnalysis = lazy(() =>
-  import('./pages/ComingSoon').then((m) => ({ default: m.FilmsAnalysis }))
-);
-const NewsAnalysis = lazy(() =>
-  import('./pages/ComingSoon').then((m) => ({ default: m.NewsAnalysis }))
-);
-const IdeasAnalysis = lazy(() =>
-  import('./pages/ComingSoon').then((m) => ({ default: m.IdeasAnalysis }))
-);
 
-// Home page wrapper (4-category grid) with auth modals
-function HomePageWrapper({ onCommunity }) {
+// Home page wrapper with auth modals
+function HomePageWrapper({ onCommunity, onOpenMusic, onOpenCategory, onSignUp, onBuyCredits }) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const loginModal = useModal();
@@ -103,11 +91,13 @@ function HomePageWrapper({ onCommunity }) {
     <>
       <HomePage
         onSignIn={loginModal.open}
-        onSignUp={signupModal.open}
+        onSignUp={onSignUp || signupModal.open}
         onLogout={signOut}
-        onBuyCredits={paymentModal.open}
+        onBuyCredits={onBuyCredits || paymentModal.open}
         onHistory={historyModal.open}
-        onCommunity={onCommunity}
+        onOpenMusic={onOpenMusic}
+        onOpenCommunity={onCommunity}
+        onOpenCategory={onOpenCategory}
       />
       <LoginModal
         isOpen={loginModal.isOpen}
@@ -131,183 +121,6 @@ function HomePageWrapper({ onCommunity }) {
         onClose={historyModal.close}
         user={user}
         onViewAnalysis={handleViewCachedAnalysis}
-      />
-    </>
-  );
-}
-
-// Landing page wrapper with navigation and auth modals (Music analysis)
-function LandingPage({ onCommunity, onOpenDebate, onViewDebate }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { user, signOut } = useAuth();
-  const loginModal = useModal();
-  const signupModal = useModal();
-  const forgotPasswordModal = useModal();
-  const paymentModal = useModal();
-  const historyModal = useModal();
-
-  // Open payment modal when navigated from PaymentCancel "Try Again"
-  // Open community hub when navigated from PaymentSuccess with pending action
-  useEffect(() => {
-    if (location.state?.openPaymentModal) {
-      paymentModal.open();
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-    if (location.state?.openColloquiumId) {
-      onOpenDebate?.(location.state.openColloquiumId);
-      navigate(location.pathname, { replace: true, state: {} });
-    } else if (location.state?.openCommunity) {
-      onCommunity?.(location.state.openCommunity);
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to location.state changes; adding navigate/paymentModal/pathname would cause loops
-  }, [location.state]);
-
-  const handleAnalyze = ({ track, model, analysisResult }) => {
-    // If we have analysis result, navigate to app with it
-    navigate('/app', {
-      state: {
-        analyzeTrack: track,
-        analyzeModel: model,
-        analysisResult: analysisResult,
-      },
-    });
-  };
-
-  const handleViewAnalysis = (analysisResult) => {
-    // Navigate to app with pre-loaded analysis result
-    navigate('/app', {
-      state: {
-        analysisResult: analysisResult,
-      },
-    });
-  };
-
-  // Handle viewing cached analysis from History modal (receives analysisId)
-  const handleViewCachedAnalysis = async (analysisId) => {
-    logger.log('[Router] Viewing cached analysis:', analysisId);
-
-    try {
-      // Fetch analysis via authenticated API endpoint
-      const response = await fetch(`${API_URL}/api/analysis/${analysisId}`, {
-        method: 'GET',
-        credentials: 'include', // Send HttpOnly cookie
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      // API returns the analysis in the same shape as analyze.js cache hit
-      // Just pass it through directly
-      const formattedResult = {
-        ...data,
-        // Ensure backward compatibility fields are present
-        song_name: data.song_name || data.song,
-        cached: true,
-      };
-
-      // Close modal and navigate to results
-      historyModal.close();
-      navigate('/app', {
-        state: {
-          analysisResult: formattedResult,
-        },
-      });
-
-      logger.log('[Router] Loaded cached analysis:', formattedResult.song);
-    } catch (err) {
-      logger.error('[Router] Failed to load analysis:', err);
-    }
-  };
-
-  const handleSignIn = () => {
-    loginModal.open();
-  };
-
-  const handleSignUp = () => {
-    signupModal.open();
-  };
-
-  const handleLogout = async () => {
-    await signOut();
-  };
-
-  const handleBuyCredits = () => {
-    paymentModal.open();
-  };
-
-  const handleHistory = () => {
-    historyModal.open();
-  };
-
-  const handleSwitchToSignup = () => {
-    loginModal.close();
-    signupModal.open();
-  };
-
-  const handleSwitchToLogin = () => {
-    signupModal.close();
-    loginModal.open();
-  };
-
-  const handleSwitchToForgotPassword = () => {
-    loginModal.close();
-    forgotPasswordModal.open();
-  };
-
-  const handleBackToLogin = () => {
-    forgotPasswordModal.close();
-    loginModal.open();
-  };
-
-  return (
-    <>
-      <LandingScreen
-        onAnalyze={handleAnalyze}
-        onSignIn={handleSignIn}
-        onSignUp={handleSignUp}
-        onLogout={handleLogout}
-        onBuyCredits={handleBuyCredits}
-        onHistory={handleHistory}
-        onViewAnalysis={handleViewAnalysis}
-        onCommunity={onCommunity}
-      />
-
-      {/* Auth Modals */}
-      <LoginModal
-        isOpen={loginModal.isOpen}
-        onClose={loginModal.close}
-        onSwitchToSignup={handleSwitchToSignup}
-        onSwitchToForgotPassword={handleSwitchToForgotPassword}
-      />
-      <SignupModal
-        isOpen={signupModal.isOpen}
-        onClose={signupModal.close}
-        onSwitchToLogin={handleSwitchToLogin}
-      />
-      <ForgotPasswordModal
-        isOpen={forgotPasswordModal.isOpen}
-        onClose={forgotPasswordModal.close}
-        onBackToLogin={handleBackToLogin}
-      />
-      <PaymentModal isOpen={paymentModal.isOpen} onClose={paymentModal.close} />
-      <AccountModal
-        isOpen={historyModal.isOpen}
-        onClose={historyModal.close}
-        user={user}
-        onViewAnalysis={handleViewCachedAnalysis}
-        onViewDebate={(threadId) => {
-          historyModal.close();
-          onViewDebate?.(threadId);
-        }}
       />
     </>
   );
@@ -340,20 +153,32 @@ function PushNavigateListener() {
   return null;
 }
 
-// Deep link handler for /debate/:debateId — opens community sidebar to debates tab
+// Deep link handler for /debate/:debateId — redirects to home and opens community sidebar
 function DebateDeepLink({ onOpenDebate }) {
+  const navigate = useNavigate();
   const { debateId } = useParams();
+
   useEffect(() => {
     if (debateId) {
       onOpenDebate(debateId);
+      navigate('/', { replace: true });
     }
-  }, [debateId, onOpenDebate]);
-  return <LandingScreen />;
+  }, [debateId, onOpenDebate, navigate]);
+
+  return null;
 }
 
 export function Router() {
   const community = useCommunity();
+  const music = useMusicSidebar();
   const [deepLinkDebateId, setDeepLinkDebateId] = useState(null);
+  const [comingSoonCategory, setComingSoonCategory] = useState(null);
+
+  // Global modals for sidebars (signup/payment triggered from MusicSidebar)
+  const signupModal = useModal();
+  const paymentModal = useModal();
+  const loginModal = useModal();
+  const forgotPasswordModal = useModal();
 
   const handleOpenDebate = useCallback(
     (debateId) => {
@@ -368,30 +193,54 @@ export function Router() {
     setDeepLinkDebateId(null);
   }, []);
 
+  // Open ComingSoon sidebar for a category (books, films, news, ideas)
+  const openComingSoon = useCallback((category) => {
+    setComingSoonCategory(category);
+  }, []);
+
+  // Close ComingSoon sidebar
+  const closeComingSoon = useCallback(() => {
+    setComingSoonCategory(null);
+  }, []);
+
+  // Modal switch handlers
+  const handleSwitchToSignup = useCallback(() => {
+    loginModal.close();
+    signupModal.open();
+  }, [loginModal, signupModal]);
+
+  const handleSwitchToLogin = useCallback(() => {
+    signupModal.close();
+    loginModal.open();
+  }, [signupModal, loginModal]);
+
+  const handleSwitchToForgotPassword = useCallback(() => {
+    loginModal.close();
+    forgotPasswordModal.open();
+  }, [loginModal, forgotPasswordModal]);
+
+  const handleBackToLogin = useCallback(() => {
+    forgotPasswordModal.close();
+    loginModal.open();
+  }, [forgotPasswordModal, loginModal]);
+
   return (
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Home Page - 4 category grid (Music, Books, Films, News) */}
-          <Route path="/" element={<HomePageWrapper onCommunity={community.open} />} />
-
-          {/* Music Analysis - Original landing screen */}
+          {/* Home Page - Interactive logo with sidebar navigation */}
           <Route
-            path="/music"
+            path="/"
             element={
-              <LandingPage
+              <HomePageWrapper
                 onCommunity={community.open}
-                onOpenDebate={handleOpenDebate}
-                onViewDebate={handleOpenDebate}
+                onOpenMusic={music.open}
+                onOpenCategory={openComingSoon}
+                onSignUp={music.isOpen ? null : undefined}
+                onBuyCredits={music.isOpen ? null : undefined}
               />
             }
           />
-
-          {/* Coming Soon pages */}
-          <Route path="/books" element={<BooksAnalysis />} />
-          <Route path="/films" element={<FilmsAnalysis />} />
-          <Route path="/news" element={<NewsAnalysis />} />
-          <Route path="/ideas" element={<IdeasAnalysis />} />
 
           {/* Main App - Full analysis experience */}
           <Route path="/app" element={<App />} />
@@ -409,7 +258,6 @@ export function Router() {
           {/* Public routes */}
           <Route path="/a/:slug" element={<SharedAnalysis />} />
           <Route path="/shared/:id" element={<SharedAnalysis />} />
-          <Route path="/analysis" element={<MusicAnalysis />} />
 
           {/* Legal pages */}
           <Route path="/tos" element={<TermsOfService />} />
@@ -433,7 +281,7 @@ export function Router() {
         {/* Push notification in-app navigation listener */}
         <PushNavigateListener />
 
-        {/* Community Hub Sidebar - global, available on all pages */}
+        {/* Community Hub Sidebar */}
         <CommunityHub
           isOpen={community.isOpen}
           onClose={community.close}
@@ -445,16 +293,55 @@ export function Router() {
           clearDeepLinkDebate={clearDeepLinkDebate}
         />
 
-        {/* Community FAB - floating button to open sidebar */}
-        <button
-          className={`community-fab ${community.isOpen ? 'community-fab--open' : ''}`}
-          onClick={community.toggle}
-          title="Community Hub"
-          aria-label="Open Community Hub"
-        >
-          <span className="community-fab__icon">&#9776;</span>
-          <span className="community-fab__label">Community</span>
-        </button>
+        {/* Music Sidebar */}
+        <MusicSidebar
+          isOpen={music.isOpen}
+          onClose={music.close}
+          query={music.query}
+          setQuery={music.setQuery}
+          results={music.results}
+          loading={music.loading}
+          selectedTrack={music.selectedTrack}
+          selectTrack={music.selectTrack}
+          clearTrack={music.clearTrack}
+          isAnalyzing={music.isAnalyzing}
+          analysisResult={music.analysisResult}
+          analysisError={music.analysisError}
+          analyze={music.analyze}
+          cancelAnalysis={music.cancelAnalysis}
+          elapsedTime={music.elapsedTime}
+          formatTime={music.formatTime}
+          user={music.user}
+          balance={music.balance}
+          onSignUp={signupModal.open}
+          onBuyCredits={paymentModal.open}
+        />
+
+        {/* Coming Soon Sidebar (Books, Films, News, Ideas) */}
+        <ComingSoonSidebar
+          isOpen={!!comingSoonCategory}
+          onClose={closeComingSoon}
+          category={comingSoonCategory}
+        />
+
+        {/* Global Auth Modals (triggered from MusicSidebar) */}
+        <LoginModal
+          isOpen={loginModal.isOpen}
+          onClose={loginModal.close}
+          onSwitchToSignup={handleSwitchToSignup}
+          onSwitchToForgotPassword={handleSwitchToForgotPassword}
+        />
+        <SignupModal
+          isOpen={signupModal.isOpen}
+          onClose={signupModal.close}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
+        <ForgotPasswordModal
+          isOpen={forgotPasswordModal.isOpen}
+          onClose={forgotPasswordModal.close}
+          onBackToLogin={handleBackToLogin}
+        />
+        <PaymentModal isOpen={paymentModal.isOpen} onClose={paymentModal.close} />
       </Suspense>
     </BrowserRouter>
   );

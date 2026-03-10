@@ -408,6 +408,58 @@
     "analyzingContent": "Felsefi içerik analiz ediliyor...",
     "analysisComplete": "Analiz tamamlandı!"
   },
+  "home": {
+    "subtitle": "Her Şeyin Felsefi Analizi",
+    "comingSoon": "Yakında",
+    "startAnalysis": "Analizi Başlat",
+    "analyze": "Analiz Et",
+    "searchDefault": "Ara...",
+    "categories": {
+      "music": {
+        "title": "Müzik",
+        "description": "Şarkılardaki ve albümlerdeki felsefi temaları analiz edin",
+        "searchPlaceholder": "Şarkı ara...",
+        "analyzeButton": "Müzik Analiz Et"
+      },
+      "books": {
+        "title": "Kitaplar",
+        "description": "Edebiyat ve kurgu dışı eserlerin ardındaki fikirleri keşfedin",
+        "searchPlaceholder": "Kitap ara...",
+        "analyzeButton": "Kitap Analiz Et"
+      },
+      "films": {
+        "title": "Filmler",
+        "description": "Sinemadaki felsefi anlatıları keşfedin",
+        "searchPlaceholder": "Film ara...",
+        "analyzeButton": "Film Analiz Et"
+      },
+      "news": {
+        "title": "Haberler",
+        "description": "Güncel olayları felsefi bir perspektiften inceleyin",
+        "searchPlaceholder": "Haber URL'si yapıştır...",
+        "analyzeButton": "Makale Analiz Et"
+      },
+      "ideas": {
+        "title": "Fikirler",
+        "description": "Felsefi kavramları keşfedin ve tartışın",
+        "searchPlaceholder": "Bir fikir veya kavram girin...",
+        "analyzeButton": "Fikir Analiz Et"
+      },
+      "community": {
+        "title": "Topluluk",
+        "description": "Düşünürlerle bağlantı kurun ve felsefi içgörüler paylaşın",
+        "searchPlaceholder": "Toplulukta ara...",
+        "analyzeButton": "Topluluğu Keşfet"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "Kitaplar için felsefi analiz getirmek üzerinde çalışıyoruz. Takipte kalın!",
+      "films": "Filmler için felsefi analiz getirmek üzerinde çalışıyoruz. Takipte kalın!",
+      "news": "Haberler için felsefi analiz getirmek üzerinde çalışıyoruz. Takipte kalın!",
+      "ideas": "Fikirlerin felsefi keşfi için çalışıyoruz. Takipte kalın!",
+      "community": "Topluluk özellikleri için çalışıyoruz. Takipte kalın!"
+    }
+  },
   "nav": {
     "backToHome": "Ana Sayfaya Dön"
   },

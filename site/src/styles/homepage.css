@@ -1,66 +1,279 @@
 /* ============================================================
-   HOMEPAGE.CSS - Styles for the interactive logo landing page
-   Extends landing.css - only adds logo container and hotspot styles
+   HOMEPAGE.CSS - Interactive logo with line+label hover effect
+   PowerPoint diagram style: line extends with label at end
    ============================================================ */
 
-/* Logo Container - replaces the video-card */
+/* Logo Container - matches video-card styling from landing.css */
 .logo-container {
   position: relative;
   width: 100%;
-  max-width: 500px;
+  max-width: 280px;
   aspect-ratio: 1 / 1;
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: visible;
+
+  /* Glassmorphism border */
+  background: linear-gradient(
+    135deg,
+    rgba(0, 240, 255, 0.3) 0%,
+    rgba(124, 58, 237, 0.2) 50%,
+    rgba(236, 72, 153, 0.3) 100%
+  );
+  padding: 2px;
+
+  /* Neon glow */
+  box-shadow:
+    0 0 30px rgba(0, 240, 255, 0.4),
+    0 0 60px rgba(124, 58, 237, 0.3),
+    0 0 90px rgba(0, 240, 255, 0.2),
+    inset 0 0 30px rgba(0, 240, 255, 0.1);
+}
+
+.logo-container-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  overflow: visible;
+  background: #0a0020;
+  position: relative;
+  padding: 10px;
+}
+
+/* Subtle inner glow overlay */
+.logo-container-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.15);
+  pointer-events: none;
 }
 
 .logo-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 20px;
+  /* Hardware acceleration */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
-/* Clickable Hotspots over symbols */
+.logo-container:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.6),
+    0 25px 70px rgba(0, 0, 0, 0.4),
+    0 0 100px rgba(236, 72, 153, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+}
+
+/* ===== Hotspot Base Styles ===== */
 .logo-hotspot {
   position: absolute;
-  border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
   z-index: 10;
-  /* Debug: uncomment to see hotspot positions */
+  /* Debug: uncomment to see hotspot areas */
   /* background: rgba(255, 0, 0, 0.2); */
 }
 
-.logo-hotspot:hover,
-.logo-hotspot:focus,
-.logo-hotspot:active {
+/* Filled circle hover effect */
+.logo-hotspot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(
+    circle,
+    rgba(236, 72, 153, 0.5) 0%,
+    rgba(236, 72, 153, 0.3) 50%,
+    rgba(236, 72, 153, 0.1) 100%
+  );
+  border-radius: 50%;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.logo-hotspot:hover::before,
+.logo-hotspot:focus::before,
+.logo-hotspot:active::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
   box-shadow:
-    0 0 20px 8px rgba(236, 72, 153, 0.5),
-    0 0 40px 15px rgba(236, 72, 153, 0.3),
-    inset 0 0 20px rgba(236, 72, 153, 0.2);
-  background: rgba(236, 72, 153, 0.15);
+    0 0 20px rgba(236, 72, 153, 0.6),
+    0 0 40px rgba(236, 72, 153, 0.3);
 }
 
-/* Focus visible for accessibility */
-.logo-hotspot:focus-visible {
-  outline: 2px solid #ec4899;
-  outline-offset: 4px;
+.logo-hotspot:focus {
+  outline: none;
 }
 
-/* Touch feedback for mobile */
-@media (hover: none) {
-  .logo-hotspot:active {
-    box-shadow:
-      0 0 25px 10px rgba(236, 72, 153, 0.6),
-      0 0 50px 20px rgba(236, 72, 153, 0.4);
-    background: rgba(236, 72, 153, 0.25);
-  }
+/* ===== Line + Label Container ===== */
+.hotspot-line {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-/* ===== Responsive adjustments ===== */
+.hotspot-line--visible {
+  opacity: 1;
+}
+
+/* The extending line bar */
+.hotspot-line__bar {
+  background: linear-gradient(90deg, #00f0ff, #ec4899);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* The label at the end */
+.hotspot-line__label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #ec4899;
+  text-shadow:
+    0 0 10px rgba(236, 72, 153, 0.8),
+    0 0 20px rgba(236, 72, 153, 0.5);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.2s;
+}
+
+.hotspot-line--visible .hotspot-line__label {
+  opacity: 1;
+}
+
+/* ===== Direction-specific styles ===== */
+
+/* Line going UP (Ideas - top) */
+.logo-hotspot--up .hotspot-line {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.logo-hotspot--up .hotspot-line__bar {
+  width: 1px;
+  height: 0;
+  background: linear-gradient(180deg, #ec4899, #00f0ff);
+}
+
+.logo-hotspot--up .hotspot-line--visible .hotspot-line__bar {
+  height: 50px;
+}
+
+.logo-hotspot--up .hotspot-line__label {
+  margin-bottom: 8px;
+}
+
+/* Line going RIGHT (Movies, News) */
+.logo-hotspot--right .hotspot-line {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-direction: row;
+}
+
+.logo-hotspot--right .hotspot-line__bar {
+  width: 0;
+  height: 1px;
+}
+
+.logo-hotspot--right .hotspot-line--visible .hotspot-line__bar {
+  width: 60px;
+}
+
+.logo-hotspot--right .hotspot-line__label {
+  margin-left: 10px;
+}
+
+/* Line going DOWN (Community - bottom) */
+.logo-hotspot--down .hotspot-line {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-hotspot--down .hotspot-line__bar {
+  width: 1px;
+  height: 0;
+  background: linear-gradient(0deg, #ec4899, #00f0ff);
+}
+
+.logo-hotspot--down .hotspot-line--visible .hotspot-line__bar {
+  height: 50px;
+}
+
+.logo-hotspot--down .hotspot-line__label {
+  margin-top: 8px;
+}
+
+/* Line going LEFT (Books, Music) */
+.logo-hotspot--left .hotspot-line {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-direction: row-reverse;
+}
+
+.logo-hotspot--left .hotspot-line__bar {
+  width: 0;
+  height: 1px;
+  background: linear-gradient(270deg, #00f0ff, #ec4899);
+}
+
+.logo-hotspot--left .hotspot-line--visible .hotspot-line__bar {
+  width: 60px;
+}
+
+.logo-hotspot--left .hotspot-line__label {
+  margin-right: 10px;
+}
+
+/* ===== Touch/Active feedback ===== */
+.logo-hotspot:active .hotspot-line {
+  opacity: 1;
+}
+
+.logo-hotspot:active .hotspot-line__bar {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.8);
+}
+
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .logo-container {
     max-width: 90vw;
+  }
+
+  .logo-hotspot--up .hotspot-line--visible .hotspot-line__bar,
+  .logo-hotspot--down .hotspot-line--visible .hotspot-line__bar {
+    height: 35px;
+  }
+
+  .logo-hotspot--right .hotspot-line--visible .hotspot-line__bar,
+  .logo-hotspot--left .hotspot-line--visible .hotspot-line__bar {
+    width: 40px;
   }
 }
 
@@ -69,10 +282,143 @@
     max-width: 95vw;
   }
 
-  .logo-hotspot:hover,
-  .logo-hotspot:active {
-    box-shadow:
-      0 0 15px 5px rgba(236, 72, 153, 0.5),
-      0 0 30px 10px rgba(236, 72, 153, 0.3);
+  .logo-hotspot--up .hotspot-line--visible .hotspot-line__bar,
+  .logo-hotspot--down .hotspot-line--visible .hotspot-line__bar {
+    height: 25px;
+  }
+
+  .logo-hotspot--right .hotspot-line--visible .hotspot-line__bar,
+  .logo-hotspot--left .hotspot-line--visible .hotspot-line__bar {
+    width: 30px;
+  }
+}
+
+/* ===== Mobile touch: show on tap ===== */
+@media (hover: none) {
+  .logo-hotspot:active .hotspot-line,
+  .logo-hotspot:focus .hotspot-line {
+    opacity: 1;
+  }
+
+  .logo-hotspot:active .hotspot-line__bar,
+  .logo-hotspot:focus .hotspot-line__bar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-hotspot--up:active .hotspot-line__bar,
+  .logo-hotspot--up:focus .hotspot-line__bar,
+  .logo-hotspot--down:active .hotspot-line__bar,
+  .logo-hotspot--down:focus .hotspot-line__bar {
+    width: 1px;
+    height: 30px;
+  }
+
+  .logo-hotspot--left:active .hotspot-line__bar,
+  .logo-hotspot--left:focus .hotspot-line__bar,
+  .logo-hotspot--right:active .hotspot-line__bar,
+  .logo-hotspot--right:focus .hotspot-line__bar {
+    width: 30px;
+    height: 1px;
+  }
+
+  .logo-hotspot:active .hotspot-line__label,
+  .logo-hotspot:focus .hotspot-line__label {
+    opacity: 1;
+  }
+}
+
+/* ===== Auth/Profile - Left side, text align left ===== */
+/* Position: 1.5cm down from top (57px), 1.5cm from left edge (57px) */
+.landing-screen .landing-auth-bar {
+  position: absolute;
+  top: 57px !important; /* 1.5cm = 57px */
+  left: 57px !important; /* 1.5cm from left edge */
+  right: auto !important;
+  width: auto !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 4px;
+  text-align: left !important;
+}
+
+.landing-screen .landing-auth-bar * {
+  text-align: left !important;
+}
+
+.landing-screen .landing-user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 4px;
+  text-align: left !important;
+}
+
+.landing-screen .landing-user-top,
+.landing-screen .landing-user-middle,
+.landing-screen .landing-user-bottom {
+  display: flex !important;
+  flex-direction: row !important; /* Normal order for left alignment */
+  justify-content: flex-start !important;
+  align-items: center !important;
+  text-align: left !important;
+  width: auto !important;
+  gap: 8px !important;
+}
+
+.landing-screen .landing-username,
+.landing-screen .landing-balance,
+.landing-screen .landing-auth-link,
+.landing-screen .landing-buy-link {
+  text-align: left !important;
+}
+
+/* Align elements consistently */
+.landing-screen .landing-balance {
+  min-width: 80px !important;
+}
+
+.landing-screen .landing-user-bottom .landing-auth-link:last-child {
+  /* Logout - consistent width */
+  min-width: 90px !important;
+}
+
+/* ===== Center the logo on the page ===== */
+.landing-screen .main-video-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+/* Override desktop grid to horizontal rows */
+@media (min-width: 769px) {
+  .landing-screen .landing-language-icons {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 8px !important;
+    width: 280px !important;
+    max-width: 280px !important;
+    gap: 2px !important;
+  }
+
+  .landing-screen .landing-language-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .landing-screen .landing-language-icon {
+    order: unset !important;
   }
 }

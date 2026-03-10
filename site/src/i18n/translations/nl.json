@@ -408,6 +408,58 @@
     "analyzingContent": "Filosofische inhoud analyseren...",
     "analysisComplete": "Analyse voltooid!"
   },
+  "home": {
+    "subtitle": "Filosofische Analyse van Alles",
+    "comingSoon": "Binnenkort",
+    "startAnalysis": "Start Analyse",
+    "analyze": "Analyseren",
+    "searchDefault": "Zoeken...",
+    "categories": {
+      "music": {
+        "title": "Muziek",
+        "description": "Analyseer filosofische thema's in nummers en albums",
+        "searchPlaceholder": "Zoek naar een nummer...",
+        "analyzeButton": "Muziek Analyseren"
+      },
+      "books": {
+        "title": "Boeken",
+        "description": "Ontdek de ideeën achter literatuur en non-fictie",
+        "searchPlaceholder": "Zoek naar een boek...",
+        "analyzeButton": "Boek Analyseren"
+      },
+      "films": {
+        "title": "Films",
+        "description": "Ontdek filosofische verhalen in cinema",
+        "searchPlaceholder": "Zoek naar een film...",
+        "analyzeButton": "Film Analyseren"
+      },
+      "news": {
+        "title": "Nieuws",
+        "description": "Bekijk actuele gebeurtenissen door een filosofische lens",
+        "searchPlaceholder": "Plak nieuws-URL...",
+        "analyzeButton": "Artikel Analyseren"
+      },
+      "ideas": {
+        "title": "Ideeën",
+        "description": "Verken en debatteer filosofische concepten",
+        "searchPlaceholder": "Voer een idee of concept in...",
+        "analyzeButton": "Idee Analyseren"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Verbind met denkers en deel filosofische inzichten",
+        "searchPlaceholder": "Zoek in community...",
+        "analyzeButton": "Community Verkennen"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "We werken eraan om filosofische analyse naar boeken te brengen. Blijf op de hoogte!",
+      "films": "We werken eraan om filosofische analyse naar films te brengen. Blijf op de hoogte!",
+      "news": "We werken eraan om filosofische analyse naar nieuws te brengen. Blijf op de hoogte!",
+      "ideas": "We werken eraan om filosofische verkenning van ideeën te brengen. Blijf op de hoogte!",
+      "community": "We werken eraan om community-functies te brengen. Blijf op de hoogte!"
+    }
+  },
   "nav": {
     "backToHome": "Terug naar Home"
   },

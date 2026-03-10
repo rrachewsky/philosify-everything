@@ -408,6 +408,58 @@
     "analyzingContent": "Analizzando contenuto filosofico...",
     "analysisComplete": "Analisi completata!"
   },
+  "home": {
+    "subtitle": "Analisi Filosofica di Tutto",
+    "comingSoon": "Prossimamente",
+    "startAnalysis": "Inizia Analisi",
+    "analyze": "Analizza",
+    "searchDefault": "Cerca...",
+    "categories": {
+      "music": {
+        "title": "Musica",
+        "description": "Analizza i temi filosofici nelle canzoni e negli album",
+        "searchPlaceholder": "Cerca una canzone...",
+        "analyzeButton": "Analizza Musica"
+      },
+      "books": {
+        "title": "Libri",
+        "description": "Esplora le idee dietro la letteratura e la saggistica",
+        "searchPlaceholder": "Cerca un libro...",
+        "analyzeButton": "Analizza Libro"
+      },
+      "films": {
+        "title": "Film",
+        "description": "Scopri le narrazioni filosofiche nel cinema",
+        "searchPlaceholder": "Cerca un film...",
+        "analyzeButton": "Analizza Film"
+      },
+      "news": {
+        "title": "Notizie",
+        "description": "Esamina gli eventi attuali attraverso una lente filosofica",
+        "searchPlaceholder": "Incolla URL della notizia...",
+        "analyzeButton": "Analizza Articolo"
+      },
+      "ideas": {
+        "title": "Idee",
+        "description": "Esplora e dibatti concetti filosofici",
+        "searchPlaceholder": "Inserisci un'idea o un concetto...",
+        "analyzeButton": "Analizza Idea"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Connettiti con pensatori e condividi intuizioni filosofiche",
+        "searchPlaceholder": "Cerca nella community...",
+        "analyzeButton": "Esplora Community"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "Stiamo lavorando per portare l'analisi filosofica ai libri. Resta sintonizzato!",
+      "films": "Stiamo lavorando per portare l'analisi filosofica ai film. Resta sintonizzato!",
+      "news": "Stiamo lavorando per portare l'analisi filosofica alle notizie. Resta sintonizzato!",
+      "ideas": "Stiamo lavorando per portare l'esplorazione filosofica delle idee. Resta sintonizzato!",
+      "community": "Stiamo lavorando per portare le funzionalità della community. Resta sintonizzato!"
+    }
+  },
   "nav": {
     "backToHome": "Torna alla Home"
   },

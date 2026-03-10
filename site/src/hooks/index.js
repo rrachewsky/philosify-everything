@@ -18,3 +18,4 @@ export { useDMUnreadCount } from './useDMUnreadCount.js';
 export { usePresence } from './usePresence.js';
 export { useUnderground } from './useUnderground.js';
 export { useContactImport, isContactPickerSupported } from './useContactImport.js';
+export { useMusicSidebar } from './useMusicSidebar.js';

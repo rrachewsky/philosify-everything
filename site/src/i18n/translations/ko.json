@@ -408,6 +408,58 @@
     "analyzingContent": "철학적 내용 분석 중...",
     "analysisComplete": "분석 완료!"
   },
+  "home": {
+    "subtitle": "모든 것의 철학적 분석",
+    "comingSoon": "곧 출시",
+    "startAnalysis": "분석 시작",
+    "analyze": "분석하기",
+    "searchDefault": "검색...",
+    "categories": {
+      "music": {
+        "title": "음악",
+        "description": "노래와 앨범의 철학적 주제를 분석합니다",
+        "searchPlaceholder": "노래 검색...",
+        "analyzeButton": "음악 분석"
+      },
+      "books": {
+        "title": "책",
+        "description": "문학과 논픽션 이면의 아이디어를 탐구합니다",
+        "searchPlaceholder": "책 검색...",
+        "analyzeButton": "책 분석"
+      },
+      "films": {
+        "title": "영화",
+        "description": "영화 속 철학적 서사를 발견합니다",
+        "searchPlaceholder": "영화 검색...",
+        "analyzeButton": "영화 분석"
+      },
+      "news": {
+        "title": "뉴스",
+        "description": "철학적 관점으로 시사를 분석합니다",
+        "searchPlaceholder": "뉴스 URL 붙여넣기...",
+        "analyzeButton": "기사 분석"
+      },
+      "ideas": {
+        "title": "아이디어",
+        "description": "철학적 개념을 탐구하고 토론합니다",
+        "searchPlaceholder": "아이디어나 개념 입력...",
+        "analyzeButton": "아이디어 분석"
+      },
+      "community": {
+        "title": "커뮤니티",
+        "description": "사상가들과 연결하고 철학적 통찰을 공유합니다",
+        "searchPlaceholder": "커뮤니티에서 검색...",
+        "analyzeButton": "커뮤니티 탐색"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "책에 대한 철학적 분석을 준비 중입니다. 기대해 주세요!",
+      "films": "영화에 대한 철학적 분석을 준비 중입니다. 기대해 주세요!",
+      "news": "뉴스에 대한 철학적 분석을 준비 중입니다. 기대해 주세요!",
+      "ideas": "아이디어의 철학적 탐구를 준비 중입니다. 기대해 주세요!",
+      "community": "커뮤니티 기능을 준비 중입니다. 기대해 주세요!"
+    }
+  },
   "nav": {
     "backToHome": "홈으로 돌아가기"
   },

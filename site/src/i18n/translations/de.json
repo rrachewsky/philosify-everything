@@ -408,6 +408,58 @@
     "analyzingContent": "Analysiere philosophischen Inhalt...",
     "analysisComplete": "Analyse abgeschlossen!"
   },
+  "home": {
+    "subtitle": "Philosophische Analyse von Allem",
+    "comingSoon": "Demnächst",
+    "startAnalysis": "Analyse starten",
+    "analyze": "Analysieren",
+    "searchDefault": "Suchen...",
+    "categories": {
+      "music": {
+        "title": "Musik",
+        "description": "Analysiere philosophische Themen in Songs und Alben",
+        "searchPlaceholder": "Suche nach einem Song...",
+        "analyzeButton": "Musik analysieren"
+      },
+      "books": {
+        "title": "Bücher",
+        "description": "Erkunde die Ideen hinter Literatur und Sachbüchern",
+        "searchPlaceholder": "Suche nach einem Buch...",
+        "analyzeButton": "Buch analysieren"
+      },
+      "films": {
+        "title": "Filme",
+        "description": "Entdecke philosophische Erzählungen im Kino",
+        "searchPlaceholder": "Suche nach einem Film...",
+        "analyzeButton": "Film analysieren"
+      },
+      "news": {
+        "title": "Nachrichten",
+        "description": "Betrachte aktuelle Ereignisse durch eine philosophische Linse",
+        "searchPlaceholder": "Nachrichten-URL einfügen...",
+        "analyzeButton": "Artikel analysieren"
+      },
+      "ideas": {
+        "title": "Ideen",
+        "description": "Erkunde und debattiere philosophische Konzepte",
+        "searchPlaceholder": "Gib eine Idee oder ein Konzept ein...",
+        "analyzeButton": "Idee analysieren"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Verbinde dich mit Denkern und teile philosophische Erkenntnisse",
+        "searchPlaceholder": "Community durchsuchen...",
+        "analyzeButton": "Community erkunden"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "Wir arbeiten daran, philosophische Analyse für Bücher zu bringen. Bleib dran!",
+      "films": "Wir arbeiten daran, philosophische Analyse für Filme zu bringen. Bleib dran!",
+      "news": "Wir arbeiten daran, philosophische Analyse für Nachrichten zu bringen. Bleib dran!",
+      "ideas": "Wir arbeiten daran, philosophische Erforschung von Ideen zu bringen. Bleib dran!",
+      "community": "Wir arbeiten daran, Community-Funktionen zu bringen. Bleib dran!"
+    }
+  },
   "nav": {
     "backToHome": "Zurück zur Startseite"
   },

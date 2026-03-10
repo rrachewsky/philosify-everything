@@ -408,6 +408,58 @@
     "analyzingContent": "מנתח תוכן פילוסופי...",
     "analysisComplete": "הניתוח הושלם!"
   },
+  "home": {
+    "subtitle": "ניתוח פילוסופי של הכל",
+    "comingSoon": "בקרוב",
+    "startAnalysis": "התחל ניתוח",
+    "analyze": "נתח",
+    "searchDefault": "חיפוש...",
+    "categories": {
+      "music": {
+        "title": "מוזיקה",
+        "description": "נתח נושאים פילוסופיים בשירים ואלבומים",
+        "searchPlaceholder": "חפש שיר...",
+        "analyzeButton": "נתח מוזיקה"
+      },
+      "books": {
+        "title": "ספרים",
+        "description": "חקור את הרעיונות מאחורי ספרות ופרוזה עיונית",
+        "searchPlaceholder": "חפש ספר...",
+        "analyzeButton": "נתח ספר"
+      },
+      "films": {
+        "title": "סרטים",
+        "description": "גלה נרטיבים פילוסופיים בקולנוע",
+        "searchPlaceholder": "חפש סרט...",
+        "analyzeButton": "נתח סרט"
+      },
+      "news": {
+        "title": "חדשות",
+        "description": "בחן אירועים אקטואליים דרך פריזמה פילוסופית",
+        "searchPlaceholder": "הדבק קישור לכתבה...",
+        "analyzeButton": "נתח כתבה"
+      },
+      "ideas": {
+        "title": "רעיונות",
+        "description": "חקור ודון במושגים פילוסופיים",
+        "searchPlaceholder": "הזן רעיון או מושג...",
+        "analyzeButton": "נתח רעיון"
+      },
+      "community": {
+        "title": "קהילה",
+        "description": "התחבר עם הוגים ושתף תובנות פילוסופיות",
+        "searchPlaceholder": "חפש בקהילה...",
+        "analyzeButton": "חקור קהילה"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "אנחנו עובדים להביא ניתוח פילוסופי לספרים. הישארו מעודכנים!",
+      "films": "אנחנו עובדים להביא ניתוח פילוסופי לסרטים. הישארו מעודכנים!",
+      "news": "אנחנו עובדים להביא ניתוח פילוסופי לחדשות. הישארו מעודכנים!",
+      "ideas": "אנחנו עובדים להביא חקירה פילוסופית של רעיונות. הישארו מעודכנים!",
+      "community": "אנחנו עובדים להביא תכונות קהילה. הישארו מעודכנים!"
+    }
+  },
   "nav": {
     "backToHome": "חזרה לדף הבית"
   },

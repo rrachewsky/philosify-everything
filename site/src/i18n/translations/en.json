@@ -444,13 +444,20 @@
         "description": "Explore and debate philosophical concepts",
         "searchPlaceholder": "Enter an idea or concept...",
         "analyzeButton": "Analyze Idea"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Connect with fellow philosophers",
+        "searchPlaceholder": "Find community members...",
+        "analyzeButton": "Join Community"
       }
     },
     "comingSoonDesc": {
       "books": "We are working to bring philosophical analysis to books. Stay tuned!",
       "films": "We are working to bring philosophical analysis to films. Stay tuned!",
       "news": "We are working to bring philosophical analysis to news. Stay tuned!",
-      "ideas": "We are working to bring philosophical exploration of ideas. Stay tuned!"
+      "ideas": "We are working to bring philosophical exploration of ideas. Stay tuned!",
+      "community": "Community features are coming soon. Stay tuned!"
     }
   },
   "nav": {

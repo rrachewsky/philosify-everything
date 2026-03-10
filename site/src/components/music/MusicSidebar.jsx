@@ -1,0 +1,190 @@
+// MusicSidebar - Slide-out Sidebar for Music Analysis
+// Uses ResultsContainer for analysis display (correct API field mapping)
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ResultsContainer } from '../results/ResultsContainer';
+import '../../styles/music-sidebar.css';
+
+export function MusicSidebar({
+  isOpen, onClose, query, setQuery, results, loading,
+  selectedTrack, selectTrack, clearTrack,
+  isAnalyzing, analysisResult, analysisError, analyze, cancelAnalysis,
+  elapsedTime, formatTime, user, balance, onSignUp, onBuyCredits, lang,
+}) {
+  const { t, i18n } = useTranslation();
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    }
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen && inputRef.current && !selectedTrack) {
+      setTimeout(() => inputRef.current?.focus(), 300);
+    }
+  }, [isOpen, selectedTrack]);
+
+  useEffect(() => {
+    setFocusedIndex(results.length > 0 ? 0 : -1);
+  }, [results]);
+
+  const handleBackdropClick = useCallback((e) => {
+    if (e.target === e.currentTarget) onClose();
+  }, [onClose]);
+
+  const handleSelect = (track) => {
+    selectTrack(track);
+    setFocusedIndex(-1);
+    if (!user) { onSignUp?.(); return; }
+    if (balance?.total !== undefined && balance.total <= 0) onBuyCredits?.();
+  };
+
+  const handleKeyDown = (e) => {
+    if (results.length === 0) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); setFocusedIndex((p) => Math.min(p + 1, results.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setFocusedIndex((p) => Math.max(p - 1, 0)); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (focusedIndex >= 0) handleSelect(results[focusedIndex]); }
+    else if (e.key === 'Escape') { e.preventDefault(); onClose(); }
+  };
+
+  const handleAnalyze = async () => {
+    if (!user) { onSignUp?.(); return; }
+    if (balance?.total !== undefined && balance.total <= 0) { onBuyCredits?.(); return; }
+    await analyze(lang || i18n.language || 'en');
+  };
+
+  const canAnalyze = selectedTrack && user && !isAnalyzing;
+
+  return (
+    <>
+      <div className={`music-backdrop ${isOpen ? 'music-backdrop--open' : ''}`} onClick={handleBackdropClick} />
+      <div className={`music-sidebar ${isOpen ? 'music-sidebar--open' : ''}`} role="dialog" aria-modal="true">
+        <div className="music-sidebar__header">
+          <span className="music-sidebar__title">
+            <span className="music-sidebar__icon">&#9835;</span>
+            {t('home.categories.music.title')}
+          </span>
+          <button className="music-sidebar__close" onClick={onClose}>&times;</button>
+        </div>
+        <div className="music-sidebar__content">
+          <div className="music-search">
+            <div className="music-search__input-wrapper">
+              <input ref={inputRef} type="text" className="music-search__input"
+                placeholder={t('landing.searchPlaceholder')} value={query}
+                onChange={(e) => setQuery(e.target.value)} onKeyDown={handleKeyDown}
+                disabled={!!selectedTrack} autoComplete="off" />
+              {loading && <div className="music-search__loading"><span></span><span></span><span></span></div>}
+              {query && !loading && !selectedTrack && (
+                <button className="music-search__clear" onClick={() => setQuery('')}>&times;</button>
+              )}
+            </div>
+            {selectedTrack && (
+              <div className="music-selected">
+                <div className="music-selected__info">
+                  <div className="music-selected__song">{selectedTrack.song}</div>
+                  <div className="music-selected__artist">{selectedTrack.artist}</div>
+                </div>
+                <button className="music-selected__clear" onClick={clearTrack}>&times;</button>
+              </div>
+            )}
+          </div>
+
+          {!selectedTrack && results.length > 0 && (
+            <div className="music-results">
+              <div className="music-results__header">{t('landing.results', 'Results')} ({results.length})</div>
+              <div className="music-results__list">
+                {results.map((track, i) => (
+                  <button key={track.spotify_id || i}
+                    className={`music-results__item ${i === focusedIndex ? 'music-results__item--focused' : ''}`}
+                    onClick={() => handleSelect(track)} onMouseEnter={() => setFocusedIndex(i)}>
+                    <span className="music-results__song">{track.song}</span>
+                    <span className="music-results__artist">{track.artist}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {selectedTrack && !analysisResult && (
+            <div className="music-analyze">
+              {!isAnalyzing ? (
+                <button className="music-analyze__button" onClick={handleAnalyze} disabled={!canAnalyze}>
+                  {t('landing.scanMusic')}
+                </button>
+              ) : (
+                <button className="music-analyze__button music-analyze__button--cancel" onClick={cancelAnalysis}>
+                  {t('listen.cancel')}
+                </button>
+              )}
+              {isAnalyzing && (
+                <div className="music-timer">
+                  <div className="music-timer__bar"><div className="music-timer__fill"></div></div>
+                  <div className="music-timer__time"><span>&#9201;</span> {formatTime(elapsedTime)}</div>
+                  <div className="music-timer__label">{t('landing.analyzingContent')}</div>
+                </div>
+              )}
+              {analysisError && <div className="music-error">{analysisError}</div>}
+            </div>
+          )}
+
+          {analysisResult && (
+            <div className="music-analysis">
+              <div className="music-analysis__header">
+                <span className="music-analysis__complete-icon">&#10003;</span>
+                {t('landing.analysisComplete')}
+              </div>
+              <div className="music-analysis__results-wrapper">
+                <ResultsContainer result={analysisResult} showShareActions={true} />
+              </div>
+              <button className="music-analyze__button music-analyze__button--another" onClick={clearTrack}>
+                {t('landing.analyzeAnother', 'Analyze Another Song')}
+              </button>
+            </div>
+          )}
+
+          {!user && selectedTrack && (
+            <div className="music-auth-required">
+              <p>{t('community.signInRequired')}</p>
+              <button className="music-auth-required__btn" onClick={onSignUp}>{t('auth.signUp')}</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default MusicSidebar;

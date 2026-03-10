@@ -408,6 +408,58 @@
     "analyzingContent": "哲学的内容を分析中...",
     "analysisComplete": "分析完了！"
   },
+  "home": {
+    "subtitle": "すべての哲学的分析",
+    "comingSoon": "近日公開",
+    "startAnalysis": "分析を開始",
+    "analyze": "分析する",
+    "searchDefault": "検索...",
+    "categories": {
+      "music": {
+        "title": "音楽",
+        "description": "曲やアルバムの哲学的テーマを分析する",
+        "searchPlaceholder": "曲を検索...",
+        "analyzeButton": "音楽を分析"
+      },
+      "books": {
+        "title": "本",
+        "description": "文学やノンフィクションの背後にあるアイデアを探求する",
+        "searchPlaceholder": "本を検索...",
+        "analyzeButton": "本を分析"
+      },
+      "films": {
+        "title": "映画",
+        "description": "映画の哲学的な物語を発見する",
+        "searchPlaceholder": "映画を検索...",
+        "analyzeButton": "映画を分析"
+      },
+      "news": {
+        "title": "ニュース",
+        "description": "哲学的な視点で時事問題を検証する",
+        "searchPlaceholder": "ニュースURLを貼り付け...",
+        "analyzeButton": "記事を分析"
+      },
+      "ideas": {
+        "title": "アイデア",
+        "description": "哲学的概念を探求し議論する",
+        "searchPlaceholder": "アイデアや概念を入力...",
+        "analyzeButton": "アイデアを分析"
+      },
+      "community": {
+        "title": "コミュニティ",
+        "description": "思想家とつながり、哲学的な洞察を共有する",
+        "searchPlaceholder": "コミュニティで検索...",
+        "analyzeButton": "コミュニティを探索"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "本の哲学的分析を準備中です。お楽しみに！",
+      "films": "映画の哲学的分析を準備中です。お楽しみに！",
+      "news": "ニュースの哲学的分析を準備中です。お楽しみに！",
+      "ideas": "アイデアの哲学的探求を準備中です。お楽しみに！",
+      "community": "コミュニティ機能を準備中です。お楽しみに！"
+    }
+  },
   "nav": {
     "backToHome": "ホームに戻る"
   },

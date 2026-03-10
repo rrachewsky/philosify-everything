@@ -408,6 +408,58 @@
     "analyzingContent": "分析哲学内容...",
     "analysisComplete": "分析完成！"
   },
+  "home": {
+    "subtitle": "万物的哲学分析",
+    "comingSoon": "即将推出",
+    "startAnalysis": "开始分析",
+    "analyze": "分析",
+    "searchDefault": "搜索...",
+    "categories": {
+      "music": {
+        "title": "音乐",
+        "description": "分析歌曲和专辑中的哲学主题",
+        "searchPlaceholder": "搜索歌曲...",
+        "analyzeButton": "分析音乐"
+      },
+      "books": {
+        "title": "书籍",
+        "description": "探索文学和非虚构作品背后的思想",
+        "searchPlaceholder": "搜索书籍...",
+        "analyzeButton": "分析书籍"
+      },
+      "films": {
+        "title": "电影",
+        "description": "发现电影中的哲学叙事",
+        "searchPlaceholder": "搜索电影...",
+        "analyzeButton": "分析电影"
+      },
+      "news": {
+        "title": "新闻",
+        "description": "从哲学角度审视时事",
+        "searchPlaceholder": "粘贴新闻链接...",
+        "analyzeButton": "分析文章"
+      },
+      "ideas": {
+        "title": "思想",
+        "description": "探索和讨论哲学概念",
+        "searchPlaceholder": "输入一个想法或概念...",
+        "analyzeButton": "分析思想"
+      },
+      "community": {
+        "title": "社区",
+        "description": "与思想者交流，分享哲学见解",
+        "searchPlaceholder": "在社区中搜索...",
+        "analyzeButton": "探索社区"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "我们正在努力为书籍带来哲学分析。敬请期待！",
+      "films": "我们正在努力为电影带来哲学分析。敬请期待！",
+      "news": "我们正在努力为新闻带来哲学分析。敬请期待！",
+      "ideas": "我们正在努力带来思想的哲学探索。敬请期待！",
+      "community": "我们正在努力推出社区功能。敬请期待！"
+    }
+  },
   "nav": {
     "backToHome": "返回首页"
   },

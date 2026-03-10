@@ -444,13 +444,20 @@
         "description": "Explore e debata conceitos filosóficos",
         "searchPlaceholder": "Digite uma ideia ou conceito...",
         "analyzeButton": "Analisar Ideia"
+      },
+      "community": {
+        "title": "Comunidade",
+        "description": "Conecte-se com pensadores e compartilhe insights filosóficos",
+        "searchPlaceholder": "Buscar na comunidade...",
+        "analyzeButton": "Explorar Comunidade"
       }
     },
     "comingSoonDesc": {
       "books": "Estamos trabalhando para trazer análise filosófica de livros. Aguarde!",
       "films": "Estamos trabalhando para trazer análise filosófica de filmes. Aguarde!",
       "news": "Estamos trabalhando para trazer análise filosófica de notícias. Aguarde!",
-      "ideas": "Estamos trabalhando para trazer exploração filosófica de ideias. Aguarde!"
+      "ideas": "Estamos trabalhando para trazer exploração filosófica de ideias. Aguarde!",
+      "community": "Estamos trabalhando para trazer recursos de comunidade. Aguarde!"
     }
   },
   "nav": {

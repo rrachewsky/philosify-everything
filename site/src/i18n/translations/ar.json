@@ -408,6 +408,58 @@
     "analyzingContent": "تحليل المحتوى الفلسفي...",
     "analysisComplete": "اكتمل التحليل!"
   },
+  "home": {
+    "subtitle": "التحليل الفلسفي لكل شيء",
+    "comingSoon": "قريباً",
+    "startAnalysis": "بدء التحليل",
+    "analyze": "تحليل",
+    "searchDefault": "بحث...",
+    "categories": {
+      "music": {
+        "title": "موسيقى",
+        "description": "حلّل المواضيع الفلسفية في الأغاني والألبومات",
+        "searchPlaceholder": "ابحث عن أغنية...",
+        "analyzeButton": "تحليل الموسيقى"
+      },
+      "books": {
+        "title": "كتب",
+        "description": "استكشف الأفكار وراء الأدب والكتب الواقعية",
+        "searchPlaceholder": "ابحث عن كتاب...",
+        "analyzeButton": "تحليل الكتاب"
+      },
+      "films": {
+        "title": "أفلام",
+        "description": "اكتشف السرديات الفلسفية في السينما",
+        "searchPlaceholder": "ابحث عن فيلم...",
+        "analyzeButton": "تحليل الفيلم"
+      },
+      "news": {
+        "title": "أخبار",
+        "description": "افحص الأحداث الجارية من منظور فلسفي",
+        "searchPlaceholder": "الصق رابط الخبر...",
+        "analyzeButton": "تحليل المقال"
+      },
+      "ideas": {
+        "title": "أفكار",
+        "description": "استكشف وناقش المفاهيم الفلسفية",
+        "searchPlaceholder": "أدخل فكرة أو مفهوماً...",
+        "analyzeButton": "تحليل الفكرة"
+      },
+      "community": {
+        "title": "المجتمع",
+        "description": "تواصل مع المفكرين وشارك الرؤى الفلسفية",
+        "searchPlaceholder": "ابحث في المجتمع...",
+        "analyzeButton": "استكشاف المجتمع"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "نعمل على تقديم التحليل الفلسفي للكتب. ترقبوا!",
+      "films": "نعمل على تقديم التحليل الفلسفي للأفلام. ترقبوا!",
+      "news": "نعمل على تقديم التحليل الفلسفي للأخبار. ترقبوا!",
+      "ideas": "نعمل على تقديم الاستكشاف الفلسفي للأفكار. ترقبوا!",
+      "community": "نعمل على تقديم ميزات المجتمع. ترقبوا!"
+    }
+  },
   "nav": {
     "backToHome": "العودة للرئيسية"
   },

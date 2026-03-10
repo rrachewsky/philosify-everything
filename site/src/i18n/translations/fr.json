@@ -408,6 +408,58 @@
     "analyzingContent": "Analyse du contenu philosophique...",
     "analysisComplete": "Analyse terminée !"
   },
+  "home": {
+    "subtitle": "Analyse Philosophique de Tout",
+    "comingSoon": "Bientôt disponible",
+    "startAnalysis": "Démarrer l'analyse",
+    "analyze": "Analyser",
+    "searchDefault": "Rechercher...",
+    "categories": {
+      "music": {
+        "title": "Musique",
+        "description": "Analysez les thèmes philosophiques dans les chansons et albums",
+        "searchPlaceholder": "Rechercher une chanson...",
+        "analyzeButton": "Analyser la musique"
+      },
+      "books": {
+        "title": "Livres",
+        "description": "Explorez les idées derrière la littérature et la non-fiction",
+        "searchPlaceholder": "Rechercher un livre...",
+        "analyzeButton": "Analyser le livre"
+      },
+      "films": {
+        "title": "Films",
+        "description": "Découvrez les récits philosophiques au cinéma",
+        "searchPlaceholder": "Rechercher un film...",
+        "analyzeButton": "Analyser le film"
+      },
+      "news": {
+        "title": "Actualités",
+        "description": "Examinez l'actualité à travers un prisme philosophique",
+        "searchPlaceholder": "Collez l'URL de l'article...",
+        "analyzeButton": "Analyser l'article"
+      },
+      "ideas": {
+        "title": "Idées",
+        "description": "Explorez et débattez des concepts philosophiques",
+        "searchPlaceholder": "Entrez une idée ou un concept...",
+        "analyzeButton": "Analyser l'idée"
+      },
+      "community": {
+        "title": "Communauté",
+        "description": "Connectez-vous avec des penseurs et partagez des idées philosophiques",
+        "searchPlaceholder": "Rechercher dans la communauté...",
+        "analyzeButton": "Explorer la communauté"
+      }
+    },
+    "comingSoonDesc": {
+      "books": "Nous travaillons pour apporter l'analyse philosophique aux livres. Restez à l'écoute !",
+      "films": "Nous travaillons pour apporter l'analyse philosophique aux films. Restez à l'écoute !",
+      "news": "Nous travaillons pour apporter l'analyse philosophique aux actualités. Restez à l'écoute !",
+      "ideas": "Nous travaillons pour apporter l'exploration philosophique des idées. Restez à l'écoute !",
+      "community": "Nous travaillons pour apporter les fonctionnalités de communauté. Restez à l'écoute !"
+    }
+  },
   "nav": {
     "backToHome": "Retour à l'Accueil"
   },
