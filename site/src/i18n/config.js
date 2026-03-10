@@ -70,7 +70,7 @@ const loadTranslation = async (lang) => {
   try {
     // Dynamic import - Vite will create separate chunks
     const module = await import(`./translations/${lang}.json`);
-    return module.default;
+    return module.default || module;
   } catch {
     console.warn(`[i18n] Failed to load ${lang} translations, falling back to English`);
     return en;
