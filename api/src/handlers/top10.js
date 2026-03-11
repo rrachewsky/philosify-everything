@@ -403,5 +403,5 @@ export async function handleScheduledTop10(env) {
     headers: new Map(),
   };
 
-  return handleRefreshTop10(mockRequest, env, "https://philosify.org", true);
+  return handleRefreshTop10(mockRequest, env, "https://everything.philosify.org", true);
 }

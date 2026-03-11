@@ -856,7 +856,7 @@ function generateEmailHtml(translations, confirmationUrl) {
                 <tr>
                   <td style="background-color: #080318; padding: 20px 40px; border-top: 1px solid rgba(120,100,180,0.15);">
                     <p style="margin: 0; color: rgba(255,255,255,0.25); font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; font-size: 11px; text-align: center; letter-spacing: 0.5px;">
-                      &copy; Philosify &bull; <a href="https://philosify.org" style="color: #00f0ff; text-decoration: none;">philosify.org</a>
+                      &copy; Philosify &bull; <a href="https://everything.philosify.org" style="color: #00f0ff; text-decoration: none;">everything.philosify.org</a>
                     </p>
                   </td>
                 </tr>
@@ -994,7 +994,7 @@ export async function handleAuthEmail(request, env, origin) {
     // Build confirmation URL from token_hash and site_url/redirect_to
     // Supabase sends site_url as the full auth base (e.g. https://xxx.supabase.co/auth/v1)
     // so we only append /verify (not /auth/v1/verify) to avoid path duplication
-    const siteUrl = emailData.site_url || "https://philosify.org";
+    const siteUrl = emailData.site_url || "https://everything.philosify.org";
     const redirectTo = emailData.redirect_to || siteUrl;
     const tokenHash = emailData.token_hash || "";
     const confirmationUrl = tokenHash

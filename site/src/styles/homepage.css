@@ -260,36 +260,29 @@
   box-shadow: 0 0 15px rgba(236, 72, 153, 0.8);
 }
 
-/* ===== Responsive ===== */
+/* ===== RESPONSIVE / MOBILE ===== */
 @media (max-width: 768px) {
+  /* --- Auth spacing: tighten buttons so all 5 elements are 6px apart --- */
+  .landing-screen .landing-user-profile .landing-auth-link {
+    line-height: 1;
+    min-height: 0;
+    display: inline;
+  }
+
+  /* --- Logo reduced by 20% (was 90vw) --- */
   .logo-container {
-    max-width: 90vw;
+    max-width: 72vw;
   }
 
-  .logo-hotspot--up .hotspot-line--visible .hotspot-line__bar,
-  .logo-hotspot--down .hotspot-line--visible .hotspot-line__bar {
-    height: 35px;
-  }
-
-  .logo-hotspot--right .hotspot-line--visible .hotspot-line__bar,
-  .logo-hotspot--left .hotspot-line--visible .hotspot-line__bar {
-    width: 40px;
+  /* --- Hide desktop hover hotspots (unusable on touch) --- */
+  .logo-hotspot {
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
   .logo-container {
-    max-width: 95vw;
-  }
-
-  .logo-hotspot--up .hotspot-line--visible .hotspot-line__bar,
-  .logo-hotspot--down .hotspot-line--visible .hotspot-line__bar {
-    height: 25px;
-  }
-
-  .logo-hotspot--right .hotspot-line--visible .hotspot-line__bar,
-  .logo-hotspot--left .hotspot-line--visible .hotspot-line__bar {
-    width: 30px;
+    max-width: 76vw;
   }
 }
 

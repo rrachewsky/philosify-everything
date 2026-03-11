@@ -664,7 +664,7 @@ async function handleGoogleOAuth(request, env, origin) {
 
   // Redirect back to frontend after OAuth — Site URL is always allowed by Supabase
   // With PKCE (code_challenge present), Supabase sends ?code= in query params, not hash tokens
-  const redirectTo = isProd ? "https://philosify.org" : "http://localhost:3000";
+  const redirectTo = isProd ? "https://everything.philosify.org" : "http://localhost:3000";
 
   // Build Supabase authorize URL with PKCE
   const params = new URLSearchParams({
@@ -730,7 +730,7 @@ async function handleOAuthCallback(request, env, origin, isProd) {
 
           // Redirect to frontend with session cookie set
           const frontendUrl = isProd
-            ? "https://philosify.org"
+            ? "https://everything.philosify.org"
             : "http://localhost:3000";
           const response = new Response(null, {
             status: 302,
@@ -768,7 +768,7 @@ async function handleOAuthCallback(request, env, origin, isProd) {
 
   // No code: implicit flow fallback — serve HTML that extracts tokens from hash fragment
   const frontendUrl = isProd
-    ? "https://philosify.org"
+    ? "https://everything.philosify.org"
     : "http://localhost:3000";
   return new Response(getOAuthCallbackHTML(frontendUrl), {
     headers: { "Content-Type": "text/html" },
@@ -907,7 +907,7 @@ async function handleCodeExchange(request, env, origin, isProd) {
  */
 function redirectToFrontend(isProd, queryString = "") {
   const frontendUrl = isProd
-    ? "https://philosify.org"
+    ? "https://everything.philosify.org"
     : "http://localhost:3000";
   return new Response(null, {
     status: 302,
@@ -1042,7 +1042,7 @@ async function handleResetPassword(request, env, origin) {
   const supabase = await getSupabaseAuthClient(env);
   const isProd = isProduction(env);
   const redirectUrl = isProd
-    ? "https://philosify.org/reset-password"
+    ? "https://everything.philosify.org/reset-password"
     : "http://localhost:3000/reset-password";
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {

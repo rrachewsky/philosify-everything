@@ -211,13 +211,13 @@ export async function sendPaymentReceiptEmail(env, { userEmail, credits, newBala
       '',
       'Thank you for your purchase!',
       '',
-      'Your credits are ready to use. Visit philosify.org to analyze your favorite songs.',
+      'Your credits are ready to use. Visit everything.philosify.org to analyze your favorite songs.',
       '',
       receiptUrl ? `Stripe Receipt: ${receiptUrl}` : '',
       '',
       '---',
       'Philosify - Discover the philosophy in music',
-      'https://philosify.org',
+      'https://everything.philosify.org',
     ].filter(Boolean).join('\n');
 
     const html = `
@@ -288,7 +288,7 @@ export async function sendPaymentReceiptEmail(env, { userEmail, credits, newBala
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding: 10px 0 25px 0;">
-                    <a href="https://philosify.org" style="display: inline-block; background-color: #00c8c8; color: #0a2a3a; text-decoration: none; padding: 14px 35px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                    <a href="https://everything.philosify.org" style="display: inline-block; background-color: #00c8c8; color: #0a2a3a; text-decoration: none; padding: 14px 35px; border-radius: 6px; font-size: 16px; font-weight: bold;">
                       Start Analyzing →
                     </a>
                   </td>

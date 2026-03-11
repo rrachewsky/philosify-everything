@@ -163,6 +163,7 @@ export function HomePage({
     img.onerror = () => setIsLoaded(true);
   }, []);
 
+
   return (
     <>
       <div className="landing-screen">
@@ -236,7 +237,7 @@ export function HomePage({
                 className="logo-image"
                 onLoad={() => setIsLoaded(true)}
               />
-              {/* Hotspots with line+label effect */}
+              {/* Hotspots with line+label hover effect */}
               {HOTSPOTS.map((hotspot) => (
                 <Hotspot
                   key={hotspot.id}
