@@ -147,9 +147,6 @@ export function CommunityHub({
     }
   }, [activeTab, refreshDMCount]);
 
-  // Ref for focusing content area to enable keyboard scrolling
-  const contentRef = useRef(null);
-
   // Close on Escape key
   useEffect(() => {
     if (!isOpen) return;
@@ -161,17 +158,6 @@ export function CommunityHub({
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
-
-  // Focus content area when sidebar opens for keyboard scrolling
-  useEffect(() => {
-    if (isOpen && contentRef.current) {
-      // Small delay to ensure sidebar animation has started and content is rendered
-      const timer = setTimeout(() => {
-        contentRef.current?.focus();
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
 
   // Prevent body scroll when sidebar is open
   useEffect(() => {
@@ -272,15 +258,8 @@ export function CommunityHub({
         {/* Subtitle */}
         <div className="community-hub__subtitle">{t(`community.subtitles.${activeTab}`)}</div>
 
-        {/* Content - tabIndex enables keyboard scrolling */}
-        <div
-          className="community-hub__content"
-          ref={contentRef}
-          tabIndex={-1}
-          style={{ outline: 'none' }}
-        >
-          {renderContent()}
-        </div>
+        {/* Content */}
+        <div className="community-hub__content">{renderContent()}</div>
 
         {/* Push notification opt-in banner (subtle, bottom of sidebar) */}
 
