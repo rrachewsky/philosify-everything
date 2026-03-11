@@ -423,7 +423,7 @@
         "analyzeButton": "音楽を分析"
       },
       "books": {
-        "title": "本",
+        "title": "文学",
         "description": "文学やノンフィクションの背後にあるアイデアを探求する",
         "searchPlaceholder": "本を検索...",
         "analyzeButton": "本を分析"
