@@ -429,7 +429,7 @@
         "analyzeButton": "Analyze Book"
       },
       "films": {
-        "title": "Films",
+        "title": "Cinema",
         "description": "Discover philosophical narratives in cinema",
         "searchPlaceholder": "Search for a film...",
         "analyzeButton": "Analyze Film"

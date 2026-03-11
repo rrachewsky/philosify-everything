@@ -429,7 +429,7 @@
         "analyzeButton": "Анализировать Книгу"
       },
       "films": {
-        "title": "Фильмы",
+        "title": "Кино",
         "description": "Откройте философские нарративы в кино",
         "searchPlaceholder": "Поиск фильма...",
         "analyzeButton": "Анализировать Фильм"

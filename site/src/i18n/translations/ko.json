@@ -429,7 +429,7 @@
         "analyzeButton": "책 분석"
       },
       "films": {
-        "title": "영화",
+        "title": "시네마",
         "description": "영화 속 철학적 서사를 발견합니다",
         "searchPlaceholder": "영화 검색...",
         "analyzeButton": "영화 분석"

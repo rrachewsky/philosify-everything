@@ -429,7 +429,7 @@
         "analyzeButton": "分析书籍"
       },
       "films": {
-        "title": "电影",
+        "title": "影院",
         "description": "发现电影中的哲学叙事",
         "searchPlaceholder": "搜索电影...",
         "analyzeButton": "分析电影"
