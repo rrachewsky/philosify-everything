@@ -128,6 +128,7 @@ export function HomePage({
   onOpenCategory,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
   const { user, signOut } = useAuth();
   const { balance } = useCreditsContext();
   const { t, i18n } = useTranslation();
@@ -163,6 +164,14 @@ export function HomePage({
     img.onerror = () => setIsLoaded(true);
   }, []);
 
+  // Mobile: fallback if video can't autoplay, show labels after 10s
+  const isAuthenticated = !!user;
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    setVideoEnded(false);
+    const timer = setTimeout(() => setVideoEnded(true), 10000);
+    return () => clearTimeout(timer);
+  }, [isAuthenticated]);
 
   return (
     <>
@@ -230,13 +239,41 @@ export function HomePage({
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <div className="logo-container">
-            <div className="logo-container-inner">
+            <div className={`logo-container-inner ${user ? 'logo-authenticated' : ''}`}>
               <img
                 src="/logo-everything.png"
                 alt="Philosify Everything"
                 className="logo-image"
                 onLoad={() => setIsLoaded(true)}
               />
+              {/* Mobile: video + category labels after sign-in (CSS hides on desktop) */}
+              {user && (
+                <>
+                  <video
+                    className="logo-video"
+                    src="/philosify-everything video.mp4"
+                    autoPlay
+                    muted
+                    playsInline
+                    poster="/logo-everything.png"
+                    onEnded={() => setVideoEnded(true)}
+                    onError={() => setVideoEnded(true)}
+                  />
+                  <div
+                    className={`mobile-category-labels ${videoEnded ? 'mobile-labels--visible' : ''}`}
+                  >
+                    {HOTSPOTS.map((hotspot) => (
+                      <button
+                        key={`mobile-${hotspot.id}`}
+                        className={`mobile-label mobile-label--${hotspot.id}`}
+                        onClick={() => handleHotspotClick(hotspot.id)}
+                      >
+                        {t(`home.categories.${hotspot.id}.title`, hotspot.id)}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
               {/* Hotspots with line+label hover effect */}
               {HOTSPOTS.map((hotspot) => (
                 <Hotspot

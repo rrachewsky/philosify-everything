@@ -74,6 +74,15 @@
   border-radius: 16px;
 }
 
+/* Mobile-only elements: hidden by default so desktop is never affected */
+.logo-video {
+  display: none;
+}
+
+.mobile-category-labels {
+  display: none;
+}
+
 /* ===== Hotspot Base Styles ===== */
 .logo-hotspot {
   position: absolute;
@@ -274,15 +283,109 @@
     max-width: 72vw;
   }
 
-  /* --- Hide desktop hover hotspots (unusable on touch) --- */
+  /* --- Swap static image for video after sign-in --- */
+  .logo-authenticated .logo-image {
+    display: none !important;
+  }
+
+  .logo-video {
+    display: block !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  /* --- Hide hover hotspots (unusable on touch) --- */
   .logo-hotspot {
     display: none !important;
+  }
+
+  /* --- Category labels (appear after video ends) --- */
+  .mobile-category-labels {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 15;
+  }
+
+  .mobile-label {
+    position: absolute;
+    background: none;
+    border: none;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #ec4899;
+    text-shadow:
+      0 0 10px rgba(236, 72, 153, 0.8),
+      0 0 20px rgba(236, 72, 153, 0.5);
+    white-space: nowrap;
+    cursor: pointer;
+    pointer-events: auto;
+    padding: 6px 4px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .mobile-labels--visible .mobile-label {
+    opacity: 1;
+  }
+
+  /* Tap feedback */
+  .mobile-label:active {
+    color: #00f0ff;
+    text-shadow:
+      0 0 10px rgba(0, 240, 255, 0.8),
+      0 0 20px rgba(0, 240, 255, 0.5);
+  }
+
+  /* Label positions (relative to logo container inner) */
+  .mobile-label--ideas {
+    top: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .mobile-label--music {
+    top: 15%;
+    left: 3%;
+  }
+
+  .mobile-label--films {
+    top: 15%;
+    right: 3%;
+  }
+
+  .mobile-label--books {
+    top: 73%;
+    left: 0%;
+  }
+
+  .mobile-label--news {
+    top: 73%;
+    right: 0%;
+  }
+
+  .mobile-label--community {
+    top: 95%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
 @media (max-width: 480px) {
   .logo-container {
     max-width: 76vw;
+  }
+
+  .mobile-label {
+    font-size: 8px;
   }
 }
 
