@@ -5,7 +5,7 @@
 // Uses DebatePanel for debates and colloquiums functionality.
 // Same design pattern as CommunityHub.
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DebatePanel } from '../community/DebatePanel.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
@@ -14,6 +14,7 @@ import '../../styles/community.css';
 export function IdeasHub({ isOpen, onClose, deepLinkDebateId, clearDeepLinkDebate }) {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
+  const contentRef = useRef(null);
 
   // Lock body scroll when sidebar is open (preserve scroll position)
   useEffect(() => {
@@ -59,6 +60,17 @@ export function IdeasHub({ isOpen, onClose, deepLinkDebateId, clearDeepLinkDebat
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
+
+  // Focus content area when sidebar opens for keyboard scrolling
+  useEffect(() => {
+    if (isOpen && contentRef.current) {
+      // Small delay to ensure sidebar animation has started and content is rendered
+      const timer = setTimeout(() => {
+        contentRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const handleBackdropClick = useCallback(
     (e) => {
@@ -108,8 +120,15 @@ export function IdeasHub({ isOpen, onClose, deepLinkDebateId, clearDeepLinkDebat
         {/* Subtitle */}
         <div className="community-hub__subtitle">{t('home.categories.ideas.description')}</div>
 
-        {/* Content */}
-        <div className="community-hub__content">{renderContent()}</div>
+        {/* Content - tabIndex enables keyboard scrolling */}
+        <div
+          className="community-hub__content"
+          ref={contentRef}
+          tabIndex={-1}
+          style={{ outline: 'none' }}
+        >
+          {renderContent()}
+        </div>
       </div>
     </>
   );
