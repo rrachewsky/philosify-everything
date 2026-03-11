@@ -297,6 +297,8 @@
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 200, 220, 0.3) transparent;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .account-history::-webkit-scrollbar {

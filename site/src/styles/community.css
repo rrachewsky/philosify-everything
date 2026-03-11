@@ -52,6 +52,7 @@
   padding: 14px 16px 10px;
   border-bottom: 1px solid rgba(120, 100, 180, 0.12);
   flex-shrink: 0;
+  touch-action: pan-y;
 }
 
 .community-hub__title {
@@ -92,6 +93,7 @@
   row-gap: 0;
   padding: 0 8px;
   flex-shrink: 0;
+  touch-action: pan-y;
 }
 
 .community-tabs__row {
@@ -168,6 +170,7 @@
   letter-spacing: 0.5px;
   border-bottom: 1px solid rgba(120, 100, 180, 0.08);
   flex-shrink: 0;
+  touch-action: pan-y;
 }
 
 /* ===== TAB CONTENT ===== */
@@ -4415,6 +4418,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
+  touch-action: pan-y;
 }
 
 .debate-panel__title {
@@ -4665,6 +4669,7 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  touch-action: pan-y;
 }
 
 .debate-detail__scroll {
@@ -4702,6 +4707,7 @@
   gap: 12px;
   padding: 8px 0 12px;
   border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+  touch-action: pan-y;
 }
 
 .debate-detail__back {
