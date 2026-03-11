@@ -7,7 +7,7 @@
 // 2. If not, call /api/tts to generate -> backend caches in R2 and updates analysis.audio_url
 // 3. On next load, audio_url will be populated -> instant playback
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api-everything.philosify.org';
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 
 // Timeout for TTS generation (2 minutes - Gemini TTS can take 60-90s)
 const TTS_TIMEOUT_MS = 120000;

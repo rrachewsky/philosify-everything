@@ -8,8 +8,8 @@ if (!rawApiUrl) {
 }
 
 // Normalize common misconfigurations:
-// - trailing slash: https://api-everything.philosify.org/
-// - accidental /api suffix: https://api-everything.philosify.org/api
+// - trailing slash: https://api.philosify.org/
+// - accidental /api suffix: https://api.philosify.org/api
 let apiUrl = String(rawApiUrl).trim().replace(/\/+$/, '');
 if (apiUrl.endsWith('/api')) {
   apiUrl = apiUrl.slice(0, -4);

@@ -2602,7 +2602,7 @@ export async function notifyAllUsersOfNewColloquium(
     if (!rows || rows.length === 0) return;
 
     const userIds = [...new Set(rows.map((r) => r.user_id))];
-    const siteUrl = env.SITE_URL || "https://everything.philosify.org";
+    const siteUrl = env.SITE_URL || "https://philosify.org";
     const colloquiumUrl = `${siteUrl}/debate/${threadId}`;
 
     // Vary the message body based on colloquium type

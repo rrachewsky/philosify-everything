@@ -52,7 +52,7 @@ function normalizeSchoolsHtml(value) {
 export async function handleAnalyze(
   request,
   env,
-  origin = "https://everything.philosify.org",
+  origin = "https://philosify.org",
   ctx = null,
 ) {
   try {

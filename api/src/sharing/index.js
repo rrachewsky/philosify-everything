@@ -85,7 +85,7 @@ export async function createShareToken(env, analysisId, userId, origin = null) {
 
       // Success! Generate full URL
       // Use origin if provided (for local development), otherwise use production URL
-      let baseUrl = 'https://everything.philosify.org';
+      let baseUrl = 'https://philosify.org';
       if (origin && origin.includes('localhost')) {
         baseUrl = origin;
       }

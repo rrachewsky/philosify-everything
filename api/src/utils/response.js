@@ -4,7 +4,7 @@
 
 import { getCorsHeaders } from './cors.js';
 
-export function jsonResponse(data, status = 200, origin = 'https://everything.philosify.org', env = {}) {
+export function jsonResponse(data, status = 200, origin = 'https://philosify.org', env = {}) {
   const cors = getCorsHeaders(origin, env);
   return new Response(JSON.stringify(data, null, 2), {
     status,

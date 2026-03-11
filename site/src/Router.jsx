@@ -26,7 +26,7 @@ import { useModal, useAuth, useMusicSidebar, useIdeas } from './hooks';
 import { useCommunity } from './hooks/useCommunity.js';
 import { logger, getPendingAction, clearPendingAction } from './utils';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api-everything.philosify.org';
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 
 // Lazy load pages (code splitting - these are loaded on demand)
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));

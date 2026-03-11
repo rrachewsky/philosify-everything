@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './TopTenTicker.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api-everything.philosify.org';
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 
 export default function TopTenTicker({ onSongSelect }) {
   const { t } = useTranslation();

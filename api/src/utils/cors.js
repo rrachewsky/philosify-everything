@@ -5,8 +5,6 @@
 // Fallback for local development (wrangler dev)
 // In production, ALLOWED_ORIGINS env var from wrangler.toml is used
 const DEV_ALLOWED_ORIGINS = [
-  "https://everything.philosify.org",
-  "https://www.everything.philosify.org",
   "https://philosify.org",
   "https://www.philosify.org",
   "http://localhost:8787",

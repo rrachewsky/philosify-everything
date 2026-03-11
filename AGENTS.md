@@ -71,7 +71,7 @@ cd api && npm run dev
 
 - Push to ALL branches: `development`, `main`, `production`
 - Deploy API: `npm run deploy:prod` (workdir: api)
-- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-everything-frontend --branch=production` (workdir: site)
+- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-frontend --branch=production --commit-dirty=true` (workdir: site)
 
 ```bash
 # Push to all branches for production deploy

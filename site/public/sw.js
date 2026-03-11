@@ -12,7 +12,7 @@ const API_URL = (() => {
   }
   // Try to use a placeholder that can be replaced during build,
   // or fallback to the standard production API
-  return 'https://api-everything.philosify.org';
+  return 'https://api.philosify.org';
 })();
 
 // Keep production console clean

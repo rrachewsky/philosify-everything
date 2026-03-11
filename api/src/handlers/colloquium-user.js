@@ -1332,7 +1332,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
       const threadTitle = threads[0].title || "Academic Colloquium";
       const nameMap = await fetchDisplayNames(env, [userId]);
       const inviterName = nameMap[userId] || "Someone";
-      const siteUrl = env.SITE_URL || "https://everything.philosify.org";
+      const siteUrl = env.SITE_URL || "https://philosify.org";
       const colloquiumUrl = `${siteUrl}/debate/${threadId}`;
       const messageText = `${inviterName} invited you to a colloquium: "${threadTitle}" — ${colloquiumUrl}`;
       const messagePreview = `Colloquium invite: ${threadTitle}`;

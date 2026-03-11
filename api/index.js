@@ -1706,12 +1706,12 @@ export default {
 
           // Add tier and session ID placeholder to success URL
           const baseSuccessUrl =
-            env.CHECKOUT_SUCCESS_URL || "https://everything.philosify.org/payment/success";
+            env.CHECKOUT_SUCCESS_URL || "https://philosify.org/payment/success";
           const successUrl = tier
             ? `${baseSuccessUrl}?credits=${tier}&session_id={CHECKOUT_SESSION_ID}`
             : `${baseSuccessUrl}?session_id={CHECKOUT_SESSION_ID}`;
           const cancelUrl =
-            env.CHECKOUT_CANCEL_URL || "https://everything.philosify.org/payment/cancel";
+            env.CHECKOUT_CANCEL_URL || "https://philosify.org/payment/cancel";
 
           console.log("[Stripe] Calling createStripeCheckout with:", {
             userId: user.userId,
@@ -2320,8 +2320,8 @@ export default {
 
           // If social bot, return HTML with Open Graph meta tags for rich preview
           if (isSocialBot) {
-            const shareUrl = `https://everything.philosify.org/shared/${analysisId}`;
-            const logoUrl = "https://everything.philosify.org/logo.png";
+            const shareUrl = `https://philosify.org/shared/${analysisId}`;
+            const logoUrl = "https://philosify.org/logo.png";
             // Escape user-supplied values to prevent HTML/XSS injection
             const songEsc = escapeHtml(enrichedAnalysis.song);
             const artistEsc = escapeHtml(enrichedAnalysis.artist);
@@ -2358,7 +2358,7 @@ export default {
     <script>
       // Redirect to main app
       setTimeout(function() {
-        window.location.href = 'https://everything.philosify.org?analysis=${analysisId}';
+        window.location.href = 'https://philosify.org?analysis=${analysisId}';
       }, 100);
     </script>
 </head>
@@ -2516,8 +2516,8 @@ export default {
           // If social bot, return HTML with Open Graph meta tags for rich preview
           if (isSocialBot) {
             const analysis = result.analysis;
-            const shareUrl = `https://everything.philosify.org/api/shared/${slug}`;
-            const logoUrl = "https://everything.philosify.org/logo.png";
+            const shareUrl = `https://philosify.org/api/shared/${slug}`;
+            const logoUrl = "https://philosify.org/logo.png";
             // Escape user-supplied values to prevent HTML/XSS injection
             const songEsc = escapeHtml(analysis.song);
             const artistEsc = escapeHtml(analysis.artist);
@@ -2552,7 +2552,7 @@ export default {
     <script>
       // Redirect to main app after meta tags are scraped
       setTimeout(function() {
-        window.location.href = 'https://everything.philosify.org?share=${slug}';
+        window.location.href = 'https://philosify.org?share=${slug}';
       }, 100);
     </script>
 </head>

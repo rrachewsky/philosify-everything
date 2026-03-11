@@ -1,4 +1,4 @@
-name = "philosify-everything-api"
+name = "philosify-api"
 main = "index.js"
 compatibility_date = "2025-11-17"
 
@@ -26,7 +26,7 @@ DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
 
 # Localhost origins for local dev
 VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
-ALLOWED_ORIGINS = "https://everything.philosify.org https://www.everything.philosify.org https://philosify.org https://www.philosify.org http://localhost:8787 http://localhost:3000 http://localhost:3001 http://localhost:3002 http://localhost:3003 http://localhost:5173"
+ALLOWED_ORIGINS = "https://philosify.org https://www.philosify.org http://localhost:8787 http://localhost:3000 http://localhost:3001 http://localhost:3002 http://localhost:3003 http://localhost:5173"
 CHECKOUT_SUCCESS_URL = "http://localhost:3000/payment/success"
 CHECKOUT_CANCEL_URL = "http://localhost:3000/payment/cancel"
 R2_PUBLIC_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"
@@ -57,14 +57,14 @@ bucket_name = "philosify-tts"
 # PRODUCTION ENVIRONMENT
 # ============================================================
 # Used by: wrangler deploy --env production
-# Deploys as: philosify-api-production
+# Deploys as: philosify-api-production (overwrites old philosify-web Worker)
 # ============================================================
 
 [env.production]
 
 # Custom domain (bypasses zone security rules - required for API)
 [[env.production.custom_domains]]
-name = "api-everything.philosify.org"
+name = "api.philosify.org"
 zone_name = "philosify.org"
 
 # Email routing - receives emails to bob@philosify.org
@@ -82,9 +82,9 @@ GEMINI_MODEL = "gemini-2.0-flash"  # Gemini 2.0 Flash
 GROK_MODEL = "grok-4-1-fast-reasoning"  # Grok 4.1 Fast (95% cheaper than Grok 3)
 DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
 VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
-ALLOWED_ORIGINS = "https://everything.philosify.org https://www.everything.philosify.org"
-CHECKOUT_SUCCESS_URL = "https://everything.philosify.org/payment/success"
-CHECKOUT_CANCEL_URL = "https://everything.philosify.org/payment/cancel"
+ALLOWED_ORIGINS = "https://philosify.org https://www.philosify.org"
+CHECKOUT_SUCCESS_URL = "https://philosify.org/payment/success"
+CHECKOUT_CANCEL_URL = "https://philosify.org/payment/cancel"
 R2_PUBLIC_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"
 
 # KV Namespaces (must be explicitly defined per environment)
@@ -104,12 +104,9 @@ name = "ANALYZE_RATE_LIMITER"
 namespace_id = "1002"
 simple = { limit = 3, period = 60 }  # 3 requests per 60 seconds (expensive AI calls)
 
-# Cron Triggers - DISABLED for philosify-everything
-# The original philosify-api worker handles all cron jobs (colloquium, QOTD, etc.)
-# Both workers share the same Supabase database, so crons only need to run once.
-# Cloudflare free plan limit: 5 crons per account (already used by philosify-api)
-# [env.production.triggers]
-# crons = ["*/5 * * * *", "0 8,11 * * *", "0 12 * * *", "0 14,17,20 * * *", "0 23 * * *"]
+# Cron Triggers - Active (this Worker now serves as the primary philosify-api)
+[env.production.triggers]
+crons = ["*/5 * * * *", "0 8,11 * * *", "0 12 * * *", "0 14,17,20 * * *", "0 23 * * *"]
 
 # R2 Bucket for TTS Audio Cache
 [[env.production.r2_buckets]]
