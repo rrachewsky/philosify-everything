@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { changeLanguageWithPreload } from '@/i18n/config';
 import { useSpotifySearch, useAuth } from '@/hooks';
 import { useCreditsContext } from '@/contexts';
 import { setPendingAction, getPendingAction, clearPendingAction } from '@utils/pendingAction.js';
@@ -80,9 +81,9 @@ export function LandingScreen({
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'en');
 
   // Handle language change - update i18n and local state
-  const handleLanguageChange = (langCode) => {
+  const handleLanguageChange = async (langCode) => {
     setSelectedLang(langCode);
-    i18n.changeLanguage(langCode);
+    await changeLanguageWithPreload(langCode);
   };
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);

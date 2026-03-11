@@ -106,7 +106,7 @@ export function IdeasHub({ isOpen, onClose, deepLinkDebateId, clearDeepLinkDebat
         </div>
 
         {/* Subtitle */}
-        <div className="community-hub__subtitle">{t('home.categories.ideas.tagline')}</div>
+        <div className="community-hub__subtitle">{t('home.categories.ideas.description')}</div>
 
         {/* Content */}
         <div className="community-hub__content">{renderContent()}</div>

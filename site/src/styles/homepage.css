@@ -348,41 +348,21 @@
   text-align: left !important;
 }
 
-.landing-screen .landing-user-profile {
+.landing-screen .landing-user-profile,
+.landing-screen .landing-auth-buttons {
   display: flex;
   flex-direction: column;
-  align-items: flex-start !important;
-  gap: 4px;
-  text-align: left !important;
+  align-items: flex-start;
+  gap: 6px;
 }
 
-.landing-screen .landing-user-top,
-.landing-screen .landing-user-middle,
-.landing-screen .landing-user-bottom {
-  display: flex !important;
-  flex-direction: row !important; /* Normal order for left alignment */
-  justify-content: flex-start !important;
-  align-items: center !important;
-  text-align: left !important;
-  width: auto !important;
-  gap: 8px !important;
-}
-
-.landing-screen .landing-username,
-.landing-screen .landing-balance,
-.landing-screen .landing-auth-link,
-.landing-screen .landing-buy-link {
-  text-align: left !important;
-}
-
-/* Align elements consistently */
-.landing-screen .landing-balance {
-  min-width: 80px !important;
-}
-
-.landing-screen .landing-user-bottom .landing-auth-link:last-child {
-  /* Logout - consistent width */
-  min-width: 90px !important;
+.landing-screen .landing-user-profile .landing-username,
+.landing-screen .landing-user-profile .landing-balance,
+.landing-screen .landing-user-profile .landing-auth-link,
+.landing-screen .landing-auth-buttons .landing-auth-link {
+  text-align: left;
+  padding: 0;
+  margin: 0;
 }
 
 /* ===== Center the logo on the page ===== */

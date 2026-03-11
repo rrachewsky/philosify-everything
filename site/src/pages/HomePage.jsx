@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { changeLanguageWithPreload } from '@/i18n/config';
 import { useAuth } from '@/hooks';
 import { useCreditsContext } from '@/contexts';
 import { InstallButton } from '@/components/pwa/InstallButton';
@@ -134,9 +135,9 @@ export function HomePage({
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
 
-  const handleLanguageChange = (langCode) => {
+  const handleLanguageChange = async (langCode) => {
     setSelectedLang(langCode);
-    i18n.changeLanguage(langCode);
+    await changeLanguageWithPreload(langCode);
   };
 
   // Handle hotspot clicks - dispatch to appropriate sidebar
@@ -188,35 +189,29 @@ export function HomePage({
         >
           <InstallButton />
           {!user ? (
-            <>
+            <div className="landing-auth-buttons">
               <button className="landing-auth-link" onClick={onSignUp}>
                 {t('auth.signUp')}
               </button>
               <button className="landing-auth-link" onClick={onSignIn}>
                 {t('auth.signIn')}
               </button>
-            </>
+            </div>
           ) : (
             <div className="landing-user-profile">
-              <div className="landing-user-top">
-                <span className="landing-username">{displayName}</span>
-              </div>
-              <div className="landing-user-middle">
-                <span className="landing-balance">
-                  {balance?.total ?? '...'} {t('userProfile.credits')}
-                </span>
-                <button className="landing-auth-link landing-buy-link" onClick={onBuyCredits}>
-                  {t('userProfile.buyCredits')}
-                </button>
-              </div>
-              <div className="landing-user-bottom">
-                <button className="landing-auth-link" onClick={onHistory}>
-                  {t('account.history')}
-                </button>
-                <button className="landing-auth-link" onClick={onLogout || signOut}>
-                  {t('userProfile.logout')}
-                </button>
-              </div>
+              <span className="landing-username">{displayName}</span>
+              <span className="landing-balance">
+                {balance?.total ?? '...'} {t('userProfile.credits')}
+              </span>
+              <button className="landing-auth-link" onClick={onHistory}>
+                {t('account.history')}
+              </button>
+              <button className="landing-auth-link" onClick={onBuyCredits}>
+                {t('userProfile.buyCredits')}
+              </button>
+              <button className="landing-auth-link" onClick={onLogout || signOut}>
+                {t('userProfile.logout')}
+              </button>
             </div>
           )}
         </motion.div>

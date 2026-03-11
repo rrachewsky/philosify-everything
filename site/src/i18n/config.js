@@ -77,6 +77,15 @@ const loadTranslation = async (lang) => {
   }
 };
 
+// Change language with pre-loading (avoids flash to English)
+export const changeLanguageWithPreload = async (langCode) => {
+  if (langCode !== 'en' && !i18n.hasResourceBundle(langCode, 'translation')) {
+    const translations = await loadTranslation(langCode);
+    i18n.addResourceBundle(langCode, 'translation', translations, true, true);
+  }
+  await i18n.changeLanguage(langCode);
+};
+
 // Initialize i18n with English first
 i18n.use(initReactI18next).init({
   resources: {
