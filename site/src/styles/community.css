@@ -4435,6 +4435,7 @@
   color: rgba(255, 255, 255, 0.6);
   margin: 0 0 12px;
   line-height: 1.4;
+  touch-action: pan-y;
 }
 
 .debate-panel__new-btn {
@@ -4528,8 +4529,8 @@
   margin-bottom: 8px;
   cursor: pointer;
   transition: border-color 0.2s;
-  /* Fix: first tap registers immediately (no scroll-gesture delay on mobile) */
-  touch-action: manipulation;
+  /* Allow vertical scroll to pass through to list */
+  touch-action: pan-y;
 }
 
 .debate-item:hover {
