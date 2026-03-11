@@ -182,19 +182,26 @@ function PaymentReturnHandler({ onOpenMusic, onOpenCommunity, onOpenIdeas, onOpe
     const state = location.state;
     if (!state) return;
 
-    if (state.openMusic) {
-      // Open music sidebar — it will read pending action from localStorage to restore track
-      onOpenMusic?.();
-    } else if (state.openDebate) {
-      onOpenDebate?.(state.openDebate);
-    } else if (state.openIdeas) {
-      onOpenIdeas?.();
-    } else if (state.openCommunity) {
-      onOpenCommunity?.(state.openCommunity);
-    }
+    logger.log('[PaymentReturnHandler] Detected state:', state);
+    logger.log('[PaymentReturnHandler] Pending action in localStorage:', getPendingAction());
 
-    // Clear state so it doesn't re-trigger on back/forward navigation
-    navigate(location.pathname, { replace: true, state: null });
+    // Open sidebar and clear state (delay ensures components are mounted)
+    const timer = setTimeout(() => {
+      if (state.openMusic) {
+        logger.log('[PaymentReturnHandler] Opening music sidebar');
+        onOpenMusic?.();
+      } else if (state.openDebate) {
+        onOpenDebate?.(state.openDebate);
+      } else if (state.openIdeas) {
+        onOpenIdeas?.();
+      } else if (state.openCommunity) {
+        onOpenCommunity?.(state.openCommunity);
+      }
+      // Clear state AFTER opening sidebar (must be inside timeout to avoid cleanup race)
+      navigate(location.pathname, { replace: true, state: null });
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [location.state, navigate, location.pathname, onOpenMusic, onOpenCommunity, onOpenIdeas, onOpenDebate]);
 
   return null;

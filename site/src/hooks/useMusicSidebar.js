@@ -9,6 +9,7 @@ import { useSpotifySearch, useAuth } from '@/hooks';
 import { useCreditsContext } from '@/contexts';
 import { config } from '@/config';
 import { getPendingAction, clearPendingAction } from '@/utils/pendingAction.js';
+import { logger } from '@/utils';
 
 /**
  * Music sidebar state management hook.
@@ -45,6 +46,7 @@ export function useMusicSidebar() {
 
   // Close the sidebar
   const close = useCallback(() => {
+    logger.log('[MusicSidebar] close() called');
     // Cancel any ongoing analysis
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -57,6 +59,7 @@ export function useMusicSidebar() {
     }
     setIsAnalyzing(false);
     setIsOpen(false);
+    logger.log('[MusicSidebar] isOpen set to false');
   }, []);
 
   // Open sidebar with a pre-loaded result (for history clicks)
@@ -82,7 +85,9 @@ export function useMusicSidebar() {
   // Open sidebar restoring track from a pending credit action (after payment return)
   const openWithPendingAction = useCallback(() => {
     const pending = getPendingAction();
+    logger.log('[MusicSidebar] openWithPendingAction - pending:', pending);
     if (pending?.type === 'analysis' && pending.track) {
+      logger.log('[MusicSidebar] Restoring track:', pending.track);
       spotify.selectTrack(pending.track);
       setSelectedTrack(pending.track);
       setAnalysisResult(null);
@@ -92,6 +97,7 @@ export function useMusicSidebar() {
       clearPendingAction();
       setIsOpen(true);
     } else {
+      logger.log('[MusicSidebar] No valid pending action, opening fresh');
       // No valid pending action — just open fresh
       open();
     }
