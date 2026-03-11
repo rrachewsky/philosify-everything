@@ -2286,6 +2286,7 @@
 /* People panel search */
 .people-panel__search {
   padding: 0 12px 8px;
+  touch-action: pan-y;
 }
 
 .people-panel__search-input {
@@ -3283,6 +3284,7 @@
   margin-bottom: 16px;
   letter-spacing: 1px;
   text-transform: uppercase;
+  touch-action: pan-y;
 }
 
 /* Section (In Your Collectives / All Members) */
@@ -3300,6 +3302,7 @@
   padding: 0 4px 8px;
   border-bottom: 1px solid rgba(120, 100, 180, 0.1);
   margin-bottom: 8px;
+  touch-action: pan-y;
 }
 
 .people-section__list {
