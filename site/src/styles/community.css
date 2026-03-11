@@ -4391,6 +4391,7 @@
   flex-direction: column;
   height: 100%;
   padding: 0 16px;
+  touch-action: pan-y;
 }
 
 .debate-panel__header {
@@ -4462,6 +4463,8 @@
   min-height: 0;
   scrollbar-width: thin;
   scrollbar-color: rgba(138, 43, 226, 0.4) transparent;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .debate-panel__list::-webkit-scrollbar {
@@ -4656,7 +4659,8 @@
   padding-bottom: 8px;
   scrollbar-width: thin;
   scrollbar-color: rgba(138, 43, 226, 0.4) transparent;
-  touch-action: manipulation;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .debate-detail__scroll::-webkit-scrollbar {
