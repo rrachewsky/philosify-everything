@@ -59,6 +59,33 @@ import { getSupabaseCredentials } from "../utils/supabase.js";
  */
 
 /**
+ * Fetch a user's language preference from auth.users metadata.
+ * Returns language code (e.g., 'pt', 'es') or 'en' as default.
+ */
+async function fetchUserLanguage(env, userId) {
+  if (!userId) return "en";
+  try {
+    const supabaseUrl = await getSecret(env.SUPABASE_URL);
+    const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+    const res = await fetch(`${supabaseUrl}/auth/v1/admin/users/${userId}`, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+      },
+    });
+    if (!res.ok) return "en";
+    const user = await res.json();
+    // Language can be stored as code ('pt') or full name ('Portuguese')
+    const lang = user.raw_user_meta_data?.language || "en";
+    // If it's a full name, we still return it - the verdict function handles both
+    return lang;
+  } catch (err) {
+    console.warn("[Colloquium] fetchUserLanguage error:", err.message);
+    return "en";
+  }
+}
+
+/**
  * Get all user IDs with access to a colloquium (for push notifications).
  * Returns unique user IDs from colloquium_access table.
  */
@@ -3372,7 +3399,12 @@ export async function checkExpiredAutoVerdicts(env) {
         `[Colloquium] Auto-verdict due for ${type} thread ${thread.id}`,
       );
       try {
-        await generateColloquiumVerdictForThread(env, thread);
+        // Fetch proposer's language so verdict is translated for them
+        const proposerId = metadata.proposer_id;
+        const proposerLang = proposerId
+          ? await fetchUserLanguage(env, proposerId)
+          : "en";
+        await generateColloquiumVerdictForThread(env, thread, proposerLang);
       } catch (err) {
         console.error(
           `[Colloquium] Auto-verdict failed for ${thread.id}:`,
