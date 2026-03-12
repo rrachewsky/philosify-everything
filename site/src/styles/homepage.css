@@ -374,6 +374,7 @@
     width: 100%;
     max-width: 280px;
     margin: 12px auto 0;
+    padding-left: 0.5cm;
     gap: 6px 16px;
   }
 
