@@ -387,9 +387,7 @@
     letter-spacing: 0.5px;
     text-transform: uppercase;
     color: #00f0ff;
-    text-shadow:
-      0 0 10px rgba(0, 240, 255, 0.8),
-      0 0 20px rgba(0, 240, 255, 0.5);
+    text-shadow: none;
     white-space: nowrap;
     cursor: pointer;
     padding: 0;
@@ -413,8 +411,7 @@
   /* Tap feedback */
   .mobile-label:active {
     color: #ec4899;
-    text-shadow:
-      0 0 10px rgba(236, 72, 153, 0.8),
+    text-shadow: none;
       0 0 20px rgba(236, 72, 153, 0.5);
   }
 }
