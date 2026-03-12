@@ -375,7 +375,7 @@
     max-width: 280px;
     margin: 12px auto 0;
     padding-left: 0.5cm;
-    gap: 0 16px;
+    gap: 6px 16px;
   }
 
   .mobile-label {
@@ -392,7 +392,7 @@
       0 0 20px rgba(0, 240, 255, 0.5);
     white-space: nowrap;
     cursor: pointer;
-    padding: 4px 0;
+    padding: 0;
     text-align: left;
     opacity: 0;
     transform: translateY(6px);
