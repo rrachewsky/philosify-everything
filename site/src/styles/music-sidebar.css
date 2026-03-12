@@ -765,3 +765,73 @@
   right: 0;
   margin: 0 auto;
 }
+
+/* ── Book-specific: No Results + Manual Entry ── */
+
+.book-no-results {
+  text-align: center;
+  padding: 20px 16px;
+}
+
+.book-no-results__message {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.book-no-results__manual-btn {
+  background: none;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.book-no-results__manual-btn:hover {
+  background: rgba(0, 240, 255, 0.1);
+  border-color: rgba(0, 240, 255, 0.6);
+}
+
+.book-manual-entry {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.book-manual-entry__title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #00f0ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.book-manual-entry__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.book-manual-entry__actions .music-analyze__button {
+  flex: 1;
+}
+
+.book-manual-entry__cancel {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.book-manual-entry__cancel:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+}

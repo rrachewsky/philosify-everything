@@ -384,6 +384,7 @@ export function Router() {
           setQuery={literature.setQuery}
           results={literature.results}
           loading={literature.loading}
+          hasSearched={literature.hasSearched}
           selectedBook={literature.selectedBook}
           selectBook={literature.selectBook}
           clearBook={literature.clearBook}

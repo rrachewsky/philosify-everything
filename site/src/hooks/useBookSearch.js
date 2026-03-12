@@ -12,6 +12,7 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const debounceTimerRef = useRef(null);
 
@@ -26,6 +27,7 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
 
       setLoading(true);
       setError(null);
+      setHasSearched(false);
 
       try {
         const data = await searchBooks(searchQuery);
@@ -40,6 +42,7 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
         setResults([]);
       } finally {
         setLoading(false);
+        setHasSearched(true);
       }
     },
     [t]
@@ -50,6 +53,7 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
     (newQuery) => {
       setQuery(newQuery);
       setSelectedBook(null);
+      setHasSearched(false);
 
       // Clear previous timer
       if (debounceTimerRef.current) {
@@ -88,6 +92,7 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
     setSelectedBook(null);
     setResults([]);
     setError(null);
+    setHasSearched(false);
   }, []);
 
   // Cleanup timer on unmount
@@ -105,6 +110,7 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
     loading,
     error,
     selectedBook,
+    hasSearched,
     setQuery: handleQueryChange,
     search,
     selectBook,

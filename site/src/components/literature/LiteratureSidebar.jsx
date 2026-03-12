@@ -17,6 +17,7 @@ export function LiteratureSidebar({
   setQuery,
   results,
   loading,
+  hasSearched,
   selectedBook,
   selectBook,
   clearBook,
@@ -33,9 +34,13 @@ export function LiteratureSidebar({
 }) {
   const { t, i18n } = useTranslation();
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [showManualEntry, setShowManualEntry] = useState(false);
+  const [manualTitle, setManualTitle] = useState('');
+  const [manualAuthor, setManualAuthor] = useState('');
   const inputRef = useRef(null);
   const sidebarRef = useRef(null);
   const contentRef = useRef(null);
+  const manualTitleRef = useRef(null);
 
   // Internal modals (rendered inside sidebar)
   const loginModal = useModal();
@@ -192,6 +197,46 @@ export function LiteratureSidebar({
 
   const canAnalyze = selectedBook && !isAnalyzing;
 
+  // Show "no results" when search completed with 0 results
+  const showNoResults = !selectedBook && !loading && hasSearched && results.length === 0 && query.length >= 2;
+
+  // Handle manual entry toggle
+  const handleShowManualEntry = () => {
+    setShowManualEntry(true);
+    setManualTitle(query || '');
+    setManualAuthor('');
+    setTimeout(() => manualTitleRef.current?.focus(), 100);
+  };
+
+  // Submit manual book entry
+  const handleManualSubmit = () => {
+    const title = manualTitle.trim();
+    const author = manualAuthor.trim();
+    if (!title) return;
+    const manualBook = {
+      title,
+      author: author || 'Unknown Author',
+      google_books_id: null,
+      cover_url: null,
+      year: null,
+      manual: true,
+    };
+    setShowManualEntry(false);
+    setManualTitle('');
+    setManualAuthor('');
+    selectBook(manualBook);
+    if (!user) {
+      signupModal.open();
+    }
+  };
+
+  // Cancel manual entry
+  const handleCancelManual = () => {
+    setShowManualEntry(false);
+    setManualTitle('');
+    setManualAuthor('');
+  };
+
   return (
     <>
       <div
@@ -276,6 +321,71 @@ export function LiteratureSidebar({
                     </span>
                   </button>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* No results message + manual entry fallback */}
+          {showNoResults && !showManualEntry && (
+            <div className="book-no-results">
+              <div className="book-no-results__message">
+                {t('home.categories.books.noResults', 'No books found for your search.')}
+              </div>
+              <button
+                className="book-no-results__manual-btn"
+                onClick={handleShowManualEntry}
+              >
+                {t('home.categories.books.enterManually', "Can't find your book? Enter it manually")}
+              </button>
+            </div>
+          )}
+
+          {/* Manual entry form */}
+          {showManualEntry && !selectedBook && (
+            <div className="book-manual-entry">
+              <div className="book-manual-entry__title">
+                {t('home.categories.books.manualEntry', 'Enter book details')}
+              </div>
+              <input
+                ref={manualTitleRef}
+                type="text"
+                className="music-search__input"
+                placeholder={t('home.categories.books.titlePlaceholder', 'Book title *')}
+                value={manualTitle}
+                onChange={(e) => setManualTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleManualSubmit();
+                  if (e.key === 'Escape') handleCancelManual();
+                }}
+                autoComplete="off"
+              />
+              <input
+                type="text"
+                className="music-search__input"
+                placeholder={t('home.categories.books.authorPlaceholder', 'Author (optional)')}
+                value={manualAuthor}
+                onChange={(e) => setManualAuthor(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleManualSubmit();
+                  if (e.key === 'Escape') handleCancelManual();
+                }}
+                style={{ marginTop: '8px' }}
+                autoComplete="off"
+              />
+              <div className="book-manual-entry__actions">
+                <button
+                  className="music-analyze__button"
+                  onClick={handleManualSubmit}
+                  disabled={!manualTitle.trim()}
+                >
+                  {t('home.categories.books.useThisBook', 'Use this book')}
+                </button>
+                <button
+                  className="book-manual-entry__cancel"
+                  onClick={handleCancelManual}
+                >
+                  {t('listen.cancel', 'Cancel')}
+                </button>
               </div>
             </div>
           )}

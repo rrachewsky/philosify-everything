@@ -290,6 +290,7 @@ export function useLiteratureSidebar() {
     setQuery: bookSearch.setQuery,
     results: bookSearch.results,
     loading: bookSearch.loading,
+    hasSearched: bookSearch.hasSearched,
 
     // Book state
     selectedBook,
