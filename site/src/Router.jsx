@@ -46,6 +46,7 @@ function HomePageWrapper({
   onBuyCredits,
   onViewAnalysis,
   onViewDebate,
+  anySidebarOpen,
 }) {
   const { user, signOut } = useAuth();
   const loginModal = useModal();
@@ -117,6 +118,7 @@ function HomePageWrapper({
         onOpenMusic={onOpenMusic}
         onOpenCommunity={onCommunity}
         onOpenCategory={onOpenCategory}
+        anySidebarOpen={anySidebarOpen}
       />
       <LoginModal
         isOpen={loginModal.isOpen}
@@ -274,6 +276,7 @@ export function Router() {
                 onBuyCredits={music.isOpen ? null : undefined}
                 onViewAnalysis={music.openWithResult}
                 onViewDebate={ideas.openWithDebate}
+                anySidebarOpen={music.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
               />
             }
           />

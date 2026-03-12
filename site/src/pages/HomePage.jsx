@@ -1,7 +1,7 @@
 // HomePage - Landing page with interactive logo
 // Sidebar-based architecture: clicking symbols opens sidebars, not pages
 // Hover effect: line extends outward with label (PowerPoint diagram style)
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { changeLanguageWithPreload } from '@/i18n/config';
@@ -126,10 +126,13 @@ export function HomePage({
   onOpenMusic,
   onOpenCommunity,
   onOpenCategory,
+  anySidebarOpen,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [visibleLabels, setVisibleLabels] = useState([]);
+  const videoRef = useRef(null);
+  const prevSidebarOpen = useRef(false);
   const { user, signOut } = useAuth();
   const { balance } = useCreditsContext();
   const { t, i18n } = useTranslation();
@@ -189,6 +192,35 @@ export function HomePage({
       clearTimeout(fallback);
     };
   }, [isAuthenticated]);
+
+  // Replay video + re-stagger labels when sidebar closes
+  useEffect(() => {
+    if (prevSidebarOpen.current && !anySidebarOpen && isAuthenticated) {
+      // Sidebar just closed — replay video
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      }
+      // Re-stagger labels
+      setVideoEnded(false);
+      setVisibleLabels([]);
+      const timers = MOBILE_LABEL_ORDER.map((id, i) =>
+        setTimeout(() => {
+          setVisibleLabels((prev) => [...prev, id]);
+        }, LABEL_START_DELAY + i * LABEL_STAGGER)
+      );
+      const fallback = setTimeout(() => {
+        setVideoEnded(true);
+        setVisibleLabels(MOBILE_LABEL_ORDER);
+      }, 10000);
+      prevSidebarOpen.current = anySidebarOpen;
+      return () => {
+        timers.forEach(clearTimeout);
+        clearTimeout(fallback);
+      };
+    }
+    prevSidebarOpen.current = anySidebarOpen;
+  }, [anySidebarOpen, isAuthenticated]);
 
   return (
     <>
@@ -266,6 +298,7 @@ export function HomePage({
               {/* Video replaces static logo after sign-in */}
               {user && (
                 <video
+                  ref={videoRef}
                   className="logo-video"
                   src="/philosifyvideo.mp4"
                   autoPlay
