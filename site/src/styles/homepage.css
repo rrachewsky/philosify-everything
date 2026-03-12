@@ -370,19 +370,17 @@
   .mobile-category-labels {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr);
-    justify-content: start;
-    width: 100%;
-    max-width: 280px;
+    width: 90%;
+    max-width: 340px;
     margin: 12px auto 0;
-    padding-left: 0.5cm;
-    gap: 6px 24px;
+    gap: 6px 0;
   }
 
   .mobile-label {
     background: none;
     border: none;
     font-family: 'Orbitron', sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     line-height: 1;
     letter-spacing: 0.5px;
@@ -396,11 +394,15 @@
     padding: 0;
     margin: 0;
     min-height: 0 !important;
-    text-align: left;
     opacity: 0;
     transform: translateY(6px);
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
+
+  /* Column alignment: left, center, right */
+  .mobile-label:nth-child(3n+1) { text-align: left; }
+  .mobile-label:nth-child(3n+2) { text-align: center; }
+  .mobile-label:nth-child(3n+3) { text-align: right; }
 
   .mobile-label--visible {
     opacity: 1;
@@ -422,7 +424,7 @@
   }
 
   .mobile-label {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
