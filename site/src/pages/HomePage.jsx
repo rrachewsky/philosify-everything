@@ -271,7 +271,7 @@ export function HomePage({
                   autoPlay
                   muted
                   playsInline
-                  poster="/logo-everything.png"
+                  poster=""
                   onEnded={() => {
                     setVideoEnded(true);
                     setVisibleLabels(MOBILE_LABEL_ORDER);

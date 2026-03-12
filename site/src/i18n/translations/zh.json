@@ -120,6 +120,10 @@
     "signIn": "登录",
     "signUp": "注册"
   },
+  "pwa": {
+    "install": "安装应用",
+    "installing": "安装中..."
+  },
   "login": {
     "title": "欢迎回来",
     "subtitle": "登录以继续分析音乐",

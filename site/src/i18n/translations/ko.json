@@ -120,6 +120,10 @@
     "signIn": "로그인",
     "signUp": "회원가입"
   },
+  "pwa": {
+    "install": "앱 설치",
+    "installing": "설치 중..."
+  },
   "login": {
     "title": "다시 오신 것을 환영합니다",
     "subtitle": "음악 분석을 계속하려면 로그인하세요",

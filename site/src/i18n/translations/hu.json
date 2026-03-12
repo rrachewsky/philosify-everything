@@ -120,6 +120,10 @@
     "signIn": "Bejelentkezés",
     "signUp": "Regisztráció"
   },
+  "pwa": {
+    "install": "Telepítés",
+    "installing": "Telepítés..."
+  },
   "login": {
     "title": "Üdvözöljük Újra",
     "subtitle": "Jelentkezzen be a zenelemzés folytatásához",

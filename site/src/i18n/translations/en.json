@@ -120,6 +120,10 @@
     "signIn": "Sign In",
     "signUp": "Sign Up"
   },
+  "pwa": {
+    "install": "Install App",
+    "installing": "Installing..."
+  },
   "login": {
     "title": "Welcome Back",
     "subtitle": "Sign in to continue analyzing music",

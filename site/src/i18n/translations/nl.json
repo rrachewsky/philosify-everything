@@ -120,6 +120,10 @@
     "signIn": "Inloggen",
     "signUp": "Registreren"
   },
+  "pwa": {
+    "install": "App installeren",
+    "installing": "Installeren..."
+  },
   "login": {
     "title": "Welkom Terug",
     "subtitle": "Log in om muziek te blijven analyseren",

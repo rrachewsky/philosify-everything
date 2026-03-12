@@ -120,6 +120,10 @@
     "signIn": "Zaloguj się",
     "signUp": "Zarejestruj się"
   },
+  "pwa": {
+    "install": "Zainstaluj",
+    "installing": "Instalowanie..."
+  },
   "login": {
     "title": "Witaj Ponownie",
     "subtitle": "Zaloguj się, aby kontynuować analizowanie muzyki",

@@ -120,6 +120,10 @@
     "signIn": "Giriş Yap",
     "signUp": "Kayıt Ol"
   },
+  "pwa": {
+    "install": "Uygulamayı Kur",
+    "installing": "Kuruluyor..."
+  },
   "login": {
     "title": "Tekrar Hoş Geldiniz",
     "subtitle": "Müzik analiz etmeye devam etmek için giriş yapın",

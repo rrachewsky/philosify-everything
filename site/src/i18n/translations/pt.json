@@ -120,6 +120,10 @@
     "signIn": "Entrar",
     "signUp": "Cadastrar"
   },
+  "pwa": {
+    "install": "Instalar App",
+    "installing": "Instalando..."
+  },
   "login": {
     "title": "Bem-vindo de Volta",
     "subtitle": "Entre para continuar analisando músicas",

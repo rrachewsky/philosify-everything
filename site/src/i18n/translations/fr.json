@@ -120,6 +120,10 @@
     "signIn": "Se Connecter",
     "signUp": "S'Inscrire"
   },
+  "pwa": {
+    "install": "Installer l'app",
+    "installing": "Installation..."
+  },
   "login": {
     "title": "Bienvenue",
     "subtitle": "Connectez-vous pour continuer à analyser de la musique",
