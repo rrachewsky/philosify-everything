@@ -63,14 +63,19 @@ function AppWithInitialization() {
     };
   }, []);
 
-  // Loading state - PWA splash screen with logo
+  // Loading state - splash screen only in standalone PWA (installed app), not in browser
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   if (!isReady) {
-    return (
-      <div className="splash-screen">
-        <img src="/logo.png" alt="Philosify" className="splash-logo" />
-        <div className="splash-spinner" />
-      </div>
-    );
+    if (isStandalone) {
+      return (
+        <div className="splash-screen">
+          <img src="/logo-everything.png" alt="Philosify" className="splash-logo" />
+          <div className="splash-spinner" />
+        </div>
+      );
+    }
+    return null;
   }
 
   // Error state (still render app, but show warning)

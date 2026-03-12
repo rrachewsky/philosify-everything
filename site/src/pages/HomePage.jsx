@@ -129,6 +129,7 @@ export function HomePage({
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
+  const [visibleLabels, setVisibleLabels] = useState([]);
   const { user, signOut } = useAuth();
   const { balance } = useCreditsContext();
   const { t, i18n } = useTranslation();
@@ -164,13 +165,29 @@ export function HomePage({
     img.onerror = () => setIsLoaded(true);
   }, []);
 
-  // Mobile: fallback if video can't autoplay, show labels after 10s
+  // Mobile: stagger category labels 1 by 1, starting 4s after video autoplay
+  const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news'];
+  const LABEL_START_DELAY = 4000; // 4s after video starts
+  const LABEL_STAGGER = 400; // 400ms between each label
   const isAuthenticated = !!user;
   useEffect(() => {
     if (!isAuthenticated) return;
     setVideoEnded(false);
-    const timer = setTimeout(() => setVideoEnded(true), 10000);
-    return () => clearTimeout(timer);
+    setVisibleLabels([]);
+    const timers = MOBILE_LABEL_ORDER.map((id, i) =>
+      setTimeout(() => {
+        setVisibleLabels((prev) => [...prev, id]);
+      }, LABEL_START_DELAY + i * LABEL_STAGGER)
+    );
+    // Fallback: ensure all labels show if video ends or after 10s
+    const fallback = setTimeout(() => {
+      setVideoEnded(true);
+      setVisibleLabels(MOBILE_LABEL_ORDER);
+    }, 10000);
+    return () => {
+      timers.forEach(clearTimeout);
+      clearTimeout(fallback);
+    };
   }, [isAuthenticated]);
 
   return (
@@ -197,7 +214,6 @@ export function HomePage({
           animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : -10 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <InstallButton />
           {!user ? (
             <div className="landing-auth-buttons">
               <button className="landing-auth-link" onClick={onSignUp}>
@@ -206,6 +222,7 @@ export function HomePage({
               <button className="landing-auth-link" onClick={onSignIn}>
                 {t('auth.signIn')}
               </button>
+              <InstallButton />
             </div>
           ) : (
             <div className="landing-user-profile">
@@ -238,41 +255,32 @@ export function HomePage({
           animate={{ opacity: isLoaded ? 1 : 0, scale: isLoaded ? 1 : 0.9 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="logo-container">
-            <div className={`logo-container-inner ${user ? 'logo-authenticated' : ''}`}>
+          <div className={`logo-container ${user ? 'logo-authenticated' : ''}`}>
+            <div className="logo-container-inner">
               <img
                 src="/logo-everything.png"
                 alt="Philosify Everything"
                 className="logo-image"
                 onLoad={() => setIsLoaded(true)}
               />
-              {/* Mobile: video + category labels after sign-in (CSS hides on desktop) */}
+              {/* Mobile: video replaces static logo after sign-in (CSS hides on desktop) */}
               {user && (
-                <>
-                  <video
-                    className="logo-video"
-                    src="/philosify-everything video.mp4"
-                    autoPlay
-                    muted
-                    playsInline
-                    poster="/logo-everything.png"
-                    onEnded={() => setVideoEnded(true)}
-                    onError={() => setVideoEnded(true)}
-                  />
-                  <div
-                    className={`mobile-category-labels ${videoEnded ? 'mobile-labels--visible' : ''}`}
-                  >
-                    {HOTSPOTS.map((hotspot) => (
-                      <button
-                        key={`mobile-${hotspot.id}`}
-                        className={`mobile-label mobile-label--${hotspot.id}`}
-                        onClick={() => handleHotspotClick(hotspot.id)}
-                      >
-                        {t(`home.categories.${hotspot.id}.title`, hotspot.id)}
-                      </button>
-                    ))}
-                  </div>
-                </>
+                <video
+                  className="logo-video"
+                  src="/philosify-everything video.mp4"
+                  autoPlay
+                  muted
+                  playsInline
+                  poster="/logo-everything.png"
+                  onEnded={() => {
+                    setVideoEnded(true);
+                    setVisibleLabels(MOBILE_LABEL_ORDER);
+                  }}
+                  onError={() => {
+                    setVideoEnded(true);
+                    setVisibleLabels(MOBILE_LABEL_ORDER);
+                  }}
+                />
               )}
               {/* Hotspots with line+label hover effect */}
               {HOTSPOTS.map((hotspot) => (
@@ -285,6 +293,33 @@ export function HomePage({
               ))}
             </div>
           </div>
+          {/* Mobile: category labels below logo in 2 rows (CSS hides on desktop) */}
+          {user && (
+            <div className="mobile-category-labels">
+              <div className="mobile-label-row">
+                {['music', 'ideas', 'films'].map((id) => (
+                  <button
+                    key={`mobile-${id}`}
+                    className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}
+                    onClick={() => handleHotspotClick(id)}
+                  >
+                    {t(`home.categories.${id}.title`, id)}
+                  </button>
+                ))}
+              </div>
+              <div className="mobile-label-row">
+                {['books', 'community', 'news'].map((id) => (
+                  <button
+                    key={`mobile-${id}`}
+                    className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}
+                    onClick={() => handleHotspotClick(id)}
+                  >
+                    {t(`home.categories.${id}.title`, id)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* Language Icons */}
