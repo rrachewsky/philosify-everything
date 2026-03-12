@@ -412,7 +412,6 @@
   .mobile-label:active {
     color: #ec4899;
     text-shadow: none;
-      0 0 20px rgba(236, 72, 153, 0.5);
   }
 }
 
