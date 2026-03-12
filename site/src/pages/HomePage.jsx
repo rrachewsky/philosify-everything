@@ -165,9 +165,9 @@ export function HomePage({
     img.onerror = () => setIsLoaded(true);
   }, []);
 
-  // Mobile: stagger category labels 1 by 1, starting 4s after video autoplay
+  // Stagger category labels 1 by 1, starting 5s after video autoplay
   const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news'];
-  const LABEL_START_DELAY = 4000; // 4s after video starts
+  const LABEL_START_DELAY = 5000; // 5s after video starts
   const LABEL_STAGGER = 400; // 400ms between each label
   const isAuthenticated = !!user;
   useEffect(() => {
@@ -263,7 +263,7 @@ export function HomePage({
                 className="logo-image"
                 onLoad={() => setIsLoaded(true)}
               />
-              {/* Mobile: video replaces static logo after sign-in (CSS hides on desktop) */}
+              {/* Video replaces static logo after sign-in */}
               {user && (
                 <video
                   className="logo-video"
@@ -293,7 +293,7 @@ export function HomePage({
               ))}
             </div>
           </div>
-          {/* Mobile: category labels below logo in 3 columns (CSS hides on desktop) */}
+          {/* Category labels below video in 3 columns (styled differently per breakpoint) */}
           {user && (
             <div className="mobile-category-labels">
               {['music', 'ideas', 'films', 'books', 'community', 'news'].map((id) => (
