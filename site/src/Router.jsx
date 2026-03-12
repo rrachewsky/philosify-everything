@@ -21,8 +21,9 @@ import {
 import { CommunityHub } from './components/community';
 import { IdeasHub } from './components/ideas';
 import { MusicSidebar } from './components/music/MusicSidebar';
+import { LiteratureSidebar } from './components/literature/LiteratureSidebar';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
-import { useModal, useAuth, useMusicSidebar, useIdeas } from './hooks';
+import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas } from './hooks';
 import { useCommunity } from './hooks/useCommunity.js';
 import { logger, getPendingAction, clearPendingAction } from './utils';
 
@@ -176,7 +177,7 @@ function PushNavigateListener() {
 }
 
 // Handles return from PaymentSuccess — reads location.state and opens the correct sidebar
-function PaymentReturnHandler({ onOpenMusic, onOpenCommunity, onOpenIdeas, onOpenDebate }) {
+function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -192,6 +193,9 @@ function PaymentReturnHandler({ onOpenMusic, onOpenCommunity, onOpenIdeas, onOpe
       if (state.openMusic) {
         logger.log('[PaymentReturnHandler] Opening music sidebar');
         onOpenMusic?.();
+      } else if (state.openBooks) {
+        logger.log('[PaymentReturnHandler] Opening literature sidebar');
+        onOpenBooks?.();
       } else if (state.openDebate) {
         onOpenDebate?.(state.openDebate);
       } else if (state.openIdeas) {
@@ -204,7 +208,7 @@ function PaymentReturnHandler({ onOpenMusic, onOpenCommunity, onOpenIdeas, onOpe
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenCommunity, onOpenIdeas, onOpenDebate]);
+  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate]);
 
   return null;
 }
@@ -228,6 +232,7 @@ export function Router() {
   const community = useCommunity();
   const ideas = useIdeas();
   const music = useMusicSidebar();
+  const literature = useLiteratureSidebar();
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
   // NOTE: Modal Scoping Rule
@@ -243,16 +248,18 @@ export function Router() {
     [ideas]
   );
 
-  // Open category sidebar - Ideas has its own sidebar, others use ComingSoon
+  // Open category sidebar - Ideas and Books have their own sidebars, others use ComingSoon
   const openCategory = useCallback(
     (category) => {
       if (category === 'ideas') {
         ideas.open();
+      } else if (category === 'books') {
+        literature.open();
       } else {
         setComingSoonCategory(category);
       }
     },
-    [ideas]
+    [ideas, literature]
   );
 
   // Close ComingSoon sidebar
@@ -276,7 +283,7 @@ export function Router() {
                 onBuyCredits={music.isOpen ? null : undefined}
                 onViewAnalysis={music.openWithResult}
                 onViewDebate={ideas.openWithDebate}
-                anySidebarOpen={music.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
+                anySidebarOpen={music.isOpen || literature.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
               />
             }
           />
@@ -323,6 +330,7 @@ export function Router() {
         {/* Payment return — opens correct sidebar after credit purchase */}
         <PaymentReturnHandler
           onOpenMusic={music.openWithPendingAction}
+          onOpenBooks={literature.openWithPendingAction}
           onOpenCommunity={community.open}
           onOpenIdeas={ideas.open}
           onOpenDebate={ideas.openWithDebate}
@@ -368,7 +376,29 @@ export function Router() {
           balance={music.balance}
         />
 
-        {/* Coming Soon Sidebar (Books, Films, News, Ideas) */}
+        {/* Literature Sidebar (Books) */}
+        <LiteratureSidebar
+          isOpen={literature.isOpen}
+          onClose={literature.close}
+          query={literature.query}
+          setQuery={literature.setQuery}
+          results={literature.results}
+          loading={literature.loading}
+          selectedBook={literature.selectedBook}
+          selectBook={literature.selectBook}
+          clearBook={literature.clearBook}
+          isAnalyzing={literature.isAnalyzing}
+          analysisResult={literature.analysisResult}
+          analysisError={literature.analysisError}
+          analyze={literature.analyze}
+          cancelAnalysis={literature.cancelAnalysis}
+          elapsedTime={literature.elapsedTime}
+          formatTime={literature.formatTime}
+          user={literature.user}
+          balance={literature.balance}
+        />
+
+        {/* Coming Soon Sidebar (Films, News) */}
         <ComingSoonSidebar
           isOpen={!!comingSoonCategory}
           onClose={closeComingSoon}

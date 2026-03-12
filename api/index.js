@@ -19,7 +19,9 @@ import {
   verifyStripeWebhook,
 } from "./src/payments/index.js";
 import { safeEq } from "./src/payments/crypto.js";
-import { handleSearch, handleAnalyze } from "./src/handlers/index.js";
+import { handleSearch, handleAnalyze, handleBookSearch, handleBookAnalyze } from "./src/handlers/index.js";
+import { handleBookAnalysisHistory } from "./src/handlers/book-analysis-history.js";
+import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
 import {
@@ -442,6 +444,55 @@ export default {
           return jsonResponse({ error: "Too many requests" }, 429, origin, env);
         }
         return handleSearch(request, env);
+      }
+
+      // ========================================
+      // BOOK (LITERATURE) ROUTES
+      // ========================================
+
+      // Book search route (public - rate limited by IP)
+      if (url.pathname === "/api/book-search" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `book-search:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+        }
+        return handleBookSearch(request, env);
+      }
+
+      // Book analysis history
+      if (url.pathname === "/api/book-analysis-history" && request.method === "GET") {
+        return handleBookAnalysisHistory(request, env, origin);
+      }
+
+      // Book analysis detail
+      const bookAnalysisDetailMatch = url.pathname.match(/^\/api\/book-analysis\/([0-9a-f-]+)$/i);
+      if (bookAnalysisDetailMatch && request.method === "GET") {
+        return handleBookAnalysisDetail(request, env, origin, bookAnalysisDetailMatch[1]);
+      }
+
+      // Cancel book analysis - release lock + credit reservation
+      if (url.pathname === "/api/cancel-book-analysis" && request.method === "POST") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
+        try {
+          const body = await request.json();
+          const { title, author, model, lang } = body;
+          const normalizeForKey = (str) =>
+            (str || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "").substring(0, 50);
+          const dedupKey = `book:${user.userId}:${normalizeForKey(title)}:${normalizeForKey(author)}:${model}:${lang}`;
+          try {
+            await callRpc(env, "release_analysis_lock", { p_lock_key: dedupKey });
+          } catch (lockErr) {
+            // Lock may already be released
+          }
+          const result = await cleanupUserStaleReservations(env, user.userId, 0);
+          return jsonResponse({ success: true, releasedCount: result.releasedCount }, 200, origin, env);
+        } catch (error) {
+          return jsonResponse({ success: true }, 200, origin, env);
+        }
       }
 
       // Text-to-Speech with Gemini 2.5 Flash TTS Preview (authenticated)
@@ -3030,6 +3081,182 @@ export default {
               `[Security] Failed to release analysis lock:`,
               lockError,
             );
+          }
+        }
+      }
+
+      // ========================================
+      // BOOK ANALYSIS ENDPOINT
+      // ========================================
+
+      if (url.pathname === "/api/book-analyze" && request.method === "POST") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse(
+            { error: "Unauthorized", message: "Authentication required" },
+            401, origin, env,
+          );
+        }
+
+        // Parse request body early
+        let requestBody;
+        try {
+          const requestText = await request.text();
+          requestBody = JSON.parse(requestText);
+          request = new Request(request.url, {
+            method: request.method,
+            headers: request.headers,
+            body: requestText,
+          });
+        } catch (error) {
+          return jsonResponse({ error: "Invalid JSON" }, 400, origin, env);
+        }
+
+        const {
+          title = "Book",
+          author = "Author",
+          model = "claude",
+          lang = "en",
+          google_books_id = null,
+        } = requestBody;
+
+        // Rate limit (uses same ANALYZE_RATE_LIMITER — expensive AI calls)
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitKey = `book-analyze:${user.userId}:${ip}`;
+        let rateLimitOk = true;
+        if (env.ANALYZE_RATE_LIMITER) {
+          try {
+            const { success } = await env.ANALYZE_RATE_LIMITER.limit({ key: rateLimitKey });
+            rateLimitOk = success;
+            if (!success) console.log("[RateLimit] Book analyze rate limit exceeded for:", rateLimitKey);
+          } catch (error) {
+            console.error("[RateLimit] ANALYZE_RATE_LIMITER error:", error);
+            rateLimitOk = false;
+          }
+        } else {
+          rateLimitOk = await checkRateLimit(env, rateLimitKey, true);
+        }
+        if (!rateLimitOk) {
+          return jsonResponse(
+            { error: "Too many requests", message: "Rate limit exceeded. Please wait." },
+            429, origin, env,
+          );
+        }
+
+        // Cleanup pending reservations
+        await cleanupUserStaleReservations(env, user.userId, 0);
+
+        // Atomic deduplication lock
+        const normalizeForKey = (str) =>
+          (str || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "").substring(0, 50);
+        const dedupKey = `book:${user.userId}:${normalizeForKey(title)}:${normalizeForKey(author)}:${model}:${lang}`;
+
+        try {
+          await callRpc(env, "release_analysis_lock", { p_lock_key: dedupKey });
+        } catch (e) {
+          // No-op if no lock exists
+        }
+
+        const lockAcquired = await callRpc(env, "acquire_analysis_lock", {
+          p_lock_key: dedupKey,
+          p_user_id: user.userId,
+        });
+
+        if (!lockAcquired) {
+          return jsonResponse(
+            { error: "Analysis in progress", message: "This book is already being analyzed. Please wait." },
+            409, origin, env,
+          );
+        }
+
+        // Reserve credit (books are never free — no free ticker for books)
+        let reservation = await reserveCredit(env, user.userId);
+
+        if (!reservation.success) {
+          return jsonResponse(
+            { error: "Insufficient credits", message: "You have no credits remaining. Please purchase more.", credits: 0, freeRemaining: reservation.remaining },
+            402, origin, env,
+          );
+        }
+
+        console.log(`[Credits] Reserved 1 ${reservation.type} credit for book analysis. Reservation: ${reservation.reservationId}`);
+
+        // Perform analysis
+        try {
+          const result = await handleBookAnalyze(request, env, origin, ctx);
+
+          if (result.ok) {
+            const resultData = await result.json();
+
+            if (resultData.timeout) {
+              const releaseResult = await releaseReservation(env, reservation.reservationId, "timeout");
+              return jsonResponse(
+                { error: "Analysis timeout", message: "Analysis took too long. Your credit has been refunded.", timeout: true, balance: releaseResult?.success ? { total: releaseResult.newTotal, credits: releaseResult.credits, freeRemaining: releaseResult.freeRemaining } : { total: reservation.remaining } },
+                504, origin, env,
+              );
+            }
+
+            let balanceResult = null;
+            let charged = false;
+
+            if (resultData.cached && resultData.isReview) {
+              balanceResult = await releaseReservation(env, reservation.reservationId, "cached_review", resultData.id);
+              charged = false;
+            } else if (resultData.cached && !resultData.isReview) {
+              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id);
+              charged = true;
+            } else if (resultData.saveFailed) {
+              balanceResult = await releaseReservation(env, reservation.reservationId, "failed");
+              charged = false;
+            } else {
+              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id);
+              charged = true;
+            }
+
+            resultData.balance = {
+              total: balanceResult?.success ? balanceResult.newTotal : reservation.remaining,
+              credits: balanceResult?.success ? balanceResult.credits : reservation.credits,
+              freeRemaining: balanceResult?.success ? balanceResult.freeRemaining : 0,
+              charged: charged,
+            };
+            return jsonResponse(resultData, 200, origin, env);
+          }
+
+          // Analysis failed — release credit
+          if (reservation) {
+            try {
+              await releaseReservation(env, reservation.reservationId, "failed");
+            } catch (releaseErr) {
+              console.error("[Credits] Release failed:", releaseErr.message);
+            }
+          }
+          return result;
+        } catch (error) {
+          console.error("[BookAnalysis] Error, releasing reservation:", error);
+          let releaseResult = null;
+          if (reservation) {
+            try {
+              const isTimeout = error.message?.includes("timeout") || error.name === "AbortError";
+              releaseResult = await releaseReservation(env, reservation.reservationId, isTimeout ? "timeout" : "failed");
+            } catch (releaseErr) {
+              console.error("[Credits] Release failed:", releaseErr.message);
+            }
+          }
+          const isTimeout = error.message?.includes("timeout") || error.name === "AbortError";
+          return jsonResponse(
+            {
+              error: isTimeout ? "Analysis timeout" : "Analysis failed",
+              message: isTimeout ? "Analysis took too long. Your credit has been refunded." : "An error occurred. Your credit has been refunded.",
+              timeout: isTimeout,
+              balance: releaseResult?.success ? { total: releaseResult.newTotal, credits: releaseResult.credits, freeRemaining: releaseResult.freeRemaining } : { free: true },
+            },
+            isTimeout ? 504 : 500, origin, env,
+          );
+        } finally {
+          try {
+            await callRpc(env, "release_analysis_lock", { p_lock_key: dedupKey });
+          } catch (lockError) {
+            console.error("[Security] Failed to release book analysis lock:", lockError);
           }
         }
       }

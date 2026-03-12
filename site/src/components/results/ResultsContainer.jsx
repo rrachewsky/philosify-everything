@@ -9,7 +9,7 @@ import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ListenButton } from './ListenButton';
 
 export const ResultsContainer = forwardRef(function ResultsContainer(
-  { result, showShareActions = true },
+  { result, showShareActions = true, mediaType = 'music' },
   ref
 ) {
   const { t } = useTranslation();
@@ -128,6 +128,10 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
     return t(key, { defaultValue: normalized });
   };
 
+  // Determine media type: explicit prop > result field > default 'music'
+  const resolvedMediaType = mediaType !== 'music' ? mediaType : (result.media_type || 'music');
+  const isLiterature = resolvedMediaType === 'literature';
+
   if (!result) return null;
 
   if (result.error) {
@@ -140,7 +144,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
 
   return (
     <div className="results-container">
-      {/* 1. Technical Specifications with Spotify Embed */}
+      {/* 1. Technical Specifications with Embed */}
       <div className="result-card" ref={ref}>
         <h3 className="result-card-title">
           {t('technicalSpecs', { defaultValue: 'Technical Specs' })}
@@ -149,75 +153,144 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         <h2 className="text-2xl font-bold mb-2 text-dark">
           {result.song || result.song_name || result.title}
         </h2>
-        <h3 className="text-xl text-dark mb-4">{result.artist}</h3>
+        <h3 className="text-xl text-dark mb-4">{result.artist || result.author}</h3>
 
         {/* Technical Specifications Grid */}
-        {(result.release_year ||
-          result.genre ||
-          result.country ||
-          result.tempo ||
-          result.key ||
-          result.time_signature) && (
-          <div className="tech-specs-grid">
-            {result.country && (
-              <>
-                <div className="tech-specs-label">{t('country', { defaultValue: 'Country' })}:</div>
-                <div className="tech-specs-value">{result.country}</div>
-              </>
-            )}
-            {result.release_year && (
-              <>
-                <div className="tech-specs-label">{t('year', { defaultValue: 'Year' })}:</div>
-                <div className="tech-specs-value">{result.release_year}</div>
-              </>
-            )}
-            {result.genre && (
-              <>
-                <div className="tech-specs-label">{t('genre', { defaultValue: 'Genre' })}:</div>
-                <div className="tech-specs-value">{result.genre}</div>
-              </>
-            )}
-            {result.tempo && (
-              <>
-                <div className="tech-specs-label">{t('tempo', { defaultValue: 'Tempo' })}:</div>
-                <div className="tech-specs-value">{result.tempo} BPM</div>
-              </>
-            )}
-            {result.key && (
-              <>
-                <div className="tech-specs-label">{t('key', { defaultValue: 'Key' })}:</div>
-                <div className="tech-specs-value">{result.key}</div>
-              </>
-            )}
-            {result.time_signature && (
-              <>
-                <div className="tech-specs-label">
-                  {t('timeSignature', { defaultValue: 'Time' })}:
-                </div>
-                <div className="tech-specs-value">{result.time_signature}</div>
-              </>
-            )}
-          </div>
+        {isLiterature ? (
+          /* Literature-specific specs */
+          (result.release_year ||
+            result.genre ||
+            result.country ||
+            result.page_count ||
+            result.publisher) && (
+            <div className="tech-specs-grid">
+              {result.country && (
+                <>
+                  <div className="tech-specs-label">
+                    {t('country', { defaultValue: 'Country' })}:
+                  </div>
+                  <div className="tech-specs-value">{result.country}</div>
+                </>
+              )}
+              {result.release_year && (
+                <>
+                  <div className="tech-specs-label">{t('year', { defaultValue: 'Year' })}:</div>
+                  <div className="tech-specs-value">{result.release_year}</div>
+                </>
+              )}
+              {result.genre && (
+                <>
+                  <div className="tech-specs-label">{t('genre', { defaultValue: 'Genre' })}:</div>
+                  <div className="tech-specs-value">{result.genre}</div>
+                </>
+              )}
+              {result.page_count && (
+                <>
+                  <div className="tech-specs-label">
+                    {t('pageCount', { defaultValue: 'Pages' })}:
+                  </div>
+                  <div className="tech-specs-value">{result.page_count}</div>
+                </>
+              )}
+              {result.publisher && (
+                <>
+                  <div className="tech-specs-label">
+                    {t('publisher', { defaultValue: 'Publisher' })}:
+                  </div>
+                  <div className="tech-specs-value">{result.publisher}</div>
+                </>
+              )}
+            </div>
+          )
+        ) : (
+          /* Music-specific specs */
+          (result.release_year ||
+            result.genre ||
+            result.country ||
+            result.tempo ||
+            result.key ||
+            result.time_signature) && (
+            <div className="tech-specs-grid">
+              {result.country && (
+                <>
+                  <div className="tech-specs-label">
+                    {t('country', { defaultValue: 'Country' })}:
+                  </div>
+                  <div className="tech-specs-value">{result.country}</div>
+                </>
+              )}
+              {result.release_year && (
+                <>
+                  <div className="tech-specs-label">{t('year', { defaultValue: 'Year' })}:</div>
+                  <div className="tech-specs-value">{result.release_year}</div>
+                </>
+              )}
+              {result.genre && (
+                <>
+                  <div className="tech-specs-label">{t('genre', { defaultValue: 'Genre' })}:</div>
+                  <div className="tech-specs-value">{result.genre}</div>
+                </>
+              )}
+              {result.tempo && (
+                <>
+                  <div className="tech-specs-label">{t('tempo', { defaultValue: 'Tempo' })}:</div>
+                  <div className="tech-specs-value">{result.tempo} BPM</div>
+                </>
+              )}
+              {result.key && (
+                <>
+                  <div className="tech-specs-label">{t('key', { defaultValue: 'Key' })}:</div>
+                  <div className="tech-specs-value">{result.key}</div>
+                </>
+              )}
+              {result.time_signature && (
+                <>
+                  <div className="tech-specs-label">
+                    {t('timeSignature', { defaultValue: 'Time' })}:
+                  </div>
+                  <div className="tech-specs-value">{result.time_signature}</div>
+                </>
+              )}
+            </div>
+          )
         )}
 
-        {/* Spotify Player */}
-        {spotifyEmbedSrc && (
-          <div className="mt-5">
-            <iframe
-              key={spotifyTrackId || spotifyQuery}
-              className="spotify-embed rounded-lg w-full border-0"
-              height="352"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-              src={spotifyEmbedSrc}
-              title="Spotify Player"
-            />
-          </div>
+        {/* Book Cover (literature) or Spotify Player (music) */}
+        {isLiterature ? (
+          result.cover_url && (
+            <div className="mt-5" style={{ textAlign: 'center' }}>
+              <img
+                src={result.cover_url}
+                alt={`${result.title || ''} cover`}
+                style={{
+                  maxHeight: '300px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                  margin: '0 auto',
+                }}
+                loading="lazy"
+              />
+            </div>
+          )
+        ) : (
+          spotifyEmbedSrc && (
+            <div className="mt-5">
+              <iframe
+                key={spotifyTrackId || spotifyQuery}
+                className="spotify-embed rounded-lg w-full border-0"
+                height="352"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+                src={spotifyEmbedSrc}
+                title="Spotify Player"
+              />
+            </div>
+          )
         )}
       </div>
 
-      {/* Listen to Analysis Button - Prominent placement between sections */}
-      {showShareActions && (
+      {/* Listen to Analysis Button - Prominent placement between sections (music only) */}
+      {showShareActions && !isLiterature && (
         <div className="listen-section">
           <ListenButton result={result} lang={result.lang} />
         </div>
@@ -396,19 +469,19 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
           <ShareButton
             analysisId={result.id}
             songName={result.song || result.song_name || result.title}
-            artist={result.artist}
+            artist={result.artist || result.author}
           />
           <ShareToDMButton
             analysisId={result.id}
             songName={result.song || result.song_name || result.title}
-            artist={result.artist}
+            artist={result.artist || result.author}
             philosophicalNote={result.philosophical_note}
             classification={result.classification}
           />
           <ShareToCommunityButton
             analysisId={result.id}
             songName={result.song || result.song_name || result.title}
-            artist={result.artist}
+            artist={result.artist || result.author}
           />
         </div>
       )}
