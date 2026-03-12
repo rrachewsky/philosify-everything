@@ -366,20 +366,15 @@
     display: none !important;
   }
 
-  /* --- Category labels (below video, 2 rows, staggered appearance) --- */
+  /* --- Category labels (below video, 3 columns, staggered appearance) --- */
   .mobile-category-labels {
-    display: flex !important;
-    flex-direction: column;
-    align-items: flex-start;
+    display: grid !important;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
     width: 100%;
     max-width: 280px;
     margin: 12px auto 0;
-    gap: 6px;
-  }
-
-  .mobile-label-row {
-    display: flex;
-    gap: 16px;
+    gap: 6px 16px;
   }
 
   .mobile-label {
@@ -390,13 +385,14 @@
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: #ec4899;
+    color: #00f0ff;
     text-shadow:
-      0 0 10px rgba(236, 72, 153, 0.8),
-      0 0 20px rgba(236, 72, 153, 0.5);
+      0 0 10px rgba(0, 240, 255, 0.8),
+      0 0 20px rgba(0, 240, 255, 0.5);
     white-space: nowrap;
     cursor: pointer;
     padding: 4px 0;
+    text-align: left;
     opacity: 0;
     transform: translateY(6px);
     transition: opacity 0.5s ease, transform 0.5s ease;
@@ -409,10 +405,10 @@
 
   /* Tap feedback */
   .mobile-label:active {
-    color: #00f0ff;
+    color: #ec4899;
     text-shadow:
-      0 0 10px rgba(0, 240, 255, 0.8),
-      0 0 20px rgba(0, 240, 255, 0.5);
+      0 0 10px rgba(236, 72, 153, 0.8),
+      0 0 20px rgba(236, 72, 153, 0.5);
   }
 }
 

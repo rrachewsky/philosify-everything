@@ -293,31 +293,18 @@ export function HomePage({
               ))}
             </div>
           </div>
-          {/* Mobile: category labels below logo in 2 rows (CSS hides on desktop) */}
+          {/* Mobile: category labels below logo in 3 columns (CSS hides on desktop) */}
           {user && (
             <div className="mobile-category-labels">
-              <div className="mobile-label-row">
-                {['music', 'ideas', 'films'].map((id) => (
-                  <button
-                    key={`mobile-${id}`}
-                    className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}
-                    onClick={() => handleHotspotClick(id)}
-                  >
-                    {t(`home.categories.${id}.title`, id)}
-                  </button>
-                ))}
-              </div>
-              <div className="mobile-label-row">
-                {['books', 'community', 'news'].map((id) => (
-                  <button
-                    key={`mobile-${id}`}
-                    className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}
-                    onClick={() => handleHotspotClick(id)}
-                  >
-                    {t(`home.categories.${id}.title`, id)}
-                  </button>
-                ))}
-              </div>
+              {['music', 'ideas', 'films', 'books', 'community', 'news'].map((id) => (
+                <button
+                  key={`mobile-${id}`}
+                  className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}
+                  onClick={() => handleHotspotClick(id)}
+                >
+                  {t(`home.categories.${id}.title`, id)}
+                </button>
+              ))}
             </div>
           )}
         </motion.div>
