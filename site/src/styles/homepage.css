@@ -369,7 +369,7 @@
   /* --- Category labels (below video, 3 columns, staggered appearance) --- */
   .mobile-category-labels {
     display: grid !important;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(3, 1fr);
     justify-content: start;
     width: 100%;
     max-width: 280px;
