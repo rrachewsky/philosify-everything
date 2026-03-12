@@ -267,7 +267,7 @@ export function HomePage({
               {user && (
                 <video
                   className="logo-video"
-                  src="/philosify-everything video.mp4"
+                  src="/philosifyvideo.mp4"
                   autoPlay
                   muted
                   playsInline
