@@ -430,7 +430,14 @@
         "title": "Литература",
         "description": "Исследуйте идеи в литературе и нон-фикшн",
         "searchPlaceholder": "Поиск книги...",
-        "analyzeButton": "Анализировать Книгу"
+        "analyzeButton": "Анализировать Книгу",
+        "analyzeAnother": "Анализировать Другую Книгу",
+        "noResults": "Книги по вашему запросу не найдены.",
+        "enterManually": "Не можете найти книгу? Введите вручную",
+        "manualEntry": "Введите данные книги",
+        "titlePlaceholder": "Название книги *",
+        "authorPlaceholder": "Автор (необязательно)",
+        "useThisBook": "Использовать эту книгу"
       },
       "films": {
         "title": "Кино",

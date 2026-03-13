@@ -430,7 +430,14 @@
         "title": "Irodalom",
         "description": "Fedezd fel az irodalom és a nem-fikció mögötti gondolatokat",
         "searchPlaceholder": "Könyv keresése...",
-        "analyzeButton": "Könyv Elemzése"
+        "analyzeButton": "Könyv Elemzése",
+        "analyzeAnother": "Másik Könyv Elemzése",
+        "noResults": "Nem található könyv a kereséshez.",
+        "enterManually": "Nem találod a könyved? Add meg manuálisan",
+        "manualEntry": "Könyv adatainak megadása",
+        "titlePlaceholder": "Könyv címe *",
+        "authorPlaceholder": "Szerző (opcionális)",
+        "useThisBook": "Ezt a könyvet használom"
       },
       "films": {
         "title": "Mozi",

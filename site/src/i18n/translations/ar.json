@@ -430,7 +430,14 @@
         "title": "أدب",
         "description": "استكشف الأفكار وراء الأدب والكتب الواقعية",
         "searchPlaceholder": "ابحث عن كتاب...",
-        "analyzeButton": "تحليل الكتاب"
+        "analyzeButton": "تحليل الكتاب",
+        "analyzeAnother": "تحليل كتاب آخر",
+        "noResults": "لم يتم العثور على كتب لبحثك.",
+        "enterManually": "لا تجد كتابك؟ أدخله يدوياً",
+        "manualEntry": "أدخل تفاصيل الكتاب",
+        "titlePlaceholder": "عنوان الكتاب *",
+        "authorPlaceholder": "المؤلف (اختياري)",
+        "useThisBook": "استخدم هذا الكتاب"
       },
       "films": {
         "title": "سينما",

@@ -430,7 +430,14 @@
         "title": "ادبیات",
         "description": "ایده‌های پشت ادبیات و غیرداستانی را کاوش کنید",
         "searchPlaceholder": "جستجوی کتاب...",
-        "analyzeButton": "تحلیل کتاب"
+        "analyzeButton": "تحلیل کتاب",
+        "analyzeAnother": "تحلیل کتاب دیگر",
+        "noResults": "کتابی برای جستجوی شما یافت نشد.",
+        "enterManually": "کتاب خود را پیدا نمی‌کنید؟ به صورت دستی وارد کنید",
+        "manualEntry": "وارد کردن جزئیات کتاب",
+        "titlePlaceholder": "عنوان کتاب *",
+        "authorPlaceholder": "نویسنده (اختیاری)",
+        "useThisBook": "استفاده از این کتاب"
       },
       "films": {
         "title": "سینما",

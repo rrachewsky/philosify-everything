@@ -430,7 +430,14 @@
         "title": "ספרות",
         "description": "חקור את הרעיונות מאחורי ספרות ופרוזה עיונית",
         "searchPlaceholder": "חפש ספר...",
-        "analyzeButton": "נתח ספר"
+        "analyzeButton": "נתח ספר",
+        "analyzeAnother": "נתח ספר אחר",
+        "noResults": "לא נמצאו ספרים לחיפוש שלך.",
+        "enterManually": "לא מוצא את הספר? הזן אותו ידנית",
+        "manualEntry": "הזן פרטי ספר",
+        "titlePlaceholder": "שם הספר *",
+        "authorPlaceholder": "מחבר (אופציונלי)",
+        "useThisBook": "השתמש בספר זה"
       },
       "films": {
         "title": "קולנוע",

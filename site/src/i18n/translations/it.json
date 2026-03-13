@@ -430,7 +430,14 @@
         "title": "Letteratura",
         "description": "Esplora le idee dietro la letteratura e la saggistica",
         "searchPlaceholder": "Cerca un libro...",
-        "analyzeButton": "Analizza Libro"
+        "analyzeButton": "Analizza Libro",
+        "analyzeAnother": "Analizza un Altro Libro",
+        "noResults": "Nessun libro trovato per la tua ricerca.",
+        "enterManually": "Non trovi il tuo libro? Inseriscilo manualmente",
+        "manualEntry": "Inserisci i dettagli del libro",
+        "titlePlaceholder": "Titolo del libro *",
+        "authorPlaceholder": "Autore (facoltativo)",
+        "useThisBook": "Usa questo libro"
       },
       "films": {
         "title": "Cinema",

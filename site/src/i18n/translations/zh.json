@@ -430,7 +430,14 @@
         "title": "文学",
         "description": "探索文学和非虚构作品背后的思想",
         "searchPlaceholder": "搜索书籍...",
-        "analyzeButton": "分析书籍"
+        "analyzeButton": "分析书籍",
+        "analyzeAnother": "分析另一本书",
+        "noResults": "未找到符合搜索条件的书籍。",
+        "enterManually": "找不到您的书？手动输入",
+        "manualEntry": "输入书籍详情",
+        "titlePlaceholder": "书名 *",
+        "authorPlaceholder": "作者（可选）",
+        "useThisBook": "使用这本书"
       },
       "films": {
         "title": "影院",

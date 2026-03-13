@@ -430,7 +430,14 @@
         "title": "Literatuur",
         "description": "Ontdek de ideeën achter literatuur en non-fictie",
         "searchPlaceholder": "Zoek naar een boek...",
-        "analyzeButton": "Boek Analyseren"
+        "analyzeButton": "Boek Analyseren",
+        "analyzeAnother": "Analyseer een Ander Boek",
+        "noResults": "Geen boeken gevonden voor uw zoekopdracht.",
+        "enterManually": "Boek niet gevonden? Voer het handmatig in",
+        "manualEntry": "Boekgegevens invoeren",
+        "titlePlaceholder": "Boektitel *",
+        "authorPlaceholder": "Auteur (optioneel)",
+        "useThisBook": "Dit boek gebruiken"
       },
       "films": {
         "title": "Cinema",

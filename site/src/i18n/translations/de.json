@@ -430,7 +430,14 @@
         "title": "Literatur",
         "description": "Erkunde die Ideen hinter Literatur und Sachbüchern",
         "searchPlaceholder": "Suche nach einem Buch...",
-        "analyzeButton": "Buch analysieren"
+        "analyzeButton": "Buch analysieren",
+        "analyzeAnother": "Ein anderes Buch analysieren",
+        "noResults": "Keine Bücher für Ihre Suche gefunden.",
+        "enterManually": "Buch nicht gefunden? Manuell eingeben",
+        "manualEntry": "Buchdetails eingeben",
+        "titlePlaceholder": "Buchtitel *",
+        "authorPlaceholder": "Autor (optional)",
+        "useThisBook": "Dieses Buch verwenden"
       },
       "films": {
         "title": "Kino",

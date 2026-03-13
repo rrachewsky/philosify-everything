@@ -430,7 +430,14 @@
         "title": "Edebiyat",
         "description": "Edebiyat ve kurgu dışı eserlerin ardındaki fikirleri keşfedin",
         "searchPlaceholder": "Kitap ara...",
-        "analyzeButton": "Kitap Analiz Et"
+        "analyzeButton": "Kitap Analiz Et",
+        "analyzeAnother": "Başka Bir Kitap Analiz Et",
+        "noResults": "Aramanız için kitap bulunamadı.",
+        "enterManually": "Kitabınızı bulamıyor musunuz? Manuel olarak girin",
+        "manualEntry": "Kitap bilgilerini girin",
+        "titlePlaceholder": "Kitap başlığı *",
+        "authorPlaceholder": "Yazar (isteğe bağlı)",
+        "useThisBook": "Bu kitabı kullan"
       },
       "films": {
         "title": "Sinema",

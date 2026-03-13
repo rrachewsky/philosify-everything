@@ -430,7 +430,14 @@
         "title": "Littérature",
         "description": "Explorez les idées derrière la littérature et la non-fiction",
         "searchPlaceholder": "Rechercher un livre...",
-        "analyzeButton": "Analyser le livre"
+        "analyzeButton": "Analyser le livre",
+        "analyzeAnother": "Analyser un Autre Livre",
+        "noResults": "Aucun livre trouvé pour votre recherche.",
+        "enterManually": "Vous ne trouvez pas votre livre ? Saisissez-le manuellement",
+        "manualEntry": "Saisir les détails du livre",
+        "titlePlaceholder": "Titre du livre *",
+        "authorPlaceholder": "Auteur (facultatif)",
+        "useThisBook": "Utiliser ce livre"
       },
       "films": {
         "title": "Cinéma",

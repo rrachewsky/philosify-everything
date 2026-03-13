@@ -430,7 +430,14 @@
         "title": "Literatura",
         "description": "Odkryj idee stojące za literaturą i non-fiction",
         "searchPlaceholder": "Szukaj książki...",
-        "analyzeButton": "Analizuj Książkę"
+        "analyzeButton": "Analizuj Książkę",
+        "analyzeAnother": "Analizuj Inną Książkę",
+        "noResults": "Nie znaleziono książek dla twojego wyszukiwania.",
+        "enterManually": "Nie możesz znaleźć książki? Wprowadź ją ręcznie",
+        "manualEntry": "Wprowadź dane książki",
+        "titlePlaceholder": "Tytuł książki *",
+        "authorPlaceholder": "Autor (opcjonalnie)",
+        "useThisBook": "Użyj tej książki"
       },
       "films": {
         "title": "Kino",

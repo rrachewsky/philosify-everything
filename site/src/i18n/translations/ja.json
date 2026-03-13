@@ -430,7 +430,14 @@
         "title": "文学",
         "description": "文学やノンフィクションの背後にあるアイデアを探求する",
         "searchPlaceholder": "本を検索...",
-        "analyzeButton": "本を分析"
+        "analyzeButton": "本を分析",
+        "analyzeAnother": "別の本を分析する",
+        "noResults": "検索に一致する本が見つかりませんでした。",
+        "enterManually": "本が見つかりませんか？手動で入力してください",
+        "manualEntry": "本の詳細を入力",
+        "titlePlaceholder": "本のタイトル *",
+        "authorPlaceholder": "著者（任意）",
+        "useThisBook": "この本を使用する"
       },
       "films": {
         "title": "シネマ",
