@@ -15,6 +15,7 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
   const [hasSearched, setHasSearched] = useState(false);
 
   const debounceTimerRef = useRef(null);
+  const searchIdRef = useRef(0); // Track latest search to discard stale responses
 
   // Perform search
   const search = useCallback(
@@ -25,24 +26,27 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
         return;
       }
 
+      // Increment search ID — only the latest search can update state
+      const thisSearchId = ++searchIdRef.current;
+
       setLoading(true);
       setError(null);
-      setHasSearched(false);
 
       try {
         const data = await searchBooks(searchQuery);
+        // Discard if a newer search was triggered while this one was in-flight
+        if (thisSearchId !== searchIdRef.current) return;
         setResults(data || []);
       } catch (err) {
+        if (thisSearchId !== searchIdRef.current) return;
         console.error('[useBookSearch] Error:', err);
-        if (err.message === 'SEARCH_FAILED') {
-          setError(t('errors.searchFailed'));
-        } else {
-          setError(t('errors.searchFailed'));
-        }
+        setError(t('errors.searchFailed'));
         setResults([]);
       } finally {
-        setLoading(false);
-        setHasSearched(true);
+        if (thisSearchId === searchIdRef.current) {
+          setLoading(false);
+          setHasSearched(true);
+        }
       }
     },
     [t]
@@ -53,21 +57,22 @@ export function useBookSearch(debounceMs = SEARCH_DEBOUNCE_MS) {
     (newQuery) => {
       setQuery(newQuery);
       setSelectedBook(null);
-      setHasSearched(false);
 
       // Clear previous timer
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
 
-      // Set new timer
+      // Reset search state while typing
       if (newQuery && newQuery.length >= 2) {
+        setHasSearched(false);
         debounceTimerRef.current = setTimeout(() => {
           search(newQuery);
         }, debounceMs);
       } else {
         setResults([]);
         setLoading(false);
+        setHasSearched(false);
       }
     },
     [search, debounceMs]

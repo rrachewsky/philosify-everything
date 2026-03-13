@@ -89,37 +89,32 @@ export async function handleGoogleBooksSearch(query, env) {
     return true;
   });
 
-  // Filter to match user's actual query
+  // Smart sorting: exact title matches first, then partial matches
   const searchLower = (title || query).toLowerCase();
-  const searchWords = searchLower.split(/\s+/).filter(w => w.length > 0);
-
-  const filteredOptions = uniqueOptions.filter(book => {
-    const titleLower = book.title.toLowerCase();
-    const authorLower = book.author.toLowerCase();
-    const combined = `${titleLower} ${authorLower}`;
-
-    return searchWords.every(word => combined.includes(word));
-  });
-
-  // Smart sorting: exact title matches first
-  filteredOptions.sort((a, b) => {
+  uniqueOptions.sort((a, b) => {
     const aExact = a.title.toLowerCase() === searchLower;
     const bExact = b.title.toLowerCase() === searchLower;
 
     if (aExact && !bExact) return -1;
     if (!aExact && bExact) return 1;
 
+    // Then prefer titles that start with the search term
+    const aStarts = a.title.toLowerCase().startsWith(searchLower);
+    const bStarts = b.title.toLowerCase().startsWith(searchLower);
+    if (aStarts && !bStarts) return -1;
+    if (!aStarts && bStarts) return 1;
+
     return 0;
   });
 
-  console.log(`[BookSearch] Found ${filteredOptions.length} filtered books (${uniqueOptions.length} unique, ${options.length} total)`);
-
-  const topResults = filteredOptions.slice(0, 40);
+  // No aggressive filtering — Google Books already handles relevance.
+  // Return all unique results (Google API returns max 40).
+  console.log(`[BookSearch] Found ${uniqueOptions.length} unique books (${options.length} total from API)`);
 
   return {
     query,
     parsed: { title, author },
-    options: topResults,
-    count: topResults.length
+    options: uniqueOptions,
+    count: uniqueOptions.length
   };
 }
