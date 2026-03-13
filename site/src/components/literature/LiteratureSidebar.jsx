@@ -440,7 +440,7 @@ export function LiteratureSidebar({
                 className="music-analyze__button music-analyze__button--another"
                 onClick={clearBook}
               >
-                {t('landing.analyzeAnother', 'Analyze Another Book')}
+                {t('home.categories.books.analyzeAnother', 'Analyze Another Book')}
               </button>
             </div>
           )}

@@ -47,7 +47,7 @@ import { getCorsHeaders } from "../utils/cors.js";
  */
 async function getCacheKey(result, lang) {
   const song = result?.song || result?.song_name || result?.title || "";
-  const artist = result?.artist || "";
+  const artist = result?.artist || result?.author || "";
   const spotifyId = result?.spotify_id || "";
   const model = result?.model || "unknown";
 
@@ -1304,7 +1304,7 @@ function stripHtml(html) {
 function extractSectionsFromResult(result) {
   return {
     song: result.song || result.song_name || result.title || "",
-    artist: result.artist || "",
+    artist: result.artist || result.author || "",
     historicalContext: stripHtml(
       result.historical_context || result.context || "",
     ),
@@ -2054,7 +2054,7 @@ export async function handleGeminiTTS(request, env, origin) {
     // Save to R2 with metadata (don't await - run in background)
     const r2Metadata = {
       song: result?.song || result?.song_name || result?.title || "unknown",
-      artist: result?.artist || "unknown",
+      artist: result?.artist || result?.author || "unknown",
       language: targetLang,
       model: result?.model || result?.generated_by || "unknown",
     };

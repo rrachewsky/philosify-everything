@@ -289,8 +289,8 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         )}
       </div>
 
-      {/* Listen to Analysis Button - Prominent placement between sections (music only) */}
-      {showShareActions && !isLiterature && (
+      {/* Listen to Analysis Button - Prominent placement between sections */}
+      {showShareActions && (
         <div className="listen-section">
           <ListenButton result={result} lang={result.lang} />
         </div>

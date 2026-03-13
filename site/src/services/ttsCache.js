@@ -27,8 +27,8 @@ const activeRequests = new Map();
  * Generate a cache key for a result + language combination
  */
 function getCacheKey(result, lang) {
-  const song = result?.song || result?.song_name || '';
-  const artist = result?.artist || '';
+  const song = result?.song || result?.song_name || result?.title || '';
+  const artist = result?.artist || result?.author || '';
   return `${song}|${artist}|${lang}`;
 }
 

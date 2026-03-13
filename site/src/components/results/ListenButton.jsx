@@ -230,7 +230,7 @@ export function ListenButton({ result }) {
   // Clear audio when result changes
   useEffect(() => {
     const resultId = result
-      ? `${result.song || result.song_name || ''}|${result.artist || ''}`
+      ? `${result.song || result.song_name || result.title || ''}|${result.artist || result.author || ''}`
       : null;
     const cacheKey = `${resultId}|${selectedTTSLang}`;
 
