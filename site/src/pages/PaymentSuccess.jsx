@@ -186,6 +186,11 @@ export function PaymentSuccess() {
         navigate('/', { state: { openCommunity: pending.space || 'underground' } });
         return;
       }
+      // Book analysis — open literature sidebar (book restored from pending action in localStorage)
+      if (pending.type === 'book-analysis') {
+        navigate('/', { state: { openBooks: true } });
+        return;
+      }
       // Analysis — open music sidebar (track restored from pending action in localStorage)
       if (pending.type === 'analysis') {
         navigate('/', { state: { openMusic: true } });
