@@ -914,11 +914,64 @@ const PODCAST_PHRASES = {
   },
 };
 
+// ============================================================
+// PODCAST PHRASES - BOOK OVERRIDES (only the phrases that differ from music)
+// ============================================================
+
+const PODCAST_PHRASES_BOOK = {
+  en: {
+    fascinating: "This is a fascinating one.",
+    interesting: "Yes, this book has some really interesting philosophical dimensions worth exploring.",
+    historianHandoff: "{name}, tell us about the history behind this book.",
+    background: "Let's start with some background. What's the story behind this book?",
+    verdictHandoff: "{name}, what's your final verdict on this book?",
+  },
+  pt: {
+    fascinating: "Este é um livro fascinante.",
+    interesting: "Sim, este livro tem dimensões filosóficas realmente interessantes para explorar.",
+    historianHandoff: "{name}, conte-nos sobre a história por trás desse livro.",
+    background: "Vamos começar com um pouco de contexto. Qual é a história por trás deste livro?",
+    verdictHandoff: "{name}, qual é o seu veredito final sobre esse livro?",
+  },
+  es: {
+    fascinating: "Este es un libro fascinante.",
+    interesting: "Sí, este libro tiene dimensiones filosóficas realmente interesantes para explorar.",
+    historianHandoff: "{name}, cuéntanos sobre la historia detrás de este libro.",
+    background: "Empecemos con algo de contexto. ¿Cuál es la historia detrás de este libro?",
+    verdictHandoff: "{name}, ¿cuál es tu veredicto final sobre este libro?",
+  },
+  fr: {
+    fascinating: "C'est un livre fascinant.",
+    interesting: "Oui, ce livre a des dimensions philosophiques vraiment intéressantes à explorer.",
+    historianHandoff: "{name}, parlez-nous de l'histoire derrière ce livre.",
+    background: "Commençons par le contexte. Quelle est l'histoire derrière ce livre ?",
+    verdictHandoff: "{name}, quel est votre verdict final sur ce livre ?",
+  },
+  de: {
+    fascinating: "Das ist ein faszinierendes Buch.",
+    interesting: "Ja, dieses Buch hat wirklich interessante philosophische Dimensionen zu erkunden.",
+    historianHandoff: "{name}, erzählen Sie uns von der Geschichte hinter diesem Buch.",
+    background: "Beginnen wir mit dem Hintergrund. Was ist die Geschichte hinter diesem Buch?",
+    verdictHandoff: "{name}, wie lautet Ihr endgültiges Urteil über dieses Buch?",
+  },
+  it: {
+    fascinating: "Questo è un libro affascinante.",
+    interesting: "Sì, questo libro ha dimensioni filosofiche davvero interessanti da esplorare.",
+    historianHandoff: "{name}, raccontaci la storia dietro questo libro.",
+    background: "Iniziamo con un po' di contesto. Qual è la storia dietro questo libro?",
+    verdictHandoff: "{name}, qual è il tuo verdetto finale su questo libro?",
+  },
+};
+
 /**
- * Get phrases for a language, falling back to English
+ * Get phrases for a language, falling back to English.
+ * If isBook is true, overlay book-specific phrases on top of the base music phrases.
  */
-function getPhrases(lang) {
-  return PODCAST_PHRASES[lang] || PODCAST_PHRASES.en;
+function getPhrases(lang, isBook = false) {
+  const base = PODCAST_PHRASES[lang] || PODCAST_PHRASES.en;
+  if (!isBook) return base;
+  const bookOverrides = PODCAST_PHRASES_BOOK[lang] || PODCAST_PHRASES_BOOK.en;
+  return { ...base, ...bookOverrides };
 }
 
 // ============================================================
@@ -1305,6 +1358,7 @@ function extractSectionsFromResult(result) {
   return {
     song: result.song || result.song_name || result.title || "",
     artist: result.artist || result.author || "",
+    isBook: result.media_type === "literature" || (!result.song && !result.song_name && !!result.title && !!result.author),
     historicalContext: stripHtml(
       result.historical_context || result.context || "",
     ),
@@ -1497,14 +1551,16 @@ function buildCreativeChunkScript(
   names,
   phrases,
   langName,
+  isBook = false,
 ) {
   const hostVoice = VOICE_CONFIG.host.geminiVoice;
   const criticVoice = VOICE_CONFIG.critic.geminiVoice;
+  const criticRole = isBook ? "Enthusiastic male literary critic." : "Enthusiastic male music critic.";
 
   let script = `# PODCAST: Filosifai - Creative Process (${langName})
 Voices:
 - ${hostVoice} (${names.host}): Warm, engaging female host.
-- ${criticVoice} (${names.critic}): Enthusiastic male music critic.
+- ${criticVoice} (${names.critic}): ${criticRole}
 
 PACING: Natural conversational flow. Brief pauses between speakers.
 LANGUAGE: Speak ONLY in ${langName}.
@@ -1828,7 +1884,8 @@ export async function generateGeminiTTS(
   // STEP 4: BUILD 4 CHUNK SCRIPTS
   // ============================================================
   const step4Start = Date.now();
-  const p = getPhrases(targetLang);
+  const isBook = sections.isBook || false;
+  const p = getPhrases(targetLang, isBook);
   const langName = LANGUAGE_NAMES[targetLang] || "English";
   const usedReactionIndices = new Set();
 
@@ -1857,6 +1914,7 @@ export async function generateGeminiTTS(
     names,
     p,
     langName,
+    isBook,
   );
 
   const script3 = buildAnalysis1ChunkScript(
