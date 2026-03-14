@@ -222,6 +222,8 @@ export function LiteratureSidebar({
   };
 
   const handlePanelConfirm = async (chosenPhilosophers) => {
+    // Close picker immediately so the timer is visible
+    setShowPicker(false);
     setPanelLoading(true);
     setPanelError(null);
     setPanelElapsed(0);
@@ -240,11 +242,9 @@ export function LiteratureSidebar({
         lang: lang || i18n.language || 'en',
       });
       setPanelResult(result.panel);
-      setShowPicker(false);
       window.dispatchEvent(new CustomEvent('credits-changed'));
     } catch (err) {
       if (err.code === 'INSUFFICIENT_CREDITS') {
-        setShowPicker(false);
         paymentModal.open();
       } else {
         setPanelError(err.message);
@@ -534,6 +534,14 @@ export function LiteratureSidebar({
                 <span className="music-analysis__complete-icon">&#10003;</span>
                 {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel Complete' })}
               </div>
+              <div className="listen-section">
+                <ListenButton result={{
+                  panelId: panelResult.id,
+                  panelText: panelResult.analysis,
+                  panelTitle: `${panelResult.title} - ${panelResult.artist}`,
+                  lang: panelResult.lang,
+                }} />
+              </div>
               <div className="music-analysis__results-wrapper">
                 <div className="panel-analysis" dangerouslySetInnerHTML={{
                   __html: panelResult.analysis
@@ -543,12 +551,6 @@ export function LiteratureSidebar({
                     .replace(/\n/g, '<br/>')
                     .replace(/^/, '<p>')
                     .replace(/$/, '</p>')
-                }} />
-                <ListenButton result={{
-                  panelId: panelResult.id,
-                  panelText: panelResult.analysis,
-                  panelTitle: `${panelResult.title} - ${panelResult.artist}`,
-                  lang: panelResult.lang,
                 }} />
               </div>
               <button

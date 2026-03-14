@@ -2072,10 +2072,18 @@ export async function handleGeminiTTS(request, env, origin) {
 
       // Generate using the wrapup TTS pipeline (handles raw markdown)
       const titleForTTS = panelTitle || "Philosopher Panel";
-      const wavBuffer = await generateWrapupTTS(panelText, titleForTTS, env, targetLang);
+      let wavBuffer;
+      try {
+        console.log(`[TTS] Panel text length: ${panelText.length} chars, title: "${titleForTTS}"`);
+        wavBuffer = await generateWrapupTTS(panelText, titleForTTS, env, targetLang);
+      } catch (genErr) {
+        console.error(`[TTS] Panel TTS generation error:`, genErr.message, genErr.stack);
+        return jsonResponse({ error: `Panel TTS failed: ${genErr.message}` }, 500);
+      }
 
       if (!wavBuffer || wavBuffer.byteLength === 0) {
-        return jsonResponse({ error: "Panel TTS generation failed" }, 500);
+        console.error(`[TTS] Panel TTS returned empty buffer`);
+        return jsonResponse({ error: "Panel TTS generation returned empty audio" }, 500);
       }
 
       // Save to R2 in background
