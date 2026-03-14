@@ -398,9 +398,9 @@ BEGIN
     ),
     updated_at = NOW();
 
-  -- Create credits record
+  -- Create credits record (10 free credits for new users)
   INSERT INTO credits (user_id, purchased, free_remaining)
-  VALUES (NEW.id, 0, 2)
+  VALUES (NEW.id, 0, 10)
   ON CONFLICT (user_id) DO NOTHING;
 
   -- Log signup bonus
@@ -415,10 +415,10 @@ BEGIN
   ) VALUES (
     NEW.id,
     'signup_bonus',
-    2,
+    10,
     0, 0,
-    0, 2,
-    0, 2,
+    0, 10,
+    0, 10,
     'completed'
   );
 

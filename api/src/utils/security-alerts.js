@@ -369,7 +369,7 @@ export async function sendNewSubscriberEmail(env, userEmail) {
       `Email: ${userEmail}`,
       `Time (UTC): ${timestamp}`,
       '',
-      'This user just signed up and received 2 free credits.',
+      'This user just signed up and received 10 free credits.',
     ].join('\n');
 
     const html = `
@@ -378,7 +378,7 @@ export async function sendNewSubscriberEmail(env, userEmail) {
         <p style="font-size: 16px; margin-bottom: 10px;"><strong>Email:</strong> ${userEmail}</p>
         <p style="font-size: 14px; color: #666; margin-bottom: 10px;"><strong>Time (UTC):</strong> ${timestamp}</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 14px; color: #888;">This user just signed up and received 2 free credits.</p>
+        <p style="font-size: 14px; color: #888;">This user just signed up and received 10 free credits.</p>
       </div>
     `;
 
