@@ -109,6 +109,33 @@ export async function handlePhilosopherPanel(
       `[PhilosopherPanel] ${mediaType}: "${title}" by ${artist}. Panel: ${uniqueNames.join(", ")}`,
     );
 
+    // ── Build deterministic cache key (prevents double-charging for same request) ──
+    const sortedPhilosophers = [...uniqueNames].sort().join(",").toLowerCase();
+    const normalizedTitle = (title || "").trim().toLowerCase().substring(0, 100);
+    const normalizedArtist = (artist || "").trim().toLowerCase().substring(0, 50);
+    const cacheKey = `panelcache:${mediaType}:${normalizedTitle}:${normalizedArtist}:${sortedPhilosophers}:${lang}`;
+
+    // ── Check cache BEFORE reserving credits ──
+    const cachedRaw = await env.PHILOSIFY_KV.get(cacheKey);
+    if (cachedRaw) {
+      const cached = JSON.parse(cachedRaw);
+      console.log(`[PhilosopherPanel] Cache HIT for "${cacheKey}" → returning free`);
+      return jsonResponse(
+        {
+          success: true,
+          cached: true,
+          panel: cached,
+          credits: 0,
+          remaining: null,
+        },
+        200,
+        origin,
+        env,
+      );
+    }
+
+    console.log(`[PhilosopherPanel] Cache MISS for "${cacheKey}" → generating new analysis`);
+
     // ── Reserve 3 credits ──
     const reservations = [];
     for (let i = 0; i < PANEL_COST; i++) {
@@ -179,22 +206,25 @@ export async function handlePhilosopherPanel(
       // ── Generate a unique panel ID for TTS caching ──
       const panelId = crypto.randomUUID();
 
-      // ── Store panel text in KV for TTS retrieval (TTL: 7 days) ──
+      // ── Build panel data object ──
       const panelData = {
         id: panelId,
         mediaType,
         title,
         artist,
         philosophers: uniqueNames,
+        objectivist: uniqueNames[0],
         analysis: panelText,
         lang,
         createdAt: new Date().toISOString(),
       };
-      await env.PHILOSIFY_KV.put(
-        `panel:${panelId}`,
-        JSON.stringify(panelData),
-        { expirationTtl: 7 * 24 * 60 * 60 },
-      );
+
+      // ── Store in KV: both deterministic key (for dedup) and UUID key (for TTS) ──
+      const kvTtl = 7 * 24 * 60 * 60; // 7 days
+      await Promise.all([
+        env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(panelData), { expirationTtl: kvTtl }),
+        env.PHILOSIFY_KV.put(`panel:${panelId}`, JSON.stringify(panelData), { expirationTtl: kvTtl }),
+      ]);
 
       // ── Confirm all credits ──
       let lastConfirm;
@@ -210,16 +240,8 @@ export async function handlePhilosopherPanel(
       return jsonResponse(
         {
           success: true,
-          panel: {
-            id: panelId,
-            mediaType,
-            title,
-            artist,
-            philosophers: uniqueNames,
-            objectivist: uniqueNames[0],
-            analysis: panelText,
-            lang,
-          },
+          cached: false,
+          panel: panelData,
           credits: lastConfirm?.credits ?? null,
           remaining: lastConfirm?.newTotal ?? null,
         },
