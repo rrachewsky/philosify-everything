@@ -186,13 +186,13 @@ export function PaymentSuccess() {
         navigate('/', { state: { openCommunity: pending.space || 'underground' } });
         return;
       }
-      // Book analysis — open literature sidebar (book restored from pending action in localStorage)
-      if (pending.type === 'book-analysis') {
+      // Book analysis or book panel — open literature sidebar
+      if (pending.type === 'book-analysis' || (pending.type === 'panel-analysis' && pending.book)) {
         navigate('/', { state: { openBooks: true } });
         return;
       }
-      // Analysis — open music sidebar (track restored from pending action in localStorage)
-      if (pending.type === 'analysis') {
+      // Music analysis or music panel — open music sidebar
+      if (pending.type === 'analysis' || (pending.type === 'panel-analysis' && pending.track)) {
         navigate('/', { state: { openMusic: true } });
         return;
       }

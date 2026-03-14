@@ -12,6 +12,23 @@ import './styles/global.css';
 // Initialize Sentry (production only)
 initSentry();
 
+// CRITICAL: Capture beforeinstallprompt IMMEDIATELY at module level.
+// Chrome fires this event as soon as installability criteria are met, which can
+// happen before any async initialization (i18n, PWA) completes. If we wait for
+// initPWA() the event is lost and the install button never shows.
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.deferredPrompt = e;
+  logger.log('[PWA] Install prompt captured (early)');
+  window.dispatchEvent(new CustomEvent('pwa-install-available'));
+});
+
+window.addEventListener('appinstalled', () => {
+  logger.log('[PWA] App installed');
+  window.deferredPrompt = null;
+  window.dispatchEvent(new CustomEvent('pwa-installed'));
+});
+
 // Cleanup stale localStorage key from old crypto implementation (added 2026-03-07)
 // The old E2E encryption stored private keys in localStorage; current implementation uses IndexedDB.
 // This cleanup can be removed after 2026-05-01 when all active users have migrated.

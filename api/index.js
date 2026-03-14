@@ -22,6 +22,7 @@ import { safeEq } from "./src/payments/crypto.js";
 import { handleSearch, handleAnalyze, handleBookSearch, handleBookAnalyze } from "./src/handlers/index.js";
 import { handleBookAnalysisHistory } from "./src/handlers/book-analysis-history.js";
 import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js";
+import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
 import {
@@ -3259,6 +3260,13 @@ export default {
             console.error("[Security] Failed to release book analysis lock:", lockError);
           }
         }
+      }
+
+      // ============================================================
+      // PHILOSOPHER PANEL — Multi-philosopher analysis (music + literature)
+      // ============================================================
+      if (url.pathname === "/api/philosopher-panel" && request.method === "POST") {
+        return handlePhilosopherPanel(request, env, origin, ctx);
       }
 
       // 404

@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "Zainstaluj",
-    "installing": "Instalowanie..."
+    "installing": "Instalowanie...",
+    "installed": "Aplikacja zainstalowana pomyslnie!"
+  },
+  "philosopherPanel": {
+    "button": "Panel Filozofow",
+    "credit": "kredyt",
+    "credits": "kredyty",
+    "pickTitle": "Wybierz 2 Filozofow",
+    "autoNote": "Philosify rowniez przypisze Ayn Rand lub Leonarda Peikoffa do panelu",
+    "searchPlaceholder": "Szukaj po nazwie, epoce lub szkole...",
+    "selected": "wybranych",
+    "noMatch": "Nie znaleziono filozofow",
+    "confirm": "Rozpocznij Analize Panelu (3 kredyty)",
+    "analyzing": "Analizowanie...",
+    "generating": "Filozofowie analizuja...",
+    "complete": "Panel Filozofow Ukonczony"
   },
   "login": {
     "title": "Witaj Ponownie",

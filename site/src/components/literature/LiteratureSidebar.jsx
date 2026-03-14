@@ -5,9 +5,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResultsContainer } from '../results/ResultsContainer';
+import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
+import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
+import { requestPhilosopherPanel } from '../../services/api/philosopherPanel.js';
 import '../../styles/music-sidebar.css';
 
 export function LiteratureSidebar({
@@ -37,6 +40,12 @@ export function LiteratureSidebar({
   const [showManualEntry, setShowManualEntry] = useState(false);
   const [manualTitle, setManualTitle] = useState('');
   const [manualAuthor, setManualAuthor] = useState('');
+  const [showPicker, setShowPicker] = useState(false);
+  const [panelLoading, setPanelLoading] = useState(false);
+  const [panelResult, setPanelResult] = useState(null);
+  const [panelError, setPanelError] = useState(null);
+  const [panelElapsed, setPanelElapsed] = useState(0);
+  const panelTimerRef = useRef(null);
   const inputRef = useRef(null);
   const sidebarRef = useRef(null);
   const contentRef = useRef(null);
@@ -195,7 +204,59 @@ export function LiteratureSidebar({
     await analyze(lang || i18n.language || 'en');
   };
 
-  const canAnalyze = selectedBook && !isAnalyzing;
+  const canAnalyze = selectedBook && !isAnalyzing && !panelLoading;
+
+  const handleOpenPanel = () => {
+    if (!user) {
+      signupModal.open();
+      return;
+    }
+    if (!balance || balance.total === undefined || balance.total < 3) {
+      if (selectedBook) {
+        setPendingAction({ type: 'panel-analysis', book: selectedBook });
+      }
+      paymentModal.open();
+      return;
+    }
+    setShowPicker(true);
+  };
+
+  const handlePanelConfirm = async (chosenPhilosophers) => {
+    setPanelLoading(true);
+    setPanelError(null);
+    setPanelElapsed(0);
+    const startTime = Date.now();
+    panelTimerRef.current = setInterval(() => {
+      setPanelElapsed(Date.now() - startTime);
+    }, 100);
+    try {
+      const result = await requestPhilosopherPanel({
+        mediaType: 'literature',
+        title: selectedBook.title,
+        artist: selectedBook.author,
+        description: selectedBook.description || null,
+        categories: selectedBook.categories ? selectedBook.categories.join(', ') : null,
+        philosophers: chosenPhilosophers,
+        lang: lang || i18n.language || 'en',
+      });
+      setPanelResult(result.panel);
+      setShowPicker(false);
+      window.dispatchEvent(new CustomEvent('credits-changed'));
+    } catch (err) {
+      if (err.code === 'INSUFFICIENT_CREDITS') {
+        setShowPicker(false);
+        paymentModal.open();
+      } else {
+        setPanelError(err.message);
+      }
+    } finally {
+      setPanelLoading(false);
+      if (panelTimerRef.current) {
+        clearInterval(panelTimerRef.current);
+        panelTimerRef.current = null;
+      }
+    }
+  };
 
   // Show "no results" when search completed with 0 results
   const showNoResults = !selectedBook && !loading && hasSearched && results.length === 0 && query.length >= 2;
@@ -390,24 +451,35 @@ export function LiteratureSidebar({
             </div>
           )}
 
-          {selectedBook && !analysisResult && (
+          {selectedBook && !analysisResult && !panelResult && (
             <div className="music-analyze">
-              {!isAnalyzing ? (
-                <button
-                  className="music-analyze__button"
-                  onClick={handleAnalyze}
-                  disabled={!canAnalyze}
-                >
-                  {t('home.categories.books.analyzeButton', 'Analyze Book')}
-                </button>
-              ) : (
+              {!isAnalyzing && !panelLoading ? (
+                <div className="music-analyze__buttons-row">
+                  <button
+                    className="music-analyze__button"
+                    onClick={handleAnalyze}
+                    disabled={!canAnalyze}
+                  >
+                    {t('home.categories.books.analyzeButton', 'Analyze Book')}
+                    <span className="music-analyze__cost">1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}</span>
+                  </button>
+                  <button
+                    className="music-analyze__button music-analyze__button--panel"
+                    onClick={handleOpenPanel}
+                    disabled={!canAnalyze}
+                  >
+                    {t('philosopherPanel.button', { defaultValue: 'Philosopher Panel' })}
+                    <span className="music-analyze__cost">3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}</span>
+                  </button>
+                </div>
+              ) : isAnalyzing ? (
                 <button
                   className="music-analyze__button music-analyze__button--cancel"
                   onClick={cancelAnalysis}
                 >
                   {t('listen.cancel')}
                 </button>
-              )}
+              ) : null}
               {isAnalyzing && (
                 <div className="music-timer">
                   <div className="music-timer__bar">
@@ -419,7 +491,18 @@ export function LiteratureSidebar({
                   <div className="music-timer__label">{t('landing.analyzingContent')}</div>
                 </div>
               )}
-              {analysisError && <div className="music-error">{analysisError}</div>}
+              {panelLoading && (
+                <div className="music-timer">
+                  <div className="music-timer__bar">
+                    <div className="music-timer__fill"></div>
+                  </div>
+                  <div className="music-timer__time">
+                    <span>&#9201;</span> {formatTime(panelElapsed)}
+                  </div>
+                  <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
+                </div>
+              )}
+              {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
             </div>
           )}
 
@@ -444,7 +527,48 @@ export function LiteratureSidebar({
               </button>
             </div>
           )}
+
+          {panelResult && (
+            <div className="music-analysis">
+              <div className="music-analysis__header">
+                <span className="music-analysis__complete-icon">&#10003;</span>
+                {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel Complete' })}
+              </div>
+              <div className="music-analysis__results-wrapper">
+                <div className="panel-analysis" dangerouslySetInnerHTML={{
+                  __html: panelResult.analysis
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br/>')
+                    .replace(/^/, '<p>')
+                    .replace(/$/, '</p>')
+                }} />
+                <ListenButton result={{
+                  panelId: panelResult.id,
+                  panelText: panelResult.analysis,
+                  panelTitle: `${panelResult.title} - ${panelResult.artist}`,
+                  lang: panelResult.lang,
+                }} />
+              </div>
+              <button
+                className="music-analyze__button music-analyze__button--another"
+                onClick={() => { setPanelResult(null); clearBook(); }}
+              >
+                {t('home.categories.books.analyzeAnother', 'Analyze Another Book')}
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Philosopher Picker */}
+        {showPicker && (
+          <PhilosopherPicker
+            onConfirm={handlePanelConfirm}
+            onClose={() => setShowPicker(false)}
+            loading={panelLoading}
+          />
+        )}
 
         {/* Internal modals - only render wrapper when a modal is open */}
         {(loginModal.isOpen ||

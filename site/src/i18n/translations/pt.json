@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "Instalar App",
-    "installing": "Instalando..."
+    "installing": "Instalando...",
+    "installed": "App instalado com sucesso!"
+  },
+  "philosopherPanel": {
+    "button": "Painel de Filosofos",
+    "credit": "credito",
+    "credits": "creditos",
+    "pickTitle": "Escolha 2 Filosofos",
+    "autoNote": "O Philosify tambem designara Ayn Rand ou Leonard Peikoff para o painel",
+    "searchPlaceholder": "Buscar por nome, era ou escola...",
+    "selected": "selecionados",
+    "noMatch": "Nenhum filosofo encontrado",
+    "confirm": "Iniciar Analise do Painel (3 creditos)",
+    "analyzing": "Analisando...",
+    "generating": "Os filosofos estao analisando...",
+    "complete": "Painel de Filosofos Concluido"
   },
   "login": {
     "title": "Bem-vindo de Volta",

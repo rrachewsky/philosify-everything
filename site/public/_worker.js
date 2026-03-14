@@ -32,6 +32,7 @@ export default {
       pathname === '/favicon.ico' ||
       pathname === '/manifest.json' ||
       pathname === '/logo.png' ||
+      pathname === '/logo-everything.png' ||
       pathname === '/philosify-logo.svg' ||
       pathname === '/philosify-og.svg' ||
       pathname === '/browserconfig.xml'

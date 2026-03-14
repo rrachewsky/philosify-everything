@@ -24,40 +24,20 @@ export function parseQuery(query) {
   return { title: query, author: '' };
 }
 
-// Google Books search handler
-export async function handleGoogleBooksSearch(query, env) {
-  const { title, author } = parseQuery(query);
-
-  console.log(`[BookSearch] Query: "${query}" -> Title: "${title}", Author: "${author}"`);
-
-  const apiKey = await getSecret(env.GOOGLE_BOOKS_API_KEY);
-  if (!apiKey) {
-    throw new Error('Google Books API not configured');
-  }
-
-  // Build search query
-  let searchQuery;
-  if (title && author) {
-    searchQuery = `intitle:${title}+inauthor:${author}`;
-  } else if (author && !title) {
-    searchQuery = `inauthor:${author}`;
-  } else {
-    searchQuery = title;
-  }
-
+// Fetch volumes from Google Books API for a given query string
+async function fetchVolumes(searchQuery, apiKey) {
   const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(searchQuery)}&maxResults=40&key=${apiKey}`;
-
   const searchRes = await fetch(searchUrl);
-
   if (!searchRes.ok) {
     throw new Error(`Google Books search failed: ${searchRes.status}`);
   }
-
   const data = await searchRes.json();
-  const volumes = data.items || [];
+  return data.items || [];
+}
 
-  // Format options for frontend
-  const options = volumes.map(volume => {
+// Convert raw Google Books volumes to our option format
+function formatVolumes(volumes) {
+  return volumes.map(volume => {
     const info = volume.volumeInfo || {};
     const identifiers = info.industryIdentifiers || [];
     const isbn13 = identifiers.find(id => id.type === 'ISBN_13')?.identifier;
@@ -77,6 +57,41 @@ export async function handleGoogleBooksSearch(query, env) {
       language: info.language || null,
     };
   });
+}
+
+// Google Books search handler
+export async function handleGoogleBooksSearch(query, env) {
+  const { title, author } = parseQuery(query);
+
+  console.log(`[BookSearch] Query: "${query}" -> Title: "${title}", Author: "${author}"`);
+
+  const apiKey = await getSecret(env.GOOGLE_BOOKS_API_KEY);
+  if (!apiKey) {
+    throw new Error('Google Books API not configured');
+  }
+
+  let volumes = [];
+
+  // Strategy 1: Operator-based search (intitle/inauthor with SPACE separator)
+  if (title && author) {
+    const operatorQuery = `intitle:${title} inauthor:${author}`;
+    console.log(`[BookSearch] Strategy 1 (operators): "${operatorQuery}"`);
+    volumes = await fetchVolumes(operatorQuery, apiKey);
+  } else if (author && !title) {
+    const operatorQuery = `inauthor:${author}`;
+    console.log(`[BookSearch] Strategy 1 (author only): "${operatorQuery}"`);
+    volumes = await fetchVolumes(operatorQuery, apiKey);
+  }
+
+  // Strategy 2: Fallback to plain text search if operators returned nothing
+  if (volumes.length === 0) {
+    const plainQuery = title && author ? `${title} ${author}` : title || author || query;
+    console.log(`[BookSearch] Strategy 2 (plain text fallback): "${plainQuery}"`);
+    volumes = await fetchVolumes(plainQuery, apiKey);
+  }
+
+  // Format options for frontend
+  const options = formatVolumes(volumes);
 
   // Deduplicate: Remove duplicate title+author combinations
   const seen = new Set();

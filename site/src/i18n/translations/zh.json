@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "安装应用",
-    "installing": "安装中..."
+    "installing": "安装中...",
+    "installed": "应用安装成功！"
+  },
+  "philosopherPanel": {
+    "button": "哲学家面板",
+    "credit": "积分",
+    "credits": "积分",
+    "pickTitle": "选择2位哲学家",
+    "autoNote": "Philosify还将指派安·兰德或伦纳德·佩科夫加入面板",
+    "searchPlaceholder": "按姓名、时代或学派搜索...",
+    "selected": "已选择",
+    "noMatch": "未找到匹配的哲学家",
+    "confirm": "开始面板分析（3积分）",
+    "analyzing": "分析中...",
+    "generating": "哲学家们正在分析...",
+    "complete": "哲学家面板完成"
   },
   "login": {
     "title": "欢迎回来",

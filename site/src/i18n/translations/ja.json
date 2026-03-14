@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "アプリをインストール",
-    "installing": "インストール中..."
+    "installing": "インストール中...",
+    "installed": "アプリのインストールが完了しました！"
+  },
+  "philosopherPanel": {
+    "button": "哲学者パネル",
+    "credit": "クレジット",
+    "credits": "クレジット",
+    "pickTitle": "哲学者を2人選んでください",
+    "autoNote": "Philosifyはアイン・ランドまたはレナード・ピーコフもパネルに割り当てます",
+    "searchPlaceholder": "名前、時代、学派で検索...",
+    "selected": "選択済み",
+    "noMatch": "該当する哲学者が見つかりません",
+    "confirm": "パネル分析を開始（3クレジット）",
+    "analyzing": "分析中...",
+    "generating": "哲学者たちが分析しています...",
+    "complete": "哲学者パネル完了"
   },
   "login": {
     "title": "おかえりなさい",

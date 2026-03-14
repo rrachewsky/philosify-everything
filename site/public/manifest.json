@@ -1,7 +1,7 @@
 {
-  "name": "Philosify - Philosophical Music Analysis",
+  "name": "Philosify Everything",
   "short_name": "Philosify",
-  "description": "Analysis of music based in objective reality, logical reasoning, individualistic ethics, justice and liberty principles, own life and happiness as moral standards.",
+  "description": "Analysis of music, literature and more based in objective reality, logical reasoning, individualistic ethics, justice and liberty principles, own life and happiness as moral standards.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0020",
@@ -11,32 +11,32 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/logo-everything.jpg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "/logo.png",
+      "src": "/logo-everything.jpg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "/logo.png",
+      "src": "/logo-everything.jpg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "maskable"
     }
   ],
   "categories": ["music", "education", "philosophy"],
   "shortcuts": [
     {
-      "name": "Analyze Song",
+      "name": "Analyze",
       "short_name": "Analyze",
-      "description": "Search and analyze a song",
+      "description": "Search and analyze music or literature",
       "url": "/?action=analyze",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/logo-everything.jpg", "sizes": "192x192" }]
     }
   ]
 }

@@ -24,9 +24,20 @@ const audioCache = new Map();
 const activeRequests = new Map();
 
 /**
+ * Check if a result is a philosopher panel object
+ */
+function isPanelResult(result) {
+  return !!(result?.panelId && result?.panelText);
+}
+
+/**
  * Generate a cache key for a result + language combination
  */
 function getCacheKey(result, lang) {
+  // Philosopher panel results use a distinct key
+  if (isPanelResult(result)) {
+    return `panel:${result.panelId}|${lang}`;
+  }
   const song = result?.song || result?.song_name || result?.title || '';
   const artist = result?.artist || result?.author || '';
   return `${song}|${artist}|${lang}`;
@@ -119,18 +130,28 @@ export async function preloadTTS(result, lang) {
           abortController.abort();
         }, TTS_TIMEOUT_MS);
 
+        // Build request body — panel results use a different shape
+        const requestBody = isPanelResult(result)
+          ? {
+              panelId: result.panelId,
+              panelText: result.panelText,
+              panelTitle: result.panelTitle || '',
+              targetLang: lang,
+            }
+          : {
+              result,
+              targetLang: lang,
+              analysisLang: analysisLang,
+              analysisId: result?.id || null,
+            };
+
         const response = await fetch(`${API_URL}/api/tts`, {
           method: 'POST',
           credentials: 'include', // Send HttpOnly cookie for auth
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            result,
-            targetLang: lang,
-            analysisLang: analysisLang,
-            analysisId: result?.id || null, // Pass analysis ID for cache key
-          }),
+          body: JSON.stringify(requestBody),
           signal: abortController.signal,
         });
 

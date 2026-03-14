@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "Telepítés",
-    "installing": "Telepítés..."
+    "installing": "Telepítés...",
+    "installed": "Az alkalmazas sikeresen telepitve!"
+  },
+  "philosopherPanel": {
+    "button": "Filozofus Panel",
+    "credit": "kredit",
+    "credits": "kredit",
+    "pickTitle": "Valassz 2 Filozofust",
+    "autoNote": "A Philosify Ayn Rand-ot vagy Leonard Peikoff-ot is kijeloli a panelbe",
+    "searchPlaceholder": "Kereses nev, korszak vagy iskola szerint...",
+    "selected": "kivalasztva",
+    "noMatch": "Nincs talalat",
+    "confirm": "Panel Elemzes Inditasa (3 kredit)",
+    "analyzing": "Elemzes...",
+    "generating": "A filozofusok elemeznek...",
+    "complete": "Filozofus Panel Kesz"
   },
   "login": {
     "title": "Üdvözöljük Újra",

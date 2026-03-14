@@ -87,7 +87,7 @@ export function useLiteratureSidebar() {
   const openWithPendingAction = useCallback(() => {
     const pending = getPendingAction();
     logger.log('[LiteratureSidebar] openWithPendingAction - pending:', pending);
-    if (pending?.type === 'book-analysis' && pending.book) {
+    if (pending?.book && (pending?.type === 'book-analysis' || pending?.type === 'panel-analysis')) {
       logger.log('[LiteratureSidebar] Restoring book:', pending.book);
       bookSearch.selectBook(pending.book);
       setSelectedBook(pending.book);

@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "התקן אפליקציה",
-    "installing": "מתקין..."
+    "installing": "מתקין...",
+    "installed": "האפליקציה הותקנה בהצלחה!"
+  },
+  "philosopherPanel": {
+    "button": "פאנל פילוסופים",
+    "credit": "קרדיט",
+    "credits": "קרדיטים",
+    "pickTitle": "בחר 2 פילוסופים",
+    "autoNote": "Philosify גם יקצה את איין ראנד או לאונרד פייקוף לפאנל",
+    "searchPlaceholder": "חיפוש לפי שם, תקופה או אסכולה...",
+    "selected": "נבחרו",
+    "noMatch": "לא נמצאו פילוסופים תואמים",
+    "confirm": "התחל ניתוח פאנל (3 קרדיטים)",
+    "analyzing": "מנתח...",
+    "generating": "הפילוסופים מנתחים...",
+    "complete": "פאנל הפילוסופים הושלם"
   },
   "login": {
     "title": "ברוכים השבים",

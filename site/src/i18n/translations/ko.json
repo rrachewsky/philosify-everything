@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "앱 설치",
-    "installing": "설치 중..."
+    "installing": "설치 중...",
+    "installed": "앱이 성공적으로 설치되었습니다!"
+  },
+  "philosopherPanel": {
+    "button": "철학자 패널",
+    "credit": "크레딧",
+    "credits": "크레딧",
+    "pickTitle": "철학자 2명 선택",
+    "autoNote": "Philosify는 아인 랜드 또는 레너드 페이코프도 패널에 배정합니다",
+    "searchPlaceholder": "이름, 시대 또는 학파로 검색...",
+    "selected": "선택됨",
+    "noMatch": "일치하는 철학자가 없습니다",
+    "confirm": "패널 분석 시작 (3 크레딧)",
+    "analyzing": "분석 중...",
+    "generating": "철학자들이 분석하고 있습니다...",
+    "complete": "철학자 패널 완료"
   },
   "login": {
     "title": "다시 오신 것을 환영합니다",

@@ -4,10 +4,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResultsContainer } from '../results/ResultsContainer';
+import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
+import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import TopTenTicker from '../TopTenTicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
+import { requestPhilosopherPanel } from '../../services/api/philosopherPanel.js';
 import '../../styles/music-sidebar.css';
 
 export function MusicSidebar({
@@ -33,6 +36,12 @@ export function MusicSidebar({
 }) {
   const { t, i18n } = useTranslation();
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [showPicker, setShowPicker] = useState(false);
+  const [panelLoading, setPanelLoading] = useState(false);
+  const [panelResult, setPanelResult] = useState(null);
+  const [panelError, setPanelError] = useState(null);
+  const [panelElapsed, setPanelElapsed] = useState(0);
+  const panelTimerRef = useRef(null);
   const inputRef = useRef(null);
   const sidebarRef = useRef(null);
   const contentRef = useRef(null);
@@ -199,7 +208,59 @@ export function MusicSidebar({
   };
 
   // Button enabled when track selected and not analyzing (auth/balance checked in handleAnalyze)
-  const canAnalyze = selectedTrack && !isAnalyzing;
+  const canAnalyze = selectedTrack && !isAnalyzing && !panelLoading;
+
+  const handleOpenPanel = () => {
+    if (!user) {
+      signupModal.open();
+      return;
+    }
+    if (!balance || balance.total === undefined || balance.total < 3) {
+      if (selectedTrack) {
+        setPendingAction({ type: 'panel-analysis', track: selectedTrack });
+      }
+      paymentModal.open();
+      return;
+    }
+    setShowPicker(true);
+  };
+
+  const handlePanelConfirm = async (chosenPhilosophers) => {
+    setPanelLoading(true);
+    setPanelError(null);
+    setPanelElapsed(0);
+    const startTime = Date.now();
+    panelTimerRef.current = setInterval(() => {
+      setPanelElapsed(Date.now() - startTime);
+    }, 100);
+    try {
+      const result = await requestPhilosopherPanel({
+        mediaType: 'music',
+        title: selectedTrack.song || selectedTrack.title,
+        artist: selectedTrack.artist,
+        lyrics: selectedTrack.lyrics || null,
+        philosophers: chosenPhilosophers,
+        lang: lang || i18n.language || 'en',
+      });
+      setPanelResult(result.panel);
+      setShowPicker(false);
+      // Dispatch credits-changed so balance updates
+      window.dispatchEvent(new CustomEvent('credits-changed'));
+    } catch (err) {
+      if (err.code === 'INSUFFICIENT_CREDITS') {
+        setShowPicker(false);
+        paymentModal.open();
+      } else {
+        setPanelError(err.message);
+      }
+    } finally {
+      setPanelLoading(false);
+      if (panelTimerRef.current) {
+        clearInterval(panelTimerRef.current);
+        panelTimerRef.current = null;
+      }
+    }
+  };
 
   // Handle song selection from Top 50 ticker
   const handleTickerSelect = useCallback(
@@ -302,24 +363,35 @@ export function MusicSidebar({
             </div>
           )}
 
-          {selectedTrack && !analysisResult && (
+          {selectedTrack && !analysisResult && !panelResult && (
             <div className="music-analyze">
-              {!isAnalyzing ? (
-                <button
-                  className="music-analyze__button"
-                  onClick={handleAnalyze}
-                  disabled={!canAnalyze}
-                >
-                  {t('landing.scanMusic')}
-                </button>
-              ) : (
+              {!isAnalyzing && !panelLoading ? (
+                <div className="music-analyze__buttons-row">
+                  <button
+                    className="music-analyze__button"
+                    onClick={handleAnalyze}
+                    disabled={!canAnalyze}
+                  >
+                    {t('landing.scanMusic')}
+                    <span className="music-analyze__cost">1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}</span>
+                  </button>
+                  <button
+                    className="music-analyze__button music-analyze__button--panel"
+                    onClick={handleOpenPanel}
+                    disabled={!canAnalyze}
+                  >
+                    {t('philosopherPanel.button', { defaultValue: 'Philosopher Panel' })}
+                    <span className="music-analyze__cost">3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}</span>
+                  </button>
+                </div>
+              ) : isAnalyzing ? (
                 <button
                   className="music-analyze__button music-analyze__button--cancel"
                   onClick={cancelAnalysis}
                 >
                   {t('listen.cancel')}
                 </button>
-              )}
+              ) : null}
               {isAnalyzing && (
                 <div className="music-timer">
                   <div className="music-timer__bar">
@@ -331,7 +403,18 @@ export function MusicSidebar({
                   <div className="music-timer__label">{t('landing.analyzingContent')}</div>
                 </div>
               )}
-              {analysisError && <div className="music-error">{analysisError}</div>}
+              {panelLoading && (
+                <div className="music-timer">
+                  <div className="music-timer__bar">
+                    <div className="music-timer__fill"></div>
+                  </div>
+                  <div className="music-timer__time">
+                    <span>&#9201;</span> {formatTime(panelElapsed)}
+                  </div>
+                  <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
+                </div>
+              )}
+              {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
             </div>
           )}
 
@@ -352,7 +435,48 @@ export function MusicSidebar({
               </button>
             </div>
           )}
+
+          {panelResult && (
+            <div className="music-analysis">
+              <div className="music-analysis__header">
+                <span className="music-analysis__complete-icon">&#10003;</span>
+                {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel Complete' })}
+              </div>
+              <div className="music-analysis__results-wrapper">
+                <div className="panel-analysis" dangerouslySetInnerHTML={{
+                  __html: panelResult.analysis
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br/>')
+                    .replace(/^/, '<p>')
+                    .replace(/$/, '</p>')
+                }} />
+                <ListenButton result={{
+                  panelId: panelResult.id,
+                  panelText: panelResult.analysis,
+                  panelTitle: `${panelResult.title} - ${panelResult.artist}`,
+                  lang: panelResult.lang,
+                }} />
+              </div>
+              <button
+                className="music-analyze__button music-analyze__button--another"
+                onClick={() => { setPanelResult(null); clearTrack(); }}
+              >
+                {t('landing.analyzeAnother', 'Analyze Another Song')}
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Philosopher Picker */}
+        {showPicker && (
+          <PhilosopherPicker
+            onConfirm={handlePanelConfirm}
+            onClose={() => setShowPicker(false)}
+            loading={panelLoading}
+          />
+        )}
 
         {/* Internal modals - only render wrapper when a modal is open
             to avoid invisible overlay blocking touch scroll events */}

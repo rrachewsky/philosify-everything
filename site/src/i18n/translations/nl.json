@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "App installeren",
-    "installing": "Installeren..."
+    "installing": "Installeren...",
+    "installed": "App succesvol geinstalleerd!"
+  },
+  "philosopherPanel": {
+    "button": "Filosofenpanel",
+    "credit": "credit",
+    "credits": "credits",
+    "pickTitle": "Kies 2 Filosofen",
+    "autoNote": "Philosify wijst ook Ayn Rand of Leonard Peikoff toe aan het panel",
+    "searchPlaceholder": "Zoek op naam, tijdperk of school...",
+    "selected": "geselecteerd",
+    "noMatch": "Geen filosofen gevonden",
+    "confirm": "Start Panelanalyse (3 credits)",
+    "analyzing": "Analyseren...",
+    "generating": "De filosofen analyseren...",
+    "complete": "Filosofenpanel Voltooid"
   },
   "login": {
     "title": "Welkom Terug",

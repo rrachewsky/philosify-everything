@@ -178,7 +178,7 @@ export async function broadcastColloquiumEvent(
 // their established principles — never invent, distort, or
 // contradict their actual philosophy.
 
-const PHILOSOPHERS = [
+export const PHILOSOPHERS = [
   {
     name: "A. J. Ayer",
     era: "Modern (1910-1989)",

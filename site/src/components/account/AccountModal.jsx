@@ -482,7 +482,7 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
                 const debateThreadId = getDebateThreadId(item);
                 const isClickable = isAnalysis || !!debateThreadId;
                 const handler = isAnalysis
-                  ? () => onViewAnalysis?.(item.analysisId)
+                  ? () => onViewAnalysis?.(item.analysisId, item.mediaType)
                   : debateThreadId
                     ? () => onViewDebate?.(debateThreadId)
                     : null;

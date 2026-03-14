@@ -291,26 +291,10 @@ export async function initPWA() {
   // Register service worker
   await registerServiceWorker();
 
-  // Listen for beforeinstallprompt event (Chrome, Edge, etc.)
-  window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the mini-infobar from appearing
-    e.preventDefault();
-    // Stash the event so it can be triggered later
-    window.deferredPrompt = e;
-    logger.log('[PWA] Install prompt available');
-
-    // You can show a custom install button here
-    // For example, dispatch a custom event
-    window.dispatchEvent(new CustomEvent('pwa-install-available'));
-  });
-
-  // Listen for app installed event
-  window.addEventListener('appinstalled', () => {
-    logger.log('[PWA] App installed');
-    window.deferredPrompt = null;
-    // You can track this event for analytics
-    window.dispatchEvent(new CustomEvent('pwa-installed'));
-  });
+  // NOTE: beforeinstallprompt and appinstalled listeners are registered
+  // at module level in main.jsx to avoid race conditions. Chrome fires
+  // beforeinstallprompt as soon as installability criteria are met, which
+  // can happen before this async function runs.
 
   logger.log('[PWA] PWA initialized. Installed:', isInstalled());
 }

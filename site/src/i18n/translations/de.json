@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "App installieren",
-    "installing": "Installiere..."
+    "installing": "Installiere...",
+    "installed": "App erfolgreich installiert!"
+  },
+  "philosopherPanel": {
+    "button": "Philosophen-Panel",
+    "credit": "Credit",
+    "credits": "Credits",
+    "pickTitle": "Wahle 2 Philosophen",
+    "autoNote": "Philosify wird dem Panel auch Ayn Rand oder Leonard Peikoff zuweisen",
+    "searchPlaceholder": "Nach Name, Epoche oder Schule suchen...",
+    "selected": "ausgewahlt",
+    "noMatch": "Keine Philosophen gefunden",
+    "confirm": "Panel-Analyse starten (3 Credits)",
+    "analyzing": "Analysiere...",
+    "generating": "Die Philosophen analysieren...",
+    "complete": "Philosophen-Panel abgeschlossen"
   },
   "login": {
     "title": "Willkommen zurück",

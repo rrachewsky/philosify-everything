@@ -33,7 +33,8 @@ export function useAccountHistory(user) {
     setError(null);
 
     try {
-      // Fetch analyses
+      // Fetch music analyses
+      let musicAnalyses = [];
       try {
         const analysisRes = await fetch(`${config.apiUrl}/api/analysis-history`, {
           method: 'GET',
@@ -43,8 +44,9 @@ export function useAccountHistory(user) {
         if (analysisRes.ok) {
           const analysisData = await analysisRes.json();
           if (analysisData.success && Array.isArray(analysisData.items)) {
-            const normalizedAnalyses = analysisData.items.map((a) => ({
+            musicAnalyses = analysisData.items.map((a) => ({
               kind: 'analysis',
+              mediaType: 'music',
               id: a.analysisId,
               analysisId: a.analysisId,
               date: a.requestedAt ? new Date(a.requestedAt) : null,
@@ -52,18 +54,44 @@ export function useAccountHistory(user) {
               artist: a.artist,
               spotifyId: a.spotifyId,
             }));
-            setAnalysisItems(normalizedAnalyses);
-            logger.log('[useAccountHistory] Loaded', normalizedAnalyses.length, 'analysis items');
-          } else {
-            setAnalysisItems([]);
+            logger.log('[useAccountHistory] Loaded', musicAnalyses.length, 'music analysis items');
           }
-        } else {
-          setAnalysisItems([]);
         }
       } catch (e) {
-        logger.error('[useAccountHistory] Analysis history failed:', e);
-        setAnalysisItems([]);
+        logger.error('[useAccountHistory] Music analysis history failed:', e);
       }
+
+      // Fetch book analyses
+      let bookAnalyses = [];
+      try {
+        const bookRes = await fetch(`${config.apiUrl}/api/book-analysis-history`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (bookRes.ok) {
+          const bookData = await bookRes.json();
+          if (bookData.success && Array.isArray(bookData.items)) {
+            bookAnalyses = bookData.items.map((a) => ({
+              kind: 'analysis',
+              mediaType: 'literature',
+              id: a.analysisId,
+              analysisId: a.analysisId,
+              date: a.requestedAt ? new Date(a.requestedAt) : null,
+              title: a.title,
+              artist: a.author,
+              author: a.author,
+              googleBooksId: a.googleBooksId,
+              coverUrl: a.coverUrl,
+            }));
+            logger.log('[useAccountHistory] Loaded', bookAnalyses.length, 'book analysis items');
+          }
+        }
+      } catch (e) {
+        logger.error('[useAccountHistory] Book analysis history failed:', e);
+      }
+
+      setAnalysisItems([...musicAnalyses, ...bookAnalyses]);
 
       // Fetch credits
       let creditRows = [];
@@ -130,9 +158,10 @@ export function useAccountHistory(user) {
   const formatDescription = useCallback(
     (item) => {
       if (item.kind === 'analysis') {
+        const icon = item.mediaType === 'literature' ? '\u{1F4DA} ' : '\u{1F3B5} ';
         const title = item.title || t('account.notAvailable', { defaultValue: 'Not available' });
         const artist = item.artist ? ` - ${item.artist}` : '';
-        return `${title}${artist}`;
+        return `${icon}${title}${artist}`;
       }
 
       const count = Math.abs(item.amount || 0);

@@ -56,10 +56,15 @@ function HomePageWrapper({
   const paymentModal = useModal();
   const historyModal = useModal();
 
-  const handleViewCachedAnalysis = async (analysisId) => {
-    logger.log('[Router] Viewing cached analysis:', analysisId);
+  const handleViewCachedAnalysis = async (analysisId, mediaType) => {
+    logger.log('[Router] Viewing cached analysis:', analysisId, 'mediaType:', mediaType);
     try {
-      const response = await fetch(`${API_URL}/api/analysis/${analysisId}`, {
+      // Use the correct API endpoint based on media type
+      const endpoint = mediaType === 'literature'
+        ? `${API_URL}/api/book-analysis/${analysisId}`
+        : `${API_URL}/api/analysis/${analysisId}`;
+
+      const response = await fetch(endpoint, {
         method: 'GET',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -69,11 +74,18 @@ function HomePageWrapper({
         throw new Error(errorData.error || `HTTP ${response.status}`);
       }
       const data = await response.json();
-      const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
       historyModal.close();
-      // Open MusicSidebar with the result instead of navigating
-      if (onViewAnalysis) {
-        onViewAnalysis(formattedResult);
+
+      if (mediaType === 'literature') {
+        // Open LiteratureSidebar with the result
+        const formattedResult = { ...data, media_type: 'literature', cached: true };
+        literature.openWithResult(formattedResult);
+      } else {
+        // Open MusicSidebar with the result
+        const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
+        if (onViewAnalysis) {
+          onViewAnalysis(formattedResult);
+        }
       }
     } catch (err) {
       logger.error('[Router] Failed to load analysis:', err);

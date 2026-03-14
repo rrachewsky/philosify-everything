@@ -7,6 +7,7 @@ export function InstallButton() {
   const { t } = useTranslation();
   const [showButton, setShowButton] = useState(false);
   const [installing, setInstalling] = useState(false);
+  const [installed, setInstalled] = useState(false);
 
   useEffect(() => {
     // Check if already installed
@@ -29,7 +30,12 @@ export function InstallButton() {
 
     // Listen for app installed
     const handleInstalled = () => {
-      setShowButton(false);
+      setInstalled(true);
+      // Hide the success message after 4 seconds
+      setTimeout(() => {
+        setShowButton(false);
+        setInstalled(false);
+      }, 4000);
     };
 
     window.addEventListener('pwa-installed', handleInstalled);
@@ -44,18 +50,27 @@ export function InstallButton() {
     setInstalling(true);
     try {
       const accepted = await showInstallPrompt();
-      if (accepted) {
-        setShowButton(false);
+      if (!accepted) {
+        // User dismissed — keep button visible
+        setInstalling(false);
       }
+      // If accepted, the 'appinstalled' event will handle the success state
     } catch (error) {
       console.error('[InstallButton] Install failed:', error);
-    } finally {
       setInstalling(false);
     }
   };
 
   if (!showButton) {
     return null;
+  }
+
+  if (installed) {
+    return (
+      <div className="pwa-install-success">
+        {t('pwa.installed', { defaultValue: 'App installed successfully!' })}
+      </div>
+    );
   }
 
   return (

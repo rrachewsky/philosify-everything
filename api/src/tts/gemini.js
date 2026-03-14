@@ -1366,7 +1366,7 @@ function extractSectionsFromResult(result) {
     philosophicalAnalysis: stripHtml(
       result.philosophical_analysis || result.integrated_analysis || "",
     ),
-    finalScore: result.final_score || result.philosophical_note || null,
+    finalScore: result.philosophical_note || null,
     classification:
       result.classification_localized || result.classification || null,
     model: result.model || "unknown",
@@ -2043,7 +2043,62 @@ export async function handleGeminiTTS(request, env, origin) {
       return jsonResponse({ error: "Invalid JSON in request body" }, 400);
     }
 
-    const { result, targetLang = "en", analysisLang, analysisId } = body || {};
+    const { result, targetLang = "en", analysisLang, analysisId, panelId, panelText, panelTitle } = body || {};
+
+    // ============================================================
+    // PHILOSOPHER PANEL TTS (raw markdown → podcast audio)
+    // ============================================================
+    if (panelId && panelText) {
+      console.log(`[TTS] Philosopher Panel TTS for panel: ${panelId}, lang: ${targetLang}`);
+      const panelCacheKey = `tts_panel_${panelId}_${targetLang}.wav`;
+
+      // Check R2 cache
+      const cachedPanel = await getFromR2Cache(env, panelCacheKey);
+      if (cachedPanel) {
+        const audioUrl = getR2PublicUrl(env, panelCacheKey);
+        console.log(`[TTS] ✓ Panel audio cached (${cachedPanel.byteLength} bytes)`);
+        return new Response(cachedPanel, {
+          status: 200,
+          headers: {
+            "Content-Type": "audio/wav",
+            "Content-Length": cachedPanel.byteLength.toString(),
+            "Cache-Control": "public, max-age=31536000",
+            "X-TTS-Cache": "HIT",
+            "X-TTS-Audio-Url": audioUrl,
+            ...corsHeaders,
+          },
+        });
+      }
+
+      // Generate using the wrapup TTS pipeline (handles raw markdown)
+      const titleForTTS = panelTitle || "Philosopher Panel";
+      const wavBuffer = await generateWrapupTTS(panelText, titleForTTS, env, targetLang);
+
+      if (!wavBuffer || wavBuffer.byteLength === 0) {
+        return jsonResponse({ error: "Panel TTS generation failed" }, 500);
+      }
+
+      // Save to R2 in background
+      try {
+        await saveToR2Cache(env, panelCacheKey, wavBuffer, {
+          customMetadata: { type: "panel", panelId, language: targetLang },
+        });
+        console.log(`[TTS] Panel audio saved to R2: ${panelCacheKey}`);
+      } catch (r2Err) {
+        console.error(`[TTS] Panel R2 save failed: ${r2Err.message}`);
+      }
+
+      return new Response(wavBuffer, {
+        status: 200,
+        headers: {
+          "Content-Type": "audio/wav",
+          "Content-Length": wavBuffer.byteLength.toString(),
+          "Cache-Control": "public, max-age=31536000",
+          "X-TTS-Cache": "MISS",
+          ...corsHeaders,
+        },
+      });
+    }
 
     if (!result || typeof result !== "object") {
       return jsonResponse({ error: "Missing analysis result" }, 400);
@@ -2447,7 +2502,7 @@ const WRAPUP_PHRASES = {
 };
 
 /**
- * Clean verdict text for TTS: strip markdown, apply pronunciation lock.
+ * Clean verdict/panel text for TTS: strip markdown, apply pronunciation locks.
  */
 function cleanVerdictForTTS(wrapupText) {
   let clean = wrapupText
@@ -2459,8 +2514,28 @@ function cleanVerdictForTTS(wrapupText) {
 
   // ⚠️ PRONUNCIATION LOCK: Replace "Philosify" with phonetic "Filosifai"
   clean = clean.replace(/Philosify/gi, "Filosifai");
+
+  // ⚠️ PHILOSOPHER NAME PRONUNCIATION FIXES
+  // Peikoff: /ˈpiːkɒf/ (PEEK-off), NOT "PIE-koff"
+  clean = clean.replace(/\bPeikoff\b/g, "Peekoff");
+  // Ayn: /aɪn/ (rhymes with "mine"), NOT "ain" or "ann"
+  clean = clean.replace(/\bAyn\b/g, "Ine");
+
   return clean;
 }
+
+// ⚠️ PRONUNCIATION SYSTEM INSTRUCTION — passed to Gemini TTS for voice enforcement
+const PRONUNCIATION_SYSTEM_INSTRUCTION = `MANDATORY PRONUNCIATION RULES — NEVER VIOLATE:
+1. "Filosifai" = /fəˈlɒsɪfaɪ/ (phi-LOS-i-fy, rhymes with Spotify). NEVER say "Philosophy" or "Philosofy".
+2. "Peekoff" = /ˈpiːkɒf/ (PEEK-off). NEVER say "PIE-koff".
+3. "Ine Rand" = Ayn is /aɪn/ (rhymes with "mine"). NEVER say "Ann" or "Ain".
+4. "Nietzsche" = /ˈniːtʃə/ (NEE-chuh). NEVER say "NEET-chee" or "NITCH".
+5. "Hegel" = /ˈheɪɡəl/ (HAY-gul). NEVER say "HEE-gul".
+6. "Kierkegaard" = /ˈkɪərkəɡɑːrd/ (KEER-keh-gaard).
+7. "Schopenhauer" = /ˈʃoʊpənhaʊ.ər/ (SHOW-pen-how-er).
+8. "Foucault" = /fuːˈkoʊ/ (foo-KOH).
+9. "Descartes" = /deɪˈkɑːrt/ (day-KART).
+10. "Maimonides" = /maɪˈmɒnɪdiːz/ (my-MON-ih-deez).`;
 
 /**
  * Split text into chunks at sentence boundaries, each under maxChars.
@@ -2519,7 +2594,7 @@ function buildWrapupScriptChunks(wrapupText, threadTitle, langCode) {
 Voices:
 - Kore: Warm, engaging female host — introduces and closes.
 - Puck: Knowledgeable male analyst — delivers the philosophical analysis.
-PRONUNCIATION: The platform name is "Filosifai" (rhymes with Spotify). NEVER say "Philosophy" or "Philosofy".
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy" or "Philosofy". "Peekoff" = PEEK-off. "Ine Rand" = Ayn rhymes with "mine".
 PACING: Measured, thoughtful pace.
 LANGUAGE: Speak ONLY in ${langName}.
 
@@ -2618,6 +2693,7 @@ export async function generateWrapupTTS(
       voiceConfigs,
       "wrapup",
       apiKey,
+      PRONUNCIATION_SYSTEM_INSTRUCTION,
     );
     const wavBuffer = pcmToWav(pcmBuffer, 24000, 1, 16);
     console.log(
@@ -2637,6 +2713,7 @@ export async function generateWrapupTTS(
         voiceConfigs,
         `wrapup-${i + 1}/${scriptChunks.length}`,
         apiKey,
+        PRONUNCIATION_SYSTEM_INSTRUCTION,
       ),
     ),
   );

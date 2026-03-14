@@ -122,7 +122,22 @@
   },
   "pwa": {
     "install": "Uygulamayı Kur",
-    "installing": "Kuruluyor..."
+    "installing": "Kuruluyor...",
+    "installed": "Uygulama basariyla kuruldu!"
+  },
+  "philosopherPanel": {
+    "button": "Filozof Paneli",
+    "credit": "kredi",
+    "credits": "kredi",
+    "pickTitle": "2 Filozof Secin",
+    "autoNote": "Philosify ayrica panele Ayn Rand veya Leonard Peikoff'u atayacaktir",
+    "searchPlaceholder": "Ad, donem veya okula gore ara...",
+    "selected": "secildi",
+    "noMatch": "Aramanizla eslesen filozof bulunamadi",
+    "confirm": "Panel Analizini Baslat (3 kredi)",
+    "analyzing": "Analiz ediliyor...",
+    "generating": "Filozoflar analiz ediyor...",
+    "complete": "Filozof Paneli Tamamlandi"
   },
   "login": {
     "title": "Tekrar Hoş Geldiniz",

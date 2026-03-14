@@ -86,7 +86,7 @@ export function useMusicSidebar() {
   const openWithPendingAction = useCallback(() => {
     const pending = getPendingAction();
     logger.log('[MusicSidebar] openWithPendingAction - pending:', pending);
-    if (pending?.type === 'analysis' && pending.track) {
+    if (pending?.track && (pending?.type === 'analysis' || pending?.type === 'panel-analysis')) {
       logger.log('[MusicSidebar] Restoring track:', pending.track);
       spotify.selectTrack(pending.track);
       setSelectedTrack(pending.track);
