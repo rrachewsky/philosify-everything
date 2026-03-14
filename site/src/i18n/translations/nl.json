@@ -139,6 +139,12 @@
     "generating": "De filosofen analyseren...",
     "complete": "Filosofenpanel Voltooid"
   },
+  "news": {
+    "latestHeadlines": "Laatste Nieuws",
+    "noHeadlines": "Geen nieuws beschikbaar op dit moment",
+    "justNow": "Zojuist",
+    "analyzeAnother": "Ander Nieuwsbericht Analyseren"
+  },
   "login": {
     "title": "Welkom Terug",
     "subtitle": "Log in om muziek te blijven analyseren",

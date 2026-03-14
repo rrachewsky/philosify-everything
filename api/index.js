@@ -23,6 +23,8 @@ import { handleSearch, handleAnalyze, handleBookSearch, handleBookAnalyze } from
 import { handleBookAnalysisHistory } from "./src/handlers/book-analysis-history.js";
 import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js";
 import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
+import { handleNewsHeadlines } from "./src/handlers/news-headlines.js";
+import { refreshHeadlines } from "./src/news/index.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
 import {
@@ -3263,10 +3265,17 @@ export default {
       }
 
       // ============================================================
-      // PHILOSOPHER PANEL — Multi-philosopher analysis (music + literature)
+      // PHILOSOPHER PANEL — Multi-philosopher analysis (music + literature + news)
       // ============================================================
       if (url.pathname === "/api/philosopher-panel" && request.method === "POST") {
         return handlePhilosopherPanel(request, env, origin, ctx);
+      }
+
+      // ============================================================
+      // NEWS HEADLINES — Public, cached headlines from GNews API
+      // ============================================================
+      if (url.pathname === "/api/news/headlines" && request.method === "GET") {
+        return handleNewsHeadlines(request, env, origin, ctx);
       }
 
       // 404
@@ -3319,6 +3328,15 @@ export default {
       if (now.getUTCDay() === 0) {
         ctx.waitUntil(handleScheduledTop10(env));
       }
+    }
+
+    // News headlines refresh — only at the top of each hour to stay within API quota
+    if (now.getUTCMinutes() < 5) {
+      ctx.waitUntil(
+        refreshHeadlines(env).catch((err) =>
+          console.error("[Cron] News headlines refresh failed:", err.message),
+        ),
+      );
     }
 
     // User-proposed colloquium: staggered philosopher replies (every 5 min)

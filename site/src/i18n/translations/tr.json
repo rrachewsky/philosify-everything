@@ -139,6 +139,12 @@
     "generating": "Filozoflar analiz ediyor...",
     "complete": "Filozof Paneli Tamamlandi"
   },
+  "news": {
+    "latestHeadlines": "Son Haberler",
+    "noHeadlines": "Su anda haber bulunmuyor",
+    "justNow": "Az once",
+    "analyzeAnother": "Baska Bir Haberi Analiz Et"
+  },
   "login": {
     "title": "Tekrar Hoş Geldiniz",
     "subtitle": "Müzik analiz etmeye devam etmek için giriş yapın",

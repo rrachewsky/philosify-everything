@@ -139,6 +139,12 @@
     "generating": "A filozofusok elemeznek...",
     "complete": "Filozofus Panel Kesz"
   },
+  "news": {
+    "latestHeadlines": "Legfrissebb Hirek",
+    "noHeadlines": "Jelenleg nincs elerheto hir",
+    "justNow": "Epp most",
+    "analyzeAnother": "Masik Hir Elemzese"
+  },
   "login": {
     "title": "Üdvözöljük Újra",
     "subtitle": "Jelentkezzen be a zenelemzés folytatásához",

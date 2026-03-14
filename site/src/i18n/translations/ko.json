@@ -139,6 +139,12 @@
     "generating": "철학자들이 분석하고 있습니다...",
     "complete": "철학자 패널 완료"
   },
+  "news": {
+    "latestHeadlines": "최신 뉴스",
+    "noHeadlines": "현재 뉴스가 없습니다",
+    "justNow": "방금",
+    "analyzeAnother": "다른 뉴스 분석"
+  },
   "login": {
     "title": "다시 오신 것을 환영합니다",
     "subtitle": "음악 분석을 계속하려면 로그인하세요",

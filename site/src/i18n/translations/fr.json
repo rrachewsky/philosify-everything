@@ -139,6 +139,12 @@
     "generating": "Les philosophes analysent...",
     "complete": "Panel de Philosophes Termine"
   },
+  "news": {
+    "latestHeadlines": "Dernieres Actualites",
+    "noHeadlines": "Aucune actualite disponible pour le moment",
+    "justNow": "A l'instant",
+    "analyzeAnother": "Analyser une Autre Actualite"
+  },
   "login": {
     "title": "Bienvenue",
     "subtitle": "Connectez-vous pour continuer à analyser de la musique",

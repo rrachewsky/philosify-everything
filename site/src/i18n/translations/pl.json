@@ -139,6 +139,12 @@
     "generating": "Filozofowie analizuja...",
     "complete": "Panel Filozofow Ukonczony"
   },
+  "news": {
+    "latestHeadlines": "Najnowsze Wiadomosci",
+    "noHeadlines": "Brak wiadomosci w tej chwili",
+    "justNow": "Wlasnie teraz",
+    "analyzeAnother": "Analizuj Kolejna Wiadomosc"
+  },
   "login": {
     "title": "Witaj Ponownie",
     "subtitle": "Zaloguj się, aby kontynuować analizowanie muzyki",

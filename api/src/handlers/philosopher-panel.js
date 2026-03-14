@@ -1,7 +1,7 @@
 // ============================================================
 // HANDLER - PHILOSOPHER PANEL ANALYSIS
 // ============================================================
-// Multi-philosopher analysis of a song or book.
+// Multi-philosopher analysis of a song, book, or news event.
 // 3 philosophers: 1 Objectivist (auto) + 2 user-chosen.
 // Cost: 3 credits. Output: markdown text (not JSON scorecard).
 // ============================================================
@@ -11,6 +11,7 @@ import { getUserFromAuth } from "../auth/index.js";
 import { getDebateAestheticGuide } from "../guides/index.js";
 import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
 import { buildPhilosopherPanelPrompt } from "../ai/prompts/philosopher-panel-template.js";
+import { buildNewsPanelPrompt } from "../ai/prompts/news-panel-template.js";
 import { callGrok } from "../ai/models/index.js";
 import { PHILOSOPHERS } from "../handlers/colloquium.js";
 
@@ -60,11 +61,14 @@ export async function handlePhilosopherPanel(
     const userId = user.userId;
 
     // ── Validate inputs ──
-    if (!title || !artist) {
-      return jsonResponse({ error: "Title and artist/author are required" }, 400, origin, env);
+    if (!title) {
+      return jsonResponse({ error: "Title is required" }, 400, origin, env);
     }
-    if (!mediaType || !["music", "literature"].includes(mediaType)) {
-      return jsonResponse({ error: "mediaType must be 'music' or 'literature'" }, 400, origin, env);
+    if (mediaType !== "news" && !artist) {
+      return jsonResponse({ error: "Artist/author is required" }, 400, origin, env);
+    }
+    if (!mediaType || !["music", "literature", "news"].includes(mediaType)) {
+      return jsonResponse({ error: "mediaType must be 'music', 'literature', or 'news'" }, 400, origin, env);
     }
     if (!Array.isArray(userPicks) || userPicks.length !== 2) {
       return jsonResponse({ error: "Exactly 2 philosophers must be chosen" }, 400, origin, env);
@@ -136,23 +140,33 @@ export async function handlePhilosopherPanel(
       // ── Load guide ──
       const guide = await getDebateAestheticGuide(env);
 
-      // ── Build prompt ──
-      const prompt = buildPhilosopherPanelPrompt({
-        mediaType,
-        title,
-        artist,
-        lyrics: lyrics || null,
-        description: description || null,
-        categories: categories || null,
-        philosophers: philosopherProfiles,
-        guide,
-        lang,
-      });
+      // ── Build prompt (news uses a different prompt template) ──
+      const prompt = mediaType === "news"
+        ? buildNewsPanelPrompt({
+            title,
+            description: description || null,
+            source: body.source || null,
+            publishedAt: body.publishedAt || null,
+            philosophers: philosopherProfiles,
+            guide,
+            lang,
+          })
+        : buildPhilosopherPanelPrompt({
+            mediaType,
+            title,
+            artist,
+            lyrics: lyrics || null,
+            description: description || null,
+            categories: categories || null,
+            philosophers: philosopherProfiles,
+            guide,
+            lang,
+          });
 
       // ── Call AI (Grok) — generate in user's language ──
-      console.log(`[PhilosopherPanel] Calling Grok for panel analysis in "${lang}"...`);
+      console.log(`[PhilosopherPanel] Calling Grok for ${mediaType} panel analysis in "${lang}"...`);
       const panelText = await callGrok(prompt, lang, env, {
-        maxTokens: 4000,
+        maxTokens: mediaType === "news" ? 5000 : 4000,
         temperature: 0.7,
       });
 

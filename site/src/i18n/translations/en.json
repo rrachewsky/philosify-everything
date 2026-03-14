@@ -139,6 +139,12 @@
     "generating": "Philosophers are analyzing...",
     "complete": "Philosopher Panel Complete"
   },
+  "news": {
+    "latestHeadlines": "Latest Headlines",
+    "noHeadlines": "No headlines available at the moment",
+    "justNow": "Just now",
+    "analyzeAnother": "Analyze Another Story"
+  },
   "login": {
     "title": "Welcome Back",
     "subtitle": "Sign in to continue analyzing music",

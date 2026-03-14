@@ -227,3 +227,9 @@ secret_name = "SUPABASE_AUTH_HOOK_SECRET"
 binding = "GOOGLE_BOOKS_API_KEY"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "GOOGLE_BOOKS_API_KEY"
+
+# GNEWS_API_KEY - GNews API for News headlines
+[[env.production.secrets_store_secrets]]
+binding = "GNEWS_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "GNEWS_API_KEY"

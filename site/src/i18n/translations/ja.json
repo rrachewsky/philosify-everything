@@ -139,6 +139,12 @@
     "generating": "哲学者たちが分析しています...",
     "complete": "哲学者パネル完了"
   },
+  "news": {
+    "latestHeadlines": "最新ニュース",
+    "noHeadlines": "現在ニュースはありません",
+    "justNow": "たった今",
+    "analyzeAnother": "別のニュースを分析"
+  },
   "login": {
     "title": "おかえりなさい",
     "subtitle": "音楽分析を続けるためにログインしてください",

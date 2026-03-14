@@ -139,6 +139,12 @@
     "generating": "Die Philosophen analysieren...",
     "complete": "Philosophen-Panel abgeschlossen"
   },
+  "news": {
+    "latestHeadlines": "Aktuelle Schlagzeilen",
+    "noHeadlines": "Derzeit keine Nachrichten verfugbar",
+    "justNow": "Gerade eben",
+    "analyzeAnother": "Weitere Nachricht analysieren"
+  },
   "login": {
     "title": "Willkommen zurück",
     "subtitle": "Melden Sie sich an, um Musik weiter zu analysieren",

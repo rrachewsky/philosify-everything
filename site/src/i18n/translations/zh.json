@@ -139,6 +139,12 @@
     "generating": "哲学家们正在分析...",
     "complete": "哲学家面板完成"
   },
+  "news": {
+    "latestHeadlines": "最新新闻",
+    "noHeadlines": "暂无新闻",
+    "justNow": "刚刚",
+    "analyzeAnother": "分析另一条新闻"
+  },
   "login": {
     "title": "欢迎回来",
     "subtitle": "登录以继续分析音乐",

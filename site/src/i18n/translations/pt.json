@@ -139,6 +139,12 @@
     "generating": "Os filosofos estao analisando...",
     "complete": "Painel de Filosofos Concluido"
   },
+  "news": {
+    "latestHeadlines": "Ultimas Noticias",
+    "noHeadlines": "Nenhuma noticia disponivel no momento",
+    "justNow": "Agora mesmo",
+    "analyzeAnother": "Analisar Outra Noticia"
+  },
   "login": {
     "title": "Bem-vindo de Volta",
     "subtitle": "Entre para continuar analisando músicas",
