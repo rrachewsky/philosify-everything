@@ -11,12 +11,13 @@ import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import '../../styles/music-sidebar.css';
 
-// Auto-scrolling vertical news ticker
+// Auto-scrolling vertical news ticker with manual scroll support
 function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
   const tickerRef = useRef(null);
   const animRef = useRef(null);
-  const pausedRef = useRef(false);
-  const scrollPos = useRef(0);
+  const autoScrollRef = useRef(true);
+  const resumeTimerRef = useRef(null);
+  const userScrollingRef = useRef(false);
 
   // Merge: highlights first (marked), then headlines
   const allItems = [
@@ -32,14 +33,16 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
     const speed = 0.4; // pixels per frame (~24px/sec at 60fps)
 
     const scroll = () => {
-      if (!pausedRef.current) {
-        scrollPos.current += speed;
-        // Reset when first copy fully scrolled out
-        const halfHeight = ticker.scrollHeight / 2;
-        if (scrollPos.current >= halfHeight) {
-          scrollPos.current -= halfHeight;
+      if (autoScrollRef.current && !userScrollingRef.current) {
+        const maxScroll = ticker.scrollHeight - ticker.clientHeight;
+        if (maxScroll > 0) {
+          ticker.scrollTop += speed;
+          // Loop: when near the bottom of the duplicate set, jump back
+          const halfHeight = ticker.scrollHeight / 2;
+          if (ticker.scrollTop >= halfHeight) {
+            ticker.scrollTop -= halfHeight;
+          }
         }
-        ticker.scrollTop = scrollPos.current;
       }
       animRef.current = requestAnimationFrame(scroll);
     };
@@ -50,8 +53,26 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
     };
   }, [allItems.length]);
 
-  const handlePause = () => { pausedRef.current = true; };
-  const handleResume = () => { pausedRef.current = false; };
+  // Detect manual scroll — pause auto-scroll, resume after 5s idle
+  const handleUserScroll = useCallback(() => {
+    if (!userScrollingRef.current) {
+      userScrollingRef.current = true;
+      autoScrollRef.current = false;
+    }
+    // Reset resume timer on each scroll event
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      userScrollingRef.current = false;
+      autoScrollRef.current = true;
+    }, 5000); // Resume auto-scroll after 5s of no manual scroll
+  }, []);
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    };
+  }, []);
 
   const renderItem = (article, i, prefix) => (
     <button
@@ -77,15 +98,12 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
     <div
       className="news-ticker"
       ref={tickerRef}
-      onMouseEnter={handlePause}
-      onMouseLeave={handleResume}
-      onTouchStart={handlePause}
-      onTouchEnd={handleResume}
+      onScroll={handleUserScroll}
+      onWheel={handleUserScroll}
+      onTouchMove={handleUserScroll}
     >
       <div className="news-ticker__track">
-        {/* Original items */}
         {allItems.map((a, i) => renderItem(a, i, 'a'))}
-        {/* Duplicate for seamless loop */}
         {allItems.map((a, i) => renderItem(a, i, 'b'))}
       </div>
     </div>

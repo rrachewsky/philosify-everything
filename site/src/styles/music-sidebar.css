@@ -1228,23 +1228,35 @@
   margin-right: 2px;
 }
 
-/* Auto-scrolling ticker */
+/* Auto-scrolling ticker (allows manual scroll too) */
 .news-ticker {
   height: calc(100vh - 140px);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
+  scroll-behavior: auto;
+  -webkit-overflow-scrolling: touch;
   mask-image: linear-gradient(to bottom,
     transparent 0%,
-    black 4%,
-    black 96%,
+    black 3%,
+    black 97%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(to bottom,
     transparent 0%,
-    black 4%,
-    black 96%,
+    black 3%,
+    black 97%,
     transparent 100%
   );
+}
+
+/* Hide scrollbar but keep scrollability */
+.news-ticker::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+.news-ticker {
+  scrollbar-width: none;
 }
 
 .news-ticker__track {

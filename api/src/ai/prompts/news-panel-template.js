@@ -64,14 +64,29 @@ ${philosopherPanelList}
 
 IMPORTANT: Use your own knowledge of this news event and its broader context. The headline and summary above are just the starting point — you should draw on the full depth of the situation, its background, the actors involved, and the relevant history.
 
+═══ FACTUAL ACCURACY RULES (MANDATORY — NEVER VIOLATE) ═══
+1. ONLY state facts you are CERTAIN about. If you are not sure of a date, number, name, or detail, DO NOT include it.
+2. NEVER invent or guess dates, statistics, vote counts, casualty numbers, economic figures, or any quantitative data.
+3. NEVER fabricate quotes, statements, or positions that you cannot verify.
+4. If the event is very recent, acknowledge the limits of your knowledge: "Based on available information as of [your knowledge cutoff]..."
+5. Clearly DISTINGUISH between:
+   - VERIFIED FACTS (what is known to have happened)
+   - CONTEXT (established historical/political background)
+   - ANALYSIS (the philosophers' interpretation and predictions)
+6. When citing historical precedents, use REAL events with correct dates. If unsure of the exact date, use approximate language ("in the early 2000s" instead of inventing "in 2003").
+7. It is BETTER to say "the details are still emerging" than to fabricate specifics.
+VIOLATION: Any invented fact, wrong date, or fabricated detail = IMMEDIATE REJECTION.
+═══ END ACCURACY RULES ═══
+
 Instructions:
 
 SECTION 1 — **THE FACTS**
-Establish the objective facts of this event:
+Establish ONLY the objective, verified facts of this event:
 - What happened? Who are the key actors and what decisions were made?
 - What is the immediate context?
-- Cross-reference your knowledge — what do you know about this situation beyond the headline?
-Be factual, precise, and comprehensive. This is the shared foundation all philosophers will build on.
+- State ONLY what you know with HIGH CONFIDENCE. Do NOT invent details.
+- If your knowledge of this specific event is limited, say so and focus on the verified context.
+Be factual, precise, and honest about the limits of your knowledge.
 
 SECTION 2 — **RETROSPECTIVE ANALYSIS: CAUSES** (Philosophers cooperate)
 Each philosopher contributes their unique framework to identify the CAUSES:

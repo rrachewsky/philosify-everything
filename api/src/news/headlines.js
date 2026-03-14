@@ -144,8 +144,9 @@ export async function fetchHighlights(env, lang = "en") {
 
   console.log(`[News] Fetching highlights in "${gnewsLang}"...`);
 
-  // Single search with combined keywords to save API quota (1 call instead of 4)
-  const combinedQuery = "innovation OR breakthrough OR freedom OR achievement OR discovery";
+  // Focused search for positive impact stories: innovation, freedom victories,
+  // business success, scientific breakthroughs, human achievement
+  const combinedQuery = "innovation breakthrough OR startup success OR freedom victory democracy OR scientific discovery cure OR space exploration achievement";
   const articles = await fetchSearchArticles(apiKey, combinedQuery, gnewsLang, 10);
 
   const unique = deduplicateArticles(articles);
