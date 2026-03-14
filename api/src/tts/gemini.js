@@ -2696,12 +2696,13 @@ export async function generateWrapupTTS(
 
   if (scriptChunks.length === 1) {
     // Single chunk — same as before
+    // NOTE: Do NOT pass systemInstruction — gemini-2.5-flash-preview-tts does not support it.
+    // Pronunciation rules are embedded in the script header text instead.
     const pcmBuffer = await generateChunkTTS(
       scriptChunks[0],
       voiceConfigs,
       "wrapup",
       apiKey,
-      PRONUNCIATION_SYSTEM_INSTRUCTION,
     );
     const wavBuffer = pcmToWav(pcmBuffer, 24000, 1, 16);
     console.log(
@@ -2721,7 +2722,6 @@ export async function generateWrapupTTS(
         voiceConfigs,
         `wrapup-${i + 1}/${scriptChunks.length}`,
         apiKey,
-        PRONUNCIATION_SYSTEM_INSTRUCTION,
       ),
     ),
   );

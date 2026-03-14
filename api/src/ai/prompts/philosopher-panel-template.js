@@ -142,10 +142,18 @@ RULES:
 - NEVER name or label your own analytical framework. Just reason and judge.
 - Keep the entire analysis between 1200-1800 words.
 - Be direct, educational, and philosophically rigorous.
-- Write the ENTIRE analysis in ${lang === 'en' ? 'English' : `the language with ISO code "${lang}". All section headers, analysis text, and verdict MUST be in this language. Philosopher names stay in their original form.`}
 - CRITICAL: Do NOT reference internal terms like "Source of Truth", "Philosophical Guide", or any internal system labels.
 - Do NOT include word count, character count, or any meta-commentary about the response itself.
 - Use markdown formatting: **bold** for philosopher names/section headers, *italics* for schools/emphasis.
+
+${lang === 'en' ? '' : `═══ MANDATORY LANGUAGE RULE ═══
+Write the ENTIRE response in the language with ISO code "${lang}".
+This is NON-NEGOTIABLE. Every single word of your analysis — section headers, philosophical terms, descriptions, arguments, verdict, and conclusions — MUST be written in "${lang}".
+DO NOT use ANY English words, terms, or expressions. Translate ALL philosophical terminology into "${lang}".
+For example: "achievement-oriented" must be translated, "sense of life" must be translated, "benevolent universe" must be translated.
+The ONLY exceptions are: philosopher proper names (e.g., "Ayn Rand", "Nietzsche") and the platform name "Philosify".
+VIOLATION: If even a single English phrase appears in a non-English response, the analysis will be REJECTED.
+═══ END LANGUAGE RULE ═══`}
 
 IMPORTANT: This is a text response, NOT JSON. Write naturally with markdown formatting.`;
 
