@@ -2,11 +2,14 @@
 // Handles headline fetching, article selection, and panel analysis
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { logger } from '../utils';
 import { fetchNewsHeadlines } from '../services/api/newsApi.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 
 export function useNewsSidebar() {
+  const { i18n } = useTranslation();
+  const userLang = i18n.language || 'en';
   const [isOpen, setIsOpen] = useState(false);
   const [headlines, setHeadlines] = useState([]);
   const [highlights, setHighlights] = useState([]);
@@ -24,17 +27,17 @@ export function useNewsSidebar() {
     setHeadlinesLoading(true);
     setHeadlinesError(null);
     try {
-      const data = await fetchNewsHeadlines();
+      const data = await fetchNewsHeadlines(userLang);
       setHeadlines(data.articles || []);
       setHighlights(data.highlights || []);
-      logger.log('[NewsSidebar] Loaded', (data.articles || []).length, 'headlines +', (data.highlights || []).length, 'highlights');
+      logger.log('[NewsSidebar] Loaded', (data.articles || []).length, 'headlines +', (data.highlights || []).length, 'highlights', 'in', userLang);
     } catch (err) {
       logger.error('[NewsSidebar] Failed to load headlines:', err.message);
       setHeadlinesError(err.message);
     } finally {
       setHeadlinesLoading(false);
     }
-  }, []);
+  }, [userLang]);
 
   // Open sidebar and load headlines
   const open = useCallback(() => {

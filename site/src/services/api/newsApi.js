@@ -2,10 +2,11 @@
 import { config } from '@/config';
 
 /**
- * Fetch cached news headlines
+ * Fetch cached news headlines in the user's language
+ * @param {string} [lang='en'] - Language code
  */
-export async function fetchNewsHeadlines() {
-  const response = await fetch(`${config.apiUrl}/api/news/headlines`, {
+export async function fetchNewsHeadlines(lang = 'en') {
+  const response = await fetch(`${config.apiUrl}/api/news/headlines?lang=${lang}`, {
     method: 'GET',
   });
 

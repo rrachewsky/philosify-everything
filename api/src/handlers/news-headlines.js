@@ -1,7 +1,8 @@
 // ============================================================
 // HANDLER - NEWS HEADLINES
 // ============================================================
-// GET /api/news/headlines — Returns cached headlines (public, no auth).
+// GET /api/news/headlines?lang=pt — Returns cached headlines in user's language.
+// Public endpoint, no auth required.
 // ============================================================
 
 import { jsonResponse } from "../utils/index.js";
@@ -9,14 +10,20 @@ import { getCachedHeadlines } from "../news/index.js";
 
 export async function handleNewsHeadlines(request, env, origin, ctx = null) {
   try {
-    const cached = await getCachedHeadlines(env, ctx);
+    // Get language from query param (default: en)
+    const url = new URL(request.url);
+    const lang = url.searchParams.get("lang") || "en";
+
+    const cached = await getCachedHeadlines(env, ctx, lang);
 
     return jsonResponse(
       {
         success: true,
         articles: cached.articles || [],
+        highlights: cached.highlights || [],
         count: cached.count || 0,
         fetchedAt: cached.fetchedAt,
+        lang: cached.lang || lang,
       },
       200,
       origin,

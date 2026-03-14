@@ -98,18 +98,24 @@ function deduplicateArticles(articles) {
 
 /**
  * Fetch headlines across multiple topics, deduplicate, and return.
+ * @param {Object} env
+ * @param {string} [lang='en'] - Language code for headlines (GNews supports: en, pt, es, fr, de, it, nl, ru, zh, ar, he, ja, ko, tr, pl, hu)
  */
-export async function fetchAllHeadlines(env) {
+export async function fetchAllHeadlines(env, lang = "en") {
   const apiKey = await getSecret(env.GNEWS_API_KEY);
   if (!apiKey) {
     throw new Error("GNEWS_API_KEY not configured");
   }
 
-  console.log("[News] Fetching headlines from GNews API...");
+  // GNews supported languages (subset — map unsupported to English)
+  const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu"];
+  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
+
+  console.log(`[News] Fetching headlines in "${gnewsLang}" from GNews API...`);
 
   // Fetch 3 topics in parallel (3 API calls)
   const results = await Promise.all(
-    TOPICS.map((topic) => fetchTopicHeadlines(apiKey, topic, "en", 10))
+    TOPICS.map((topic) => fetchTopicHeadlines(apiKey, topic, gnewsLang, 10))
   );
 
   const allArticles = deduplicateArticles(results.flat());
@@ -119,7 +125,7 @@ export async function fetchAllHeadlines(env) {
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
-  console.log(`[News] Fetched ${allArticles.length} unique headlines across ${TOPICS.length} topics`);
+  console.log(`[News] Fetched ${allArticles.length} unique headlines in "${gnewsLang}" across ${TOPICS.length} topics`);
   return allArticles;
 }
 
@@ -127,17 +133,20 @@ export async function fetchAllHeadlines(env) {
  * Fetch highlight articles (positive impact stories).
  * Uses a SINGLE combined search to save API quota.
  */
-export async function fetchHighlights(env) {
+export async function fetchHighlights(env, lang = "en") {
   const apiKey = await getSecret(env.GNEWS_API_KEY);
   if (!apiKey) {
     throw new Error("GNEWS_API_KEY not configured");
   }
 
-  console.log("[News] Fetching highlights (positive impact stories)...");
+  const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu"];
+  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
+
+  console.log(`[News] Fetching highlights in "${gnewsLang}"...`);
 
   // Single search with combined keywords to save API quota (1 call instead of 4)
   const combinedQuery = "innovation OR breakthrough OR freedom OR achievement OR discovery";
-  const articles = await fetchSearchArticles(apiKey, combinedQuery, "en", 10);
+  const articles = await fetchSearchArticles(apiKey, combinedQuery, gnewsLang, 10);
 
   const unique = deduplicateArticles(articles);
 
@@ -152,62 +161,76 @@ export async function fetchHighlights(env) {
 
 /**
  * Refresh general headlines and store in KV.
+ * @param {Object} env
+ * @param {string} [lang='en'] - Language code
  */
-export async function refreshHeadlines(env) {
+export async function refreshHeadlines(env, lang = "en") {
   try {
-    const articles = await fetchAllHeadlines(env);
+    const articles = await fetchAllHeadlines(env, lang);
 
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
       count: articles.length,
+      lang,
     };
 
-    await env.PHILOSIFY_KV.put(KV_KEY_HEADLINES, JSON.stringify(cached), {
+    const kvKey = lang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${lang}`;
+    await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
       expirationTtl: CACHE_TTL_SECONDS,
     });
 
-    console.log(`[News] Cached ${articles.length} headlines in KV`);
+    console.log(`[News] Cached ${articles.length} headlines (${lang}) in KV`);
     return cached;
   } catch (err) {
-    console.error(`[News] Failed to refresh headlines: ${err.message}`);
+    console.error(`[News] Failed to refresh headlines (${lang}): ${err.message}`);
     throw err;
   }
 }
 
 /**
  * Refresh highlights and store in KV.
+ * @param {Object} env
+ * @param {string} [lang='en'] - Language code
  */
-export async function refreshHighlights(env) {
+export async function refreshHighlights(env, lang = "en") {
   try {
-    const articles = await fetchHighlights(env);
+    const articles = await fetchHighlights(env, lang);
 
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
       count: articles.length,
+      lang,
     };
 
-    await env.PHILOSIFY_KV.put(KV_KEY_HIGHLIGHTS, JSON.stringify(cached), {
+    const kvKey = lang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${lang}`;
+    await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
       expirationTtl: CACHE_TTL_SECONDS * 2, // 4h TTL
     });
 
-    console.log(`[News] Cached ${articles.length} highlights in KV`);
+    console.log(`[News] Cached ${articles.length} highlights (${lang}) in KV`);
     return cached;
   } catch (err) {
-    console.error(`[News] Failed to refresh highlights: ${err.message}`);
+    console.error(`[News] Failed to refresh highlights (${lang}): ${err.message}`);
     throw err;
   }
 }
 
 /**
  * Get cached headlines from KV. If stale, trigger background refresh.
+ * @param {Object} env
+ * @param {Object|null} ctx - Cloudflare context for waitUntil
+ * @param {string} [lang='en'] - User language
  */
-export async function getCachedHeadlines(env, ctx = null) {
+export async function getCachedHeadlines(env, ctx = null, lang = "en") {
+  const headlinesKey = lang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${lang}`;
+  const highlightsKey = lang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${lang}`;
+
   // Fetch both headlines and highlights in parallel
   const [headlinesRaw, highlightsRaw] = await Promise.all([
-    env.PHILOSIFY_KV.get(KV_KEY_HEADLINES),
-    env.PHILOSIFY_KV.get(KV_KEY_HIGHLIGHTS),
+    env.PHILOSIFY_KV.get(headlinesKey),
+    env.PHILOSIFY_KV.get(highlightsKey),
   ]);
 
   let headlines = null;
@@ -217,37 +240,45 @@ export async function getCachedHeadlines(env, ctx = null) {
     headlines = JSON.parse(headlinesRaw);
     const age = Date.now() - new Date(headlines.fetchedAt).getTime();
     if (age > STALE_THRESHOLD_MS && ctx) {
-      console.log("[News] Headlines stale, refreshing in background...");
-      ctx.waitUntil(refreshHeadlines(env).catch((e) =>
-        console.error("[News] Background headlines refresh failed:", e.message)
+      console.log(`[News] Headlines (${lang}) stale, refreshing in background...`);
+      ctx.waitUntil(refreshHeadlines(env, lang).catch((e) =>
+        console.error(`[News] Background headlines (${lang}) refresh failed:`, e.message)
       ));
     }
-  } else if (ctx) {
-    // No cache — fetch in background, return empty for now
-    console.log("[News] No cached headlines, fetching in background...");
-    ctx.waitUntil(refreshHeadlines(env).catch((e) =>
-      console.error("[News] Background headlines fetch failed:", e.message)
-    ));
   } else {
-    // No ctx — fetch synchronously
-    headlines = await refreshHeadlines(env);
+    // No cache for this language — fetch synchronously (first request)
+    console.log(`[News] No cached headlines for "${lang}", fetching...`);
+    try {
+      headlines = await refreshHeadlines(env, lang);
+    } catch (e) {
+      console.error(`[News] Headlines fetch (${lang}) failed:`, e.message);
+      // Fallback to English cache
+      if (lang !== "en") {
+        const enRaw = await env.PHILOSIFY_KV.get(KV_KEY_HEADLINES);
+        if (enRaw) headlines = JSON.parse(enRaw);
+      }
+    }
   }
 
   if (highlightsRaw) {
     highlights = JSON.parse(highlightsRaw);
     const age = Date.now() - new Date(highlights.fetchedAt).getTime();
     if (age > HIGHLIGHTS_STALE_MS && ctx) {
-      console.log("[News] Highlights stale, refreshing in background...");
-      ctx.waitUntil(refreshHighlights(env).catch((e) =>
-        console.error("[News] Background highlights refresh failed:", e.message)
+      ctx.waitUntil(refreshHighlights(env, lang).catch((e) =>
+        console.error(`[News] Background highlights (${lang}) refresh failed:`, e.message)
       ));
     }
-  } else if (ctx) {
-    ctx.waitUntil(refreshHighlights(env).catch((e) =>
-      console.error("[News] Background highlights fetch failed:", e.message)
-    ));
   } else {
-    highlights = await refreshHighlights(env);
+    console.log(`[News] No cached highlights for "${lang}", fetching...`);
+    try {
+      highlights = await refreshHighlights(env, lang);
+    } catch (e) {
+      console.error(`[News] Highlights fetch (${lang}) failed:`, e.message);
+      if (lang !== "en") {
+        const enRaw = await env.PHILOSIFY_KV.get(KV_KEY_HIGHLIGHTS);
+        if (enRaw) highlights = JSON.parse(enRaw);
+      }
+    }
   }
 
   return {
@@ -255,5 +286,6 @@ export async function getCachedHeadlines(env, ctx = null) {
     highlights: highlights?.articles || [],
     count: (headlines?.count || 0) + (highlights?.count || 0),
     fetchedAt: headlines?.fetchedAt || new Date().toISOString(),
+    lang,
   };
 }
