@@ -536,10 +536,11 @@ export function LiteratureSidebar({
               </div>
               <div className="listen-section">
                 <ListenButton result={{
-                  panelId: panelResult.id,
-                  panelText: panelResult.analysis,
-                  panelTitle: `${panelResult.title} - ${panelResult.artist}`,
+                  title: panelResult.title,
+                  author: panelResult.artist,
+                  philosophical_analysis: panelResult.analysis,
                   lang: panelResult.lang,
+                  id: panelResult.id,
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">

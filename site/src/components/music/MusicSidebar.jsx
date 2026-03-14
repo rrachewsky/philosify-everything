@@ -444,10 +444,11 @@ export function MusicSidebar({
               </div>
               <div className="listen-section">
                 <ListenButton result={{
-                  panelId: panelResult.id,
-                  panelText: panelResult.analysis,
-                  panelTitle: `${panelResult.title} - ${panelResult.artist}`,
+                  song_name: panelResult.title,
+                  artist: panelResult.artist,
+                  philosophical_analysis: panelResult.analysis,
                   lang: panelResult.lang,
+                  id: panelResult.id,
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">

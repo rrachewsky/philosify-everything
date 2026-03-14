@@ -98,8 +98,8 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
     <div
       className="news-ticker"
       ref={tickerRef}
-      onScroll={handleUserScroll}
       onWheel={handleUserScroll}
+      onTouchStart={handleUserScroll}
       onTouchMove={handleUserScroll}
     >
       <div className="news-ticker__track">
@@ -321,10 +321,11 @@ export function NewsSidebar({
               </div>
               <div className="listen-section">
                 <ListenButton result={{
-                  panelId: panelResult.id,
-                  panelText: panelResult.analysis,
-                  panelTitle: panelResult.title,
+                  song_name: panelResult.title,
+                  artist: panelResult.artist || panelResult.source || 'News',
+                  philosophical_analysis: panelResult.analysis,
                   lang: panelResult.lang,
+                  id: panelResult.id,
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">
