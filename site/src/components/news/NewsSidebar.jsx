@@ -2,7 +2,7 @@
 // Users browse scrolling headlines, click one, pick philosophers, get analysis.
 // Reuses music-sidebar.css classes + news-specific additions.
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
@@ -10,6 +10,87 @@ import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import '../../styles/music-sidebar.css';
+
+// Auto-scrolling vertical news ticker
+function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
+  const tickerRef = useRef(null);
+  const animRef = useRef(null);
+  const pausedRef = useRef(false);
+  const scrollPos = useRef(0);
+
+  // Merge: highlights first (marked), then headlines
+  const allItems = [
+    ...highlights.map((a) => ({ ...a, isHighlight: true })),
+    ...headlines,
+  ];
+
+  // Auto-scroll effect
+  useEffect(() => {
+    const ticker = tickerRef.current;
+    if (!ticker || allItems.length === 0) return;
+
+    const speed = 0.4; // pixels per frame (~24px/sec at 60fps)
+
+    const scroll = () => {
+      if (!pausedRef.current) {
+        scrollPos.current += speed;
+        // Reset when first copy fully scrolled out
+        const halfHeight = ticker.scrollHeight / 2;
+        if (scrollPos.current >= halfHeight) {
+          scrollPos.current -= halfHeight;
+        }
+        ticker.scrollTop = scrollPos.current;
+      }
+      animRef.current = requestAnimationFrame(scroll);
+    };
+
+    animRef.current = requestAnimationFrame(scroll);
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+    };
+  }, [allItems.length]);
+
+  const handlePause = () => { pausedRef.current = true; };
+  const handleResume = () => { pausedRef.current = false; };
+
+  const renderItem = (article, i, prefix) => (
+    <button
+      key={`${prefix}-${i}`}
+      className={`news-headline__item ${article.isHighlight ? 'news-headline__item--highlight' : ''}`}
+      onClick={() => onSelect(article)}
+    >
+      {article.imageUrl && (
+        <img className="news-headline__image" src={article.imageUrl} alt="" loading="lazy" />
+      )}
+      <div className="news-headline__content">
+        {article.isHighlight && <span className="news-headline__star">&#9733;</span>}
+        <span className="news-headline__title">{article.title}</span>
+        <span className="news-headline__meta">
+          {article.source} &middot; {timeAgo(article.publishedAt)}
+          {article.topic && <span className="news-headline__topic"> &middot; {article.topic}</span>}
+        </span>
+      </div>
+    </button>
+  );
+
+  return (
+    <div
+      className="news-ticker"
+      ref={tickerRef}
+      onMouseEnter={handlePause}
+      onMouseLeave={handleResume}
+      onTouchStart={handlePause}
+      onTouchEnd={handleResume}
+    >
+      <div className="news-ticker__track">
+        {/* Original items */}
+        {allItems.map((a, i) => renderItem(a, i, 'a'))}
+        {/* Duplicate for seamless loop */}
+        {allItems.map((a, i) => renderItem(a, i, 'b'))}
+      </div>
+    </div>
+  );
+}
 
 export function NewsSidebar({
   isOpen,
@@ -152,7 +233,7 @@ export function NewsSidebar({
             </div>
           )}
 
-          {/* Headlines ticker/list */}
+          {/* Auto-scrolling headlines ticker */}
           {!selectedArticle && !panelResult && (
             <div className="news-headlines">
               {headlinesLoading && (
@@ -165,76 +246,19 @@ export function NewsSidebar({
               {headlinesError && (
                 <div className="music-error">{headlinesError}</div>
               )}
-              {!headlinesLoading && headlines.length === 0 && !headlinesError && (
+              {!headlinesLoading && headlines.length === 0 && highlights.length === 0 && !headlinesError && (
                 <div className="news-headlines__empty">
                   {t('news.noHeadlines', { defaultValue: 'No headlines available at the moment' })}
                 </div>
               )}
-              {highlights.length > 0 && (
-                <div className="news-highlights">
-                  <div className="news-highlights__header">
-                    <span className="news-highlights__icon">&#9733;</span>
-                    {t('news.highlights', { defaultValue: 'Highlights' })}
-                  </div>
-                  <div className="news-highlights__list">
-                    {highlights.map((article, i) => (
-                      <button
-                        key={`hl-${article.title}-${i}`}
-                        className="news-headline__item news-headline__item--highlight"
-                        onClick={() => selectArticle(article)}
-                      >
-                        {article.imageUrl && (
-                          <img
-                            className="news-headline__image"
-                            src={article.imageUrl}
-                            alt=""
-                            loading="lazy"
-                          />
-                        )}
-                        <div className="news-headline__content">
-                          <span className="news-headline__title">{article.title}</span>
-                          <span className="news-headline__meta">
-                            {article.source} &middot; {timeAgo(article.publishedAt)}
-                          </span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {headlines.length > 0 && (
-                <>
-                  <div className="music-results__header">
-                    {t('news.latestHeadlines', { defaultValue: 'Latest Headlines' })} ({headlines.length})
-                  </div>
-                  <div className="news-headlines__list">
-                    {headlines.map((article, i) => (
-                      <button
-                        key={`${article.title}-${i}`}
-                        className="news-headline__item"
-                        onClick={() => selectArticle(article)}
-                      >
-                        {article.imageUrl && (
-                          <img
-                            className="news-headline__image"
-                            src={article.imageUrl}
-                            alt=""
-                            loading="lazy"
-                          />
-                        )}
-                        <div className="news-headline__content">
-                          <span className="news-headline__title">{article.title}</span>
-                          <span className="news-headline__meta">
-                            {article.source} &middot; {timeAgo(article.publishedAt)}
-                            {article.topic && (
-                              <span className="news-headline__topic"> &middot; {article.topic}</span>
-                            )}
-                          </span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </>
+              {(highlights.length > 0 || headlines.length > 0) && (
+                <NewsTicker
+                  highlights={highlights}
+                  headlines={headlines}
+                  onSelect={selectArticle}
+                  timeAgo={timeAgo}
+                  t={t}
+                />
               )}
             </div>
           )}

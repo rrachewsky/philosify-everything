@@ -1222,6 +1222,37 @@
   text-transform: capitalize;
 }
 
+.news-headline__star {
+  color: #fbbf24;
+  font-size: 12px;
+  margin-right: 2px;
+}
+
+/* Auto-scrolling ticker */
+.news-ticker {
+  height: calc(100vh - 140px);
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to bottom,
+    transparent 0%,
+    black 4%,
+    black 96%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0%,
+    black 4%,
+    black 96%,
+    transparent 100%
+  );
+}
+
+.news-ticker__track {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 /* Highlights section */
 .news-highlights {
   margin-bottom: 16px;
