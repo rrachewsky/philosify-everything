@@ -140,6 +140,7 @@
     "complete": "哲学者パネル完了"
   },
   "news": {
+    "highlights": "注目ニュース",
     "latestHeadlines": "最新ニュース",
     "noHeadlines": "現在ニュースはありません",
     "justNow": "たった今",

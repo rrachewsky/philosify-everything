@@ -140,6 +140,7 @@
     "complete": "Philosopher Panel Complete"
   },
   "news": {
+    "highlights": "Highlights",
     "latestHeadlines": "Latest Headlines",
     "noHeadlines": "No headlines available at the moment",
     "justNow": "Just now",

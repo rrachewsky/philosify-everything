@@ -421,6 +421,7 @@ export function Router() {
           isOpen={news.isOpen}
           onClose={news.close}
           headlines={news.headlines}
+          highlights={news.highlights}
           headlinesLoading={news.headlinesLoading}
           headlinesError={news.headlinesError}
           selectedArticle={news.selectedArticle}

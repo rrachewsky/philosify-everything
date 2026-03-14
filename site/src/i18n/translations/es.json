@@ -140,6 +140,7 @@
     "complete": "Panel de Filosofos Completado"
   },
   "news": {
+    "highlights": "Destacados",
     "latestHeadlines": "Ultimas Noticias",
     "noHeadlines": "No hay noticias disponibles en este momento",
     "justNow": "Ahora mismo",

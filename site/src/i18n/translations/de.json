@@ -140,6 +140,7 @@
     "complete": "Philosophen-Panel abgeschlossen"
   },
   "news": {
+    "highlights": "Highlights",
     "latestHeadlines": "Aktuelle Schlagzeilen",
     "noHeadlines": "Derzeit keine Nachrichten verfugbar",
     "justNow": "Gerade eben",

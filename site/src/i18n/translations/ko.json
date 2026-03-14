@@ -140,6 +140,7 @@
     "complete": "철학자 패널 완료"
   },
   "news": {
+    "highlights": "하이라이트",
     "latestHeadlines": "최신 뉴스",
     "noHeadlines": "현재 뉴스가 없습니다",
     "justNow": "방금",

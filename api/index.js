@@ -24,7 +24,7 @@ import { handleBookAnalysisHistory } from "./src/handlers/book-analysis-history.
 import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js";
 import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
 import { handleNewsHeadlines } from "./src/handlers/news-headlines.js";
-import { refreshHeadlines } from "./src/news/index.js";
+import { refreshHeadlines, refreshHighlights } from "./src/news/index.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
 import {
@@ -3337,6 +3337,14 @@ export default {
           console.error("[Cron] News headlines refresh failed:", err.message),
         ),
       );
+      // Highlights refresh — every 4 hours (hours 0, 4, 8, 12, 16, 20)
+      if (hour % 4 === 0) {
+        ctx.waitUntil(
+          refreshHighlights(env).catch((err) =>
+            console.error("[Cron] News highlights refresh failed:", err.message),
+          ),
+        );
+      }
     }
 
     // User-proposed colloquium: staggered philosopher replies (every 5 min)

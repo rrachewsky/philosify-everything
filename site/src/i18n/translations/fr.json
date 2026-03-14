@@ -140,6 +140,7 @@
     "complete": "Panel de Philosophes Termine"
   },
   "news": {
+    "highlights": "A la Une",
     "latestHeadlines": "Dernieres Actualites",
     "noHeadlines": "Aucune actualite disponible pour le moment",
     "justNow": "A l'instant",

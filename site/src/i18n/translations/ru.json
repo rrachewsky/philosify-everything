@@ -140,6 +140,7 @@
     "complete": "Панель философов завершена"
   },
   "news": {
+    "highlights": "Главное",
     "latestHeadlines": "Последние новости",
     "noHeadlines": "Новостей пока нет",
     "justNow": "Только что",

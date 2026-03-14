@@ -15,6 +15,7 @@ export function NewsSidebar({
   isOpen,
   onClose,
   headlines,
+  highlights,
   headlinesLoading,
   headlinesError,
   selectedArticle,
@@ -167,6 +168,38 @@ export function NewsSidebar({
               {!headlinesLoading && headlines.length === 0 && !headlinesError && (
                 <div className="news-headlines__empty">
                   {t('news.noHeadlines', { defaultValue: 'No headlines available at the moment' })}
+                </div>
+              )}
+              {highlights.length > 0 && (
+                <div className="news-highlights">
+                  <div className="news-highlights__header">
+                    <span className="news-highlights__icon">&#9733;</span>
+                    {t('news.highlights', { defaultValue: 'Highlights' })}
+                  </div>
+                  <div className="news-highlights__list">
+                    {highlights.map((article, i) => (
+                      <button
+                        key={`hl-${article.title}-${i}`}
+                        className="news-headline__item news-headline__item--highlight"
+                        onClick={() => selectArticle(article)}
+                      >
+                        {article.imageUrl && (
+                          <img
+                            className="news-headline__image"
+                            src={article.imageUrl}
+                            alt=""
+                            loading="lazy"
+                          />
+                        )}
+                        <div className="news-headline__content">
+                          <span className="news-headline__title">{article.title}</span>
+                          <span className="news-headline__meta">
+                            {article.source} &middot; {timeAgo(article.publishedAt)}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               {headlines.length > 0 && (

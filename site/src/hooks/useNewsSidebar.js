@@ -9,6 +9,7 @@ import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 export function useNewsSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [headlines, setHeadlines] = useState([]);
+  const [highlights, setHighlights] = useState([]);
   const [headlinesLoading, setHeadlinesLoading] = useState(false);
   const [headlinesError, setHeadlinesError] = useState(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -25,7 +26,8 @@ export function useNewsSidebar() {
     try {
       const data = await fetchNewsHeadlines();
       setHeadlines(data.articles || []);
-      logger.log('[NewsSidebar] Loaded', data.count, 'headlines');
+      setHighlights(data.highlights || []);
+      logger.log('[NewsSidebar] Loaded', (data.articles || []).length, 'headlines +', (data.highlights || []).length, 'highlights');
     } catch (err) {
       logger.error('[NewsSidebar] Failed to load headlines:', err.message);
       setHeadlinesError(err.message);
@@ -142,6 +144,7 @@ export function useNewsSidebar() {
     open,
     close,
     headlines,
+    highlights,
     headlinesLoading,
     headlinesError,
     selectedArticle,
