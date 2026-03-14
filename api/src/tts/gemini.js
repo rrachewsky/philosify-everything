@@ -1793,6 +1793,69 @@ export async function generateGeminiTTS(
   console.log(`[TTS] ========== START (v3.0 - 4 Parallel Chunks) ==========`);
   console.log(`[TTS] Target: ${targetLang}, Source: ${analysisLang}`);
 
+  // ============================================================
+  // PANEL MODE: If result only has philosophical_analysis (no history/creative),
+  // use a simplified 2-chunk pipeline instead of the full 4-chunk one.
+  // ============================================================
+  const isPanelMode = !!(
+    sections.philosophicalAnalysis &&
+    sections.philosophicalAnalysis.length > 50 &&
+    (!sections.historicalContext || sections.historicalContext.length < 20) &&
+    (!sections.creativeProcess || sections.creativeProcess.length < 20)
+  );
+
+  if (isPanelMode) {
+    console.log(`[TTS] PANEL MODE detected — using simplified 2-chunk pipeline`);
+
+    const langName = LANGUAGE_NAMES[targetLang] || "English";
+    const names = getNames(targetLang);
+    const isBook = sections.isBook || false;
+    const p = getPhrases(targetLang, isBook);
+
+    // Split analysis in half
+    const { part1, part2 } = splitTextInHalf(sections.philosophicalAnalysis);
+
+    const hostVoice = VOICE_CONFIG.host.geminiVoice;
+    const philosopherVoice = VOICE_CONFIG.philosopher.geminiVoice;
+
+    const voiceConfigs = [
+      { speaker: hostVoice, voiceConfig: { prebuiltVoiceConfig: { voiceName: hostVoice } } },
+      { speaker: philosopherVoice, voiceConfig: { prebuiltVoiceConfig: { voiceName: philosopherVoice } } },
+    ];
+
+    const scriptHeader = `# PODCAST: Filosifai - Philosopher Panel (${langName})
+Voices:
+- ${hostVoice} (${names.host}): Warm, engaging female host.
+- ${philosopherVoice} (${names.philosopher}): Authoritative male philosophical analyst.
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy". "Peekoff" = PEEK-off.
+PACING: Natural conversational flow. Brief pauses between speakers.
+LANGUAGE: Speak ONLY in ${langName}.
+
+## SCRIPT
+`;
+
+    const script1 = scriptHeader +
+      `\n**${hostVoice}:** ${p.welcome} "${sections.song}" ${p.byArtist} ${sections.artist}. ${p.fascinating}\n\n` +
+      `**${philosopherVoice}:** ${part1}\n\n` +
+      `=== END SCRIPT ===`;
+
+    const script2 = scriptHeader +
+      `\n**${philosopherVoice}:** ${part2}\n\n` +
+      `**${hostVoice}:** ${p.verdict || p.wrapUp || "Thank you for listening."}\n\n` +
+      `=== END SCRIPT ===`;
+
+    console.log(`[TTS] Panel scripts: chunk1=${script1.length}, chunk2=${script2.length}`);
+
+    const [audio1, audio2] = await Promise.all([
+      generateChunkTTS(script1, voiceConfigs, "Panel-1", apiKey),
+      generateChunkTTS(script2, voiceConfigs, "Panel-2", apiKey),
+    ]);
+
+    const wavBuffer = concatenatePcmToWav([audio1, audio2]);
+    console.log(`[TTS] ✓ Panel TTS complete: ${wavBuffer.byteLength} bytes (${Date.now() - startTime}ms)`);
+    return wavBuffer;
+  }
+
   const needsTranslation = targetLang !== analysisLang;
   let translatedSections = { ...sections };
 
