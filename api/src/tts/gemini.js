@@ -2070,12 +2070,45 @@ export async function handleGeminiTTS(request, env, origin) {
         });
       }
 
-      // Generate using the wrapup TTS pipeline (handles raw markdown)
+      // Generate panel TTS directly (simple single-chunk approach)
       const titleForTTS = panelTitle || "Philosopher Panel";
       let wavBuffer;
       try {
-        console.log(`[TTS] Panel text length: ${panelText.length} chars, title: "${titleForTTS}"`);
-        wavBuffer = await generateWrapupTTS(panelText, titleForTTS, env, targetLang);
+        const apiKey = await getSecret(env.GEMINI_API_KEY);
+        if (!apiKey) throw new Error("GEMINI_API_KEY not configured");
+
+        // Clean panel text for TTS
+        const cleanText = cleanVerdictForTTS(panelText);
+        const langName = LANGUAGE_NAMES[targetLang] || "English";
+
+        console.log(`[TTS] Panel: ${cleanText.length} chars, lang: ${langName}, title: "${titleForTTS}"`);
+
+        // Build a simple podcast script with Kore (intro/outro) + Puck (analysis)
+        const script = `# PODCAST: Filosifai - Philosopher Panel (${langName})
+Voices:
+- Kore: Warm, engaging female host — introduces and closes.
+- Puck: Knowledgeable male analyst — delivers the philosophical analysis.
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy". "Peekoff" = PEEK-off.
+LANGUAGE: Speak ONLY in ${langName}.
+
+## SCRIPT
+
+**Kore:** Filosifai. Philosopher Panel analysis for: "${titleForTTS}".
+
+**Puck:** ${cleanText.substring(0, 4000)}
+
+**Kore:** That concludes this Filosifai Philosopher Panel.
+
+=== END SCRIPT ===`;
+
+        const voiceConfigs = [
+          { speaker: "Kore", voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } },
+          { speaker: "Puck", voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } } },
+        ];
+
+        const pcmBuffer = await generateChunkTTS(script, voiceConfigs, "panel", apiKey);
+        wavBuffer = pcmToWav(pcmBuffer, 24000, 1, 16);
+        console.log(`[TTS] Panel audio generated: ${wavBuffer.byteLength} bytes`);
       } catch (genErr) {
         console.error(`[TTS] Panel TTS generation error:`, genErr.message, genErr.stack);
         return jsonResponse({ error: `Panel TTS failed: ${genErr.message}` }, 500);
