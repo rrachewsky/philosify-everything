@@ -27,7 +27,7 @@ import { ComingSoonSidebar } from './components/ComingSoonSidebar';
 import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas } from './hooks';
 import { useNewsSidebar } from './hooks/useNewsSidebar.js';
 import { useCommunity } from './hooks/useCommunity.js';
-import { logger, getPendingAction, clearPendingAction } from './utils';
+import { logger, getPendingAction } from './utils';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 
@@ -49,6 +49,7 @@ function HomePageWrapper({
   onBuyCredits,
   onViewAnalysis,
   onViewDebate,
+  onOpenSidebar,
   anySidebarOpen,
 }) {
   const { user, signOut } = useAuth();
@@ -68,19 +69,10 @@ function HomePageWrapper({
         return;
       }
 
-      // Panels — fetch from KV via panel endpoint
+      // Panels — open the relevant sidebar (cached, free to re-run)
       if (kind === 'panel') {
-        // Panel data is in KV, not a DB endpoint. The panel cache key uses the panelId.
-        // We don't have a dedicated GET endpoint for panels, but the data is cached.
-        // For now, just open the relevant sidebar — the user can re-run (it's cached, free)
         historyModal.close();
-        if (mediaType === 'news') {
-          news.open();
-        } else if (mediaType === 'literature') {
-          literature.open();
-        } else {
-          music.open();
-        }
+        if (onOpenSidebar) onOpenSidebar(mediaType);
         return;
       }
 
@@ -103,7 +95,7 @@ function HomePageWrapper({
 
       if (mediaType === 'literature') {
         const formattedResult = { ...data, media_type: 'literature', cached: true };
-        literature.openWithResult(formattedResult);
+        if (onOpenSidebar) onOpenSidebar('literature', formattedResult);
       } else {
         const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
         if (onViewAnalysis) {
@@ -321,6 +313,11 @@ export function Router() {
                 onBuyCredits={music.isOpen ? null : undefined}
                 onViewAnalysis={music.openWithResult}
                 onViewDebate={ideas.openWithDebate}
+                onOpenSidebar={(type, result) => {
+                  if (type === 'news') news.open();
+                  else if (type === 'literature') result ? literature.openWithResult(result) : literature.open();
+                  else result ? music.openWithResult(result) : music.open();
+                }}
                 anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
               />
             }
