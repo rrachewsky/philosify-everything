@@ -486,7 +486,7 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
                   : debateThreadId
                     ? () => onViewDebate?.(debateThreadId)
                     : null;
-                const title = isAnalysis
+                const title = isInteraction
                   ? t('account.viewAnalysis', { defaultValue: 'View this analysis' })
                   : debateThreadId
                     ? t('account.viewDebate', { defaultValue: 'View this debate' })
