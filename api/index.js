@@ -24,6 +24,7 @@ import { handleBookAnalysisHistory } from "./src/handlers/book-analysis-history.
 import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js";
 import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
 import { handleNewsHeadlines } from "./src/handlers/news-headlines.js";
+import { handleNewsTTS } from "./src/handlers/news-tts.js";
 import { refreshHeadlines, refreshHighlights } from "./src/news/index.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
@@ -3276,6 +3277,10 @@ export default {
       // ============================================================
       if (url.pathname === "/api/news/headlines" && request.method === "GET") {
         return handleNewsHeadlines(request, env, origin, ctx);
+      }
+
+      if (url.pathname === "/api/news/tts" && request.method === "POST") {
+        return handleNewsTTS(request, env, origin);
       }
 
       // 404

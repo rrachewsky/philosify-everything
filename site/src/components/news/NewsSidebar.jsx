@@ -4,12 +4,103 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
+import { config } from '../../config';
 import '../../styles/music-sidebar.css';
+
+// Standalone news audio player — calls /api/news/tts directly
+function NewsAudioPlayer({ text, title, lang }) {
+  const { t } = useTranslation();
+  const [status, setStatus] = useState('idle'); // idle | loading | ready | playing | error
+  const audioRef = useRef(null);
+  const blobUrlRef = useRef(null);
+
+  const fetchAudio = useCallback(async () => {
+    if (status === 'loading') return;
+    setStatus('loading');
+
+    try {
+      const res = await fetch(`${config.apiUrl}/api/news/tts`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, title, lang }),
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err);
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      blobUrlRef.current = url;
+      setStatus('ready');
+    } catch (err) {
+      console.error('[NewsAudio] Failed:', err.message);
+      setStatus('error');
+    }
+  }, [text, title, lang, status]);
+
+  // Auto-fetch on mount
+  useEffect(() => {
+    if (text && text.length > 50) {
+      fetchAudio();
+    }
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handlePlay = () => {
+    if (status === 'playing' && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setStatus('ready');
+      return;
+    }
+
+    if (status === 'error') {
+      fetchAudio();
+      return;
+    }
+
+    if (status === 'ready' && blobUrlRef.current) {
+      const audio = new Audio(blobUrlRef.current);
+      audioRef.current = audio;
+      audio.onended = () => setStatus('ready');
+      audio.onerror = () => setStatus('error');
+      audio.play().then(() => setStatus('playing')).catch(() => setStatus('error'));
+    }
+  };
+
+  const label = {
+    idle: t('listen.listen', { defaultValue: 'Listen' }),
+    loading: t('listen.generating', { defaultValue: 'Generating audio...' }),
+    ready: t('listen.listen', { defaultValue: 'Listen' }),
+    playing: t('listen.stop', { defaultValue: 'Stop' }),
+    error: t('listen.retry', { defaultValue: 'Retry' }),
+  };
+
+  return (
+    <button
+      className={`news-audio-btn ${status === 'playing' ? 'news-audio-btn--playing' : ''} ${status === 'error' ? 'news-audio-btn--error' : ''}`}
+      onClick={handlePlay}
+      disabled={status === 'loading'}
+    >
+      {label[status]}
+    </button>
+  );
+}
 
 // Auto-scrolling vertical news ticker with manual scroll support
 function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
@@ -320,13 +411,11 @@ export function NewsSidebar({
                 {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel Complete' })}
               </div>
               <div className="listen-section">
-                <ListenButton result={{
-                  song_name: panelResult.title,
-                  artist: panelResult.artist || panelResult.source || 'News',
-                  philosophical_analysis: panelResult.analysis,
-                  lang: panelResult.lang,
-                  id: panelResult.id,
-                }} />
+                <NewsAudioPlayer
+                  text={panelResult.analysis}
+                  title={panelResult.title || ''}
+                  lang={panelResult.lang || i18n.language || 'en'}
+                />
               </div>
               <div className="music-analysis__results-wrapper">
                 <div className="panel-analysis" dangerouslySetInnerHTML={{
