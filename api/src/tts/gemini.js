@@ -1805,15 +1805,12 @@ export async function generateGeminiTTS(
   );
 
   if (isPanelMode) {
-    console.log(`[TTS] PANEL MODE detected — using simplified 2-chunk pipeline`);
+    console.log(`[TTS] PANEL MODE detected — using multi-chunk pipeline`);
 
     const langName = LANGUAGE_NAMES[targetLang] || "English";
     const names = getNames(targetLang);
     const isBook = sections.isBook || false;
     const p = getPhrases(targetLang, isBook);
-
-    // Split analysis in half
-    const { part1, part2 } = splitTextInHalf(sections.philosophicalAnalysis);
 
     const hostVoice = VOICE_CONFIG.host.geminiVoice;
     const philosopherVoice = VOICE_CONFIG.philosopher.geminiVoice;
@@ -1834,25 +1831,41 @@ LANGUAGE: Speak ONLY in ${langName}.
 ## SCRIPT
 `;
 
-    const script1 = scriptHeader +
-      `\n**${hostVoice}:** ${p.welcome} "${sections.song}" ${p.byArtist} ${sections.artist}. ${p.fascinating}\n\n` +
-      `**${philosopherVoice}:** ${part1}\n\n` +
-      `=== END SCRIPT ===`;
+    // Split text into chunks of max ~1500 chars (safe for Gemini TTS)
+    const CHUNK_SIZE = 1500;
+    const fullText = sections.philosophicalAnalysis;
+    const textChunks = [];
+    for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
+      textChunks.push(fullText.substring(i, i + CHUNK_SIZE));
+    }
 
-    const script2 = scriptHeader +
-      `\n**${philosopherVoice}:** ${part2}\n\n` +
-      `**${hostVoice}:** ${p.verdict || p.wrapUp || "Thank you for listening."}\n\n` +
-      `=== END SCRIPT ===`;
+    console.log(`[TTS] Panel text: ${fullText.length} chars → ${textChunks.length} chunks`);
 
-    console.log(`[TTS] Panel scripts: chunk1=${script1.length}, chunk2=${script2.length}`);
+    // Build scripts: first has intro, last has outro
+    const scripts = textChunks.map((chunk, i) => {
+      let script = scriptHeader;
+      if (i === 0) {
+        script += `\n**${hostVoice}:** ${p.welcome} "${sections.song}" ${p.byArtist} ${sections.artist}. ${p.fascinating}\n\n`;
+      }
+      script += `**${philosopherVoice}:** ${chunk}\n\n`;
+      if (i === textChunks.length - 1) {
+        script += `**${hostVoice}:** ${p.verdict || p.wrapUp || "Thank you for listening."}\n\n`;
+      }
+      script += `=== END SCRIPT ===`;
+      return script;
+    });
 
-    const [audio1, audio2] = await Promise.all([
-      generateChunkTTS(script1, voiceConfigs, "Panel-1", apiKey),
-      generateChunkTTS(script2, voiceConfigs, "Panel-2", apiKey),
-    ]);
+    scripts.forEach((s, i) => console.log(`[TTS] Panel script ${i + 1}: ${s.length} chars`));
 
-    const wavBuffer = concatenatePcmToWav([audio1, audio2]);
-    console.log(`[TTS] ✓ Panel TTS complete: ${wavBuffer.byteLength} bytes (${Date.now() - startTime}ms)`);
+    // Generate all chunks in parallel
+    const pcmBuffers = await Promise.all(
+      scripts.map((script, i) =>
+        generateChunkTTS(script, voiceConfigs, `Panel-${i + 1}/${scripts.length}`, apiKey)
+      )
+    );
+
+    const wavBuffer = concatenatePcmToWav(pcmBuffers);
+    console.log(`[TTS] ✓ Panel TTS complete: ${wavBuffer.byteLength} bytes, ${scripts.length} chunks (${Date.now() - startTime}ms)`);
     return wavBuffer;
   }
 
