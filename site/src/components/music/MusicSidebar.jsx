@@ -7,6 +7,9 @@ import { ResultsContainer } from '../results/ResultsContainer';
 import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
+import { ShareButton } from '../sharing/ShareButton';
+import { ShareToDMButton } from '../sharing/ShareToDMButton';
+import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
 import TopTenTicker from '../TopTenTicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
@@ -462,6 +465,25 @@ export function MusicSidebar({
                     .replace(/$/, '</p>')
                 }} />
               </div>
+              {panelResult.id && (
+                <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
+                  <ShareButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist}
+                  />
+                  <ShareToDMButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist}
+                  />
+                  <ShareToCommunityButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist}
+                  />
+                </div>
+              )}
               <button
                 className="music-analyze__button music-analyze__button--another"
                 onClick={() => { setPanelResult(null); clearTrack(); }}

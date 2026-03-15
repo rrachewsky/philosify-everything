@@ -8,6 +8,8 @@ import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { ShareButton } from '../sharing/ShareButton';
+import { ShareToDMButton } from '../sharing/ShareToDMButton';
+import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import '../../styles/music-sidebar.css';
@@ -343,6 +345,16 @@ export function NewsSidebar({
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
                   <ShareButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={selectedArticle?.source || 'News'}
+                  />
+                  <ShareToDMButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={selectedArticle?.source || 'News'}
+                  />
+                  <ShareToCommunityButton
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={selectedArticle?.source || 'News'}
