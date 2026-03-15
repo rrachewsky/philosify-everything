@@ -4,96 +4,13 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
+import { ShareButton } from '../sharing/ShareButton';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
-import { config } from '../../config';
 import '../../styles/music-sidebar.css';
-
-// Standalone news audio player — calls /api/news/tts directly
-// No retry button. Either it works or shows "audio unavailable".
-function NewsAudioPlayer({ text, title, lang }) {
-  const { t } = useTranslation();
-  const [status, setStatus] = useState('loading'); // loading | ready | playing | unavailable
-  const audioRef = useRef(null);
-  const blobUrlRef = useRef(null);
-
-  // Fetch audio once on mount — no retries exposed to user
-  useEffect(() => {
-    let cancelled = false;
-
-    async function generate() {
-      try {
-        const res = await fetch(`${config.apiUrl}/api/news/tts`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, title, lang }),
-        });
-
-        if (cancelled) return;
-
-        if (!res.ok) throw new Error(`${res.status}`);
-
-        const blob = await res.blob();
-        if (cancelled) return;
-
-        if (blob.size < 100) throw new Error('Empty audio');
-
-        blobUrlRef.current = URL.createObjectURL(blob);
-        setStatus('ready');
-      } catch (err) {
-        console.error('[NewsAudio]', err.message);
-        if (!cancelled) setStatus('unavailable');
-      }
-    }
-
-    if (text && text.length > 50) {
-      generate();
-    } else {
-      setStatus('unavailable');
-    }
-
-    return () => {
-      cancelled = true;
-      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
-      if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
-    };
-  }, [text, title, lang]);
-
-  const handlePlay = () => {
-    if (status === 'playing' && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setStatus('ready');
-      return;
-    }
-    if (status === 'ready' && blobUrlRef.current) {
-      const audio = new Audio(blobUrlRef.current);
-      audioRef.current = audio;
-      audio.onended = () => setStatus('ready');
-      audio.onerror = () => setStatus('ready'); // don't show error, just reset
-      audio.play().then(() => setStatus('playing')).catch(() => setStatus('ready'));
-    }
-  };
-
-  if (status === 'unavailable') return null; // silently hide if audio unavailable
-
-  return (
-    <button
-      className={`news-audio-btn ${status === 'playing' ? 'news-audio-btn--playing' : ''}`}
-      onClick={handlePlay}
-      disabled={status === 'loading'}
-    >
-      {status === 'loading'
-        ? t('listen.generating', { defaultValue: 'Generating audio...' })
-        : status === 'playing'
-          ? t('listen.stop', { defaultValue: 'Stop' })
-          : t('listen.listen', { defaultValue: 'Listen' })}
-    </button>
-  );
-}
 
 // Auto-scrolling vertical news ticker with manual scroll support
 function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
@@ -404,11 +321,13 @@ export function NewsSidebar({
                 {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel Complete' })}
               </div>
               <div className="listen-section">
-                <NewsAudioPlayer
-                  text={panelResult.analysis}
-                  title={panelResult.title || ''}
-                  lang={panelResult.lang || i18n.language || 'en'}
-                />
+                <ListenButton result={{
+                  song_name: panelResult.title,
+                  artist: panelResult.artist || selectedArticle?.source || 'News',
+                  philosophical_analysis: panelResult.analysis,
+                  lang: panelResult.lang,
+                  id: panelResult.id,
+                }} />
               </div>
               <div className="music-analysis__results-wrapper">
                 <div className="panel-analysis" dangerouslySetInnerHTML={{
@@ -421,6 +340,15 @@ export function NewsSidebar({
                     .replace(/$/, '</p>')
                 }} />
               </div>
+              {panelResult.id && (
+                <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
+                  <ShareButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={selectedArticle?.source || 'News'}
+                  />
+                </div>
+              )}
               <button
                 className="music-analyze__button music-analyze__button--another"
                 onClick={clearArticle}

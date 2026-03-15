@@ -119,16 +119,31 @@ export async function preloadTTS(result, lang) {
           abortController.abort();
         }, TTS_TIMEOUT_MS);
 
-        const requestBody = {
-          result,
-          targetLang: lang,
-          analysisLang: analysisLang,
-          analysisId: result?.id || null,
-        };
+        // Panel results (only philosophical_analysis, no scorecard) use /api/news/tts
+        const isPanel = !!(
+          result?.philosophical_analysis &&
+          !result?.historical_context &&
+          !result?.creative_process &&
+          !result?.scorecard
+        );
 
-        const response = await fetch(`${API_URL}/api/tts`, {
+        const endpoint = isPanel ? `${API_URL}/api/news/tts` : `${API_URL}/api/tts`;
+        const requestBody = isPanel
+          ? {
+              text: result.philosophical_analysis,
+              title: result.song_name || result.title || '',
+              lang: lang,
+            }
+          : {
+              result,
+              targetLang: lang,
+              analysisLang: analysisLang,
+              analysisId: result?.id || null,
+            };
+
+        const response = await fetch(endpoint, {
           method: 'POST',
-          credentials: 'include', // Send HttpOnly cookie for auth
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
