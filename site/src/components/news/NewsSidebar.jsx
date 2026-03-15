@@ -12,54 +12,55 @@ import { config } from '../../config';
 import '../../styles/music-sidebar.css';
 
 // Standalone news audio player — calls /api/news/tts directly
+// No retry button. Either it works or shows "audio unavailable".
 function NewsAudioPlayer({ text, title, lang }) {
   const { t } = useTranslation();
-  const [status, setStatus] = useState('idle'); // idle | loading | ready | playing | error
+  const [status, setStatus] = useState('loading'); // loading | ready | playing | unavailable
   const audioRef = useRef(null);
   const blobUrlRef = useRef(null);
 
-  const fetchAudio = useCallback(async () => {
-    if (status === 'loading') return;
-    setStatus('loading');
-
-    try {
-      const res = await fetch(`${config.apiUrl}/api/news/tts`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, title, lang }),
-      });
-
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err);
-      }
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      blobUrlRef.current = url;
-      setStatus('ready');
-    } catch (err) {
-      console.error('[NewsAudio] Failed:', err.message);
-      setStatus('error');
-    }
-  }, [text, title, lang, status]);
-
-  // Auto-fetch on mount
+  // Fetch audio once on mount — no retries exposed to user
   useEffect(() => {
-    if (text && text.length > 50) {
-      fetchAudio();
+    let cancelled = false;
+
+    async function generate() {
+      try {
+        const res = await fetch(`${config.apiUrl}/api/news/tts`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, title, lang }),
+        });
+
+        if (cancelled) return;
+
+        if (!res.ok) throw new Error(`${res.status}`);
+
+        const blob = await res.blob();
+        if (cancelled) return;
+
+        if (blob.size < 100) throw new Error('Empty audio');
+
+        blobUrlRef.current = URL.createObjectURL(blob);
+        setStatus('ready');
+      } catch (err) {
+        console.error('[NewsAudio]', err.message);
+        if (!cancelled) setStatus('unavailable');
+      }
     }
+
+    if (text && text.length > 50) {
+      generate();
+    } else {
+      setStatus('unavailable');
+    }
+
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-      if (blobUrlRef.current) {
-        URL.revokeObjectURL(blobUrlRef.current);
-      }
+      cancelled = true;
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+      if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [text, title, lang]);
 
   const handlePlay = () => {
     if (status === 'playing' && audioRef.current) {
@@ -68,36 +69,28 @@ function NewsAudioPlayer({ text, title, lang }) {
       setStatus('ready');
       return;
     }
-
-    if (status === 'error') {
-      fetchAudio();
-      return;
-    }
-
     if (status === 'ready' && blobUrlRef.current) {
       const audio = new Audio(blobUrlRef.current);
       audioRef.current = audio;
       audio.onended = () => setStatus('ready');
-      audio.onerror = () => setStatus('error');
-      audio.play().then(() => setStatus('playing')).catch(() => setStatus('error'));
+      audio.onerror = () => setStatus('ready'); // don't show error, just reset
+      audio.play().then(() => setStatus('playing')).catch(() => setStatus('ready'));
     }
   };
 
-  const label = {
-    idle: t('listen.listen', { defaultValue: 'Listen' }),
-    loading: t('listen.generating', { defaultValue: 'Generating audio...' }),
-    ready: t('listen.listen', { defaultValue: 'Listen' }),
-    playing: t('listen.stop', { defaultValue: 'Stop' }),
-    error: t('listen.retry', { defaultValue: 'Retry' }),
-  };
+  if (status === 'unavailable') return null; // silently hide if audio unavailable
 
   return (
     <button
-      className={`news-audio-btn ${status === 'playing' ? 'news-audio-btn--playing' : ''} ${status === 'error' ? 'news-audio-btn--error' : ''}`}
+      className={`news-audio-btn ${status === 'playing' ? 'news-audio-btn--playing' : ''}`}
       onClick={handlePlay}
       disabled={status === 'loading'}
     >
-      {label[status]}
+      {status === 'loading'
+        ? t('listen.generating', { defaultValue: 'Generating audio...' })
+        : status === 'playing'
+          ? t('listen.stop', { defaultValue: 'Stop' })
+          : t('listen.listen', { defaultValue: 'Listen' })}
     </button>
   );
 }

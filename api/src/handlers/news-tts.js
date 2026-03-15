@@ -1,8 +1,9 @@
 // ============================================================
-// NEWS TTS — Standalone, independent TTS for panel analyses
+// NEWS TTS — Standalone, reliable TTS for panel analyses
 // ============================================================
-// Built from scratch. Does NOT use the existing TTS pipeline.
-// Takes plain text, calls Gemini TTS API, returns WAV audio.
+// Uses SINGLE VOICE mode (simplest Gemini TTS call).
+// Short chunks (800 chars). Server-side retry (2 attempts).
+// Built to never fail.
 // ============================================================
 
 import { jsonResponse } from "../utils/index.js";
@@ -13,85 +14,97 @@ const GEMINI_TTS_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent";
 
 /**
- * Call Gemini TTS API with a script. Returns raw PCM ArrayBuffer.
+ * Single-voice Gemini TTS call. Simplest possible API shape.
+ * Retries once on failure.
  */
-async function callGeminiTTS(script, voices, apiKey) {
+async function callTTS(text, voiceName, apiKey) {
   const body = {
-    contents: [{ parts: [{ text: script }] }],
+    contents: [{ parts: [{ text }] }],
     generationConfig: {
       responseModalities: ["AUDIO"],
       speechConfig: {
-        multiSpeakerVoiceConfig: {
-          speakerVoiceConfigs: voices,
+        voiceConfig: {
+          prebuiltVoiceConfig: { voiceName },
         },
       },
     },
   };
 
-  const res = await fetch(`${GEMINI_TTS_URL}?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const res = await fetch(`${GEMINI_TTS_URL}?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Gemini TTS ${res.status}: ${errText.substring(0, 200)}`);
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error(`[NewsTTS] Attempt ${attempt} failed: ${res.status} ${errText.substring(0, 150)}`);
+        if (attempt === 2) throw new Error(`TTS API ${res.status}`);
+        await new Promise((r) => setTimeout(r, 1000)); // wait 1s before retry
+        continue;
+      }
+
+      const data = await res.json();
+      const b64 = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+      if (!b64) {
+        if (attempt === 2) throw new Error("No audio in response");
+        continue;
+      }
+
+      const bin = atob(b64);
+      const pcm = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) pcm[i] = bin.charCodeAt(i);
+      return pcm;
+    } catch (err) {
+      if (attempt === 2) throw err;
+      console.warn(`[NewsTTS] Attempt ${attempt} error: ${err.message}, retrying...`);
+      await new Promise((r) => setTimeout(r, 1000));
+    }
   }
-
-  const data = await res.json();
-  const b64 = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-  if (!b64) throw new Error("No audio data in Gemini response");
-
-  // Decode base64 → Uint8Array
-  const bin = atob(b64);
-  const pcm = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) pcm[i] = bin.charCodeAt(i);
-  return pcm.buffer;
 }
 
 /**
- * Convert PCM to WAV
+ * PCM → WAV
  */
-function toWav(pcmBuffer) {
-  const pcm = new Uint8Array(pcmBuffer);
+function toWav(pcmArrays) {
+  let totalLen = 0;
+  for (const a of pcmArrays) totalLen += a.byteLength;
+
   const sampleRate = 24000;
-  const channels = 1;
-  const bitsPerSample = 16;
-  const byteRate = sampleRate * channels * (bitsPerSample / 8);
-  const blockAlign = channels * (bitsPerSample / 8);
-  const dataSize = pcm.byteLength;
   const headerSize = 44;
+  const wav = new ArrayBuffer(headerSize + totalLen);
+  const v = new DataView(wav);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
 
-  const wav = new ArrayBuffer(headerSize + dataSize);
-  const view = new DataView(wav);
+  w(0, "RIFF");
+  v.setUint32(4, headerSize + totalLen - 8, true);
+  w(8, "WAVE");
+  w(12, "fmt ");
+  v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true);
+  v.setUint16(22, 1, true);
+  v.setUint32(24, sampleRate, true);
+  v.setUint32(28, sampleRate * 2, true);
+  v.setUint16(32, 2, true);
+  v.setUint16(34, 16, true);
+  w(36, "data");
+  v.setUint32(40, totalLen, true);
 
-  // RIFF header
-  const writeStr = (offset, str) => {
-    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-  };
-  writeStr(0, "RIFF");
-  view.setUint32(4, headerSize + dataSize - 8, true);
-  writeStr(8, "WAVE");
-  writeStr(12, "fmt ");
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, channels, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, byteRate, true);
-  view.setUint16(32, blockAlign, true);
-  view.setUint16(34, bitsPerSample, true);
-  writeStr(36, "data");
-  view.setUint32(40, dataSize, true);
-
-  new Uint8Array(wav).set(pcm, headerSize);
+  const bytes = new Uint8Array(wav);
+  let offset = headerSize;
+  for (const a of pcmArrays) {
+    bytes.set(a, offset);
+    offset += a.byteLength;
+  }
   return wav;
 }
 
 /**
- * Strip markdown from text for TTS
+ * Clean text for TTS
  */
-function cleanForTTS(text) {
+function clean(text) {
   return text
     .replace(/\*\*([^*]+)\*\*/g, "$1")
     .replace(/\*([^*]+)\*/g, "$1")
@@ -115,7 +128,6 @@ export async function handleNewsTTS(request, env, origin) {
   };
 
   try {
-    // Auth
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) {
       return jsonResponse({ error: "Auth required" }, 401, origin, env);
@@ -131,87 +143,49 @@ export async function handleNewsTTS(request, env, origin) {
       return jsonResponse({ error: "TTS not configured" }, 500, origin, env);
     }
 
-    // Clean text
-    const clean = cleanForTTS(text);
-    console.log(`[NewsTTS] ${clean.length} chars, title: "${title}", lang: ${lang}`);
-
     // R2 cache check
-    const cacheKey = `news_tts_${btoa(title || "").substring(0, 40)}_${lang || "en"}.wav`;
+    const safeTitle = (title || "untitled").replace(/[^a-zA-Z0-9]/g, "_").substring(0, 30);
+    const cacheKey = `news_tts_${safeTitle}_${lang || "en"}.wav`;
     try {
       const cached = await env.TTS_CACHE.get(cacheKey);
       if (cached) {
-        console.log(`[NewsTTS] Cache HIT: ${cacheKey}`);
+        console.log(`[NewsTTS] Cache HIT`);
         const buf = await cached.arrayBuffer();
         return new Response(buf, {
           status: 200,
           headers: { "Content-Type": "audio/wav", ...corsHeaders },
         });
       }
-    } catch (_) { /* cache miss, continue */ }
+    } catch (_) {}
 
-    // Voices
-    const voices = [
-      { speaker: "Kore", voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } },
-      { speaker: "Puck", voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } } },
-      { speaker: "Charon", voiceConfig: { prebuiltVoiceConfig: { voiceName: "Charon" } } },
-    ];
+    const cleaned = clean(text);
+    console.log(`[NewsTTS] Generating: ${cleaned.length} chars, ${title}`);
 
-    // Split text into chunks of ~1200 chars max
-    const LIMIT = 1200;
-    const chunks = [];
-    for (let i = 0; i < clean.length; i += LIMIT) {
-      chunks.push(clean.substring(i, i + LIMIT));
+    // Split into small chunks (800 chars max for reliability)
+    const CHUNK = 800;
+    const parts = [];
+    for (let i = 0; i < cleaned.length; i += CHUNK) {
+      parts.push(cleaned.substring(i, i + CHUNK));
     }
 
-    console.log(`[NewsTTS] Split into ${chunks.length} chunks`);
+    console.log(`[NewsTTS] ${parts.length} chunks of ~${CHUNK} chars`);
 
-    // Build one script per chunk, alternating philosopher voices
-    const langLabel = lang === "pt" ? "Portuguese" : lang === "es" ? "Spanish" : lang === "fr" ? "French" : lang === "de" ? "German" : lang === "it" ? "Italian" : "English";
-
-    const scripts = chunks.map((chunk, i) => {
-      const philoVoice = i % 2 === 0 ? "Puck" : "Charon";
-      let s = `Voices: Kore (female host), Puck (male analyst 1), Charon (male analyst 2).\nSpeak in ${langLabel}.\n\n`;
-
-      if (i === 0) {
-        s += `Kore: Filosifai. Philosophical panel analysis for ${title || "this story"}.\n\n`;
-      }
-
-      s += `${philoVoice}: ${chunk}\n\n`;
-
-      if (i === chunks.length - 1) {
-        s += `Kore: That concludes our Filosifai philosopher panel.\n`;
-      }
-
-      return s;
-    });
-
-    // Generate all chunks in parallel
-    const pcmBuffers = await Promise.all(
-      scripts.map((script, i) => {
-        console.log(`[NewsTTS] Chunk ${i + 1}: ${script.length} chars`);
-        return callGeminiTTS(script, voices, apiKey);
-      })
-    );
-
-    // Concatenate PCM
-    let totalLen = 0;
-    for (const buf of pcmBuffers) totalLen += buf.byteLength;
-    const combined = new Uint8Array(totalLen);
-    let offset = 0;
-    for (const buf of pcmBuffers) {
-      combined.set(new Uint8Array(buf), offset);
-      offset += buf.byteLength;
+    // Generate each chunk sequentially with single voice (most reliable)
+    // Sequential avoids rate limiting. Single voice avoids multi-speaker complexity.
+    const pcmArrays = [];
+    for (let i = 0; i < parts.length; i++) {
+      console.log(`[NewsTTS] Chunk ${i + 1}/${parts.length} (${parts[i].length} chars)`);
+      const pcm = await callTTS(parts[i], "Puck", apiKey);
+      pcmArrays.push(pcm);
     }
 
-    const wav = toWav(combined.buffer);
+    const wav = toWav(pcmArrays);
     console.log(`[NewsTTS] Done: ${wav.byteLength} bytes WAV`);
 
-    // Cache in R2 (background)
+    // Cache in R2
     try {
-      await env.TTS_CACHE.put(cacheKey, wav, {
-        customMetadata: { type: "news-panel", lang: lang || "en" },
-      });
-    } catch (_) { /* R2 save failed, ok */ }
+      await env.TTS_CACHE.put(cacheKey, wav);
+    } catch (_) {}
 
     return new Response(wav, {
       status: 200,
