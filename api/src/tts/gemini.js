@@ -1831,9 +1831,12 @@ LANGUAGE: Speak ONLY in ${langName}.
 ## SCRIPT
 `;
 
-    // Split text into chunks of max ~1500 chars (safe for Gemini TTS)
+    // Strip ALL markdown from analysis text — markdown bold (**text**) confuses
+    // Gemini TTS because it looks like speaker labels (**VoiceName:**)
+    const fullText = cleanVerdictForTTS(sections.philosophicalAnalysis);
+
+    // Split into chunks of max ~1500 chars (safe for Gemini TTS)
     const CHUNK_SIZE = 1500;
-    const fullText = sections.philosophicalAnalysis;
     const textChunks = [];
     for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
       textChunks.push(fullText.substring(i, i + CHUNK_SIZE));
