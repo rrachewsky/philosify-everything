@@ -1805,25 +1805,49 @@ export async function generateGeminiTTS(
   );
 
   if (isPanelMode) {
-    console.log(`[TTS] PANEL MODE detected — using multi-chunk pipeline`);
+    console.log(`[TTS] PANEL MODE detected — 3-voice pipeline (host + 2 philosopher voices)`);
 
     const langName = LANGUAGE_NAMES[targetLang] || "English";
     const names = getNames(targetLang);
     const isBook = sections.isBook || false;
     const p = getPhrases(targetLang, isBook);
 
-    const hostVoice = VOICE_CONFIG.host.geminiVoice;
-    const philosopherVoice = VOICE_CONFIG.philosopher.geminiVoice;
+    // 3 voices: Host (Kore), Philosopher A (Puck), Philosopher B (Charon)
+    const hostVoice = VOICE_CONFIG.host.geminiVoice;       // Kore
+    const philoVoiceA = VOICE_CONFIG.philosopher.geminiVoice; // Puck
+    const philoVoiceB = VOICE_CONFIG.historian.geminiVoice;   // Charon
 
     const voiceConfigs = [
       { speaker: hostVoice, voiceConfig: { prebuiltVoiceConfig: { voiceName: hostVoice } } },
-      { speaker: philosopherVoice, voiceConfig: { prebuiltVoiceConfig: { voiceName: philosopherVoice } } },
+      { speaker: philoVoiceA, voiceConfig: { prebuiltVoiceConfig: { voiceName: philoVoiceA } } },
+      { speaker: philoVoiceB, voiceConfig: { prebuiltVoiceConfig: { voiceName: philoVoiceB } } },
     ];
 
+    // Parse panel text into sections by splitting on bold headers (**Name** —)
+    // Sections: [philosopher1, philosopher2, philosopher3, convergence/agreement, verdict]
+    const rawText = sections.philosophicalAnalysis;
+    const sectionSplits = rawText.split(/\*\*[^*]+\*\*/);
+    const sectionHeaders = rawText.match(/\*\*[^*]+\*\*/g) || [];
+
+    // Build semantic sections: pair headers with content
+    const panelSections = [];
+    for (let i = 0; i < sectionHeaders.length; i++) {
+      const header = sectionHeaders[i].replace(/\*\*/g, '').trim();
+      const content = (sectionSplits[i + 1] || '').replace(/\*/g, '').replace(/#{1,4}\s*/g, '').trim();
+      if (content.length > 20) {
+        panelSections.push({ header, content });
+      }
+    }
+
+    console.log(`[TTS] Parsed ${panelSections.length} panel sections: ${panelSections.map(s => s.header.substring(0, 30)).join(', ')}`);
+
+    // Assign voices: first 3 sections are philosophers (alternating A/B/A),
+    // remaining sections (convergence, verdict) go to host
     const scriptHeader = `# PODCAST: Filosifai - Philosopher Panel (${langName})
 Voices:
-- ${hostVoice} (${names.host}): Warm, engaging female host.
-- ${philosopherVoice} (${names.philosopher}): Authoritative male philosophical analyst.
+- ${hostVoice} (${names.host}): Warm, engaging female host — introduces, transitions, reads verdict.
+- ${philoVoiceA}: First philosopher voice — deep, authoritative.
+- ${philoVoiceB}: Second philosopher voice — measured, analytical.
 PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy". "Peekoff" = PEEK-off.
 PACING: Natural conversational flow. Brief pauses between speakers.
 LANGUAGE: Speak ONLY in ${langName}.
@@ -1831,32 +1855,57 @@ LANGUAGE: Speak ONLY in ${langName}.
 ## SCRIPT
 `;
 
-    // Strip ALL markdown from analysis text — markdown bold (**text**) confuses
-    // Gemini TTS because it looks like speaker labels (**VoiceName:**)
-    const fullText = cleanVerdictForTTS(sections.philosophicalAnalysis);
+    const scripts = [];
+    const CHUNK_LIMIT = 1500;
 
-    // Split into chunks of max ~1500 chars (safe for Gemini TTS)
-    const CHUNK_SIZE = 1500;
-    const textChunks = [];
-    for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
-      textChunks.push(fullText.substring(i, i + CHUNK_SIZE));
+    // Script 1: Host intro + Philosopher 1 (voice A)
+    if (panelSections.length > 0) {
+      const s1Content = panelSections[0].content.substring(0, CHUNK_LIMIT);
+      scripts.push(scriptHeader +
+        `\n**${hostVoice}:** ${p.welcome} "${sections.song}" ${p.byArtist} ${sections.artist}. ${p.fascinating}\n\n` +
+        `**${hostVoice}:** ${panelSections[0].header}.\n\n` +
+        `**${philoVoiceA}:** ${s1Content}\n\n` +
+        `=== END SCRIPT ===`);
     }
 
-    console.log(`[TTS] Panel text: ${fullText.length} chars → ${textChunks.length} chunks`);
+    // Script 2: Philosopher 2 (voice B)
+    if (panelSections.length > 1) {
+      const s2Content = panelSections[1].content.substring(0, CHUNK_LIMIT);
+      scripts.push(scriptHeader +
+        `\n**${hostVoice}:** ${panelSections[1].header}.\n\n` +
+        `**${philoVoiceB}:** ${s2Content}\n\n` +
+        `=== END SCRIPT ===`);
+    }
 
-    // Build scripts: first has intro, last has outro
-    const scripts = textChunks.map((chunk, i) => {
-      let script = scriptHeader;
-      if (i === 0) {
-        script += `\n**${hostVoice}:** ${p.welcome} "${sections.song}" ${p.byArtist} ${sections.artist}. ${p.fascinating}\n\n`;
-      }
-      script += `**${philosopherVoice}:** ${chunk}\n\n`;
-      if (i === textChunks.length - 1) {
-        script += `**${hostVoice}:** ${p.verdict || p.wrapUp || "Thank you for listening."}\n\n`;
-      }
-      script += `=== END SCRIPT ===`;
-      return script;
-    });
+    // Script 3: Philosopher 3 (voice A)
+    if (panelSections.length > 2) {
+      const s3Content = panelSections[2].content.substring(0, CHUNK_LIMIT);
+      scripts.push(scriptHeader +
+        `\n**${hostVoice}:** ${panelSections[2].header}.\n\n` +
+        `**${philoVoiceA}:** ${s3Content}\n\n` +
+        `=== END SCRIPT ===`);
+    }
+
+    // Script 4: Remaining sections (convergence + verdict) — Host reads
+    if (panelSections.length > 3) {
+      const verdictParts = panelSections.slice(3).map(s =>
+        `${s.header}. ${s.content}`
+      ).join('\n\n');
+      const verdictText = verdictParts.substring(0, CHUNK_LIMIT * 2);
+      scripts.push(scriptHeader +
+        `\n**${hostVoice}:** ${verdictText}\n\n` +
+        `=== END SCRIPT ===`);
+    }
+
+    // Fallback: if parsing failed, use simple single-voice approach
+    if (scripts.length === 0) {
+      console.log(`[TTS] Panel section parsing failed, using fallback`);
+      const cleanText = cleanVerdictForTTS(rawText).substring(0, CHUNK_LIMIT);
+      scripts.push(scriptHeader +
+        `\n**${hostVoice}:** ${p.welcome} "${sections.song}". ${p.fascinating}\n\n` +
+        `**${philoVoiceA}:** ${cleanText}\n\n` +
+        `=== END SCRIPT ===`);
+    }
 
     scripts.forEach((s, i) => console.log(`[TTS] Panel script ${i + 1}: ${s.length} chars`));
 
