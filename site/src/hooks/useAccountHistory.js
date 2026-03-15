@@ -33,65 +33,40 @@ export function useAccountHistory(user) {
     setError(null);
 
     try {
-      // Fetch music analyses
-      let musicAnalyses = [];
+      // Unified history — one call for all types
       try {
-        const analysisRes = await fetch(`${config.apiUrl}/api/analysis-history`, {
+        const historyRes = await fetch(`${config.apiUrl}/api/user-history`, {
           method: 'GET',
           credentials: 'include',
         });
 
-        if (analysisRes.ok) {
-          const analysisData = await analysisRes.json();
-          if (analysisData.success && Array.isArray(analysisData.items)) {
-            musicAnalyses = analysisData.items.map((a) => ({
-              kind: 'analysis',
-              mediaType: 'music',
-              id: a.analysisId,
-              analysisId: a.analysisId,
-              date: a.requestedAt ? new Date(a.requestedAt) : null,
+        if (historyRes.ok) {
+          const historyData = await historyRes.json();
+          if (historyData.success && Array.isArray(historyData.items)) {
+            const items = historyData.items.map((a) => ({
+              kind: a.kind, // 'analysis', 'panel', 'debate'
+              mediaType: a.mediaType,
+              id: a.id,
+              analysisId: a.id,
+              date: a.date ? new Date(a.date) : null,
               title: a.title,
               artist: a.artist,
-              spotifyId: a.spotifyId,
+              philosophers: a.philosophers,
+              threadType: a.threadType,
+              accessType: a.accessType,
             }));
-            logger.log('[useAccountHistory] Loaded', musicAnalyses.length, 'music analysis items');
+            setAnalysisItems(items);
+            logger.log('[useAccountHistory] Loaded', items.length, 'history items');
+          } else {
+            setAnalysisItems([]);
           }
+        } else {
+          setAnalysisItems([]);
         }
       } catch (e) {
-        logger.error('[useAccountHistory] Music analysis history failed:', e);
+        logger.error('[useAccountHistory] Unified history failed:', e);
+        setAnalysisItems([]);
       }
-
-      // Fetch book analyses
-      let bookAnalyses = [];
-      try {
-        const bookRes = await fetch(`${config.apiUrl}/api/book-analysis-history`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        if (bookRes.ok) {
-          const bookData = await bookRes.json();
-          if (bookData.success && Array.isArray(bookData.items)) {
-            bookAnalyses = bookData.items.map((a) => ({
-              kind: 'analysis',
-              mediaType: 'literature',
-              id: a.analysisId,
-              analysisId: a.analysisId,
-              date: a.requestedAt ? new Date(a.requestedAt) : null,
-              title: a.title,
-              artist: a.author,
-              author: a.author,
-              googleBooksId: a.googleBooksId,
-              coverUrl: a.coverUrl,
-            }));
-            logger.log('[useAccountHistory] Loaded', bookAnalyses.length, 'book analysis items');
-          }
-        }
-      } catch (e) {
-        logger.error('[useAccountHistory] Book analysis history failed:', e);
-      }
-
-      setAnalysisItems([...musicAnalyses, ...bookAnalyses]);
 
       // Fetch credits
       let creditRows = [];
@@ -157,19 +132,34 @@ export function useAccountHistory(user) {
 
   const formatDescription = useCallback(
     (item) => {
-      if (item.kind === 'analysis') {
-        const icon = item.mediaType === 'literature' ? '\u{1F4DA} ' : '\u{1F3B5} ';
+      // Analyses, panels, debates
+      if (item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate') {
+        const icons = {
+          music: '\u{1F3B5}',        // musical note
+          literature: '\u{1F4DA}',   // books
+          news: '\u{1F4F0}',         // newspaper
+          ideas: '\u{1F4AC}',        // speech bubble
+        };
+        const icon = icons[item.mediaType] || '\u{2728}';
         const title = item.title || t('account.notAvailable', { defaultValue: 'Not available' });
         const artist = item.artist ? ` - ${item.artist}` : '';
-        return `${icon}${title}${artist}`;
+
+        let label = '';
+        if (item.kind === 'panel') {
+          label = ' [Panel]';
+        } else if (item.kind === 'debate') {
+          label = item.threadType === 'user_proposed' ? ' [Colloquium]' : ' [Debate]';
+        }
+
+        return `${icon} ${title}${artist}${label}`;
       }
 
+      // Credit transactions
       const count = Math.abs(item.amount || 0);
       switch (item.type) {
         case 'purchase':
           return t('transactions.purchase', { count });
         case 'consume':
-          // Use the description stored in metadata by confirmCreditUsage()
           if (item.metadata?.description) {
             return `${item.metadata.description} (${count} ${count === 1 ? 'credit' : 'credits'})`;
           }

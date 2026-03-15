@@ -58,10 +58,33 @@ function HomePageWrapper({
   const paymentModal = useModal();
   const historyModal = useModal();
 
-  const handleViewCachedAnalysis = async (analysisId, mediaType) => {
-    logger.log('[Router] Viewing cached analysis:', analysisId, 'mediaType:', mediaType);
+  const handleViewCachedAnalysis = async (analysisId, mediaType, kind) => {
+    logger.log('[Router] Viewing history item:', analysisId, 'mediaType:', mediaType, 'kind:', kind);
     try {
-      // Use the correct API endpoint based on media type
+      // Debates — open the debate view
+      if (kind === 'debate') {
+        historyModal.close();
+        if (onViewDebate) onViewDebate(analysisId);
+        return;
+      }
+
+      // Panels — fetch from KV via panel endpoint
+      if (kind === 'panel') {
+        // Panel data is in KV, not a DB endpoint. The panel cache key uses the panelId.
+        // We don't have a dedicated GET endpoint for panels, but the data is cached.
+        // For now, just open the relevant sidebar — the user can re-run (it's cached, free)
+        historyModal.close();
+        if (mediaType === 'news') {
+          news.open();
+        } else if (mediaType === 'literature') {
+          literature.open();
+        } else {
+          music.open();
+        }
+        return;
+      }
+
+      // Regular analyses — fetch full data from API
       const endpoint = mediaType === 'literature'
         ? `${API_URL}/api/book-analysis/${analysisId}`
         : `${API_URL}/api/analysis/${analysisId}`;
@@ -79,11 +102,9 @@ function HomePageWrapper({
       historyModal.close();
 
       if (mediaType === 'literature') {
-        // Open LiteratureSidebar with the result
         const formattedResult = { ...data, media_type: 'literature', cached: true };
         literature.openWithResult(formattedResult);
       } else {
-        // Open MusicSidebar with the result
         const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
         if (onViewAnalysis) {
           onViewAnalysis(formattedResult);

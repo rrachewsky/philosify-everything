@@ -14,6 +14,7 @@ import { buildPhilosopherPanelPrompt } from "../ai/prompts/philosopher-panel-tem
 import { buildNewsPanelPrompt } from "../ai/prompts/news-panel-template.js";
 import { callGrok } from "../ai/models/index.js";
 import { PHILOSOPHERS } from "../handlers/colloquium.js";
+import { getSupabaseCredentials } from "../utils/supabase.js";
 
 // The two Objectivist philosophers that Philosify auto-assigns
 const OBJECTIVIST_PICKS = ["Ayn Rand", "Leonard Peikoff"];
@@ -225,6 +226,33 @@ export async function handlePhilosopherPanel(
         env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(panelData), { expirationTtl: kvTtl }),
         env.PHILOSIFY_KV.put(`panel:${panelId}`, JSON.stringify(panelData), { expirationTtl: kvTtl }),
       ]);
+
+      // ── Save to DB for history ──
+      try {
+        const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
+        await fetch(`${sbUrl}/rest/v1/panel_analyses`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: sbKey,
+            Authorization: `Bearer ${sbKey}`,
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            panel_id: panelId,
+            user_id: userId,
+            media_type: mediaType,
+            title,
+            artist: artist || null,
+            philosophers: uniqueNames,
+            lang,
+          }),
+        });
+        console.log(`[PhilosopherPanel] Saved to panel_analyses: ${panelId}`);
+      } catch (dbErr) {
+        // Non-fatal — KV has the data, history just won't show this one
+        console.error(`[PhilosopherPanel] DB save failed (non-fatal): ${dbErr.message}`);
+      }
 
       // ── Confirm all credits ──
       let lastConfirm;

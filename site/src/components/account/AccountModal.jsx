@@ -478,11 +478,11 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
           ) : (
             <div className="transaction-list">
               {historyItems.map((item) => {
-                const isAnalysis = item.kind === 'analysis';
-                const debateThreadId = getDebateThreadId(item);
-                const isClickable = isAnalysis || !!debateThreadId;
-                const handler = isAnalysis
-                  ? () => onViewAnalysis?.(item.analysisId, item.mediaType)
+                const isInteraction = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate';
+                const debateThreadId = item.kind === 'debate' ? item.id : getDebateThreadId(item);
+                const isClickable = isInteraction || !!debateThreadId;
+                const handler = isInteraction
+                  ? () => onViewAnalysis?.(item.analysisId || item.id, item.mediaType, item.kind)
                   : debateThreadId
                     ? () => onViewDebate?.(debateThreadId)
                     : null;

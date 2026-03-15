@@ -25,6 +25,8 @@ import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js
 import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
 import { handleNewsHeadlines } from "./src/handlers/news-headlines.js";
 import { handleNewsTTS } from "./src/handlers/news-tts.js";
+import { handlePanelHistory } from "./src/handlers/panel-history.js";
+import { handleUserHistory } from "./src/handlers/user-history.js";
 import { refreshHeadlines, refreshHighlights } from "./src/news/index.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
@@ -3281,6 +3283,15 @@ export default {
 
       if (url.pathname === "/api/news/tts" && request.method === "POST") {
         return handleNewsTTS(request, env, origin);
+      }
+
+      if (url.pathname === "/api/panel-history" && request.method === "GET") {
+        return handlePanelHistory(request, env, origin);
+      }
+
+      // Unified user history — all analyses, panels, debates
+      if (url.pathname === "/api/user-history" && request.method === "GET") {
+        return handleUserHistory(request, env, origin);
       }
 
       // 404
