@@ -1,8 +1,9 @@
 // ============================================================
 // HANDLER - NEWS HEADLINES
 // ============================================================
-// GET /api/news/headlines?lang=pt — Returns cached headlines in user's language.
-// Public endpoint, no auth required.
+// GET /api/news/headlines?lang=pt — Returns cached headlines.
+// International headlines (EN) + local headlines (user lang) mixed.
+// Content filtered: no sports, no inappropriate content.
 // ============================================================
 
 import { jsonResponse } from "../utils/index.js";
@@ -10,9 +11,10 @@ import { getCachedHeadlines } from "../news/index.js";
 
 export async function handleNewsHeadlines(request, env, origin, ctx = null) {
   try {
-    // Always fetch headlines in English — major international sources (Reuters, BBC, AP, etc.)
-    // publish in English. The philosophical ANALYSIS is generated in the user's language.
-    const cached = await getCachedHeadlines(env, ctx, "en");
+    const url = new URL(request.url);
+    const lang = url.searchParams.get("lang") || "en";
+
+    const cached = await getCachedHeadlines(env, ctx, lang);
 
     return jsonResponse(
       {
@@ -21,7 +23,7 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
         highlights: cached.highlights || [],
         count: cached.count || 0,
         fetchedAt: cached.fetchedAt,
-        lang: cached.lang || lang,
+        lang: cached.lang || "en",
       },
       200,
       origin,

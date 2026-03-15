@@ -1,46 +1,75 @@
 // ============================================================
 // NEWS - HEADLINES FETCHER (GNews API)
 // ============================================================
-// Fetches top headlines + curated "Highlights" (positive impact stories).
-// Free tier: 100 requests/day.
-// Budget: 3 topics/hour (72/day) + 1 highlights search/4h (6/day) = 78/day.
+// Fetches international + local headlines and curated Highlights.
+//
+// CONTENT POLICY:
+// - NO sports
+// - NO curse, dirty names, depravation
+// - Highlights focus on: innovations, business success, great achievements,
+//   freedom victories, scientific breakthroughs, human progress
+//
+// STRATEGY:
+// - International headlines: always in English (Reuters, BBC, AP, Bloomberg)
+// - Local headlines: in user's language for regional relevance
+// - Mix both for a complete view
+// - Content filter removes inappropriate articles
+//
+// API BUDGET: Free tier = 100 requests/day
+// - International: 2 topics/hour = 48/day
+// - Local: fetched on-demand per language, cached 2h
+// - Highlights: 1 search/4h = 6/day
+// - Total: ~54-60/day (well within limit)
 // ============================================================
 
 import { getSecret } from "../utils/secrets.js";
 
 const KV_KEY_HEADLINES = "news:headlines";
 const KV_KEY_HIGHLIGHTS = "news:highlights";
-const CACHE_TTL_SECONDS = 2 * 60 * 60; // 2 hours TTL in KV
-const STALE_THRESHOLD_MS = 60 * 60 * 1000; // 1 hour — refresh if older
-const HIGHLIGHTS_STALE_MS = 4 * 60 * 60 * 1000; // 4 hours — refresh highlights less often
+const CACHE_TTL_SECONDS = 2 * 60 * 60; // 2 hours
+const STALE_THRESHOLD_MS = 60 * 60 * 1000; // 1 hour
+const HIGHLIGHTS_STALE_MS = 4 * 60 * 60 * 1000; // 4 hours
 
-// GNews topics for general headlines (3 to save API quota for highlights)
-const TOPICS = ["world", "business", "technology"];
+// International topics (NO sports)
+const INTL_TOPICS = ["world", "business"];
+
+// GNews supported languages
+const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu"];
 
 // ============================================================
-// HIGHLIGHTS — Positive impact news
+// CONTENT FILTER — removes inappropriate articles
 // ============================================================
-// Searches for stories about innovation, achievement, freedom,
-// business success, scientific breakthroughs, human progress.
-// These are the stories that celebrate human potential.
-// ============================================================
-const HIGHLIGHT_SEARCHES = [
-  "innovation breakthrough technology",
-  "freedom democracy victory rights",
-  "business success startup achievement",
-  "scientific discovery space exploration cure",
+const BLOCKED_WORDS = [
+  // Sports
+  "nfl", "nba", "fifa", "premier league", "champions league", "world cup",
+  "touchdown", "goalkeeper", "quarterback", "soccer", "football match",
+  "baseball", "basketball", "tennis", "cricket", "rugby", "boxing",
+  "olympics", "medal count", "playoff", "super bowl",
+  // Depravation / inappropriate
+  "porn", "xxx", "nude", "naked", "sex tape", "prostitut",
+  "rape", "molest", "pedophil", "incest",
+  // Excessive violence / gore
+  "dismember", "decapitat", "torture video", "execution video",
+  // Tabloid / gossip
+  "kardashian", "reality tv", "celebrity gossip", "onlyfans",
 ];
 
-/**
- * Fetch top headlines from GNews API for a given topic.
- */
+function isCleanArticle(article) {
+  const text = `${article.title} ${article.description || ""}`.toLowerCase();
+  return !BLOCKED_WORDS.some((word) => text.includes(word));
+}
+
+// ============================================================
+// API FETCHERS
+// ============================================================
+
 async function fetchTopicHeadlines(apiKey, topic, lang = "en", max = 10) {
   const url = `https://gnews.io/api/v4/top-headlines?topic=${topic}&lang=${lang}&max=${max}&token=${apiKey}`;
   const response = await fetch(url);
 
   if (!response.ok) {
     const text = await response.text();
-    console.error(`[News] GNews API error for topic "${topic}": ${response.status} ${text}`);
+    console.error(`[News] GNews API error for topic "${topic}" lang="${lang}": ${response.status} ${text}`);
     return [];
   }
 
@@ -57,10 +86,7 @@ async function fetchTopicHeadlines(apiKey, topic, lang = "en", max = 10) {
   }));
 }
 
-/**
- * Fetch articles by search query from GNews API.
- */
-async function fetchSearchArticles(apiKey, query, lang = "en", max = 5) {
+async function fetchSearchArticles(apiKey, query, lang = "en", max = 10) {
   const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=${lang}&max=${max}&sortby=publishedAt&token=${apiKey}`;
   const response = await fetch(url);
 
@@ -83,9 +109,6 @@ async function fetchSearchArticles(apiKey, query, lang = "en", max = 5) {
   }));
 }
 
-/**
- * Deduplicate articles by title.
- */
 function deduplicateArticles(articles) {
   const seen = new Set();
   return articles.filter((article) => {
@@ -96,79 +119,74 @@ function deduplicateArticles(articles) {
   });
 }
 
+// ============================================================
+// MAIN FETCHERS
+// ============================================================
+
 /**
- * Fetch headlines across multiple topics, deduplicate, and return.
- * @param {Object} env
- * @param {string} [lang='en'] - Language code for headlines (GNews supports: en, pt, es, fr, de, it, nl, ru, zh, ar, he, ja, ko, tr, pl, hu)
+ * Fetch international headlines (English) + local headlines (user language).
+ * Mix both, filter content, deduplicate.
  */
 export async function fetchAllHeadlines(env, lang = "en") {
   const apiKey = await getSecret(env.GNEWS_API_KEY);
-  if (!apiKey) {
-    throw new Error("GNEWS_API_KEY not configured");
-  }
+  if (!apiKey) throw new Error("GNEWS_API_KEY not configured");
 
-  // GNews supported languages (subset — map unsupported to English)
-  const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu"];
   const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
+  const isLocalDifferent = gnewsLang !== "en";
 
-  console.log(`[News] Fetching headlines in "${gnewsLang}" from GNews API...`);
+  console.log(`[News] Fetching headlines: international (EN) ${isLocalDifferent ? `+ local (${gnewsLang})` : ""}`);
 
-  // Fetch 3 topics in parallel (3 API calls)
-  const results = await Promise.all(
-    TOPICS.map((topic) => fetchTopicHeadlines(apiKey, topic, gnewsLang, 10))
+  // Fetch international headlines (always English)
+  const intlPromises = INTL_TOPICS.map((topic) =>
+    fetchTopicHeadlines(apiKey, topic, "en", 10)
   );
 
+  // If user language differs from EN, also fetch local headlines
+  const localPromises = isLocalDifferent
+    ? [fetchTopicHeadlines(apiKey, "nation", gnewsLang, 10)]
+    : [];
+
+  const results = await Promise.all([...intlPromises, ...localPromises]);
   const allArticles = deduplicateArticles(results.flat());
 
-  // Sort by published date (newest first)
-  allArticles.sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+  // Apply content filter
+  const clean = allArticles.filter(isCleanArticle);
+  const filtered = allArticles.length - clean.length;
+  if (filtered > 0) console.log(`[News] Filtered ${filtered} inappropriate articles`);
 
-  console.log(`[News] Fetched ${allArticles.length} unique headlines in "${gnewsLang}" across ${TOPICS.length} topics`);
-  return allArticles;
+  // Sort newest first
+  clean.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
+  console.log(`[News] ${clean.length} clean headlines (${allArticles.length} total, ${filtered} filtered)`);
+  return clean;
 }
 
 /**
  * Fetch highlight articles (positive impact stories).
- * Uses a SINGLE combined search to save API quota.
  */
-export async function fetchHighlights(env, lang = "en") {
+export async function fetchHighlights(env) {
   const apiKey = await getSecret(env.GNEWS_API_KEY);
-  if (!apiKey) {
-    throw new Error("GNEWS_API_KEY not configured");
-  }
+  if (!apiKey) throw new Error("GNEWS_API_KEY not configured");
 
-  const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu"];
-  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
+  console.log("[News] Fetching highlights (positive impact stories)...");
 
-  console.log(`[News] Fetching highlights in "${gnewsLang}"...`);
-
-  // Focused search for positive impact stories: innovation, freedom victories,
-  // business success, scientific breakthroughs, human achievement
   const combinedQuery = "innovation breakthrough OR startup success OR freedom victory democracy OR scientific discovery cure OR space exploration achievement";
-  const articles = await fetchSearchArticles(apiKey, combinedQuery, gnewsLang, 10);
+  const articles = await fetchSearchArticles(apiKey, combinedQuery, "en", 10);
+  const clean = deduplicateArticles(articles).filter(isCleanArticle);
 
-  const unique = deduplicateArticles(articles);
+  clean.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
-  // Sort by published date (newest first)
-  unique.sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
-
-  console.log(`[News] Fetched ${unique.length} highlight articles`);
-  return unique;
+  console.log(`[News] ${clean.length} highlight articles`);
+  return clean;
 }
 
-/**
- * Refresh general headlines and store in KV.
- * @param {Object} env
- * @param {string} [lang='en'] - Language code
- */
+// ============================================================
+// CACHE MANAGEMENT
+// ============================================================
+
 export async function refreshHeadlines(env, lang = "en") {
   try {
     const articles = await fetchAllHeadlines(env, lang);
-
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
@@ -181,7 +199,7 @@ export async function refreshHeadlines(env, lang = "en") {
       expirationTtl: CACHE_TTL_SECONDS,
     });
 
-    console.log(`[News] Cached ${articles.length} headlines (${lang}) in KV`);
+    console.log(`[News] Cached ${articles.length} headlines (${lang})`);
     return cached;
   } catch (err) {
     console.error(`[News] Failed to refresh headlines (${lang}): ${err.message}`);
@@ -189,49 +207,39 @@ export async function refreshHeadlines(env, lang = "en") {
   }
 }
 
-/**
- * Refresh highlights and store in KV.
- * @param {Object} env
- * @param {string} [lang='en'] - Language code
- */
-export async function refreshHighlights(env, lang = "en") {
+export async function refreshHighlights(env) {
   try {
-    const articles = await fetchHighlights(env, lang);
-
+    const articles = await fetchHighlights(env);
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
       count: articles.length,
-      lang,
     };
 
-    const kvKey = lang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${lang}`;
-    await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
-      expirationTtl: CACHE_TTL_SECONDS * 2, // 4h TTL
+    await env.PHILOSIFY_KV.put(KV_KEY_HIGHLIGHTS, JSON.stringify(cached), {
+      expirationTtl: CACHE_TTL_SECONDS * 2,
     });
 
-    console.log(`[News] Cached ${articles.length} highlights (${lang}) in KV`);
+    console.log(`[News] Cached ${articles.length} highlights`);
     return cached;
   } catch (err) {
-    console.error(`[News] Failed to refresh highlights (${lang}): ${err.message}`);
+    console.error(`[News] Failed to refresh highlights: ${err.message}`);
     throw err;
   }
 }
 
 /**
- * Get cached headlines from KV. If stale, trigger background refresh.
- * @param {Object} env
- * @param {Object|null} ctx - Cloudflare context for waitUntil
- * @param {string} [lang='en'] - User language
+ * Get cached headlines. If stale, refresh in background.
+ * @param {string} lang - User language for local news mix
  */
 export async function getCachedHeadlines(env, ctx = null, lang = "en") {
-  const headlinesKey = lang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${lang}`;
-  const highlightsKey = lang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${lang}`;
+  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
+  // Use language-specific cache key if local news is needed
+  const headlinesKey = gnewsLang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${gnewsLang}`;
 
-  // Fetch both headlines and highlights in parallel
   const [headlinesRaw, highlightsRaw] = await Promise.all([
     env.PHILOSIFY_KV.get(headlinesKey),
-    env.PHILOSIFY_KV.get(highlightsKey),
+    env.PHILOSIFY_KV.get(KV_KEY_HIGHLIGHTS),
   ]);
 
   let headlines = null;
@@ -241,20 +249,17 @@ export async function getCachedHeadlines(env, ctx = null, lang = "en") {
     headlines = JSON.parse(headlinesRaw);
     const age = Date.now() - new Date(headlines.fetchedAt).getTime();
     if (age > STALE_THRESHOLD_MS && ctx) {
-      console.log(`[News] Headlines (${lang}) stale, refreshing in background...`);
-      ctx.waitUntil(refreshHeadlines(env, lang).catch((e) =>
-        console.error(`[News] Background headlines (${lang}) refresh failed:`, e.message)
+      ctx.waitUntil(refreshHeadlines(env, gnewsLang).catch((e) =>
+        console.error(`[News] Background headlines refresh failed:`, e.message)
       ));
     }
   } else {
-    // No cache for this language — fetch synchronously (first request)
-    console.log(`[News] No cached headlines for "${lang}", fetching...`);
     try {
-      headlines = await refreshHeadlines(env, lang);
+      headlines = await refreshHeadlines(env, gnewsLang);
     } catch (e) {
-      console.error(`[News] Headlines fetch (${lang}) failed:`, e.message);
+      console.error(`[News] Headlines fetch failed:`, e.message);
       // Fallback to English cache
-      if (lang !== "en") {
+      if (gnewsLang !== "en") {
         const enRaw = await env.PHILOSIFY_KV.get(KV_KEY_HEADLINES);
         if (enRaw) headlines = JSON.parse(enRaw);
       }
@@ -265,20 +270,15 @@ export async function getCachedHeadlines(env, ctx = null, lang = "en") {
     highlights = JSON.parse(highlightsRaw);
     const age = Date.now() - new Date(highlights.fetchedAt).getTime();
     if (age > HIGHLIGHTS_STALE_MS && ctx) {
-      ctx.waitUntil(refreshHighlights(env, lang).catch((e) =>
-        console.error(`[News] Background highlights (${lang}) refresh failed:`, e.message)
+      ctx.waitUntil(refreshHighlights(env).catch((e) =>
+        console.error(`[News] Background highlights refresh failed:`, e.message)
       ));
     }
   } else {
-    console.log(`[News] No cached highlights for "${lang}", fetching...`);
     try {
-      highlights = await refreshHighlights(env, lang);
+      highlights = await refreshHighlights(env);
     } catch (e) {
-      console.error(`[News] Highlights fetch (${lang}) failed:`, e.message);
-      if (lang !== "en") {
-        const enRaw = await env.PHILOSIFY_KV.get(KV_KEY_HIGHLIGHTS);
-        if (enRaw) highlights = JSON.parse(enRaw);
-      }
+      console.error(`[News] Highlights fetch failed:`, e.message);
     }
   }
 
@@ -287,6 +287,6 @@ export async function getCachedHeadlines(env, ctx = null, lang = "en") {
     highlights: highlights?.articles || [],
     count: (headlines?.count || 0) + (highlights?.count || 0),
     fetchedAt: headlines?.fetchedAt || new Date().toISOString(),
-    lang,
+    lang: gnewsLang,
   };
 }
