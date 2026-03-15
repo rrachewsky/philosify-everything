@@ -10,11 +10,9 @@ import { getCachedHeadlines } from "../news/index.js";
 
 export async function handleNewsHeadlines(request, env, origin, ctx = null) {
   try {
-    // Get language from query param (default: en)
-    const url = new URL(request.url);
-    const lang = url.searchParams.get("lang") || "en";
-
-    const cached = await getCachedHeadlines(env, ctx, lang);
+    // Always fetch headlines in English — major international sources (Reuters, BBC, AP, etc.)
+    // publish in English. The philosophical ANALYSIS is generated in the user's language.
+    const cached = await getCachedHeadlines(env, ctx, "en");
 
     return jsonResponse(
       {
