@@ -98,7 +98,7 @@ export async function handleUserHistory(request, env, origin) {
       const threadPromises = threadIds.map((tid) =>
         pg(env, "GET", "forum_threads", {
           filter: `id=eq.${tid}`,
-          select: "id,title,content,thread_type,metadata,created_at",
+          select: "id,title,content,metadata,created_at",
         })
       );
       const threadResults = await Promise.all(threadPromises);
@@ -118,7 +118,7 @@ export async function handleUserHistory(request, env, origin) {
           title: thread.title || "Debate",
           content: thread.content || null,
           artist: philosophers.length > 0 ? philosophers.join(", ") : null,
-          threadType: thread.thread_type,
+          threadType: thread.metadata?.colloquium_type || null,
           accessType: r.access_type,
           date: r.created_at,
         };
@@ -142,12 +142,7 @@ export async function handleUserHistory(request, env, origin) {
         success: true,
         items: all,
         count: all.length,
-        _debug: {
-          accessRows: accessRows.length,
-          threadIds: accessRows.length > 0 ? [...new Set(accessRows.map((r) => r.thread_id))] : [],
-          threadsFound: debates.filter((d) => d.title !== "Debate").length,
-          debateTitles: debates.map((d) => d.title),
-        },
+
       },
       200,
       origin,
