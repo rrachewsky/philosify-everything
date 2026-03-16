@@ -14,10 +14,15 @@ import { getUserFromAuth } from "../auth/index.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
 async function query(sbUrl, sbKey, path) {
-  const res = await fetch(`${sbUrl}/rest/v1/${path}`, {
+  const url = `${sbUrl}/rest/v1/${path}`;
+  const res = await fetch(url, {
     headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` },
   });
-  if (!res.ok) return [];
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    console.error(`[UserHistory] Query failed: ${res.status} ${path.split("?")[0]} — ${errText.slice(0, 200)}`);
+    return [];
+  }
   return res.json();
 }
 
@@ -86,12 +91,15 @@ export async function handleUserHistory(request, env, origin) {
     let debates = [];
     if (accessRows.length > 0) {
       const threadIds = [...new Set(accessRows.map((r) => r.thread_id))];
-      // Fetch thread details using `in` filter (simpler, more reliable than `or`)
-      const idList = threadIds.join(",");
-      const threads = await query(sbUrl, sbKey,
-        `forum_threads?id=in.(${idList})&select=id,title,content,thread_type,metadata,created_at`
+      console.log(`[UserHistory] Debate thread IDs:`, JSON.stringify(threadIds));
+
+      // Fetch each thread individually to avoid filter issues
+      const threadPromises = threadIds.map((tid) =>
+        query(sbUrl, sbKey, `forum_threads?id=eq.${tid}&select=id,title,content,thread_type,metadata,created_at`)
       );
-      console.log(`[UserHistory] Found ${threads.length} threads for ${threadIds.length} debate IDs`);
+      const threadResults = await Promise.all(threadPromises);
+      const threads = threadResults.flat();
+      console.log(`[UserHistory] Found ${threads.length} threads, titles: ${threads.map(t => t.title).join(", ")}`);
       const threadMap = {};
       for (const t of threads) threadMap[t.id] = t;
 
