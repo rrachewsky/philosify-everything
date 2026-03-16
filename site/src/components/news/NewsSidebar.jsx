@@ -18,9 +18,8 @@ import '../../styles/music-sidebar.css';
 function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
   const tickerRef = useRef(null);
   const animRef = useRef(null);
-  const autoScrollRef = useRef(true);
+  const pausedRef = useRef(false);
   const resumeTimerRef = useRef(null);
-  const userScrollingRef = useRef(false);
 
   // Merge: highlights first (marked), then headlines
   const allItems = [
@@ -28,47 +27,58 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
     ...headlines,
   ];
 
-  // Auto-scroll effect
-  useEffect(() => {
-    const ticker = tickerRef.current;
-    if (!ticker || allItems.length === 0) return;
+  // Start/restart auto-scroll animation
+  const startAutoScroll = useCallback(() => {
+    if (animRef.current) cancelAnimationFrame(animRef.current);
 
-    const speed = 0.4; // pixels per frame (~24px/sec at 60fps)
+    const ticker = tickerRef.current;
+    if (!ticker) return;
+
+    const speed = 0.15; // ~9px/sec at 60fps — slow, readable
 
     const scroll = () => {
-      if (autoScrollRef.current && !userScrollingRef.current) {
-        const maxScroll = ticker.scrollHeight - ticker.clientHeight;
-        if (maxScroll > 0) {
-          ticker.scrollTop += speed;
-          // Loop: when near the bottom of the duplicate set, jump back
-          const halfHeight = ticker.scrollHeight / 2;
-          if (ticker.scrollTop >= halfHeight) {
-            ticker.scrollTop -= halfHeight;
-          }
+      if (!pausedRef.current && ticker) {
+        ticker.scrollTop += speed;
+        const halfHeight = ticker.scrollHeight / 2;
+        if (halfHeight > 0 && ticker.scrollTop >= halfHeight) {
+          ticker.scrollTop -= halfHeight;
         }
       }
       animRef.current = requestAnimationFrame(scroll);
     };
 
     animRef.current = requestAnimationFrame(scroll);
+  }, []);
+
+  // Stop auto-scroll completely
+  const stopAutoScroll = useCallback(() => {
+    pausedRef.current = true;
+    if (animRef.current) {
+      cancelAnimationFrame(animRef.current);
+      animRef.current = null;
+    }
+  }, []);
+
+  // Start auto-scroll on mount
+  useEffect(() => {
+    if (allItems.length > 0) {
+      pausedRef.current = false;
+      startAutoScroll();
+    }
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
     };
-  }, [allItems.length]);
+  }, [allItems.length, startAutoScroll]);
 
-  // Detect manual scroll — pause auto-scroll, resume after 5s idle
-  const handleUserScroll = useCallback(() => {
-    if (!userScrollingRef.current) {
-      userScrollingRef.current = true;
-      autoScrollRef.current = false;
-    }
-    // Reset resume timer on each scroll event
+  // User interaction: stop auto-scroll, resume after 8s idle
+  const handleUserInteraction = useCallback(() => {
+    stopAutoScroll();
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     resumeTimerRef.current = setTimeout(() => {
-      userScrollingRef.current = false;
-      autoScrollRef.current = true;
-    }, 5000); // Resume auto-scroll after 5s of no manual scroll
-  }, []);
+      pausedRef.current = false;
+      startAutoScroll();
+    }, 8000);
+  }, [stopAutoScroll, startAutoScroll]);
 
   // Cleanup
   useEffect(() => {
@@ -101,9 +111,9 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo, t }) {
     <div
       className="news-ticker"
       ref={tickerRef}
-      onWheel={handleUserScroll}
-      onTouchStart={handleUserScroll}
-      onTouchMove={handleUserScroll}
+      onWheel={handleUserInteraction}
+      onTouchStart={handleUserInteraction}
+      onPointerDown={handleUserInteraction}
     >
       <div className="news-ticker__track">
         {allItems.map((a, i) => renderItem(a, i, 'a'))}
