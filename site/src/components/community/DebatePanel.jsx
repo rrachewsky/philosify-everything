@@ -13,6 +13,7 @@ import { PaymentModal } from '../payment/PaymentModal.jsx';
 import { getPendingAction, clearPendingAction } from '@utils/pendingAction.js';
 import { logger } from '@utils';
 import { translateEra, translateSchool } from '../../data/philosopherI18n.js';
+import { ShareButton } from '../sharing/ShareButton.jsx';
 
 function formatTimeAgo(isoString, t) {
   const now = Date.now();
@@ -1759,7 +1760,11 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                       />
                     )}
                     <div className="debate-wrapup__content">{localizedWrapup}</div>
-                    {/* No translate button — verdict is pre-translated */}
+                    {/* Share verdict via WhatsApp, Telegram, etc. */}
+                    <ShareButton
+                      shareUrl={`${window.location.origin}`}
+                      shareText={`${coll.thread?.title || 'Philosophical Debate'} — ${t('community.debate.wrapupTitle')} | Philosify`}
+                    />
                   </div>
                 ) : coll.verdictLoading ? (
                   <div className="debate-wrapup-timer">
@@ -2155,6 +2160,11 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                 )}
                 <div className="debate-wrapup__content">{debate.wrapup}</div>
                 <TranslateButton text={debate.wrapup} />
+                {/* Share verdict via WhatsApp, Telegram, etc. */}
+                <ShareButton
+                  shareUrl={`${window.location.origin}`}
+                  shareText={`${debate.activeDebate?.title || 'Philosophical Debate'} — ${t('community.debate.wrapupTitle')} | Philosify`}
+                />
               </div>
             ) : debate.wrapupLoading ? (
               <div className="debate-wrapup-timer">

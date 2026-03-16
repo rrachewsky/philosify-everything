@@ -5,12 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { Toast } from '../common';
 import { getApiUrl } from '../../config';
 
-export function ShareButton({ analysisId, songName, artist }) {
+export function ShareButton({ analysisId, songName, artist, shareUrl: directShareUrl, shareText: customShareText }) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
   const createShareUrl = async () => {
+    // If a direct share URL was provided, use it (for debates, panels, etc.)
+    if (directShareUrl) return directShareUrl;
+
     if (!analysisId) {
       setToast({ type: 'error', message: t('share.shareErrorNoAnalysis') });
       return null;
@@ -20,7 +23,7 @@ export function ShareButton({ analysisId, songName, artist }) {
     try {
       const response = await fetch(`${getApiUrl()}/api/share`, {
         method: 'POST',
-        credentials: 'include', // Send HttpOnly cookie for auth
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -38,14 +41,12 @@ export function ShareButton({ analysisId, songName, artist }) {
         return data.url;
       }
 
-      // Fall back below (keeps sharing working even if token system isn't deployed)
       console.error('[ShareButton] Failed to create share token:', data);
     } catch (error) {
       console.error('[ShareButton] Error creating share token:', error);
-      // Fall back below
     }
 
-    // Fallback: direct URL (works if backend supports /shared/:analysisId)
+    // Fallback: direct URL
     const baseUrl = window.location.origin;
     return `${baseUrl}/shared/${analysisId}`;
   };
@@ -59,8 +60,8 @@ export function ShareButton({ analysisId, songName, artist }) {
       return;
     }
 
-    // Generate share text
-    const shareText = t('share.shareWhatsAppText', {
+    // Use custom text or default analysis share text
+    const shareText = customShareText || t('share.shareWhatsAppText', {
       song: songName,
       artist: artist,
     });
@@ -165,7 +166,7 @@ export function ShareButton({ analysisId, songName, artist }) {
     },
   ];
 
-  const isDisabled = loading || !analysisId;
+  const isDisabled = loading || (!analysisId && !directShareUrl);
 
   return (
     <>

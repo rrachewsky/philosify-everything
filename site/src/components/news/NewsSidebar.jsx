@@ -358,7 +358,8 @@ export function NewsSidebar({
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
                   <ShareButton
-                    analysisId={panelResult.id}
+                    shareUrl={`${window.location.origin}`}
+                    shareText={`${panelResult.title} — Philosopher's Panel | Philosify`}
                     songName={panelResult.title}
                     artist={selectedArticle?.source || 'News'}
                   />
