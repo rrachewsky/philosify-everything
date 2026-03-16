@@ -51,6 +51,7 @@ export function useAccountHistory(user) {
               date: a.date ? new Date(a.date) : null,
               title: a.title,
               artist: a.artist,
+              content: a.content,
               philosophers: a.philosophers,
               threadType: a.threadType,
               accessType: a.accessType,
@@ -149,6 +150,9 @@ export function useAccountHistory(user) {
           label = ' [Panel]';
         } else if (item.kind === 'debate') {
           label = item.threadType === 'user_proposed' ? ' [Colloquium]' : ' [Debate]';
+          // Show debate topic/context (truncated)
+          const context = item.content ? ` — ${item.content.slice(0, 80)}${item.content.length > 80 ? '...' : ''}` : '';
+          return `${icon} ${title}${context}${label}`;
         }
 
         return `${icon} ${title}${artist}${label}`;

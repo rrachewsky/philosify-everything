@@ -69,8 +69,26 @@ function HomePageWrapper({
         return;
       }
 
-      // Panels — open the relevant sidebar (cached, free to re-run)
+      // Panels — fetch full analysis from KV, then open sidebar with result
       if (kind === 'panel') {
+        try {
+          const panelRes = await fetch(`${API_URL}/api/panel/${analysisId}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          if (panelRes.ok) {
+            const panelData = await panelRes.json();
+            if (panelData.success && panelData.panel) {
+              historyModal.close();
+              if (onOpenSidebar) onOpenSidebar(mediaType, panelData.panel);
+              return;
+            }
+          }
+        } catch (err) {
+          logger.error('[Router] Failed to fetch panel:', err);
+        }
+        // Fallback: just open sidebar if panel data unavailable
         historyModal.close();
         if (onOpenSidebar) onOpenSidebar(mediaType);
         return;

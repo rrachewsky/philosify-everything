@@ -3289,6 +3289,19 @@ export default {
         return handlePanelHistory(request, env, origin);
       }
 
+      // GET /api/panel/:id — fetch a single panel analysis from KV
+      const panelMatch = url.pathname.match(/^\/api\/panel\/([a-f0-9-]+)$/);
+      if (panelMatch && request.method === "GET") {
+        try {
+          const panelId = panelMatch[1];
+          const raw = await env.PHILOSIFY_KV.get(`panel:${panelId}`);
+          if (!raw) return jsonResponse({ error: "Panel not found or expired" }, 404, origin, env);
+          return jsonResponse({ success: true, panel: JSON.parse(raw) }, 200, origin, env);
+        } catch (e) {
+          return jsonResponse({ error: e.message }, 500, origin, env);
+        }
+      }
+
       // Unified user history — all analyses, panels, debates
       if (url.pathname === "/api/user-history" && request.method === "GET") {
         return handleUserHistory(request, env, origin);

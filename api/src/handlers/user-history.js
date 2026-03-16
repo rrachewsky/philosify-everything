@@ -89,7 +89,7 @@ export async function handleUserHistory(request, env, origin) {
       // Fetch thread titles
       const threadFilter = threadIds.map((id) => `id.eq.${id}`).join(",");
       const threads = await query(sbUrl, sbKey,
-        `forum_threads?or=(${threadFilter})&select=id,title,thread_type,created_at`
+        `forum_threads?or=(${threadFilter})&select=id,title,content,thread_type,created_at`
       );
       const threadMap = {};
       for (const t of threads) threadMap[t.id] = t;
@@ -101,6 +101,7 @@ export async function handleUserHistory(request, env, origin) {
           mediaType: "ideas",
           id: r.thread_id,
           title: thread.title || "Debate",
+          content: thread.content || null,
           threadType: thread.thread_type,
           accessType: r.access_type,
           date: r.created_at,
