@@ -109,6 +109,9 @@ async function fetchTopicHeadlines(apiKey, topic, lang = "en", max = 10) {
   }
 
   const data = await response.json();
+  if (!data.articles || data.articles.length === 0) {
+    console.warn(`[News] GNews returned 0 articles for topic="${topic}" lang="${lang}". Possible quota exceeded.`);
+  }
   return (data.articles || []).map((article) => ({
     title: article.title,
     description: article.description || "",
