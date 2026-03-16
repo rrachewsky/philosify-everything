@@ -315,15 +315,7 @@ export function HomePage({
                   }}
                 />
               )}
-              {/* Hotspots with line+label hover effect */}
-              {HOTSPOTS.map((hotspot) => (
-                <Hotspot
-                  key={hotspot.id}
-                  hotspot={hotspot}
-                  onClick={handleHotspotClick}
-                  label={t(`home.categories.${hotspot.id}.title`, hotspot.id)}
-                />
-              ))}
+
             </div>
           </div>
           {/* Category labels below video in 3 columns (styled differently per breakpoint) */}

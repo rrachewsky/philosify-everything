@@ -1309,4 +1309,99 @@
   color: #fde68a;
 }
 
+/* ============================================================
+   NEWS - Inline Expansion (click headline to show summary + panel button)
+   ============================================================ */
+
+/* Expanded state — border glow */
+.news-headline__item--expanded {
+  border-color: rgba(0, 240, 255, 0.35) !important;
+  background: rgba(0, 240, 255, 0.06) !important;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.08);
+}
+
+.news-headline__item--expanded.news-headline__item--highlight {
+  border-color: rgba(251, 191, 36, 0.45) !important;
+  background: rgba(251, 191, 36, 0.08) !important;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.1);
+}
+
+/* Wrapper uses CSS grid trick for smooth height animation */
+.news-headline__expanded-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+  width: 100%;
+}
+
+.news-headline__item--expanded .news-headline__expanded-wrapper {
+  grid-template-rows: 1fr;
+}
+
+.news-headline__expanded {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Summary text */
+.news-headline__summary {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(226, 232, 240, 0.8);
+  margin: 8px 0 10px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid rgba(0, 240, 255, 0.3);
+  border-radius: 0 4px 4px 0;
+}
+
+.news-headline__item--highlight .news-headline__summary {
+  border-left-color: rgba(251, 191, 36, 0.4);
+}
+
+.news-headline__summary--empty {
+  font-style: italic;
+  color: rgba(226, 232, 240, 0.4);
+}
+
+/* Philosopher's Panel button (inline in expanded headline) */
+.news-headline__panel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(139, 92, 246, 0.12));
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 6px;
+  color: #00f0ff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.news-headline__panel-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(139, 92, 246, 0.2));
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.news-headline__panel-btn:active {
+  transform: translateY(0);
+}
+
+.news-headline__panel-cost {
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(196, 181, 253, 0.6);
+  letter-spacing: 0.3px;
+}
+
 

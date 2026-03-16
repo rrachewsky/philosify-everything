@@ -10,16 +10,16 @@
 //   freedom victories, scientific breakthroughs, human progress
 //
 // STRATEGY:
-// - International headlines: always in English (Reuters, BBC, AP, Bloomberg)
-// - Local headlines: in user's language for regional relevance
-// - Mix both for a complete view
+// - ALL topics fetched in user's language (native translation)
+// - International topics (world, business, science, tech) give major agency coverage
+// - National topic adds local newspapers, agencies, magazines
+// - Highlights also fetched in user's language with translated queries
 // - Content filter removes inappropriate articles
 //
 // API BUDGET: Free tier = 100 requests/day
-// - International: 2 topics/hour = 48/day
-// - Local: fetched on-demand per language, cached 2h
-// - Highlights: 1 search/4h = 6/day
-// - Total: ~54-60/day (well within limit)
+// - 5 topics per language refresh, cached 2h
+// - Highlights: 1 search/4h per language
+// - English cron refresh hourly; other languages on-demand + cached
 // ============================================================
 
 import { getSecret } from "../utils/secrets.js";
@@ -35,6 +35,31 @@ const INTL_TOPICS = ["world", "business", "science", "technology"];
 
 // GNews supported languages
 const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu"];
+
+// ============================================================
+// HIGHLIGHT SEARCH QUERIES — translated per language
+// ============================================================
+// Each query is tuned for GNews search in the corresponding language.
+// GNews filters by article language, so search terms must match.
+// ============================================================
+const HIGHLIGHT_QUERIES = {
+  en: "innovation breakthrough OR startup success OR scientific discovery OR space exploration achievement",
+  pt: "inovação avanço OR startup sucesso OR descoberta científica OR conquista exploração espacial",
+  es: "innovación avance OR startup éxito OR descubrimiento científico OR logro exploración espacial",
+  fr: "innovation percée OR startup succès OR découverte scientifique OR exploration spatiale",
+  de: "Innovation Durchbruch OR Startup Erfolg OR wissenschaftliche Entdeckung OR Weltraumforschung",
+  it: "innovazione svolta OR startup successo OR scoperta scientifica OR esplorazione spaziale",
+  nl: "innovatie doorbraak OR startup succes OR wetenschappelijke ontdekking OR ruimtevaart",
+  ru: "инновация прорыв OR стартап успех OR научное открытие OR космическое достижение",
+  zh: "创新突破 OR 创业成功 OR 科学发现 OR 太空探索",
+  ar: "ابتكار اختراق OR نجاح شركة ناشئة OR اكتشاف علمي OR استكشاف الفضاء",
+  he: "חדשנות פריצת דרך OR הצלחה סטארטאפ OR גילוי מדעי OR חלל",
+  ja: "イノベーション OR スタートアップ成功 OR 科学的発見 OR 宇宙探査",
+  ko: "혁신 돌파구 OR 스타트업 성공 OR 과학적 발견 OR 우주 탐사",
+  tr: "inovasyon atılım OR startup başarı OR bilimsel keşif OR uzay keşfi",
+  pl: "innowacja przełom OR startup sukces OR odkrycie naukowe OR eksploracja kosmiczna",
+  hu: "innováció áttörés OR startup siker OR tudományos felfedezés OR űrkutatás",
+};
 
 // ============================================================
 // BLOCKED SOURCES — unreliable, tabloid, clickbait, propaganda
@@ -162,31 +187,33 @@ function deduplicateArticles(articles) {
 // ============================================================
 
 /**
- * Fetch international headlines (English) + local headlines (user language).
- * Mix both, filter content, deduplicate.
+ * Fetch headlines in user's language — ALL topics + national/local.
+ * International topics (world, business, science, technology) are fetched
+ * in the user's language so sources naturally publish in that language.
+ * National topic adds local source diversity (local newspapers/magazines).
+ * This ensures all headlines are natively in the user's language.
  */
 export async function fetchAllHeadlines(env, lang = "en") {
   const apiKey = await getSecret(env.GNEWS_API_KEY);
   if (!apiKey) throw new Error("GNEWS_API_KEY not configured");
 
   const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
-  const isLocalDifferent = gnewsLang !== "en";
 
   // Debug: log key prefix to verify correct key is loaded
   console.log(`[News] API key starts with: ${apiKey.substring(0, 6)}...`);
-  console.log(`[News] Fetching headlines: international (EN) ${isLocalDifferent ? `+ local (${gnewsLang})` : ""}`);
+  console.log(`[News] Fetching all topics in "${gnewsLang}" (international + local mix)`);
 
-  // Fetch international headlines (always English)
-  const intlPromises = INTL_TOPICS.map((topic) =>
-    fetchTopicHeadlines(apiKey, topic, "en", 10)
+  // Fetch ALL topics in user's language for natural translation
+  // This returns a mix of international coverage + local sources publishing in that language
+  const topicPromises = INTL_TOPICS.map((topic) =>
+    fetchTopicHeadlines(apiKey, topic, gnewsLang, 10)
   );
 
-  // If user language differs from EN, also fetch local headlines
-  const localPromises = isLocalDifferent
-    ? [fetchTopicHeadlines(apiKey, "nation", gnewsLang, 10)]
-    : [];
+  // Always include national/local news for local source diversity
+  // (local newspapers, agencies, magazines alongside major outlets)
+  topicPromises.push(fetchTopicHeadlines(apiKey, "nation", gnewsLang, 10));
 
-  const results = await Promise.all([...intlPromises, ...localPromises]);
+  const results = await Promise.all(topicPromises);
   const allArticles = deduplicateArticles(results.flat());
 
   // Apply source blacklist + content filter
@@ -205,16 +232,19 @@ export async function fetchAllHeadlines(env, lang = "en") {
 }
 
 /**
- * Fetch highlight articles (positive impact stories).
+ * Fetch highlight articles (positive impact stories) in user's language.
+ * Uses language-specific search queries so results are natively translated.
  */
-export async function fetchHighlights(env) {
+export async function fetchHighlights(env, lang = "en") {
   const apiKey = await getSecret(env.GNEWS_API_KEY);
   if (!apiKey) throw new Error("GNEWS_API_KEY not configured");
 
-  console.log("[News] Fetching highlights (positive impact stories)...");
+  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
+  const query = HIGHLIGHT_QUERIES[gnewsLang] || HIGHLIGHT_QUERIES.en;
 
-  const combinedQuery = "innovation breakthrough OR startup success OR freedom victory democracy OR scientific discovery cure OR space exploration achievement";
-  const articles = await fetchSearchArticles(apiKey, combinedQuery, "en", 10);
+  console.log(`[News] Fetching highlights in "${gnewsLang}" (positive impact stories)...`);
+
+  const articles = await fetchSearchArticles(apiKey, query, gnewsLang, 10);
   const clean = deduplicateArticles(articles)
     .filter((a) => !isBlockedSource(a.source))
     .filter(isCleanArticle);
@@ -257,27 +287,30 @@ export async function refreshHeadlines(env, lang = "en") {
   }
 }
 
-export async function refreshHighlights(env) {
+export async function refreshHighlights(env, lang = "en") {
   try {
-    const articles = await fetchHighlights(env);
+    const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
+    const articles = await fetchHighlights(env, gnewsLang);
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
       count: articles.length,
+      lang: gnewsLang,
     };
 
     if (articles.length > 0) {
-      await env.PHILOSIFY_KV.put(KV_KEY_HIGHLIGHTS, JSON.stringify(cached), {
+      const kvKey = gnewsLang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${gnewsLang}`;
+      await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
         expirationTtl: CACHE_TTL_SECONDS * 2,
       });
-      console.log(`[News] Cached ${articles.length} highlights`);
+      console.log(`[News] Cached ${articles.length} highlights (${gnewsLang})`);
     } else {
-      console.warn(`[News] NOT caching empty highlights — possible API issue`);
+      console.warn(`[News] NOT caching empty highlights (${gnewsLang}) — possible API issue`);
     }
 
     return cached;
   } catch (err) {
-    console.error(`[News] Failed to refresh highlights: ${err.message}`);
+    console.error(`[News] Failed to refresh highlights (${lang}): ${err.message}`);
     throw err;
   }
 }
@@ -288,12 +321,13 @@ export async function refreshHighlights(env) {
  */
 export async function getCachedHeadlines(env, ctx = null, lang = "en") {
   const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
-  // Use language-specific cache key if local news is needed
+  // Language-specific cache keys for both headlines and highlights
   const headlinesKey = gnewsLang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${gnewsLang}`;
+  const highlightsKey = gnewsLang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${gnewsLang}`;
 
   const [headlinesRaw, highlightsRaw] = await Promise.all([
     env.PHILOSIFY_KV.get(headlinesKey),
-    env.PHILOSIFY_KV.get(KV_KEY_HIGHLIGHTS),
+    env.PHILOSIFY_KV.get(highlightsKey),
   ]);
 
   let headlines = null;
@@ -324,13 +358,13 @@ export async function getCachedHeadlines(env, ctx = null, lang = "en") {
     highlights = JSON.parse(highlightsRaw);
     const age = Date.now() - new Date(highlights.fetchedAt).getTime();
     if (age > HIGHLIGHTS_STALE_MS && ctx) {
-      ctx.waitUntil(refreshHighlights(env).catch((e) =>
+      ctx.waitUntil(refreshHighlights(env, gnewsLang).catch((e) =>
         console.error(`[News] Background highlights refresh failed:`, e.message)
       ));
     }
   } else {
     try {
-      highlights = await refreshHighlights(env);
+      highlights = await refreshHighlights(env, gnewsLang);
     } catch (e) {
       console.error(`[News] Highlights fetch failed:`, e.message);
     }
