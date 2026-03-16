@@ -87,7 +87,7 @@ export async function handleUserHistory(request, env, origin) {
     if (accessRows.length > 0) {
       const threadIds = [...new Set(accessRows.map((r) => r.thread_id))];
       // Fetch thread details using `in` filter (simpler, more reliable than `or`)
-      const idList = threadIds.map((id) => `"${id}"`).join(",");
+      const idList = threadIds.join(",");
       const threads = await query(sbUrl, sbKey,
         `forum_threads?id=in.(${idList})&select=id,title,content,thread_type,metadata,created_at`
       );
