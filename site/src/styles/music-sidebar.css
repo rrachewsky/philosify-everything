@@ -1310,31 +1310,27 @@
 }
 
 /* ============================================================
-   NEWS - Inline Expansion (click headline to show summary + panel button)
+   NEWS - Summary card (shown after selecting a headline)
    ============================================================ */
 
-/* Expanded state — border glow */
-.news-headline__item--expanded {
-  border-color: rgba(0, 240, 255, 0.35) !important;
-  background: rgba(0, 240, 255, 0.06) !important;
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.08);
+.news-summary-card {
+  padding: 12px 14px;
+  margin: 0 0 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 240, 255, 0.12);
+  border-left: 3px solid rgba(0, 240, 255, 0.3);
+  border-radius: 0 6px 6px 0;
 }
 
-.news-headline__item--expanded.news-headline__item--highlight {
-  border-color: rgba(251, 191, 36, 0.45) !important;
-  background: rgba(251, 191, 36, 0.08) !important;
-  box-shadow: 0 0 12px rgba(251, 191, 36, 0.1);
+.news-summary-card__text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(226, 232, 240, 0.85);
+  margin: 0;
 }
 
-/* Wrapper uses CSS grid trick for smooth height animation */
+/* DEPRECATED — kept temporarily for transition */
 .news-headline__expanded-wrapper {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s ease;
-  width: 100%;
-}
-
-.news-headline__item--expanded .news-headline__expanded-wrapper {
   grid-template-rows: 1fr;
 }
 

@@ -1,8 +1,7 @@
 // NewsSidebar - Slide-out Sidebar for Philosophical News Analysis
 // Users browse a slow auto-scrolling ticker of headlines.
-// Click a headline to expand it inline: summary + Philosopher's Panel button.
-// All headlines and summaries are in the user's chosen language (fetched natively).
-// Reuses music-sidebar.css classes + news-specific additions.
+// Click a headline → new page with headline, summary, Panel button.
+// Same pattern as music/literature sidebars.
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,23 +15,18 @@ import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import '../../styles/music-sidebar.css';
 
-// Auto-scrolling vertical news ticker with inline expansion
-// Slow speed for comfortable reading; user can scroll freely.
-// Clicking a headline expands it inline (summary + panel button).
-function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelClick, timeAgo, t }) {
+// Auto-scrolling vertical news ticker
+function NewsTicker({ highlights, headlines, onSelect, timeAgo }) {
   const tickerRef = useRef(null);
   const pausedRef = useRef(false);
   const resumeTimerRef = useRef(null);
 
-  // Merge: highlights first (marked), then headlines
   const allItems = [
     ...highlights.map((a) => ({ ...a, isHighlight: true })),
     ...headlines,
   ];
 
   // Single animation loop — runs forever, only moves when not paused
-  // Uses sub-pixel accumulator so scrollTop always gets whole-pixel increments
-  // (mobile browsers round fractional scrollTop to 0)
   useEffect(() => {
     const ticker = tickerRef.current;
     if (!ticker || allItems.length === 0) return;
@@ -59,96 +53,20 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
     return () => cancelAnimationFrame(frameId);
   }, [allItems.length]);
 
-  // Pause when expanded, resume instantly when collapsed
-  useEffect(() => {
-    if (expandedArticle) {
-      pausedRef.current = true;
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
-        resumeTimerRef.current = null;
-      }
-    } else {
-      pausedRef.current = false;
-    }
-  }, [expandedArticle]);
-
   // User manual scroll: pause, resume after 8s idle
   const handleUserInteraction = useCallback(() => {
-    if (expandedArticle) return;
     pausedRef.current = true;
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     resumeTimerRef.current = setTimeout(() => {
       pausedRef.current = false;
     }, 8000);
-  }, [expandedArticle]);
+  }, []);
 
-  // Cleanup timers
   useEffect(() => {
     return () => {
       if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     };
   }, []);
-
-  const isExpanded = (article) => {
-    return expandedArticle && expandedArticle.title === article.title;
-  };
-
-  const handleItemClick = (article) => {
-    if (isExpanded(article)) {
-      onExpand(null); // collapse
-    } else {
-      onExpand(article); // expand this one
-    }
-  };
-
-  const renderItem = (article, i, prefix) => {
-    const expanded = isExpanded(article);
-    return (
-      <div
-        key={`${prefix}-${i}`}
-        className={`news-headline__item ${article.isHighlight ? 'news-headline__item--highlight' : ''} ${expanded ? 'news-headline__item--expanded' : ''}`}
-        onClick={() => handleItemClick(article)}
-        role="button"
-        tabIndex={0}
-      >
-        {article.imageUrl && (
-          <img className="news-headline__image" src={article.imageUrl} alt="" loading="lazy" />
-        )}
-        <div className="news-headline__content">
-          {article.isHighlight && <span className="news-headline__star">&#9733;</span>}
-          <span className="news-headline__title">{article.title}</span>
-          <span className="news-headline__meta">
-            {article.source} &middot; {timeAgo(article.publishedAt)}
-            {article.topic && <span className="news-headline__topic"> &middot; {article.topic}</span>}
-          </span>
-          {/* Expanded section: AI summary + Philosopher's Panel button */}
-          <div className="news-headline__expanded-wrapper">
-            <div className="news-headline__expanded">
-              {(article.aiSummary || article.description) ? (
-                <p className="news-headline__summary">{article.aiSummary || article.description}</p>
-              ) : expanded ? (
-                <p className="news-headline__summary news-headline__summary--empty">
-                  {t('news.noSummary', { defaultValue: 'No summary available for this article.' })}
-                </p>
-              ) : null}
-              <button
-                className="news-headline__panel-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPanelClick(article);
-                }}
-              >
-                {t('philosopherPanel.button', { defaultValue: "Philosopher's Panel" })}
-                <span className="news-headline__panel-cost">
-                  3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div
@@ -159,8 +77,44 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
       onPointerDown={handleUserInteraction}
     >
       <div className="news-ticker__track">
-        {allItems.map((a, i) => renderItem(a, i, 'a'))}
-        {allItems.map((a, i) => renderItem(a, i, 'b'))}
+        {allItems.map((a, i) => (
+          <button
+            key={`a-${i}`}
+            className={`news-headline__item ${a.isHighlight ? 'news-headline__item--highlight' : ''}`}
+            onClick={() => onSelect(a)}
+          >
+            {a.imageUrl && (
+              <img className="news-headline__image" src={a.imageUrl} alt="" loading="lazy" />
+            )}
+            <div className="news-headline__content">
+              {a.isHighlight && <span className="news-headline__star">&#9733;</span>}
+              <span className="news-headline__title">{a.title}</span>
+              <span className="news-headline__meta">
+                {a.source} &middot; {timeAgo(a.publishedAt)}
+                {a.topic && <span className="news-headline__topic"> &middot; {a.topic}</span>}
+              </span>
+            </div>
+          </button>
+        ))}
+        {allItems.map((a, i) => (
+          <button
+            key={`b-${i}`}
+            className={`news-headline__item ${a.isHighlight ? 'news-headline__item--highlight' : ''}`}
+            onClick={() => onSelect(a)}
+          >
+            {a.imageUrl && (
+              <img className="news-headline__image" src={a.imageUrl} alt="" loading="lazy" />
+            )}
+            <div className="news-headline__content">
+              {a.isHighlight && <span className="news-headline__star">&#9733;</span>}
+              <span className="news-headline__title">{a.title}</span>
+              <span className="news-headline__meta">
+                {a.source} &middot; {timeAgo(a.publishedAt)}
+                {a.topic && <span className="news-headline__topic"> &middot; {a.topic}</span>}
+              </span>
+            </div>
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -188,11 +142,9 @@ export function NewsSidebar({
 }) {
   const { t, i18n } = useTranslation();
   const [showPicker, setShowPicker] = useState(false);
-  const [expandedArticle, setExpandedArticle] = useState(null);
   const sidebarRef = useRef(null);
   const contentRef = useRef(null);
 
-  // Internal modals
   const loginModal = useModal();
   const signupModal = useModal();
   const forgotPasswordModal = useModal();
@@ -227,33 +179,22 @@ export function NewsSidebar({
     };
   }, [isOpen]);
 
-  // Reset expanded article when sidebar closes
-  useEffect(() => {
-    if (!isOpen) {
-      setExpandedArticle(null);
-    }
-  }, [isOpen]);
-
   const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+    if (e.target === e.currentTarget) onClose();
   };
 
-  // Handle panel button click from inline headline expansion
-  const handleOpenPanel = (article) => {
+  const handleOpenPanel = () => {
     if (!user) {
       signupModal.open();
       return;
     }
     if (!balance || balance.total === undefined || balance.total < 3) {
-      if (article) {
-        setPendingAction({ type: 'news-analysis', article });
+      if (selectedArticle) {
+        setPendingAction({ type: 'news-analysis', article: selectedArticle });
       }
       paymentModal.open();
       return;
     }
-    selectArticle(article); // Set as selected for analysis
     setShowPicker(true);
   };
 
@@ -268,21 +209,13 @@ export function NewsSidebar({
     }
   };
 
-  // Reset everything and go back to ticker
-  const handleAnalyzeAnother = () => {
-    clearArticle();
-    setExpandedArticle(null);
-  };
-
-  // Time since article was published
   const timeAgo = (dateStr) => {
     if (!dateStr) return '';
     const diff = Date.now() - new Date(dateStr).getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
     if (hours < 1) return t('news.justNow', { defaultValue: 'Just now' });
     if (hours < 24) return `${hours}h`;
-    const days = Math.floor(hours / 24);
-    return `${days}d`;
+    return `${Math.floor(hours / 24)}d`;
   };
 
   return (
@@ -308,26 +241,9 @@ export function NewsSidebar({
         </div>
 
         <div ref={contentRef} className="music-sidebar__content">
-          {/* Loading indicator during panel analysis */}
-          {panelLoading && (
-            <div className="music-analyze">
-              <div className="music-timer">
-                <div className="music-timer__bar">
-                  <div className="music-timer__fill"></div>
-                </div>
-                <div className="music-timer__time">
-                  <span>&#9201;</span> {formatTime(elapsedTime)}
-                </div>
-                <div className="music-timer__label">
-                  {t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}
-                </div>
-              </div>
-              {panelError && <div className="music-error">{panelError}</div>}
-            </div>
-          )}
 
-          {/* Auto-scrolling headlines ticker — visible until analysis starts */}
-          {!panelLoading && !panelResult && (
+          {/* ── STATE 1: Headlines ticker (no article selected, no result) ── */}
+          {!selectedArticle && !panelResult && !panelLoading && (
             <div className="news-headlines">
               {headlinesLoading && (
                 <div className="news-headlines__loading">
@@ -348,17 +264,71 @@ export function NewsSidebar({
                 <NewsTicker
                   highlights={highlights}
                   headlines={headlines}
-                  expandedArticle={expandedArticle}
-                  onExpand={setExpandedArticle}
-                  onPanelClick={handleOpenPanel}
+                  onSelect={selectArticle}
                   timeAgo={timeAgo}
-                  t={t}
                 />
               )}
             </div>
           )}
 
-          {/* Panel result */}
+          {/* ── STATE 2: Article selected — headline + summary + Panel button ── */}
+          {selectedArticle && !panelResult && (
+            <>
+              <div className="music-selected">
+                <div className="music-selected__info">
+                  <div className="music-selected__song">{selectedArticle.title}</div>
+                  <div className="music-selected__artist">
+                    {selectedArticle.source} &middot; {timeAgo(selectedArticle.publishedAt)}
+                  </div>
+                </div>
+                <button className="music-selected__clear" onClick={clearArticle}>
+                  &times;
+                </button>
+              </div>
+
+              {/* AI Summary */}
+              {(selectedArticle.aiSummary || selectedArticle.description) && (
+                <div className="news-summary-card">
+                  <p className="news-summary-card__text">
+                    {selectedArticle.aiSummary || selectedArticle.description}
+                  </p>
+                </div>
+              )}
+
+              {/* Panel button / loading */}
+              <div className="music-analyze">
+                {!panelLoading ? (
+                  <button
+                    className="music-analyze__button music-analyze__button--panel"
+                    onClick={handleOpenPanel}
+                    disabled={panelLoading}
+                    style={{ width: '100%' }}
+                  >
+                    {t('philosopherPanel.button', { defaultValue: "Philosopher's Panel" })}
+                    <span className="music-analyze__cost">
+                      3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}
+                    </span>
+                  </button>
+                ) : null}
+                {panelLoading && (
+                  <div className="music-timer">
+                    <div className="music-timer__bar">
+                      <div className="music-timer__fill"></div>
+                    </div>
+                    <div className="music-timer__time">
+                      <span>&#9201;</span> {formatTime(elapsedTime)}
+                    </div>
+                    <div className="music-timer__label">
+                      {t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}
+                    </div>
+                  </div>
+                )}
+                {panelError && <div className="music-error">{panelError}</div>}
+              </div>
+            </>
+          )}
+
+          {/* ── STATE 3: Panel result ── */}
           {panelResult && (
             <div className="music-analysis">
               <div className="music-analysis__header">
@@ -406,7 +376,7 @@ export function NewsSidebar({
               )}
               <button
                 className="music-analyze__button music-analyze__button--another"
-                onClick={handleAnalyzeAnother}
+                onClick={clearArticle}
               >
                 {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
               </button>
