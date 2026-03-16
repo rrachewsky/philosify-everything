@@ -12,6 +12,7 @@
 import { jsonResponse } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
+import { pg } from "../utils/pg.js";
 
 async function query(sbUrl, sbKey, path) {
   const url = `${sbUrl}/rest/v1/${path}`;
@@ -93,13 +94,17 @@ export async function handleUserHistory(request, env, origin) {
       const threadIds = [...new Set(accessRows.map((r) => r.thread_id))];
       console.log(`[UserHistory] Debate thread IDs:`, JSON.stringify(threadIds));
 
-      // Fetch each thread individually to avoid filter issues
+      // Use pg() helper — proven to work with forum_threads (same as colloquium handler)
       const threadPromises = threadIds.map((tid) =>
-        query(sbUrl, sbKey, `forum_threads?id=eq.${tid}&select=id,title,content,thread_type,metadata,created_at`)
+        pg(env, "GET", "forum_threads", {
+          filter: `id=eq.${tid}`,
+          select: "id,title,content,thread_type,metadata,created_at",
+        })
       );
       const threadResults = await Promise.all(threadPromises);
-      const threads = threadResults.flat();
-      console.log(`[UserHistory] Found ${threads.length} threads, titles: ${threads.map(t => t.title).join(", ")}`);
+      // pg returns array or null
+      const threads = threadResults.flat().filter(Boolean);
+      console.log(`[UserHistory] Found ${threads.length} threads, titles: ${threads.map(t => t.title).join(" | ")}`);
       const threadMap = {};
       for (const t of threads) threadMap[t.id] = t;
 
