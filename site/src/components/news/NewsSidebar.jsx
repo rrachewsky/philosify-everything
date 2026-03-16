@@ -121,17 +121,16 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
             {article.source} &middot; {timeAgo(article.publishedAt)}
             {article.topic && <span className="news-headline__topic"> &middot; {article.topic}</span>}
           </span>
-          {/* Expanded section: summary + Philosopher's Panel button */}
+          {/* Expanded section: AI summary + Philosopher's Panel button */}
           <div className="news-headline__expanded-wrapper">
             <div className="news-headline__expanded">
-              {article.description && (
-                <p className="news-headline__summary">{article.description}</p>
-              )}
-              {!article.description && expanded && (
+              {(article.aiSummary || article.description) ? (
+                <p className="news-headline__summary">{article.aiSummary || article.description}</p>
+              ) : expanded ? (
                 <p className="news-headline__summary news-headline__summary--empty">
                   {t('news.noSummary', { defaultValue: 'No summary available for this article.' })}
                 </p>
-              )}
+              ) : null}
               <button
                 className="news-headline__panel-btn"
                 onClick={(e) => {

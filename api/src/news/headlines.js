@@ -256,12 +256,63 @@ export async function fetchHighlights(env, lang = "en") {
 }
 
 // ============================================================
+// AI SUMMARIZER — ~40-word summary per article via Gemini Flash
+// ============================================================
+
+async function summarizeArticles(articles, lang, env) {
+  const apiKey = await getSecret(env.GEMINI_API_KEY);
+  if (!apiKey || articles.length === 0) return articles;
+
+  const batch = articles.map((a, i) => `[${i}] ${a.title}${a.description ? " — " + a.description : ""}`).join("\n");
+
+  const prompt = `You are a news editor. For each article below, write a concise summary of approximately 40 words.
+Write ALL summaries in the language with ISO code "${lang}".
+Return ONLY a valid JSON array: [{"id":0,"summary":"..."},{"id":1,"summary":"..."},...]
+No markdown fences, no explanation, ONLY the JSON array.
+
+Articles:
+${batch}`;
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.2, maxOutputTokens: 4096 },
+      }),
+    });
+
+    if (!res.ok) {
+      console.error(`[News] Summary API error: ${res.status}`);
+      return articles;
+    }
+
+    const data = await res.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const jsonStr = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const summaries = JSON.parse(jsonStr);
+
+    const map = {};
+    for (const s of summaries) map[s.id] = s.summary;
+
+    console.log(`[News] Generated ${summaries.length} AI summaries (${lang})`);
+    return articles.map((a, i) => ({ ...a, aiSummary: map[i] || a.description || "" }));
+  } catch (err) {
+    console.error(`[News] AI summary failed (${lang}): ${err.message}`);
+    return articles;
+  }
+}
+
+// ============================================================
 // CACHE MANAGEMENT
 // ============================================================
 
 export async function refreshHeadlines(env, lang = "en") {
   try {
-    const articles = await fetchAllHeadlines(env, lang);
+    let articles = await fetchAllHeadlines(env, lang);
+    articles = await summarizeArticles(articles, lang, env);
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
@@ -290,7 +341,8 @@ export async function refreshHeadlines(env, lang = "en") {
 export async function refreshHighlights(env, lang = "en") {
   try {
     const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
-    const articles = await fetchHighlights(env, gnewsLang);
+    let articles = await fetchHighlights(env, gnewsLang);
+    articles = await summarizeArticles(articles, gnewsLang, env);
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
