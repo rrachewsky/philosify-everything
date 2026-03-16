@@ -137,6 +137,12 @@ export async function handleUserHistory(request, env, origin) {
         success: true,
         items: all,
         count: all.length,
+        _debug: {
+          accessRows: accessRows.length,
+          threadIds: accessRows.length > 0 ? [...new Set(accessRows.map((r) => r.thread_id))] : [],
+          threadsFound: debates.filter((d) => d.title !== "Debate").length,
+          debateTitles: debates.map((d) => d.title),
+        },
       },
       200,
       origin,
