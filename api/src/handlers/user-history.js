@@ -86,10 +86,10 @@ export async function handleUserHistory(request, env, origin) {
     let debates = [];
     if (accessRows.length > 0) {
       const threadIds = [...new Set(accessRows.map((r) => r.thread_id))];
-      // Fetch thread titles
-      const threadFilter = threadIds.map((id) => `id.eq.${id}`).join(",");
+      // Fetch thread details using `in` filter (simpler, more reliable than `or`)
+      const idList = threadIds.map((id) => `"${id}"`).join(",");
       const threads = await query(sbUrl, sbKey,
-        `forum_threads?or=(${threadFilter})&select=id,title,content,thread_type,metadata,created_at`
+        `forum_threads?id=in.(${idList})&select=id,title,content,thread_type,metadata,created_at`
       );
       console.log(`[UserHistory] Found ${threads.length} threads for ${threadIds.length} debate IDs`);
       const threadMap = {};
