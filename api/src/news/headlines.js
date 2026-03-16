@@ -24,8 +24,8 @@
 
 import { getSecret } from "../utils/secrets.js";
 
-const KV_KEY_HEADLINES = "news:headlines";
-const KV_KEY_HIGHLIGHTS = "news:highlights";
+const KV_KEY_HEADLINES = "news:v2:headlines";
+const KV_KEY_HIGHLIGHTS = "news:v2:highlights";
 const CACHE_TTL_SECONDS = 2 * 60 * 60; // 2 hours
 const STALE_THRESHOLD_MS = 60 * 60 * 1000; // 1 hour
 const HIGHLIGHTS_STALE_MS = 4 * 60 * 60 * 1000; // 4 hours

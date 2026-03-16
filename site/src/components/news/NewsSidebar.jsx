@@ -63,19 +63,10 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
     }
   }, []);
 
-  // Start auto-scroll on mount (only when no article is expanded)
+  // Single effect: controls auto-scroll based on items + expanded state
   useEffect(() => {
-    if (allItems.length > 0 && !expandedArticle) {
-      pausedRef.current = false;
-      startAutoScroll();
-    }
-    return () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-    };
-  }, [allItems.length, startAutoScroll, expandedArticle]);
+    if (allItems.length === 0) return;
 
-  // Pause auto-scroll when an article is expanded; resume when collapsed
-  useEffect(() => {
     if (expandedArticle) {
       stopAutoScroll();
       if (resumeTimerRef.current) {
@@ -86,7 +77,11 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
       pausedRef.current = false;
       startAutoScroll();
     }
-  }, [expandedArticle, stopAutoScroll, startAutoScroll]);
+
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+    };
+  }, [allItems.length, expandedArticle, stopAutoScroll, startAutoScroll]);
 
   // User manual scroll: pause auto-scroll, resume after 8s idle
   const handleUserInteraction = useCallback(() => {
