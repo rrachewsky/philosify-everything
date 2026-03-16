@@ -150,9 +150,9 @@ export function useAccountHistory(user) {
           label = ' [Panel]';
         } else if (item.kind === 'debate') {
           label = item.threadType === 'user_proposed' ? ' [Colloquium]' : ' [Debate]';
-          // Show debate topic/context (truncated)
-          const context = item.content ? ` — ${item.content.slice(0, 80)}${item.content.length > 80 ? '...' : ''}` : '';
-          return `${icon} ${title}${context}${label}`;
+          const philosophers = item.artist ? ` - ${item.artist}` : '';
+          const context = item.content ? `\n${item.content.slice(0, 100)}${item.content.length > 100 ? '...' : ''}` : '';
+          return `${icon} ${title}${philosophers}${label}${context}`;
         }
 
         return `${icon} ${title}${artist}${label}`;
