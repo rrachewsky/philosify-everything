@@ -172,6 +172,8 @@ export async function fetchAllHeadlines(env, lang = "en") {
   const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
   const isLocalDifferent = gnewsLang !== "en";
 
+  // Debug: log key prefix to verify correct key is loaded
+  console.log(`[News] API key starts with: ${apiKey.substring(0, 6)}...`);
   console.log(`[News] Fetching headlines: international (EN) ${isLocalDifferent ? `+ local (${gnewsLang})` : ""}`);
 
   // Fetch international headlines (always English)
@@ -198,7 +200,7 @@ export async function fetchAllHeadlines(env, lang = "en") {
   // Sort newest first
   clean.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
-  console.log(`[News] ${clean.length} clean headlines (${allArticles.length} total, ${filtered} filtered)`);
+  console.log(`[News] ${clean.length} clean headlines (${allArticles.length} total, ${sourceBlocked} source-blocked, ${contentFiltered} content-filtered)`);
   return clean;
 }
 
@@ -237,12 +239,17 @@ export async function refreshHeadlines(env, lang = "en") {
       lang,
     };
 
-    const kvKey = lang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${lang}`;
-    await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
-      expirationTtl: CACHE_TTL_SECONDS,
-    });
+    // Never cache empty results — they indicate API errors or quota issues
+    if (articles.length > 0) {
+      const kvKey = lang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${lang}`;
+      await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
+        expirationTtl: CACHE_TTL_SECONDS,
+      });
+      console.log(`[News] Cached ${articles.length} headlines (${lang})`);
+    } else {
+      console.warn(`[News] NOT caching empty headlines (${lang}) — possible API issue`);
+    }
 
-    console.log(`[News] Cached ${articles.length} headlines (${lang})`);
     return cached;
   } catch (err) {
     console.error(`[News] Failed to refresh headlines (${lang}): ${err.message}`);
@@ -259,11 +266,15 @@ export async function refreshHighlights(env) {
       count: articles.length,
     };
 
-    await env.PHILOSIFY_KV.put(KV_KEY_HIGHLIGHTS, JSON.stringify(cached), {
-      expirationTtl: CACHE_TTL_SECONDS * 2,
-    });
+    if (articles.length > 0) {
+      await env.PHILOSIFY_KV.put(KV_KEY_HIGHLIGHTS, JSON.stringify(cached), {
+        expirationTtl: CACHE_TTL_SECONDS * 2,
+      });
+      console.log(`[News] Cached ${articles.length} highlights`);
+    } else {
+      console.warn(`[News] NOT caching empty highlights — possible API issue`);
+    }
 
-    console.log(`[News] Cached ${articles.length} highlights`);
     return cached;
   } catch (err) {
     console.error(`[News] Failed to refresh highlights: ${err.message}`);
