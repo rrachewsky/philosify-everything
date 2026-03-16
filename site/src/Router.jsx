@@ -314,8 +314,8 @@ export function Router() {
                 onViewAnalysis={music.openWithResult}
                 onViewDebate={ideas.openWithDebate}
                 onOpenSidebar={(type, result) => {
-                  if (type === 'news') news.open();
-                  else if (type === 'literature') result ? literature.openWithResult(result) : literature.open();
+                   if (type === 'news') result ? news.openWithResult(result) : news.open();
+                   else if (type === 'literature') result ? literature.openWithResult(result) : literature.open();
                   else result ? music.openWithResult(result) : music.open();
                 }}
                 anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
