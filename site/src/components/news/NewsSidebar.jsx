@@ -31,19 +31,25 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
   ];
 
   // Single animation loop — runs forever, only moves when not paused
+  // Uses sub-pixel accumulator so scrollTop always gets whole-pixel increments
+  // (mobile browsers round fractional scrollTop to 0)
   useEffect(() => {
     const ticker = tickerRef.current;
     if (!ticker || allItems.length === 0) return;
 
-    const speed = 0.08;
+    let subPixel = 0;
     let frameId;
 
     const scroll = () => {
       if (!pausedRef.current && ticker) {
-        ticker.scrollTop += speed;
-        const halfHeight = ticker.scrollHeight / 2;
-        if (halfHeight > 0 && ticker.scrollTop >= halfHeight) {
-          ticker.scrollTop -= halfHeight;
+        subPixel += 0.15;
+        if (subPixel >= 1) {
+          ticker.scrollTop += 1;
+          subPixel -= 1;
+          const halfHeight = ticker.scrollHeight / 2;
+          if (halfHeight > 0 && ticker.scrollTop >= halfHeight) {
+            ticker.scrollTop -= halfHeight;
+          }
         }
       }
       frameId = requestAnimationFrame(scroll);
