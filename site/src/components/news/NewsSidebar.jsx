@@ -21,7 +21,6 @@ import '../../styles/music-sidebar.css';
 // Clicking a headline expands it inline (summary + panel button).
 function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelClick, timeAgo, t }) {
   const tickerRef = useRef(null);
-  const animRef = useRef(null);
   const pausedRef = useRef(false);
   const resumeTimerRef = useRef(null);
 
@@ -31,14 +30,13 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
     ...headlines,
   ];
 
-  // Start/restart auto-scroll animation
-  const startAutoScroll = useCallback(() => {
-    if (animRef.current) cancelAnimationFrame(animRef.current);
-
+  // Single animation loop — runs forever, only moves when not paused
+  useEffect(() => {
     const ticker = tickerRef.current;
-    if (!ticker) return;
+    if (!ticker || allItems.length === 0) return;
 
-    const speed = 0.08; // ~4.8px/sec at 60fps — very slow, comfortable reading
+    const speed = 0.08;
+    let frameId;
 
     const scroll = () => {
       if (!pausedRef.current && ticker) {
@@ -48,55 +46,37 @@ function NewsTicker({ highlights, headlines, expandedArticle, onExpand, onPanelC
           ticker.scrollTop -= halfHeight;
         }
       }
-      animRef.current = requestAnimationFrame(scroll);
+      frameId = requestAnimationFrame(scroll);
     };
 
-    animRef.current = requestAnimationFrame(scroll);
-  }, []);
+    frameId = requestAnimationFrame(scroll);
+    return () => cancelAnimationFrame(frameId);
+  }, [allItems.length]);
 
-  // Stop auto-scroll completely
-  const stopAutoScroll = useCallback(() => {
-    pausedRef.current = true;
-    if (animRef.current) {
-      cancelAnimationFrame(animRef.current);
-      animRef.current = null;
-    }
-  }, []);
-
-  // Single effect: controls auto-scroll based on items + expanded state
+  // Pause when expanded, resume instantly when collapsed
   useEffect(() => {
-    if (allItems.length === 0) return;
-
     if (expandedArticle) {
-      stopAutoScroll();
+      pausedRef.current = true;
       if (resumeTimerRef.current) {
         clearTimeout(resumeTimerRef.current);
         resumeTimerRef.current = null;
       }
     } else {
       pausedRef.current = false;
-      startAutoScroll();
     }
+  }, [expandedArticle]);
 
-    return () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-    };
-  }, [allItems.length, expandedArticle, stopAutoScroll, startAutoScroll]);
-
-  // User manual scroll: pause auto-scroll, resume after 8s idle
+  // User manual scroll: pause, resume after 8s idle
   const handleUserInteraction = useCallback(() => {
-    if (expandedArticle) return; // Don't interfere when expanded
-    stopAutoScroll();
+    if (expandedArticle) return;
+    pausedRef.current = true;
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     resumeTimerRef.current = setTimeout(() => {
-      if (!expandedArticle) {
-        pausedRef.current = false;
-        startAutoScroll();
-      }
+      pausedRef.current = false;
     }, 8000);
-  }, [stopAutoScroll, startAutoScroll, expandedArticle]);
+  }, [expandedArticle]);
 
-  // Cleanup
+  // Cleanup timers
   useEffect(() => {
     return () => {
       if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
