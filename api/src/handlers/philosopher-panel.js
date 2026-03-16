@@ -220,11 +220,11 @@ export async function handlePhilosopherPanel(
         createdAt: new Date().toISOString(),
       };
 
-      // ── Store in KV: both deterministic key (for dedup) and UUID key (for TTS) ──
-      const kvTtl = 7 * 24 * 60 * 60; // 7 days
+      // ── Store in KV: both deterministic key (for dedup) and UUID key (for history/TTS) ──
+      // No TTL — user paid credits, analysis must be permanent
       await Promise.all([
-        env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(panelData), { expirationTtl: kvTtl }),
-        env.PHILOSIFY_KV.put(`panel:${panelId}`, JSON.stringify(panelData), { expirationTtl: kvTtl }),
+        env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(panelData)),
+        env.PHILOSIFY_KV.put(`panel:${panelId}`, JSON.stringify(panelData)),
       ]);
 
       // ── Save to DB for history ──
