@@ -136,7 +136,7 @@ export function useCinemaSidebar() {
 
         if (controller.signal.aborted) return;
 
-        setPanelResult(result);
+        setPanelResult(result.panel);
         if (refreshBalance) refreshBalance();
       } catch (err) {
         if (!controller.signal.aborted) {
