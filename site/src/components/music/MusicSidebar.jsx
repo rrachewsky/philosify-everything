@@ -472,7 +472,7 @@ export function MusicSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}` : undefined}
+                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.resolvedLanguage || i18n.language}` : undefined}
                     shareText={t('share.shareMusicText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton

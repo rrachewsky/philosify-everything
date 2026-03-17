@@ -1762,7 +1762,7 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                     <div className="debate-wrapup__content">{localizedWrapup}</div>
                     {/* Share verdict via WhatsApp, Telegram, etc. */}
                     <ShareButton
-                      shareUrl={`${config.apiUrl}/api/share-preview/debate/${coll.activeColloquium?.id}?lang=${i18n.language}`}
+                      shareUrl={`${config.apiUrl}/api/share-preview/debate/${coll.activeColloquium?.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
                       shareText={t('share.shareDebateText', { title: localizedTitle || t('community.debate.wrapupTitle') })}
                     />
                   </div>
@@ -2162,7 +2162,7 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                 <TranslateButton text={debate.wrapup} />
                 {/* Share verdict via WhatsApp, Telegram, etc. */}
                 <ShareButton
-                  shareUrl={`${config.apiUrl}/api/share-preview/debate/${debate.activeDebate?.id}?lang=${i18n.language}`}
+                  shareUrl={`${config.apiUrl}/api/share-preview/debate/${debate.activeDebate?.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
                   shareText={t('share.shareDebateText', { title: debate.activeDebate?.title || t('community.debate.wrapupTitle') })}
                 />
               </div>
