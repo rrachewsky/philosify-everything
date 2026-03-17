@@ -146,7 +146,7 @@ export function CinemaSidebar({
                   ref={inputRef}
                   type="text"
                   className="music-search__input"
-                  placeholder={t('films.searchPlaceholder', 'Search for a film...')}
+                  placeholder={t('home.categories.films.searchPlaceholder', 'Search for a film...')}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   disabled={!!selectedFilm}
@@ -191,7 +191,7 @@ export function CinemaSidebar({
           {/* No results */}
           {!selectedFilm && !panelResult && hasSearched && results.length === 0 && !searchLoading && (
             <div className="music-no-results">
-              {t('films.noResults', 'No films found for your search.')}
+              {t('home.categories.films.noResults', 'No films found for your search.')}
             </div>
           )}
 
@@ -315,7 +315,7 @@ export function CinemaSidebar({
                 className="music-analyze__button music-analyze__button--another"
                 onClick={clearFilm}
               >
-                {t('films.analyzeAnother', 'Analyze Another Film')}
+                {t('home.categories.films.analyzeAnother', 'Analyze Another Film')}
               </button>
             </div>
           )}
