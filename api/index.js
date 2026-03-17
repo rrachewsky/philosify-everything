@@ -3310,11 +3310,11 @@ export default {
         try {
           const threadId = debateShareMatch[1];
           const lang = url.searchParams.get("lang") || "en";
-          const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
-          const res = await fetch(`${sbUrl}/rest/v1/forum_threads?id=eq.${threadId}&select=id,title,content,metadata`, {
-            headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` },
+          const { pg: pgQuery } = await import("./src/utils/pg.js");
+          const threads = await pgQuery(env, "GET", "forum_threads", {
+            filter: `id=eq.${threadId}`,
+            select: "id,title,content,metadata",
           });
-          const threads = await res.json();
           const thread = threads?.[0];
           // Use translated title/content if available
           const translations = thread?.metadata?.translations?.[lang] || {};
