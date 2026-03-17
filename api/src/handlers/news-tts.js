@@ -1,6 +1,7 @@
 // ============================================================
-// NEWS/PANEL TTS — One narrator reads the full text.
-// Splits long texts into chunks, generates sequentially, concatenates.
+// NEWS/PANEL TTS — Parallel chunk generation with voice rotation.
+// Splits long texts into chunks, generates in parallel with
+// different voices per chunk, adds silence gaps, concatenates.
 // ============================================================
 
 import { jsonResponse } from "../utils/index.js";
@@ -10,7 +11,10 @@ import { getSecret } from "../utils/secrets.js";
 const TTS_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent";
 
-async function ttsCall(text, apiKey) {
+// Rotate through Gemini TTS voices for each chunk
+const VOICES = ["Puck", "Charon", "Kore", "Fenrir", "Aoede"];
+
+async function ttsCall(text, apiKey, voiceName = "Puck") {
   const res = await fetch(`${TTS_URL}?key=${apiKey}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -19,7 +23,7 @@ async function ttsCall(text, apiKey) {
       generationConfig: {
         responseModalities: ["AUDIO"],
         speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } },
+          voiceConfig: { prebuiltVoiceConfig: { voiceName } },
         },
       },
     }),
@@ -38,6 +42,11 @@ async function ttsCall(text, apiKey) {
   const pcm = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) pcm[i] = bin.charCodeAt(i);
   return pcm;
+}
+
+// 0.3s silence at 24000 Hz, 16-bit mono = 14400 bytes
+function silenceGap() {
+  return new Uint8Array(14400);
 }
 
 function buildWav(pcmArrays) {
@@ -99,7 +108,6 @@ export async function handleNewsTTS(request, env, origin) {
         chunks.push(remaining);
         break;
       }
-      // Find last paragraph break before limit
       let splitAt = remaining.lastIndexOf("\n\n", LIMIT);
       if (splitAt < LIMIT * 0.3) splitAt = remaining.lastIndexOf(". ", LIMIT);
       if (splitAt < LIMIT * 0.3) splitAt = LIMIT;
@@ -107,17 +115,28 @@ export async function handleNewsTTS(request, env, origin) {
       remaining = remaining.substring(splitAt + 1).trim();
     }
 
-    console.log(`[NewsTTS] ${chunks.length} chunks`);
+    console.log(`[NewsTTS] ${chunks.length} chunks, generating in parallel with voice rotation...`);
 
-    // Generate chunks sequentially to maintain consistent voice quality
-    console.log(`[NewsTTS] Generating ${chunks.length} chunks sequentially...`);
-    const pcmArrays = [];
-    for (let i = 0; i < chunks.length; i++) {
-      console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunks[i].length} chars`);
-      pcmArrays.push(await ttsCall(chunks[i], apiKey));
+    // Generate all chunks in parallel, each with a different voice
+    const pcmResults = await Promise.all(
+      chunks.map((chunk, i) => {
+        const voice = VOICES[i % VOICES.length];
+        console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunk.length} chars, voice: ${voice}`);
+        return ttsCall(chunk, apiKey, voice);
+      })
+    );
+
+    // Interleave PCM arrays with silence gaps between chunks
+    const allPcm = [];
+    const gap = silenceGap();
+    for (let i = 0; i < pcmResults.length; i++) {
+      allPcm.push(pcmResults[i]);
+      if (i < pcmResults.length - 1) {
+        allPcm.push(gap);
+      }
     }
 
-    const wav = buildWav(pcmArrays);
+    const wav = buildWav(allPcm);
     console.log(`[NewsTTS] Done: ${wav.byteLength} bytes`);
 
     return new Response(wav, {
