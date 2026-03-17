@@ -3302,6 +3302,88 @@ export default {
         }
       }
 
+      // ── Share preview pages (serve OG tags for WhatsApp/Telegram link previews) ──
+
+      // GET /api/share-preview/debate/:threadId
+      const debateShareMatch = url.pathname.match(/^\/api\/share-preview\/debate\/([a-f0-9-]+)$/);
+      if (debateShareMatch && request.method === "GET") {
+        try {
+          const threadId = debateShareMatch[1];
+          const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
+          const res = await fetch(`${sbUrl}/rest/v1/forum_threads?id=eq.${threadId}&select=id,title,content,metadata`, {
+            headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` },
+          });
+          const threads = await res.json();
+          const thread = threads?.[0];
+          const title = escapeHtml(thread?.title || "Philosophical Debate");
+          const content = thread?.content || "";
+          const excerpt = escapeHtml(content.length > 160 ? content.slice(0, 160) + "..." : content);
+          const philosophers = (thread?.metadata?.philosophers || []).join(", ");
+          const desc = philosophers ? `${excerpt} — ${escapeHtml(philosophers)}` : excerpt;
+          const logoUrl = "https://philosify.org/logo.png";
+          const previewUrl = `https://philosify.org/api/share-preview/debate/${threadId}`;
+
+          const html = `<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${previewUrl}">
+<meta property="og:title" content="${title} | Philosify">
+<meta property="og:description" content="${desc}">
+<meta property="og:image" content="${logoUrl}">
+<meta property="og:site_name" content="Philosify">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title} | Philosify">
+<meta name="twitter:description" content="${desc}">
+<meta name="twitter:image" content="${logoUrl}">
+<title>${title} | Philosify</title>
+<script>setTimeout(function(){window.location.href='https://philosify.org'},100);</script>
+</head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
+
+          return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders(origin, env) } });
+        } catch (e) {
+          return jsonResponse({ error: e.message }, 500, origin, env);
+        }
+      }
+
+      // GET /api/share-preview/panel/:panelId
+      const panelShareMatch = url.pathname.match(/^\/api\/share-preview\/panel\/([a-f0-9-]+)$/);
+      if (panelShareMatch && request.method === "GET") {
+        try {
+          const panelId = panelShareMatch[1];
+          const raw = await env.PHILOSIFY_KV.get(`panel:${panelId}`);
+          const panel = raw ? JSON.parse(raw) : null;
+          const title = escapeHtml(panel?.title || "Philosopher's Panel");
+          const analysis = panel?.analysis || "";
+          const excerpt = escapeHtml(analysis.replace(/\*\*/g, "").replace(/\*/g, "").slice(0, 160) + "...");
+          const mediaType = panel?.mediaType || "news";
+          const desc = `${mediaType === "news" ? "📰" : mediaType === "music" ? "🎵" : "📚"} ${excerpt}`;
+          const logoUrl = "https://philosify.org/logo.png";
+          const previewUrl = `https://philosify.org/api/share-preview/panel/${panelId}`;
+
+          const html = `<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${previewUrl}">
+<meta property="og:title" content="${title} | Philosify">
+<meta property="og:description" content="${desc}">
+<meta property="og:image" content="${logoUrl}">
+<meta property="og:site_name" content="Philosify">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title} | Philosify">
+<meta name="twitter:description" content="${desc}">
+<meta name="twitter:image" content="${logoUrl}">
+<title>${title} | Philosify</title>
+<script>setTimeout(function(){window.location.href='https://philosify.org'},100);</script>
+</head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
+
+          return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders(origin, env) } });
+        } catch (e) {
+          return jsonResponse({ error: e.message }, 500, origin, env);
+        }
+      }
+
       // Unified user history — all analyses, panels, debates
       if (url.pathname === "/api/user-history" && request.method === "GET") {
         return handleUserHistory(request, env, origin);

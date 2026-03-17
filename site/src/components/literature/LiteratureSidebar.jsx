@@ -563,6 +563,7 @@ export function LiteratureSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
+                    shareUrl={panelResult.id ? `${window.location.origin}/api/share-preview/panel/${panelResult.id}` : undefined}
                     shareText={t('share.shareLiteratureText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton
