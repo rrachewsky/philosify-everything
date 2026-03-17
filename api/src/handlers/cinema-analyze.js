@@ -10,7 +10,7 @@ import { getDebateAestheticGuide } from "../guides/index.js";
 import { analyzeFilmPhilosophy } from "../ai/cinema-orchestrator.js";
 import { getFilmDetails } from "../films/search.js";
 import { calculateWeightedScore } from "../config/scoring.js";
-import { getPhilosophicalNote } from "../ai/prompts/calculator.js";
+import { calculatePhilosophicalNote } from "../ai/prompts/calculator.js";
 import { normalizeClassification } from "../ai/parser.js";
 import { localizeClassification } from "../ai/classification-i18n.js";
 
@@ -45,9 +45,9 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       });
       result.final_score = finalScore;
       result.scorecard.final_score = finalScore;
-      result.classification = normalizeClassification(finalScore);
+      result.classification = normalizeClassification("", finalScore);
       result.classification_localized = localizeClassification(result.classification, lang);
-      result.philosophical_note = getPhilosophicalNote(finalScore);
+      result.philosophical_note = calculatePhilosophicalNote(finalScore);
       result.cached = true;
       return jsonResponse(result, 200, origin, env);
     }
@@ -107,8 +107,8 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       // Generate guide proof
       let guideProof = {};
       try {
-        const { generateGuideProof } = await import("../ai/guide-proof.js");
-        guideProof = await generateGuideProof(guide, `cinema-${cacheKey}`, env);
+        const { generateGuideProof } = await import("../guides/loader.js");
+        guideProof = await generateGuideProof(guide);
       } catch (e) {
         console.warn(`[CinemaAnalyze] Guide proof failed: ${e.message}`);
       }

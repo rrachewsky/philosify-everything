@@ -4,103 +4,134 @@
 // ============================================================
 
 import { buildCinemaAnalysisPrompt } from "./prompts/cinema-template.js";
-import { callModel, validateModel, validateLanguage } from "./models/index.js";
-import { extractJSON, normalizeResponse, normalizeClassification } from "./parser.js";
-import { calculateWeightedScore, AXIS_WEIGHTS } from "../config/scoring.js";
-import { getPhilosophicalNote } from "./prompts/calculator.js";
+import { calculatePhilosophicalNote } from "./prompts/calculator.js";
+import {
+  callClaude,
+  callOpenAI,
+  callGemini,
+  callGrok,
+  callDeepSeek,
+} from "./models/index.js";
+import {
+  extractJSON,
+  normalizeResponse,
+  splitTrailingSchoolsParagraph,
+} from "./parser.js";
+import { calculateWeightedScore } from "../config/scoring.js";
 
-const BRANCHES = ["ethics", "metaphysics", "epistemology", "politics", "aesthetics"];
+function normalizeSchoolsHtml(value) {
+  if (!value) return "";
+  const s = String(value);
+  if (!s.includes("<") && s.includes("\n")) {
+    return s.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).join("<br/>");
+  }
+  return s.replace(/\n/g, "<br/>").replace(/<br\/><br\/><br\/>/g, "<br/><br/>");
+}
 
-export async function analyzeFilmPhilosophy(title, director, synopsis, filmMetadata, guide, model, lang, env) {
-  const validModel = validateModel(model);
-  const validLang = validateLanguage(lang);
+const LANG_NAMES = {
+  en: "English", pt: "Portuguese", es: "Spanish", de: "German",
+  fr: "French", it: "Italian", hu: "Hungarian", ru: "Russian",
+  ja: "Japanese", zh: "Chinese", ko: "Korean", he: "Hebrew",
+  ar: "Arabic", hi: "Hindi", fa: "Farsi", nl: "Dutch",
+  pl: "Polish", tr: "Turkish",
+};
 
-  const prompt = buildCinemaAnalysisPrompt(title, director, synopsis, filmMetadata, guide, validLang);
+function normalizeModelKey(model) {
+  const m = String(model || "").toLowerCase();
+  if (m.includes("claude") || m === "anthropic") return "claude";
+  if (m === "gpt4" || m === "openai" || m.startsWith("o1") || m.startsWith("o3") || m.startsWith("gpt-")) return "openai";
+  if (m.includes("gemini")) return "gemini";
+  if (m.includes("grok")) return "grok";
+  if (m.includes("deepseek")) return "deepseek";
+  throw new Error(`Unrecognized model key: "${model}"`);
+}
 
-  // Model fallback chain (same as book-orchestrator)
-  const modelOrder = [validModel, "claude", "openai", "gemini", "grok", "deepseek"]
-    .filter((v, i, a) => a.indexOf(v) === i);
-
-  let analysisText = null;
-  let usedModel = validModel;
-
-  for (const currentModel of modelOrder) {
-    let attempts = 0;
-    const maxAttempts = 2;
-
-    while (attempts < maxAttempts) {
-      attempts++;
-      try {
-        console.log(`[CinemaOrchestrator] Trying ${currentModel} (attempt ${attempts}/${maxAttempts})`);
-
-        analysisText = await callModel(currentModel, prompt, env, validLang);
-        usedModel = currentModel;
-
-        if (analysisText) break;
-      } catch (err) {
-        console.error(`[CinemaOrchestrator] ${currentModel} attempt ${attempts} failed:`, err.message);
-
-        if (err.message?.includes("content_filtered")) {
-          console.log(`[CinemaOrchestrator] Content filtered by ${currentModel}, skipping to next model`);
-          break;
-        }
-
-        if (attempts >= maxAttempts) {
-          console.log(`[CinemaOrchestrator] ${currentModel} exhausted, trying next model`);
-        }
+function isComplete(normalized) {
+  const issues = [];
+  const sc = normalized.scorecard;
+  if (!sc) { issues.push("missing scorecard"); }
+  else {
+    for (const branch of ["ethics", "metaphysics", "epistemology", "politics", "aesthetics"]) {
+      if (!sc[branch]) issues.push(`missing scorecard.${branch}`);
+      else {
+        if (sc[branch].score === undefined) issues.push(`missing ${branch}.score`);
+        if (!sc[branch].justification || sc[branch].justification.length < 20) issues.push(`${branch}.justification too short`);
       }
-    }
-
-    if (analysisText) break;
-  }
-
-  if (!analysisText) {
-    throw new Error("All AI models failed to analyze this film");
-  }
-
-  // Parse and normalize the response
-  const parsed = extractJSON(analysisText);
-  if (!parsed) {
-    throw new Error("Failed to parse AI response as JSON");
-  }
-
-  const normalized = normalizeResponse(parsed);
-
-  // Extract schools_of_thought
-  if (!normalized.schools_of_thought && normalized.philosophical_analysis) {
-    const sotMatch = normalized.philosophical_analysis.match(
-      /(?:<strong>.*?School.*?<\/strong>|School\(s\) of Thought)[\s\S]{10,500}/i
-    );
-    if (sotMatch) {
-      normalized.schools_of_thought = sotMatch[0];
-    }
-  }
-
-  if (normalized.schools_of_thought) {
-    normalized.schools_of_thought = normalized.schools_of_thought
-      .replace(/\n/g, "<br/>")
-      .replace(/<br\/><br\/><br\/>/g, "<br/><br/>");
-  }
-
-  // Validate completeness
-  const missing = [];
-  for (const branch of BRANCHES) {
-    if (!normalized.scorecard?.[branch]?.justification || normalized.scorecard[branch].justification.length < 20) {
-      missing.push(branch);
-    }
-    if (normalized.scorecard?.[branch]?.score === undefined) {
-      missing.push(`${branch}_score`);
     }
   }
   if (!normalized.philosophical_analysis || normalized.philosophical_analysis.length < 100) {
-    missing.push("philosophical_analysis");
+    issues.push("philosophical_analysis too short");
+  }
+  if (!normalized.classification) issues.push("missing classification");
+  return { ok: issues.length === 0, issues };
+}
+
+export async function analyzeFilmPhilosophy(title, director, synopsis, filmMetadata, guide, model, lang, env) {
+  const prompt = buildCinemaAnalysisPrompt(title, director, synopsis, filmMetadata, guide, lang);
+  const targetLanguage = LANG_NAMES[lang] || "English";
+
+  console.log(`[CinemaOrchestrator] Prompt: ${prompt.length} chars, Guide: ${guide?.length || 0} chars`);
+
+  const requestedKey = normalizeModelKey(model);
+
+  const callByKey = {
+    claude: () => callClaude(prompt, targetLanguage, env),
+    openai: () => callOpenAI(prompt, targetLanguage, env),
+    gemini: () => callGemini(prompt, targetLanguage, env),
+    grok: () => callGrok(prompt, targetLanguage, env),
+    deepseek: () => callDeepSeek(prompt, targetLanguage, env),
+  };
+
+  const fallbacksByKey = {
+    claude: ["openai", "gemini", "grok", "deepseek"],
+    openai: ["claude", "gemini", "grok", "deepseek"],
+    gemini: ["claude", "openai", "grok", "deepseek"],
+    grok: ["claude", "openai", "gemini", "deepseek"],
+    deepseek: ["claude", "openai", "gemini", "grok"],
+  };
+
+  const modelChain = [requestedKey, ...(fallbacksByKey[requestedKey] || [])];
+  let analysisText = null;
+  let usedModel = requestedKey;
+
+  for (const currentKey of modelChain) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        console.log(`[CinemaOrchestrator] ${currentKey} attempt ${attempt}/2`);
+        analysisText = await callByKey[currentKey]();
+        usedModel = currentKey;
+        if (analysisText) break;
+      } catch (err) {
+        console.error(`[CinemaOrchestrator] ${currentKey} attempt ${attempt} failed: ${err.message}`);
+        if (err.message?.includes("content_filtered")) break;
+        if (attempt >= 2) break;
+      }
+    }
+    if (analysisText) break;
   }
 
-  if (missing.length > 0) {
-    console.warn(`[CinemaOrchestrator] Missing fields: ${missing.join(", ")}`);
+  if (!analysisText) throw new Error("All AI models failed to analyze this film");
+
+  const parsed = extractJSON(analysisText);
+  if (!parsed) throw new Error("Failed to parse AI response as JSON");
+
+  const normalized = normalizeResponse(parsed);
+
+  // Extract schools if embedded in philosophical_analysis
+  if (!normalized.schools_of_thought && normalized.philosophical_analysis) {
+    const split = splitTrailingSchoolsParagraph(normalized.philosophical_analysis);
+    if (split) {
+      normalized.philosophical_analysis = split.analysis;
+      normalized.schools_of_thought = split.schools;
+    }
   }
 
-  // Recalculate weighted score (never trust AI's calculation)
+  normalized.schools_of_thought = normalizeSchoolsHtml(normalized.schools_of_thought);
+
+  const check = isComplete(normalized);
+  if (!check.ok) console.warn(`[CinemaOrchestrator] Incomplete: ${check.issues.join(", ")}`);
+
+  // Recalculate score (never trust AI)
   const finalScore = calculateWeightedScore({
     ethics: normalized.scorecard?.ethics?.score || 0,
     metaphysics: normalized.scorecard?.metaphysics?.score || 0,
@@ -111,8 +142,7 @@ export async function analyzeFilmPhilosophy(title, director, synopsis, filmMetad
 
   normalized.scorecard.final_score = finalScore;
   normalized.final_score = finalScore;
-  normalized.classification = normalizeClassification(finalScore);
-  normalized.philosophical_note = getPhilosophicalNote(finalScore);
+  normalized.philosophical_note = calculatePhilosophicalNote(finalScore);
   normalized.model = usedModel;
 
   return normalized;
