@@ -73,7 +73,7 @@ export async function handleGetColloquiums(request, env, origin) {
       filter,
       select:
         "id,title,content,category,is_pinned,reply_count,last_reply_at,created_at,wrapup,metadata",
-      order: "is_pinned.desc,last_reply_at.desc",
+      order: "created_at.desc",
       limit: 50,
     });
 
@@ -160,6 +160,19 @@ export async function handleGetColloquiums(request, env, origin) {
           },
         };
       });
+
+    // Sort: today's pinned daily colloquium first, then newest first
+    const todayStr = new Date().toISOString().split("T")[0];
+    colloquiums.sort((a, b) => {
+      const aIsToday = a.created_at && a.created_at.startsWith(todayStr);
+      const bIsToday = b.created_at && b.created_at.startsWith(todayStr);
+      const aPinnedToday = a.is_pinned && aIsToday && a.colloquium_type === "daily";
+      const bPinnedToday = b.is_pinned && bIsToday && b.colloquium_type === "daily";
+      if (aPinnedToday && !bPinnedToday) return -1;
+      if (!aPinnedToday && bPinnedToday) return 1;
+      // Then by created_at descending (newest first)
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
 
     let response = jsonResponse({ colloquiums }, 200, origin, env);
     return addRefreshedCookieToResponse(response, setCookieHeader);
