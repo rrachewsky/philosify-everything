@@ -6,6 +6,7 @@
 // as analysisId — it will be converted to NULL for the RPC (DB column is UUID type).
 
 import { callRpc } from "../utils/supabase.js";
+import { getSupabaseCredentials } from "../utils/supabase.js";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -15,6 +16,10 @@ export async function confirmReservation(env, reservationId, analysisId) {
   // (the analysis_id column in credit_reservations is typed as UUID)
   const safeAnalysisId =
     analysisId && UUID_RE.test(analysisId) ? analysisId : null;
+
+  // For non-UUID analysisId strings (panels, colloquiums), extract a description
+  // Format: "philosopher-panel:news:headline..." or "colloquium:access:threadId"
+  const description = !safeAnalysisId && analysisId ? analysisId : null;
 
   console.log(
     `[Credits] Confirming reservation: ${reservationId} -> analysis: ${analysisId} (safe: ${safeAnalysisId})`,
@@ -32,6 +37,30 @@ export async function confirmReservation(env, reservationId, analysisId) {
       return { success: false, newTotal: 0, credits: 0, freeRemaining: 0 };
     }
 
+    // If there's a non-UUID description, patch the most recent credit_history
+    // entry for this reservation so it shows a readable description in history
+    if (description) {
+      try {
+        const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
+        // Find and update the credit_history entry created by this confirmation
+        const filter = result.history_id
+          ? `id=eq.${result.history_id}`
+          : `type=eq.consume&order=created_at.desc&limit=1`;
+        await fetch(`${sbUrl}/rest/v1/credit_history?${filter}`, {
+          method: "PATCH",
+          headers: {
+            apikey: sbKey,
+            Authorization: `Bearer ${sbKey}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({ metadata: { description } }),
+        });
+      } catch (e) {
+        console.warn(`[Credits] Failed to set description on credit_history: ${e.message}`);
+      }
+    }
+
     console.log(
       `[Credits] Reservation ${reservationId} confirmed. Balance: ${result.new_total}`,
     );
@@ -43,8 +72,6 @@ export async function confirmReservation(env, reservationId, analysisId) {
     };
   } catch (error) {
     console.error(`[Credits] Failed to confirm reservation: ${error.message}`);
-    // Return fallback instead of throwing — matches 98baaf4 behavior where
-    // handlers did NOT check success and confirmation failure was non-fatal
     return { success: false, newTotal: 0, credits: 0, freeRemaining: 0 };
   }
 }

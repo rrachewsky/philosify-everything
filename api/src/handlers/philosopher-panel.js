@@ -256,11 +256,12 @@ export async function handlePhilosopherPanel(
 
       // ── Confirm all credits ──
       let lastConfirm;
+      const panelDesc = `Panel: ${title.substring(0, 60)} (${mediaType})`;
       for (const res of reservations) {
         lastConfirm = await confirmReservation(
           env,
           res.reservationId,
-          `philosopher-panel:${mediaType}:${title.substring(0, 50)}`,
+          panelDesc,
         );
       }
 
