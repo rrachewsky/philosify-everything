@@ -327,8 +327,8 @@ async function handleSignUp(request, env, origin, isProd) {
   const { data, error } = await supabase.auth.signUp(signUpOptions);
 
   if (error) {
-    console.error("[Auth Proxy] Sign up failed:", error.message);
-    return jsonResponse({ error: error.message }, 400, origin, env);
+    console.error("[Auth Proxy] Sign up failed:", error.message, "| status:", error.status, "| code:", error.code, "| details:", JSON.stringify(error));
+    return jsonResponse({ error: error.message, _debug: { status: error.status, code: error.code, name: error.name } }, 400, origin, env);
   }
 
   // If email confirmation is required, session might be null
