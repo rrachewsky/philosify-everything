@@ -259,6 +259,27 @@ export function CinemaSidebar({
                 <span className="music-analysis__complete-icon">&#10003;</span>
                 {t('philosopherPanel.complete', 'Philosopher Panel Complete')}
               </div>
+
+              {/* Film title + synopsis */}
+              {selectedFilm && (
+                <div className="music-selected" style={{ marginBottom: 0 }}>
+                  {selectedFilm.poster_url && (
+                    <img className="music-selected__cover" src={selectedFilm.poster_url} alt="" />
+                  )}
+                  <div className="music-selected__info">
+                    <div className="music-selected__song">{selectedFilm.title}</div>
+                    <div className="music-selected__artist">
+                      {[selectedFilm.director, selectedFilm.year, ...(selectedFilm.countries || [])].filter(Boolean).join(' · ')}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {selectedFilm?.overview && (
+                <div className="news-summary-card">
+                  <p className="news-summary-card__text">{selectedFilm.overview}</p>
+                </div>
+              )}
+
               <div className="listen-section">
                 <ListenButton result={{
                   song_name: panelResult.title,
