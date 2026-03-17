@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 Philosifyで{{artist}}の{{title}}の哲学的分析をチェック！",
     "shareNewsText": "📰 哲学者パネルをチェック：{{title}} | Philosify",
     "shareDebateText": "💬 この哲学的討論をチェック：{{title}} | Philosify",
+    "shareFilmText": "🎬 Philosifyで{{artist}}の{{title}}の哲学的分析をチェック！",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "シネマ",
         "description": "映画の哲学的な物語を発見する",
         "searchPlaceholder": "映画を検索...",
-        "analyzeButton": "映画を分析"
+        "analyzeButton": "映画を分析",
+        "analyzeAnother": "別の映画を分析",
+        "noResults": "映画が見つかりませんでした。"
       },
       "news": {
         "title": "ニュース",

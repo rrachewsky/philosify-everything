@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 查看Philosify上{{artist}}的{{title}}的哲学分析！",
     "shareNewsText": "📰 查看哲学家论坛：{{title}} | Philosify",
     "shareDebateText": "💬 查看这场哲学辩论：{{title}} | Philosify",
+    "shareFilmText": "🎬 查看Philosify上{{artist}}的{{title}}的哲学分析！",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "影院",
         "description": "发现电影中的哲学叙事",
         "searchPlaceholder": "搜索电影...",
-        "analyzeButton": "分析电影"
+        "analyzeButton": "分析电影",
+        "analyzeAnother": "分析另一部电影",
+        "noResults": "未找到相关电影。"
       },
       "news": {
         "title": "新闻",

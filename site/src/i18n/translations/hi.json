@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 Philosify पर {{artist}} के {{title}} का दार्शनिक विश्लेषण देखें!",
     "shareNewsText": "📰 दार्शनिक पैनल देखें: {{title}} | Philosify",
     "shareDebateText": "💬 यह दार्शनिक बहस देखें: {{title}} | Philosify",
+    "shareFilmText": "🎬 Philosify पर {{artist}} के {{title}} का दार्शनिक विश्लेषण देखें!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "सिनेमा",
         "description": "सिनेमा में दार्शनिक कथाओं की खोज करें",
         "searchPlaceholder": "फ़िल्म खोजें...",
-        "analyzeButton": "फ़िल्म का विश्लेषण"
+        "analyzeButton": "फ़िल्म का विश्लेषण",
+        "analyzeAnother": "एक और फिल्म का विश्लेषण करें",
+        "noResults": "कोई फिल्म नहीं मिली।"
       },
       "news": {
         "title": "समाचार",

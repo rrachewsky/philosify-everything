@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 בדוק את הניתוח הפילוסופי של {{title}} מאת {{artist}} ב-Philosify!",
     "shareNewsText": "📰 בדוק את פאנל הפילוסופים: {{title}} | Philosify",
     "shareDebateText": "💬 בדוק את הדיון הפילוסופי הזה: {{title}} | Philosify",
+    "shareFilmText": "🎬 בדוק את הניתוח הפילוסופי של {{title}} מאת {{artist}} ב-Philosify!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "קולנוע",
         "description": "גלה נרטיבים פילוסופיים בקולנוע",
         "searchPlaceholder": "חפש סרט...",
-        "analyzeButton": "נתח סרט"
+        "analyzeButton": "נתח סרט",
+        "analyzeAnother": "נתח סרט אחר",
+        "noResults": "לא נמצאו סרטים."
       },
       "news": {
         "title": "חדשות",

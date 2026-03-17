@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 Nézd meg {{title}} - {{artist}} filozófiai elemzését a Philosify-on!",
     "shareNewsText": "📰 Nézd meg a Filozófusok Paneljét: {{title}} | Philosify",
     "shareDebateText": "💬 Nézd meg ezt a filozófiai vitát: {{title}} | Philosify",
+    "shareFilmText": "🎬 Nézd meg {{title}} - {{artist}} filozófiai elemzését a Philosify-on!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "Mozi",
         "description": "Fedezd fel a filozófiai narratívákat a filmekben",
         "searchPlaceholder": "Film keresése...",
-        "analyzeButton": "Film Elemzése"
+        "analyzeButton": "Film Elemzése",
+        "analyzeAnother": "Másik Film Elemzése",
+        "noResults": "Nem találhatók filmek."
       },
       "news": {
         "title": "Hírek",

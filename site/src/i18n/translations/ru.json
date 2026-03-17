@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 Посмотрите философский анализ {{title}} от {{artist}} на Philosify!",
     "shareNewsText": "📰 Посмотрите Панель Философов: {{title}} | Philosify",
     "shareDebateText": "💬 Посмотрите эту философскую дискуссию: {{title}} | Philosify",
+    "shareFilmText": "🎬 Посмотрите философский анализ {{title}} от {{artist}} на Philosify!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "Кино",
         "description": "Откройте философские нарративы в кино",
         "searchPlaceholder": "Поиск фильма...",
-        "analyzeButton": "Анализировать Фильм"
+        "analyzeButton": "Анализировать Фильм",
+        "analyzeAnother": "Анализировать Другой Фильм",
+        "noResults": "Фильмы не найдены."
       },
       "news": {
         "title": "Новости",

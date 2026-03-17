@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 Philosify에서 {{artist}}의 {{title}} 철학적 분석을 확인하세요!",
     "shareNewsText": "📰 철학자 패널 확인: {{title}} | Philosify",
     "shareDebateText": "💬 이 철학적 토론을 확인하세요: {{title}} | Philosify",
+    "shareFilmText": "🎬 Philosify에서 {{artist}}의 {{title}} 철학적 분석을 확인하세요!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "시네마",
         "description": "영화 속 철학적 서사를 발견합니다",
         "searchPlaceholder": "영화 검색...",
-        "analyzeButton": "영화 분석"
+        "analyzeButton": "영화 분석",
+        "analyzeAnother": "다른 영화 분석",
+        "noResults": "영화를 찾을 수 없습니다."
       },
       "news": {
         "title": "뉴스",

@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 Bekijk de filosofische analyse van {{title}} door {{artist}} op Philosify!",
     "shareNewsText": "📰 Bekijk het Filosofenpanel over: {{title}} | Philosify",
     "shareDebateText": "💬 Bekijk dit filosofisch debat: {{title}} | Philosify",
+    "shareFilmText": "🎬 Bekijk de filosofische analyse van {{title}} door {{artist}} op Philosify!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "Cinema",
         "description": "Ontdek filosofische verhalen in cinema",
         "searchPlaceholder": "Zoek naar een film...",
-        "analyzeButton": "Film Analyseren"
+        "analyzeButton": "Film Analyseren",
+        "analyzeAnother": "Analyseer een Andere Film",
+        "noResults": "Geen films gevonden."
       },
       "news": {
         "title": "Nieuws",

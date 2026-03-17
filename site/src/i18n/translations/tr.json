@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 Philosify'da {{artist}} - {{title}} felsefi analizine göz atın!",
     "shareNewsText": "📰 Filozof Paneline göz atın: {{title}} | Philosify",
     "shareDebateText": "💬 Bu felsefi tartışmaya göz atın: {{title}} | Philosify",
+    "shareFilmText": "🎬 Philosify'da {{artist}} - {{title}} felsefi analizine göz atın!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "Sinema",
         "description": "Sinemadaki felsefi anlatıları keşfedin",
         "searchPlaceholder": "Film ara...",
-        "analyzeButton": "Film Analiz Et"
+        "analyzeButton": "Film Analiz Et",
+        "analyzeAnother": "Başka Bir Film Analiz Et",
+        "noResults": "Film bulunamadı."
       },
       "news": {
         "title": "Haberler",

@@ -307,6 +307,7 @@
     "shareLiteratureText": "📚 شاهد التحليل الفلسفي لـ {{title}} للكاتب {{artist}} على Philosify!",
     "shareNewsText": "📰 شاهد لجنة الفلاسفة حول: {{title}} | Philosify",
     "shareDebateText": "💬 شاهد هذا النقاش الفلسفي: {{title}} | Philosify",
+    "shareFilmText": "🎬 شاهد التحليل الفلسفي لـ {{title}} للمخرج {{artist}} على Philosify!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -469,7 +470,9 @@
         "title": "سينما",
         "description": "اكتشف السرديات الفلسفية في السينما",
         "searchPlaceholder": "ابحث عن فيلم...",
-        "analyzeButton": "تحليل الفيلم"
+        "analyzeButton": "تحليل الفيلم",
+        "analyzeAnother": "تحليل فيلم آخر",
+        "noResults": "لم يتم العثور على أفلام."
       },
       "news": {
         "title": "أخبار",
