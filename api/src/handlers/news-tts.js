@@ -109,14 +109,13 @@ export async function handleNewsTTS(request, env, origin) {
 
     console.log(`[NewsTTS] ${chunks.length} chunks`);
 
-    // Generate all chunks in parallel
-    console.log(`[NewsTTS] Generating ${chunks.length} chunks in parallel...`);
-    const pcmArrays = await Promise.all(
-      chunks.map((chunk, i) => {
-        console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunk.length} chars`);
-        return ttsCall(chunk, apiKey);
-      })
-    );
+    // Generate chunks sequentially to maintain consistent voice quality
+    console.log(`[NewsTTS] Generating ${chunks.length} chunks sequentially...`);
+    const pcmArrays = [];
+    for (let i = 0; i < chunks.length; i++) {
+      console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunks[i].length} chars`);
+      pcmArrays.push(await ttsCall(chunks[i], apiKey));
+    }
 
     const wav = buildWav(pcmArrays);
     console.log(`[NewsTTS] Done: ${wav.byteLength} bytes`);

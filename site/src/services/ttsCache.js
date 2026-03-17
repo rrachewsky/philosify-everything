@@ -29,7 +29,10 @@ const activeRequests = new Map();
 function getCacheKey(result, lang) {
   const song = result?.song || result?.song_name || result?.title || '';
   const artist = result?.artist || result?.author || '';
-  return `${song}|${artist}|${lang}`;
+  // Include ID when available (panel analyses) to avoid cache collisions
+  // when the same content is analyzed with different philosophers
+  const id = result?.id || '';
+  return id ? `${id}|${lang}` : `${song}|${artist}|${lang}`;
 }
 
 /**

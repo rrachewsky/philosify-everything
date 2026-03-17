@@ -138,8 +138,8 @@ export function CinemaSidebar({
         </div>
 
         <div ref={contentRef} className="music-sidebar__content">
-          {/* Search input */}
-          {!panelResult && (
+          {/* Search input — hidden once a film is selected */}
+          {!panelResult && !selectedFilm && (
             <div className="music-search">
               <div className="music-search__input-wrapper">
                 <input
