@@ -3425,6 +3425,63 @@ export default {
         return handleUserHistory(request, env, origin);
       }
 
+      // Temporary diagnostic: check profiles table and auth trigger
+      if (url.pathname === "/api/admin/diagnose-auth" && request.method === "GET") {
+        const adminSecret = request.headers.get("X-Admin-Secret");
+        const expected = await getSecret(env.ADMIN_SECRET);
+        if (!adminSecret || adminSecret !== expected) {
+          return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+        }
+        try {
+          const { getSupabaseCredentials: getSbCreds } = await import("./src/utils/supabase.js");
+          const { url: sbUrl, key: sbKey } = await getSbCreds(env);
+          const headers = { apikey: sbKey, Authorization: `Bearer ${sbKey}` };
+
+          // Check profiles table structure
+          const profilesRes = await fetch(`${sbUrl}/rest/v1/profiles?select=user_id&limit=1`, { headers });
+          const profilesOk = profilesRes.ok;
+          const profilesStatus = profilesRes.status;
+
+          // Try to list database functions related to auth
+          const rpcRes = await fetch(`${sbUrl}/rest/v1/rpc/get_pg_functions`, {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          });
+
+          // Check if we can insert into profiles manually
+          const testId = "00000000-0000-0000-0000-000000000000";
+          const insertRes = await fetch(`${sbUrl}/rest/v1/profiles`, {
+            method: "POST",
+            headers: { ...headers, "Content-Type": "application/json", Prefer: "return=minimal" },
+            body: JSON.stringify({
+              user_id: testId,
+              email: "diag-test@example.com",
+              display_name: "Diagnostic Test",
+            }),
+          });
+          const insertStatus = insertRes.status;
+          const insertErr = insertStatus !== 201 ? await insertRes.text() : "ok";
+
+          // Clean up test row
+          if (insertStatus === 201 || insertStatus === 409) {
+            await fetch(`${sbUrl}/rest/v1/profiles?user_id=eq.${testId}`, {
+              method: "DELETE",
+              headers: { ...headers },
+            });
+          }
+
+          return jsonResponse({
+            profiles_table_accessible: profilesOk,
+            profiles_status: profilesStatus,
+            insert_test_status: insertStatus,
+            insert_test_result: insertErr.substring(0, 500),
+          }, 200, origin, env);
+        } catch (e) {
+          return jsonResponse({ error: e.message }, 500, origin, env);
+        }
+      }
+
       // 404
       return jsonResponse({ error: "Not found" }, 404, origin, env);
     } catch (error) {
