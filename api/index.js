@@ -3360,7 +3360,7 @@ export default {
 <meta name="twitter:description" content="${desc}">
 <meta name="twitter:image" content="${logoUrl}">
 <title>${title} | Philosify</title>
-<script>setTimeout(function(){window.location.href='https://philosify.org'},100);</script>
+<meta http-equiv="refresh" content="1;url=https://philosify.org">
 </head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
 
           return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
@@ -3399,7 +3399,7 @@ export default {
 <meta name="twitter:description" content="${desc}">
 <meta name="twitter:image" content="${logoUrl}">
 <title>${title} | Philosify</title>
-<script>setTimeout(function(){window.location.href='https://philosify.org'},100);</script>
+<meta http-equiv="refresh" content="1;url=https://philosify.org">
 </head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
 
           return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
