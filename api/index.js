@@ -3304,6 +3304,14 @@ export default {
 
       // ── Share preview pages (serve OG tags for WhatsApp/Telegram link previews) ──
 
+      // ── Share preview i18n labels ──
+      const SHARE_LABELS = {
+        debate: { en: "Philosophical Debate", pt: "Debate Filosófico", es: "Debate Filosófico", fr: "Débat Philosophique", de: "Philosophische Debatte", it: "Dibattito Filosofico", nl: "Filosofisch Debat", ru: "Философская дискуссия", zh: "哲学辩论", ja: "哲学的討論", ko: "철학적 토론", ar: "نقاش فلسفي", he: "דיון פילוסופי", hi: "दार्शनिक बहस", fa: "بحث فلسفی", tr: "Felsefi Tartışma", pl: "Debata Filozoficzna", hu: "Filozófiai Vita" },
+        panel: { en: "Philosopher's Panel", pt: "Painel dos Filósofos", es: "Panel de Filósofos", fr: "Panel des Philosophes", de: "Philosophen-Panel", it: "Panel dei Filosofi", nl: "Filosofenpanel", ru: "Панель Философов", zh: "哲学家论坛", ja: "哲学者パネル", ko: "철학자 패널", ar: "لجنة الفلاسفة", he: "פאנל הפילוסופים", hi: "दार्शनिक पैनल", fa: "پنل فیلسوفان", tr: "Filozof Paneli", pl: "Panel Filozofów", hu: "Filozófusok Panele" },
+        tagline: { en: "Algorithmic Philosophical System for Cultural Analysis", pt: "Sistema Filosófico Algorítmico de Análise Cultural", es: "Sistema Filosófico Algorítmico de Análisis Cultural", fr: "Système Philosophique Algorithmique d'Analyse Culturelle", de: "Algorithmisches Philosophisches System für Kulturanalyse", it: "Sistema Filosofico Algoritmico di Analisi Culturale" },
+      };
+      const getLabel = (type, lang) => SHARE_LABELS[type]?.[lang] || SHARE_LABELS[type]?.en || "";
+
       // GET /api/share-preview/debate/:threadId?lang=xx
       const debateShareMatch = url.pathname.match(/^\/api\/share-preview\/debate\/([a-f0-9-]+)$/);
       if (debateShareMatch && request.method === "GET") {
@@ -3318,7 +3326,7 @@ export default {
           const thread = threads?.[0];
           // Use translated title/content if available
           const translations = thread?.metadata?.translations?.[lang] || {};
-          const rawTitle = translations.title || thread?.title || "Philosophical Debate";
+          const rawTitle = translations.title || thread?.title || getLabel("debate", lang);
           const rawContent = translations.content || thread?.content || "";
           const title = escapeHtml(rawTitle);
           const excerpt = escapeHtml(rawContent.length > 160 ? rawContent.slice(0, 160) + "..." : rawContent);
@@ -3355,9 +3363,10 @@ export default {
       if (panelShareMatch && request.method === "GET") {
         try {
           const panelId = panelShareMatch[1];
+          const lang = url.searchParams.get("lang") || "en";
           const raw = await env.PHILOSIFY_KV.get(`panel:${panelId}`);
           const panel = raw ? JSON.parse(raw) : null;
-          const title = escapeHtml(panel?.title || "Philosopher's Panel");
+          const title = escapeHtml(panel?.title || getLabel("panel", lang));
           const analysis = panel?.analysis || "";
           const excerpt = escapeHtml(analysis.replace(/\*\*/g, "").replace(/\*/g, "").slice(0, 160) + "...");
           const mediaType = panel?.mediaType || "news";
@@ -3366,7 +3375,7 @@ export default {
           const previewUrl = `https://philosify.org/api/share-preview/panel/${panelId}`;
 
           const html = `<!DOCTYPE html>
-<html lang="en"><head>
+<html lang="${lang}"><head>
 <meta charset="UTF-8">
 <meta property="og:type" content="article">
 <meta property="og:url" content="${previewUrl}">
