@@ -466,6 +466,17 @@ export default {
         return handleBookSearch(request, env);
       }
 
+      // Film search (TMDB)
+      if (url.pathname === "/api/film-search" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `film-search:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+        }
+        const { handleFilmSearch } = await import("./src/handlers/film-search.js");
+        return handleFilmSearch(request, env, origin);
+      }
+
       // Book analysis history
       if (url.pathname === "/api/book-analysis-history" && request.method === "GET") {
         return handleBookAnalysisHistory(request, env, origin);

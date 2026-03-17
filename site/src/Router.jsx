@@ -22,9 +22,11 @@ import { CommunityHub } from './components/community';
 import { IdeasHub } from './components/ideas';
 import { MusicSidebar } from './components/music/MusicSidebar';
 import { LiteratureSidebar } from './components/literature/LiteratureSidebar';
+import { CinemaSidebar } from './components/cinema/CinemaSidebar';
 import { NewsSidebar } from './components/news/NewsSidebar';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
 import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas } from './hooks';
+import { useCinemaSidebar } from './hooks/useCinemaSidebar.js';
 import { useNewsSidebar } from './hooks/useNewsSidebar.js';
 import { useCommunity } from './hooks/useCommunity.js';
 import { logger, getPendingAction } from './utils';
@@ -279,6 +281,7 @@ export function Router() {
   const music = useMusicSidebar();
   const literature = useLiteratureSidebar();
   const news = useNewsSidebar();
+  const cinema = useCinemaSidebar();
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
   // NOTE: Modal Scoping Rule
@@ -303,11 +306,13 @@ export function Router() {
         literature.open();
       } else if (category === 'news') {
         news.open();
+      } else if (category === 'films') {
+        cinema.open();
       } else {
         setComingSoonCategory(category);
       }
     },
-    [ideas, literature, news]
+    [ideas, literature, news, cinema]
   );
 
   // Close ComingSoon sidebar
@@ -334,9 +339,10 @@ export function Router() {
                 onOpenSidebar={(type, result) => {
                    if (type === 'news') result ? news.openWithResult(result) : news.open();
                    else if (type === 'literature') result ? literature.openWithResult(result) : literature.open();
+                   else if (type === 'films') result ? cinema.openWithResult(result) : cinema.open();
                   else result ? music.openWithResult(result) : music.open();
                 }}
-                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
+                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
               />
             }
           />
@@ -474,7 +480,30 @@ export function Router() {
           lang={music.lang}
         />
 
-        {/* Coming Soon Sidebar (Films) */}
+        {/* Cinema Sidebar (Films) */}
+        <CinemaSidebar
+          isOpen={cinema.isOpen}
+          onClose={cinema.close}
+          query={cinema.query}
+          setQuery={cinema.setQuery}
+          results={cinema.results}
+          searchLoading={cinema.searchLoading}
+          hasSearched={cinema.hasSearched}
+          searchError={cinema.searchError}
+          selectedFilm={cinema.selectedFilm}
+          selectFilm={cinema.selectFilm}
+          clearFilm={cinema.clearFilm}
+          panelLoading={cinema.panelLoading}
+          panelResult={cinema.panelResult}
+          panelError={cinema.panelError}
+          elapsedTime={cinema.elapsedTime}
+          formatTime={cinema.formatTime}
+          analyzeWithPanel={cinema.analyzeWithPanel}
+          user={cinema.user}
+          balance={cinema.balance}
+        />
+
+        {/* Coming Soon Sidebar */}
         <ComingSoonSidebar
           isOpen={!!comingSoonCategory}
           onClose={closeComingSoon}

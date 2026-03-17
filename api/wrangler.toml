@@ -233,3 +233,9 @@ secret_name = "GOOGLE_BOOKS_API_KEY"
 binding = "GNEWS_API_KEY"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "GNEWS_API_KEY"
+
+# TMDB_API_KEY - TMDB API for Cinema sidebar
+[[env.production.secrets_store_secrets]]
+binding = "TMDB_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "TMDB_API_KEY"

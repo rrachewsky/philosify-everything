@@ -308,6 +308,7 @@
     "shareLiteratureText": "📚 Check out the philosophical analysis of {{title}} by {{artist}} on Philosify!",
     "shareNewsText": "📰 Check out the Philosopher's Panel on: {{title}} | Philosify",
     "shareDebateText": "💬 Check out this philosophical debate: {{title}} | Philosify",
+    "shareFilmText": "🎬 Check out the philosophical analysis of {{title}} by {{artist}} on Philosify!",
     "shareInstructionTitle": "Share this with your friends.",
     "shareInstructionSubtitle": "Just click below.",
     "shareCopyLinkLabel": "Copy Link",
@@ -470,7 +471,9 @@
         "title": "Cinema",
         "description": "Discover philosophical narratives in cinema",
         "searchPlaceholder": "Search for a film...",
-        "analyzeButton": "Analyze Film"
+        "analyzeButton": "Analyze Film",
+        "analyzeAnother": "Analyze Another Film",
+        "noResults": "No films found for your search."
       },
       "news": {
         "title": "News",
