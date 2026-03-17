@@ -11,9 +11,7 @@ const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
  * Returns normalized results with poster URLs.
  */
 export async function searchFilms(query, env, lang = "en") {
-  console.log(`[Films] TMDB_API_KEY type: ${typeof env.TMDB_API_KEY}, exists: ${!!env.TMDB_API_KEY}`);
   const apiKey = await getSecret(env.TMDB_API_KEY);
-  console.log(`[Films] Key resolved: ${apiKey ? apiKey.substring(0, 8) + '...' : 'EMPTY'}`);
   if (!apiKey) throw new Error("TMDB_API_KEY not configured");
 
   // TMDB v3 supports both api_key param and Bearer token auth
