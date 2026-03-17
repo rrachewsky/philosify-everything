@@ -563,7 +563,7 @@ export function LiteratureSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareText={`📚 ${panelResult.title} — ${panelResult.artist} | Philosophical Analysis on Philosify`}
+                    shareText={t('share.shareLiteratureText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton
                     analysisId={panelResult.id}

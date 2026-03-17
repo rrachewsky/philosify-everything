@@ -1763,7 +1763,7 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                     {/* Share verdict via WhatsApp, Telegram, etc. */}
                     <ShareButton
                       shareUrl={`${window.location.origin}`}
-                      shareText={`${coll.thread?.title || 'Philosophical Debate'} — ${t('community.debate.wrapupTitle')} | Philosify`}
+                      shareText={t('share.shareDebateText', { title: coll.thread?.title || t('community.debate.wrapupTitle') })}
                     />
                   </div>
                 ) : coll.verdictLoading ? (
@@ -2163,7 +2163,7 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                 {/* Share verdict via WhatsApp, Telegram, etc. */}
                 <ShareButton
                   shareUrl={`${window.location.origin}`}
-                  shareText={`${debate.activeDebate?.title || 'Philosophical Debate'} — ${t('community.debate.wrapupTitle')} | Philosify`}
+                  shareText={t('share.shareDebateText', { title: debate.activeDebate?.title || t('community.debate.wrapupTitle') })}
                 />
               </div>
             ) : debate.wrapupLoading ? (

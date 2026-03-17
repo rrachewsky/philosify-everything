@@ -359,7 +359,7 @@ export function NewsSidebar({
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
                   <ShareButton
                     shareUrl={`${window.location.origin}`}
-                    shareText={`${panelResult.title} — Philosopher's Panel | Philosify`}
+                    shareText={t('share.shareNewsText', { title: panelResult.title })}
                     songName={panelResult.title}
                     artist={selectedArticle?.source || 'News'}
                   />

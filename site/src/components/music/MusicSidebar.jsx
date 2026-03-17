@@ -471,7 +471,7 @@ export function MusicSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareText={`🎵 ${panelResult.title} — ${panelResult.artist} | Philosophical Analysis on Philosify`}
+                    shareText={t('share.shareMusicText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton
                     analysisId={panelResult.id}
