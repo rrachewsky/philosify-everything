@@ -101,9 +101,9 @@ export async function handleGetColloquiums(request, env, origin) {
         const metadata = t.metadata || {};
         const visibility = metadata.visibility || "open";
         if (visibility === "closed") {
-          // Closed: only visible to proposer (and invited users)
+          // Closed: visible to proposer (by access record OR metadata) and invited users
           const userAccess = accessMap[t.id] || {};
-          return userAccess.proposer || userAccess.invite || false;
+          return userAccess.proposer || userAccess.invite || metadata.proposer_id === userId || false;
         }
         return true; // Open: everyone sees it
       })
