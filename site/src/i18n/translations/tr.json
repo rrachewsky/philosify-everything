@@ -302,7 +302,7 @@
     "shareWhatsApp": "Share on WhatsApp",
     "shareLoading": "Creating share link...",
     "shareSuccess": "Share link created! Opening WhatsApp...",
-    "shareWhatsAppText": "🎵📖 Check out this philosophical analysis of {{song}} by {{artist}} on Philosify!",
+    "shareWhatsAppText": "Check out this philosophical analysis of {{song}} by {{artist}} on Philosify!",
     "shareMusicText": "🎵 Philosify'da {{artist}} - {{title}} felsefi analizine göz atın!",
     "shareLiteratureText": "📚 Philosify'da {{artist}} - {{title}} felsefi analizine göz atın!",
     "shareNewsText": "📰 Filozof Paneline göz atın: {{title}} | Philosify",

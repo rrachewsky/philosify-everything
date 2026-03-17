@@ -302,7 +302,7 @@
     "shareWhatsApp": "在WhatsApp上分享",
     "shareLoading": "正在创建分享链接...",
     "shareSuccess": "链接已创建！正在打开WhatsApp...",
-    "shareWhatsAppText": "🎵📖 查看Philosify上{{artist}}的{{song}}的哲学分析！",
+    "shareWhatsAppText": "查看Philosify上{{artist}}的{{song}}的哲学分析！",
     "shareMusicText": "🎵 查看Philosify上{{artist}}的{{title}}的哲学分析！",
     "shareLiteratureText": "📚 查看Philosify上{{artist}}的{{title}}的哲学分析！",
     "shareNewsText": "📰 查看哲学家论坛：{{title}} | Philosify",

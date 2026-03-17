@@ -302,7 +302,7 @@
     "shareWhatsApp": "WhatsApp으로 공유",
     "shareLoading": "공유 링크 생성 중...",
     "shareSuccess": "링크가 생성되었습니다! WhatsApp 열기...",
-    "shareWhatsAppText": "🎵📖 Philosify에서 {{artist}}의 {{song}} 철학적 분석을 확인하세요!",
+    "shareWhatsAppText": "Philosify에서 {{artist}}의 {{song}} 철학적 분석을 확인하세요!",
     "shareMusicText": "🎵 Philosify에서 {{artist}}의 {{title}} 철학적 분석을 확인하세요!",
     "shareLiteratureText": "📚 Philosify에서 {{artist}}의 {{title}} 철학적 분석을 확인하세요!",
     "shareNewsText": "📰 철학자 패널 확인: {{title}} | Philosify",
