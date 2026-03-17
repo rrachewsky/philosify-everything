@@ -132,7 +132,7 @@ export function useAccountHistory(user) {
   }, [analysisItems, creditItems]);
 
   const formatDescription = useCallback(
-    (item) => {
+    (item, allItems) => {
       // Analyses, panels, debates
       if (item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate') {
         const icons = {
@@ -166,6 +166,19 @@ export function useAccountHistory(user) {
         case 'consume':
           if (item.metadata?.description) {
             return `${item.metadata.description} (${count} ${count === 1 ? 'credit' : 'credits'})`;
+          }
+          // Match undescribed consume entries to nearby panel/analysis items by timestamp
+          if (allItems && item.date) {
+            const t0 = item.date.getTime();
+            const match = allItems.find((other) => {
+              if (other.kind !== 'panel' && other.kind !== 'analysis') return false;
+              if (!other.date) return false;
+              return Math.abs(other.date.getTime() - t0) < 30000;
+            });
+            if (match) {
+              const label = match.kind === 'panel' ? 'Panel' : 'Analysis';
+              return `${label}: ${(match.title || '').substring(0, 50)} (${count} ${count === 1 ? 'credit' : 'credits'})`;
+            }
           }
           return t('transactions.consume', {
             count,

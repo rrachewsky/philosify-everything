@@ -504,7 +504,7 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
                     })}
                   >
                     <div className="transaction-info">
-                      <div className="transaction-description">{formatDescription(item)}</div>
+                      <div className="transaction-description">{formatDescription(item, items)}</div>
                       <div className="transaction-date">
                         {item.date ? formatDate(item.date) : ''}
                       </div>
