@@ -12,7 +12,7 @@ import { getPendingAction, clearPendingAction } from '../utils/pendingAction.js'
 export function useCinemaSidebar() {
   const { i18n } = useTranslation();
   const filmSearch = useFilmSearch();
-  const { user, balance, refreshBalance } = useAuth();
+  const { user, sessionBalance: balance, refreshBalance } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFilm, setSelectedFilm] = useState(null);
