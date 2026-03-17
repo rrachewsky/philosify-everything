@@ -170,9 +170,9 @@ export function CinemaSidebar({
                     className="music-results__item"
                     onClick={() => selectFilm(film)}
                   >
-                    <span className="music-results__song">{film.title}</span>
+                    <span className="music-results__song">{film.title} {film.year ? `(${film.year})` : ''} {film.countries?.length ? `[${film.countries.join('/')}]` : ''}</span>
                     <span className="music-results__artist">
-                      {film.year || ''}
+                      {[film.director, ...(film.cast || [])].filter(Boolean).join(' · ')}
                     </span>
                   </button>
                 ))}
