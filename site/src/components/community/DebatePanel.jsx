@@ -1763,7 +1763,7 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                     {/* Share verdict via WhatsApp, Telegram, etc. */}
                     <ShareButton
                       shareUrl={`${window.location.origin}`}
-                      shareText={t('share.shareDebateText', { title: coll.thread?.title || t('community.debate.wrapupTitle') })}
+                      shareText={t('share.shareDebateText', { title: coll.activeColloquium?.title || t('community.debate.wrapupTitle') })}
                     />
                   </div>
                 ) : coll.verdictLoading ? (
