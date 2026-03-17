@@ -65,7 +65,7 @@ export async function handlePhilosopherPanel(
     if (!title) {
       return jsonResponse({ error: "Title is required" }, 400, origin, env);
     }
-    if (mediaType !== "news" && !artist) {
+    if (mediaType !== "news" && mediaType !== "cinema" && !artist) {
       return jsonResponse({ error: "Artist/author is required" }, 400, origin, env);
     }
     if (!mediaType || !["music", "literature", "news", "cinema"].includes(mediaType)) {
