@@ -3307,6 +3307,49 @@ export default {
         return handleUserHistory(request, env, origin);
       }
 
+      // One-time migration: backfill panel credit descriptions
+      if (url.pathname === "/api/admin/backfill-panel-descriptions" && request.method === "POST") {
+        const adminSecret = request.headers.get("X-Admin-Secret");
+        const expected = await getSecret(env.ADMIN_SECRET);
+        if (!adminSecret || adminSecret !== expected) {
+          return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+        }
+        try {
+          const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
+          const headers = { apikey: sbKey, Authorization: `Bearer ${sbKey}` };
+
+          // Get all panel_analyses
+          const panelsRes = await fetch(`${sbUrl}/rest/v1/panel_analyses?select=panel_id,user_id,title,media_type,created_at&order=created_at.desc`, { headers });
+          const panels = await panelsRes.json();
+
+          // Get all consume credit_history entries with no description
+          const creditsRes = await fetch(`${sbUrl}/rest/v1/credit_history?type=eq.consume&metadata=is.null&select=id,user_id,created_at&order=created_at.desc`, { headers });
+          const credits = await creditsRes.json();
+
+          let updated = 0;
+          for (const panel of panels) {
+            // Find credit entries within 30s of panel creation for same user
+            const panelTime = new Date(panel.created_at).getTime();
+            const matching = credits.filter((c) => {
+              const creditTime = new Date(c.created_at).getTime();
+              return c.user_id === panel.user_id && Math.abs(creditTime - panelTime) < 30000;
+            });
+            for (const credit of matching) {
+              const desc = `Panel: ${panel.title.substring(0, 60)} (${panel.media_type})`;
+              await fetch(`${sbUrl}/rest/v1/credit_history?id=eq.${credit.id}`, {
+                method: "PATCH",
+                headers: { ...headers, "Content-Type": "application/json", Prefer: "return=minimal" },
+                body: JSON.stringify({ metadata: { description: desc } }),
+              });
+              updated++;
+            }
+          }
+          return jsonResponse({ success: true, updated }, 200, origin, env);
+        } catch (e) {
+          return jsonResponse({ error: e.message }, 500, origin, env);
+        }
+      }
+
       // 404
       return jsonResponse({ error: "Not found" }, 404, origin, env);
     } catch (error) {
