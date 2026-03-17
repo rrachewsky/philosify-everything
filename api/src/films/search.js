@@ -11,14 +11,17 @@ const TMDB_IMG = "https://image.tmdb.org/t/p/w200";
  * Returns normalized results with poster URLs.
  */
 export async function searchFilms(query, env, lang = "en") {
+  console.log(`[Films] TMDB_API_KEY type: ${typeof env.TMDB_API_KEY}, exists: ${!!env.TMDB_API_KEY}`);
   const apiKey = await getSecret(env.TMDB_API_KEY);
+  console.log(`[Films] Key resolved: ${apiKey ? apiKey.substring(0, 8) + '...' : 'EMPTY'}`);
   if (!apiKey) throw new Error("TMDB_API_KEY not configured");
 
   const url = `${TMDB_BASE}/search/movie?query=${encodeURIComponent(query)}&api_key=${apiKey}&language=${lang}&include_adult=false&page=1`;
 
   const res = await fetch(url);
   if (!res.ok) {
-    console.error(`[Films] TMDB search failed: ${res.status}`);
+    const errText = await res.text().catch(() => '');
+    console.error(`[Films] TMDB search failed: ${res.status} ${errText.slice(0, 200)}`);
     return [];
   }
 
