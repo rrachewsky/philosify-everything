@@ -16,9 +16,18 @@ export async function searchFilms(query, env, lang = "en") {
   console.log(`[Films] Key resolved: ${apiKey ? apiKey.substring(0, 8) + '...' : 'EMPTY'}`);
   if (!apiKey) throw new Error("TMDB_API_KEY not configured");
 
-  const url = `${TMDB_BASE}/search/movie?query=${encodeURIComponent(query)}&api_key=${apiKey}&language=${lang}&include_adult=false&page=1`;
+  // TMDB v3 supports both api_key param and Bearer token auth
+  // Try Bearer token first (works with API Read Access Token)
+  const url = `${TMDB_BASE}/search/movie?query=${encodeURIComponent(query)}&language=${lang}&include_adult=false&page=1`;
 
-  const res = await fetch(url);
+  const res = await fetch(apiKey.length > 40
+    ? `${url}` // Bearer token (long key)
+    : `${url}&api_key=${apiKey}`, // API key (short key)
+  {
+    headers: apiKey.length > 40
+      ? { Authorization: `Bearer ${apiKey}`, accept: 'application/json' }
+      : { accept: 'application/json' },
+  });
   if (!res.ok) {
     const errText = await res.text().catch(() => '');
     console.error(`[Films] TMDB search failed: ${res.status} ${errText.slice(0, 200)}`);
@@ -48,9 +57,16 @@ export async function getFilmDetails(tmdbId, env, lang = "en") {
   const apiKey = await getSecret(env.TMDB_API_KEY);
   if (!apiKey) throw new Error("TMDB_API_KEY not configured");
 
-  const url = `${TMDB_BASE}/movie/${tmdbId}?api_key=${apiKey}&language=${lang}&append_to_response=credits`;
+  const url = `${TMDB_BASE}/movie/${tmdbId}?language=${lang}&append_to_response=credits`;
 
-  const res = await fetch(url);
+  const res = await fetch(apiKey.length > 40
+    ? `${url}`
+    : `${url}&api_key=${apiKey}`,
+  {
+    headers: apiKey.length > 40
+      ? { Authorization: `Bearer ${apiKey}`, accept: 'application/json' }
+      : { accept: 'application/json' },
+  });
   if (!res.ok) {
     console.error(`[Films] TMDB details failed for ${tmdbId}: ${res.status}`);
     return null;
