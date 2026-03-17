@@ -470,6 +470,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
             analysisId={result.id}
             songName={result.song || result.song_name || result.title}
             artist={result.artist || result.author}
+            shareText={`${mediaType === 'literature' ? '📚' : '🎵'} ${result.song || result.song_name || result.title} — ${result.artist || result.author} | Philosophical Analysis on Philosify`}
           />
           <ShareToDMButton
             analysisId={result.id}
