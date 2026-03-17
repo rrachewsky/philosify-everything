@@ -3304,27 +3304,31 @@ export default {
 
       // ── Share preview pages (serve OG tags for WhatsApp/Telegram link previews) ──
 
-      // GET /api/share-preview/debate/:threadId
+      // GET /api/share-preview/debate/:threadId?lang=xx
       const debateShareMatch = url.pathname.match(/^\/api\/share-preview\/debate\/([a-f0-9-]+)$/);
       if (debateShareMatch && request.method === "GET") {
         try {
           const threadId = debateShareMatch[1];
+          const lang = url.searchParams.get("lang") || "en";
           const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
           const res = await fetch(`${sbUrl}/rest/v1/forum_threads?id=eq.${threadId}&select=id,title,content,metadata`, {
             headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` },
           });
           const threads = await res.json();
           const thread = threads?.[0];
-          const title = escapeHtml(thread?.title || "Philosophical Debate");
-          const content = thread?.content || "";
-          const excerpt = escapeHtml(content.length > 160 ? content.slice(0, 160) + "..." : content);
+          // Use translated title/content if available
+          const translations = thread?.metadata?.translations?.[lang] || {};
+          const rawTitle = translations.title || thread?.title || "Philosophical Debate";
+          const rawContent = translations.content || thread?.content || "";
+          const title = escapeHtml(rawTitle);
+          const excerpt = escapeHtml(rawContent.length > 160 ? rawContent.slice(0, 160) + "..." : rawContent);
           const philosophers = (thread?.metadata?.philosophers || []).join(", ");
           const desc = philosophers ? `${excerpt} — ${escapeHtml(philosophers)}` : excerpt;
           const logoUrl = "https://philosify.org/logo.png";
           const previewUrl = `https://philosify.org/api/share-preview/debate/${threadId}`;
 
           const html = `<!DOCTYPE html>
-<html lang="en"><head>
+<html lang="${lang}"><head>
 <meta charset="UTF-8">
 <meta property="og:type" content="article">
 <meta property="og:url" content="${previewUrl}">
@@ -3346,7 +3350,7 @@ export default {
         }
       }
 
-      // GET /api/share-preview/panel/:panelId
+      // GET /api/share-preview/panel/:panelId?lang=xx
       const panelShareMatch = url.pathname.match(/^\/api\/share-preview\/panel\/([a-f0-9-]+)$/);
       if (panelShareMatch && request.method === "GET") {
         try {
