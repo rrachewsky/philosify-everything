@@ -3381,7 +3381,7 @@ export default {
           const analysis = panel?.analysis || "";
           const excerpt = escapeHtml(analysis.replace(/\*\*/g, "").replace(/\*/g, "").slice(0, 160) + "...");
           const mediaType = panel?.mediaType || "news";
-          const desc = `${mediaType === "news" ? "📰" : mediaType === "music" ? "🎵" : "📚"} ${excerpt}`;
+          const desc = `${mediaType === "news" ? "📰" : mediaType === "cinema" ? "🎬" : mediaType === "music" ? "🎵" : "📚"} ${excerpt}`;
           const logoUrl = "https://philosify.org/logo.png";
           const previewUrl = `https://philosify.org/api/share-preview/panel/${panelId}`;
 

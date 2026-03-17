@@ -68,8 +68,8 @@ export async function handlePhilosopherPanel(
     if (mediaType !== "news" && !artist) {
       return jsonResponse({ error: "Artist/author is required" }, 400, origin, env);
     }
-    if (!mediaType || !["music", "literature", "news"].includes(mediaType)) {
-      return jsonResponse({ error: "mediaType must be 'music', 'literature', or 'news'" }, 400, origin, env);
+    if (!mediaType || !["music", "literature", "news", "cinema"].includes(mediaType)) {
+      return jsonResponse({ error: "mediaType must be 'music', 'literature', 'news', or 'cinema'" }, 400, origin, env);
     }
     if (!Array.isArray(userPicks) || userPicks.length !== 2) {
       return jsonResponse({ error: "Exactly 2 philosophers must be chosen" }, 400, origin, env);

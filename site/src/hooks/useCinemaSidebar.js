@@ -125,7 +125,7 @@ export function useCinemaSidebar() {
 
       try {
         const result = await requestPhilosopherPanel({
-          mediaType: 'films',
+          mediaType: 'cinema',
           title: selectedFilm.title,
           artist: selectedFilm.director || '',
           description: selectedFilm.overview || '',
