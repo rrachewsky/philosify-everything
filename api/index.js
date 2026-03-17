@@ -3324,10 +3324,10 @@ export default {
             select: "id,title,content,metadata",
           });
           const thread = threads?.[0];
-          // Use translated title/content if available
-          const translations = thread?.metadata?.translations?.[lang] || {};
-          const rawTitle = translations.title || thread?.title || getLabel("debate", lang);
-          const rawContent = translations.content || thread?.content || "";
+          // Translations stored as metadata.translations.title.{lang} and metadata.translations.content.{lang}
+          const trans = thread?.metadata?.translations || {};
+          const rawTitle = trans.title?.[lang] || thread?.title || getLabel("debate", lang);
+          const rawContent = trans.content?.[lang] || thread?.content || "";
           const title = escapeHtml(rawTitle);
           const excerpt = escapeHtml(rawContent.length > 160 ? rawContent.slice(0, 160) + "..." : rawContent);
           const philosophers = (thread?.metadata?.philosophers || []).join(", ");
