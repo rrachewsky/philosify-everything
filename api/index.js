@@ -466,6 +466,18 @@ export default {
         return handleBookSearch(request, env);
       }
 
+      // Cinema full analysis (1 credit)
+      if (url.pathname === "/api/cinema-analyze" && request.method === "POST") {
+        const { handleCinemaAnalyze } = await import("./src/handlers/cinema-analyze.js");
+        return handleCinemaAnalyze(request, env, origin, ctx);
+      }
+
+      // News full analysis (1 credit)
+      if (url.pathname === "/api/news-analyze" && request.method === "POST") {
+        const { handleNewsAnalyze } = await import("./src/handlers/news-analyze.js");
+        return handleNewsAnalyze(request, env, origin, ctx);
+      }
+
       // Film search (TMDB)
       if (url.pathname === "/api/film-search" && request.method === "POST") {
         const ip = request.headers.get("cf-connecting-ip") || "unknown";

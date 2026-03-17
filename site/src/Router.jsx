@@ -469,6 +469,10 @@ export function Router() {
           selectedArticle={news.selectedArticle}
           selectArticle={news.selectArticle}
           clearArticle={news.clearArticle}
+          isAnalyzing={news.isAnalyzing}
+          analysisResult={news.analysisResult}
+          analysisError={news.analysisError}
+          analyzeArticle={news.analyzeArticle}
           panelLoading={news.panelLoading}
           panelResult={news.panelResult}
           panelError={news.panelError}
@@ -493,6 +497,10 @@ export function Router() {
           selectedFilm={cinema.selectedFilm}
           selectFilm={cinema.selectFilm}
           clearFilm={cinema.clearFilm}
+          isAnalyzing={cinema.isAnalyzing}
+          analysisResult={cinema.analysisResult}
+          analysisError={cinema.analysisError}
+          analyze={cinema.analyze}
           panelLoading={cinema.panelLoading}
           panelResult={cinema.panelResult}
           panelError={cinema.panelError}

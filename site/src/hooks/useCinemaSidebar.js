@@ -6,6 +6,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFilmSearch } from './useFilmSearch.js';
 import { useAuth } from './useAuth.js';
+import { config } from '@/config';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 import { getPendingAction, clearPendingAction } from '../utils/pendingAction.js';
 
@@ -17,7 +18,12 @@ export function useCinemaSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFilm, setSelectedFilm] = useState(null);
 
-  // Panel state
+  // Analysis state (1-credit full analysis)
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [analysisError, setAnalysisError] = useState(null);
+
+  // Panel state (3-credit philosopher panel)
   const [panelLoading, setPanelLoading] = useState(false);
   const [panelResult, setPanelResult] = useState(null);
   const [panelError, setPanelError] = useState(null);
@@ -80,6 +86,8 @@ export function useCinemaSidebar() {
   // Clear selection
   const clearFilm = useCallback(() => {
     setSelectedFilm(null);
+    setAnalysisResult(null);
+    setAnalysisError(null);
     setPanelResult(null);
     setPanelError(null);
     filmSearch.clearSelection();
@@ -111,7 +119,65 @@ export function useCinemaSidebar() {
     }
   }, []);
 
-  // Analyze with Philosopher's Panel
+  // Full philosophical analysis (1 credit)
+  const analyze = useCallback(
+    async (lang, model = 'grok') => {
+      if (!selectedFilm) return;
+
+      setIsAnalyzing(true);
+      setAnalysisError(null);
+      startTimer();
+
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      try {
+        const response = await fetch(`${config.apiUrl}/api/cinema-analyze`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: selectedFilm.title,
+            director: selectedFilm.director || '',
+            tmdb_id: selectedFilm.tmdb_id,
+            overview: selectedFilm.overview || '',
+            genres: selectedFilm.genres || [],
+            countries: selectedFilm.countries || [],
+            year: selectedFilm.year,
+            poster_url: selectedFilm.poster_url,
+            model,
+            lang: lang || i18n.resolvedLanguage || i18n.language || 'en',
+          }),
+          signal: controller.signal,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          if (response.status === 402) {
+            throw Object.assign(new Error(data.error || 'Insufficient credits'), {
+              code: 'INSUFFICIENT_CREDITS',
+            });
+          }
+          throw new Error(data.error || `Analysis failed: ${response.status}`);
+        }
+
+        if (controller.signal.aborted) return;
+        setAnalysisResult(data);
+      } catch (err) {
+        if (!controller.signal.aborted) {
+          setAnalysisError(err.message || 'Analysis failed');
+          if (err.code === 'INSUFFICIENT_CREDITS') throw err;
+        }
+      } finally {
+        stopTimer();
+        setIsAnalyzing(false);
+      }
+    },
+    [selectedFilm, startTimer, stopTimer, i18n],
+  );
+
+  // Analyze with Philosopher's Panel (3 credits)
   const analyzeWithPanel = useCallback(
     async (philosophers, lang) => {
       if (!selectedFilm) return;
@@ -180,6 +246,12 @@ export function useCinemaSidebar() {
     selectedFilm,
     selectFilm,
     clearFilm,
+
+    // Analysis (1 credit)
+    isAnalyzing,
+    analysisResult,
+    analysisError,
+    analyze,
 
     // Panel
     panelLoading,

@@ -13,6 +13,7 @@ import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
+import { ResultsContainer } from '../results/ResultsContainer';
 import { config } from '@/config';
 import '../../styles/music-sidebar.css';
 
@@ -131,6 +132,10 @@ export function NewsSidebar({
   selectedArticle,
   selectArticle,
   clearArticle,
+  isAnalyzing,
+  analysisResult,
+  analysisError,
+  analyzeArticle,
   panelLoading,
   panelResult,
   panelError,
@@ -182,6 +187,23 @@ export function NewsSidebar({
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) onClose();
+  };
+
+  const handleAnalyzeArticle = async () => {
+    if (!user) {
+      signupModal.open();
+      return;
+    }
+    if (!balance || balance.total === undefined || balance.total < 1) {
+      if (selectedArticle) setPendingAction({ type: 'news-analysis', article: selectedArticle });
+      paymentModal.open();
+      return;
+    }
+    try {
+      await analyzeArticle(i18n.resolvedLanguage || i18n.language || 'en');
+    } catch (err) {
+      if (err.code === 'INSUFFICIENT_CREDITS') paymentModal.open();
+    }
   };
 
   const handleOpenPanel = () => {
@@ -244,7 +266,7 @@ export function NewsSidebar({
         <div ref={contentRef} className="music-sidebar__content">
 
           {/* ── STATE 1: Headlines ticker (no article selected, no result) ── */}
-          {!selectedArticle && !panelResult && !panelLoading && (
+          {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
             <div className="news-headlines">
               {headlinesLoading && (
                 <div className="news-headlines__loading">
@@ -272,8 +294,8 @@ export function NewsSidebar({
             </div>
           )}
 
-          {/* ── STATE 2: Article selected — headline + summary + Panel button ── */}
-          {selectedArticle && !panelResult && (
+          {/* ── STATE 2: Article selected — headline + summary + buttons ── */}
+          {selectedArticle && !panelResult && !analysisResult && (
             <>
               <div className="music-selected">
                 <div className="music-selected__info">
@@ -296,22 +318,32 @@ export function NewsSidebar({
                 </div>
               )}
 
-              {/* Panel button / loading */}
+              {/* Two analysis buttons side by side */}
               <div className="music-analyze">
-                {!panelLoading ? (
-                  <button
-                    className="music-analyze__button music-analyze__button--panel"
-                    onClick={handleOpenPanel}
-                    disabled={panelLoading}
-                    style={{ width: '100%' }}
-                  >
-                    {t('philosopherPanel.button', { defaultValue: "Philosopher's Panel" })}
-                    <span className="music-analyze__cost">
-                      3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}
-                    </span>
-                  </button>
+                {!isAnalyzing && !panelLoading ? (
+                  <div className="music-analyze__buttons-row">
+                    <button
+                      className="music-analyze__button"
+                      onClick={handleAnalyzeArticle}
+                      disabled={isAnalyzing}
+                    >
+                      {t('news.analyzeArticle', { defaultValue: 'Analyze Article' })}
+                      <span className="music-analyze__cost">
+                        1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}
+                      </span>
+                    </button>
+                    <button
+                      className="music-analyze__button music-analyze__button--panel"
+                      onClick={handleOpenPanel}
+                    >
+                      {t('philosopherPanel.button', { defaultValue: "Philosopher's Panel" })}
+                      <span className="music-analyze__cost">
+                        3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}
+                      </span>
+                    </button>
+                  </div>
                 ) : null}
-                {panelLoading && (
+                {(isAnalyzing || panelLoading) && (
                   <div className="music-timer">
                     <div className="music-timer__bar">
                       <div className="music-timer__fill"></div>
@@ -320,13 +352,20 @@ export function NewsSidebar({
                       <span>&#9201;</span> {formatTime(elapsedTime)}
                     </div>
                     <div className="music-timer__label">
-                      {t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}
+                      {panelLoading
+                        ? t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })
+                        : t('analyzing', { defaultValue: 'Analyzing...' })}
                     </div>
                   </div>
                 )}
-                {panelError && <div className="music-error">{panelError}</div>}
+                {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
               </div>
             </>
+          )}
+
+          {/* Full analysis result (1 credit) */}
+          {analysisResult && !panelResult && (
+            <ResultsContainer result={analysisResult} mediaType="news" />
           )}
 
           {/* ── STATE 3: Panel result ── */}

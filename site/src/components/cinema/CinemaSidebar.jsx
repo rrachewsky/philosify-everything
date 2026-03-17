@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ResultsContainer } from '../results/ResultsContainer';
 import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
@@ -27,6 +28,10 @@ export function CinemaSidebar({
   selectedFilm,
   selectFilm,
   clearFilm,
+  isAnalyzing,
+  analysisResult,
+  analysisError,
+  analyze,
   panelLoading,
   panelResult,
   panelError,
@@ -85,6 +90,23 @@ export function CinemaSidebar({
 
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) onClose();
+  };
+
+  const handleAnalyze = async () => {
+    if (!user) {
+      signupModal.open();
+      return;
+    }
+    if (!balance || balance.total === undefined || balance.total < 1) {
+      if (selectedFilm) setPendingAction({ type: 'cinema-analysis', film: selectedFilm });
+      paymentModal.open();
+      return;
+    }
+    try {
+      await analyze(i18n.resolvedLanguage || i18n.language || 'en');
+    } catch (err) {
+      if (err.code === 'INSUFFICIENT_CREDITS') paymentModal.open();
+    }
   };
 
   const handleOpenPanel = () => {
@@ -212,29 +234,36 @@ export function CinemaSidebar({
               {/* Film overview */}
               {selectedFilm.overview && (
                 <div className="news-summary-card">
-                  <p className="news-summary-card__text">
-                    {selectedFilm.overview.length > 200
-                      ? selectedFilm.overview.slice(0, 200) + '...'
-                      : selectedFilm.overview}
-                  </p>
+                  <p className="news-summary-card__text">{selectedFilm.overview}</p>
                 </div>
               )}
 
-              {/* Panel button / loading */}
+              {/* Two analysis buttons side by side (same as literature) */}
               <div className="music-analyze">
-                {!panelLoading ? (
-                  <button
-                    className="music-analyze__button music-analyze__button--panel"
-                    onClick={handleOpenPanel}
-                    style={{ width: '100%' }}
-                  >
-                    {t('philosopherPanel.button', "Philosopher's Panel")}
-                    <span className="music-analyze__cost">
-                      3 {t('philosopherPanel.credits', 'credits')}
-                    </span>
-                  </button>
+                {!isAnalyzing && !panelLoading ? (
+                  <div className="music-analyze__buttons-row">
+                    <button
+                      className="music-analyze__button"
+                      onClick={handleAnalyze}
+                      disabled={isAnalyzing}
+                    >
+                      {t('home.categories.films.analyzeButton', 'Analyze Film')}
+                      <span className="music-analyze__cost">
+                        1 {t('philosopherPanel.credit', 'credit')}
+                      </span>
+                    </button>
+                    <button
+                      className="music-analyze__button music-analyze__button--panel"
+                      onClick={handleOpenPanel}
+                    >
+                      {t('philosopherPanel.button', "Philosopher's Panel")}
+                      <span className="music-analyze__cost">
+                        3 {t('philosopherPanel.credits', 'credits')}
+                      </span>
+                    </button>
+                  </div>
                 ) : null}
-                {panelLoading && (
+                {(isAnalyzing || panelLoading) && (
                   <div className="music-timer">
                     <div className="music-timer__bar">
                       <div className="music-timer__fill"></div>
@@ -243,13 +272,20 @@ export function CinemaSidebar({
                       <span>&#9201;</span> {formatTime(elapsedTime)}
                     </div>
                     <div className="music-timer__label">
-                      {t('philosopherPanel.generating', 'Philosophers are analyzing...')}
+                      {panelLoading
+                        ? t('philosopherPanel.generating', 'Philosophers are analyzing...')
+                        : t('analyzing', 'Analyzing...')}
                     </div>
                   </div>
                 )}
-                {panelError && <div className="music-error">{panelError}</div>}
+                {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
               </div>
             </>
+          )}
+
+          {/* Full analysis result (1 credit) */}
+          {analysisResult && !panelResult && (
+            <ResultsContainer result={analysisResult} mediaType="cinema" />
           )}
 
           {/* Panel result */}

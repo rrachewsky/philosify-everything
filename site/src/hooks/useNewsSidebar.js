@@ -4,6 +4,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { logger } from '../utils';
+import { config } from '@/config';
 import { fetchNewsHeadlines } from '../services/api/newsApi.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 
@@ -16,6 +17,9 @@ export function useNewsSidebar() {
   const [headlinesLoading, setHeadlinesLoading] = useState(false);
   const [headlinesError, setHeadlinesError] = useState(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [analysisError, setAnalysisError] = useState(null);
   const [panelLoading, setPanelLoading] = useState(false);
   const [panelResult, setPanelResult] = useState(null);
   const [panelError, setPanelError] = useState(null);
@@ -66,6 +70,8 @@ export function useNewsSidebar() {
 
   const clearArticle = useCallback(() => {
     setSelectedArticle(null);
+    setAnalysisResult(null);
+    setAnalysisError(null);
     setPanelResult(null);
     setPanelError(null);
     setElapsedTime(0);
@@ -82,6 +88,63 @@ export function useNewsSidebar() {
     const millis = Math.floor((ms % 1000) / 10);
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(millis).padStart(2, '0')}`;
   }, []);
+
+  // Full philosophical analysis (1 credit)
+  const analyzeArticle = useCallback(
+    async (lang = 'en', model = 'grok') => {
+      if (!selectedArticle) return;
+
+      setIsAnalyzing(true);
+      setAnalysisError(null);
+      setElapsedTime(0);
+      const startTime = Date.now();
+      timerRef.current = setInterval(() => {
+        setElapsedTime(Date.now() - startTime);
+      }, 100);
+
+      try {
+        const response = await fetch(`${config.apiUrl}/api/news-analyze`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: selectedArticle.title,
+            source: selectedArticle.source || '',
+            description: selectedArticle.description || selectedArticle.aiSummary || '',
+            topic: selectedArticle.topic || '',
+            publishedAt: selectedArticle.publishedAt || null,
+            aiSummary: selectedArticle.aiSummary || '',
+            model,
+            lang,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          if (response.status === 402) {
+            throw Object.assign(new Error(data.error || 'Insufficient credits'), {
+              code: 'INSUFFICIENT_CREDITS',
+            });
+          }
+          throw new Error(data.error || `Analysis failed: ${response.status}`);
+        }
+
+        setAnalysisResult(data);
+        window.dispatchEvent(new CustomEvent('credits-changed'));
+      } catch (err) {
+        setAnalysisError(err.message || 'Analysis failed');
+        throw err;
+      } finally {
+        setIsAnalyzing(false);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+      }
+    },
+    [selectedArticle],
+  );
 
   // Analyze selected article with philosopher panel
   const analyzeWithPanel = useCallback(
@@ -153,6 +216,10 @@ export function useNewsSidebar() {
     selectedArticle,
     selectArticle,
     clearArticle,
+    isAnalyzing,
+    analysisResult,
+    analysisError,
+    analyzeArticle,
     panelLoading,
     panelResult,
     panelError,
