@@ -13,6 +13,7 @@ import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
+import { config } from '@/config';
 import { requestPhilosopherPanel } from '../../services/api/philosopherPanel.js';
 import '../../styles/music-sidebar.css';
 
@@ -563,7 +564,7 @@ export function LiteratureSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareUrl={panelResult.id ? `${window.location.origin}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}` : undefined}
+                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}` : undefined}
                     shareText={t('share.shareLiteratureText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton

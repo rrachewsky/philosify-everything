@@ -13,6 +13,7 @@ import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
+import { config } from '@/config';
 import '../../styles/music-sidebar.css';
 
 // Auto-scrolling vertical news ticker
@@ -358,7 +359,7 @@ export function NewsSidebar({
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
                   <ShareButton
-                    shareUrl={`${window.location.origin}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}`}
+                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}`}
                     shareText={t('share.shareNewsText', { title: panelResult.title })}
                     songName={panelResult.title}
                     artist={selectedArticle?.source || 'News'}
