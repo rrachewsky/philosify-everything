@@ -74,7 +74,7 @@ export async function handleGetColloquiums(request, env, origin) {
       select:
         "id,title,content,category,is_pinned,reply_count,last_reply_at,created_at,wrapup,metadata",
       order: "is_pinned.desc,last_reply_at.desc",
-      limit: 20,
+      limit: 50,
     });
 
     // Check user's access for each thread
@@ -95,17 +95,21 @@ export async function handleGetColloquiums(request, env, origin) {
       accessMap[record.thread_id][record.access_type] = true;
     }
 
-    // Build storefront response (filter out closed colloquiums for non-proposers)
+    // Build storefront response
+    // - Open: visible to everyone
+    // - Closed: visible to proposer and invited users
+    // - Proposer always sees their own debates regardless of visibility
     const colloquiums = (threads || [])
       .filter((t) => {
         const metadata = t.metadata || {};
+        const userAccess = accessMap[t.id] || {};
+        // Proposer always sees their own
+        if (userAccess.proposer || metadata.proposer_id === userId) return true;
         const visibility = metadata.visibility || "open";
         if (visibility === "closed") {
-          // Closed: visible to proposer (by access record OR metadata) and invited users
-          const userAccess = accessMap[t.id] || {};
-          return userAccess.proposer || userAccess.invite || metadata.proposer_id === userId || false;
+          return userAccess.invite || false;
         }
-        return true; // Open: everyone sees it
+        return true;
       })
       .map((t) => {
         const userAccess = accessMap[t.id] || {};
