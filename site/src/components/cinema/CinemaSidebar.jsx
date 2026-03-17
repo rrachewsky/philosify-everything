@@ -163,28 +163,20 @@ export function CinemaSidebar({
           {/* Search results */}
           {!selectedFilm && !panelResult && results.length > 0 && (
             <div className="music-results">
-              {results.map((film) => (
-                <button
-                  key={film.tmdb_id}
-                  className="music-result"
-                  onClick={() => selectFilm(film)}
-                >
-                  {film.poster_url && (
-                    <img
-                      className="music-result__image"
-                      src={film.poster_url}
-                      alt=""
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="music-result__info">
-                    <div className="music-result__title">{film.title}</div>
-                    <div className="music-result__artist">
+              <div className="music-results__list">
+                {results.map((film) => (
+                  <button
+                    key={film.tmdb_id}
+                    className="music-results__item"
+                    onClick={() => selectFilm(film)}
+                  >
+                    <span className="music-results__song">{film.title}</span>
+                    <span className="music-results__artist">
                       {film.year || ''}
-                    </div>
-                  </div>
-                </button>
-              ))}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
