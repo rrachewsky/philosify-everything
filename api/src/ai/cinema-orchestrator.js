@@ -83,11 +83,10 @@ export async function analyzeFilmPhilosophy(title, director, synopsis, filmMetad
   };
 
   const fallbacksByKey = {
-    claude: ["openai", "gemini", "grok", "deepseek"],
-    openai: ["claude", "gemini", "grok", "deepseek"],
-    gemini: ["claude", "openai", "grok", "deepseek"],
-    grok: ["claude", "openai", "gemini", "deepseek"],
-    deepseek: ["claude", "openai", "gemini", "grok"],
+    claude: ["grok", "gemini", "deepseek"],
+    gemini: ["claude", "grok", "deepseek"],
+    grok: ["claude", "gemini", "deepseek"],
+    deepseek: ["claude", "grok", "gemini"],
   };
 
   const modelChain = [requestedKey, ...(fallbacksByKey[requestedKey] || [])];

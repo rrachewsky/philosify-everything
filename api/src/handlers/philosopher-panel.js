@@ -12,7 +12,7 @@ import { getDebateAestheticGuide } from "../guides/index.js";
 import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
 import { buildPhilosopherPanelPrompt } from "../ai/prompts/philosopher-panel-template.js";
 import { buildNewsPanelPrompt } from "../ai/prompts/news-panel-template.js";
-import { callClaude, callGrok, callOpenAI } from "../ai/models/index.js";
+import { callClaude, callGrok, callGemini } from "../ai/models/index.js";
 import { PHILOSOPHERS } from "../handlers/colloquium.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
@@ -187,7 +187,7 @@ export async function handlePhilosopherPanel(
       const models = [
         { name: "claude", call: () => callClaude(prompt, lang, env) },
         { name: "grok", call: () => callGrok(prompt, lang, env, { maxTokens: mediaType === "news" ? 5000 : 4000, temperature: 0.7 }) },
-        { name: "openai", call: () => callOpenAI(prompt, lang, env) },
+        { name: "gemini", call: () => callGemini(prompt, lang, env) },
       ];
       
       for (const model of models) {
