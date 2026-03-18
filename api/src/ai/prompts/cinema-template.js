@@ -156,8 +156,16 @@ EVERY SINGLE WORD must be in ${targetLanguage}:
 - classification -> ALWAYS IN ENGLISH (standardized enum)
 
 ALLOWED EXCEPTIONS (VERY LIMITED):
-- Film title and director name MUST remain exactly as provided (proper nouns; do NOT translate).
+- Director name MUST remain exactly as provided (proper noun; do NOT translate).
 - Do NOT leave standalone words/phrases in any other language in your prose.
+
+CRITICAL - FILM TITLE LOCALIZATION:
+- Do NOT literally translate the film title yourself.
+- You MUST use the OFFICIAL REGIONAL TITLE chosen by the film's distributors/producers for the ${targetLanguage}-speaking market.
+- Example: "The Woman in Red" (1984) -> Brazilian Portuguese title is "A Dama de Vermelho" (NOT "Mulher de Vermelho").
+- Example: "Die Hard" -> Brazilian Portuguese title is "Duro de Matar" (NOT "Morrer Difícil").
+- Use your knowledge of official film titles in each region. If you don't know the official regional title, keep the original title.
+- The official regional title is what appears on posters, DVDs, and streaming services in that region.
 
 If you write even ONE WORD in English (or any other language besides ${targetLanguage}),
 your response will be COMPLETELY REJECTED and you will FAIL this task.
