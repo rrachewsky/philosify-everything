@@ -2,7 +2,7 @@
 // HANDLER - PHILOSOPHER PANEL ANALYSIS
 // ============================================================
 // Multi-philosopher analysis of a song, book, or news event.
-// 3 philosophers: 1 Objectivist (auto) + 2 user-chosen.
+// 3 philosophers: all user-chosen from the full roster.
 // Cost: 3 credits. Output: markdown text (not JSON scorecard).
 // ============================================================
 
@@ -16,22 +16,19 @@ import { callGrok } from "../ai/models/index.js";
 import { PHILOSOPHERS } from "../handlers/colloquium.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
-// The two Objectivist philosophers that Philosify auto-assigns
-const OBJECTIVIST_PICKS = ["Ayn Rand", "Leonard Peikoff"];
-
 const PANEL_COST = 3; // credits
 
 /**
  * POST /api/philosopher-panel
  *
  * Body: {
- *   mediaType: "music" | "literature",
+ *   mediaType: "music" | "literature" | "news" | "cinema",
  *   title: string,
  *   artist: string,          // artist (music) or author (books)
  *   lyrics?: string,         // music only
  *   description?: string,    // books only
  *   categories?: string,     // books only
- *   philosophers: [string, string],  // 2 user-chosen philosopher names
+ *   philosophers: [string, string, string],  // 3 user-chosen philosopher names
  *   lang?: string
  * }
  */
@@ -71,23 +68,15 @@ export async function handlePhilosopherPanel(
     if (!mediaType || !["music", "literature", "news", "cinema"].includes(mediaType)) {
       return jsonResponse({ error: "mediaType must be 'music', 'literature', 'news', or 'cinema'" }, 400, origin, env);
     }
-    if (!Array.isArray(userPicks) || userPicks.length !== 2) {
-      return jsonResponse({ error: "Exactly 2 philosophers must be chosen" }, 400, origin, env);
+    if (!Array.isArray(userPicks) || userPicks.length !== 3) {
+      return jsonResponse({ error: "Exactly 3 philosophers must be chosen" }, 400, origin, env);
     }
 
     // ── Resolve philosopher profiles ──
-    // Auto-assign 1 Objectivist (random between Ayn Rand and Leonard Peikoff)
-    const objectivistName = OBJECTIVIST_PICKS[Math.random() < 0.5 ? 0 : 1];
-
     // Validate user picks exist in roster and are not duplicates
-    const allNames = [objectivistName, ...userPicks];
-    const uniqueNames = [...new Set(allNames)];
+    const uniqueNames = [...new Set(userPicks)];
     if (uniqueNames.length < 3) {
-      // User picked the same philosopher that was auto-assigned, or duplicates
-      // Replace the objectivist pick with the other one
-      const altObjectivist = objectivistName === "Ayn Rand" ? "Leonard Peikoff" : "Ayn Rand";
-      uniqueNames[0] = altObjectivist;
-      allNames[0] = altObjectivist;
+      return jsonResponse({ error: "Duplicate philosophers are not allowed" }, 400, origin, env);
     }
 
     const philosopherProfiles = [];

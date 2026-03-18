@@ -1,19 +1,16 @@
-// PhilosopherPicker - Modal for selecting 2 philosophers for panel analysis
+// PhilosopherPicker - Modal for selecting 3 philosophers for panel analysis
 // Reuses CSS from the colloquium roster modal (colloquium-modal, colloquium-roster)
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fetchPhilosopherRoster } from '@/services/api/philosopherPanel';
 
-// Objectivist philosophers that Philosify auto-assigns (1 random)
-const OBJECTIVIST_PICKS = ['Ayn Rand', 'Leonard Peikoff'];
-
 export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading }) {
   const { t } = useTranslation();
   const [roster, setRoster] = useState([]);
   const [rosterLoading, setRosterLoading] = useState(true);
   const [rosterError, setRosterError] = useState(null);
-  const [selected, setSelected] = useState([]); // max 2
+  const [selected, setSelected] = useState([]); // max 3
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -22,9 +19,7 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
     fetchPhilosopherRoster()
       .then((data) => {
         if (mounted) {
-          // Exclude Objectivist picks — Philosify auto-assigns one
-          const filtered = data.filter((p) => !OBJECTIVIST_PICKS.includes(p.name));
-          setRoster(filtered);
+          setRoster(data);
           setRosterLoading(false);
         }
       })
@@ -42,7 +37,7 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
   const toggleSelect = (name) => {
     setSelected((prev) => {
       if (prev.includes(name)) return prev.filter((n) => n !== name);
-      if (prev.length >= 2) return prev; // max 2
+      if (prev.length >= 3) return prev; // max 3
       return [...prev, name];
     });
     // Clear search field after selecting a philosopher
@@ -61,7 +56,7 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
     : roster;
 
   const handleConfirm = () => {
-    if (selected.length === 2) {
+    if (selected.length === 3) {
       onConfirm(selected);
     }
   };
@@ -73,7 +68,7 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
       <div className="philosopher-picker" onClick={(e) => e.stopPropagation()}>
         <div className="philosopher-picker__header">
           <span className="philosopher-picker__title">
-            {t('philosopherPanel.pickTitle', { defaultValue: 'Choose 2 Philosophers' })}
+            {t('philosopherPanel.pickTitle', { defaultValue: 'Choose 3 Philosophers' })}
           </span>
           <button
             className="philosopher-picker__close"
@@ -82,13 +77,6 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
           >
             &times;
           </button>
-        </div>
-
-        <div className="philosopher-picker__auto-note">
-          <span className="philosopher-picker__auto-icon">&#9733;</span>
-          {t('philosopherPanel.autoNote', {
-            defaultValue: 'Philosify will also assign Ayn Rand or Leonard Peikoff to the panel',
-          })}
         </div>
 
         {rosterError && <div className="philosopher-picker__error">{rosterError}</div>}
@@ -123,7 +111,7 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
               </div>
 
               <div className="philosopher-picker__count">
-                {selected.length}/2{' '}
+                {selected.length}/3{' '}
                 {t('philosopherPanel.selected', { defaultValue: 'selected' })}
               </div>
 
@@ -137,7 +125,7 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
                 <div className="philosopher-picker__list">
                   {filtered.map((p) => {
                     const isSelected = selected.includes(p.name);
-                    const isDisabled = !isSelected && selected.length >= 2;
+                    const isDisabled = !isSelected && selected.length >= 3;
                     return (
                       <button
                         key={p.name}
@@ -167,7 +155,7 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
           <button
             className="philosopher-picker__confirm"
             onClick={handleConfirm}
-            disabled={selected.length !== 2 || isLoading}
+            disabled={selected.length !== 3 || isLoading}
           >
             {externalLoading
               ? t('philosopherPanel.analyzing', { defaultValue: 'Analyzing...' })

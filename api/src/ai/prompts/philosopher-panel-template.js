@@ -2,8 +2,7 @@
 // AI - PHILOSOPHER PANEL PROMPT BUILDER
 // ============================================================
 // Generates a multi-philosopher analysis of a song or book.
-// 3 philosophers: 1 Objectivist (Ayn Rand or Leonard Peikoff, auto-assigned)
-// + 2 user-chosen philosophers from the roster.
+// 3 philosophers: all user-chosen from the full roster.
 //
 // Output: individual philosopher perspectives + agreements/conflicts + verdict
 // Cost: 3 credits
