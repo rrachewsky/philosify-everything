@@ -365,7 +365,26 @@ export function NewsSidebar({
 
           {/* Full analysis result (1 credit) */}
           {analysisResult && !panelResult && (
-            <ResultsContainer result={analysisResult} mediaType="news" />
+            <div className="music-analysis">
+              <ResultsContainer result={analysisResult} mediaType="news" />
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+                <button
+                  className="music-analyze__button music-analyze__button--panel"
+                  onClick={handleOpenPanel}
+                >
+                  {t('philosopherPanel.button', { defaultValue: "Philosopher's Panel" })}
+                  <span className="music-analyze__cost">
+                    3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}
+                  </span>
+                </button>
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={clearArticle}
+                >
+                  {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
+                </button>
+              </div>
+            </div>
           )}
 
           {/* ── STATE 3: Panel result ── */}
@@ -415,12 +434,26 @@ export function NewsSidebar({
                   />
                 </div>
               )}
-              <button
-                className="music-analyze__button music-analyze__button--another"
-                onClick={clearArticle}
-              >
-                {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
-              </button>
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+                {!analysisResult && (
+                  <button
+                    className="music-analyze__button"
+                    onClick={handleAnalyzeArticle}
+                    disabled={isAnalyzing}
+                  >
+                    {t('news.analyzeArticle', { defaultValue: 'Analyze Article' })}
+                    <span className="music-analyze__cost">
+                      1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}
+                    </span>
+                  </button>
+                )}
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={clearArticle}
+                >
+                  {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -510,7 +510,7 @@ export function LiteratureSidebar({
             </div>
           )}
 
-          {analysisResult && (
+          {analysisResult && !panelResult && (
             <div className="music-analysis">
               <div className="music-analysis__header">
                 <span className="music-analysis__complete-icon">&#10003;</span>
@@ -523,12 +523,21 @@ export function LiteratureSidebar({
                   mediaType="literature"
                 />
               </div>
-              <button
-                className="music-analyze__button music-analyze__button--another"
-                onClick={clearBook}
-              >
-                {t('home.categories.books.analyzeAnother', 'Analyze Another Book')}
-              </button>
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+                <button
+                  className="music-analyze__button music-analyze__button--panel"
+                  onClick={handleOpenPanel}
+                >
+                  {t('philosopherPanel.button', { defaultValue: 'Philosopher Panel' })}
+                  <span className="music-analyze__cost">3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}</span>
+                </button>
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={clearBook}
+                >
+                  {t('home.categories.books.analyzeAnother', 'Analyze Another Book')}
+                </button>
+              </div>
             </div>
           )}
 
@@ -579,12 +588,24 @@ export function LiteratureSidebar({
                   />
                 </div>
               )}
-              <button
-                className="music-analyze__button music-analyze__button--another"
-                onClick={() => { setPanelResult(null); clearBook(); }}
-              >
-                {t('home.categories.books.analyzeAnother', 'Analyze Another Book')}
-              </button>
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+                {!analysisResult && (
+                  <button
+                    className="music-analyze__button"
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing}
+                  >
+                    {t('home.categories.books.analyzeButton', 'Analyze Book')}
+                    <span className="music-analyze__cost">1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}</span>
+                  </button>
+                )}
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={() => { setPanelResult(null); clearBook(); }}
+                >
+                  {t('home.categories.books.analyzeAnother', 'Analyze Another Book')}
+                </button>
+              </div>
             </div>
           )}
         </div>
