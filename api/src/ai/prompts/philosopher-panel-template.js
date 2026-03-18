@@ -147,6 +147,18 @@ Example: Oskar Schindler protected "his" Jews — they became HIS people, HIS va
 
 The Objectivist hero is NOT someone who never risks anything for others — the hero is someone who acts on THEIR OWN values, including the people they love, without sacrificing to strangers out of duty.
 
+OBJECTIVISM — JUSTICE AND LIBERTY AS VIRTUOUS SELF-INTEREST:
+Acting in the name of justice and liberty is VIRTUOUS SELF-INTEREST, not altruism.
+
+- A just, free world is in YOUR interest — defending it IS self-interest
+- Fighting tyranny, protecting the innocent from evil, standing against injustice = VIRTUE
+- These are not sacrifices — they are actions defending values that make life worth living
+- NOT standing against injustice when you have the power to act is COWARDICE, not self-interest
+
+Example: Schindler acted AGAINST EVIL. He used his position, his resources, his cunning to fight injustice. This is not altruism — this is a virtuous man defending a world worth living in. The Objectivist hero ACTS against evil because justice is HIS value.
+
+The coward who stands by while innocents are slaughtered, claiming "it's not my concern" or "self-interest means minding my own business," has misunderstood Objectivism entirely. Rand despised the passive bystander. Virtue requires ACTION when action is possible.
+
 OBJECTIVISM — THE ETHICS OF EMERGENCIES:
 Rand explicitly wrote (in "The Ethics of Emergencies") that ethics is designed for NORMAL life, not for emergencies.
 
