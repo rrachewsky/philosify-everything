@@ -300,21 +300,24 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
   };
 
   const renderRight = (item) => {
-    if (item.kind === 'analysis')
-      return <span className="transaction-amount analysis-arrow">&#8250;</span>;
-    const threadId = getDebateThreadId(item);
-    if (threadId) {
-      const amt = Number(item.amount || 0);
+    // Get credits spent (negative) - use credits field from history API
+    const credits = Number(item.credits || item.amount || 0);
+    const isClickable = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || getDebateThreadId(item);
+    
+    if (isClickable) {
       return (
         <span className="transaction-right-group">
-          <span className={`transaction-amount ${amt >= 0 ? 'positive' : 'negative'}`}>
-            {amt >= 0 ? '+' : ''}
-            {amt}
-          </span>
+          {credits > 0 && (
+            <span className="transaction-amount negative">
+              -{credits}
+            </span>
+          )}
           <span className="transaction-amount analysis-arrow">&#8250;</span>
         </span>
       );
     }
+    
+    // For non-clickable items (purchases, etc.)
     const amt = Number(item.amount || 0);
     return (
       <span className={`transaction-amount ${amt >= 0 ? 'positive' : 'negative'}`}>

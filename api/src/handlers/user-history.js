@@ -60,7 +60,7 @@ export async function handleUserHistory(request, env, origin) {
       ),
     ]);
 
-    // Normalize music
+    // Normalize music (1 credit per analysis)
     const music = musicRows.map((r) => ({
       kind: "analysis",
       mediaType: "music",
@@ -68,9 +68,10 @@ export async function handleUserHistory(request, env, origin) {
       title: r.song_title,
       artist: r.artist_name,
       date: r.requested_at,
+      credits: 1,
     }));
 
-    // Normalize books
+    // Normalize books (1 credit per analysis)
     const books = bookRows.map((r) => ({
       kind: "analysis",
       mediaType: "literature",
@@ -78,9 +79,10 @@ export async function handleUserHistory(request, env, origin) {
       title: r.title,
       artist: r.author,
       date: r.requested_at,
+      credits: 1,
     }));
 
-    // Normalize films
+    // Normalize films (1 credit per analysis)
     const films = filmRows.map((r) => ({
       kind: "analysis",
       mediaType: "cinema",
@@ -88,9 +90,10 @@ export async function handleUserHistory(request, env, origin) {
       title: r.title,
       artist: r.director,
       date: r.requested_at,
+      credits: 1,
     }));
 
-    // Normalize panels
+    // Normalize panels (3 credits per panel)
     const panels = panelRows.map((r) => ({
       kind: "panel",
       mediaType: r.media_type,
@@ -99,6 +102,7 @@ export async function handleUserHistory(request, env, origin) {
       artist: r.artist,
       philosophers: r.philosophers,
       date: r.created_at,
+      credits: 3,
     }));
 
     // Fetch thread titles for colloquiums
@@ -128,6 +132,7 @@ export async function handleUserHistory(request, env, origin) {
           threadType: thread.metadata?.colloquium_type || null,
           accessType: r.access_type,
           date: r.created_at,
+          credits: r.credits_spent || 0,
         };
       });
 
