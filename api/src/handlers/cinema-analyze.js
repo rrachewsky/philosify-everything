@@ -61,16 +61,31 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       result.cached = true;
 
       // Log user request for history tracking (even for cache hits)
-      if (userId && result.db_analysis_id) {
+      if (userId) {
         try {
           const sbUrl = await getSecret(env.SUPABASE_URL);
           const sbKey = await getSecret(env.SUPABASE_SERVICE_KEY);
           if (sbUrl && sbKey) {
-            await logFilmAnalysisRequest(sbUrl, sbKey, userId, result.db_analysis_id, title, director, {
-              lang,
-              model,
-              cached: true,
-            });
+            let analysisIdToLog = result.db_analysis_id;
+
+            // For old KV cache entries without db_analysis_id, check database
+            if (!analysisIdToLog) {
+              const dbCached = await getCachedFilmAnalysis(env, tmdb_id, title, director, lang, model);
+              if (dbCached?.analysis?.id) {
+                analysisIdToLog = dbCached.analysis.id;
+                // Update KV cache with db_analysis_id for future hits
+                result.db_analysis_id = analysisIdToLog;
+                await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
+              }
+            }
+
+            if (analysisIdToLog) {
+              await logFilmAnalysisRequest(sbUrl, sbKey, userId, analysisIdToLog, title, director, {
+                lang,
+                model,
+                cached: true,
+              });
+            }
           }
         } catch (err) {
           console.warn("[CinemaAnalyze] Failed to log cache hit:", err.message);
