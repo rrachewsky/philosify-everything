@@ -109,7 +109,12 @@ async function fetchUserLanguage(env, userId) {
     });
     if (!res.ok) return "English";
     const user = await res.json();
-    return user.raw_user_meta_data?.language || "English";
+    // Check preferred_language first (new), then language (legacy) for backward compat
+    return (
+      user.raw_user_meta_data?.preferred_language ||
+      user.raw_user_meta_data?.language ||
+      "English"
+    );
   } catch (err) {
     console.warn("[Forum] fetchUserLanguage error:", err.message);
     return "English";

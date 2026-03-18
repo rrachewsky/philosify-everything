@@ -209,8 +209,8 @@ export function CinemaSidebar({
             </div>
           )}
 
-          {/* Selected film */}
-          {selectedFilm && !panelResult && (
+          {/* Selected film - shown when film is selected but NO results yet */}
+          {selectedFilm && !panelResult && !analysisResult && (
             <>
               <div className="music-selected">
                 {selectedFilm.poster_url && (
@@ -285,7 +285,15 @@ export function CinemaSidebar({
 
           {/* Full analysis result (1 credit) */}
           {analysisResult && !panelResult && (
-            <ResultsContainer result={analysisResult} mediaType="cinema" />
+            <div className="music-analysis">
+              <ResultsContainer result={analysisResult} mediaType="cinema" />
+              <button
+                className="music-analyze__button music-analyze__button--another"
+                onClick={clearFilm}
+              >
+                {t('home.categories.films.analyzeAnother', 'Analyze Another Film')}
+              </button>
+            </div>
           )}
 
           {/* Panel result */}

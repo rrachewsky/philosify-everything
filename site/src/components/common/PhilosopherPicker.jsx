@@ -45,6 +45,8 @@ export function PhilosopherPicker({ onConfirm, onClose, loading: externalLoading
       if (prev.length >= 2) return prev; // max 2
       return [...prev, name];
     });
+    // Clear search field after selecting a philosopher
+    setSearch('');
   };
 
   const filtered = search.trim()

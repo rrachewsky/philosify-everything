@@ -76,7 +76,11 @@ async function fetchUserLanguage(env, userId) {
     if (!res.ok) return "en";
     const user = await res.json();
     // Language can be stored as code ('pt') or full name ('Portuguese')
-    const lang = user.raw_user_meta_data?.language || "en";
+    // Check preferred_language first (new), then language (legacy) for backward compat
+    const lang =
+      user.raw_user_meta_data?.preferred_language ||
+      user.raw_user_meta_data?.language ||
+      "en";
     // If it's a full name, we still return it - the verdict function handles both
     return lang;
   } catch (err) {

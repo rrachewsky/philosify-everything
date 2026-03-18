@@ -375,11 +375,13 @@ COMMENT ON TABLE songs IS 'Music catalog with Spotify metadata';
 -- ------------------------------------------------------------
 -- Trigger 1: Create profile when user signs up
 -- ------------------------------------------------------------
+-- IMPORTANT: Must use explicit public. schema prefix for all tables
+-- IMPORTANT: Must GRANT EXECUTE to supabase_auth_admin after CREATE OR REPLACE
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Create profile (with display_name from auth metadata)
-  INSERT INTO profiles (user_id, email, display_name, preferred_language)
+  INSERT INTO public.profiles (user_id, email, display_name, preferred_language)
   VALUES (
     NEW.id,
     NEW.email,
@@ -399,12 +401,12 @@ BEGIN
     updated_at = NOW();
 
   -- Create credits record (10 free credits for new users)
-  INSERT INTO credits (user_id, purchased, free_remaining)
+  INSERT INTO public.credits (user_id, purchased, free_remaining)
   VALUES (NEW.id, 0, 10)
   ON CONFLICT (user_id) DO NOTHING;
 
   -- Log signup bonus
-  INSERT INTO credit_history (
+  INSERT INTO public.credit_history (
     user_id,
     type,
     amount,
@@ -425,6 +427,10 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- CRITICAL: Grant execute to supabase_auth_admin (required for signup to work)
+-- This grant is LOST every time CREATE OR REPLACE FUNCTION is run!
+GRANT EXECUTE ON FUNCTION handle_new_user() TO supabase_auth_admin;
 
 -- Drop old trigger if exists
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;

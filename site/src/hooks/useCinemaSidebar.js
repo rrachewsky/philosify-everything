@@ -58,6 +58,9 @@ export function useCinemaSidebar() {
   const open = useCallback(() => {
     filmSearch.clearAll();
     setSelectedFilm(null);
+    setIsAnalyzing(false);
+    setAnalysisResult(null);
+    setAnalysisError(null);
     setPanelLoading(false);
     setPanelResult(null);
     setPanelError(null);
@@ -182,6 +185,9 @@ export function useCinemaSidebar() {
     async (philosophers, lang) => {
       if (!selectedFilm) return;
 
+      // Clear any existing regular analysis before starting panel
+      setAnalysisResult(null);
+      setAnalysisError(null);
       setPanelLoading(true);
       setPanelError(null);
       startTimer();

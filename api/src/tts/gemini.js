@@ -963,15 +963,155 @@ const PODCAST_PHRASES_BOOK = {
   },
 };
 
+// ============================================================
+// PODCAST PHRASES - CINEMA OVERRIDES (only the phrases that differ from music)
+// ============================================================
+
+const PODCAST_PHRASES_CINEMA = {
+  en: {
+    fascinating: "This is a fascinating film.",
+    interesting: "Yes, this film has some really interesting philosophical dimensions worth exploring.",
+    historianHandoff: "{name}, tell us about the history behind this film.",
+    background: "Let's start with some background. What's the story behind this film?",
+    verdictHandoff: "{name}, what's your final verdict on this film?",
+  },
+  pt: {
+    fascinating: "Este é um filme fascinante.",
+    interesting: "Sim, este filme tem dimensões filosóficas realmente interessantes para explorar.",
+    historianHandoff: "{name}, conte-nos sobre a história por trás desse filme.",
+    background: "Vamos começar com um pouco de contexto. Qual é a história por trás deste filme?",
+    verdictHandoff: "{name}, qual é o seu veredito final sobre esse filme?",
+  },
+  es: {
+    fascinating: "Esta es una película fascinante.",
+    interesting: "Sí, esta película tiene dimensiones filosóficas realmente interesantes para explorar.",
+    historianHandoff: "{name}, cuéntanos sobre la historia detrás de esta película.",
+    background: "Empecemos con algo de contexto. ¿Cuál es la historia detrás de esta película?",
+    verdictHandoff: "{name}, ¿cuál es tu veredicto final sobre esta película?",
+  },
+  fr: {
+    fascinating: "C'est un film fascinant.",
+    interesting: "Oui, ce film a des dimensions philosophiques vraiment intéressantes à explorer.",
+    historianHandoff: "{name}, parlez-nous de l'histoire derrière ce film.",
+    background: "Commençons par le contexte. Quelle est l'histoire derrière ce film ?",
+    verdictHandoff: "{name}, quel est votre verdict final sur ce film ?",
+  },
+  de: {
+    fascinating: "Das ist ein faszinierender Film.",
+    interesting: "Ja, dieser Film hat wirklich interessante philosophische Dimensionen zu erkunden.",
+    historianHandoff: "{name}, erzählen Sie uns von der Geschichte hinter diesem Film.",
+    background: "Beginnen wir mit dem Hintergrund. Was ist die Geschichte hinter diesem Film?",
+    verdictHandoff: "{name}, wie lautet Ihr endgültiges Urteil über diesen Film?",
+  },
+  it: {
+    fascinating: "Questo è un film affascinante.",
+    interesting: "Sì, questo film ha dimensioni filosofiche davvero interessanti da esplorare.",
+    historianHandoff: "{name}, raccontaci la storia dietro questo film.",
+    background: "Iniziamo con un po' di contesto. Qual è la storia dietro questo film?",
+    verdictHandoff: "{name}, qual è il tuo verdetto finale su questo film?",
+  },
+  ja: {
+    fascinating: "これは魅力的な映画です。",
+    interesting: "はい、この映画には探求すべき本当に興味深い哲学的な側面があります。",
+    historianHandoff: "{name}さん、この映画の背景について教えてください。",
+    background: "まず背景から始めましょう。この映画の物語は何ですか？",
+    verdictHandoff: "{name}さん、この映画に対する最終評価は何ですか？",
+  },
+  ko: {
+    fascinating: "이것은 매력적인 영화입니다.",
+    interesting: "네, 이 영화에는 탐구할 가치가 있는 정말 흥미로운 철학적 차원이 있습니다.",
+    historianHandoff: "{name}님, 이 영화의 역사적 배경에 대해 말씀해 주세요.",
+    background: "배경부터 시작해 볼까요? 이 영화의 이야기는 무엇인가요?",
+    verdictHandoff: "{name}님, 이 영화에 대한 최종 평가는 무엇인가요?",
+  },
+  zh: {
+    fascinating: "这是一部迷人的电影。",
+    interesting: "是的，这部电影有一些非常有趣的哲学维度值得探索。",
+    historianHandoff: "{name}，请给我们讲讲这部电影的历史背景。",
+    background: "让我们从背景开始。这部电影背后的故事是什么？",
+    verdictHandoff: "{name}，你对这部电影的最终评价是什么？",
+  },
+  ru: {
+    fascinating: "Это увлекательный фильм.",
+    interesting: "Да, у этого фильма есть действительно интересные философские измерения для исследования.",
+    historianHandoff: "{name}, расскажите нам об истории этого фильма.",
+    background: "Начнём с контекста. Какова история этого фильма?",
+    verdictHandoff: "{name}, каков ваш окончательный вердикт об этом фильме?",
+  },
+  ar: {
+    fascinating: "هذا فيلم رائع.",
+    interesting: "نعم، هذا الفيلم له أبعاد فلسفية مثيرة للاهتمام تستحق الاستكشاف.",
+    historianHandoff: "{name}، أخبرنا عن تاريخ هذا الفيلم.",
+    background: "لنبدأ ببعض السياق. ما هي القصة وراء هذا الفيلم؟",
+    verdictHandoff: "{name}، ما هو حكمك النهائي على هذا الفيلم؟",
+  },
+  he: {
+    fascinating: "זה סרט מרתק.",
+    interesting: "כן, לסרט הזה יש ממדים פילוסופיים מעניינים באמת לחקור.",
+    historianHandoff: "{name}, ספר לנו על ההיסטוריה של הסרט הזה.",
+    background: "בואו נתחיל עם קצת רקע. מה הסיפור מאחורי הסרט הזה?",
+    verdictHandoff: "{name}, מה פסק הדין הסופי שלך על הסרט הזה?",
+  },
+  hi: {
+    fascinating: "यह एक आकर्षक फिल्म है।",
+    interesting: "हाँ, इस फिल्म में खोजने योग्य कुछ वाकई दिलचस्प दार्शनिक आयाम हैं।",
+    historianHandoff: "{name}, हमें इस फिल्म के इतिहास के बारे में बताइए।",
+    background: "आइए कुछ पृष्ठभूमि से शुरू करें। इस फिल्म के पीछे की कहानी क्या है?",
+    verdictHandoff: "{name}, इस फिल्म पर आपका अंतिम फैसला क्या है?",
+  },
+  nl: {
+    fascinating: "Dit is een fascinerende film.",
+    interesting: "Ja, deze film heeft echt interessante filosofische dimensies om te verkennen.",
+    historianHandoff: "{name}, vertel ons over de geschiedenis achter deze film.",
+    background: "Laten we beginnen met wat achtergrond. Wat is het verhaal achter deze film?",
+    verdictHandoff: "{name}, wat is jouw eindoordeel over deze film?",
+  },
+  pl: {
+    fascinating: "To fascynujący film.",
+    interesting: "Tak, ten film ma naprawdę interesujące wymiary filozoficzne do zbadania.",
+    historianHandoff: "{name}, opowiedz nam o historii tego filmu.",
+    background: "Zacznijmy od kontekstu. Jaka jest historia tego filmu?",
+    verdictHandoff: "{name}, jaki jest twój ostateczny werdykt o tym filmie?",
+  },
+  tr: {
+    fascinating: "Bu büyüleyici bir film.",
+    interesting: "Evet, bu filmin keşfedilmeye değer gerçekten ilginç felsefi boyutları var.",
+    historianHandoff: "{name}, bize bu filmin tarihçesini anlat.",
+    background: "Biraz arka planla başlayalım. Bu filmin arkasındaki hikaye nedir?",
+    verdictHandoff: "{name}, bu film hakkındaki nihai kararın nedir?",
+  },
+  hu: {
+    fascinating: "Ez egy lenyűgöző film.",
+    interesting: "Igen, ennek a filmnek igazán érdekes filozófiai dimenziói vannak, amelyeket érdemes felfedezni.",
+    historianHandoff: "{name}, mesélj nekünk a film történetéről.",
+    background: "Kezdjük egy kis háttérrel. Mi a történet e film mögött?",
+    verdictHandoff: "{name}, mi a végső ítéleted erről a filmről?",
+  },
+  fa: {
+    fascinating: "این یک فیلم جذاب است.",
+    interesting: "بله، این فیلم ابعاد فلسفی واقعاً جالبی برای کاوش دارد.",
+    historianHandoff: "{name}، درباره تاریخچه این فیلم به ما بگو.",
+    background: "بیایید با کمی زمینه شروع کنیم. داستان پشت این فیلم چیست؟",
+    verdictHandoff: "{name}، نظر نهایی تو درباره این فیلم چیست؟",
+  },
+};
+
 /**
  * Get phrases for a language, falling back to English.
  * If isBook is true, overlay book-specific phrases on top of the base music phrases.
+ * If isCinema is true, overlay cinema-specific phrases on top of the base music phrases.
  */
-function getPhrases(lang, isBook = false) {
+function getPhrases(lang, isBook = false, isCinema = false) {
   const base = PODCAST_PHRASES[lang] || PODCAST_PHRASES.en;
-  if (!isBook) return base;
-  const bookOverrides = PODCAST_PHRASES_BOOK[lang] || PODCAST_PHRASES_BOOK.en;
-  return { ...base, ...bookOverrides };
+  if (isBook) {
+    const bookOverrides = PODCAST_PHRASES_BOOK[lang] || PODCAST_PHRASES_BOOK.en;
+    return { ...base, ...bookOverrides };
+  }
+  if (isCinema) {
+    const cinemaOverrides = PODCAST_PHRASES_CINEMA[lang] || PODCAST_PHRASES_CINEMA.en;
+    return { ...base, ...cinemaOverrides };
+  }
+  return base;
 }
 
 // ============================================================
@@ -1357,8 +1497,9 @@ function stripHtml(html) {
 function extractSectionsFromResult(result) {
   return {
     song: result.song || result.song_name || result.title || "",
-    artist: result.artist || result.author || "",
+    artist: result.artist || result.author || result.director || "",
     isBook: result.media_type === "literature" || (!result.song && !result.song_name && !!result.title && !!result.author),
+    isCinema: result.media_type === "cinema",
     historicalContext: stripHtml(
       result.historical_context || result.context || "",
     ),
@@ -1552,10 +1693,13 @@ function buildCreativeChunkScript(
   phrases,
   langName,
   isBook = false,
+  isCinema = false,
 ) {
   const hostVoice = VOICE_CONFIG.host.geminiVoice;
   const criticVoice = VOICE_CONFIG.critic.geminiVoice;
-  const criticRole = isBook ? "Enthusiastic male literary critic." : "Enthusiastic male music critic.";
+  let criticRole = "Enthusiastic male music critic.";
+  if (isBook) criticRole = "Enthusiastic male literary critic.";
+  else if (isCinema) criticRole = "Enthusiastic male film critic.";
 
   let script = `# PODCAST: Filosifai - Creative Process (${langName})
 Voices:
@@ -2013,7 +2157,8 @@ LANGUAGE: Speak ONLY in ${langName}.
   // ============================================================
   const step4Start = Date.now();
   const isBook = sections.isBook || false;
-  const p = getPhrases(targetLang, isBook);
+  const isCinema = sections.isCinema || false;
+  const p = getPhrases(targetLang, isBook, isCinema);
   const langName = LANGUAGE_NAMES[targetLang] || "English";
   const usedReactionIndices = new Set();
 
@@ -2043,6 +2188,7 @@ LANGUAGE: Speak ONLY in ${langName}.
     p,
     langName,
     isBook,
+    isCinema,
   );
 
   const script3 = buildAnalysis1ChunkScript(

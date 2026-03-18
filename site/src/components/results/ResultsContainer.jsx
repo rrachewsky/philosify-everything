@@ -131,6 +131,8 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
   // Determine media type: explicit prop > result field > default 'music'
   const resolvedMediaType = mediaType !== 'music' ? mediaType : (result.media_type || 'music');
   const isLiterature = resolvedMediaType === 'literature';
+  const isCinema = resolvedMediaType === 'cinema';
+  const showCoverImage = isLiterature || isCinema;
 
   if (!result) return null;
 
@@ -255,8 +257,8 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
           )
         )}
 
-        {/* Book Cover (literature) or Spotify Player (music) */}
-        {isLiterature ? (
+        {/* Cover Image (literature/cinema) or Spotify Player (music) */}
+        {showCoverImage ? (
           result.cover_url && (
             <div className="mt-5" style={{ textAlign: 'center' }}>
               <img

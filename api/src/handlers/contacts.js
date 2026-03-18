@@ -120,8 +120,12 @@ export async function handleMatchContacts(request, env, origin) {
         const usersData = await usersRes.json();
         const users = usersData.users || usersData || [];
         for (const u of users) {
-          if (u.id && u.raw_user_meta_data?.language) {
-            userLanguages[u.id] = u.raw_user_meta_data.language;
+          // Check preferred_language first (new), then language (legacy)
+          const lang =
+            u.raw_user_meta_data?.preferred_language ||
+            u.raw_user_meta_data?.language;
+          if (u.id && lang) {
+            userLanguages[u.id] = lang;
           }
         }
       }

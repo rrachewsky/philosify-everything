@@ -1002,8 +1002,12 @@ export async function handleAuthEmail(request, env, origin) {
       : redirectTo;
 
     // Get user's preferred language from metadata, fallback to 'en'
+    // Check preferred_language first (new), then language (legacy) for backward compat
     const userLanguage =
-      user.user_metadata?.language || user.app_metadata?.language || "en";
+      user.user_metadata?.preferred_language ||
+      user.user_metadata?.language ||
+      user.app_metadata?.language ||
+      "en";
 
     // Validate required fields
     if (!userEmail) {

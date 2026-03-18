@@ -306,11 +306,15 @@ async function handleSignUp(request, env, origin, isProd) {
 
   const supabase = await getSupabaseAuthClient(env);
 
-  // Include language and full_name in user_metadata
+  // Include preferred_language and full_name in user_metadata
   // full_name is used for display across the app (Agora, DMs, Collectives)
   // Google OAuth users already get full_name from their Google profile
+  // NOTE: Field names must match what handle_new_user() trigger expects:
+  //   - preferred_language (not "language") for profiles.preferred_language
+  //   - full_name for profiles.display_name
   const metadata = {
-    language: language || "en",
+    preferred_language: language || "en",
+    language: language || "en", // Keep for backward compat with email templates
   };
   if (fullName && fullName.trim()) {
     metadata.full_name = fullName.trim();

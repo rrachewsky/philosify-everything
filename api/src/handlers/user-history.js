@@ -37,7 +37,7 @@ export async function handleUserHistory(request, env, origin) {
     const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
 
     // Fetch all types in parallel
-    const [musicRows, bookRows, panelRows, accessRows] = await Promise.all([
+    const [musicRows, bookRows, filmRows, panelRows, accessRows] = await Promise.all([
       // Music analyses
       query(sbUrl, sbKey,
         `user_analysis_requests?user_id=eq.${uid}&select=analysis_id,song_title,artist_name,requested_at&order=requested_at.desc&limit=50`
@@ -45,6 +45,10 @@ export async function handleUserHistory(request, env, origin) {
       // Book analyses
       query(sbUrl, sbKey,
         `user_book_analysis_requests?user_id=eq.${uid}&select=analysis_id,title,author,requested_at&order=requested_at.desc&limit=50`
+      ),
+      // Film analyses
+      query(sbUrl, sbKey,
+        `user_film_analysis_requests?user_id=eq.${uid}&select=film_analysis_id,title,director,requested_at&order=requested_at.desc&limit=50`
       ),
       // Philosopher panels
       query(sbUrl, sbKey,
@@ -73,6 +77,16 @@ export async function handleUserHistory(request, env, origin) {
       id: r.analysis_id,
       title: r.title,
       artist: r.author,
+      date: r.requested_at,
+    }));
+
+    // Normalize films
+    const films = filmRows.map((r) => ({
+      kind: "analysis",
+      mediaType: "cinema",
+      id: r.film_analysis_id,
+      title: r.title,
+      artist: r.director,
       date: r.requested_at,
     }));
 
@@ -127,7 +141,7 @@ export async function handleUserHistory(request, env, origin) {
     }
 
     // Merge all and sort by date (newest first)
-    const all = [...music, ...books, ...panels, ...debates];
+    const all = [...music, ...books, ...films, ...panels, ...debates];
     all.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return jsonResponse(

@@ -1,7 +1,7 @@
 // ============================================================
 // CINEMA ANALYSIS HANDLER
 // Full philosophical analysis for films (1 credit)
-// Uses KV for caching (deterministic key: cinema:{tmdb_id}:{model}:{lang})
+// Uses KV for fast caching + Supabase for history tracking
 // ============================================================
 
 import { jsonResponse } from "../utils/index.js";
@@ -13,6 +13,13 @@ import { calculateWeightedScore } from "../config/scoring.js";
 import { calculatePhilosophicalNote } from "../ai/prompts/calculator.js";
 import { normalizeClassification } from "../ai/parser.js";
 import { localizeClassification } from "../ai/classification-i18n.js";
+import {
+  saveFilmToSupabase,
+  logFilmAnalysisRequest,
+  getCachedFilmAnalysis,
+  checkUserFilmAccess,
+} from "../ai/cinema-storage.js";
+import { getSecret } from "../utils/secrets.js";
 
 export async function handleCinemaAnalyze(request, env, origin, ctx) {
   try {
@@ -28,13 +35,16 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       return jsonResponse({ error: "Title required (1-300 chars)" }, 400, origin, env);
     }
 
-    // Check KV cache
-    const cacheKey = `analysis:cinema:${tmdb_id || title.toLowerCase().replace(/\s+/g, '_')}:${model}:${lang}`;
-    const cached = await env.PHILOSIFY_KV.get(cacheKey);
+    const userId = user.userId;
 
-    if (cached) {
-      console.log(`[CinemaAnalyze] Cache HIT: ${cacheKey}`);
-      const result = JSON.parse(cached);
+    // === CACHE CHECK (KV first, then Supabase) ===
+    const cacheKey = `analysis:cinema:${tmdb_id || title.toLowerCase().replace(/\s+/g, '_')}:${model}:${lang}`;
+    const kvCached = await env.PHILOSIFY_KV.get(cacheKey);
+
+    if (kvCached) {
+      console.log(`[CinemaAnalyze] KV Cache HIT: ${cacheKey}`);
+      const result = JSON.parse(kvCached);
+
       // Recalculate scores (never trust stored values)
       const finalScore = calculateWeightedScore({
         ethics: result.scorecard?.ethics?.score || 0,
@@ -49,6 +59,119 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       result.classification_localized = localizeClassification(result.classification, lang);
       result.philosophical_note = calculatePhilosophicalNote(finalScore);
       result.cached = true;
+
+      // Log user request for history tracking (even for cache hits)
+      if (userId && result.db_analysis_id) {
+        try {
+          const sbUrl = await getSecret(env.SUPABASE_URL);
+          const sbKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+          if (sbUrl && sbKey) {
+            await logFilmAnalysisRequest(sbUrl, sbKey, userId, result.db_analysis_id, title, director, {
+              lang,
+              model,
+              cached: true,
+            });
+          }
+        } catch (err) {
+          console.warn("[CinemaAnalyze] Failed to log cache hit:", err.message);
+        }
+      }
+
+      return jsonResponse(result, 200, origin, env);
+    }
+
+    // Check Supabase cache (database)
+    const dbCached = await getCachedFilmAnalysis(env, tmdb_id, title, director, lang, model);
+    if (dbCached) {
+      console.log(`[CinemaAnalyze] Database Cache HIT: ${dbCached.film.title}`);
+      const { film, analysis } = dbCached;
+
+      // Check if this is a re-view
+      const isReview = await checkUserFilmAccess(env, userId, analysis.id);
+
+      // Recalculate scores
+      const scorecardForCalc = {
+        ethics: { score: Number(analysis.ethics_score ?? 0) },
+        metaphysics: { score: Number(analysis.metaphysics_score ?? 0) },
+        epistemology: { score: Number(analysis.epistemology_score ?? 0) },
+        politics: { score: Number(analysis.politics_score ?? 0) },
+        aesthetics: { score: Number(analysis.aesthetics_score ?? 0) },
+      };
+      const officialFinalScore = calculateWeightedScore(scorecardForCalc);
+      const officialNote = calculatePhilosophicalNote(officialFinalScore);
+      const canonicalClassification = normalizeClassification("", officialFinalScore);
+      const localizedClassification = localizeClassification(canonicalClassification, lang);
+
+      // Log user request for history
+      try {
+        const sbUrl = await getSecret(env.SUPABASE_URL);
+        const sbKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+        if (sbUrl && sbKey) {
+          await logFilmAnalysisRequest(sbUrl, sbKey, userId, analysis.id, title, director, {
+            lang,
+            model,
+            cached: true,
+          });
+        }
+      } catch (err) {
+        console.warn("[CinemaAnalyze] Failed to log db cache hit:", err.message);
+      }
+
+      const result = {
+        id: analysis.id,
+        db_analysis_id: analysis.id,
+        film_id: analysis.film_id,
+        title: film.title,
+        director: film.director,
+        tmdb_id: film.tmdb_id,
+        language: analysis.language,
+        version: analysis.version,
+        media_type: "cinema",
+        guide_proof: analysis.metadata?.guide_sha256
+          ? {
+              sha256: analysis.metadata.guide_sha256,
+              signature: analysis.metadata.guide_signature,
+              version: analysis.metadata.guide_version,
+            }
+          : null,
+        release_year: analysis.metadata?.release_year || null,
+        genre: analysis.metadata?.genre || null,
+        country: null,
+        cover_url: film.poster_url || analysis.metadata?.poster_url || null,
+        runtime: analysis.metadata?.runtime || null,
+        historical_context: analysis.historical_context,
+        creative_process: analysis.creative_process,
+        philosophical_analysis: analysis.philosophical_analysis,
+        schools_of_thought: analysis.metadata?.schools_of_thought || "",
+        summary: analysis.summary,
+        classification: canonicalClassification,
+        classification_localized: localizedClassification,
+        philosophical_note: officialNote,
+        ethics_analysis: analysis.ethics_analysis,
+        metaphysics_analysis: analysis.metaphysics_analysis,
+        epistemology_analysis: analysis.epistemology_analysis,
+        politics_analysis: analysis.politics_analysis,
+        aesthetics_analysis: analysis.aesthetics_analysis,
+        scorecard: {
+          ethics: { score: analysis.ethics_score, justification: analysis.ethics_analysis || "" },
+          metaphysics: { score: analysis.metaphysics_score, justification: analysis.metaphysics_analysis || "" },
+          epistemology: { score: analysis.epistemology_score, justification: analysis.epistemology_analysis || "" },
+          politics: { score: analysis.politics_score, justification: analysis.politics_analysis || "" },
+          aesthetics: { score: analysis.aesthetics_score, justification: analysis.aesthetics_analysis || "" },
+          final_score: officialFinalScore,
+        },
+        overall_grade: officialFinalScore,
+        final_score: officialFinalScore,
+        ethics_score: analysis.ethics_score,
+        metadata: analysis.metadata || {},
+        cached: true,
+        isReview,
+        created_at: analysis.created_at,
+      };
+
+      // Also store in KV for faster future access
+      await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
+
       return jsonResponse(result, 200, origin, env);
     }
 
@@ -68,7 +191,13 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
     try {
       // Get film details from TMDB for richer metadata
-      let filmMetadata = { year: body.year, genres: genres || [], countries: body.countries || [], overview: overview || "" };
+      let filmMetadata = {
+        year: body.year,
+        genres: genres || [],
+        countries: body.countries || [],
+        overview: overview || "",
+        poster_url: body.poster_url || null,
+      };
       if (tmdb_id) {
         try {
           const details = await getFilmDetails(tmdb_id, env, lang);
@@ -82,6 +211,9 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
               genres: details.genres || genres || [],
               countries: details.production_countries || body.countries || [],
               year: details.year || body.year,
+              poster_url: details.poster_path
+                ? `https://image.tmdb.org/t/p/w500${details.poster_path}`
+                : filmMetadata.poster_url,
             };
           }
         } catch (e) {
@@ -113,9 +245,30 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
         console.warn(`[CinemaAnalyze] Guide proof failed: ${e.message}`);
       }
 
+      // Save to Supabase database
+      let savedRecord = null;
+      try {
+        savedRecord = await saveFilmToSupabase(
+          analysis,
+          env,
+          title,
+          director || "",
+          lang,
+          model,
+          tmdb_id,
+          userId,
+          guideProof,
+          filmMetadata,
+        );
+      } catch (err) {
+        console.warn("[CinemaAnalyze] Database save failed:", err.message);
+      }
+
       // Build response
       const result = {
-        id: crypto.randomUUID(),
+        id: savedRecord?.id || crypto.randomUUID(),
+        db_analysis_id: savedRecord?.id || null,
+        film_id: savedRecord?.film_id || null,
         title,
         director: director || "",
         tmdb_id: tmdb_id || null,
@@ -126,7 +279,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
         release_year: filmMetadata.year || null,
         genre: (filmMetadata.genres || []).join(", "),
         country: (filmMetadata.countries || []).join(", "),
-        cover_url: body.poster_url || null,
+        cover_url: filmMetadata.poster_url || body.poster_url || null,
         runtime: filmMetadata.runtime || null,
         historical_context: analysis.historical_context || "",
         creative_process: analysis.creative_process || "",
@@ -159,7 +312,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
       // Store in KV (permanent)
       await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
-      console.log(`[CinemaAnalyze] Cached: ${cacheKey}`);
+      console.log(`[CinemaAnalyze] Cached to KV: ${cacheKey}`);
 
       // Confirm credit
       await confirmReservation(env, reservation.reservationId, `cinema-analysis:${title.substring(0, 50)}`);
