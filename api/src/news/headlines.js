@@ -25,8 +25,9 @@
 // - Fetch world, business, science, technology, nation topics
 // - Filter blocked sources (tabloids, propaganda, clickbait)
 // - Filter blocked words (sports, gossip, trivial)
+// - Prioritize quality sources (Reuters, WSJ, Economist, etc.)
 // - Score articles by philosophical keywords
-// - Sort by philosophical relevance, then by date
+// - Sort by: source priority → philosophical relevance → date
 //
 // API BUDGET: Free tier = 100 requests/day
 // - 5 topics per language refresh, cached 2h
@@ -134,6 +135,39 @@ const BLOCKED_SOURCES = [
 ];
 
 // ============================================================
+// PRIORITY SOURCES — quality journalism, boosted in sorting
+// ============================================================
+// Articles from these sources get priority in the feed.
+// Tier 1: Wire services & top quality (highest priority)
+// Tier 2: Quality newspapers & magazines (high priority)
+// ============================================================
+const PRIORITY_SOURCES_TIER1 = [
+  // Wire Services (most reliable for facts)
+  "reuters", "associated press", "ap news", "afp", "agence france",
+  // Top Quality International
+  "the economist", "wall street journal", "wsj", "financial times",
+  "bloomberg",
+];
+
+const PRIORITY_SOURCES_TIER2 = [
+  // US Quality
+  "reason", "reason magazine", "national review", "the free press",
+  "free press", "city journal", "foreign affairs", "quillette",
+  // UK / Europe
+  "the telegraph", "telegraph", "the times", "the spectator", "spectator",
+  "neue zürcher", "nzz", "die welt", "le figaro",
+  // Israel / Middle East
+  "times of israel", "jerusalem post", "i24 news", "i24news",
+  // Brazil / Latin America
+  "gazeta do povo", "crusoé", "crusoe", "piauí", "piaui",
+  "poder360", "jovem pan", "o antagonista", "antagonista",
+  // Tech / Science / Business
+  "techcrunch", "tech crunch", "wired", "ars technica", "arstechnica",
+  "mit technology review", "nature", "scientific american",
+  "forbes", "fortune", "cnbc",
+];
+
+// ============================================================
 // CONTENT FILTER — removes inappropriate/trivial articles
 // ============================================================
 const BLOCKED_WORDS = [
@@ -191,6 +225,25 @@ function getPhilosophicalScore(article) {
     if (text.includes(keyword)) score += 1;
   }
   return score;
+}
+
+/**
+ * Score article by source quality (higher = more trusted).
+ * Tier 1 sources (wire services, top quality) = 10 points
+ * Tier 2 sources (quality journalism) = 5 points
+ * Other sources = 0 points
+ */
+function getSourcePriorityScore(article) {
+  const source = (article.source || "").toLowerCase();
+  if (!source) return 0;
+  
+  for (const s of PRIORITY_SOURCES_TIER1) {
+    if (source.includes(s) || s.includes(source)) return 10;
+  }
+  for (const s of PRIORITY_SOURCES_TIER2) {
+    if (source.includes(s) || s.includes(source)) return 5;
+  }
+  return 0;
 }
 
 /**
@@ -307,15 +360,22 @@ export async function fetchAllHeadlines(env, lang = "en") {
   if (sourceBlocked > 0) console.log(`[News] Blocked ${sourceBlocked} articles from unreliable sources`);
   if (contentFiltered > 0) console.log(`[News] Filtered ${contentFiltered} inappropriate articles`);
 
-  // Sort by philosophical relevance first, then by date (newest first)
+  // Sort by: 1) source priority, 2) philosophical relevance, 3) date
   clean.sort((a, b) => {
-    const scoreA = getPhilosophicalScore(a);
-    const scoreB = getPhilosophicalScore(b);
-    if (scoreB !== scoreA) return scoreB - scoreA;
+    // First: source quality (Tier 1 > Tier 2 > Others)
+    const srcA = getSourcePriorityScore(a);
+    const srcB = getSourcePriorityScore(b);
+    if (srcB !== srcA) return srcB - srcA;
+    // Second: philosophical relevance
+    const philA = getPhilosophicalScore(a);
+    const philB = getPhilosophicalScore(b);
+    if (philB !== philA) return philB - philA;
+    // Third: newest first
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
 
-  console.log(`[News] ${clean.length} clean headlines (${allArticles.length} total, ${sourceBlocked} source-blocked, ${contentFiltered} content-filtered)`);
+  const priorityCount = clean.filter(a => getSourcePriorityScore(a) > 0).length;
+  console.log(`[News] ${clean.length} clean headlines (${priorityCount} from priority sources, ${sourceBlocked} source-blocked, ${contentFiltered} content-filtered)`);
   return clean;
 }
 
@@ -337,11 +397,14 @@ export async function fetchHighlights(env, lang = "en") {
     .filter((a) => !isBlockedSource(a.source))
     .filter(isCleanArticle);
 
-  // Sort by philosophical relevance first, then by date (newest first)
+  // Sort by: 1) source priority, 2) philosophical relevance, 3) date
   clean.sort((a, b) => {
-    const scoreA = getPhilosophicalScore(a);
-    const scoreB = getPhilosophicalScore(b);
-    if (scoreB !== scoreA) return scoreB - scoreA;
+    const srcA = getSourcePriorityScore(a);
+    const srcB = getSourcePriorityScore(b);
+    if (srcB !== srcA) return srcB - srcA;
+    const philA = getPhilosophicalScore(a);
+    const philB = getPhilosophicalScore(b);
+    if (philB !== philA) return philB - philA;
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
 
