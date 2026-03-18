@@ -287,12 +287,23 @@ export function CinemaSidebar({
           {analysisResult && !panelResult && (
             <div className="music-analysis">
               <ResultsContainer result={analysisResult} mediaType="cinema" />
-              <button
-                className="music-analyze__button music-analyze__button--another"
-                onClick={clearFilm}
-              >
-                {t('home.categories.films.analyzeAnother', 'Analyze Another Film')}
-              </button>
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+                <button
+                  className="music-analyze__button music-analyze__button--panel"
+                  onClick={handleOpenPanel}
+                >
+                  {t('philosopherPanel.button', "Philosopher's Panel")}
+                  <span className="music-analyze__cost">
+                    3 {t('philosopherPanel.credits', 'credits')}
+                  </span>
+                </button>
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={clearFilm}
+                >
+                  {t('home.categories.films.analyzeAnother', 'Analyze Another Film')}
+                </button>
+              </div>
             </div>
           )}
 
