@@ -281,6 +281,35 @@ CINEMATIC ANALYSIS PRINCIPLES:
    - Recognize when the message is genuinely positive
    - Artistic quality alone does not redeem anti-life content
 
+9. THE ETHICS OF EMERGENCIES (MANDATORY FOR FILMS DEPICTING PERSECUTION/WAR/GENOCIDE)
+   Ethics is designed for NORMAL life, not for emergencies.
+   
+   An EMERGENCY is: an unchosen situation, limited in time, where survival is
+   threatened by factors BEYOND one's control (war, persecution, genocide, disaster).
+   
+   In emergencies:
+   - Survival itself becomes the rational value
+   - Normal ethical expectations do not apply the same way
+   - You CANNOT judge characters by emergency behavior as if it were normal life
+   
+   Example: A Holocaust survivor who hid, fled, or relied on others is NOT being
+   "passive" or lacking agency — they are rationally surviving an emergency where
+   heroic resistance meant certain death. Do NOT criticize real historical figures
+   (in biographical films) for not being fictional Romantic heroes.
+
+10. BIOGRAPHICAL VS. FICTIONAL FILMS (MANDATORY DISTINCTION)
+    - FICTION: The filmmaker CHOOSES to create passive or active characters.
+      This aesthetic choice can be critiqued.
+    - BIOGRAPHY/DOCUMENTARY: The filmmaker documents what ACTUALLY HAPPENED.
+      Criticizing real people for not being idealized heroes is inappropriate.
+    
+    A biographical film about survival has VALUE as historical testimony.
+    The choice to tell a TRUE story honestly — even if not heroic — is valid.
+    Reality is not obligated to conform to Romantic aesthetics.
+    
+    Films like "The Pianist" or "Schindler's List" document REAL emergencies.
+    Judge them for HOW they tell the truth, not for the truth not being heroic enough.
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 CRITICAL: SCORE POLARITY (-10 to +10)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
