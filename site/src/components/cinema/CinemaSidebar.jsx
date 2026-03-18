@@ -379,12 +379,26 @@ export function CinemaSidebar({
                   />
                 </div>
               )}
-              <button
-                className="music-analyze__button music-analyze__button--another"
-                onClick={clearFilm}
-              >
-                {t('home.categories.films.analyzeAnother', 'Analyze Another Film')}
-              </button>
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+                {!analysisResult && (
+                  <button
+                    className="music-analyze__button"
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing}
+                  >
+                    {t('home.categories.films.analyzeButton', 'Analyze Film')}
+                    <span className="music-analyze__cost">
+                      1 {t('philosopherPanel.credit', 'credit')}
+                    </span>
+                  </button>
+                )}
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={clearFilm}
+                >
+                  {t('home.categories.films.analyzeAnother', 'Analyze Another Film')}
+                </button>
+              </div>
             </div>
           )}
         </div>
