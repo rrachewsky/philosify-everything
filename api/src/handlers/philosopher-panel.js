@@ -12,7 +12,7 @@ import { getDebateAestheticGuide } from "../guides/index.js";
 import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
 import { buildPhilosopherPanelPrompt } from "../ai/prompts/philosopher-panel-template.js";
 import { buildNewsPanelPrompt } from "../ai/prompts/news-panel-template.js";
-import { callGrok } from "../ai/models/index.js";
+import { callClaude } from "../ai/models/index.js";
 import { PHILOSOPHERS } from "../handlers/colloquium.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
@@ -180,9 +180,9 @@ export async function handlePhilosopherPanel(
             lang,
           });
 
-      // ── Call AI (Grok) — generate in user's language ──
-      console.log(`[PhilosopherPanel] Calling Grok for ${mediaType} panel analysis in "${lang}"...`);
-      const panelText = await callGrok(prompt, lang, env, {
+      // ── Call AI (Claude) — generate in user's language ──
+      console.log(`[PhilosopherPanel] Calling Claude for ${mediaType} panel analysis in "${lang}"...`);
+      const panelText = await callClaude(prompt, lang, env, {
         maxTokens: mediaType === "news" ? 5000 : 4000,
         temperature: 0.7,
       });

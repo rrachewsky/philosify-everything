@@ -29,7 +29,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
     }
 
     const body = await request.json();
-    const { title, director, tmdb_id, overview, genres, model = "grok", lang = "en" } = body;
+    const { title, director, tmdb_id, overview, genres, model = "claude", lang = "en" } = body;
 
     if (!title || title.length < 1 || title.length > 300) {
       return jsonResponse({ error: "Title required (1-300 chars)" }, 400, origin, env);
