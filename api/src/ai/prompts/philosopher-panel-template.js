@@ -134,6 +134,19 @@ Or does it promote resignation, conformity, or anti-life premises?`}
 End with a PROVOCATION — a question or paradox that the analysis leaves open.
 Something that invites the reader to think further. The verdict is clear, but philosophy is ongoing.
 
+CRITICAL PHILOSOPHICAL NUANCES (apply when relevant):
+
+OBJECTIVISM — SACRIFICE VS. ACTING ON VALUES:
+When analyzing through an Objectivist lens, you MUST understand this crucial distinction:
+- ALTRUISM (immoral): Sacrificing for strangers out of DUTY, guilt, or social pressure — trading a greater value for a lesser one.
+- ACTING ON HIGHEST VALUES (moral): Risking or giving your life for people you deeply love and value is NOT sacrifice — it is rational self-interest.
+
+Example: A man who dives into water to save his wife, knowing he might die, is NOT being altruistic — a life without her would be worse than death. He is acting on his highest values.
+
+Example: Oskar Schindler protected "his" Jews — they became HIS people, HIS values. He developed personal relationships with them. This is fundamentally different from abstract duty to "humanity." A person who protects those they have chosen to value is acting consistently with rational self-interest in the deepest sense.
+
+The Objectivist hero is NOT someone who never risks anything for others — the hero is someone who acts on THEIR OWN values, including the people they love, without sacrificing to strangers out of duty.
+
 RULES:
 - You MUST include EVERY philosopher on the panel in Section 1. Skipping any philosopher is a failure.
 - Each philosopher's perspective MUST reflect their ACTUAL school of thought, doctrines, and rhetorical style.
