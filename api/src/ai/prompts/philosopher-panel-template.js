@@ -1,7 +1,7 @@
 // ============================================================
 // AI - PHILOSOPHER PANEL PROMPT BUILDER
 // ============================================================
-// Generates a multi-philosopher analysis of a song or book.
+// Generates a multi-philosopher analysis of a song, book, news, or film.
 // 3 philosophers: all user-chosen from the full roster.
 //
 // Output: individual philosopher perspectives + agreements/conflicts + verdict
