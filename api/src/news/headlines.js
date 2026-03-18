@@ -1,20 +1,32 @@
 // ============================================================
 // NEWS - HEADLINES FETCHER (GNews API)
 // ============================================================
-// Fetches international + local headlines and curated Highlights.
+// PHILOSOPHICAL MISSION:
+// Philosify focuses ONLY on news that sparks meaningful philosophical analysis.
 //
-// CONTENT POLICY:
-// - NO sports
-// - NO curse, dirty names, depravation
-// - Highlights focus on: innovations, business success, great achievements,
-//   freedom victories, scientific breakthroughs, human progress
+// APPROVED THEMES:
+// ✓ Innovation & Scientific Breakthroughs
+// ✓ Great Achievements & Human Progress
+// ✓ Business Success & Entrepreneurship
+// ✓ Wars & Conflicts (good vs. evil, defense of rights)
+// ✓ Heroic Actions & Courage
+// ✓ Life-Changing Transformations
+// ✓ Justice & Accountability
+// ✓ Freedom Victories & Individual Rights
+//
+// EXCLUDED THEMES:
+// ✗ Lottery, gambling, games of chance
+// ✗ Sports scores (unless philosophically significant)
+// ✗ Celebrity gossip, entertainment, fashion
+// ✗ Weather, traffic, daily market noise
+// ✗ Viral trends, memes, trivial content
 //
 // STRATEGY:
-// - ALL topics fetched in user's language (native translation)
-// - International topics (world, business, science, tech) give major agency coverage
-// - National topic adds local newspapers, agencies, magazines
-// - Highlights also fetched in user's language with translated queries
-// - Content filter removes inappropriate articles
+// - Fetch world, business, science, technology, nation topics
+// - Filter blocked sources (tabloids, propaganda, clickbait)
+// - Filter blocked words (sports, gossip, trivial)
+// - Score articles by philosophical keywords
+// - Sort by philosophical relevance, then by date
 //
 // API BUDGET: Free tier = 100 requests/day
 // - 5 topics per language refresh, cached 2h
@@ -43,23 +55,57 @@ const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar",
 // GNews filters by article language, so search terms must match.
 // ============================================================
 const HIGHLIGHT_QUERIES = {
-  en: "innovation breakthrough OR startup success OR scientific discovery OR space exploration achievement",
-  pt: "inovação avanço OR startup sucesso OR descoberta científica OR conquista exploração espacial",
-  es: "innovación avance OR startup éxito OR descubrimiento científico OR logro exploración espacial",
-  fr: "innovation percée OR startup succès OR découverte scientifique OR exploration spatiale",
-  de: "Innovation Durchbruch OR Startup Erfolg OR wissenschaftliche Entdeckung OR Weltraumforschung",
-  it: "innovazione svolta OR startup successo OR scoperta scientifica OR esplorazione spaziale",
-  nl: "innovatie doorbraak OR startup succes OR wetenschappelijke ontdekking OR ruimtevaart",
-  ru: "инновация прорыв OR стартап успех OR научное открытие OR космическое достижение",
-  zh: "创新突破 OR 创业成功 OR 科学发现 OR 太空探索",
-  ar: "ابتكار اختراق OR نجاح شركة ناشئة OR اكتشاف علمي OR استكشاف الفضاء",
-  he: "חדשנות פריצת דרך OR הצלחה סטארטאפ OR גילוי מדעי OR חלל",
-  ja: "イノベーション OR スタートアップ成功 OR 科学的発見 OR 宇宙探査",
-  ko: "혁신 돌파구 OR 스타트업 성공 OR 과학적 발견 OR 우주 탐사",
-  tr: "inovasyon atılım OR startup başarı OR bilimsel keşif OR uzay keşfi",
-  pl: "innowacja przełom OR startup sukces OR odkrycie naukowe OR eksploracja kosmiczna",
-  hu: "innováció áttörés OR startup siker OR tudományos felfedezés OR űrkutatás",
+  en: "innovation breakthrough OR startup success OR scientific discovery OR hero rescue OR freedom victory OR justice served OR entrepreneur achievement",
+  pt: "inovação avanço OR startup sucesso OR descoberta científica OR herói resgate OR vitória liberdade OR justiça feita OR empreendedor conquista",
+  es: "innovación avance OR startup éxito OR descubrimiento científico OR héroe rescate OR victoria libertad OR justicia hecha OR emprendedor logro",
+  fr: "innovation percée OR startup succès OR découverte scientifique OR héros sauvetage OR victoire liberté OR justice rendue OR entrepreneur réussite",
+  de: "Innovation Durchbruch OR Startup Erfolg OR wissenschaftliche Entdeckung OR Held Rettung OR Freiheit Sieg OR Gerechtigkeit OR Unternehmer Erfolg",
+  it: "innovazione svolta OR startup successo OR scoperta scientifica OR eroe salvataggio OR vittoria libertà OR giustizia fatta OR imprenditore successo",
+  nl: "innovatie doorbraak OR startup succes OR wetenschappelijke ontdekking OR held redding OR vrijheid overwinning OR gerechtigheid OR ondernemer succes",
+  ru: "инновация прорыв OR стартап успех OR научное открытие OR герой спасение OR победа свобода OR справедливость OR предприниматель достижение",
+  zh: "创新突破 OR 创业成功 OR 科学发现 OR 英雄救援 OR 自由胜利 OR 正义 OR 企业家成就",
+  ar: "ابتكار اختراق OR نجاح شركة ناشئة OR اكتشاف علمي OR بطل إنقاذ OR انتصار الحرية OR العدالة OR رائد أعمال",
+  he: "חדשנות פריצת דרך OR הצלחה סטארטאפ OR גילוי מדעי OR גיבור הצלה OR ניצחון חופש OR צדק OR יזם הישג",
+  ja: "イノベーション突破 OR スタートアップ成功 OR 科学的発見 OR 英雄救出 OR 自由の勝利 OR 正義 OR 起業家の成功",
+  ko: "혁신 돌파구 OR 스타트업 성공 OR 과학적 발견 OR 영웅 구조 OR 자유 승리 OR 정의 실현 OR 기업가 성취",
+  tr: "inovasyon atılım OR startup başarı OR bilimsel keşif OR kahraman kurtarma OR özgürlük zaferi OR adalet OR girişimci başarı",
+  pl: "innowacja przełom OR startup sukces OR odkrycie naukowe OR bohater ratunek OR zwycięstwo wolności OR sprawiedliwość OR przedsiębiorca sukces",
+  hu: "innováció áttörés OR startup siker OR tudományos felfedezés OR hős mentés OR szabadság győzelem OR igazságszolgáltatás OR vállalkozó siker",
 };
+
+// ============================================================
+// PHILOSOPHICAL KEYWORDS — prioritize meaningful content
+// ============================================================
+// Articles containing these keywords are scored higher and sorted first.
+// This ensures philosophically significant news rises to the top.
+// ============================================================
+const PHILOSOPHICAL_KEYWORDS = [
+  // Innovation & Achievement
+  "breakthrough", "innovation", "discovery", "achievement", "pioneer",
+  "revolutionize", "transform", "first ever", "historic", "milestone",
+  "invented", "patent", "scientific",
+  // Heroic Action
+  "hero", "heroic", "rescue", "saved lives", "courage", "brave",
+  "selfless", "risked life", "medal of honor", "bravery",
+  // Freedom & Rights
+  "freedom", "liberty", "rights", "independence", "liberation",
+  "resistance", "overthrow", "freed from", "escaped tyranny",
+  "democracy", "constitution", "civil rights",
+  // Business Success & Value Creation
+  "entrepreneur", "founder", "startup", "unicorn", "disruption",
+  "billion", "ipo", "acquisition", "merger", "growth",
+  // Life Transformation
+  "overcame", "triumph", "against all odds", "remarkable recovery",
+  "turned life around", "second chance", "inspiring story",
+  // Justice & Accountability
+  "justice", "convicted", "held accountable", "verdict", "sentenced",
+  "whistleblower", "exposed corruption", "indicted", "tribunal",
+  // Wars - Good vs Evil
+  "defended", "liberated", "victory against", "resistance fighters",
+  "war crimes", "humanitarian", "peacekeeping", "ceasefire",
+  // Philosophy & Ideas
+  "philosophy", "ethics", "moral", "principle", "ideology",
+];
 
 // ============================================================
 // BLOCKED SOURCES — unreliable, tabloid, clickbait, propaganda
@@ -88,14 +134,37 @@ const BLOCKED_SOURCES = [
 ];
 
 // ============================================================
-// CONTENT FILTER — removes inappropriate articles
+// CONTENT FILTER — removes inappropriate/trivial articles
 // ============================================================
 const BLOCKED_WORDS = [
-  // Sports
+  // Sports (trivial scores, not philosophically significant)
   "nfl", "nba", "fifa", "premier league", "champions league", "world cup",
   "touchdown", "goalkeeper", "quarterback", "soccer", "football match",
   "baseball", "basketball", "tennis", "cricket", "rugby", "boxing",
-  "olympics", "medal count", "playoff", "super bowl",
+  "olympics", "medal count", "playoff", "super bowl", "stanley cup",
+  "grand slam", "hole in one", "hat trick",
+  // Lottery & Gambling
+  "lottery", "jackpot", "powerball", "mega millions", "lotto",
+  "winning numbers", "scratch ticket", "casino", "slot machine",
+  "betting odds", "sportsbook",
+  // Astrology & Superstition
+  "horoscope", "zodiac", "astrology", "fortune teller", "psychic reading",
+  "tarot", "numerology",
+  // Weather (trivial forecasts)
+  "weather forecast", "storm warning", "hurricane watch", "cold front",
+  "heat wave warning", "flood watch", "tornado warning",
+  // Daily Market Noise (not policy-related)
+  "stock closes", "dow jones", "s&p 500", "market recap", "trading day",
+  "futures rise", "futures fall", "nasdaq closes",
+  // Traffic & Local Trivial
+  "traffic jam", "road closure", "commute time", "parking ticket",
+  // Fashion & Entertainment
+  "best dressed", "fashion week", "red carpet", "award show outfit",
+  "grammy", "oscar", "emmy", "golden globe", "mtv awards",
+  "met gala", "runway", "designer collection",
+  // Viral / Memes / Trivial Internet
+  "viral video", "tiktok trend", "meme", "goes viral", "internet breaks",
+  "trending on", "challenge goes viral",
   // Depravation / inappropriate
   "porn", "xxx", "nude", "naked", "sex tape", "prostitut",
   "rape", "molest", "pedophil", "incest",
@@ -103,11 +172,25 @@ const BLOCKED_WORDS = [
   "dismember", "decapitat", "torture video", "execution video",
   // Tabloid / gossip
   "kardashian", "reality tv", "celebrity gossip", "onlyfans",
+  "dating rumor", "breakup", "divorce filing", "baby bump",
 ];
 
 function isCleanArticle(article) {
   const text = `${article.title} ${article.description || ""}`.toLowerCase();
   return !BLOCKED_WORDS.some((word) => text.includes(word));
+}
+
+/**
+ * Score article by philosophical relevance (higher = more relevant).
+ * Used for sorting priority, not filtering.
+ */
+function getPhilosophicalScore(article) {
+  const text = `${article.title} ${article.description || ""}`.toLowerCase();
+  let score = 0;
+  for (const keyword of PHILOSOPHICAL_KEYWORDS) {
+    if (text.includes(keyword)) score += 1;
+  }
+  return score;
 }
 
 /**
@@ -224,8 +307,13 @@ export async function fetchAllHeadlines(env, lang = "en") {
   if (sourceBlocked > 0) console.log(`[News] Blocked ${sourceBlocked} articles from unreliable sources`);
   if (contentFiltered > 0) console.log(`[News] Filtered ${contentFiltered} inappropriate articles`);
 
-  // Sort newest first
-  clean.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  // Sort by philosophical relevance first, then by date (newest first)
+  clean.sort((a, b) => {
+    const scoreA = getPhilosophicalScore(a);
+    const scoreB = getPhilosophicalScore(b);
+    if (scoreB !== scoreA) return scoreB - scoreA;
+    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+  });
 
   console.log(`[News] ${clean.length} clean headlines (${allArticles.length} total, ${sourceBlocked} source-blocked, ${contentFiltered} content-filtered)`);
   return clean;
@@ -249,7 +337,13 @@ export async function fetchHighlights(env, lang = "en") {
     .filter((a) => !isBlockedSource(a.source))
     .filter(isCleanArticle);
 
-  clean.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  // Sort by philosophical relevance first, then by date (newest first)
+  clean.sort((a, b) => {
+    const scoreA = getPhilosophicalScore(a);
+    const scoreB = getPhilosophicalScore(b);
+    if (scoreB !== scoreA) return scoreB - scoreA;
+    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+  });
 
   console.log(`[News] ${clean.length} highlight articles`);
   return clean;
