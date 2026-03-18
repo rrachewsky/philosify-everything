@@ -102,8 +102,13 @@ export async function analyzeFilmPhilosophy(title, director, synopsis, filmMetad
         usedModel = currentKey;
         if (analysisText) break;
       } catch (err) {
-        console.error(`[CinemaOrchestrator] ${currentKey} attempt ${attempt} failed: ${err.message}`);
-        if (err.message?.includes("content_filtered")) break;
+        const errMsg = err.message || JSON.stringify(err);
+        console.error(`[CinemaOrchestrator] ${currentKey} attempt ${attempt} failed: ${errMsg}`);
+        // If content was filtered/blocked, skip retries and try next model
+        if (err.type === 'content_filtered' || errMsg.includes('blocked') || errMsg.includes('safety')) {
+          console.log(`[CinemaOrchestrator] Content filtered by ${currentKey}, trying next model...`);
+          break;
+        }
         if (attempt >= 2) break;
       }
     }

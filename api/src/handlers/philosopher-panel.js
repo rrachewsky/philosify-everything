@@ -12,7 +12,7 @@ import { getDebateAestheticGuide } from "../guides/index.js";
 import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
 import { buildPhilosopherPanelPrompt } from "../ai/prompts/philosopher-panel-template.js";
 import { buildNewsPanelPrompt } from "../ai/prompts/news-panel-template.js";
-import { callClaude } from "../ai/models/index.js";
+import { callClaude, callGrok, callOpenAI } from "../ai/models/index.js";
 import { PHILOSOPHERS } from "../handlers/colloquium.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
@@ -180,18 +180,38 @@ export async function handlePhilosopherPanel(
             lang,
           });
 
-      // ── Call AI (Claude) — generate in user's language ──
-      console.log(`[PhilosopherPanel] Calling Claude for ${mediaType} panel analysis in "${lang}"...`);
-      const panelText = await callClaude(prompt, lang, env, {
-        maxTokens: mediaType === "news" ? 5000 : 4000,
-        temperature: 0.7,
-      });
-
-      if (!panelText || panelText.length < 100) {
-        throw new Error("AI returned empty or insufficient panel analysis");
+      // ── Call AI with fallback chain: Claude → Grok → OpenAI ──
+      let panelText = null;
+      let usedModel = "claude";
+      
+      const models = [
+        { name: "claude", call: () => callClaude(prompt, lang, env) },
+        { name: "grok", call: () => callGrok(prompt, lang, env, { maxTokens: mediaType === "news" ? 5000 : 4000, temperature: 0.7 }) },
+        { name: "openai", call: () => callOpenAI(prompt, lang, env) },
+      ];
+      
+      for (const model of models) {
+        try {
+          console.log(`[PhilosopherPanel] Calling ${model.name} for ${mediaType} panel analysis in "${lang}"...`);
+          panelText = await model.call();
+          usedModel = model.name;
+          if (panelText && panelText.length >= 100) break;
+        } catch (err) {
+          const errMsg = err.message || JSON.stringify(err);
+          console.warn(`[PhilosopherPanel] ${model.name} failed: ${errMsg}`);
+          // If content blocked, try next model
+          if (err.type === 'content_filtered' || errMsg.includes('blocked') || errMsg.includes('safety')) {
+            console.log(`[PhilosopherPanel] Content filtered by ${model.name}, trying next model...`);
+            continue;
+          }
+        }
       }
 
-      console.log(`[PhilosopherPanel] Generated ${panelText.length} chars of panel analysis`);
+      if (!panelText || panelText.length < 100) {
+        throw new Error("All AI models failed to generate panel analysis");
+      }
+      
+      console.log(`[PhilosopherPanel] Generated ${panelText.length} chars using ${usedModel}`);
 
       // ── Generate a unique panel ID for TTS caching ──
       const panelId = crypto.randomUUID();
