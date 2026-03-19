@@ -143,8 +143,36 @@
     "highlights": "मुख्य समाचार",
     "latestHeadlines": "ताज़ा समाचार",
     "noHeadlines": "फिलहाल कोई समाचार उपलब्ध नहीं",
+    "noSummary": "इस लेख के लिए कोई सारांश उपलब्ध नहीं है।",
     "justNow": "अभी",
-    "analyzeAnother": "एक और समाचार का विश्लेषण करें"
+    "analyzeAnother": "एक और समाचार का विश्लेषण करें",
+    "sources": "स्रोत",
+    "sourcePicker": {
+      "title": "समाचार स्रोत",
+      "buttonLabel": "स्रोत",
+      "unlockTitle": "अपने समाचार स्रोतों को अनुकूलित करें",
+      "unlockDesc": "चुनें कि आप कौन से मीडिया देखना चाहते हैं। एक बार भुगतान करें, हमेशा के लिए अनुकूलित करें।",
+      "currentDefault": "वर्तमान डिफ़ॉल्ट स्रोत:",
+      "unlocking": "अनलॉक हो रहा है...",
+      "unlockButton": "स्रोत चयन अनलॉक करें",
+      "noCredits": "अनलॉक के लिए कम से कम 1 क्रेडिट चाहिए।",
+      "selectAll": "सभी का चयन करें",
+      "clearAll": "सभी हटाएं",
+      "selected": "चयनित",
+      "saving": "सहेजा जा रहा है...",
+      "save": "चयन सहेजें",
+      "categories": {
+        "wire_services": "समाचार एजेंसियां",
+        "business_finance": "व्यापार और वित्त",
+        "quality_news": "गुणवत्ता पत्रकारिता",
+        "tech_science": "तकनीक और विज्ञान",
+        "opinion_analysis": "राय और विश्लेषण",
+        "europe": "यूरोप",
+        "americas": "अमेरिका",
+        "asia_pacific": "एशिया प्रशांत",
+        "middle_east_africa": "मध्य पूर्व और अफ्रीका"
+      }
+    }
   },
   "login": {
     "title": "वापसी पर स्वागत है",

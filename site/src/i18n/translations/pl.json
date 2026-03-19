@@ -143,8 +143,36 @@
     "highlights": "Wyroznienia",
     "latestHeadlines": "Najnowsze Wiadomosci",
     "noHeadlines": "Brak wiadomosci w tej chwili",
+    "noSummary": "Brak podsumowania dla tego artykulu.",
     "justNow": "Wlasnie teraz",
-    "analyzeAnother": "Analizuj Kolejna Wiadomosc"
+    "analyzeAnother": "Analizuj Kolejna Wiadomosc",
+    "sources": "Zrodla",
+    "sourcePicker": {
+      "title": "Zrodla Wiadomosci",
+      "buttonLabel": "Zrodla",
+      "unlockTitle": "Dostosuj Swoje Zrodla Wiadomosci",
+      "unlockDesc": "Wybierz, ktore media chcesz widziec. Zaplac raz, dostosowuj na zawsze.",
+      "currentDefault": "Obecne domyslne zrodla:",
+      "unlocking": "Odblokowywanie...",
+      "unlockButton": "Odblokuj Wybor Zrodel",
+      "noCredits": "Potrzebujesz co najmniej 1 kredyt, aby odblokowac.",
+      "selectAll": "Zaznacz Wszystko",
+      "clearAll": "Wyczysc Wszystko",
+      "selected": "wybrano",
+      "saving": "Zapisywanie...",
+      "save": "Zapisz Wybor",
+      "categories": {
+        "wire_services": "Agencje Prasowe",
+        "business_finance": "Biznes i Finanse",
+        "quality_news": "Dziennikarstwo Jakosciowe",
+        "tech_science": "Tech i Nauka",
+        "opinion_analysis": "Opinia i Analiza",
+        "europe": "Europa",
+        "americas": "Ameryka",
+        "asia_pacific": "Azja i Pacyfik",
+        "middle_east_africa": "Bliski Wschod i Afryka"
+      }
+    }
   },
   "login": {
     "title": "Witaj Ponownie",

@@ -143,8 +143,36 @@
     "highlights": "注目ニュース",
     "latestHeadlines": "最新ニュース",
     "noHeadlines": "現在ニュースはありません",
+    "noSummary": "この記事の要約はありません。",
     "justNow": "たった今",
-    "analyzeAnother": "別のニュースを分析"
+    "analyzeAnother": "別のニュースを分析",
+    "sources": "ソース",
+    "sourcePicker": {
+      "title": "ニュースソース",
+      "buttonLabel": "ソース",
+      "unlockTitle": "ニュースソースをカスタマイズ",
+      "unlockDesc": "表示するメディアを選択してください。一度支払えば永久にカスタマイズ可能。",
+      "currentDefault": "現在のデフォルトソース:",
+      "unlocking": "解除中...",
+      "unlockButton": "ソース選択を解除",
+      "noCredits": "解除には少なくとも1クレジット必要です。",
+      "selectAll": "全て選択",
+      "clearAll": "全てクリア",
+      "selected": "選択済み",
+      "saving": "保存中...",
+      "save": "選択を保存",
+      "categories": {
+        "wire_services": "通信社",
+        "business_finance": "ビジネス・金融",
+        "quality_news": "高品質ニュース",
+        "tech_science": "テック・科学",
+        "opinion_analysis": "オピニオン・分析",
+        "europe": "ヨーロッパ",
+        "americas": "南北アメリカ",
+        "asia_pacific": "アジア太平洋",
+        "middle_east_africa": "中東・アフリカ"
+      }
+    }
   },
   "login": {
     "title": "おかえりなさい",

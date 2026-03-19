@@ -311,8 +311,8 @@ export function CinemaSidebar({
             </div>
           )}
 
-          {/* Panel result */}
-          {panelResult && (
+          {/* Panel result only (no normal analysis yet) */}
+          {panelResult && !analysisResult && (
             <div className="music-analysis">
               <div className="music-analysis__header">
                 <span className="music-analysis__complete-icon">&#10003;</span>
@@ -384,18 +384,105 @@ export function CinemaSidebar({
                 </div>
               )}
               <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
-                {!analysisResult && (
-                  <button
-                    className="music-analyze__button"
-                    onClick={handleAnalyze}
-                    disabled={isAnalyzing}
-                  >
-                    {t('home.categories.films.analyzeButton', 'Analyze Film')}
-                    <span className="music-analyze__cost">
-                      1 {t('philosopherPanel.credit', 'credit')}
-                    </span>
-                  </button>
-                )}
+                <button
+                  className="music-analyze__button"
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing}
+                >
+                  {t('home.categories.films.analyzeButton', 'Analyze Film')}
+                  <span className="music-analyze__cost">
+                    1 {t('philosopherPanel.credit', 'credit')}
+                  </span>
+                </button>
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={clearFilm}
+                >
+                  {t('home.categories.films.analyzeAnother', 'Analyze Another Film')}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* BOTH analyses exist - show combined view with both audios */}
+          {analysisResult && panelResult && (
+            <div className="music-analysis">
+              <div className="music-analysis__header">
+                <span className="music-analysis__complete-icon">&#10003;</span>
+                {t('landing.analysisComplete')} + {t('philosopherPanel.complete', { defaultValue: 'Panel' })}
+              </div>
+
+              {/* Normal analysis content (includes its own ListenButton) */}
+              <div className="music-analysis__results-wrapper">
+                <ResultsContainer result={analysisResult} mediaType="cinema" />
+              </div>
+
+              {/* Panel analysis content with its own ListenButton */}
+              <div className="music-analysis__header" style={{ marginTop: '1.5rem' }}>
+                <span className="music-analysis__complete-icon">&#9733;</span>
+                {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel' })}
+              </div>
+
+              {/* Film title + synopsis */}
+              {selectedFilm && (
+                <div className="music-selected" style={{ marginBottom: 0 }}>
+                  {selectedFilm.poster_url && (
+                    <img className="music-selected__cover" src={selectedFilm.poster_url} alt="" />
+                  )}
+                  <div className="music-selected__info">
+                    <div className="music-selected__song">{selectedFilm.title}</div>
+                    <div className="music-selected__artist">
+                      {[selectedFilm.director, selectedFilm.year, ...(selectedFilm.countries || [])].filter(Boolean).join(' · ')}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="listen-section">
+                <ListenButton result={{
+                  song_name: panelResult.title,
+                  artist: panelResult.artist || selectedFilm?.director || 'Cinema',
+                  philosophical_analysis: panelResult.analysis,
+                  lang: panelResult.lang,
+                  id: panelResult.id,
+                }} />
+              </div>
+              <div className="music-analysis__results-wrapper">
+                <div className="panel-analysis" dangerouslySetInnerHTML={{
+                  __html: panelResult.analysis
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br/>')
+                    .replace(/^/, '<p>')
+                    .replace(/$/, '</p>')
+                }} />
+              </div>
+              {panelResult.id && (
+                <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
+                  <ShareButton
+                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${lang}`}
+                    shareText={t('share.shareFilmText', {
+                      title: panelResult.title,
+                      artist: panelResult.artist || selectedFilm?.director || '',
+                      defaultValue: `🎬 Check out the philosophical analysis of ${panelResult.title} | Philosify`,
+                    })}
+                    songName={panelResult.title}
+                    artist={panelResult.artist || selectedFilm?.director || 'Cinema'}
+                  />
+                  <ShareToDMButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist || selectedFilm?.director || 'Cinema'}
+                  />
+                  <ShareToCommunityButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist || selectedFilm?.director || 'Cinema'}
+                  />
+                </div>
+              )}
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
                 <button
                   className="music-analyze__button music-analyze__button--another"
                   onClick={clearFilm}

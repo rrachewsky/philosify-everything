@@ -143,8 +143,36 @@
     "highlights": "Hoogtepunten",
     "latestHeadlines": "Laatste Nieuws",
     "noHeadlines": "Geen nieuws beschikbaar op dit moment",
+    "noSummary": "Geen samenvatting beschikbaar voor dit artikel.",
     "justNow": "Zojuist",
-    "analyzeAnother": "Ander Nieuwsbericht Analyseren"
+    "analyzeAnother": "Ander Nieuwsbericht Analyseren",
+    "sources": "Bronnen",
+    "sourcePicker": {
+      "title": "Nieuwsbronnen",
+      "buttonLabel": "Bronnen",
+      "unlockTitle": "Pas Je Nieuwsbronnen Aan",
+      "unlockDesc": "Kies welke media je wilt zien. Betaal eenmaal, pas voor altijd aan.",
+      "currentDefault": "Huidige standaardbronnen:",
+      "unlocking": "Ontgrendelen...",
+      "unlockButton": "Bronnenselectie Ontgrendelen",
+      "noCredits": "Je hebt minimaal 1 credit nodig om te ontgrendelen.",
+      "selectAll": "Alles Selecteren",
+      "clearAll": "Alles Wissen",
+      "selected": "geselecteerd",
+      "saving": "Opslaan...",
+      "save": "Selectie Opslaan",
+      "categories": {
+        "wire_services": "Persbureaus",
+        "business_finance": "Zakelijk en Financieel",
+        "quality_news": "Kwaliteitsjournalistiek",
+        "tech_science": "Tech en Wetenschap",
+        "opinion_analysis": "Opinie en Analyse",
+        "europe": "Europa",
+        "americas": "Amerika",
+        "asia_pacific": "Azie en Pacific",
+        "middle_east_africa": "Midden-Oosten en Afrika"
+      }
+    }
   },
   "login": {
     "title": "Welkom Terug",

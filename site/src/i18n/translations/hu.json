@@ -143,8 +143,36 @@
     "highlights": "Kiemeltek",
     "latestHeadlines": "Legfrissebb Hirek",
     "noHeadlines": "Jelenleg nincs elerheto hir",
+    "noSummary": "Ehhez a cikkhez nincs osszefoglalo.",
     "justNow": "Epp most",
-    "analyzeAnother": "Masik Hir Elemzese"
+    "analyzeAnother": "Masik Hir Elemzese",
+    "sources": "Forrasok",
+    "sourcePicker": {
+      "title": "Hirforrasok",
+      "buttonLabel": "Forrasok",
+      "unlockTitle": "Szabd Testre a Hirforrasaidat",
+      "unlockDesc": "Valaszd ki, mely mediakat szeretned latni. Fizess egyszer, szabd testre orokre.",
+      "currentDefault": "Jelenlegi alapertelmezett forrasok:",
+      "unlocking": "Feloldas...",
+      "unlockButton": "Forrasvalasztas Feloldasa",
+      "noCredits": "A feloldashoz legalabb 1 kredit szukseges.",
+      "selectAll": "Osszes Kivalasztasa",
+      "clearAll": "Osszes Torlese",
+      "selected": "kivalasztva",
+      "saving": "Mentes...",
+      "save": "Valasztas Mentese",
+      "categories": {
+        "wire_services": "Hirugynoksegek",
+        "business_finance": "Uzlet es Penzugy",
+        "quality_news": "Minosegi Ujsagiras",
+        "tech_science": "Tech es Tudomany",
+        "opinion_analysis": "Velemeny es Elemzes",
+        "europe": "Europa",
+        "americas": "Amerika",
+        "asia_pacific": "Azsia es Csendes-ocean",
+        "middle_east_africa": "Kozel-Kelet es Afrika"
+      }
+    }
   },
   "login": {
     "title": "Üdvözöljük Újra",

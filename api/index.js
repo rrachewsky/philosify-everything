@@ -25,6 +25,11 @@ import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js
 import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
 import { handleNewsHeadlines } from "./src/handlers/news-headlines.js";
 import { handleNewsTTS } from "./src/handlers/news-tts.js";
+import {
+  handleGetNewsPreferences,
+  handleUnlockNewsPreferences,
+  handleUpdateNewsPreferences,
+} from "./src/handlers/news-preferences.js";
 import { handlePanelHistory } from "./src/handlers/panel-history.js";
 import { handleUserHistory } from "./src/handlers/user-history.js";
 import { refreshHeadlines, refreshHighlights } from "./src/news/index.js";
@@ -3306,6 +3311,21 @@ export default {
 
       if (url.pathname === "/api/news/tts" && request.method === "POST") {
         return handleNewsTTS(request, env, origin);
+      }
+
+      // ============================================================
+      // NEWS PREFERENCES — User source customization (1 credit to unlock)
+      // ============================================================
+      if (url.pathname === "/api/user/news-preferences" && request.method === "GET") {
+        return handleGetNewsPreferences(request, env, origin);
+      }
+
+      if (url.pathname === "/api/user/news-preferences/unlock" && request.method === "POST") {
+        return handleUnlockNewsPreferences(request, env, origin);
+      }
+
+      if (url.pathname === "/api/user/news-preferences" && request.method === "PUT") {
+        return handleUpdateNewsPreferences(request, env, origin);
       }
 
       if (url.pathname === "/api/panel-history" && request.method === "GET") {

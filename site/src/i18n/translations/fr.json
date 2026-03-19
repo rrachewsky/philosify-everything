@@ -143,8 +143,36 @@
     "highlights": "A la Une",
     "latestHeadlines": "Dernieres Actualites",
     "noHeadlines": "Aucune actualite disponible pour le moment",
+    "noSummary": "Aucun resume disponible pour cet article.",
     "justNow": "A l'instant",
-    "analyzeAnother": "Analyser une Autre Actualite"
+    "analyzeAnother": "Analyser une Autre Actualite",
+    "sources": "Sources",
+    "sourcePicker": {
+      "title": "Sources d'Actualites",
+      "buttonLabel": "Sources",
+      "unlockTitle": "Personnalisez Vos Sources d'Actualites",
+      "unlockDesc": "Choisissez quels medias vous souhaitez voir. Payez une fois, personnalisez pour toujours.",
+      "currentDefault": "Sources par defaut actuelles:",
+      "unlocking": "Deblocage...",
+      "unlockButton": "Debloquer la Selection des Sources",
+      "noCredits": "Vous avez besoin d'au moins 1 credit pour debloquer.",
+      "selectAll": "Tout Selectionner",
+      "clearAll": "Tout Effacer",
+      "selected": "selectionnes",
+      "saving": "Sauvegarde...",
+      "save": "Sauvegarder la Selection",
+      "categories": {
+        "wire_services": "Agences de Presse",
+        "business_finance": "Affaires et Finance",
+        "quality_news": "Journalisme de Qualite",
+        "tech_science": "Tech et Science",
+        "opinion_analysis": "Opinion et Analyse",
+        "europe": "Europe",
+        "americas": "Ameriques",
+        "asia_pacific": "Asie et Pacifique",
+        "middle_east_africa": "Moyen-Orient et Afrique"
+      }
+    }
   },
   "login": {
     "title": "Bienvenue",

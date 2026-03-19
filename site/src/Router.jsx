@@ -479,6 +479,7 @@ export function Router() {
           elapsedTime={news.elapsedTime}
           formatTime={news.formatTime}
           analyzeWithPanel={news.analyzeWithPanel}
+          onRefreshHeadlines={news.loadHeadlines}
           user={music.user}
           balance={music.balance}
           lang={music.lang}

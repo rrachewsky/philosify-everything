@@ -541,7 +541,8 @@ export function LiteratureSidebar({
             </div>
           )}
 
-          {panelResult && (
+          {/* Only panel exists (no normal analysis yet) */}
+          {panelResult && !analysisResult && (
             <div className="music-analysis">
               <div className="music-analysis__header">
                 <span className="music-analysis__complete-icon">&#10003;</span>
@@ -589,16 +590,88 @@ export function LiteratureSidebar({
                 </div>
               )}
               <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
-                {!analysisResult && (
-                  <button
-                    className="music-analyze__button"
-                    onClick={handleAnalyze}
-                    disabled={isAnalyzing}
-                  >
-                    {t('home.categories.books.analyzeButton', 'Analyze Book')}
-                    <span className="music-analyze__cost">1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}</span>
-                  </button>
-                )}
+                <button
+                  className="music-analyze__button"
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing}
+                >
+                  {t('home.categories.books.analyzeButton', 'Analyze Book')}
+                  <span className="music-analyze__cost">1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}</span>
+                </button>
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={() => { setPanelResult(null); clearBook(); }}
+                >
+                  {t('home.categories.books.analyzeAnother', 'Analyze Another Book')}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* BOTH analyses exist - show combined view with both audios */}
+          {analysisResult && panelResult && (
+            <div className="music-analysis">
+              <div className="music-analysis__header">
+                <span className="music-analysis__complete-icon">&#10003;</span>
+                {t('landing.analysisComplete')} + {t('philosopherPanel.complete', { defaultValue: 'Panel' })}
+              </div>
+
+              {/* Normal analysis content (includes its own ListenButton) */}
+              <div className="music-analysis__results-wrapper">
+                <ResultsContainer
+                  result={analysisResult}
+                  showShareActions={true}
+                  mediaType="literature"
+                />
+              </div>
+
+              {/* Panel analysis content with its own ListenButton */}
+              <div className="music-analysis__header" style={{ marginTop: '1.5rem' }}>
+                <span className="music-analysis__complete-icon">&#9733;</span>
+                {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel' })}
+              </div>
+              <div className="listen-section">
+                <ListenButton result={{
+                  title: panelResult.title,
+                  author: panelResult.artist,
+                  philosophical_analysis: panelResult.analysis,
+                  lang: panelResult.lang,
+                  id: panelResult.id,
+                }} />
+              </div>
+              <div className="music-analysis__results-wrapper">
+                <div className="panel-analysis" dangerouslySetInnerHTML={{
+                  __html: panelResult.analysis
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br/>')
+                    .replace(/^/, '<p>')
+                    .replace(/$/, '</p>')
+                }} />
+              </div>
+              {panelResult.id && (
+                <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
+                  <ShareButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist}
+                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}` : undefined}
+                    shareText={t('share.shareLiteratureText', { title: panelResult.title, artist: panelResult.artist })}
+                  />
+                  <ShareToDMButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist}
+                  />
+                  <ShareToCommunityButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={panelResult.artist}
+                  />
+                </div>
+              )}
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
                 <button
                   className="music-analyze__button music-analyze__button--another"
                   onClick={() => { setPanelResult(null); clearBook(); }}

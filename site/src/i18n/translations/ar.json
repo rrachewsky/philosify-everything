@@ -143,8 +143,36 @@
     "highlights": "أبرز الأخبار",
     "latestHeadlines": "آخر الأخبار",
     "noHeadlines": "لا توجد أخبار متاحة حالياً",
+    "noSummary": "لا يوجد ملخص لهذه المقالة.",
     "justNow": "الآن",
-    "analyzeAnother": "تحليل خبر آخر"
+    "analyzeAnother": "تحليل خبر آخر",
+    "sources": "المصادر",
+    "sourcePicker": {
+      "title": "مصادر الأخبار",
+      "buttonLabel": "المصادر",
+      "unlockTitle": "خصص مصادر أخبارك",
+      "unlockDesc": "اختر وسائل الإعلام التي تريد رؤيتها. ادفع مرة واحدة، خصص للأبد.",
+      "currentDefault": "المصادر الافتراضية الحالية:",
+      "unlocking": "جارٍ الفتح...",
+      "unlockButton": "فتح اختيار المصادر",
+      "noCredits": "تحتاج رصيد واحد على الأقل للفتح.",
+      "selectAll": "تحديد الكل",
+      "clearAll": "مسح الكل",
+      "selected": "محدد",
+      "saving": "جارٍ الحفظ...",
+      "save": "حفظ الاختيار",
+      "categories": {
+        "wire_services": "وكالات الأنباء",
+        "business_finance": "الأعمال والمالية",
+        "quality_news": "الصحافة الجيدة",
+        "tech_science": "التقنية والعلوم",
+        "opinion_analysis": "الرأي والتحليل",
+        "europe": "أوروبا",
+        "americas": "الأمريكتين",
+        "asia_pacific": "آسيا والمحيط الهادئ",
+        "middle_east_africa": "الشرق الأوسط وأفريقيا"
+      }
+    }
   },
   "login": {
     "title": "مرحباً بعودتك",

@@ -11,7 +11,9 @@ import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { ShareButton } from '../sharing/ShareButton';
 import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
+import { NewsSourcePicker } from './NewsSourcePicker';
 import { useModal } from '../../hooks';
+import { useNewsPreferences } from '../../hooks/useNewsPreferences';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import { ResultsContainer } from '../results/ResultsContainer';
 import { config } from '@/config';
@@ -145,9 +147,11 @@ export function NewsSidebar({
   user,
   balance,
   lang,
+  onRefreshHeadlines,
 }) {
   const { t, i18n } = useTranslation();
   const [showPicker, setShowPicker] = useState(false);
+  const [showSourcePicker, setShowSourcePicker] = useState(false);
   const sidebarRef = useRef(null);
   const contentRef = useRef(null);
 
@@ -155,6 +159,18 @@ export function NewsSidebar({
   const signupModal = useModal();
   const forgotPasswordModal = useModal();
   const paymentModal = useModal();
+
+  // News source preferences
+  const {
+    unlocked: sourcesUnlocked,
+    unlocking: sourcesUnlocking,
+    saving: sourcesSaving,
+    availableSources,
+    enabledSources,
+    defaultSources,
+    unlock: unlockSources,
+    updateSources,
+  } = useNewsPreferences();
 
   // Lock body scroll when sidebar is open
   useEffect(() => {
@@ -258,9 +274,21 @@ export function NewsSidebar({
             <span className="music-sidebar__icon">&#128240;</span>
             {t('home.categories.news.title', 'News')}
           </span>
-          <button className="music-sidebar__close" onClick={onClose}>
-            &times;
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {user && (
+              <button
+                className={`news-filter-btn ${sourcesUnlocked ? 'news-filter-btn--unlocked' : ''}`}
+                onClick={() => setShowSourcePicker(true)}
+                title={t('news.sourcePicker.title')}
+              >
+                <span style={{ marginRight: '4px' }}>&#9881;</span>
+                {t('news.sources')}
+              </button>
+            )}
+            <button className="music-sidebar__close" onClick={onClose}>
+              &times;
+            </button>
+          </div>
         </div>
 
         <div ref={contentRef} className="music-sidebar__content">
@@ -498,6 +526,30 @@ export function NewsSidebar({
             {paymentModal.isOpen && <PaymentModal isOpen={true} onClose={paymentModal.close} />}
           </div>
         )}
+
+        {/* News Source Picker */}
+        <NewsSourcePicker
+          isOpen={showSourcePicker}
+          onClose={() => setShowSourcePicker(false)}
+          unlocked={sourcesUnlocked}
+          unlocking={sourcesUnlocking}
+          saving={sourcesSaving}
+          availableSources={availableSources}
+          enabledSources={enabledSources}
+          defaultSources={defaultSources}
+          onUnlock={unlockSources}
+          onSave={async (sources) => {
+            const result = await updateSources(sources);
+            if (result.success) {
+              setShowSourcePicker(false);
+              // Refresh headlines to apply new filter
+              if (onRefreshHeadlines) {
+                onRefreshHeadlines();
+              }
+            }
+          }}
+          balance={balance}
+        />
       </div>
     </>
   );

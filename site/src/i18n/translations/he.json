@@ -143,8 +143,36 @@
     "highlights": "דגשים",
     "latestHeadlines": "כותרות אחרונות",
     "noHeadlines": "אין חדשות זמינות כרגע",
+    "noSummary": "אין תקציר זמין לכתבה זו.",
     "justNow": "עכשיו",
-    "analyzeAnother": "נתח חדשה נוספת"
+    "analyzeAnother": "נתח חדשה נוספת",
+    "sources": "מקורות",
+    "sourcePicker": {
+      "title": "מקורות חדשות",
+      "buttonLabel": "מקורות",
+      "unlockTitle": "התאם אישית את מקורות החדשות שלך",
+      "unlockDesc": "בחר אילו כלי תקשורת תרצה לראות. שלם פעם אחת, התאם לנצח.",
+      "currentDefault": "מקורות ברירת מחדל נוכחיים:",
+      "unlocking": "פותח...",
+      "unlockButton": "פתח בחירת מקורות",
+      "noCredits": "צריך לפחות קרדיט אחד כדי לפתוח.",
+      "selectAll": "בחר הכל",
+      "clearAll": "נקה הכל",
+      "selected": "נבחרו",
+      "saving": "שומר...",
+      "save": "שמור בחירה",
+      "categories": {
+        "wire_services": "סוכנויות ידיעות",
+        "business_finance": "עסקים וכלכלה",
+        "quality_news": "עיתונות איכותית",
+        "tech_science": "טכנולוגיה ומדע",
+        "opinion_analysis": "דעות וניתוח",
+        "europe": "אירופה",
+        "americas": "אמריקה",
+        "asia_pacific": "אסיה ופסיפיק",
+        "middle_east_africa": "המזרח התיכון ואפריקה"
+      }
+    }
   },
   "login": {
     "title": "ברוכים השבים",

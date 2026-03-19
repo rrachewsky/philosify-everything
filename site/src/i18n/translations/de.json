@@ -143,8 +143,36 @@
     "highlights": "Highlights",
     "latestHeadlines": "Aktuelle Schlagzeilen",
     "noHeadlines": "Derzeit keine Nachrichten verfugbar",
+    "noSummary": "Keine Zusammenfassung fur diesen Artikel verfugbar.",
     "justNow": "Gerade eben",
-    "analyzeAnother": "Weitere Nachricht analysieren"
+    "analyzeAnother": "Weitere Nachricht analysieren",
+    "sources": "Quellen",
+    "sourcePicker": {
+      "title": "Nachrichtenquellen",
+      "buttonLabel": "Quellen",
+      "unlockTitle": "Personalisiere Deine Nachrichtenquellen",
+      "unlockDesc": "Wahle, welche Medien du sehen mochtest. Einmal zahlen, fur immer anpassen.",
+      "currentDefault": "Aktuelle Standardquellen:",
+      "unlocking": "Entsperre...",
+      "unlockButton": "Quellenauswahl Freischalten",
+      "noCredits": "Du brauchst mindestens 1 Credit zum Freischalten.",
+      "selectAll": "Alle Auswahlen",
+      "clearAll": "Alle Loschen",
+      "selected": "ausgewahlt",
+      "saving": "Speichern...",
+      "save": "Auswahl Speichern",
+      "categories": {
+        "wire_services": "Nachrichtenagenturen",
+        "business_finance": "Wirtschaft und Finanzen",
+        "quality_news": "Qualitatsjournalismus",
+        "tech_science": "Tech und Wissenschaft",
+        "opinion_analysis": "Meinung und Analyse",
+        "europe": "Europa",
+        "americas": "Amerika",
+        "asia_pacific": "Asien und Pazifik",
+        "middle_east_africa": "Naher Osten und Afrika"
+      }
+    }
   },
   "login": {
     "title": "Willkommen zurück",

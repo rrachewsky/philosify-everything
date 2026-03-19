@@ -145,7 +145,34 @@
     "noHeadlines": "No headlines available at the moment",
     "noSummary": "No summary available for this article.",
     "justNow": "Just now",
-    "analyzeAnother": "Analyze Another Story"
+    "analyzeAnother": "Analyze Another Story",
+    "sources": "Sources",
+    "sourcePicker": {
+      "title": "News Sources",
+      "buttonLabel": "Sources",
+      "unlockTitle": "Customize Your News Sources",
+      "unlockDesc": "Choose which news outlets you want to see. Pay once, customize forever.",
+      "currentDefault": "Current default sources:",
+      "unlocking": "Unlocking...",
+      "unlockButton": "Unlock Source Selection",
+      "noCredits": "You need at least 1 credit to unlock.",
+      "selectAll": "Select All",
+      "clearAll": "Clear All",
+      "selected": "selected",
+      "saving": "Saving...",
+      "save": "Save Selection",
+      "categories": {
+        "wire_services": "Wire Services",
+        "business_finance": "Business & Finance",
+        "quality_news": "Quality News",
+        "tech_science": "Tech & Science",
+        "opinion_analysis": "Opinion & Analysis",
+        "europe": "Europe",
+        "americas": "Americas",
+        "asia_pacific": "Asia & Pacific",
+        "middle_east_africa": "Middle East & Africa"
+      }
+    }
   },
   "login": {
     "title": "Welcome Back",

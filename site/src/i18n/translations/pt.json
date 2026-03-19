@@ -143,8 +143,36 @@
     "highlights": "Destaques",
     "latestHeadlines": "Ultimas Noticias",
     "noHeadlines": "Nenhuma noticia disponivel no momento",
+    "noSummary": "Nenhum resumo disponivel para este artigo.",
     "justNow": "Agora mesmo",
-    "analyzeAnother": "Analisar Outra Noticia"
+    "analyzeAnother": "Analisar Outra Noticia",
+    "sources": "Fontes",
+    "sourcePicker": {
+      "title": "Fontes de Noticias",
+      "buttonLabel": "Fontes",
+      "unlockTitle": "Personalize Suas Fontes de Noticias",
+      "unlockDesc": "Escolha quais veiculos de noticias voce quer ver. Pague uma vez, personalize para sempre.",
+      "currentDefault": "Fontes padrao atuais:",
+      "unlocking": "Desbloqueando...",
+      "unlockButton": "Desbloquear Selecao de Fontes",
+      "noCredits": "Voce precisa de pelo menos 1 credito para desbloquear.",
+      "selectAll": "Selecionar Todos",
+      "clearAll": "Limpar Todos",
+      "selected": "selecionados",
+      "saving": "Salvando...",
+      "save": "Salvar Selecao",
+      "categories": {
+        "wire_services": "Agencias de Noticias",
+        "business_finance": "Negocios e Financas",
+        "quality_news": "Jornalismo de Qualidade",
+        "tech_science": "Tecnologia e Ciencia",
+        "opinion_analysis": "Opiniao e Analise",
+        "europe": "Europa",
+        "americas": "Americas",
+        "asia_pacific": "Asia e Pacifico",
+        "middle_east_africa": "Oriente Medio e Africa"
+      }
+    }
   },
   "login": {
     "title": "Bem-vindo de Volta",

@@ -155,10 +155,14 @@ export function useMusicSidebar() {
     startTimeRef.current = null;
   }, []);
 
-  // Run analysis
+  // Run analysis - accepts optional track parameter to avoid stale closure issues
   const analyze = useCallback(
-    async (lang = 'en', model = 'grok') => {
-      if (!selectedTrack || !user) return { success: false, error: 'No track or user' };
+    async (lang = 'en', model = 'grok', track = null) => {
+      const trackToUse = track || selectedTrack;
+      
+      if (!trackToUse || !user) {
+        return { success: false, error: 'No track or user' };
+      }
 
       // Check credits (balance is an object with .total)
       if (balance !== null && balance.total !== undefined && balance.total <= 0) {
@@ -171,7 +175,7 @@ export function useMusicSidebar() {
       startTimer();
 
       abortControllerRef.current = new AbortController();
-      lastAnalysisParamsRef.current = { song: selectedTrack.song, artist: selectedTrack.artist, model, lang };
+      lastAnalysisParamsRef.current = { song: trackToUse.song, artist: trackToUse.artist, model, lang };
 
       try {
         // Retry logic for 409 (lock still held from cancelled request)
@@ -184,9 +188,9 @@ export function useMusicSidebar() {
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              song: selectedTrack.song,
-              artist: selectedTrack.artist,
-              spotify_id: selectedTrack.spotify_id,
+              song: trackToUse.song,
+              artist: trackToUse.artist,
+              spotify_id: trackToUse.spotify_id,
               model,
               lang,
             }),

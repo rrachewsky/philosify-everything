@@ -22,3 +22,4 @@ export { useMusicSidebar } from './useMusicSidebar.js';
 export { useLiteratureSidebar } from './useLiteratureSidebar.js';
 export { useBookSearch } from './useBookSearch.js';
 export { useIdeas } from './useIdeas.js';
+export { useNewsPreferences } from './useNewsPreferences.js';

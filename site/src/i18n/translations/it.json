@@ -143,8 +143,36 @@
     "highlights": "In Evidenza",
     "latestHeadlines": "Ultime Notizie",
     "noHeadlines": "Nessuna notizia disponibile al momento",
+    "noSummary": "Nessun riassunto disponibile per questo articolo.",
     "justNow": "Proprio ora",
-    "analyzeAnother": "Analizza un'Altra Notizia"
+    "analyzeAnother": "Analizza un'Altra Notizia",
+    "sources": "Fonti",
+    "sourcePicker": {
+      "title": "Fonti di Notizie",
+      "buttonLabel": "Fonti",
+      "unlockTitle": "Personalizza le Tue Fonti di Notizie",
+      "unlockDesc": "Scegli quali testate vuoi vedere. Paga una volta, personalizza per sempre.",
+      "currentDefault": "Fonti predefinite attuali:",
+      "unlocking": "Sblocco...",
+      "unlockButton": "Sblocca Selezione Fonti",
+      "noCredits": "Hai bisogno di almeno 1 credito per sbloccare.",
+      "selectAll": "Seleziona Tutto",
+      "clearAll": "Cancella Tutto",
+      "selected": "selezionati",
+      "saving": "Salvataggio...",
+      "save": "Salva Selezione",
+      "categories": {
+        "wire_services": "Agenzie di Stampa",
+        "business_finance": "Business e Finanza",
+        "quality_news": "Giornalismo di Qualita",
+        "tech_science": "Tech e Scienza",
+        "opinion_analysis": "Opinione e Analisi",
+        "europe": "Europa",
+        "americas": "Americhe",
+        "asia_pacific": "Asia e Pacifico",
+        "middle_east_africa": "Medio Oriente e Africa"
+      }
+    }
   },
   "login": {
     "title": "Bentornato",

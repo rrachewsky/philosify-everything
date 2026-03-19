@@ -143,8 +143,36 @@
     "highlights": "برجسته‌ها",
     "latestHeadlines": "آخرین اخبار",
     "noHeadlines": "در حال حاضر خبری موجود نیست",
+    "noSummary": "خلاصه‌ای برای این مقاله موجود نیست.",
     "justNow": "همین الان",
-    "analyzeAnother": "تحلیل خبر دیگر"
+    "analyzeAnother": "تحلیل خبر دیگر",
+    "sources": "منابع",
+    "sourcePicker": {
+      "title": "منابع خبری",
+      "buttonLabel": "منابع",
+      "unlockTitle": "منابع خبری خود را سفارشی کنید",
+      "unlockDesc": "انتخاب کنید کدام رسانه‌ها را می‌خواهید ببینید. یک بار پرداخت کنید، برای همیشه سفارشی کنید.",
+      "currentDefault": "منابع پیش‌فرض فعلی:",
+      "unlocking": "در حال باز کردن...",
+      "unlockButton": "باز کردن انتخاب منابع",
+      "noCredits": "برای باز کردن حداقل ۱ اعتبار نیاز دارید.",
+      "selectAll": "انتخاب همه",
+      "clearAll": "پاک کردن همه",
+      "selected": "انتخاب شده",
+      "saving": "در حال ذخیره...",
+      "save": "ذخیره انتخاب",
+      "categories": {
+        "wire_services": "خبرگزاری‌ها",
+        "business_finance": "کسب‌وکار و مالی",
+        "quality_news": "روزنامه‌نگاری با کیفیت",
+        "tech_science": "فناوری و علم",
+        "opinion_analysis": "نظر و تحلیل",
+        "europe": "اروپا",
+        "americas": "آمریکا",
+        "asia_pacific": "آسیا اقیانوسیه",
+        "middle_east_africa": "خاورمیانه و آفریقا"
+      }
+    }
   },
   "login": {
     "title": "خوش آمدید",

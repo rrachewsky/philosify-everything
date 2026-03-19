@@ -143,8 +143,36 @@
     "highlights": "One Cikanlar",
     "latestHeadlines": "Son Haberler",
     "noHeadlines": "Su anda haber bulunmuyor",
+    "noSummary": "Bu makale icin ozet mevcut degil.",
     "justNow": "Az once",
-    "analyzeAnother": "Baska Bir Haberi Analiz Et"
+    "analyzeAnother": "Baska Bir Haberi Analiz Et",
+    "sources": "Kaynaklar",
+    "sourcePicker": {
+      "title": "Haber Kaynaklari",
+      "buttonLabel": "Kaynaklar",
+      "unlockTitle": "Haber Kaynaklarinizi Ozellestirin",
+      "unlockDesc": "Hangi medyayi gormek istediginizi secin. Bir kez odeyin, sonsuza kadar ozellestirin.",
+      "currentDefault": "Mevcut varsayilan kaynaklar:",
+      "unlocking": "Aciliyor...",
+      "unlockButton": "Kaynak Secimini Ac",
+      "noCredits": "Acmak icin en az 1 kredi gereklidir.",
+      "selectAll": "Tumunu Sec",
+      "clearAll": "Tumunu Temizle",
+      "selected": "secildi",
+      "saving": "Kaydediliyor...",
+      "save": "Secimi Kaydet",
+      "categories": {
+        "wire_services": "Haber Ajanslari",
+        "business_finance": "Is ve Finans",
+        "quality_news": "Kaliteli Habercilik",
+        "tech_science": "Teknoloji ve Bilim",
+        "opinion_analysis": "Gorus ve Analiz",
+        "europe": "Avrupa",
+        "americas": "Amerika",
+        "asia_pacific": "Asya Pasifik",
+        "middle_east_africa": "Orta Dogu ve Afrika"
+      }
+    }
   },
   "login": {
     "title": "Tekrar Hoş Geldiniz",

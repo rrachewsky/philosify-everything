@@ -143,8 +143,36 @@
     "highlights": "亮点新闻",
     "latestHeadlines": "最新新闻",
     "noHeadlines": "暂无新闻",
+    "noSummary": "此文章无摘要。",
     "justNow": "刚刚",
-    "analyzeAnother": "分析另一条新闻"
+    "analyzeAnother": "分析另一条新闻",
+    "sources": "来源",
+    "sourcePicker": {
+      "title": "新闻来源",
+      "buttonLabel": "来源",
+      "unlockTitle": "自定义您的新闻来源",
+      "unlockDesc": "选择您想看的新闻媒体。一次付费，永久自定义。",
+      "currentDefault": "当前默认来源:",
+      "unlocking": "解锁中...",
+      "unlockButton": "解锁来源选择",
+      "noCredits": "解锁需要至少1个积分。",
+      "selectAll": "全选",
+      "clearAll": "清除全部",
+      "selected": "已选择",
+      "saving": "保存中...",
+      "save": "保存选择",
+      "categories": {
+        "wire_services": "通讯社",
+        "business_finance": "商业与金融",
+        "quality_news": "优质新闻",
+        "tech_science": "科技与科学",
+        "opinion_analysis": "观点与分析",
+        "europe": "欧洲",
+        "americas": "美洲",
+        "asia_pacific": "亚太地区",
+        "middle_east_africa": "中东与非洲"
+      }
+    }
   },
   "login": {
     "title": "欢迎回来",
