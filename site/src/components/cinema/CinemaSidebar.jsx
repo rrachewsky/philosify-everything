@@ -94,12 +94,16 @@ export function CinemaSidebar({
   // };
 
   const handleAnalyze = async () => {
+    if (!selectedFilm) {
+      console.warn('[CinemaSidebar] No film selected, cannot analyze');
+      return;
+    }
     if (!user) {
       signupModal.open();
       return;
     }
     if (!balance || balance.total === undefined || balance.total < 1) {
-      if (selectedFilm) setPendingAction({ type: 'cinema-analysis', film: selectedFilm });
+      setPendingAction({ type: 'cinema-analysis', film: selectedFilm });
       paymentModal.open();
       return;
     }

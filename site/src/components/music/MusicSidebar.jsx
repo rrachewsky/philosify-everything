@@ -197,19 +197,24 @@ export function MusicSidebar({
   };
 
   const handleAnalyze = async () => {
+    if (!selectedTrack) {
+      console.warn('[MusicSidebar] No track selected, cannot analyze');
+      return;
+    }
     if (!user) {
       signupModal.open();
       return;
     }
     // Check if balance is not loaded yet or has zero credits
     if (!balance || balance.total === undefined || balance.total <= 0) {
-      if (selectedTrack) {
-        setPendingAction({ type: 'analysis', track: selectedTrack });
-      }
+      setPendingAction({ type: 'analysis', track: selectedTrack });
       paymentModal.open();
       return;
     }
-    await analyze(lang || i18n.language || 'en');
+    const result = await analyze(lang || i18n.language || 'en');
+    if (result && !result.success) {
+      console.warn('[MusicSidebar] Analyze failed:', result.error);
+    }
   };
 
   // Button enabled when track selected and not analyzing (auth/balance checked in handleAnalyze)
@@ -497,11 +502,11 @@ export function MusicSidebar({
                 </div>
               )}
               <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
-                {!analysisResult && (
+                {!analysisResult && selectedTrack && (
                   <button
                     className="music-analyze__button"
                     onClick={handleAnalyze}
-                    disabled={isAnalyzing}
+                    disabled={isAnalyzing || !selectedTrack}
                   >
                     {t('landing.scanMusic')}
                     <span className="music-analyze__cost">1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}</span>
