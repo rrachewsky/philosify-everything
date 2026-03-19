@@ -38,6 +38,15 @@ You MUST write your ENTIRE response in ${targetLanguage}.
 EVERY SINGLE WORD must be in ${targetLanguage}.
 ALL justifications, analysis, context, classifications - EVERYTHING in ${targetLanguage}.
 
+SPELLING AND TRANSLATION REQUIREMENTS:
+- Use CORRECT spelling in ${targetLanguage} — proofread carefully
+- Translate ALL philosophical terms (e.g., "sense of life" → "senso de vida", "benevolent universe" → "universo benevolente")
+- Common Portuguese mistakes to AVOID:
+  * "recreação" (recreation/play) vs "recriação" (re-creation) — use the correct one based on context
+  * "autointeresse" NOT "auto-interesse" or "auto interesse"
+  * "metafísica", "epistemologia", "estética" — correct accents required
+- Do NOT leave English words untranslated unless they are proper nouns (names, titles)
+
 This is MANDATORY. If you write even ONE word in another language, you FAIL.
 The user is paying for analysis in ${targetLanguage} and cannot read other languages.
 
