@@ -88,9 +88,10 @@ export function CinemaSidebar({
     }
   }, [isOpen, selectedFilm]);
 
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
-  };
+  // Removed: backdrop click to close - sidebar only closes via close button
+  // const handleBackdropClick = (e) => {
+  //   if (e.target === e.currentTarget) onClose();
+  // };
 
   const handleAnalyze = async () => {
     if (!user) {
@@ -141,7 +142,6 @@ export function CinemaSidebar({
     <>
       <div
         className={`music-backdrop ${isOpen ? 'music-backdrop--open' : ''}`}
-        onClick={handleBackdropClick}
       />
       <div
         ref={sidebarRef}

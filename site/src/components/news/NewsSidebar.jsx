@@ -185,9 +185,10 @@ export function NewsSidebar({
     };
   }, [isOpen]);
 
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
-  };
+  // Removed: backdrop click to close - sidebar only closes via close button
+  // const handleBackdropClick = (e) => {
+  //   if (e.target === e.currentTarget) onClose();
+  // };
 
   const handleAnalyzeArticle = async () => {
     if (!user) {
@@ -245,7 +246,6 @@ export function NewsSidebar({
     <>
       <div
         className={`music-backdrop ${isOpen ? 'music-backdrop--open' : ''}`}
-        onClick={handleBackdropClick}
       />
       <div
         ref={sidebarRef}

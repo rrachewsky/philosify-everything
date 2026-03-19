@@ -62,12 +62,13 @@ export function ComingSoonSidebar({ isOpen, onClose, category }) {
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
-  const handleBackdropClick = useCallback(
-    (e) => {
-      if (e.target === e.currentTarget) onClose();
-    },
-    [onClose]
-  );
+  // Removed: backdrop click to close - sidebar only closes via close button
+  // const handleBackdropClick = useCallback(
+  //   (e) => {
+  //     if (e.target === e.currentTarget) onClose();
+  //   },
+  //   [onClose]
+  // );
 
   const icon = CATEGORY_ICONS[category] || '\u{2728}'; // ✨ fallback
   const title = t(`home.categories.${category}.title`, category);
@@ -78,7 +79,6 @@ export function ComingSoonSidebar({ isOpen, onClose, category }) {
       {/* Backdrop */}
       <div
         className={`music-backdrop ${isOpen ? 'music-backdrop--open' : ''}`}
-        onClick={handleBackdropClick}
       />
 
       {/* Sidebar */}

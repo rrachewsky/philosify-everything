@@ -160,12 +160,13 @@ export function LiteratureSidebar({
     setFocusedIndex(results.length > 0 ? 0 : -1);
   }, [results]);
 
-  const handleBackdropClick = useCallback(
-    (e) => {
-      if (e.target === e.currentTarget) onClose();
-    },
-    [onClose]
-  );
+  // Removed: backdrop click to close - sidebar only closes via close button
+  // const handleBackdropClick = useCallback(
+  //   (e) => {
+  //     if (e.target === e.currentTarget) onClose();
+  //   },
+  //   [onClose]
+  // );
 
   const handleSelect = (book) => {
     selectBook(book);
@@ -306,7 +307,6 @@ export function LiteratureSidebar({
     <>
       <div
         className={`music-backdrop ${isOpen ? 'music-backdrop--open' : ''}`}
-        onClick={handleBackdropClick}
       />
       <div
         ref={sidebarRef}
