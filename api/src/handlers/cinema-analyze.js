@@ -333,10 +333,20 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
       // Store in KV (permanent)
       try {
-        await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
-        console.log(`[CinemaAnalyze] Cached to KV: ${cacheKey}`);
+        const resultJson = JSON.stringify(result);
+        console.log(`[CinemaAnalyze] Saving to KV (${resultJson.length} bytes): ${cacheKey}`);
+        await env.PHILOSIFY_KV.put(cacheKey, resultJson);
+        console.log(`[CinemaAnalyze] KV put completed for: ${cacheKey}`);
+        
+        // Verify save by reading back
+        const verify = await env.PHILOSIFY_KV.get(cacheKey);
+        if (verify) {
+          console.log(`[CinemaAnalyze] KV VERIFIED: ${cacheKey} (${verify.length} bytes)`);
+        } else {
+          console.error(`[CinemaAnalyze] KV VERIFY FAILED - key not found after save!`);
+        }
       } catch (kvErr) {
-        console.error(`[CinemaAnalyze] KV SAVE FAILED: ${kvErr.message}`);
+        console.error(`[CinemaAnalyze] KV SAVE EXCEPTION: ${kvErr.message}`, kvErr.stack);
       }
       
       // Also log save status for debugging
