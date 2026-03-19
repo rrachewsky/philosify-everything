@@ -263,6 +263,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       // Save to Supabase database
       let savedRecord = null;
       try {
+        console.log(`[CinemaAnalyze] Saving to Supabase: "${title}" (${tmdb_id || 'no tmdb'}, ${model}, ${lang})`);
         savedRecord = await saveFilmToSupabase(
           analysis,
           env,
@@ -275,8 +276,13 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
           guideProof,
           filmMetadata,
         );
+        if (savedRecord) {
+          console.log(`[CinemaAnalyze] Supabase save OK: ID=${savedRecord.id}, FilmID=${savedRecord.film_id}`);
+        } else {
+          console.error(`[CinemaAnalyze] Supabase save returned NULL`);
+        }
       } catch (err) {
-        console.warn("[CinemaAnalyze] Database save failed:", err.message);
+        console.error("[CinemaAnalyze] Database save EXCEPTION:", err.message, err.stack);
       }
 
       // Build response
@@ -326,8 +332,15 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       };
 
       // Store in KV (permanent)
-      await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
-      console.log(`[CinemaAnalyze] Cached to KV: ${cacheKey}`);
+      try {
+        await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
+        console.log(`[CinemaAnalyze] Cached to KV: ${cacheKey}`);
+      } catch (kvErr) {
+        console.error(`[CinemaAnalyze] KV SAVE FAILED: ${kvErr.message}`);
+      }
+      
+      // Also log save status for debugging
+      console.log(`[CinemaAnalyze] Save status - Supabase: ${savedRecord ? 'OK (ID: ' + savedRecord.id + ')' : 'FAILED'}, KV key: ${cacheKey}`);
 
       // Confirm credit
       await confirmReservation(env, reservation.reservationId, `cinema-analysis:${title.substring(0, 50)}`);
