@@ -118,18 +118,26 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
 
     // Determine which sources to use
     let sourcesToUse = DEFAULT_SOURCE_IDS;
-    if (unlocked && enabledSources && Array.isArray(enabledSources) && enabledSources.length > 0) {
+    const userHasCustomSources = unlocked && enabledSources && Array.isArray(enabledSources) && enabledSources.length > 0;
+    if (userHasCustomSources) {
       sourcesToUse = enabledSources;
-      console.log(`[News] User has custom sources: ${sourcesToUse.length} selected`);
+      console.log(`[News] User has custom sources: ${sourcesToUse.length} selected: [${sourcesToUse.slice(0, 10).join(", ")}${sourcesToUse.length > 10 ? "..." : ""}]`);
     }
 
     // Filter articles by enabled sources
     const filteredArticles = articles.filter((a) => articleMatchesSource(a, sourcesToUse));
     const filteredHighlights = highlights.filter((a) => articleMatchesSource(a, sourcesToUse));
 
-    // If filtering results in too few articles, fall back to all
-    const minArticles = 5;
-    const useFiltered = filteredArticles.length >= minArticles;
+    // When user explicitly chose their sources: ALWAYS respect that choice, even if 0 results.
+    // When using defaults: fall back to all if filter is too restrictive.
+    let useFiltered;
+    if (userHasCustomSources) {
+      useFiltered = true; // User chose these sources — respect it
+      console.log(`[News] Custom filter: ${filteredArticles.length} articles match user's ${sourcesToUse.length} sources`);
+    } else {
+      const minArticles = 5;
+      useFiltered = filteredArticles.length >= minArticles;
+    }
 
     return jsonResponse(
       {
