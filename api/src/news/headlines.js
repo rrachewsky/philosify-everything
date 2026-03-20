@@ -308,12 +308,34 @@ async function fetchSearchArticles(apiKey, query, lang = "en", max = 10) {
   }));
 }
 
+/**
+ * Deduplicate articles — removes exact title matches AND fuzzy matches
+ * (same story from different languages with slightly different titles).
+ * Uses normalized keywords to catch "Trump signs order" vs "Trump assina decreto".
+ */
 function deduplicateArticles(articles) {
   const seen = new Set();
+  const seenFuzzy = new Set();
   return articles.filter((article) => {
-    const key = article.title.toLowerCase().trim();
-    if (seen.has(key)) return false;
-    seen.add(key);
+    // Exact match on full title
+    const exactKey = article.title.toLowerCase().trim();
+    if (seen.has(exactKey)) return false;
+    seen.add(exactKey);
+
+    // Fuzzy match: extract significant words (4+ chars), sort, take first 5
+    // This catches the same story reported in different languages
+    const words = exactKey
+      .replace(/[^a-zA-Z\u00C0-\u024F\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF ]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length >= 4)
+      .sort()
+      .slice(0, 5)
+      .join("|");
+    if (words.length >= 10) {
+      if (seenFuzzy.has(words)) return false;
+      seenFuzzy.add(words);
+    }
+
     return true;
   });
 }

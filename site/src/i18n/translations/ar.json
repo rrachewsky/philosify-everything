@@ -143,6 +143,7 @@
     "highlights": "أبرز الأخبار",
     "latestHeadlines": "آخر الأخبار",
     "noHeadlines": "لا توجد أخبار متاحة حالياً",
+    "loadingGlobal": "جاري تحميل الأخبار العالمية...",
     "noSummary": "لا يوجد ملخص لهذه المقالة.",
     "justNow": "الآن",
     "analyzeAnother": "تحليل خبر آخر",

@@ -143,6 +143,7 @@
     "highlights": "A la Une",
     "latestHeadlines": "Dernieres Actualites",
     "noHeadlines": "Aucune actualite disponible pour le moment",
+    "loadingGlobal": "Chargement des actualites mondiales...",
     "noSummary": "Aucun resume disponible pour cet article.",
     "justNow": "A l'instant",
     "analyzeAnother": "Analyser une Autre Actualite",

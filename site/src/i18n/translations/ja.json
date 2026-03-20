@@ -143,6 +143,7 @@
     "highlights": "注目ニュース",
     "latestHeadlines": "最新ニュース",
     "noHeadlines": "現在ニュースはありません",
+    "loadingGlobal": "グローバルニュースを読み込み中...",
     "noSummary": "この記事の要約はありません。",
     "justNow": "たった今",
     "analyzeAnother": "別のニュースを分析",

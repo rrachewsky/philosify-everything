@@ -143,6 +143,7 @@
     "highlights": "亮点新闻",
     "latestHeadlines": "最新新闻",
     "noHeadlines": "暂无新闻",
+    "loadingGlobal": "正在加载全球新闻...",
     "noSummary": "此文章无摘要。",
     "justNow": "刚刚",
     "analyzeAnother": "分析另一条新闻",

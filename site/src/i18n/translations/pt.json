@@ -143,6 +143,7 @@
     "highlights": "Destaques",
     "latestHeadlines": "Ultimas Noticias",
     "noHeadlines": "Nenhuma noticia disponivel no momento",
+    "loadingGlobal": "Carregando noticias globais...",
     "noSummary": "Nenhum resumo disponivel para este artigo.",
     "justNow": "Agora mesmo",
     "analyzeAnother": "Analisar Outra Noticia",

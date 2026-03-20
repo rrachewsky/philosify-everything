@@ -143,6 +143,7 @@
     "highlights": "Highlights",
     "latestHeadlines": "Aktuelle Schlagzeilen",
     "noHeadlines": "Derzeit keine Nachrichten verfugbar",
+    "loadingGlobal": "Globale Nachrichten werden geladen...",
     "noSummary": "Keine Zusammenfassung fur diesen Artikel verfugbar.",
     "justNow": "Gerade eben",
     "analyzeAnother": "Weitere Nachricht analysieren",

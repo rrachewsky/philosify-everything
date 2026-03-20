@@ -3,7 +3,7 @@
 // Click a headline → new page with headline, summary, Panel button.
 // Same pattern as music/literature sidebars.
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
@@ -25,10 +25,21 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo }) {
   const pausedRef = useRef(false);
   const resumeTimerRef = useRef(null);
 
-  const allItems = [
+  const allItems = useMemo(() => [
     ...highlights.map((a) => ({ ...a, isHighlight: true })),
     ...headlines,
-  ];
+  ], [highlights, headlines]);
+
+  // Shuffled copy for the second half of the loop — avoids visible repetition
+  const shuffledItems = useMemo(() => {
+    if (allItems.length <= 3) return allItems;
+    const copy = [...allItems];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }, [allItems]);
 
   // Single animation loop — runs forever, only moves when not paused
   useEffect(() => {
@@ -100,7 +111,7 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo }) {
             </div>
           </button>
         ))}
-        {allItems.map((a, i) => (
+        {shuffledItems.map((a, i) => (
           <button
             key={`b-${i}`}
             className={`news-headline__item ${a.isHighlight ? 'news-headline__item--highlight' : ''}`}
@@ -159,6 +170,28 @@ export function NewsSidebar({
   const signupModal = useModal();
   const forgotPasswordModal = useModal();
   const paymentModal = useModal();
+
+  // Headlines loading timer (chronometer)
+  const [headlineTimer, setHeadlineTimer] = useState(0);
+  const headlineTimerRef = useRef(null);
+
+  useEffect(() => {
+    if (headlinesLoading) {
+      setHeadlineTimer(0);
+      const start = Date.now();
+      headlineTimerRef.current = setInterval(() => {
+        setHeadlineTimer(((Date.now() - start) / 1000).toFixed(1));
+      }, 100);
+    } else {
+      if (headlineTimerRef.current) {
+        clearInterval(headlineTimerRef.current);
+        headlineTimerRef.current = null;
+      }
+    }
+    return () => {
+      if (headlineTimerRef.current) clearInterval(headlineTimerRef.current);
+    };
+  }, [headlinesLoading]);
 
   // News source preferences
   const {
@@ -301,9 +334,15 @@ export function NewsSidebar({
           {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
             <div className="news-headlines">
               {headlinesLoading && (
-                <div className="news-headlines__loading">
-                  <div className="music-search__loading">
+                <div className="news-headlines__loading" style={{ textAlign: 'center', padding: '40px 20px' }}>
+                  <div className="music-search__loading" style={{ marginBottom: '16px' }}>
                     <span></span><span></span><span></span>
+                  </div>
+                  <div style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'monospace', color: '#00f0ff', marginBottom: '8px' }}>
+                    {headlineTimer}s
+                  </div>
+                  <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>
+                    {t('news.loadingGlobal', { defaultValue: 'Loading global headlines...' })}
                   </div>
                 </div>
               )}

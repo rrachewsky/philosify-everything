@@ -143,6 +143,7 @@
     "highlights": "One Cikanlar",
     "latestHeadlines": "Son Haberler",
     "noHeadlines": "Su anda haber bulunmuyor",
+    "loadingGlobal": "Kuresel haberler yukleniyor...",
     "noSummary": "Bu makale icin ozet mevcut degil.",
     "justNow": "Az once",
     "analyzeAnother": "Baska Bir Haberi Analiz Et",
