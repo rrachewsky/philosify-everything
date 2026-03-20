@@ -169,9 +169,13 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
     } else {
       filteredArticles = articles.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
       filteredHighlights = highlights.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
-      // If user has custom sources, always use filtered results (even if few/none)
-      // Only fall back to all if user is NOT unlocked (using defaults)
-      useFiltered = userHasCustomSources || filteredArticles.length > 0;
+      // Fall back to all articles if filtering produces too few results
+      // (GNews source names often don't match our name map exactly)
+      const minArticles = 5;
+      useFiltered = filteredArticles.length >= minArticles;
+      if (!useFiltered && userHasCustomSources) {
+        console.warn(`[News] Source filter too strict: only ${filteredArticles.length} matched (need ${minArticles}), falling back to all ${articles.length} articles`);
+      }
     }
 
     console.log(`[News] Filtering: ${articles.length} total, ${filteredArticles.length} matched, userCustom=${userHasCustomSources}, allSources=${userHasAllSources}, useFiltered=${useFiltered}`);
