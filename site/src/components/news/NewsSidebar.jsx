@@ -415,8 +415,8 @@ export function NewsSidebar({
             </div>
           )}
 
-          {/* ── STATE 3: Panel result ── */}
-          {panelResult && (
+          {/* ── STATE 3: Panel result only (no normal analysis) ── */}
+          {panelResult && !analysisResult && (
             <div className="music-analysis">
               <div className="music-analysis__header">
                 <span className="music-analysis__complete-icon">&#10003;</span>
@@ -463,18 +463,85 @@ export function NewsSidebar({
                 </div>
               )}
               <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
-                {!analysisResult && (
-                  <button
-                    className="music-analyze__button"
-                    onClick={handleAnalyzeArticle}
-                    disabled={isAnalyzing}
-                  >
-                    {t('news.analyzeArticle', { defaultValue: 'Analyze Article' })}
-                    <span className="music-analyze__cost">
-                      1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}
-                    </span>
-                  </button>
-                )}
+                <button
+                  className="music-analyze__button"
+                  onClick={handleAnalyzeArticle}
+                  disabled={isAnalyzing}
+                >
+                  {t('news.analyzeArticle', { defaultValue: 'Analyze Article' })}
+                  <span className="music-analyze__cost">
+                    1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}
+                  </span>
+                </button>
+                <button
+                  className="music-analyze__button music-analyze__button--another"
+                  onClick={clearArticle}
+                >
+                  {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── STATE 4: BOTH analyses exist - combined view with dual listen buttons ── */}
+          {analysisResult && panelResult && (
+            <div className="music-analysis">
+              <div className="music-analysis__header">
+                <span className="music-analysis__complete-icon">&#10003;</span>
+                {t('landing.analysisComplete')} + {t('philosopherPanel.complete', { defaultValue: 'Panel' })}
+              </div>
+
+              {/* Normal analysis content (includes its own ListenButton via ResultsContainer) */}
+              <div className="music-analysis__results-wrapper">
+                <ResultsContainer result={analysisResult} mediaType="news" showShareActions={true} />
+              </div>
+
+              {/* Panel analysis content with its own ListenButton */}
+              <div className="music-analysis__header" style={{ marginTop: '1.5rem' }}>
+                <span className="music-analysis__complete-icon">&#9733;</span>
+                {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel' })}
+              </div>
+              <div className="listen-section">
+                <ListenButton result={{
+                  song_name: panelResult.title,
+                  artist: panelResult.artist || selectedArticle?.source || 'News',
+                  philosophical_analysis: panelResult.analysis,
+                  lang: panelResult.lang,
+                  id: panelResult.id,
+                }} />
+              </div>
+              <div className="music-analysis__results-wrapper">
+                <div className="panel-analysis" dangerouslySetInnerHTML={{
+                  __html: panelResult.analysis
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br/>')
+                    .replace(/^/, '<p>')
+                    .replace(/$/, '</p>')
+                }} />
+              </div>
+              {panelResult.id && (
+                <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
+                  <ShareButton
+                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
+                    shareText={t('share.shareNewsText', { title: panelResult.title })}
+                    songName={panelResult.title}
+                    artist={selectedArticle?.source || 'News'}
+                  />
+                  <ShareToDMButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={selectedArticle?.source || 'News'}
+                  />
+                  <ShareToCommunityButton
+                    analysisId={panelResult.id}
+                    songName={panelResult.title}
+                    artist={selectedArticle?.source || 'News'}
+                  />
+                </div>
+              )}
+              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
                 <button
                   className="music-analyze__button music-analyze__button--another"
                   onClick={clearArticle}
@@ -539,13 +606,24 @@ export function NewsSidebar({
           defaultSources={defaultSources}
           onUnlock={unlockSources}
           onSave={async (sources) => {
-            const result = await updateSources(sources);
-            if (result.success) {
+            console.log('[NewsSidebar] Saving sources:', sources.length, 'unlocked:', sourcesUnlocked);
+            try {
+              const result = await updateSources(sources);
+              console.log('[NewsSidebar] Save result:', result);
+              // Always close the modal after save attempt
               setShowSourcePicker(false);
               // Refresh headlines to apply new filter
               if (onRefreshHeadlines) {
+                console.log('[NewsSidebar] Refreshing headlines...');
                 onRefreshHeadlines();
               }
+              if (!result.success) {
+                console.error('[NewsSidebar] Save returned error:', result.error);
+              }
+            } catch (err) {
+              console.error('[NewsSidebar] Save error:', err);
+              // Still close modal on error
+              setShowSourcePicker(false);
             }
           }}
           balance={balance}

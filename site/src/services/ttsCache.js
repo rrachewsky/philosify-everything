@@ -122,27 +122,55 @@ export async function preloadTTS(result, lang) {
           abortController.abort();
         }, TTS_TIMEOUT_MS);
 
+        // New news analysis format: 4 separate fields (the_facts, source_analysis, etc.)
+        const isNewsAnalysis = !!(
+          result?.media_type === 'news' &&
+          result?.the_facts
+        );
+
         // Panel results (only philosophical_analysis, no scorecard) use /api/news/tts
         const isPanel = !!(
+          !isNewsAnalysis &&
           result?.philosophical_analysis &&
           !result?.historical_context &&
           !result?.creative_process &&
           !result?.scorecard
         );
 
-        const endpoint = isPanel ? `${API_URL}/api/news/tts` : `${API_URL}/api/tts`;
-        const requestBody = isPanel
-          ? {
-              text: result.philosophical_analysis,
-              title: result.song_name || result.title || '',
-              lang: lang,
-            }
-          : {
-              result,
-              targetLang: lang,
-              analysisLang: analysisLang,
-              analysisId: result?.id || null,
-            };
+        // Choose endpoint and body based on result type
+        let endpoint;
+        let requestBody;
+
+        if (isNewsAnalysis) {
+          // Concatenate the 4 news analysis fields for TTS
+          const newsText = [
+            result.the_facts,
+            result.source_analysis,
+            result.hits_and_misses,
+            result.philosify_opinion,
+          ].filter(Boolean).join('\n\n');
+          endpoint = `${API_URL}/api/news/tts`;
+          requestBody = {
+            text: newsText,
+            title: result.song_name || result.title || '',
+            lang: lang,
+          };
+        } else if (isPanel) {
+          endpoint = `${API_URL}/api/news/tts`;
+          requestBody = {
+            text: result.philosophical_analysis,
+            title: result.song_name || result.title || '',
+            lang: lang,
+          };
+        } else {
+          endpoint = `${API_URL}/api/tts`;
+          requestBody = {
+            result,
+            targetLang: lang,
+            analysisLang: analysisLang,
+            analysisId: result?.id || null,
+          };
+        }
 
         const response = await fetch(endpoint, {
           method: 'POST',

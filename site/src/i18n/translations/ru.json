@@ -146,6 +146,10 @@
     "noSummary": "Для этой статьи нет аннотации.",
     "justNow": "Только что",
     "analyzeAnother": "Анализировать другую новость",
+    "theFactsTitle": "Факты",
+    "sourceAnalysisTitle": "Анализ источника",
+    "hitsAndMissesTitle": "Попадания и промахи",
+    "philosifyOpinionTitle": "Мнение Philosify",
     "sources": "Источники",
     "sourcePicker": {
       "title": "Источники новостей",

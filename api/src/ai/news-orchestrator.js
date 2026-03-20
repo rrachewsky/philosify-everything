@@ -1,10 +1,12 @@
 // ============================================================
-// AI - News Article Philosophical Analysis Orchestrator
-// Mirrors book-orchestrator.js for news articles
+// AI - News Article Analysis Orchestrator
+// ============================================================
+// Calls AI models with the news analysis prompt, parses JSON response.
+// Returns 4 fields: the_facts, source_analysis, hits_and_misses, philosify_opinion.
+// No scorecard, no classification, no philosophical note.
 // ============================================================
 
 import { buildNewsAnalysisPrompt } from "./prompts/news-analysis-template.js";
-import { calculatePhilosophicalNote } from "./prompts/calculator.js";
 import {
   callClaude,
   callOpenAI,
@@ -12,21 +14,7 @@ import {
   callGrok,
   callDeepSeek,
 } from "./models/index.js";
-import {
-  extractJSON,
-  normalizeResponse,
-  splitTrailingSchoolsParagraph,
-} from "./parser.js";
-import { calculateWeightedScore } from "../config/scoring.js";
-
-function normalizeSchoolsHtml(value) {
-  if (!value) return "";
-  const s = String(value);
-  if (!s.includes("<") && s.includes("\n")) {
-    return s.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).join("<br/>");
-  }
-  return s.replace(/\n/g, "<br/>").replace(/<br\/><br\/><br\/>/g, "<br/><br/>");
-}
+import { extractJSON, normalizeResponse } from "./parser.js";
 
 const LANG_NAMES = {
   en: "English", pt: "Portuguese", es: "Spanish", de: "German",
@@ -48,29 +36,26 @@ function normalizeModelKey(model) {
 
 function isComplete(normalized) {
   const issues = [];
-  const sc = normalized.scorecard;
-  if (!sc) { issues.push("missing scorecard"); }
-  else {
-    for (const branch of ["ethics", "metaphysics", "epistemology", "politics", "aesthetics"]) {
-      if (!sc[branch]) issues.push(`missing scorecard.${branch}`);
-      else {
-        if (sc[branch].score === undefined) issues.push(`missing ${branch}.score`);
-        if (!sc[branch].justification || sc[branch].justification.length < 20) issues.push(`${branch}.justification too short`);
-      }
-    }
+  if (!normalized.the_facts || normalized.the_facts.length < 80) {
+    issues.push("the_facts too short or missing");
   }
-  if (!normalized.philosophical_analysis || normalized.philosophical_analysis.length < 100) {
-    issues.push("philosophical_analysis too short");
+  if (!normalized.source_analysis || normalized.source_analysis.length < 80) {
+    issues.push("source_analysis too short or missing");
   }
-  if (!normalized.classification) issues.push("missing classification");
+  if (!normalized.hits_and_misses || normalized.hits_and_misses.length < 80) {
+    issues.push("hits_and_misses too short or missing");
+  }
+  if (!normalized.philosify_opinion || normalized.philosify_opinion.length < 100) {
+    issues.push("philosify_opinion too short or missing");
+  }
   return { ok: issues.length === 0, issues };
 }
 
-export async function analyzeNewsPhilosophy(title, source, articleText, newsMetadata, guide, model, lang, env) {
-  const prompt = buildNewsAnalysisPrompt(title, source, articleText, newsMetadata, guide, lang);
+export async function analyzeNewsPhilosophy(title, source, articleText, newsMetadata, guide, sourceOfTruth, model, lang, env) {
+  const prompt = buildNewsAnalysisPrompt(title, source, articleText, newsMetadata, guide, sourceOfTruth, lang);
   const targetLanguage = LANG_NAMES[lang] || "English";
 
-  console.log(`[NewsOrchestrator] Prompt: ${prompt.length} chars, Guide: ${guide?.length || 0} chars`);
+  console.log(`[NewsOrchestrator] Prompt: ${prompt.length} chars, Guide: ${guide?.length || 0} chars, SourceOfTruth: ${sourceOfTruth?.length || 0} chars`);
 
   const requestedKey = normalizeModelKey(model);
 
@@ -117,30 +102,9 @@ export async function analyzeNewsPhilosophy(title, source, articleText, newsMeta
 
   const normalized = normalizeResponse(parsed);
 
-  if (!normalized.schools_of_thought && normalized.philosophical_analysis) {
-    const split = splitTrailingSchoolsParagraph(normalized.philosophical_analysis);
-    if (split) {
-      normalized.philosophical_analysis = split.analysis;
-      normalized.schools_of_thought = split.schools;
-    }
-  }
-
-  normalized.schools_of_thought = normalizeSchoolsHtml(normalized.schools_of_thought);
-
   const check = isComplete(normalized);
   if (!check.ok) console.warn(`[NewsOrchestrator] Incomplete: ${check.issues.join(", ")}`);
 
-  const finalScore = calculateWeightedScore({
-    ethics: normalized.scorecard?.ethics?.score || 0,
-    metaphysics: normalized.scorecard?.metaphysics?.score || 0,
-    epistemology: normalized.scorecard?.epistemology?.score || 0,
-    politics: normalized.scorecard?.politics?.score || 0,
-    aesthetics: normalized.scorecard?.aesthetics?.score || 0,
-  });
-
-  normalized.scorecard.final_score = finalScore;
-  normalized.final_score = finalScore;
-  normalized.philosophical_note = calculatePhilosophicalNote(finalScore);
   normalized.model = usedModel;
 
   return normalized;

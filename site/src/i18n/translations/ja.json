@@ -146,6 +146,10 @@
     "noSummary": "この記事の要約はありません。",
     "justNow": "たった今",
     "analyzeAnother": "別のニュースを分析",
+    "theFactsTitle": "事実",
+    "sourceAnalysisTitle": "情報源の分析",
+    "hitsAndMissesTitle": "的中と誤り",
+    "philosifyOpinionTitle": "Philosifyの見解",
     "sources": "ソース",
     "sourcePicker": {
       "title": "ニュースソース",

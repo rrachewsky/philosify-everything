@@ -146,6 +146,10 @@
     "noSummary": "No summary available for this article.",
     "justNow": "Just now",
     "analyzeAnother": "Analyze Another Story",
+    "theFactsTitle": "The Facts",
+    "sourceAnalysisTitle": "Source Analysis",
+    "hitsAndMissesTitle": "Hits & Misses",
+    "philosifyOpinionTitle": "Philosify's Opinion",
     "sources": "Sources",
     "sourcePicker": {
       "title": "News Sources",

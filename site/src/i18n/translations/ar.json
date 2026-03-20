@@ -146,6 +146,10 @@
     "noSummary": "لا يوجد ملخص لهذه المقالة.",
     "justNow": "الآن",
     "analyzeAnother": "تحليل خبر آخر",
+    "theFactsTitle": "الحقائق",
+    "sourceAnalysisTitle": "تحليل المصدر",
+    "hitsAndMissesTitle": "الإصابات والأخطاء",
+    "philosifyOpinionTitle": "رأي Philosify",
     "sources": "المصادر",
     "sourcePicker": {
       "title": "مصادر الأخبار",

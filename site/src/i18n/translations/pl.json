@@ -146,6 +146,10 @@
     "noSummary": "Brak podsumowania dla tego artykulu.",
     "justNow": "Wlasnie teraz",
     "analyzeAnother": "Analizuj Kolejna Wiadomosc",
+    "theFactsTitle": "Fakty",
+    "sourceAnalysisTitle": "Analiza Zrodla",
+    "hitsAndMissesTitle": "Trafienia i Bledy",
+    "philosifyOpinionTitle": "Opinia Philosify",
     "sources": "Zrodla",
     "sourcePicker": {
       "title": "Zrodla Wiadomosci",

@@ -24,15 +24,34 @@ export function NewsSourcePicker({
 }) {
   const { t } = useTranslation();
   const [selected, setSelected] = useState(new Set());
+  const [justUnlocked, setJustUnlocked] = useState(false);
 
   // Initialize selected from enabledSources or defaultSources
+  // Skip if we just unlocked (to preserve the selectAll selection)
   useEffect(() => {
-    if (unlocked && enabledSources) {
+    if (justUnlocked) return;
+    if (unlocked && enabledSources && enabledSources.length > 0) {
+      // User has saved custom sources - use them
       setSelected(new Set(enabledSources));
-    } else {
+    } else if (unlocked && (!enabledSources || enabledSources.length === 0)) {
+      // User is unlocked but hasn't saved sources yet - select all by default
+      const all = new Set();
+      Object.values(availableSources).forEach((cat) => {
+        cat.sources.forEach((s) => all.add(s.id));
+      });
+      setSelected(all);
+    } else if (!unlocked) {
+      // Not unlocked - show default sources as selected (visual only)
       setSelected(new Set(defaultSources));
     }
-  }, [unlocked, enabledSources, defaultSources]);
+  }, [unlocked, enabledSources, defaultSources, availableSources, justUnlocked]);
+
+  // Reset justUnlocked when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setJustUnlocked(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -59,14 +78,17 @@ export function NewsSourcePicker({
     setSelected(new Set());
   };
 
-  const handleSave = () => {
-    onSave(Array.from(selected));
+  const handleSave = async () => {
+    console.log('[NewsSourcePicker] handleSave called with', selected.size, 'sources');
+    await onSave(Array.from(selected));
   };
 
   const handleUnlock = async () => {
     const result = await onUnlock();
     if (result.success) {
-      // After unlock, initialize with all sources
+      // Mark as just unlocked to prevent useEffect from resetting selection
+      setJustUnlocked(true);
+      // Select all sources after unlock
       selectAll();
     }
   };

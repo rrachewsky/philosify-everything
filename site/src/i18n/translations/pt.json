@@ -146,6 +146,10 @@
     "noSummary": "Nenhum resumo disponivel para este artigo.",
     "justNow": "Agora mesmo",
     "analyzeAnother": "Analisar Outra Noticia",
+    "theFactsTitle": "Os Fatos",
+    "sourceAnalysisTitle": "Analise da Fonte",
+    "hitsAndMissesTitle": "Acertos e Erros",
+    "philosifyOpinionTitle": "Opiniao do Philosify",
     "sources": "Fontes",
     "sourcePicker": {
       "title": "Fontes de Noticias",

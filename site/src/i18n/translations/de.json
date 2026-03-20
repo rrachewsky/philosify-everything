@@ -146,6 +146,10 @@
     "noSummary": "Keine Zusammenfassung fur diesen Artikel verfugbar.",
     "justNow": "Gerade eben",
     "analyzeAnother": "Weitere Nachricht analysieren",
+    "theFactsTitle": "Die Fakten",
+    "sourceAnalysisTitle": "Quellenanalyse",
+    "hitsAndMissesTitle": "Treffer und Fehler",
+    "philosifyOpinionTitle": "Philosifys Meinung",
     "sources": "Quellen",
     "sourcePicker": {
       "title": "Nachrichtenquellen",

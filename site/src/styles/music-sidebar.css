@@ -1139,6 +1139,28 @@
 }
 
 /* ============================================================
+   NEWS ANALYSIS CARDS - 4-card layout for news results
+   ============================================================ */
+
+.news-analysis-card .result-card-text {
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.news-opinion-card {
+  border-color: rgba(124, 58, 237, 0.35);
+}
+
+.news-opinion-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(124, 58, 237, 0.5) 0%,
+    rgba(0, 240, 255, 0.4) 50%,
+    rgba(124, 58, 237, 0.5) 100%
+  );
+}
+
+/* ============================================================
    NEWS HEADLINES - Ticker list items
    ============================================================ */
 
@@ -1409,15 +1431,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
+  gap: 4px;
+  padding: 6px 12px;
   margin-right: 8px;
   background: rgba(120, 100, 180, 0.15);
   border: 1px solid rgba(120, 100, 180, 0.3);
   border-radius: 6px;
   color: rgba(196, 181, 253, 0.8);
-  font-size: 16px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
   transition: all 0.2s ease;
 }

@@ -1,12 +1,11 @@
 // ============================================================
 // AI - NEWS ARTICLE ANALYSIS PROMPT BUILDER
 // ============================================================
-// Mirrors literature-template.js but adapted for news articles.
-// Key differences:
-// - No lyrics/copyright quotation rules
-// - News metadata (source, published date, topic, description)
-// - AI analyzes the provided article content
-// - News Analysis Framework guide (philosophical lens on current events)
+// Objective news analysis — NOT a music/literature analysis.
+// Structure: The Facts (5W+H) | Source Analysis | Hits & Misses | Philosify Opinion
+// Uses guide_text + wrap_up_source_of_truth from KV as philosophical foundation.
+// No scorecard, no classification, no philosophical note, no schools of thought.
+// No "council of thinkers", no host interjections, no advisors.
 // ============================================================
 
 export function buildNewsAnalysisPrompt(
@@ -15,71 +14,9 @@ export function buildNewsAnalysisPrompt(
   articleText,
   metadata,
   guide,
+  sourceOfTruth,
   lang = "en",
 ) {
-  // Probable School of Thought disclaimer (localized)
-  const probableSchoolDisclaimerByLang = {
-    en: "School of Thought is a supposition based on probability. It may not be as accurate as you are expecting.",
-    pt: "Escola de Pensamento é uma suposição baseada em probabilidade. Pode não ser tão precisa quanto você espera.",
-    es: "La Escuela de Pensamiento es una suposición basada en probabilidad. Puede no ser tan precisa como esperas.",
-    fr: "L'École de pensée est une supposition fondée sur la probabilité. Elle peut ne pas être aussi précise que vous l'espérez.",
-    de: "Die Denkschule ist eine Annahme auf Basis von Wahrscheinlichkeit. Sie ist möglicherweise nicht so präzise, wie Sie erwarten.",
-    it: "La Scuola di pensiero è una supposizione basata sulla probabilità. Potrebbe non essere precisa quanto ti aspetti.",
-    hu: "A gondolkodási iskola valószínűségen alapuló feltételezés. Lehet, hogy nem olyan pontos, mint várnád.",
-    ru: "Школа мысли — это предположение, основанное на вероятности. Оно может быть не таким точным, как вы ожидаете.",
-    ja: "思想学派は確率に基づく推測です。期待するほど正確ではない場合があります。",
-    zh: "思想学派是基于概率的推测。它可能不如您期望的那样准确。",
-    ko: "사상 학파는 확률에 기반한 추측입니다. 기대만큼 정확하지 않을 수 있습니다.",
-    he: "אסכולת המחשבה היא השערה המבוססת על הסתברות. ייתכן שהיא לא מדויקת כפי שאתה מצפה.",
-    ar: "مدرسة الفكر هي افتراض قائم على الاحتمالية. قد لا تكون دقيقة كما تتوقع.",
-    hi: "विचार का स्कूल संभावना पर आधारित एक अनुमान है। यह उतना सटीक नहीं हो सकता जितना आप उम्मीद कर रहे हैं।",
-    fa: "مکتب فکری یک فرض بر اساس احتمال است. ممکن است به اندازه‌ای که انتظار دارید دقیق نباشد.",
-  };
-  const probableSchoolDisclaimer =
-    probableSchoolDisclaimerByLang[String(lang || "en").toLowerCase()] ||
-    probableSchoolDisclaimerByLang.en;
-  const probableSchoolPrefixByLang = {
-    en: "Probable School of Thought",
-    pt: "Escola de Pensamento (provável)",
-    es: "Escuela de Pensamiento (probable)",
-    fr: "École de pensée (probable)",
-    de: "Denkschule (wahrscheinlich)",
-    it: "Scuola di pensiero (probabile)",
-    hu: "Valószínű gondolkodási iskola",
-    ru: "Вероятная школа мысли",
-    ja: "推定される思想学派",
-    zh: "可能的思想学派",
-    ko: "추정 사상 학파",
-    he: "אסכולת מחשבה משוערת",
-    ar: "مدرسة الفكر المحتملة",
-    hi: "संभावित विचार स्कूल",
-    fa: "مکتب فکری احتمالی",
-  };
-  const probableSchoolPrefix =
-    probableSchoolPrefixByLang[String(lang || "en").toLowerCase()] ||
-    probableSchoolPrefixByLang.en;
-
-  // Schools of Thought labels (localized)
-  const schoolLabels = {
-    en: { primary: "Primary", secondary: "Secondary", peripheral: "Peripheral", exclusions: "Exclusions", not: "NOT", evidence: "Evidence", metaphysics: "Metaphysics", epistemology: "Epistemology", ethics: "Ethics", politics: "Politics", aesthetics: "Aesthetics" },
-    pt: { primary: "Primário", secondary: "Secundário", peripheral: "Periférico", exclusions: "Exclusões", not: "NÃO", evidence: "Evidência", metaphysics: "Metafísica", epistemology: "Epistemologia", ethics: "Ética", politics: "Política", aesthetics: "Estética" },
-    es: { primary: "Primario", secondary: "Secundario", peripheral: "Periférico", exclusions: "Exclusiones", not: "NO", evidence: "Evidencia", metaphysics: "Metafísica", epistemology: "Epistemología", ethics: "Ética", politics: "Política", aesthetics: "Estética" },
-    fr: { primary: "Primaire", secondary: "Secondaire", peripheral: "Périphérique", exclusions: "Exclusions", not: "PAS", evidence: "Preuve", metaphysics: "Métaphysique", epistemology: "Épistémologie", ethics: "Éthique", politics: "Politique", aesthetics: "Esthétique" },
-    de: { primary: "Primär", secondary: "Sekundär", peripheral: "Peripher", exclusions: "Ausschlüsse", not: "NICHT", evidence: "Beleg", metaphysics: "Metaphysik", epistemology: "Erkenntnistheorie", ethics: "Ethik", politics: "Politik", aesthetics: "Ästhetik" },
-    it: { primary: "Primario", secondary: "Secondario", peripheral: "Periferico", exclusions: "Esclusioni", not: "NON", evidence: "Evidenza", metaphysics: "Metafisica", epistemology: "Epistemologia", ethics: "Etica", politics: "Politica", aesthetics: "Estetica" },
-    hu: { primary: "Elsődleges", secondary: "Másodlagos", peripheral: "Perifériás", exclusions: "Kizárások", not: "NEM", evidence: "Bizonyíték", metaphysics: "Metafizika", epistemology: "Ismeretelmélet", ethics: "Etika", politics: "Politika", aesthetics: "Esztétika" },
-    ru: { primary: "Первичная", secondary: "Вторичная", peripheral: "Периферийная", exclusions: "Исключения", not: "НЕ", evidence: "Доказательство", metaphysics: "Метафизика", epistemology: "Эпистемология", ethics: "Этика", politics: "Политика", aesthetics: "Эстетика" },
-    ja: { primary: "主要", secondary: "副次的", peripheral: "周辺的", exclusions: "除外", not: "非", evidence: "証拠", metaphysics: "形而上学", epistemology: "認識論", ethics: "倫理学", politics: "政治学", aesthetics: "美学" },
-    zh: { primary: "主要", secondary: "次要", peripheral: "边缘", exclusions: "排除", not: "非", evidence: "证据", metaphysics: "形而上学", epistemology: "认识论", ethics: "伦理学", politics: "政治学", aesthetics: "美学" },
-    ko: { primary: "주요", secondary: "부차적", peripheral: "주변적", exclusions: "제외", not: "아님", evidence: "증거", metaphysics: "형이상학", epistemology: "인식론", ethics: "윤리학", politics: "정치학", aesthetics: "미학" },
-    he: { primary: "ראשי", secondary: "משני", peripheral: "היקפי", exclusions: "החרגות", not: "לא", evidence: "ראיה", metaphysics: "מטאפיזיקה", epistemology: "אפיסטמולוגיה", ethics: "אתיקה", politics: "פוליטיקה", aesthetics: "אסתטיקה" },
-    ar: { primary: "أساسي", secondary: "ثانوي", peripheral: "هامشي", exclusions: "استثناءات", not: "ليس", evidence: "دليل", metaphysics: "ميتافيزيقا", epistemology: "نظرية المعرفة", ethics: "أخلاق", politics: "سياسة", aesthetics: "جماليات" },
-    hi: { primary: "प्राथमिक", secondary: "द्वितीयक", peripheral: "परिधीय", exclusions: "बहिष्करण", not: "नहीं", evidence: "साक्ष्य", metaphysics: "तत्वमीमांसा", epistemology: "ज्ञानमीमांसा", ethics: "नीतिशास्त्र", politics: "राजनीति", aesthetics: "सौंदर्यशास्त्र" },
-    fa: { primary: "اصلی", secondary: "ثانویه", peripheral: "حاشیه‌ای", exclusions: "استثناها", not: "نه", evidence: "شواهد", metaphysics: "متافیزیک", epistemology: "معرفت‌شناسی", ethics: "اخلاق", politics: "سیاست", aesthetics: "زیبایی‌شناسی" },
-  };
-  const L_schools =
-    schoolLabels[String(lang || "en").toLowerCase()] || schoolLabels.en;
-
   // Language code to name mapping
   const langNames = {
     en: "English", pt: "Portuguese", es: "Spanish", de: "German",
@@ -95,11 +32,14 @@ export function buildNewsAnalysisPrompt(
   const articleInfoLines = [];
   articleInfoLines.push(`Title: "${title}"`);
   articleInfoLines.push(`Source: ${source}`);
-  if (metadata?.published_date) {
-    articleInfoLines.push(`Published: ${metadata.published_date}`);
+  if (metadata?.published_date || metadata?.publishedAt) {
+    articleInfoLines.push(`Published: ${metadata.published_date || metadata.publishedAt}`);
   }
   if (metadata?.categories?.length > 0) {
     articleInfoLines.push(`Topic/Category: ${metadata.categories.join(', ')}`);
+  }
+  if (metadata?.topic) {
+    articleInfoLines.push(`Topic: ${metadata.topic}`);
   }
   if (metadata?.description) {
     articleInfoLines.push(`Description: ${metadata.description}`);
@@ -114,366 +54,231 @@ export function buildNewsAnalysisPrompt(
     articleInfoLines.push(`URL: ${metadata.url}`);
   }
 
+  // Build the source of truth section (only if available)
+  const sourceOfTruthSection = sourceOfTruth
+    ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AUTHORITATIVE PHILOSOPHICAL REFERENCE — PHILOSIFY'S VOICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This is the authoritative philosophical reference that represents Philosify's
+analytical voice and principled worldview. The "Philosify Opinion" section
+MUST be grounded in this reference.
+
+When this reference and the analytical framework above conflict,
+THIS REFERENCE TAKES PRECEDENCE.
+
+${sourceOfTruth}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`
+    : "";
+
   return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHILOSOPHICAL GUIDE (NEWS ANALYSIS FRAMEWORK) - MANDATORY REFERENCE
+ANALYTICAL FRAMEWORK — MANDATORY REFERENCE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-YOU MUST CONSULT AND APPLY THE FOLLOWING GUIDE RIGOROUSLY.
-
-This is the authoritative philosophical framework for your news analysis.
-Every score, justification, and classification MUST align with these principles.
-Do NOT deviate from this guide. Do NOT use your own interpretation.
-
-CRITICAL (COMPLIANCE):
-Do NOT explicitly mention "Objectivism", "Objectivist", "Ayn Rand", or reference the philosophy by name.
-You must APPLY the guide's framework, definitions, and scoring rules WITHOUT naming the source philosophy.
+You MUST apply the following framework rigorously.
+Every analysis and judgment MUST align with these principles.
+APPLY the framework WITHOUT naming the source philosophy.
+Do NOT explicitly mention "Objectivism", "Objectivist", "Ayn Rand",
+or reference the philosophy by name.
 
 ${guide}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL LANGUAGE INSTRUCTION
+${sourceOfTruthSection}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LANGUAGE INSTRUCTION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-YOU MUST WRITE YOUR ENTIRE RESPONSE IN ${targetLanguage.toUpperCase()}
+YOU MUST WRITE YOUR ENTIRE RESPONSE IN ${targetLanguage.toUpperCase()}.
+This is MANDATORY and NON-NEGOTIABLE.
 
-THIS IS MANDATORY AND NON-NEGOTIABLE.
-
-EVERY SINGLE WORD must be in ${targetLanguage}:
-- scorecard.ethics.justification -> ${targetLanguage}
-- scorecard.metaphysics.justification -> ${targetLanguage}
-- scorecard.epistemology.justification -> ${targetLanguage}
-- scorecard.politics.justification -> ${targetLanguage}
-- scorecard.aesthetics.justification -> ${targetLanguage}
-- philosophical_analysis -> ${targetLanguage}
-- historical_context -> ${targetLanguage}
-- creative_process -> ${targetLanguage}
-- classification -> ALWAYS IN ENGLISH (standardized enum)
+EVERY field value must be in ${targetLanguage}:
+- the_facts -> ${targetLanguage}
+- source_analysis -> ${targetLanguage}
+- hits_and_misses -> ${targetLanguage}
+- philosify_opinion -> ${targetLanguage}
 
 ALLOWED EXCEPTIONS (VERY LIMITED):
-- Article title and source name MUST remain exactly as provided (proper nouns; do NOT translate).
+- Article title and source name remain as provided (proper nouns; do NOT translate).
 - Do NOT leave standalone words/phrases in any other language in your prose.
-
-If you write even ONE WORD in English (or any other language besides ${targetLanguage}),
-your response will be COMPLETELY REJECTED and you will FAIL this task.
 
 The user is paying for this analysis in ${targetLanguage}.
 WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
----
-
-REQUESTED NEWS ARTICLE ANALYSIS:
+NEWS ARTICLE TO ANALYZE:
 
 ${articleInfoLines.join('\n')}
 
-${articleText ? `ARTICLE CONTENT / SUMMARY:\n${articleText}` : 'No article content available - use your own knowledge of this event.'}
+${articleText ? `ARTICLE CONTENT / SUMMARY:\n${articleText}` : 'No article content available — use your own knowledge of this event.'}
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSTRUCTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-ANALYSIS LANGUAGE: ${targetLanguage}
+You are Philosify — an objective analytical intelligence.
+You are NOT a host, NOT a commentator, NOT a panel moderator.
+You do NOT use interjections, exclamations, or rhetorical flourishes.
+You produce a SINGLE, COHERENT, COHESIVE analysis. No digressions.
 
----
+Analyze this news article and return JSON with EXACTLY these fields:
 
-INSTRUCTIONS:
-Analyze this news article following RIGOROUSLY the philosophical guide above.
+━━━ FIELD 1: "the_facts" (~200-300 words) ━━━
 
-NEWS ANALYSIS PRINCIPLES:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. ANALYZE THE EVENT AND ITS PHILOSOPHICAL IMPLICATIONS
-   - What happened? What values are at stake?
-   - Who are the actors and what motivates them?
-   - What are the philosophical implications of this event?
-   - Use the provided article content as the primary source of facts
-   - Supplement with your own contextual knowledge when necessary
+Establish the objective facts using the 5W+H framework:
+- WHAT: What happened? What is the core event or development?
+- WHO: Who are the actors involved (individuals, institutions, governments)?
+- WHERE: Where did this occur (geographic, institutional, jurisdictional)?
+- WHEN: When did this happen (date, timeline, sequence of events)?
+- HOW: How did this event unfold (mechanism, process, chain of actions)?
+- WHY: Why did this happen according to the SOURCE (the source's stated reasons)?
 
-2. RECOGNIZE EDITORIAL BIAS AND FRAMING
-   - Is the article framing events to promote a particular worldview?
-   - Distinguish between factual reporting and editorial interpretation
-   - Identify unstated philosophical premises in the reporting
-   - A news source's bias does NOT define the event itself — separate the event from how it is reported
+RULES for this field:
+- State ONLY verified, objective facts. No opinion. No analysis.
+- The WHY here is the source's version of why — NOT your analysis.
+- If facts are uncertain or unverified, say so explicitly.
+- Be precise with dates, names, and figures.
 
-3. APPLY PHILOSOPHICAL FRAMEWORK TO CURRENT EVENTS
-   The guide provides a framework for analyzing current events:
-   - A1: Individual Rights (are individual rights being expanded or curtailed?)
-   - A2: Reason vs. Force (is the event resolved through persuasion or coercion?)
-   - A3: Productive Achievement (does this advance or hinder human flourishing?)
-   - A4: Government Role (what role does government play — protector or aggressor?)
-   - A5: Cultural Implications (what does this event reveal about the culture's philosophical direction?)
-   Evaluate these dimensions for the single Aesthetics score (-10 to +10).
+━━━ FIELD 2: "source_analysis" (~300-400 words) ━━━
 
-4. IDENTIFY THE DEEPER PHILOSOPHICAL CONFLICT
-   - Every news event reflects a deeper clash of values
-   - Identify the root philosophical conflict (reason vs. faith, individual vs. collective, etc.)
-   - Go beyond surface-level political framing to the underlying philosophical premises
-   - What principles are being upheld or violated?
+Describe and analyze the news source:
+- Who is this source? (name, country, editorial profile, ownership)
+- What is this source's known editorial bias?
+- What is the source's probable INTENTION with this specific article given its bias?
+- What FRAMING does the source use? (tone, word choice, emphasis, what is highlighted vs buried)
+- Is the source reporting facts, editorializing, or mixing both?
 
-5. ANTI-HALLUCINATION: FACTUAL ACCURACY
-   - Base your analysis on the provided article content
-   - Do NOT invent facts, quotes, or events not in the article
-   - Acknowledge when you have limited information
-   - If the article is incomplete, say so — do NOT fill gaps with fabricated details
-   - It is BETTER to say "the article does not address this" than to invent content
+RULES for this field:
+- Be specific about the bias — not just "left/right" but HOW the bias manifests.
+- Reference concrete editorial choices: what words were chosen, what angle was prioritized.
+- If you are not certain about the source's profile, acknowledge it.
 
-6. BE FAIR AND BALANCED
-   - Recognize positive developments when present
-   - Do not force negative interpretation
-   - Capture the ESSENTIAL significance of the event
-   - Complex events can have mixed philosophical content
+━━━ FIELD 3: "hits_and_misses" (~400-600 words) ━━━
 
-7. USE PRECISE TERMINOLOGY
-   - "Virtuous self-interest" (not "rational egoism")
-   - "Personal flourishing" instead of "egoism"
-   - "Sacrifice" = trading greater value for lesser value (not all trade-offs)
-   - Hero vs. Martyr distinction is essential
+Evaluate the source's coverage:
 
-8. AVOID EXCESSIVE BIAS
-   - Not everything is government overreach
-   - Not everything is collectivism
-   - Recognize when the event is genuinely positive for individual rights
-   - Political alignment alone does not determine philosophical value
+HITS (where the source gets it right):
+- Specific factual or analytical points the source handles correctly
+- WHY these points are correct (evidence, logic, data)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL: SCORE POLARITY (-10 to +10)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MISSES (where the source gets it wrong):
+- Specific factual errors, distortions, or misleading framing
+- WHY these are errors (evidence, logic, data that contradicts)
 
-THE SCORE MUST MATCH THE JUSTIFICATION:
+OMISSIONS (what the source leaves out):
+- Relevant information the source does not mention
+- WHY these omissions matter for understanding the full picture
 
-NEGATIVE SCORES (-10 to -1):
-Use when the news article reports on or promotes:
-- Altruism, sacrifice, collectivism
-- Mysticism, faith over reason, evasion
-- Malevolent universe premise, pessimism, determinism
-- Coercion, government control, tribalism
-- Nihilism, ugliness in service of destruction
+RULES for this field:
+- Every hit and miss MUST have a concrete reason ("because...").
+- Do NOT make vague claims. Be specific about what is right or wrong and why.
+- Distinguish between factual errors and analytical/framing errors.
 
-POSITIVE SCORES (+1 to +10):
-Use when the news article reports on or promotes:
-- Virtuous self-interest, rational values
-- Reason, logic, productive achievement
-- Benevolent universe, efficacy of man
-- Individual rights, voluntary cooperation
-- Romantic realism, beauty serving life
+━━━ FIELD 4: "philosify_opinion" (~600-800 words) ━━━
 
-ZERO (0): Neutral or completely ambiguous
+Philosify's principled analysis. This is the CORE of the response.
+MUST be grounded in the Authoritative Philosophical Reference above.
 
-IF YOUR JUSTIFICATION DESCRIBES NEGATIVE CONTENT -> USE NEGATIVE SCORE
-IF YOUR JUSTIFICATION DESCRIBES POSITIVE CONTENT -> USE POSITIVE SCORE
+STRUCTURE:
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL: SCHOOL OF THOUGHT -> SCORE CONSISTENCY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+A) HISTORICAL CONTEXT — CALIBRATED BY CAUSAL NATURE:
 
-NON-NEGOTIABLE RULE: "POISON IN A GOLDEN CHALICE IS STILL POISON"
+BEFORE writing context, identify the CAUSAL NATURE of this event:
 
-If your schools_of_thought analysis identifies as PRIMARY school any of these:
-- MARXISM, NIHILISM, DETERMINISM (rigid), POSTMODERNISM
-- ZEN/BUDDHISM (desire-negation), UTILITARIANISM (sacrifice logic)
-- STOICISM (resignation/fatalism), IDEALISM/KANTIANISM (duty over happiness)
+TYPE A — LONG CAUSAL CHAIN: The event results from a sequence of ideas,
+policies, and actions over years.
+-> Trace the proportional causal chain (typically 2-10 years).
+-> Each link in the chain MUST be factual and demonstrable.
+-> NEVER go back further than necessary to explain the direct cause.
+-> Trace: IDEA -> POLICY -> ACTION -> CONSEQUENCE.
 
-Then your scores MUST be NEGATIVE (typically -4 to -8), because these schools
-are fundamentally opposed to the Guide's philosophical framework.
+TYPE B — PUNCTUAL/OCCASIONAL EVENT: The event has immediate, circumstantial,
+or accidental causes (accident, disaster, incident).
+-> Describe only the immediate causes (days/weeks).
+-> Do NOT force a long causal narrative where none exists.
+-> Do NOT invent "deep roots" for accidental events.
 
-ARTISTIC QUALITY DOES NOT REDEEM ANTI-LIFE CONTENT:
-- A news article can be well-written AND philosophically destructive
-- A news article can be from a prestigious source AND promote wrong values
-- Sophisticated reporting does NOT neutralize corrupt content
+The depth of context MUST be PROPORTIONAL to the actual causal chain.
+Yesterday's accident does not need 10 years of context.
+An economic crisis may need 5-8 years of context.
+NEVER go back 70 years to explain a recent event.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-MANDATORY FIELDS - ALL REQUIRED, NO EXCEPTIONS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+B) REAL CAUSES:
+- What actually caused this event/phenomenon (not the source's version)?
+- What structural, political, economic, or ideological factors are at play?
+- Apply the analytical framework principles WITHOUT naming them.
 
-YOU MUST INCLUDE ALL OF THESE FIELDS IN YOUR JSON:
+C) FUTURE PERSPECTIVES WITH PROBABILITIES:
+- Near-term predictions (weeks/months) — HIGH confidence
+- Medium-term predictions (1-3 years) — MODERATE confidence
+- Long-term implications (3+ years) — if applicable, LOWER confidence
+- Label each prediction with its confidence level.
 
-1. "philosophical_analysis" -> MANDATORY integrated analysis essay (4-6 paragraphs, ~800-1200 words)
-2. "historical_context" -> MANDATORY context about the event, background, and relevant history (~200-300 words)
-3. "creative_process" -> MANDATORY explanation of the journalistic/editorial context: the source's perspective, how the article frames the event, what editorial choices were made, and the broader media landscape around this topic (~200-300 words)
-4. "scorecard" -> MANDATORY with all 5 branches (ethics, metaphysics, epistemology, politics, aesthetics)
-   EACH BRANCH MUST HAVE:
-   - "score": integer from -10 to +10 (REQUIRED)
-   - "justification": detailed text explaining the score (~100-150 words, REQUIRED)
-5. "classification" -> MANDATORY classification based on final_score
-6. "country" -> Country where the event occurred (use your knowledge)
-7. "genre" -> News category (politics, economics, technology, etc.)
+D) PRINCIPLED CAUSAL RELATIONSHIP:
+- What PRINCIPLES are at work? (cause and effect at the level of ideas)
+- What CONSEQUENCES follow from these principles being applied or violated?
+- What is seen vs. what is unseen in this situation?
+- What effects on ALL groups (not just the visible beneficiaries)?
 
-Source: ${source}
--> You KNOW this source's country and the event's category
--> DO NOT leave empty
+RULES for this field:
+- APPLY the philosophical reference. Do NOT name it.
+- Do NOT mention "advisors", "council", "panel", "thinkers", or philosopher names.
+- Do NOT use scorecard language, ratings, or grades.
+- Write as ONE cohesive analytical essay, not bullet points or fragmented sections.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CLASSIFICATION (STANDARDIZED VALUES)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FACTUAL ACCURACY — MANDATORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-The "classification" field must be EXACTLY one of these standardized values:
+- Base your analysis on the provided article content + your knowledge
+- NEVER invent facts, quotes, statistics, or events
+- If you are uncertain about a detail, acknowledge the uncertainty
+- Historical examples MUST be real and verifiable
+- Distinguish between verified facts and your analytical interpretation
+- It is BETTER to say "information is limited" than to fabricate details
 
-Based on final_score:
-* +8.1 to +10.0  -> "Extremely Revolutionary"
-* +6.1 to +8.0   -> "Revolutionary"
-* +4.1 to +6.0   -> "Moderately Revolutionary"
-* +2.1 to +4.0   -> "Constructive Critique"
-* +0.1 to +2.0   -> "Ambiguous, Leaning Realist"
-* -2.0 to 0.0    -> "Ambiguous, Leaning Evasion"
-* -4.0 to -2.1   -> "Soft Conformist"
-* -6.0 to -4.1   -> "Directly Conformist"
-* -8.0 to -6.1   -> "Strongly Conformist"
-* -10.0 to -8.1  -> "Doctrinally Conformist"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TONE & STYLE — MANDATORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-DO NOT paraphrase these labels (must match exactly).
+- Objective analyst. NOT a host, NOT a commentator, NOT a preacher.
+- NO interjections ("Wow!", "Interesting!", "Let's dive in!")
+- NO rhetorical questions as filler
+- NO mentioning "advisors", "council", "panel", "our thinkers"
+- NO scorecard, grades, ratings, or numerical assessments
+- NO philosophical classification labels
+- SINGLE coherent voice throughout. No digressions.
+- Precise terminology. Economic terms used correctly.
+- "Virtuous self-interest" (not "rational egoism")
+- "Sacrifice" = trading greater value for lesser value (not all trade-offs)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 MANDATORY RESPONSE FORMAT:
 - Return ONLY valid JSON
 - DO NOT include explanatory text before or after the JSON
-- DO NOT include comments or observations
 - DO NOT use markdown code blocks
 - Start your response directly with { and end with }
 
-EXPECTED JSON FORMAT EXAMPLE:
+EXPECTED JSON FORMAT:
 {
-  "scorecard": {
-    "ethics": {
-      "score": 7,
-      "justification": "Text analyzing ethics..."
-    },
-    "metaphysics": {
-      "score": 5,
-      "justification": "Text analyzing metaphysics..."
-    },
-    "epistemology": {
-      "score": 6,
-      "justification": "Text analyzing epistemology..."
-    },
-    "politics": {
-      "score": 8,
-      "justification": "Text analyzing politics..."
-    },
-    "aesthetics": {
-      "score": 7,
-      "justification": "Text analyzing aesthetics..."
-    },
-    "final_score": 6.8
-  },
-  "classification": "Moderately Revolutionary",
-  "philosophical_analysis": "Integrated synthesis...",
-  "philosophical_note": 8,
-  "historical_context": "Historical context...",
-  "creative_process": "Editorial context...",
-  "country": "[Country where the event occurred]",
-  "genre": "[News category]"
+  "the_facts": "5W+H factual foundation of the event...",
+  "source_analysis": "Analysis of the source, its bias, intention, and framing...",
+  "hits_and_misses": "Where the source is right (with reasons) and wrong (with reasons), plus omissions...",
+  "philosify_opinion": "Historical context (calibrated), real causes, future perspectives with probabilities, principled causal relationship...",
+  "country": "Country where the event occurred",
+  "genre": "News category (politics, economics, technology, etc.)"
 }
 
-CRITICAL: SCORECARD STRUCTURE VALIDATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Source: ${source}
+-> You KNOW this source's country and the event's category
+-> DO NOT leave country or genre empty
 
-BEFORE SUBMITTING YOUR RESPONSE, VERIFY:
-
-1. scorecard.ethics.score exists AND is an integer between -10 and +10
-2. scorecard.ethics.justification exists AND is not empty (100-150 words)
-3. scorecard.metaphysics.score exists AND is an integer between -10 and +10
-4. scorecard.metaphysics.justification exists AND is not empty (100-150 words)
-5. scorecard.epistemology.score exists AND is an integer between -10 and +10
-6. scorecard.epistemology.justification exists AND is not empty (100-150 words)
-7. scorecard.politics.score exists AND is an integer between -10 and +10
-8. scorecard.politics.justification exists AND is not empty (100-150 words)
-9. scorecard.aesthetics.score exists AND is an integer between -10 and +10
-10. scorecard.aesthetics.justification exists AND is not empty (100-150 words)
-11. scorecard.final_score exists AND matches weighted calculation
-
-IF ANY OF THE ABOVE IS MISSING OR EMPTY, YOUR RESPONSE WILL BE REJECTED.
-THE SCORECARD IS MANDATORY FOR ALL AI MODELS AND ALL LANGUAGES.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL: FACTUAL ACCURACY
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-YOU MUST BASE YOUR ANALYSIS ON ACCURATE KNOWLEDGE:
-- Use the provided article content as the primary source of facts
-- NEVER invent facts, quotes, statistics, or events not in the article
-- NEVER confuse this event with a different event
-- If you are not confident about specific details, acknowledge uncertainty
-- Base historical_context on verified facts about the event and its background
-
-MANDATORY VERIFICATION:
-- Confirm the article content is clear before analyzing it
-- If the article is incomplete or ambiguous, say so honestly
-- It is better to say "limited information available" than to fabricate content
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SCHOOL(S) OF THOUGHT - CLASSIFICATION (MANDATORY FIELD: schools_of_thought):
-
-USE ONLY THESE 17 SCHOOLS - NO EXCEPTIONS, NO INVENTIONS:
-
-1. OBJECTIVISM - Ayn Rand, Leonard Peikoff
-2. MARXISM - Karl Marx, Friedrich Engels
-3. STOICISM - Epictetus, Seneca, Marcus Aurelius
-4. EXISTENTIALISM - Sartre, Camus, de Beauvoir
-5. NIHILISM - Max Stirner, Nietzsche (diagnostic)
-6. UTILITARIANISM - Bentham, Mill, Singer
-7. DETERMINISM - Spinoza, d'Holbach
-8. HEDONISM - Aristippus, Epicurus
-9. PRAGMATISM - James, Dewey, Rorty
-10. ZEN/BUDDHISM - Nagarjuna, Dogen
-11. IDEALISM/KANTIANISM - Kant, Fichte, Hegel
-12. POSTMODERNISM - Foucault, Derrida, Butler
-13. SECULAR HUMANISM - Russell, Sagan, Pinker
-14. JUDAISM - Maimonides, Philo
-15. CATHOLICISM - Aquinas, Augustine
-16. PROTESTANTISM - Luther, Calvin
-17. ISLAM - Avicenna, Averroes
-
-FORBIDDEN NAMES (NEVER USE):
-- "Individualism", "Rational Individualism"
-- "Liberalism", "Classical Liberalism", "Libertarianism"
-- "Romanticism", "Humanism" (alone)
-- ANY name not in the 17 schools above
-
-CLASSIFICATION REQUIRES 5-AXIS ALIGNMENT.
-If alignment is partial or mixed -> use "Mixed/Uncertain" or list as Secondary/Peripheral.
-
-OBJECTIVISM DISQUALIFIERS - AUTOMATIC EXCLUSION:
-A news article CANNOT be classified as OBJECTIVISM if it contains:
-1. Religious/mystical elements (God, prayer, divine intervention, afterlife)
-2. Resignation/fatalism/passivity (acceptance without action)
-3. Altruism/self-sacrifice as moral duty (sacrifice for "the greater good")
-4. Collectivism (group identity over individual)
-5. Anti-reason/emotionalism ("follow your heart, not your head")
-
-EXCEPTION: Dying for a deeply loved person IS compatible with Objectivism (acting on highest values).
-
-ONE DISQUALIFIER = CANNOT BE OBJECTIVISM.
-
-If you cannot find a matching school -> "Mixed/Uncertain"
-NEVER invent a school name.
-
-You MUST include a top-level JSON field "schools_of_thought" (string) written in ${targetLanguage}.
-This MUST be a standalone container/section (NOT inside philosophical_analysis).
-Formatting requirement: return HTML (no markdown). Use <strong> for school names and <br/> for line breaks.
-
-ALL text in schools_of_thought MUST be in ${targetLanguage}, including ALL labels.
-
-REQUIRED STRUCTURE (ALL TEXT IN ${targetLanguage}):
-  <strong>${probableSchoolPrefix}</strong><br/><br/>
-  1. <strong>${L_schools.primary}:</strong> <SCHOOL NAME> - <Key Philosophers> (Level 1-2)<br/>
-  * ${L_schools.metaphysics}: <brief description><br/>
-  * ${L_schools.epistemology}: <brief description><br/>
-  * ${L_schools.ethics}: <brief description><br/>
-  * ${L_schools.politics}: <brief description><br/>
-  * ${L_schools.aesthetics}: <brief description><br/>
-  <em>${L_schools.evidence}:</em> <article-based justification><br/><br/>
-  2. <strong>${L_schools.secondary}:</strong> <SCHOOL - Philosophers> (Level 2-3) - <brief evidence><br/><br/>
-  3. <strong>${L_schools.peripheral}:</strong> <SCHOOL - Philosophers> (Level 3) - <brief evidence><br/><br/>
-  4. <strong>${L_schools.exclusions}:</strong> ${L_schools.not} <list schools clearly absent><br/><br/>
-  ${probableSchoolDisclaimer}
-
-DEPTH AND EXTENSIVENESS REQUIREMENTS:
-- Each justification: ~100-150 words, thorough and detailed
-- philosophical_analysis: 4-6 paragraphs, ~800-1200 words (do not exceed 1500)
-- historical_context: ~200-300 words (do not exceed 400)
-- creative_process: ~200-300 words (do not exceed 400) — NOTE: This field describes the journalistic/editorial context, NOT a creative writing process
-- Quality must be IDENTICAL across all languages
-
-REMEMBER: Your ENTIRE response must be ONLY the valid JSON object, nothing else.`;
+REMEMBER: Your ENTIRE response must be ONLY the valid JSON object, nothing else.
+REMEMBER: Write ALL text fields in ${targetLanguage}.`;
 }

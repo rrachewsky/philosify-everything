@@ -146,6 +146,10 @@
     "noSummary": "Aucun resume disponible pour cet article.",
     "justNow": "A l'instant",
     "analyzeAnother": "Analyser une Autre Actualite",
+    "theFactsTitle": "Les Faits",
+    "sourceAnalysisTitle": "Analyse de la Source",
+    "hitsAndMissesTitle": "Points Forts et Faiblesses",
+    "philosifyOpinionTitle": "L'Avis de Philosify",
     "sources": "Sources",
     "sourcePicker": {
       "title": "Sources d'Actualites",

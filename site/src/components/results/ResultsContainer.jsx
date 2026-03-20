@@ -132,6 +132,9 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
   const resolvedMediaType = mediaType !== 'music' ? mediaType : (result.media_type || 'music');
   const isLiterature = resolvedMediaType === 'literature';
   const isCinema = resolvedMediaType === 'cinema';
+  // News analysis uses a completely different rendering path (4 cards, no scorecard)
+  // Detect new format by checking for the_facts field; old cached results fall through to legacy rendering
+  const isNews = resolvedMediaType === 'news' && !!result.the_facts;
   const showCoverImage = isLiterature || isCinema;
 
   if (!result) return null;
@@ -257,7 +260,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
           )
         )}
 
-        {/* Cover Image (literature/cinema) or Spotify Player (music) */}
+        {/* Cover Image (literature/cinema) or Spotify Player (music) — NOT for news */}
         {showCoverImage ? (
           result.cover_url && (
             <div className="mt-5" style={{ textAlign: 'center' }}>
@@ -275,7 +278,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
             </div>
           )
         ) : (
-          spotifyEmbedSrc && (
+          !isNews && spotifyEmbedSrc && (
             <div className="mt-5">
               <iframe
                 key={spotifyTrackId || spotifyQuery}
@@ -298,8 +301,67 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         </div>
       )}
 
+      {/* ═══ NEWS-SPECIFIC: 4 Analysis Cards ═══ */}
+      {isNews && result.the_facts && (
+        <div className="result-card news-analysis-card">
+          <h3 className="result-card-title">
+            {t('news.theFactsTitle', { defaultValue: 'The Facts' })}
+          </h3>
+          <div
+            className="result-card-text"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(stripTrailingWordCount(result.the_facts)),
+            }}
+          />
+        </div>
+      )}
+
+      {isNews && result.source_analysis && (
+        <div className="result-card news-analysis-card">
+          <h3 className="result-card-title">
+            {t('news.sourceAnalysisTitle', { defaultValue: 'Source Analysis' })}
+          </h3>
+          <div
+            className="result-card-text"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(stripTrailingWordCount(result.source_analysis)),
+            }}
+          />
+        </div>
+      )}
+
+      {isNews && result.hits_and_misses && (
+        <div className="result-card news-analysis-card">
+          <h3 className="result-card-title">
+            {t('news.hitsAndMissesTitle', { defaultValue: 'Hits & Misses' })}
+          </h3>
+          <div
+            className="result-card-text"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(stripTrailingWordCount(result.hits_and_misses)),
+            }}
+          />
+        </div>
+      )}
+
+      {isNews && result.philosify_opinion && (
+        <div className="result-card news-analysis-card news-opinion-card">
+          <h3 className="result-card-title">
+            {t('news.philosifyOpinionTitle', { defaultValue: "Philosify's Opinion" })}
+          </h3>
+          <div
+            className="result-card-text"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(stripTrailingWordCount(result.philosify_opinion)),
+            }}
+          />
+        </div>
+      )}
+
+      {/* ═══ LEGACY SECTIONS (music, literature, cinema, old cached news) ═══ */}
+
       {/* 2. Historical Context */}
-      {result.historical_context && (
+      {!isNews && result.historical_context && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('historicalContext', { defaultValue: 'Historical Context' })}
@@ -314,7 +376,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
       )}
 
       {/* 3. Creative Process */}
-      {result.creative_process && (
+      {!isNews && result.creative_process && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('creativeProcess', { defaultValue: 'Creative Process' })}
@@ -328,11 +390,11 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         </div>
       )}
 
-      {/* 4. Weighted Philosophical Scorecard TABLE */}
-      {result.scorecard && <ScorecardTable scorecard={result.scorecard} />}
+      {/* 4. Weighted Philosophical Scorecard TABLE — not for news */}
+      {!isNews && result.scorecard && <ScorecardTable scorecard={result.scorecard} />}
 
-      {/* 5. Integrated Philosophical Analysis */}
-      {(() => {
+      {/* 5. Integrated Philosophical Analysis — not for news (replaced by 4 cards above) */}
+      {!isNews && (() => {
         // Shared pages may receive the integrated essay in different fields depending on API/db schema.
         // Prefer philosophical_analysis, but fall back to summary/integrated_analysis when needed.
         const integrated =
@@ -428,8 +490,8 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         </div>
       )}
 
-      {/* 6. Philosophical Weighted Score */}
-      {(result.scorecard?.final_score ?? result.final_score ?? result.overall_grade) !==
+      {/* 6. Philosophical Weighted Score — not for news */}
+      {!isNews && (result.scorecard?.final_score ?? result.final_score ?? result.overall_grade) !==
         undefined && (
         <div className="result-card">
           <h3 className="result-card-title">
@@ -441,8 +503,8 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         </div>
       )}
 
-      {/* 7. Philosophical Note */}
-      {result.philosophical_note && (
+      {/* 7. Philosophical Note — not for news */}
+      {!isNews && result.philosophical_note && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('philosophicalNote', { defaultValue: 'Philosophical Note' })}
@@ -453,8 +515,8 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         </div>
       )}
 
-      {/* 8. Philosophical Classification */}
-      {result.classification && (
+      {/* 8. Philosophical Classification — not for news */}
+      {!isNews && result.classification && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('philosophicalClassification', { defaultValue: 'Philosophical Classification' })}
@@ -472,7 +534,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
             analysisId={result.id}
             songName={result.song || result.song_name || result.title}
             artist={result.artist || result.author}
-            shareText={t(mediaType === 'literature' ? 'share.shareLiteratureText' : 'share.shareMusicText', { title: result.song || result.song_name || result.title, artist: result.artist || result.author })}
+            shareText={t(isNews ? 'share.shareNewsText' : (mediaType === 'literature' ? 'share.shareLiteratureText' : 'share.shareMusicText'), { title: result.song || result.song_name || result.title, artist: result.artist || result.author })}
           />
           <ShareToDMButton
             analysisId={result.id}

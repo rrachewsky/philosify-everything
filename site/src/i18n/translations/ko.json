@@ -146,6 +146,10 @@
     "noSummary": "이 기사에 대한 요약이 없습니다.",
     "justNow": "방금",
     "analyzeAnother": "다른 뉴스 분석",
+    "theFactsTitle": "사실",
+    "sourceAnalysisTitle": "출처 분석",
+    "hitsAndMissesTitle": "적중과 오류",
+    "philosifyOpinionTitle": "Philosify의 견해",
     "sources": "소스",
     "sourcePicker": {
       "title": "뉴스 소스",

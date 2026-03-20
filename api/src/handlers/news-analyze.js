@@ -1,17 +1,15 @@
 // ============================================================
 // NEWS ANALYSIS HANDLER
-// Full philosophical analysis for news articles (1 credit)
+// Full analysis for news articles (1 credit)
 // Uses KV for caching (deterministic key: news:{sha256(title+source)}:{model}:{lang})
+// Returns: the_facts, source_analysis, hits_and_misses, philosify_opinion
+// No scorecard, no classification, no philosophical note.
 // ============================================================
 
 import { jsonResponse } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
-import { getGuide } from "../guides/index.js";
+import { getGuide, getWrapupSource } from "../guides/index.js";
 import { analyzeNewsPhilosophy } from "../ai/news-orchestrator.js";
-import { calculateWeightedScore } from "../config/scoring.js";
-import { calculatePhilosophicalNote } from "../ai/prompts/calculator.js";
-import { normalizeClassification } from "../ai/parser.js";
-import { localizeClassification } from "../ai/classification-i18n.js";
 
 async function hashKey(str) {
   const encoder = new TextEncoder();
@@ -43,18 +41,6 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
     if (cached) {
       console.log(`[NewsAnalyze] Cache HIT: ${cacheKey}`);
       const result = JSON.parse(cached);
-      const finalScore = calculateWeightedScore({
-        ethics: result.scorecard?.ethics?.score || 0,
-        metaphysics: result.scorecard?.metaphysics?.score || 0,
-        epistemology: result.scorecard?.epistemology?.score || 0,
-        politics: result.scorecard?.politics?.score || 0,
-        aesthetics: result.scorecard?.aesthetics?.score || 0,
-      });
-      result.final_score = finalScore;
-      result.scorecard.final_score = finalScore;
-      result.classification = normalizeClassification("", finalScore);
-      result.classification_localized = localizeClassification(result.classification, lang);
-      result.philosophical_note = calculatePhilosophicalNote(finalScore);
       result.cached = true;
       return jsonResponse(result, 200, origin, env);
     }
@@ -81,8 +67,14 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
         description: description || "",
       };
 
-      // Load philosophical guide (main guide for news — deals with real-world ethics/politics)
-      const guide = await getGuide(env);
+      // Load philosophical guide + source of truth (owner's voice) in parallel
+      const [guide, sourceOfTruth] = await Promise.all([
+        getGuide(env),
+        getWrapupSource(env).catch((err) => {
+          console.warn(`[NewsAnalyze] Source of truth unavailable: ${err.message}`);
+          return "";
+        }),
+      ]);
 
       // Build article text from available content
       const articleText = [
@@ -90,13 +82,14 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
         body.aiSummary || "",
       ].filter(Boolean).join("\n\n") || `News headline: ${title}. Source: ${source || "Unknown"}. Use your own knowledge of this event.`;
 
-      // Run AI analysis
+      // Run AI analysis (with sourceOfTruth)
       const analysis = await analyzeNewsPhilosophy(
         title,
         source || "",
         articleText,
         newsMetadata,
         guide,
+        sourceOfTruth,
         model,
         lang,
         env,
@@ -111,7 +104,7 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
         console.warn(`[NewsAnalyze] Guide proof failed: ${e.message}`);
       }
 
-      // Build response
+      // Build response — new structure with 4 analysis fields
       const result = {
         id: crypto.randomUUID(),
         title,
@@ -123,23 +116,22 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
         guide_proof: guideProof,
         country: analysis.country || "",
         genre: analysis.genre || topic || "",
-        historical_context: analysis.historical_context || "",
-        creative_process: analysis.creative_process || "",
-        philosophical_analysis: analysis.philosophical_analysis || "",
-        schools_of_thought: analysis.schools_of_thought || "",
-        summary: analysis.summary || "",
-        classification: analysis.classification || "",
-        classification_localized: localizeClassification(analysis.classification, lang),
-        philosophical_note: analysis.philosophical_note || 5,
-        ethics_analysis: analysis.scorecard?.ethics?.justification || "",
-        metaphysics_analysis: analysis.scorecard?.metaphysics?.justification || "",
-        epistemology_analysis: analysis.scorecard?.epistemology?.justification || "",
-        politics_analysis: analysis.scorecard?.politics?.justification || "",
-        aesthetics_analysis: analysis.scorecard?.aesthetics?.justification || "",
-        scorecard: analysis.scorecard || {},
-        overall_grade: analysis.final_score || 0,
-        final_score: analysis.final_score || 0,
-        ethics_score: analysis.scorecard?.ethics?.score || 0,
+        // New analysis fields
+        the_facts: analysis.the_facts || "",
+        source_analysis: analysis.source_analysis || "",
+        hits_and_misses: analysis.hits_and_misses || "",
+        philosify_opinion: analysis.philosify_opinion || "",
+        // Legacy fields set to null for frontend compatibility
+        scorecard: null,
+        classification: null,
+        classification_localized: null,
+        philosophical_note: null,
+        philosophical_analysis: null,
+        historical_context: null,
+        creative_process: null,
+        schools_of_thought: null,
+        final_score: null,
+        overall_grade: null,
         metadata: {
           model: analysis.model,
           guide_sha256: guideProof.sha256,

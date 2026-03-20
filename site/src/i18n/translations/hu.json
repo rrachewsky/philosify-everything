@@ -146,6 +146,10 @@
     "noSummary": "Ehhez a cikkhez nincs osszefoglalo.",
     "justNow": "Epp most",
     "analyzeAnother": "Masik Hir Elemzese",
+    "theFactsTitle": "A Tenyek",
+    "sourceAnalysisTitle": "Forras Elemzese",
+    "hitsAndMissesTitle": "Talalatok es Hianyossagok",
+    "philosifyOpinionTitle": "A Philosify Velemenye",
     "sources": "Forrasok",
     "sourcePicker": {
       "title": "Hirforrasok",

@@ -146,6 +146,10 @@
     "noSummary": "此文章无摘要。",
     "justNow": "刚刚",
     "analyzeAnother": "分析另一条新闻",
+    "theFactsTitle": "事实",
+    "sourceAnalysisTitle": "来源分析",
+    "hitsAndMissesTitle": "正确与错误",
+    "philosifyOpinionTitle": "Philosify的观点",
     "sources": "来源",
     "sourcePicker": {
       "title": "新闻来源",
