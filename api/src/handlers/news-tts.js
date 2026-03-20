@@ -11,6 +11,83 @@ import { getSecret } from "../utils/secrets.js";
 const TTS_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent";
 
+// Acronym expansion — TTS reads these as full words, not letter-by-letter
+const ACRONYMS = {
+  en: {
+    "USA": "United States", "US": "United States", "U.S.": "United States",
+    "UK": "United Kingdom", "U.K.": "United Kingdom",
+    "EU": "European Union", "E.U.": "European Union",
+    "UN": "United Nations", "U.N.": "United Nations",
+    "NATO": "North Atlantic Treaty Organization",
+    "FBI": "Federal Bureau of Investigation", "CIA": "Central Intelligence Agency",
+    "GDP": "Gross Domestic Product", "IMF": "International Monetary Fund",
+    "WHO": "World Health Organization", "WTO": "World Trade Organization",
+    "AI": "Artificial Intelligence", "CEO": "Chief Executive Officer",
+    "IPO": "Initial Public Offering", "NYSE": "New York Stock Exchange",
+    "SEC": "Securities and Exchange Commission", "FED": "Federal Reserve",
+    "GOP": "Republican Party", "SCOTUS": "Supreme Court",
+    "OPEC": "Organization of the Petroleum Exporting Countries",
+    "BRICS": "Brazil Russia India China South Africa",
+    "ICC": "International Criminal Court", "ICJ": "International Court of Justice",
+    "NGO": "Non-governmental Organization", "PM": "Prime Minister",
+    "VP": "Vice President", "DOJ": "Department of Justice",
+  },
+  pt: {
+    "EUA": "Estados Unidos", "E.U.A.": "Estados Unidos",
+    "UE": "União Europeia", "U.E.": "União Europeia",
+    "ONU": "Organização das Nações Unidas",
+    "OTAN": "Organização do Tratado do Atlântico Norte",
+    "PIB": "Produto Interno Bruto", "FMI": "Fundo Monetário Internacional",
+    "OMS": "Organização Mundial da Saúde", "OMC": "Organização Mundial do Comércio",
+    "IA": "Inteligência Artificial", "CEO": "Diretor Executivo",
+    "STF": "Supremo Tribunal Federal", "TSE": "Tribunal Superior Eleitoral",
+    "PF": "Polícia Federal", "BC": "Banco Central",
+    "IBGE": "Instituto Brasileiro de Geografia e Estatística",
+    "BNDES": "Banco Nacional de Desenvolvimento",
+    "ONG": "Organização Não Governamental", "PM": "Primeiro Ministro",
+    "VP": "Vice Presidente", "EBC": "Empresa Brasil de Comunicação",
+    "USA": "Estados Unidos", "US": "Estados Unidos",
+    "UK": "Reino Unido", "EU": "União Europeia", "UN": "Nações Unidas",
+    "NATO": "OTAN", "FBI": "FBI Polícia Federal Americana",
+    "CIA": "Agência Central de Inteligência", "GDP": "PIB",
+    "IMF": "FMI", "WHO": "OMS", "WTO": "OMC", "AI": "Inteligência Artificial",
+    "BRICS": "Brasil Rússia Índia China África do Sul",
+    "ICC": "Tribunal Penal Internacional", "NGO": "ONG",
+  },
+  es: {
+    "EE.UU.": "Estados Unidos", "EEUU": "Estados Unidos", "EUA": "Estados Unidos",
+    "UE": "Unión Europea", "ONU": "Organización de las Naciones Unidas",
+    "OTAN": "Organización del Tratado del Atlántico Norte",
+    "PIB": "Producto Interno Bruto", "FMI": "Fondo Monetario Internacional",
+    "OMS": "Organización Mundial de la Salud",
+    "IA": "Inteligencia Artificial", "ONG": "Organización No Gubernamental",
+    "USA": "Estados Unidos", "US": "Estados Unidos",
+    "UK": "Reino Unido", "EU": "Unión Europea", "UN": "Naciones Unidas",
+    "NATO": "OTAN", "GDP": "PIB", "IMF": "FMI", "WHO": "OMS",
+    "AI": "Inteligencia Artificial", "BRICS": "Brasil Rusia India China Sudáfrica",
+    "NGO": "ONG", "PM": "Primer Ministro",
+  },
+};
+
+function expandAcronyms(text, lang) {
+  // Use language-specific acronyms, fall back to English
+  const langAcronyms = ACRONYMS[lang] || {};
+  const enAcronyms = ACRONYMS.en || {};
+  // Merge: language-specific takes precedence over English
+  const merged = { ...enAcronyms, ...langAcronyms };
+
+  let result = text;
+  // Sort by length descending so longer acronyms match first (e.g. "E.U.A." before "EU")
+  const sorted = Object.entries(merged).sort((a, b) => b[0].length - a[0].length);
+  for (const [acronym, expansion] of sorted) {
+    // Word boundary match — only replace standalone acronyms, not parts of words
+    const escaped = acronym.replace(/\./g, "\\.").replace(/\$/g, "\\$");
+    const regex = new RegExp(`\\b${escaped}\\b`, "g");
+    result = result.replace(regex, expansion);
+  }
+  return result;
+}
+
 // Rotate through Gemini TTS voices for each chunk
 const VOICES = ["Puck", "Charon", "Kore", "Fenrir", "Aoede"];
 
@@ -85,16 +162,19 @@ export async function handleNewsTTS(request, env, origin) {
 
     const apiKey = await getSecret(env.GEMINI_API_KEY);
 
-    // Clean markdown + pronunciation
-    const clean = text
-      .replace(/\*\*([^*]+)\*\*/g, "$1")
-      .replace(/\*([^*]+)\*/g, "$1")
-      .replace(/#{1,4}\s*/g, "")
-      .replace(/\n{3,}/g, "\n\n")
-      .replace(/Philosify/gi, "Filosifai")
-      .replace(/\bPeikoff\b/g, "Peekoff")
-      .replace(/\bAyn\b/g, "Ine")
-      .trim();
+    // Clean markdown + pronunciation + expand acronyms
+    const clean = expandAcronyms(
+      text
+        .replace(/\*\*([^*]+)\*\*/g, "$1")
+        .replace(/\*([^*]+)\*/g, "$1")
+        .replace(/#{1,4}\s*/g, "")
+        .replace(/\n{3,}/g, "\n\n")
+        .replace(/Philosify/gi, "Filosifai")
+        .replace(/\bPeikoff\b/g, "Peekoff")
+        .replace(/\bAyn\b/g, "Ine")
+        .trim(),
+      lang || "en",
+    );
 
     console.log(`[NewsTTS] ${clean.length} chars`);
 

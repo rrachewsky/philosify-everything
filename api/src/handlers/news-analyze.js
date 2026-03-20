@@ -10,6 +10,8 @@ import { jsonResponse } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getGuide, getWrapupSource } from "../guides/index.js";
 import { analyzeNewsPhilosophy } from "../ai/news-orchestrator.js";
+import { getSecret } from "../utils/secrets.js";
+import { logUserAnalysisRequest } from "../ai/storage.js";
 
 async function hashKey(str) {
   const encoder = new TextEncoder();
@@ -42,6 +44,25 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
       console.log(`[NewsAnalyze] Cache HIT: ${cacheKey}`);
       const result = JSON.parse(cached);
       result.cached = true;
+
+      // Log user request for history (even on cache hit)
+      if (result.id && user.userId) {
+        try {
+          const sbUrl = await getSecret(env.SUPABASE_URL);
+          const sbKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+          if (sbUrl && sbKey) {
+            await logUserAnalysisRequest(sbUrl, sbKey, user.userId, result.id, {
+              lang: body.lang || "en",
+              model: body.model || "grok",
+              media_type: "news",
+              cached: true,
+            });
+          }
+        } catch (logErr) {
+          console.warn(`[NewsAnalyze] Cache hit log failed (non-fatal): ${logErr.message}`);
+        }
+      }
+
       return jsonResponse(result, 200, origin, env);
     }
 
@@ -144,9 +165,153 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
         created_at: new Date().toISOString(),
       };
 
-      // Store in KV (permanent)
+      // Store in KV cache
       await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
       console.log(`[NewsAnalyze] Cached: ${cacheKey}`);
+
+      // Save to Supabase for user history (same pattern as music/books/films)
+      try {
+        const sbUrl = await getSecret(env.SUPABASE_URL);
+        const sbKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+        if (sbUrl && sbKey) {
+          // Step 1: Upsert into songs table (reuse for news — spotify_id = news:hash)
+          const newsSpotifyId = `news:${titleHash}`;
+          let songId = null;
+
+          // Check if exists
+          const existRes = await fetch(
+            `${sbUrl}/rest/v1/songs?spotify_id=eq.${encodeURIComponent(newsSpotifyId)}&select=id`,
+            { headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` } },
+          );
+          const existing = existRes.ok ? await existRes.json() : [];
+          if (existing.length > 0) {
+            songId = existing[0].id;
+          } else {
+            const createRes = await fetch(`${sbUrl}/rest/v1/songs`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                apikey: sbKey,
+                Authorization: `Bearer ${sbKey}`,
+                Prefer: "return=representation",
+              },
+              body: JSON.stringify({
+                title: title,
+                artist: source || "News",
+                spotify_id: newsSpotifyId,
+                lyrics: "",
+                status: "published",
+              }),
+            });
+            if (createRes.ok) {
+              const created = await createRes.json();
+              songId = created[0]?.id;
+            } else if (createRes.status === 409) {
+              // Conflict — already exists, fetch it
+              const retryRes = await fetch(
+                `${sbUrl}/rest/v1/songs?spotify_id=eq.${encodeURIComponent(newsSpotifyId)}&select=id`,
+                { headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` } },
+              );
+              const retryData = retryRes.ok ? await retryRes.json() : [];
+              songId = retryData[0]?.id;
+            }
+          }
+
+          if (songId) {
+            // Step 2: Insert into analyses table (null scores — news has no scorecard)
+            const analysisData = {
+              song_id: songId,
+              language: lang,
+              model: analysis.model || "grok",
+              version: 1,
+              ethics_score: 0,
+              metaphysics_score: 0,
+              epistemology_score: 0,
+              politics_score: 0,
+              aesthetics_score: 0,
+              final_score: 0,
+              philosophical_analysis: [
+                result.the_facts,
+                result.source_analysis,
+                result.hits_and_misses,
+                result.philosify_opinion,
+              ].filter(Boolean).join("\n\n"),
+              summary: result.the_facts || "",
+              classification: "news",
+              philosophical_note: null,
+              genre: result.genre || topic || "news",
+              country: result.country || "",
+              historical_context: null,
+              creative_process: null,
+              metadata: {
+                media_type: "news",
+                the_facts: result.the_facts,
+                source_analysis: result.source_analysis,
+                hits_and_misses: result.hits_and_misses,
+                philosify_opinion: result.philosify_opinion,
+                guide_sha256: guideProof.sha256,
+                guide_signature: guideProof.signature,
+                guide_version: guideProof.version,
+                publishedAt,
+                topic,
+              },
+              status: "published",
+            };
+
+            const insertRes = await fetch(`${sbUrl}/rest/v1/analyses`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                apikey: sbKey,
+                Authorization: `Bearer ${sbKey}`,
+                Prefer: "return=representation",
+              },
+              body: JSON.stringify(analysisData),
+            });
+
+            if (insertRes.ok) {
+              const saved = await insertRes.json();
+              const analysisId = saved[0]?.id;
+              result.id = analysisId || result.id;
+              console.log(`[NewsAnalyze] Saved to Supabase: ${analysisId}`);
+
+              // Step 3: Log user request for history
+              if (user.userId && analysisId) {
+                await logUserAnalysisRequest(sbUrl, sbKey, user.userId, analysisId, {
+                  lang,
+                  model: analysis.model,
+                  media_type: "news",
+                });
+              }
+            } else if (insertRes.status === 409) {
+              // Already exists — just log the user request
+              console.log(`[NewsAnalyze] Analysis already in Supabase (409), logging user request`);
+              const findRes = await fetch(
+                `${sbUrl}/rest/v1/analyses?song_id=eq.${songId}&language=eq.${lang}&status=eq.published&select=id`,
+                { headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` } },
+              );
+              const found = findRes.ok ? await findRes.json() : [];
+              if (found[0]?.id && user.userId) {
+                result.id = found[0].id;
+                await logUserAnalysisRequest(sbUrl, sbKey, user.userId, found[0].id, {
+                  lang,
+                  model: analysis.model,
+                  media_type: "news",
+                  cached: true,
+                });
+              }
+            } else {
+              console.warn(`[NewsAnalyze] Supabase insert failed: ${insertRes.status}`);
+            }
+          }
+        }
+      } catch (dbErr) {
+        // Don't fail the analysis if Supabase save fails — KV cache is still valid
+        console.error(`[NewsAnalyze] Supabase save failed (non-fatal): ${dbErr.message}`);
+      }
+
+      // Update KV with the real Supabase ID
+      await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
 
       // Confirm credit
       await confirmReservation(env, reservation.reservationId, `news-analysis:${title.substring(0, 50)}`);
