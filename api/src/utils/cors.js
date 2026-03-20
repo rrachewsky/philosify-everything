@@ -24,15 +24,16 @@ export function getCorsHeaders(origin, env = {}) {
   const safeOrigin = typeof origin === "string" ? origin : "";
 
   // Security headers (shared across all responses)
+  // NOTE: CSP is NOT included here — CSP belongs on HTML documents (served by Cloudflare Pages),
+  // not on API JSON responses. Including CSP on API responses causes conflicts with the
+  // frontend's CSP when the browser applies both.
   const securityHeaders = {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "geolocation=(), microphone=(), camera=()",
-    "Cross-Origin-Resource-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "cross-origin",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-    "Content-Security-Policy":
-      "default-src 'self'; script-src 'self' 'unsafe-inline' https://open.spotify.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src https://open.spotify.com https://js.stripe.com; connect-src 'self' https://*.supabase.co https://api.stripe.com; img-src 'self' data: https://i.scdn.co https://*.spotify.com",
   };
 
   // Allow localhost only in non-production environments (exact hostname match)
@@ -45,7 +46,7 @@ export function getCorsHeaders(origin, env = {}) {
       ) {
         return {
           "Access-Control-Allow-Origin": safeOrigin,
-          "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
           "Access-Control-Allow-Headers":
             "Content-Type, Authorization, X-Admin-Secret",
           "Access-Control-Allow-Credentials": "true",
@@ -87,7 +88,7 @@ export function getCorsHeaders(origin, env = {}) {
 
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
     "Access-Control-Allow-Headers":
       "Content-Type, Authorization, X-Admin-Secret",
     "Access-Control-Allow-Credentials": "true",
