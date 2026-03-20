@@ -144,22 +144,37 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
     // Determine which sources to use
     let sourcesToUse = DEFAULT_SOURCE_IDS;
     const userHasCustomSources = unlocked && enabledSources && Array.isArray(enabledSources) && enabledSources.length > 0;
-    if (userHasCustomSources) {
+
+    // If user has ALL (or nearly all) sources enabled, skip filtering entirely
+    // This avoids false negatives where GNews source names don't match our name map
+    const ALL_SOURCES_COUNT = Object.values(NEWS_SOURCES).reduce((sum, cat) => sum + cat.sources.length, 0);
+    const userHasAllSources = userHasCustomSources && enabledSources.length >= ALL_SOURCES_COUNT - 5;
+
+    if (userHasCustomSources && !userHasAllSources) {
       sourcesToUse = enabledSources;
-      console.log(`[News] User has custom sources: ${sourcesToUse.length} selected: [${sourcesToUse.join(", ")}]`);
-      // Log first 5 article sources for debugging
+      console.log(`[News] User has custom sources: ${sourcesToUse.length}/${ALL_SOURCES_COUNT} selected`);
       console.log(`[News] Sample article sources: [${articles.slice(0, 5).map(a => a.source).join(", ")}]`);
+    } else if (userHasAllSources) {
+      console.log(`[News] User has all/nearly all sources (${enabledSources.length}/${ALL_SOURCES_COUNT}), skipping source filter`);
     }
 
-    // Filter articles by enabled sources (debug=true if user has custom sources to trace matching)
-    const filteredArticles = articles.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
-    const filteredHighlights = highlights.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
+    // Filter articles by enabled sources — skip if user has all sources enabled
+    let filteredArticles, filteredHighlights, useFiltered;
 
-    // If user has custom sources, always use filtered results (even if few/none)
-    // Only fall back to all if user is NOT unlocked (using defaults)
-    const useFiltered = userHasCustomSources || filteredArticles.length > 0;
+    if (userHasAllSources) {
+      // All sources enabled — no filtering, show everything
+      filteredArticles = articles;
+      filteredHighlights = highlights;
+      useFiltered = true;
+    } else {
+      filteredArticles = articles.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
+      filteredHighlights = highlights.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
+      // If user has custom sources, always use filtered results (even if few/none)
+      // Only fall back to all if user is NOT unlocked (using defaults)
+      useFiltered = userHasCustomSources || filteredArticles.length > 0;
+    }
 
-    console.log(`[News] Filtering: ${articles.length} total, ${filteredArticles.length} matched, userCustom=${userHasCustomSources}, useFiltered=${useFiltered}`);
+    console.log(`[News] Filtering: ${articles.length} total, ${filteredArticles.length} matched, userCustom=${userHasCustomSources}, allSources=${userHasAllSources}, useFiltered=${useFiltered}`);
 
     return jsonResponse(
       {
