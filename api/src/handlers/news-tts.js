@@ -220,6 +220,41 @@ function buildWav(pcmArrays) {
   return wav;
 }
 
+// R2 cache helpers for TTS audio
+async function hashForCache(str) {
+  const data = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("").substring(0, 32);
+}
+
+async function getFromR2(env, key) {
+  if (!env.TTS_CACHE) return null;
+  try {
+    const obj = await env.TTS_CACHE.get(key);
+    if (obj) {
+      console.log(`[NewsTTS] R2 cache HIT: ${key}`);
+      return await obj.arrayBuffer();
+    }
+    console.log(`[NewsTTS] R2 cache MISS: ${key}`);
+    return null;
+  } catch (e) {
+    console.error(`[NewsTTS] R2 read error: ${e.message}`);
+    return null;
+  }
+}
+
+async function saveToR2(env, key, buffer) {
+  if (!env.TTS_CACHE) return;
+  try {
+    await env.TTS_CACHE.put(key, buffer, {
+      httpMetadata: { contentType: "audio/wav", cacheControl: "public, max-age=31536000" },
+    });
+    console.log(`[NewsTTS] R2 cache SAVED: ${key} (${buffer.byteLength} bytes)`);
+  } catch (e) {
+    console.error(`[NewsTTS] R2 save error: ${e.message}`);
+  }
+}
+
 export async function handleNewsTTS(request, env, origin) {
   const cors = {
     "Access-Control-Allow-Origin": origin || "*",
@@ -232,6 +267,17 @@ export async function handleNewsTTS(request, env, origin) {
 
     const { text, title, lang } = await request.json();
     if (!text) return jsonResponse({ error: "No text" }, 400, origin, env);
+
+    // Check R2 cache first (deterministic key from text content + lang)
+    const textHash = await hashForCache(`${text}:${lang || "en"}`);
+    const r2Key = `news-tts/${lang || "en"}/${textHash}.wav`;
+    const cached = await getFromR2(env, r2Key);
+    if (cached) {
+      return new Response(cached, {
+        status: 200,
+        headers: { "Content-Type": "audio/wav", ...cors },
+      });
+    }
 
     const apiKey = await getSecret(env.GEMINI_API_KEY);
 
@@ -291,6 +337,9 @@ export async function handleNewsTTS(request, env, origin) {
 
     const wav = buildWav(allPcm);
     console.log(`[NewsTTS] Done: ${wav.byteLength} bytes`);
+
+    // Save to R2 for future requests
+    await saveToR2(env, r2Key, wav);
 
     return new Response(wav, {
       status: 200,
