@@ -52,8 +52,12 @@ export function useNewsSidebar() {
   const close = useCallback(() => {
     setIsOpen(false);
     setSelectedArticle(null);
+    setAnalysisResult(null);
+    setAnalysisError(null);
     setPanelResult(null);
     setPanelError(null);
+    setIsAnalyzing(false);
+    setPanelLoading(false);
     setElapsedTime(0);
     if (timerRef.current) {
       clearInterval(timerRef.current);
