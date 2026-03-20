@@ -38,13 +38,11 @@ const SOURCE_ALIASES = {
 
 for (const cat of Object.values(NEWS_SOURCES)) {
   for (const src of cat.sources) {
-    // Map ID to lowercase name variations
     const variations = [
       src.name.toLowerCase(),
       src.id.replace(/-/g, " "),
       src.id.replace(/-/g, ""),
     ];
-    // Add any custom aliases
     if (SOURCE_ALIASES[src.id]) {
       variations.push(...SOURCE_ALIASES[src.id]);
     }
@@ -54,41 +52,19 @@ for (const cat of Object.values(NEWS_SOURCES)) {
 
 /**
  * Check if an article's source matches any of the enabled source IDs.
- * Uses strict matching to avoid false positives.
+ * Uses bidirectional substring matching (the original working logic).
  */
-function articleMatchesSource(article, enabledSourceIds, debug = false) {
+function articleMatchesSource(article, enabledSourceIds) {
   const articleSource = (article.source || "").toLowerCase().trim();
   if (!articleSource) return false;
 
   for (const sourceId of enabledSourceIds) {
     const nameVariations = SOURCE_NAME_MAP[sourceId] || [];
     for (const variation of nameVariations) {
-      // Method 1: Article source contains the variation (e.g., "Reuters News" contains "reuters")
-      if (articleSource.includes(variation)) {
-        if (debug) {
-          console.log(`[News] MATCH: "${articleSource}" contains "${variation}" (source: ${sourceId})`);
-        }
-        return true;
-      }
-      // Method 2: Variation contains article source, but ONLY if article source is 4+ chars
-      // to avoid false positives (e.g., "ap" matching "associated press")
-      if (articleSource.length >= 4 && variation.includes(articleSource)) {
-        if (debug) {
-          console.log(`[News] MATCH: "${variation}" contains "${articleSource}" (source: ${sourceId})`);
-        }
-        return true;
-      }
-      // Method 3: Exact match for short sources (2-3 chars like "ap", "bbc", "nbc")
-      if (articleSource.length <= 3 && articleSource === variation) {
-        if (debug) {
-          console.log(`[News] MATCH: "${articleSource}" exact match "${variation}" (source: ${sourceId})`);
-        }
+      if (articleSource.includes(variation) || variation.includes(articleSource)) {
         return true;
       }
     }
-  }
-  if (debug) {
-    console.log(`[News] NO MATCH: "${articleSource}" did not match any of [${enabledSourceIds.join(", ")}]`);
   }
   return false;
 }
@@ -103,9 +79,9 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
     let highlights = cached.highlights || [];
 
     // Deduplicate: remove articles that also appear in highlights (by URL or title)
-    const highlightUrls = new Set(highlights.map(h => h.url));
-    const highlightTitles = new Set(highlights.map(h => h.title?.toLowerCase().trim()));
-    articles = articles.filter(a => {
+    const highlightUrls = new Set(highlights.map((h) => h.url));
+    const highlightTitles = new Set(highlights.map((h) => h.title?.toLowerCase().trim()));
+    articles = articles.filter((a) => {
       const isDupe = highlightUrls.has(a.url) || highlightTitles.has(a.title?.toLowerCase().trim());
       return !isDupe;
     });
@@ -125,7 +101,7 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
               apikey: sbKey,
               Authorization: `Bearer ${sbKey}`,
             },
-          }
+          },
         );
 
         if (res.ok) {
@@ -137,48 +113,23 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
         }
       }
     } catch (authErr) {
-      // Ignore auth errors - user is not logged in or token expired
       console.log("[News] No auth or preferences, using defaults");
     }
 
     // Determine which sources to use
     let sourcesToUse = DEFAULT_SOURCE_IDS;
-    const userHasCustomSources = unlocked && enabledSources && Array.isArray(enabledSources) && enabledSources.length > 0;
-
-    // If user has ALL (or nearly all) sources enabled, skip filtering entirely
-    // This avoids false negatives where GNews source names don't match our name map
-    const ALL_SOURCES_COUNT = Object.values(NEWS_SOURCES).reduce((sum, cat) => sum + cat.sources.length, 0);
-    const userHasAllSources = userHasCustomSources && enabledSources.length >= ALL_SOURCES_COUNT - 5;
-
-    if (userHasCustomSources && !userHasAllSources) {
+    if (unlocked && enabledSources && Array.isArray(enabledSources) && enabledSources.length > 0) {
       sourcesToUse = enabledSources;
-      console.log(`[News] User has custom sources: ${sourcesToUse.length}/${ALL_SOURCES_COUNT} selected`);
-      console.log(`[News] Sample article sources: [${articles.slice(0, 5).map(a => a.source).join(", ")}]`);
-    } else if (userHasAllSources) {
-      console.log(`[News] User has all/nearly all sources (${enabledSources.length}/${ALL_SOURCES_COUNT}), skipping source filter`);
+      console.log(`[News] User has custom sources: ${sourcesToUse.length} selected`);
     }
 
-    // Filter articles by enabled sources — skip if user has all sources enabled
-    let filteredArticles, filteredHighlights, useFiltered;
+    // Filter articles by enabled sources
+    const filteredArticles = articles.filter((a) => articleMatchesSource(a, sourcesToUse));
+    const filteredHighlights = highlights.filter((a) => articleMatchesSource(a, sourcesToUse));
 
-    if (userHasAllSources) {
-      // All sources enabled — no filtering, show everything
-      filteredArticles = articles;
-      filteredHighlights = highlights;
-      useFiltered = true;
-    } else {
-      filteredArticles = articles.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
-      filteredHighlights = highlights.filter((a) => articleMatchesSource(a, sourcesToUse, userHasCustomSources));
-      // Fall back to all articles if filtering produces too few results
-      // (GNews source names often don't match our name map exactly)
-      const minArticles = 5;
-      useFiltered = filteredArticles.length >= minArticles;
-      if (!useFiltered && userHasCustomSources) {
-        console.warn(`[News] Source filter too strict: only ${filteredArticles.length} matched (need ${minArticles}), falling back to all ${articles.length} articles`);
-      }
-    }
-
-    console.log(`[News] Filtering: ${articles.length} total, ${filteredArticles.length} matched, userCustom=${userHasCustomSources}, allSources=${userHasAllSources}, useFiltered=${useFiltered}`);
+    // If filtering results in too few articles, fall back to all
+    const minArticles = 5;
+    const useFiltered = filteredArticles.length >= minArticles;
 
     return jsonResponse(
       {
@@ -190,7 +141,6 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
         lang: cached.lang || "en",
         filtered: useFiltered,
         unlocked,
-        selectedSources: userHasCustomSources ? enabledSources.length : null,
       },
       200,
       origin,
