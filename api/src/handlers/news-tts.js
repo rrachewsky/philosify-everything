@@ -128,7 +128,11 @@ const ACRONYMS = {
  * - Subsequent occurrences: phonetic pronunciation (natural speech)
  */
 function expandAcronyms(text, lang) {
-  const langAcronyms = ACRONYMS[lang] || {};
+  // Only expand for languages where we have verified native pronunciations
+  // Other languages: let Gemini TTS handle acronyms natively
+  if (!ACRONYMS[lang]) return text;
+
+  const langAcronyms = ACRONYMS[lang];
   const enAcronyms = ACRONYMS.en || {};
   const merged = { ...enAcronyms, ...langAcronyms };
 
