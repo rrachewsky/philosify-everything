@@ -51,11 +51,11 @@ const ACRONYMS = {
     "VP": { full: "Vice President", spoken: "Vice President" },
   },
   pt: {
-    // Acronyms pronounced as WORDS in Brazilian Portuguese
-    "EUA": { full: "Estados Unidos, EUA", spoken: "êuá" },
-    "E.U.A.": { full: "Estados Unidos", spoken: "êuá" },
-    "USA": { full: "Estados Unidos", spoken: "êuá" },
-    "US": { full: "Estados Unidos", spoken: "êuá" },
+    // EUA/USA — always spoken in full, never abbreviated in speech
+    "EUA": { full: "Estados Unidos", spoken: "Estados Unidos" },
+    "E.U.A.": { full: "Estados Unidos", spoken: "Estados Unidos" },
+    "USA": { full: "Estados Unidos", spoken: "Estados Unidos" },
+    "US": { full: "Estados Unidos", spoken: "Estados Unidos" },
     "ONU": { full: "Organização das Nações Unidas, ONU", spoken: "onu" },
     "UN": { full: "Nações Unidas", spoken: "onu" },
     "OTAN": { full: "OTAN, Organização do Tratado do Atlântico Norte", spoken: "otã" },
