@@ -47,7 +47,7 @@ const HIGHLIGHTS_STALE_MS = 4 * 60 * 60 * 1000; // 4 hours
 const INTL_TOPICS = ["world", "business", "science", "technology"];
 
 // GNews supported languages
-const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu"];
+const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu", "hi", "fa"];
 
 // ============================================================
 // HIGHLIGHT SEARCH QUERIES — translated per language
