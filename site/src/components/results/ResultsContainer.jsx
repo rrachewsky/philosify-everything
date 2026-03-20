@@ -359,10 +359,10 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
         </div>
       )}
 
-      {/* ═══ LEGACY SECTIONS (music, literature, cinema, old cached news) ═══ */}
+      {/* ═══ LEGACY SECTIONS (music, literature, cinema — NEVER for news) ═══ */}
 
       {/* 2. Historical Context */}
-      {!isNews && result.historical_context && (
+      {!isAnyNews && result.historical_context && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('historicalContext', { defaultValue: 'Historical Context' })}
@@ -377,7 +377,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
       )}
 
       {/* 3. Creative Process */}
-      {!isNews && result.creative_process && (
+      {!isAnyNews && result.creative_process && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('creativeProcess', { defaultValue: 'Creative Process' })}
@@ -392,10 +392,10 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
       )}
 
       {/* 4. Weighted Philosophical Scorecard TABLE — not for news */}
-      {!isNews && result.scorecard && <ScorecardTable scorecard={result.scorecard} />}
+      {!isAnyNews && result.scorecard && <ScorecardTable scorecard={result.scorecard} />}
 
       {/* 5. Integrated Philosophical Analysis — not for news (replaced by 4 cards above) */}
-      {!isNews && (() => {
+      {!isAnyNews && (() => {
         // Shared pages may receive the integrated essay in different fields depending on API/db schema.
         // Prefer philosophical_analysis, but fall back to summary/integrated_analysis when needed.
         const integrated =
@@ -492,7 +492,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
       )}
 
       {/* 6. Philosophical Weighted Score — not for news */}
-      {!isNews && (result.scorecard?.final_score ?? result.final_score ?? result.overall_grade) !==
+      {!isAnyNews && (result.scorecard?.final_score ?? result.final_score ?? result.overall_grade) !==
         undefined && (
         <div className="result-card">
           <h3 className="result-card-title">
@@ -505,7 +505,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
       )}
 
       {/* 7. Philosophical Note — not for news */}
-      {!isNews && result.philosophical_note && (
+      {!isAnyNews && result.philosophical_note && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('philosophicalNote', { defaultValue: 'Philosophical Note' })}
@@ -517,7 +517,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
       )}
 
       {/* 8. Philosophical Classification — not for news */}
-      {!isNews && result.classification && (
+      {!isAnyNews && result.classification && (
         <div className="result-card">
           <h3 className="result-card-title">
             {t('philosophicalClassification', { defaultValue: 'Philosophical Classification' })}

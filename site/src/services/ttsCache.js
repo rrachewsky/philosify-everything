@@ -122,15 +122,15 @@ export async function preloadTTS(result, lang) {
           abortController.abort();
         }, TTS_TIMEOUT_MS);
 
-        // New news analysis format: 4 separate fields (the_facts, source_analysis, etc.)
-        const isNewsAnalysis = !!(
-          result?.media_type === 'news' &&
-          result?.the_facts
-        );
+        // Any news result (new or old cached format) uses /api/news/tts
+        const isAnyNewsResult = result?.media_type === 'news';
+
+        // New news format: 4 separate fields
+        const isNewNewsFormat = !!(isAnyNewsResult && result?.the_facts);
 
         // Panel results (only philosophical_analysis, no scorecard) use /api/news/tts
         const isPanel = !!(
-          !isNewsAnalysis &&
+          !isAnyNewsResult &&
           result?.philosophical_analysis &&
           !result?.historical_context &&
           !result?.creative_process &&
@@ -141,14 +141,28 @@ export async function preloadTTS(result, lang) {
         let endpoint;
         let requestBody;
 
-        if (isNewsAnalysis) {
-          // Concatenate the 4 news analysis fields for TTS
+        if (isNewNewsFormat) {
+          // New format: concatenate the 4 news analysis fields
           const newsText = [
             result.the_facts,
             result.source_analysis,
             result.hits_and_misses,
             result.philosify_opinion,
           ].filter(Boolean).join('\n\n');
+          endpoint = `${API_URL}/api/news/tts`;
+          requestBody = {
+            text: newsText,
+            title: result.song_name || result.title || '',
+            lang: lang,
+          };
+        } else if (isAnyNewsResult) {
+          // Old cached news format: use philosophical_analysis as text
+          const newsText = result.philosophical_analysis || result.historical_context || '';
+          if (!newsText) {
+            console.warn('[TTS Cache] Old news result has no text for TTS, skipping');
+            audioCache.set(key, { status: 'error', url: null });
+            return;
+          }
           endpoint = `${API_URL}/api/news/tts`;
           requestBody = {
             text: newsText,
