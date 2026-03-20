@@ -11,80 +11,147 @@ import { getSecret } from "../utils/secrets.js";
 const TTS_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent";
 
-// Acronym expansion — TTS reads these as full words, not letter-by-letter
+// ============================================================
+// Acronym handling for TTS — first occurrence: full name + abbreviation
+// Subsequent occurrences: phonetic pronunciation of the abbreviation
+// Example (PT): first "EUA" → "Estados Unidos, EUA" / then "EUA" → "eh-oo-ah"
+// ============================================================
+
+// Each entry: { full: "full name", spoken: "how TTS should say the abbreviation" }
 const ACRONYMS = {
   en: {
-    "USA": "United States", "US": "United States", "U.S.": "United States",
-    "UK": "United Kingdom", "U.K.": "United Kingdom",
-    "EU": "European Union", "E.U.": "European Union",
-    "UN": "United Nations", "U.N.": "United Nations",
-    "NATO": "North Atlantic Treaty Organization",
-    "FBI": "Federal Bureau of Investigation", "CIA": "Central Intelligence Agency",
-    "GDP": "Gross Domestic Product", "IMF": "International Monetary Fund",
-    "WHO": "World Health Organization", "WTO": "World Trade Organization",
-    "AI": "Artificial Intelligence", "CEO": "Chief Executive Officer",
-    "IPO": "Initial Public Offering", "NYSE": "New York Stock Exchange",
-    "SEC": "Securities and Exchange Commission", "FED": "Federal Reserve",
-    "GOP": "Republican Party", "SCOTUS": "Supreme Court",
-    "OPEC": "Organization of the Petroleum Exporting Countries",
-    "BRICS": "Brazil Russia India China South Africa",
-    "ICC": "International Criminal Court", "ICJ": "International Court of Justice",
-    "NGO": "Non-governmental Organization", "PM": "Prime Minister",
-    "VP": "Vice President", "DOJ": "Department of Justice",
+    "USA": { full: "United States", spoken: "U.S.A." },
+    "US": { full: "United States", spoken: "U.S." },
+    "U.S.": { full: "United States", spoken: "U.S." },
+    "UK": { full: "United Kingdom", spoken: "U.K." },
+    "U.K.": { full: "United Kingdom", spoken: "U.K." },
+    "EU": { full: "European Union", spoken: "E.U." },
+    "UN": { full: "United Nations", spoken: "U.N." },
+    "NATO": { full: "NATO, the North Atlantic Treaty Organization", spoken: "NATO" },
+    "FBI": { full: "FBI, the Federal Bureau of Investigation", spoken: "F.B.I." },
+    "CIA": { full: "CIA, the Central Intelligence Agency", spoken: "C.I.A." },
+    "GDP": { full: "GDP, Gross Domestic Product", spoken: "G.D.P." },
+    "IMF": { full: "IMF, the International Monetary Fund", spoken: "I.M.F." },
+    "WHO": { full: "WHO, the World Health Organization", spoken: "W.H.O." },
+    "WTO": { full: "WTO, the World Trade Organization", spoken: "W.T.O." },
+    "AI": { full: "Artificial Intelligence", spoken: "A.I." },
+    "CEO": { full: "CEO, Chief Executive Officer", spoken: "C.E.O." },
+    "IPO": { full: "IPO, Initial Public Offering", spoken: "I.P.O." },
+    "NYSE": { full: "the New York Stock Exchange", spoken: "N.Y.S.E." },
+    "SEC": { full: "SEC, the Securities and Exchange Commission", spoken: "S.E.C." },
+    "FED": { full: "the Federal Reserve", spoken: "the Fed" },
+    "GOP": { full: "the Republican Party", spoken: "G.O.P." },
+    "SCOTUS": { full: "the Supreme Court", spoken: "the Supreme Court" },
+    "OPEC": { full: "OPEC, the Organization of Petroleum Exporting Countries", spoken: "OPEC" },
+    "BRICS": { full: "BRICS, Brazil, Russia, India, China and South Africa", spoken: "BRICS" },
+    "ICC": { full: "ICC, the International Criminal Court", spoken: "I.C.C." },
+    "NGO": { full: "NGO, a non-governmental organization", spoken: "N.G.O." },
+    "DOJ": { full: "the Department of Justice", spoken: "D.O.J." },
+    "PM": { full: "Prime Minister", spoken: "Prime Minister" },
+    "VP": { full: "Vice President", spoken: "Vice President" },
   },
   pt: {
-    "EUA": "Estados Unidos", "E.U.A.": "Estados Unidos",
-    "UE": "União Europeia", "U.E.": "União Europeia",
-    "ONU": "Organização das Nações Unidas",
-    "OTAN": "Organização do Tratado do Atlântico Norte",
-    "PIB": "Produto Interno Bruto", "FMI": "Fundo Monetário Internacional",
-    "OMS": "Organização Mundial da Saúde", "OMC": "Organização Mundial do Comércio",
-    "IA": "Inteligência Artificial", "CEO": "Diretor Executivo",
-    "STF": "Supremo Tribunal Federal", "TSE": "Tribunal Superior Eleitoral",
-    "PF": "Polícia Federal", "BC": "Banco Central",
-    "IBGE": "Instituto Brasileiro de Geografia e Estatística",
-    "BNDES": "Banco Nacional de Desenvolvimento",
-    "ONG": "Organização Não Governamental", "PM": "Primeiro Ministro",
-    "VP": "Vice Presidente", "EBC": "Empresa Brasil de Comunicação",
-    "USA": "Estados Unidos", "US": "Estados Unidos",
-    "UK": "Reino Unido", "EU": "União Europeia", "UN": "Nações Unidas",
-    "NATO": "OTAN", "FBI": "FBI Polícia Federal Americana",
-    "CIA": "Agência Central de Inteligência", "GDP": "PIB",
-    "IMF": "FMI", "WHO": "OMS", "WTO": "OMC", "AI": "Inteligência Artificial",
-    "BRICS": "Brasil Rússia Índia China África do Sul",
-    "ICC": "Tribunal Penal Internacional", "NGO": "ONG",
+    "EUA": { full: "Estados Unidos, EUA", spoken: "eh-oo-ah" },
+    "E.U.A.": { full: "Estados Unidos", spoken: "eh-oo-ah" },
+    "USA": { full: "Estados Unidos", spoken: "eh-oo-ah" },
+    "US": { full: "Estados Unidos", spoken: "eh-oo-ah" },
+    "UE": { full: "União Europeia, UE", spoken: "oo-eh" },
+    "EU": { full: "União Europeia", spoken: "oo-eh" },
+    "ONU": { full: "Organização das Nações Unidas, ONU", spoken: "ô-ene-oo" },
+    "UN": { full: "Nações Unidas", spoken: "ô-ene-oo" },
+    "OTAN": { full: "OTAN, Organização do Tratado do Atlântico Norte", spoken: "ô-tã" },
+    "NATO": { full: "OTAN, Organização do Tratado do Atlântico Norte", spoken: "ô-tã" },
+    "PIB": { full: "Produto Interno Bruto, PIB", spoken: "pê-i-bê" },
+    "GDP": { full: "Produto Interno Bruto", spoken: "pê-i-bê" },
+    "FMI": { full: "Fundo Monetário Internacional, FMI", spoken: "éfe-eme-i" },
+    "IMF": { full: "Fundo Monetário Internacional", spoken: "éfe-eme-i" },
+    "OMS": { full: "Organização Mundial da Saúde, OMS", spoken: "ô-eme-ésse" },
+    "WHO": { full: "Organização Mundial da Saúde", spoken: "ô-eme-ésse" },
+    "OMC": { full: "Organização Mundial do Comércio, OMC", spoken: "ô-eme-cê" },
+    "WTO": { full: "Organização Mundial do Comércio", spoken: "ô-eme-cê" },
+    "IA": { full: "Inteligência Artificial, IA", spoken: "i-á" },
+    "AI": { full: "Inteligência Artificial", spoken: "i-á" },
+    "STF": { full: "Supremo Tribunal Federal, STF", spoken: "ésse-tê-éfe" },
+    "TSE": { full: "Tribunal Superior Eleitoral, TSE", spoken: "tê-ésse-ê" },
+    "PF": { full: "Polícia Federal, PF", spoken: "pê-éfe" },
+    "FBI": { full: "FBI, a Polícia Federal americana", spoken: "éfe-bê-i" },
+    "CIA": { full: "CIA, a Agência Central de Inteligência americana", spoken: "cê-i-á" },
+    "BC": { full: "Banco Central, BC", spoken: "bê-cê" },
+    "FED": { full: "Federal Reserve, o banco central americano", spoken: "féd" },
+    "IBGE": { full: "IBGE, Instituto Brasileiro de Geografia e Estatística", spoken: "i-bê-gê-ê" },
+    "BNDES": { full: "BNDES, Banco Nacional de Desenvolvimento", spoken: "bê-ene-dê-ésse" },
+    "ONG": { full: "ONG, organização não governamental", spoken: "ô-ene-gê" },
+    "NGO": { full: "organização não governamental", spoken: "ô-ene-gê" },
+    "UK": { full: "Reino Unido", spoken: "Reino Unido" },
+    "BRICS": { full: "BRICS, Brasil, Rússia, Índia, China e África do Sul", spoken: "brícs" },
+    "ICC": { full: "Tribunal Penal Internacional", spoken: "Tribunal Penal Internacional" },
+    "CEO": { full: "CEO, diretor executivo", spoken: "cê-ê-ô" },
+    "PM": { full: "Primeiro Ministro", spoken: "Primeiro Ministro" },
+    "VP": { full: "Vice Presidente", spoken: "Vice Presidente" },
+    "OPEC": { full: "OPEP, Organização dos Países Exportadores de Petróleo", spoken: "ô-pép" },
   },
   es: {
-    "EE.UU.": "Estados Unidos", "EEUU": "Estados Unidos", "EUA": "Estados Unidos",
-    "UE": "Unión Europea", "ONU": "Organización de las Naciones Unidas",
-    "OTAN": "Organización del Tratado del Atlántico Norte",
-    "PIB": "Producto Interno Bruto", "FMI": "Fondo Monetario Internacional",
-    "OMS": "Organización Mundial de la Salud",
-    "IA": "Inteligencia Artificial", "ONG": "Organización No Gubernamental",
-    "USA": "Estados Unidos", "US": "Estados Unidos",
-    "UK": "Reino Unido", "EU": "Unión Europea", "UN": "Naciones Unidas",
-    "NATO": "OTAN", "GDP": "PIB", "IMF": "FMI", "WHO": "OMS",
-    "AI": "Inteligencia Artificial", "BRICS": "Brasil Rusia India China Sudáfrica",
-    "NGO": "ONG", "PM": "Primer Ministro",
+    "EE.UU.": { full: "Estados Unidos", spoken: "eh-eh oo-oo" },
+    "EEUU": { full: "Estados Unidos", spoken: "eh-eh oo-oo" },
+    "EUA": { full: "Estados Unidos", spoken: "eh-oo-ah" },
+    "USA": { full: "Estados Unidos", spoken: "eh-oo-ah" },
+    "US": { full: "Estados Unidos", spoken: "eh-oo-ah" },
+    "UE": { full: "Unión Europea, UE", spoken: "oo-eh" },
+    "EU": { full: "Unión Europea", spoken: "oo-eh" },
+    "ONU": { full: "Organización de las Naciones Unidas, ONU", spoken: "ô-ene-oo" },
+    "UN": { full: "Naciones Unidas", spoken: "ô-ene-oo" },
+    "OTAN": { full: "OTAN, Organización del Tratado del Atlántico Norte", spoken: "ô-tán" },
+    "NATO": { full: "OTAN", spoken: "ô-tán" },
+    "PIB": { full: "Producto Interno Bruto, PIB", spoken: "pê-i-bê" },
+    "GDP": { full: "Producto Interno Bruto", spoken: "pê-i-bê" },
+    "FMI": { full: "Fondo Monetario Internacional, FMI", spoken: "éfe-eme-i" },
+    "IMF": { full: "Fondo Monetario Internacional", spoken: "éfe-eme-i" },
+    "OMS": { full: "Organización Mundial de la Salud, OMS", spoken: "ô-eme-ésse" },
+    "WHO": { full: "Organización Mundial de la Salud", spoken: "ô-eme-ésse" },
+    "IA": { full: "Inteligencia Artificial, IA", spoken: "i-á" },
+    "AI": { full: "Inteligencia Artificial", spoken: "i-á" },
+    "ONG": { full: "ONG, organización no gubernamental", spoken: "ô-ene-gê" },
+    "NGO": { full: "organización no gubernamental", spoken: "ô-ene-gê" },
+    "UK": { full: "Reino Unido", spoken: "Reino Unido" },
+    "BRICS": { full: "BRICS, Brasil, Rusia, India, China y Sudáfrica", spoken: "brícs" },
+    "CEO": { full: "CEO, director ejecutivo", spoken: "cê-ê-ô" },
+    "PM": { full: "Primer Ministro", spoken: "Primer Ministro" },
+    "OPEC": { full: "OPEP, Organización de Países Exportadores de Petróleo", spoken: "ô-pép" },
   },
 };
 
+/**
+ * Process acronyms for TTS:
+ * - First occurrence: "Full Name, ACRONYM" (introduces the term)
+ * - Subsequent occurrences: phonetic pronunciation (natural speech)
+ */
 function expandAcronyms(text, lang) {
-  // Use language-specific acronyms, fall back to English
   const langAcronyms = ACRONYMS[lang] || {};
   const enAcronyms = ACRONYMS.en || {};
-  // Merge: language-specific takes precedence over English
   const merged = { ...enAcronyms, ...langAcronyms };
 
+  const seen = new Set();
   let result = text;
-  // Sort by length descending so longer acronyms match first (e.g. "E.U.A." before "EU")
+
+  // Sort by length descending so longer acronyms match first
   const sorted = Object.entries(merged).sort((a, b) => b[0].length - a[0].length);
-  for (const [acronym, expansion] of sorted) {
-    // Word boundary match — only replace standalone acronyms, not parts of words
+
+  for (const [acronym, { full, spoken }] of sorted) {
     const escaped = acronym.replace(/\./g, "\\.").replace(/\$/g, "\\$");
     const regex = new RegExp(`\\b${escaped}\\b`, "g");
-    result = result.replace(regex, expansion);
+
+    // Track the canonical key (e.g. "USA" and "US" both map to "United States")
+    const canonicalKey = full.substring(0, 30).toLowerCase();
+
+    result = result.replace(regex, (match) => {
+      if (!seen.has(canonicalKey)) {
+        seen.add(canonicalKey);
+        return full; // First occurrence: full name (may include the acronym)
+      }
+      return spoken; // Subsequent: phonetic pronunciation
+    });
   }
+
   return result;
 }
 
