@@ -3,9 +3,10 @@
 // ============================================================
 // Displays available news sources grouped by category.
 // Users can unlock (1 credit) and then customize their selection.
+// Selection auto-saves when modal closes (any method).
 // ============================================================
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import '../../styles/music-sidebar.css';
 
@@ -25,26 +26,27 @@ export function NewsSourcePicker({
   const { t } = useTranslation();
   const [selected, setSelected] = useState(new Set());
   const [justUnlocked, setJustUnlocked] = useState(false);
+  const initialSelectionRef = useRef(null);
 
   // Initialize selected from enabledSources or defaultSources
-  // Skip if we just unlocked (to preserve the selectAll selection)
   useEffect(() => {
+    if (!isOpen) return;
     if (justUnlocked) return;
     if (unlocked && enabledSources && enabledSources.length > 0) {
-      // User has saved custom sources - use them
       setSelected(new Set(enabledSources));
+      initialSelectionRef.current = new Set(enabledSources);
     } else if (unlocked && (!enabledSources || enabledSources.length === 0)) {
-      // User is unlocked but hasn't saved sources yet - select all by default
       const all = new Set();
       Object.values(availableSources).forEach((cat) => {
         cat.sources.forEach((s) => all.add(s.id));
       });
       setSelected(all);
+      initialSelectionRef.current = all;
     } else if (!unlocked) {
-      // Not unlocked - show default sources as selected (visual only)
       setSelected(new Set(defaultSources));
+      initialSelectionRef.current = new Set(defaultSources);
     }
-  }, [unlocked, enabledSources, defaultSources, availableSources, justUnlocked]);
+  }, [isOpen, unlocked, enabledSources, defaultSources, availableSources, justUnlocked]);
 
   // Reset justUnlocked when modal closes
   useEffect(() => {
@@ -78,17 +80,31 @@ export function NewsSourcePicker({
     setSelected(new Set());
   };
 
-  const handleSave = async () => {
-    console.log('[NewsSourcePicker] handleSave called with', selected.size, 'sources');
-    await onSave(Array.from(selected));
+  // Check if selection changed from what was loaded
+  const hasChanged = () => {
+    if (!initialSelectionRef.current) return selected.size > 0;
+    if (selected.size !== initialSelectionRef.current.size) return true;
+    for (const id of selected) {
+      if (!initialSelectionRef.current.has(id)) return true;
+    }
+    return false;
+  };
+
+  // Save and close — used by ALL close methods
+  const saveAndClose = async () => {
+    if (unlocked && hasChanged() && selected.size > 0) {
+      console.log('[NewsSourcePicker] Auto-saving', selected.size, 'sources on close');
+      await onSave(Array.from(selected));
+    } else {
+      // No changes or not unlocked — just close
+      onClose();
+    }
   };
 
   const handleUnlock = async () => {
     const result = await onUnlock();
     if (result.success) {
-      // Mark as just unlocked to prevent useEffect from resetting selection
       setJustUnlocked(true);
-      // Select all sources after unlock
       selectAll();
     }
   };
@@ -96,13 +112,13 @@ export function NewsSourcePicker({
   const hasCredits = balance && balance.total !== undefined && balance.total >= 1;
 
   return (
-    <div className="philosopher-picker-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="philosopher-picker-overlay" onClick={(e) => e.target === e.currentTarget && saveAndClose()}>
       <div className="philosopher-picker">
         <div className="philosopher-picker__header">
           <h3 className="philosopher-picker__title">
             {t('news.sourcePicker.title')}
           </h3>
-          <button className="philosopher-picker__close" onClick={onClose}>
+          <button className="philosopher-picker__close" onClick={saveAndClose}>
             &times;
           </button>
         </div>
@@ -198,7 +214,7 @@ export function NewsSourcePicker({
                 </span>
                 <button
                   className="music-analyze__button"
-                  onClick={handleSave}
+                  onClick={saveAndClose}
                   disabled={saving || selected.size === 0}
                 >
                   {saving
