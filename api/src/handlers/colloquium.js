@@ -4606,8 +4606,10 @@ export async function generateColloquiumVerdictForThread(
     })
     .join("\n\n");
 
-  // Build philosopher panel list with school info
-  const philosopherPanelList = allPhilosophers
+  // Sort philosophers for presentation order, then build panel list
+  const { sortPhilosopherNamesForPanel } = await import("../ai/philosopher-sort.js");
+  const sortedPhilosopherNames = sortPhilosopherNamesForPanel(allPhilosophers, findPhilosopher);
+  const philosopherPanelList = sortedPhilosopherNames
     .map((name) => {
       const profile = findPhilosopher(name);
       const school = profile ? profile.school : "Unknown";

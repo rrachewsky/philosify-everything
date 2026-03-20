@@ -95,8 +95,12 @@ export async function handlePhilosopherPanel(
       philosopherProfiles.push(profile);
     }
 
+    // Sort for panel presentation order
+    const { sortPhilosophersForPanel } = await import("../ai/philosopher-sort.js");
+    const sortedProfiles = sortPhilosophersForPanel(philosopherProfiles);
+
     console.log(
-      `[PhilosopherPanel] ${mediaType}: "${title}" by ${artist}. Panel: ${uniqueNames.join(", ")}`,
+      `[PhilosopherPanel] ${mediaType}: "${title}" by ${artist}. Panel: ${sortedProfiles.map((p) => p.name).join(", ")}`,
     );
 
     // ── Build deterministic cache key (prevents double-charging for same request) ──
@@ -164,7 +168,7 @@ export async function handlePhilosopherPanel(
             description: description || null,
             source: body.source || null,
             publishedAt: body.publishedAt || null,
-            philosophers: philosopherProfiles,
+            philosophers: sortedProfiles,
             guide,
             lang,
           })
@@ -175,7 +179,7 @@ export async function handlePhilosopherPanel(
             lyrics: lyrics || null,
             description: description || null,
             categories: categories || null,
-            philosophers: philosopherProfiles,
+            philosophers: sortedProfiles,
             guide,
             lang,
           });
