@@ -86,13 +86,17 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
       return !isDupe;
     });
 
-    // Try to get user preferences (optional auth - don't fail if not logged in)
+    // Get user preferences — determines source filtering
     let enabledSources = null;
     let unlocked = false;
+    let userId = null;
+    let authStatus = "no_auth";
 
     try {
       const user = await getUserFromAuth(request, env);
       if (user?.userId) {
+        userId = user.userId;
+        authStatus = "authenticated";
         const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
         const res = await fetch(
           `${sbUrl}/rest/v1/user_news_preferences?user_id=eq.${user.userId}&select=unlocked,enabled_sources`,
@@ -109,31 +113,47 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
           if (rows[0]) {
             unlocked = rows[0].unlocked || false;
             enabledSources = rows[0].enabled_sources;
+            authStatus = `ok_unlocked=${unlocked}_sources=${enabledSources?.length || 0}`;
+          } else {
+            authStatus = "ok_no_preferences_row";
           }
+        } else {
+          authStatus = `supabase_error_${res.status}`;
         }
+      } else {
+        authStatus = "no_user";
       }
     } catch (authErr) {
-      console.log("[News] No auth or preferences, using defaults");
+      authStatus = `auth_error: ${authErr.message}`;
+      console.error("[News] Auth/preferences error:", authErr.message);
     }
+
+    console.log(`[News] Auth: ${authStatus}`);
 
     // Determine which sources to use
     let sourcesToUse = DEFAULT_SOURCE_IDS;
     const userHasCustomSources = unlocked && enabledSources && Array.isArray(enabledSources) && enabledSources.length > 0;
     if (userHasCustomSources) {
       sourcesToUse = enabledSources;
-      console.log(`[News] User has custom sources: ${sourcesToUse.length} selected: [${sourcesToUse.slice(0, 10).join(", ")}${sourcesToUse.length > 10 ? "..." : ""}]`);
+      console.log(`[News] CUSTOM sources: ${sourcesToUse.length} — [${sourcesToUse.join(", ")}]`);
+    } else {
+      console.log(`[News] DEFAULT sources: ${sourcesToUse.length} (unlocked=${unlocked}, enabledSources=${JSON.stringify(enabledSources)})`);
     }
+
+    // Log all unique source names in the feed for debugging
+    const uniqueSources = [...new Set(articles.map((a) => a.source))];
+    console.log(`[News] Available sources in feed (${uniqueSources.length}): [${uniqueSources.join(", ")}]`);
 
     // Filter articles by enabled sources
     const filteredArticles = articles.filter((a) => articleMatchesSource(a, sourcesToUse));
     const filteredHighlights = highlights.filter((a) => articleMatchesSource(a, sourcesToUse));
 
-    // When user explicitly chose their sources: ALWAYS respect that choice, even if 0 results.
-    // When using defaults: fall back to all if filter is too restrictive.
+    // When user explicitly chose sources: ALWAYS respect that choice
+    // When using defaults: fall back to all if filter is too restrictive
     let useFiltered;
     if (userHasCustomSources) {
-      useFiltered = true; // User chose these sources — respect it
-      console.log(`[News] Custom filter: ${filteredArticles.length} articles match user's ${sourcesToUse.length} sources`);
+      useFiltered = true;
+      console.log(`[News] CUSTOM filter result: ${filteredArticles.length}/${articles.length} articles, ${filteredHighlights.length}/${highlights.length} highlights`);
     } else {
       const minArticles = 5;
       useFiltered = filteredArticles.length >= minArticles;
@@ -149,6 +169,16 @@ export async function handleNewsHeadlines(request, env, origin, ctx = null) {
         lang: cached.lang || "en",
         filtered: useFiltered,
         unlocked,
+        // Debug info — remove after confirming fix
+        _debug: {
+          authStatus,
+          userHasCustomSources,
+          selectedSourceCount: sourcesToUse.length,
+          selectedSources: userHasCustomSources ? sourcesToUse : null,
+          totalArticles: articles.length,
+          matchedArticles: filteredArticles.length,
+          availableSources: uniqueSources,
+        },
       },
       200,
       origin,
