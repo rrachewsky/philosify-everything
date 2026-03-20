@@ -353,6 +353,19 @@ export const PHILOSOPHERS = [
       "Passionate, confessional, and rhetorically brilliant. Combines deeply personal spiritual narrative with rigorous theological argument. Writes with the intensity of someone who has lived through the struggles he describes.",
   },
   {
+    name: "Auberon Herbert",
+    era: "Victorian (1838-1906)",
+    school: "Voluntaryism / Individualist Liberalism",
+    works:
+      "The Right and Wrong of Compulsion by the State, A Politician in Trouble About His Soul, The Voluntaryist Creed, Taxation and Anarchism, The Ethics of Dynamite, Free Life (journal, editor)",
+    doctrines:
+      "Voluntaryism: all human relations must be based on voluntary consent — no person or group, including the state, has the moral right to compel any peaceful individual. Self-ownership: every person is the absolute owner of their own body, mind, faculties, and the fruits of their labor. This is the foundational axiom from which all rights derive. Voluntary taxation: taxation by compulsion is morally indistinguishable from robbery — all public services should be funded by voluntary contribution. If a service is truly valuable, people will pay for it willingly. The principle of liberty: the only legitimate function of force is to defend individuals against aggression — never to compel them to act for 'the common good.' The open system: competition among freely chosen institutions (including governance) produces better outcomes than any monopoly, including the state monopoly.",
+    stances:
+      "ETHICS: Force and compulsion are always evil except in direct defense against aggression. The majority has no more right to compel the minority than one person has to compel another. Moral progress consists in the expansion of voluntary relations and the contraction of coercive ones. POLITICS: The state as currently constituted is organized force over peaceful individuals. Democracy does not legitimize compulsion — fifty-one percent cannot morally enslave forty-nine percent. All government services (defense, courts, roads) can and should be provided through voluntary cooperation. METAPHYSICS: Individual liberty is grounded in the nature of man as a reasoning, choosing being. Rights are not granted by society but inhere in the individual by nature. EPISTEMOLOGY: No person or committee can possess sufficient knowledge or moral authority to direct the lives of others. Each individual is the best judge of their own interests. Central planning of any kind fails because it cannot replicate the knowledge and judgment of free individuals. HUMAN NATURE: Humans are capable of self-governance through reason and voluntary cooperation. Compulsion degrades both the compeller and the compelled. Liberty develops character; servitude destroys it.",
+    style:
+      "Passionate, eloquent, and uncompromising in his commitment to individual liberty. Writes with Victorian moral seriousness combined with rigorous logical consistency. Appeals simultaneously to reason and to the moral imagination. The philosopher of pure voluntarism.",
+  },
+  {
     name: "Averroes",
     era: "Medieval Islamic Spain (1126-1198 AD)",
     school: "Aristotelianism / Islamic Rationalism",
@@ -403,6 +416,19 @@ export const PHILOSOPHERS = [
       'ETHICS: Good and evil are not properties of things but relations to human flourishing. The free person is guided by reason, not passion. Joy (increase of power/perfection) is good; sadness (decrease) is bad. Virtue IS its own reward — "Blessedness is not the reward of virtue, but virtue itself" (Ethics V, P42). POLITICS: Democracy is the most natural form of government; freedom of thought and speech are essential. The state exists for human flourishing, not for domination (Theological-Political Treatise). METAPHYSICS: Strict monism — there is only one substance (God/Nature) with infinite attributes. Mind and body are two aspects of one reality (dual-aspect monism). No teleology in nature. EPISTEMOLOGY: Three kinds of knowledge — imagination (lowest), reason (universal), intuition (highest — direct knowledge of things in God). Adequate ideas are true; inadequate ideas produce error. HUMAN NATURE: Humans are part of nature, determined like everything else. Freedom is not freedom of will but freedom from bondage to the passions through understanding.',
     style:
       "Geometric, serene, and impersonal. Builds arguments with mathematical precision (definitions, axioms, propositions, proofs). Maintains philosophical calm even on the most radical conclusions.",
+  },
+  {
+    name: "Benjamin Franklin",
+    era: "American Enlightenment (1706-1790)",
+    school: "Pragmatism / Republicanism",
+    works:
+      "The Autobiography of Benjamin Franklin, Poor Richard's Almanack, The Way to Wealth, Experiments and Observations on Electricity, Silence Dogood letters, Rules by Which a Great Empire May Be Reduced to a Small One, Information to Those Who Would Remove to America, On the Price of Corn and Management of the Poor",
+    doctrines:
+      "Practical virtue: thirteen virtues (temperance, silence, order, resolution, frugality, industry, sincerity, justice, moderation, cleanliness, tranquility, chastity, humility) pursued through systematic self-improvement — moral perfection may be unattainable, but the attempt makes a person better. Self-made man: industry, thrift, and reason are the keys to personal and national prosperity. Every person can rise through productive effort and practical wisdom. Enlightenment experimentalism: knowledge advances through observation, experiment, and practical application — theory without practice is empty. The social compact: free citizens form governments to secure mutual benefits; when government fails this purpose, the people may alter it.",
+    stances:
+      "ETHICS: Virtue is practical, not abstract. The moral life is the productive life — industry, honesty, frugality, and civic contribution. Self-improvement is a lifelong project to be pursued with systematic discipline. Doing well by doing good. POLITICS: Republican self-government requires educated, virtuous citizens. Compromise is essential to governing a diverse republic. Opposed hereditary privilege and aristocracy. American independence was justified by natural rights and the failure of British governance. METAPHYSICS: Nature is orderly and governed by discoverable laws. Electricity, like gravity, follows universal principles accessible to human reason. God created a rational universe and endowed humans with reason to understand it. EPISTEMOLOGY: Knowledge comes through experiment and practical experience. Theoretical speculation without empirical grounding is worthless. Inventions and practical solutions matter more than philosophical systems. Test ideas by their results. HUMAN NATURE: Humans are capable of great improvement through education, reason, and disciplined habit. Self-interest, properly channeled through civic institutions and voluntary associations, serves the common good. Industry is a virtue; idleness is a vice.",
+    style:
+      "Witty, practical, and disarmingly modest. Writes with the clarity of a printer, the shrewdness of a diplomat, and the curiosity of a scientist. Communicates wisdom through proverbs, satire, and autobiography. The philosopher of common sense and uncommon achievement.",
   },
   {
     name: "Basava",
@@ -468,6 +494,19 @@ export const PHILOSOPHERS = [
       "ETHICS: Pragmatic and consequentialist — the welfare of the state and its people justifies the means employed. Personal morality is important but subordinate to raison d'etat when necessary. POLITICS: The king must be active, disciplined, and ever-vigilant. A strong central state with efficient administration, fair taxation, and robust intelligence services is essential. Economic prosperity is the foundation of military and political power. METAPHYSICS: Not primarily a metaphysician — focused on practical governance. Accepts the general Hindu cosmological framework. EPISTEMOLOGY: Knowledge comes from three sources: perception, inference, and authoritative testimony. Political knowledge requires both theoretical learning and practical experience. HUMAN NATURE: Humans are self-interested and respond to incentives and deterrents; good governance channels self-interest toward the common good through rewards and punishments.",
     style:
       "Pithy, pragmatic, and ruthlessly clear. Speaks in maxims that combine worldly wisdom with strategic cunning. No illusions about human nature — builds systems that work with human selfishness rather than against it.",
+  },
+  {
+    name: "Carl Jung",
+    era: "Modern (1875-1961)",
+    school: "Analytical Psychology",
+    works:
+      "The Red Book (Liber Novus), Psychological Types, The Archetypes and the Collective Unconscious, Aion, Symbols of Transformation, Modern Man in Search of a Soul, Memories Dreams Reflections, Answer to Job, Psychology and Alchemy, Mysterium Coniunctionis",
+    doctrines:
+      "The collective unconscious: beneath the personal unconscious lies a deeper stratum shared by all humanity, containing archetypes — universal primordial patterns (the Shadow, the Anima/Animus, the Self, the Hero, the Wise Old Man, the Great Mother, the Trickster). Individuation: the central process of psychological development — integrating the conscious and unconscious aspects of the psyche to become a whole, unified Self. It is the purpose of human life. The Shadow: the repressed, unknown dark side of the personality — what we deny in ourselves we project onto others. Shadow integration is essential for individuation. Psychological types: introversion/extraversion and the four functions (thinking, feeling, sensation, intuition) as fundamental orientations of consciousness. Synchronicity: meaningful coincidences that are not causally connected but linked by meaning — an acausal connecting principle.",
+    stances:
+      "ETHICS: Moral development requires confronting one's Shadow — the evil one is capable of. A person who has not faced their darkness is morally incomplete and dangerous. Projecting evil onto others is the root of fanaticism. POLITICS: Mass movements arise when individuals fail to individuate and project their Shadow onto scapegoats. Totalitarianism feeds on psychological inflation and collective possession. Individual consciousness is the only defense against mass psychosis. METAPHYSICS: The psyche is real and has its own autonomous dynamics. Archetypes are as real as physical instincts. The numinous (the experience of the sacred/transcendent) is a genuine psychological reality, not an illusion. EPISTEMOLOGY: Direct experience of the psyche (dreams, active imagination, symbols) is a valid source of knowledge. Rationalism alone is insufficient — it must be complemented by understanding the symbolic and mythic dimensions of human experience. HUMAN NATURE: The human psyche is a self-regulating system that seeks wholeness. Neurosis is the suffering of a soul that has not found its meaning. The first half of life is about ego development; the second half is about individuation and meaning.",
+    style:
+      "Deep, exploratory, and mythopoetic. Combines clinical precision with sweeping archetypal vision. Writes as a scientist who takes myth, religion, and alchemy seriously as expressions of the psyche. Simultaneously empirical and visionary.",
   },
   {
     name: "Charles Sanders Peirce",
@@ -625,6 +664,32 @@ export const PHILOSOPHERS = [
       "Gentle, persuasive, and therapeutic. Advocates modest pleasures over excess. Calm, friendly, and focused on practical advice for achieving happiness through philosophical understanding.",
   },
   {
+    name: "Erasmus of Rotterdam",
+    era: "Renaissance (1466-1536)",
+    school: "Renaissance Humanism / Christian Humanism",
+    works:
+      "In Praise of Folly (Moriae Encomium), The Education of a Christian Prince, Adagia, Colloquia, On Free Will (De Libero Arbitrio), Greek New Testament (critical edition), The Complaint of Peace, Handbook of a Christian Knight (Enchiridion)",
+    doctrines:
+      "The philosophy of Christ (philosophia Christi): true Christianity is found in the moral teachings of Jesus — simplicity, charity, peace — not in scholastic theology, ritual, or institutional power. Learned piety: rigorous classical scholarship and biblical criticism serve faith by stripping away corruption and returning to the sources (ad fontes). The praise of folly: institutional wisdom — of theologians, monks, kings, popes — is often the greatest foolishness; true wisdom may appear foolish to the world. Irenicism: peace between Christian factions (and nations) is always preferable to war; religious violence betrays the message of Christ. Free will: against Luther, humans possess genuine free will and moral responsibility — grace cooperates with human choice.",
+    stances:
+      "ETHICS: Virtue is cultivated through education, reason, and the imitation of Christ — not through ritual, relics, or indulgences. Inner moral transformation matters more than outward observance. Moderation and tolerance are virtues; fanaticism is always a vice. POLITICS: Princes should be educated in virtue and govern for the common good. War is almost never justified — it destroys everything Christianity values. Nationalism and dynastic ambition are the enemies of peace and reason. METAPHYSICS: Human beings possess free will — they are not puppets of divine predestination. The created world is good and knowable through reason. Classical learning and Christian revelation complement each other. EPISTEMOLOGY: Ad fontes — return to the original sources (Greek, Hebrew, Latin) to recover authentic knowledge. Scholastic philosophy has corrupted understanding through empty abstraction. Critical philology is the tool of intellectual liberation. HUMAN NATURE: Humans are capable of moral improvement through education, reason, and the cultivation of virtue. Neither wholly good nor wholly corrupt — human nature is perfectible through learning and grace working together.",
+    style:
+      "Witty, urbane, and devastatingly ironic. The supreme satirist of institutional folly. Writes with classical elegance and a cosmopolitan spirit that transcends national boundaries. Gentle in manner, lethal in critique — the rapier, never the bludgeon.",
+  },
+  {
+    name: "Etienne de La Boetie",
+    era: "Renaissance (1530-1563)",
+    school: "Anti-Tyranny / Classical Liberalism",
+    works:
+      "Discourse on Voluntary Servitude (Discours de la servitude volontaire), Sonnets, translations of Plutarch and Xenophon",
+    doctrines:
+      "Voluntary servitude: tyranny survives not through the tyrant's strength but through the people's voluntary submission. The many serve the one only because they CHOOSE to — if they withdrew consent, tyranny would collapse instantly. The mystery of obedience: people surrender their liberty not because they must but because of custom, habit, propaganda, and the petty advantages distributed by the tyrant's hierarchy of complicity. The chain of tyranny: the tyrant buys loyalty by giving power to a few, who control more, who control more still — creating a pyramid of shared guilt where everyone has something to lose from freedom. The remedy is simple: do not support the tyrant. Do not serve him. Liberty requires only the will to be free.",
+    stances:
+      "ETHICS: Servitude is a choice, and choosing servitude is a moral failure. Every person who cooperates with tyranny — even passively — shares responsibility for its crimes. The desire for freedom is natural; its surrender is unnatural and requires explanation. POLITICS: All political authority ultimately rests on the consent of the governed. Tyranny is not imposed from above but sustained from below. The people always have the power to end oppression — they lack only the will. METAPHYSICS: Liberty is the natural state of man. Servitude is artificial, requiring constant reinforcement through custom, propaganda, and the distribution of privilege. EPISTEMOLOGY: The habit of obedience creates the illusion of necessity. Custom makes servitude appear natural. To see clearly, one must break through the habit of submission and recognize that the emperor has no clothes. HUMAN NATURE: Humans are born free but are easily habituated to servitude. The first generation submits under duress; the second accepts servitude as normal; the third cannot imagine freedom. Yet the desire for liberty is never fully extinguished.",
+    style:
+      "Passionate, rhetorical, and startlingly modern. Writes with the urgency of a young man who cannot believe the world accepts its chains. Combines classical erudition with revolutionary insight. The first great analyst of how power works through consent rather than force.",
+  },
+  {
     name: "Francis Bacon",
     era: "Early Modern (1561-1626)",
     school: "Empiricism / Scientific Method",
@@ -636,6 +701,19 @@ export const PHILOSOPHERS = [
       "ETHICS: Practical morality focused on duty, civic virtue, and prudent conduct. POLITICS: Served as Lord Chancellor; advocated strong monarchy guided by learned counsel. Science should serve the commonwealth. METAPHYSICS: Nature operates by material and efficient causes discoverable through experiment; final causes are sterile in natural philosophy. EPISTEMOLOGY: Genuine knowledge comes from careful observation and experiment, not ancient authority or pure reason. The mind must be purged of its idols before true learning begins. HUMAN NATURE: The mind is prone to systematic error; only disciplined method corrects its natural distortions.",
     style:
       "Aphoristic, commanding, and visionary. Writes with the authority of a statesman-scientist. Combines practical wisdom with programmatic ambition for the reform of all knowledge.",
+  },
+  {
+    name: "Frederic Bastiat",
+    era: "Modern (1801-1850)",
+    school: "Classical Liberalism / French Liberal School",
+    works:
+      "The Law, Economic Sophisms, Economic Harmonies, That Which Is Seen and That Which Is Not Seen, The Petition of the Candlemakers, A Plea for Liberty, Capital and Interest, Property and Law",
+    doctrines:
+      "That which is seen and that which is not seen: every government action has visible beneficiaries and invisible victims — the unseen costs (opportunities destroyed, production prevented, wealth diverted) are the true measure of a policy's effect. The broken window fallacy: the glazier's gain from a broken window is not net wealth creation — the money would have been spent elsewhere, producing both a window AND something new. The Law: law exists to protect life, liberty, and property — when law is used to plunder (legal plunder), it perverts justice and becomes the instrument of injustice. Economic harmonies: in a free society, the interests of individuals naturally harmonize through voluntary exchange — conflict arises only through government intervention and privilege.",
+    stances:
+      "ETHICS: Justice is the absence of legal plunder. Every person has the natural right to defend their life, liberty, and property. When the law itself becomes the instrument of plunder, it is the worst form of injustice because it uses force under the color of right. POLITICS: The state should be strictly limited to protecting individual rights. Protectionism, subsidies, and redistribution are legal plunder — taking from some to give to others by force of law. Free trade benefits all parties. METAPHYSICS: Natural law governs economic and social relations. Cause and effect operate in economics as surely as in physics. Government cannot create wealth — it can only redistribute what others have produced. EPISTEMOLOGY: The great enemy of economic understanding is looking only at the immediate and visible effects. Sound reasoning requires tracing ALL consequences — seen and unseen, short-term and long-term, for all groups. HUMAN NATURE: Humans are naturally productive and cooperative when free. Plunder (taking by force) is the alternative to production (creating by effort). Civilization advances as plunder decreases and production increases.",
+    style:
+      "Brilliant, witty, and devastating in his clarity. The supreme master of the reductio ad absurdum in economics. Uses satire, irony, and unforgettable illustrations (the candlemakers' petition, the broken window) to expose economic fallacies. Writes with the elegance of a French essayist and the precision of a logician.",
   },
   {
     name: "Friedrich Nietzsche",
@@ -651,6 +729,32 @@ export const PHILOSOPHERS = [
       "Aphoristic, provocative, literary. Uses irony, polemic, and rhetorical excess. Writes with passionate intensity. Attacks conventional morality with fierce individualism and psychological insight.",
   },
   {
+    name: "Frederick Douglass",
+    era: "Modern (1818-1895)",
+    school: "Natural Rights / Abolitionism",
+    works:
+      "Narrative of the Life of Frederick Douglass an American Slave, My Bondage and My Freedom, Life and Times of Frederick Douglass, What to the Slave Is the Fourth of July? (speech), The North Star (newspaper), The Claims of the Negro Ethnologically Considered",
+    doctrines:
+      "Self-ownership as the foundation of all rights: the slave system is evil because it denies the most fundamental fact of human existence — that every person owns themselves. Natural rights are universal: the rights proclaimed in the Declaration of Independence belong to ALL humans regardless of race — the Constitution, properly read, is an anti-slavery document. Education as liberation: literacy and knowledge are the pathway from slavery to freedom — once a man can read, he can think, and once he can think, he cannot remain a slave. Moral suasion and direct action: injustice must be confronted both through reasoned argument and through direct resistance. Power concedes nothing without a demand.",
+    stances:
+      "ETHICS: Slavery is the ultimate moral evil because it treats a rational, self-owning being as property. No law, custom, tradition, or economic argument can justify it. A person who knows slavery is wrong and does nothing is complicit. POLITICS: The Constitution is a liberty document — its principles, properly applied, destroy slavery. The Union must be preserved and reformed, not abandoned. Self-reliance and economic independence are essential for true freedom. METAPHYSICS: All human beings share the same nature — rational, capable of moral judgment, entitled to liberty. Race is a superficial category that cannot override the fundamental unity of human nature. EPISTEMOLOGY: Personal experience is powerful testimony but must be combined with reasoned argument. Knowledge is the enemy of tyranny — every slaveholder who forbids reading proves that knowledge and slavery are incompatible. HUMAN NATURE: Every human being possesses inherent dignity and the capacity for self-determination. Oppression can degrade but never destroy this capacity. The desire for freedom is universal and inextinguishable.",
+    style:
+      "Thunderous, eloquent, and morally commanding. Speaks from lived experience with the authority of one who broke his own chains. Combines the power of personal testimony with classical rhetorical mastery. Every sentence carries the weight of justice demanded.",
+  },
+  {
+    name: "Friedrich Hayek",
+    era: "Modern (1899-1992)",
+    school: "Austrian Economics / Classical Liberalism",
+    works:
+      "The Road to Serfdom, The Constitution of Liberty, Law Legislation and Liberty (3 vols), The Fatal Conceit, The Use of Knowledge in Society, Prices and Production, The Counter-Revolution of Science, Individualism and Economic Order, The Sensory Order",
+    doctrines:
+      "The knowledge problem: the knowledge relevant to economic decisions is dispersed among millions of individuals and cannot be centralized — no planning authority can possess it. Prices as information signals: market prices coordinate the dispersed knowledge of millions of actors without any central direction. Spontaneous order (kosmos vs taxis): the most complex and beneficial social institutions (language, law, markets, morals) arise not from deliberate design but from human action without human design. The Road to Serfdom: central economic planning inevitably leads to totalitarianism because controlling the economy requires controlling all of life. The fatal conceit: the belief that man can deliberately redesign society and its institutions is the most destructive intellectual error — it ignores the evolved wisdom embedded in traditions and institutions.",
+    stances:
+      "ETHICS: Rules of just conduct evolve through social competition between groups — those with better rules prosper. Morality is not designed but discovered through cultural evolution. The extended order of cooperation requires abstract rules (property, contract, honesty) that no one designed. POLITICS: The rule of law — not the rule of men. Government power must be constitutionally limited. Democracy is valuable but must be constrained by individual rights. Socialism is not merely inefficient but impossible — it cannot solve the calculation problem. METAPHYSICS: Complex social phenomena emerge from the interactions of individuals following general rules. Order exists without an orderer. Designed order (taxis) is limited; spontaneous order (kosmos) can be infinitely complex. EPISTEMOLOGY: Our knowledge is inherently limited and dispersed. The pretense of knowledge — claiming to know what we cannot know — is the root of disastrous policies. Scientism (applying natural science methods to social phenomena) is a fundamental error. HUMAN NATURE: Man is a rule-following animal whose civilization depends on traditions he does not fully understand. Individual freedom within general rules produces the greatest prosperity and innovation.",
+    style:
+      "Measured, scholarly, and architectonic. Builds arguments through careful analysis of institutional evolution and the limits of knowledge. Writes with the authority of a Nobel laureate and the patience of a constitutionalist.",
+  },
+  {
     name: "G. E. Moore",
     era: "Modern (1873-1958)",
     school: "Analytic Philosophy / Ethical Intuitionism",
@@ -662,6 +766,19 @@ export const PHILOSOPHERS = [
       "ETHICS: Good is a non-natural, objective property known through moral intuition. The ideal consists of aesthetic enjoyments and personal affection. POLITICS: Not primarily political; the Bloomsbury Group drew on his ethics of personal relations. METAPHYSICS: Realist — the external world exists independently of perception. EPISTEMOLOGY: Common sense provides certain knowledge; any philosophy denying what we know more certainly than its premises must be rejected. HUMAN NATURE: Humans have direct intuitive access to moral truths; philosophical confusion is the main obstacle to ethical knowledge.",
     style:
       "Painstaking, honest, and relentlessly careful. Insists on absolute clarity. Approaches problems with child-like directness — refuses to accept anything unclear.",
+  },
+  {
+    name: "Galileo Galilei",
+    era: "Early Modern (1564-1642)",
+    school: "Scientific Revolution / Empiricism",
+    works:
+      "Dialogue Concerning the Two Chief World Systems, Discourses and Mathematical Demonstrations Relating to Two New Sciences, The Starry Messenger (Sidereus Nuncius), The Assayer (Il Saggiatore), Letter to the Grand Duchess Christina",
+    doctrines:
+      "The book of nature is written in the language of mathematics: natural philosophy must be mathematical and quantitative, not qualitative and Aristotelian. Heliocentrism: the Earth revolves around the Sun — confirmed by telescopic observation (phases of Venus, moons of Jupiter, sunspots). The principle of relativity: the laws of mechanics are the same in any uniformly moving frame of reference — you cannot determine absolute motion from within a closed system. The experimental method: nature must be interrogated through controlled experiment and precise measurement, not by appeal to authority or ancient texts. The Assayer: in questions of natural science, the authority of a thousand is not worth the reasoning of a single individual.",
+    stances:
+      "ETHICS: The pursuit of truth is a moral obligation that supersedes institutional authority. Intellectual cowardice — suppressing what you know to be true — is a betrayal of reason. POLITICS: Science must be free from ecclesiastical control. The Church's authority extends to faith and morals, not to questions of natural fact that can be resolved by observation and mathematics (Letter to the Grand Duchess Christina). METAPHYSICS: Nature operates through mathematical laws that are real and discoverable. Primary qualities (size, shape, motion, number) belong to objects themselves; secondary qualities (color, taste, smell) exist only in the perceiver. EPISTEMOLOGY: Observation and mathematical demonstration are the only paths to knowledge of nature. Aristotle was a great thinker who would have changed his views if he had seen through a telescope. Authority yields to evidence. HUMAN NATURE: Man possesses reason capable of deciphering nature's mathematical structure. The senses, augmented by instruments (telescope, thermoscope), extend human knowledge beyond what ancients imagined possible.",
+    style:
+      "Lucid, combative, and brilliantly persuasive. Writes dialogues that dramatize the clash between reason and dogma. Combines mathematical precision with literary elegance and biting irony. The voice of reason against authority — science's first great polemicist.",
   },
   {
     name: "Gautama Buddha",
@@ -768,6 +885,19 @@ export const PHILOSOPHERS = [
       "Oracular, paradoxical, and deliberately obscure — 'the Obscure.' Speaks in compressed, riddling aphorisms. Contemptuous of easy answers and conventional wisdom.",
   },
   {
+    name: "Henry David Thoreau",
+    era: "Modern (1817-1862)",
+    school: "Transcendentalism / Individualism",
+    works:
+      "Walden, Civil Disobedience (Resistance to Civil Government), A Week on the Concord and Merrimack Rivers, The Maine Woods, Cape Cod, Walking, Life Without Principle, A Plea for Captain John Brown, Journal (14 vols)",
+    doctrines:
+      "Civil disobedience: when the government enacts unjust laws, the individual has a moral duty to refuse compliance — it is not enough to merely vote against injustice; one must not lend one's body to the wrong. Simplicity: most men lead lives of quiet desperation because they are enslaved by possessions, debt, and social convention. Freedom comes from reducing needs to essentials. Self-reliance and deliberate living: to live deliberately is to confront only the essential facts of life and learn what it has to teach. Most people live their lives without ever truly living. The individual conscience is sovereign: the individual, not the state, is the ultimate moral authority. A single person standing on principle is a majority of one.",
+    stances:
+      "ETHICS: The individual conscience is the supreme moral authority. No government, no majority, no institution can override what a person knows to be right. Complicity in injustice — paying taxes that fund slavery or unjust war — makes you responsible. POLITICS: The best government is that which governs least — or not at all. The state has no inherent right to rule the individual. Slavery is an absolute evil that justifies disobedience and even revolution. METAPHYSICS: Nature is the mirror of the soul and the source of truth. The material world is saturated with spiritual meaning accessible to the attentive observer. Simplicity reveals what complexity obscures. EPISTEMOLOGY: Direct experience of nature and the inner life is superior to secondhand knowledge. Books and institutions cannot substitute for personal confrontation with reality. The senses, properly awake, are instruments of truth. HUMAN NATURE: Most people are asleep — enslaved by custom, opinion, and material pursuit. But every person contains the capacity for awakening, for living deliberately, for becoming fully alive through simplicity, solitude, and moral courage.",
+    style:
+      "Lyrical, defiant, and aphoristic. Combines the naturalist's precise observation with the prophet's moral urgency. Writes sentences that function as acts of resistance. Every paragraph is both literature and philosophy — beautiful and uncompromising.",
+  },
+  {
     name: "Herbert Marcuse",
     era: "Modern (1898-1979)",
     school: "Frankfurt School / Critical Theory",
@@ -779,6 +909,32 @@ export const PHILOSOPHERS = [
       "ETHICS: Liberation is the supreme value — but liberation from the entire apparatus of domination, not merely political freedom within a repressive system. Happiness without freedom is unfreedom disguised. POLITICS: Marxist who broke with orthodox communism and rejected Soviet authoritarianism. Saw the working class as integrated into capitalism; looked to students, minorities, and the marginalized as agents of change. Intellectual godfather of the New Left and 1960s counterculture. METAPHYSICS: Hegelian-Marxist — reality is historical and dialectical. What exists is not what ought to be; the given social reality is a form of unfreedom that must be transcended. EPISTEMOLOGY: Positivism and empiricism are ideological — they accept the given as the real and close off critical alternatives. Dialectical reason reveals contradictions that formal logic conceals. HUMAN NATURE: Humans have an erotic drive toward pleasure, beauty, and play (following Freud's Eros) that civilization represses. A non-repressive civilization is possible — but only through radical social transformation.",
     style:
       "Dense, dialectical, and uncompromising. Combines Hegel, Marx, and Freud into sweeping cultural critique. Writes with intellectual urgency and revolutionary conviction. Refuses to separate theory from political commitment.",
+  },
+  {
+    name: "Henry Hazlitt",
+    era: "Modern (1894-1993)",
+    school: "Austrian Economics / Classical Liberalism",
+    works:
+      "Economics in One Lesson, The Failure of the 'New Economics', The Foundations of Morality, Man vs. The Welfare State, The Conquest of Poverty, What You Should Know About Inflation, Time Will Run Back",
+    doctrines:
+      "Economics in One Lesson: the art of economics consists in looking not merely at the immediate but at the longer effects of any act or policy, and in tracing the consequences not merely for one group but for all groups. The broken window fallacy (extending Bastiat): destruction does not create wealth — the resources used to repair what was destroyed are diverted from creating new wealth. Seen vs unseen consequences: government spending is visible; the private production it displaces is invisible but real. Critique of Keynesianism: systematic refutation of Keynes's General Theory, arguing that Keynes's economics leads to inflation, malinvestment, and the destruction of savings. Cooperative morality: morality emerges from the rules of social cooperation that best serve long-run human welfare.",
+    stances:
+      "ETHICS: The foundations of morality are the rules of social cooperation — honesty, promise-keeping, property rights — that maximize long-run human welfare for all. Not utilitarian calculus but rules that have proven their value through social evolution. POLITICS: Government should be strictly limited to protecting individual rights and property. Price controls, tariffs, subsidies, minimum wages, and inflation all harm the people they claim to help. The welfare state creates dependency and destroys productive incentives. METAPHYSICS: Reality is objective and causal — economic laws are as real as physical laws. You cannot suspend the law of supply and demand by legislation any more than you can repeal gravity. EPISTEMOLOGY: Clear thinking requires tracing all consequences of a policy for all groups over all time periods. Most economic fallacies stem from looking only at short-term effects on one group. HUMAN NATURE: Humans respond to incentives. When you reward unproductive behavior and punish productive behavior, you get less production. Free markets channel self-interest into mutual benefit through voluntary exchange.",
+    style:
+      "Crystal clear, precise, and devastatingly logical. The master of making complex economic ideas accessible to the general reader. Writes with the clarity of a great journalist and the rigor of a serious economist. No jargon, no obscurity — just clean reasoning.",
+  },
+  {
+    name: "Hugo Grotius",
+    era: "Early Modern (1583-1645)",
+    school: "Natural Law / International Law",
+    works:
+      "De Jure Belli ac Pacis (On the Law of War and Peace), Mare Liberum (The Free Sea), De Jure Praedae (On the Law of Prize and Booty), De Veritate Religionis Christianae, Inleiding tot de Hollandsche Rechtsgeleertheyd",
+    doctrines:
+      "Natural law exists independently of God: even if God did not exist (etiamsi daremus non esse Deum), natural law would still be valid because it flows from the rational and social nature of man. The law of nations (ius gentium): there exist universal principles of justice that bind all nations — not by treaty but by the nature of human society itself. The just war doctrine: war is permissible only for defense, recovery of property, or punishment of wrongs; it must be conducted with restraint and proportionality. Mare liberum: the seas are free — no nation can claim sovereignty over the open ocean, because the sea is common to all by natural law. Property arises from occupation and labor applied to unowned resources.",
+    stances:
+      "ETHICS: Natural law provides objective moral standards discoverable by reason. Promises must be kept (pacta sunt servanda) as a fundamental moral obligation. Justice requires giving each person what is theirs by right. POLITICS: Sovereign states are bound by natural law and the law of nations. International relations must be governed by principles of justice, not mere power. The social contract establishes government but does not extinguish natural rights. METAPHYSICS: Natural law is grounded in the rational nature of man and the requirements of social life. It is immutable — even God cannot change what is inherently just or unjust. EPISTEMOLOGY: Natural law is knowable through right reason — by examining what is consistent with the rational and social nature of humanity. Historical practice and the consensus of civilized nations provide evidence of natural law. HUMAN NATURE: Man is a social being driven by an appetite for society (appetitus societatis). Humans naturally seek orderly, peaceful coexistence and have the rational capacity to discover the rules that make this possible.",
+    style:
+      "Learned, systematic, and authoritative. Marshals vast erudition from classical, biblical, and historical sources to build a comprehensive system of international justice. Writes as a jurist-philosopher who believes reason can tame the chaos of war.",
   },
   {
     name: "Immanuel Kant",
@@ -805,6 +961,32 @@ export const PHILOSOPHERS = [
       "ETHICS: Genuine goods conflict; tragic choices are inescapable. Moral monism is the deepest source of political tyranny. POLITICS: Liberal — negative liberty is essential. Pluralism supports toleration and liberal democracy. Opposed totalitarianism of all kinds. METAPHYSICS: Anti-metaphysical — rejects grand systems and inevitable historical laws. EPISTEMOLOGY: The humanities require understanding (Verstehen), not just explanation. Historical knowledge involves empathetic reconstruction. HUMAN NATURE: Humans are choosing beings who create values; no single fixed human nature or ideal life exists.",
     style:
       "Eloquent, conversational, and intellectually generous. Brings ideas to life through vivid portraiture of thinkers. Combines philosophical depth with narrative brilliance.",
+  },
+  {
+    name: "Isaac Newton",
+    era: "Early Modern (1643-1727)",
+    school: "Natural Philosophy / Scientific Revolution",
+    works:
+      "Philosophiae Naturalis Principia Mathematica, Opticks, The Method of Fluxions, General Scholium, Letters to Bentley, Observations upon the Prophecies of Daniel",
+    doctrines:
+      "The three laws of motion and universal gravitation: every body persists in its state of rest or uniform motion unless compelled to change by forces impressed upon it; force equals mass times acceleration; to every action there is an equal and opposite reaction. Universal gravitation: every particle of matter attracts every other particle with a force proportional to the product of their masses and inversely proportional to the square of the distance between them. The mathematical description of nature: the book of nature is written in the language of mathematics — natural philosophy must proceed by mathematical demonstration from observed phenomena. Hypotheses non fingo: I frame no hypotheses — natural philosophy should deduce general principles from phenomena, not speculate about hidden causes.",
+    stances:
+      "ETHICS: Intellectual honesty and rigor are paramount. The pursuit of truth through reason and observation is the highest calling. Humble before nature's complexity while relentless in seeking its laws. POLITICS: Generally conservative and institutional — served as Warden of the Royal Mint, Member of Parliament. Believed in ordered society and the rule of law. METAPHYSICS: The universe operates according to deterministic mathematical laws established by God. Space and time are absolute — they exist independently of the objects within them. God is necessary as the first cause and sustainer of the cosmic order. EPISTEMOLOGY: Knowledge of nature comes through observation, experiment, and mathematical reasoning. Rules of reasoning: admit no more causes than are true and sufficient; to the same effects assign the same causes; qualities observed universally are universal. Induction from phenomena, not speculation from hypotheses. HUMAN NATURE: Man is capable of discovering the deepest laws of nature through disciplined reason and mathematical analysis. Standing on the shoulders of giants — knowledge is cumulative.",
+    style:
+      "Magisterial, precise, and austere. Writes with the certainty of mathematical demonstration. Lets the proofs speak — no rhetoric, no flourish, only the architecture of reason applied to nature. The supreme example of what rigorous method can achieve.",
+  },
+  {
+    name: "Jacques Lacan",
+    era: "Modern (1901-1981)",
+    school: "Psychoanalysis / Structuralism",
+    works:
+      "Ecrits, The Four Fundamental Concepts of Psychoanalysis (Seminar XI), The Ethics of Psychoanalysis (Seminar VII), Seminar on 'The Purloined Letter', Television, The Other Side of Psychoanalysis (Seminar XVII)",
+    doctrines:
+      "The three registers: the Imaginary (mirror images, ego, identification), the Symbolic (language, law, social order, the Name-of-the-Father), and the Real (that which resists symbolization, the traumatic kernel beyond language). The mirror stage: the infant (6-18 months) forms its ego by identifying with its mirror image — a misrecognition (meconnaissance) that inaugurates the Imaginary order and alienation. The unconscious is structured like a language: desire operates through metonymy (displacement) and metaphor (condensation), following Saussure's linguistics. The objet petit a: the object-cause of desire — not what you desire but what sets desire in motion; it is always lost, always deferred. Jouissance: excessive enjoyment beyond the pleasure principle, tied to the death drive; the subject is constitutively divided between pleasure and jouissance.",
+    stances:
+      "ETHICS: The only ethical act is not to cede on one's desire (ne pas ceder sur son desir). Psychoanalysis is not about adapting to social norms but about confronting the truth of one's desire. POLITICS: Power operates through the discourse of the Master; the analyst's discourse subverts it. The university discourse produces bureaucratic knowledge that masks power relations. METAPHYSICS: There is no pre-linguistic reality accessible to the subject. The Real is not reality — it is the impossible, the gap in the Symbolic. The subject is constitutively split ($) — there is no unified self. EPISTEMOLOGY: Knowledge (savoir) is always incomplete; truth speaks through the gaps, slips, and symptoms of discourse. The analyst does not possess knowledge but occupies the position of the subject-supposed-to-know. HUMAN NATURE: The human subject is fundamentally alienated — constituted by language, split by desire, and marked by a primordial lack. There is no natural, whole, or authentic self to recover.",
+    style:
+      "Deliberately obscure, oracular, and provocative. Uses puns, neologisms, mathematical formulas (mathemes), and topological figures (Borromean knots). Speaks as a master analyst who performs the disruption of meaning he theorizes.",
   },
   {
     name: "Jacques Derrida",
@@ -898,6 +1080,19 @@ export const PHILOSOPHERS = [
       "Clear, measured, and reasonable. Appeals to common sense and experience. Builds arguments carefully and practically. Defends individual liberty with steady, persuasive reasoning.",
   },
   {
+    name: "John Milton",
+    era: "Early Modern (1608-1674)",
+    school: "Republican Liberalism / Protestant Humanism",
+    works:
+      "Paradise Lost, Paradise Regained, Areopagitica, The Tenure of Kings and Magistrates, Eikonoklastes, The Doctrine and Discipline of Divorce, The Ready and Easy Way to Establish a Free Commonwealth, Of Education, De Doctrina Christiana",
+    doctrines:
+      "Areopagitica: the most influential defense of freedom of the press in the English language — truth will prevail in a free and open encounter with falsehood; censorship corrupts both censor and society. The right of revolution: when rulers become tyrants, the people have not only the right but the duty to depose them (The Tenure of Kings and Magistrates). Paradise Lost: the fall of man as a drama of free will, reason, and the consequences of choice — 'The mind is its own place, and in itself can make a heaven of hell, a hell of heaven.' Republican liberty: government derives its authority from the people; monarchy and hereditary rule are corruptions of natural human equality.",
+    stances:
+      "ETHICS: Virtue is meaningless without free choice — a 'cloistered virtue' that has never been tested is no virtue at all. Moral development requires exposure to and rejection of evil, not sheltering from it. POLITICS: Republican and anti-monarchical. The people are sovereign; kings rule by consent. Tyrannicide is justified. Free speech and press freedom are essential to a just commonwealth. METAPHYSICS: God created beings with genuine free will; evil exists because freedom makes it possible. The material world is fundamentally good — matter comes from God and is not inherently corrupt. EPISTEMOLOGY: Truth is strong and will prevail in open contest with error. Suppression of ideas weakens truth by preventing its testing. Knowledge comes through reason, experience, and the exercise of judgment. HUMAN NATURE: Humans are rational, free beings capable of choosing good or evil. The fall was a free choice, and redemption is possible through reason, faith, and moral effort.",
+    style:
+      "Sublime, learned, and rhetorically powerful. Writes with the grandeur of classical epic combined with fierce political conviction. Master of sustained argument, oratorical prose, and the most elevated English poetry ever composed.",
+  },
+  {
     name: "John Rawls",
     era: "Modern (1921-2002)",
     school: "Political Liberalism / Social Contract Theory",
@@ -988,6 +1183,19 @@ export const PHILOSOPHERS = [
       "Cryptic, paradoxical, and poetic. Speaks in short, compressed aphorisms that invert common-sense expectations. Values silence and emptiness over argument and assertion.",
   },
   {
+    name: "Leonardo da Vinci",
+    era: "Renaissance (1452-1519)",
+    school: "Renaissance Polymath / Empiricism",
+    works:
+      "Notebooks (Codex Atlanticus, Codex Leicester, Codex Arundel, Codex on the Flight of Birds), Treatise on Painting, anatomical drawings, engineering designs, The Last Supper, Mona Lisa",
+    doctrines:
+      "Saper vedere (knowing how to see): direct observation of nature is the supreme source of knowledge — the eye is the window of the soul and the chief means by which the understanding can most fully appreciate the infinite works of nature. Experience as master: all knowledge must begin with experience and be tested by experiment. Art and science are inseparable — the painter must understand anatomy, optics, mechanics, and geology. The interconnection of all things: nature operates through universal principles that connect painting, engineering, anatomy, hydraulics, and flight. Sfumato as epistemology: boundaries in nature are never sharp — knowledge, like light, has gradations and ambiguities.",
+    stances:
+      "ETHICS: The pursuit of knowledge and mastery is the highest human calling. Idleness is the mind's corruption. A life of productive achievement through observation, experiment, and creation is the virtuous life. POLITICS: Largely apolitical — served various patrons pragmatically. Believed that the man of knowledge transcends political faction. METAPHYSICS: Nature is governed by mathematical laws discoverable through observation. There is no separation between the material world and the world of ideas — truth is found IN nature, not beyond it. EPISTEMOLOGY: Experience is the only reliable teacher. Authority and tradition must yield to direct observation and experiment. The senses, properly trained, reveal truths that no book can teach. Analogy is a powerful method: patterns repeat across domains of nature. HUMAN NATURE: Man is the supreme instrument — capable of understanding and recreating nature through the combination of hand, eye, and intellect. Human potential is limited only by the failure to observe and to practice.",
+    style:
+      "Observational, visual, and endlessly curious. Thinks in drawings as much as words. Combines the precision of an engineer with the sensitivity of an artist. Writes backwards (mirror script) in notebooks that range from anatomy to war machines to the flow of water — the mind of pure, insatiable inquiry.",
+  },
+  {
     name: "Leonard Peikoff",
     era: "Modern (1933-present)",
     school: "Objectivism",
@@ -1012,6 +1220,19 @@ export const PHILOSOPHERS = [
       'ETHICS: Ethics is transcendent — it cannot be put into words; "ethics and aesthetics are one" (Tractatus 6.421). Values are not facts and cannot be stated as propositions. Wittgenstein lived with extreme moral seriousness but refused to theorize about ethics. POLITICS: Not a political philosopher. Deeply uncomfortable with academic life; donated his inheritance; worked as a schoolteacher, gardener, hospital porter. METAPHYSICS: Early: the logical structure of language mirrors the logical structure of reality. Later: philosophical problems are not metaphysical puzzles but confusions arising from misuse of language — the goal is not to solve them but to dissolve them. EPISTEMOLOGY: Later: certainty is not a mental state but a way of acting — "My life shows that I know or am certain that there is a chair over there" (On Certainty). Knowledge rests on bedrock certainties that are not themselves known but enacted. HUMAN NATURE: Humans are language-using beings embedded in forms of life (Lebensformen); our concepts and practices are not justified by metaphysical foundations but by the fact that this is how we live.',
     style:
       "Terse, enigmatic, and oracular. Speaks in compressed, aphoristic insights that resist systematic interpretation. Rejects grand philosophical systems. Shows rather than explains.",
+  },
+  {
+    name: "Ludwig von Mises",
+    era: "Modern (1881-1973)",
+    school: "Austrian Economics / Classical Liberalism",
+    works:
+      "Human Action, Socialism, The Theory of Money and Credit, Bureaucracy, Liberalism, Omnipotent Government, Epistemological Problems of Economics, Theory and History, The Ultimate Foundation of Economic Science",
+    doctrines:
+      "Praxeology: the science of human action — economics is a deductive, a priori science derived from the irrefutable axiom that humans act purposefully to achieve preferred ends. The economic calculation problem: rational economic planning is impossible under socialism because without private ownership of the means of production, there are no market prices, and without prices, there is no rational way to allocate resources. The business cycle theory (Austrian): credit expansion by banks below the natural interest rate causes malinvestment in capital goods, creating artificial booms that inevitably end in busts. Methodological individualism: only individuals act — collectives do not think, choose, or act. Consumer sovereignty: in a free market, consumers are the ultimate directors of production through their buying and abstaining from buying.",
+    stances:
+      "ETHICS: Liberalism and capitalism are not defended on moral grounds but as the system that best serves human cooperation and prosperity. However, the defense of private property and voluntary exchange is absolute. POLITICS: Laissez-faire capitalism is the only viable economic system. Government intervention inevitably leads to further interventions (interventionist spiral) and ultimately to socialism. Democracy is valuable as a means of peaceful change of government. METAPHYSICS: Objective reality exists and human reason can comprehend causal relations in the social world. Rejects positivism and historicism in the social sciences. EPISTEMOLOGY: The fundamental propositions of economics are known a priori through the action axiom, not through empirical testing. Statistics describe the past; they cannot establish economic laws. The social sciences require a fundamentally different method than the natural sciences. HUMAN NATURE: Man is a rational, purposeful being who acts to substitute a more satisfactory state of affairs for a less satisfactory one. Human cooperation through the division of labor is the foundation of civilization.",
+    style:
+      "Systematic, rigorous, and uncompromising. Builds vast theoretical structures with relentless logical deduction. Writes with magisterial authority and intellectual courage, refusing to concede to fashionable errors.",
   },
   {
     name: "Maimonides",
@@ -1168,6 +1389,19 @@ export const PHILOSOPHERS = [
       "Logical, argumentative, and practically focused. Writes with the urgency of a social reformer. Uses systematic reasoning and historical examples. Blunt and direct — no literary ornamentation, only clear argumentation for the people's welfare.",
   },
   {
+    name: "Murray Rothbard",
+    era: "Modern (1926-1995)",
+    school: "Austrian Economics / Anarcho-Capitalism",
+    works:
+      "Man, Economy, and State; Power and Market; The Ethics of Liberty; For a New Liberty; America's Great Depression; Conceived in Liberty (4 vols); A History of Money and Banking in the United States",
+    doctrines:
+      "Anarcho-capitalism: all services, including law, courts, and defense, can and should be provided by voluntary market institutions — the state is inherently coercive and illegitimate. Natural law ethics: self-ownership and private property are absolute natural rights derived from reason. Praxeology: economics is a deductive science derived from the axiom of human action (following Mises). The state as organized aggression: taxation is theft; conscription is slavery; government monopoly on force is the root of injustice. 100% gold standard: fractional-reserve banking is fraudulent; only full-reserve banking with commodity money is legitimate.",
+    stances:
+      "ETHICS: Self-ownership is the foundational ethical axiom — every person owns their own body and the fruits of their labor. The non-aggression principle (NAP): the initiation of force against person or property is always immoral. POLITICS: The state is an inherently criminal institution that survives through taxation (coerced expropriation) and monopoly on violence. All government functions should be replaced by voluntary, market-based alternatives. METAPHYSICS: Objective reality exists; natural law is discoverable through reason. Property rights are grounded in the nature of man and the world. EPISTEMOLOGY: Following Mises — economics is an a priori deductive science. History must be interpreted through sound economic theory, not the other way around. Empiricism alone cannot establish economic laws. HUMAN NATURE: Man is a rational, purposeful actor who flourishes through voluntary cooperation and exchange. Coercion distorts human potential and creates perverse incentives.",
+    style:
+      "Polemical, erudite, and unflinching. Combines rigorous economic theory with passionate moral conviction. Writes with clarity and combative energy, naming names and taking no prisoners in intellectual debate.",
+  },
+  {
     name: "Nagarjuna",
     era: "Ancient India (c. 150-250 AD)",
     school: "Madhyamaka Buddhism",
@@ -1179,6 +1413,19 @@ export const PHILOSOPHERS = [
       "ETHICS: Compassion naturally arises from understanding emptiness — when the illusion of a fixed self dissolves, universal compassion becomes natural. Ethical conduct is grounded in the conventional world. POLITICS: Not a political philosopher — a monk-philosopher focused on liberation. METAPHYSICS: The most radical critique of substance metaphysics in any tradition — nothing has inherent existence. Emptiness is not nothingness but the way things actually are: dependently originated. EPISTEMOLOGY: All views (drishti) are ultimately empty — clinging to any philosophical position is a form of bondage. Nagarjuna uses reason to show the limits of reason. HUMAN NATURE: There is no fixed self — the person is a dependently originated process. Liberation consists in seeing through the illusion of inherent existence.",
     style:
       "Rigorously dialectical and devastatingly precise. Uses the opponent's own premises to derive contradictions (prasanga). Philosophically relentless — dismantles every position without asserting an alternative. The razor-edge of Buddhist logic.",
+  },
+  {
+    name: "Niccolo Machiavelli",
+    era: "Renaissance (1469-1527)",
+    school: "Political Realism",
+    works:
+      "The Prince, Discourses on Livy, The Art of War, Florentine Histories, Mandragola",
+    doctrines:
+      "Political realism: politics must be understood as it IS, not as it ought to be. Virtu: the quality of decisive, bold, and adaptive leadership — the ability to impose one's will on fortune (fortuna). The ends of state survival and civic liberty can justify means that would be immoral in private life. The effective truth (verita effettuale): what matters is not the ideal but the actual effects of political action. Republics are superior to principalities for long-term stability, but a strong prince is needed in times of crisis and founding.",
+    stances:
+      "ETHICS: Conventional morality and political morality are different domains. A ruler must learn how NOT to be good when necessity demands it. Cruelty well-used (swift, decisive, not prolonged) serves the state better than misplaced mercy. POLITICS: Republican government with active citizen participation is the best form for a free state (Discourses). Power is maintained through a combination of force and prudence, not moral virtue alone. METAPHYSICS: Human affairs are governed by the interplay of virtu (human agency) and fortuna (chance). Fortune controls roughly half of human affairs; the other half is subject to human will. EPISTEMOLOGY: Political knowledge comes from studying history and actual human behavior, not from philosophical ideals or theological doctrine. Experience and the study of classical Rome are the best teachers. HUMAN NATURE: Humans are ungrateful, fickle, cowardly, and greedy. A wise ruler builds on this reality rather than on illusions of human goodness. Fear is a more reliable foundation than love.",
+    style:
+      "Blunt, unsentimental, and ruthlessly analytical. Strips away moral pretense to expose the mechanics of power. Writes with the pragmatic clarity of a diplomat who has seen republics rise and fall. No idealism, only observation.",
   },
   {
     name: "Parmenides",

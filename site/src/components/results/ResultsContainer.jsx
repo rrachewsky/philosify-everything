@@ -132,9 +132,10 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
   const resolvedMediaType = mediaType !== 'music' ? mediaType : (result.media_type || 'music');
   const isLiterature = resolvedMediaType === 'literature';
   const isCinema = resolvedMediaType === 'cinema';
-  // News analysis uses a completely different rendering path (4 cards, no scorecard)
-  // Detect new format by checking for the_facts field; old cached results fall through to legacy rendering
-  const isNews = resolvedMediaType === 'news' && !!result.the_facts;
+  // Any news result (old or new format) — used to hide Spotify embed and music-specific specs
+  const isAnyNews = resolvedMediaType === 'news';
+  // New format specifically (4 cards) — old cached results fall through to legacy rendering
+  const isNews = isAnyNews && !!result.the_facts;
   const showCoverImage = isLiterature || isCinema;
 
   if (!result) return null;
@@ -236,19 +237,19 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
                   <div className="tech-specs-value">{result.genre}</div>
                 </>
               )}
-              {result.tempo && (
+              {!isAnyNews && result.tempo && (
                 <>
                   <div className="tech-specs-label">{t('tempo', { defaultValue: 'Tempo' })}:</div>
                   <div className="tech-specs-value">{result.tempo} BPM</div>
                 </>
               )}
-              {result.key && (
+              {!isAnyNews && result.key && (
                 <>
                   <div className="tech-specs-label">{t('key', { defaultValue: 'Key' })}:</div>
                   <div className="tech-specs-value">{result.key}</div>
                 </>
               )}
-              {result.time_signature && (
+              {!isAnyNews && result.time_signature && (
                 <>
                   <div className="tech-specs-label">
                     {t('timeSignature', { defaultValue: 'Time' })}:
@@ -278,7 +279,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
             </div>
           )
         ) : (
-          !isNews && spotifyEmbedSrc && (
+          !isAnyNews && spotifyEmbedSrc && (
             <div className="mt-5">
               <iframe
                 key={spotifyTrackId || spotifyQuery}
