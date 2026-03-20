@@ -1,20 +1,14 @@
 // ============================================================
 // AI - News Article Analysis Orchestrator
 // ============================================================
-// Calls AI models with the news analysis prompt, parses JSON response.
+// Calls Grok (primary) or Claude (fallback) with the news analysis prompt.
 // Returns 4 fields: the_facts, source_analysis, hits_and_misses, philosify_opinion.
-// No scorecard, no classification, no philosophical note.
+// No scorecard, no classification, no normalizeResponse.
 // ============================================================
 
 import { buildNewsAnalysisPrompt } from "./prompts/news-analysis-template.js";
-import {
-  callClaude,
-  callOpenAI,
-  callGemini,
-  callGrok,
-  callDeepSeek,
-} from "./models/index.js";
-import { extractJSON, normalizeResponse } from "./parser.js";
+import { callGrok, callClaude } from "./models/index.js";
+import { extractJSON } from "./parser.js";
 
 const LANG_NAMES = {
   en: "English", pt: "Portuguese", es: "Spanish", de: "German",
@@ -24,28 +18,18 @@ const LANG_NAMES = {
   pl: "Polish", tr: "Turkish",
 };
 
-function normalizeModelKey(model) {
-  const m = String(model || "").toLowerCase();
-  if (m.includes("claude") || m === "anthropic") return "claude";
-  if (m === "gpt4" || m === "openai" || m.startsWith("o1") || m.startsWith("o3") || m.startsWith("gpt-")) return "openai";
-  if (m.includes("gemini")) return "gemini";
-  if (m.includes("grok")) return "grok";
-  if (m.includes("deepseek")) return "deepseek";
-  throw new Error(`Unrecognized model key: "${model}"`);
-}
-
-function isComplete(normalized) {
+function isComplete(result) {
   const issues = [];
-  if (!normalized.the_facts || normalized.the_facts.length < 80) {
+  if (!result.the_facts || result.the_facts.length < 80) {
     issues.push("the_facts too short or missing");
   }
-  if (!normalized.source_analysis || normalized.source_analysis.length < 80) {
+  if (!result.source_analysis || result.source_analysis.length < 80) {
     issues.push("source_analysis too short or missing");
   }
-  if (!normalized.hits_and_misses || normalized.hits_and_misses.length < 80) {
+  if (!result.hits_and_misses || result.hits_and_misses.length < 80) {
     issues.push("hits_and_misses too short or missing");
   }
-  if (!normalized.philosify_opinion || normalized.philosify_opinion.length < 100) {
+  if (!result.philosify_opinion || result.philosify_opinion.length < 100) {
     issues.push("philosify_opinion too short or missing");
   }
   return { ok: issues.length === 0, issues };
@@ -57,37 +41,24 @@ export async function analyzeNewsPhilosophy(title, source, articleText, newsMeta
 
   console.log(`[NewsOrchestrator] Prompt: ${prompt.length} chars, Guide: ${guide?.length || 0} chars, SourceOfTruth: ${sourceOfTruth?.length || 0} chars`);
 
-  const requestedKey = normalizeModelKey(model);
+  // Grok is primary for news analysis. Claude is the only fallback.
+  const modelChain = [
+    { key: "grok", call: () => callGrok(prompt, targetLanguage, env) },
+    { key: "claude", call: () => callClaude(prompt, targetLanguage, env) },
+  ];
 
-  const callByKey = {
-    claude: () => callClaude(prompt, targetLanguage, env),
-    openai: () => callOpenAI(prompt, targetLanguage, env),
-    gemini: () => callGemini(prompt, targetLanguage, env),
-    grok: () => callGrok(prompt, targetLanguage, env),
-    deepseek: () => callDeepSeek(prompt, targetLanguage, env),
-  };
-
-  const fallbacksByKey = {
-    claude: ["openai", "gemini", "grok", "deepseek"],
-    openai: ["claude", "gemini", "grok", "deepseek"],
-    gemini: ["claude", "openai", "grok", "deepseek"],
-    grok: ["claude", "openai", "gemini", "deepseek"],
-    deepseek: ["claude", "openai", "gemini", "grok"],
-  };
-
-  const modelChain = [requestedKey, ...(fallbacksByKey[requestedKey] || [])];
   let analysisText = null;
-  let usedModel = requestedKey;
+  let usedModel = "grok";
 
-  for (const currentKey of modelChain) {
+  for (const { key, call } of modelChain) {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        console.log(`[NewsOrchestrator] ${currentKey} attempt ${attempt}/2`);
-        analysisText = await callByKey[currentKey]();
-        usedModel = currentKey;
+        console.log(`[NewsOrchestrator] ${key} attempt ${attempt}/2`);
+        analysisText = await call();
+        usedModel = key;
         if (analysisText) break;
       } catch (err) {
-        console.error(`[NewsOrchestrator] ${currentKey} attempt ${attempt} failed: ${err.message}`);
+        console.error(`[NewsOrchestrator] ${key} attempt ${attempt} failed: ${err.message}`);
         if (err.message?.includes("content_filtered")) break;
         if (attempt >= 2) break;
       }
@@ -100,12 +71,18 @@ export async function analyzeNewsPhilosophy(title, source, articleText, newsMeta
   const parsed = extractJSON(analysisText);
   if (!parsed) throw new Error("Failed to parse AI response as JSON");
 
-  const normalized = normalizeResponse(parsed);
+  const result = {
+    the_facts: parsed.the_facts || "",
+    source_analysis: parsed.source_analysis || "",
+    hits_and_misses: parsed.hits_and_misses || "",
+    philosify_opinion: parsed.philosify_opinion || "",
+    country: parsed.country || "",
+    genre: parsed.genre || "",
+    model: usedModel,
+  };
 
-  const check = isComplete(normalized);
+  const check = isComplete(result);
   if (!check.ok) console.warn(`[NewsOrchestrator] Incomplete: ${check.issues.join(", ")}`);
 
-  normalized.model = usedModel;
-
-  return normalized;
+  return result;
 }
