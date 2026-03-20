@@ -170,6 +170,7 @@ export function NewsSidebar({
     defaultSources,
     unlock: unlockSources,
     updateSources,
+    refreshPreferences,
   } = useNewsPreferences();
 
   // Lock body scroll when sidebar is open
@@ -278,7 +279,10 @@ export function NewsSidebar({
             {user && (
               <button
                 className={`news-filter-btn ${sourcesUnlocked ? 'news-filter-btn--unlocked' : ''}`}
-                onClick={() => setShowSourcePicker(true)}
+                onClick={() => {
+                  refreshPreferences();
+                  setShowSourcePicker(true);
+                }}
                 title={t('news.sourcePicker.title')}
               >
                 <span style={{ marginRight: '4px' }}>&#9881;</span>

@@ -475,15 +475,24 @@ export async function handleUpdateNewsPreferences(request, env, origin) {
     );
 
     if (!updateRes.ok) {
+      const errText = await updateRes.text().catch(() => "");
+      console.error(`[NewsPreferences] PATCH failed: ${updateRes.status} ${errText}`);
       throw new Error(`Failed to update: ${updateRes.status}`);
     }
 
-    console.log(`[NewsPreferences] User ${user.userId} updated sources: ${sources.length} selected`);
+    const updated = await updateRes.json().catch(() => []);
+    const savedSources = updated[0]?.enabled_sources;
+    console.log(`[NewsPreferences] User ${user.userId} saved ${sources.length} sources. Supabase confirmed: ${savedSources?.length ?? "null"} sources`);
+
+    // Verify the save actually persisted
+    if (!savedSources || savedSources.length !== sources.length) {
+      console.error(`[NewsPreferences] SAVE MISMATCH: sent ${sources.length}, got back ${savedSources?.length ?? "null"}`);
+    }
 
     return jsonResponse(
       {
         success: true,
-        enabledSources: sources,
+        enabledSources: savedSources || sources,
       },
       200,
       origin,

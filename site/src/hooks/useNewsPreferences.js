@@ -22,29 +22,34 @@ export function useNewsPreferences() {
   const [defaultSources, setDefaultSources] = useState([]);
   const [availableSources, setAvailableSources] = useState({});
 
-  // Fetch preferences on mount (if user is logged in)
-  useEffect(() => {
+  // Fetch preferences from API
+  const fetchPrefs = useCallback(async () => {
     if (!user) return;
-
-    const fetchPrefs = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await getNewsPreferences();
-        setUnlocked(data.unlocked || false);
-        setEnabledSources(data.enabledSources);
-        setDefaultSources(data.defaultSources || []);
-        setAvailableSources(data.availableSources || {});
-      } catch (err) {
-        console.error('[useNewsPreferences] Fetch error:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPrefs();
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getNewsPreferences();
+      console.log('[useNewsPreferences] Loaded from API:', {
+        unlocked: data.unlocked,
+        enabledSources: data.enabledSources?.length ?? 'null',
+        sources: data.enabledSources?.slice(0, 5),
+      });
+      setUnlocked(data.unlocked || false);
+      setEnabledSources(data.enabledSources);
+      setDefaultSources(data.defaultSources || []);
+      setAvailableSources(data.availableSources || {});
+    } catch (err) {
+      console.error('[useNewsPreferences] Fetch error:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, [user]);
+
+  // Fetch on mount
+  useEffect(() => {
+    fetchPrefs();
+  }, [fetchPrefs]);
 
   // Unlock custom source selection (costs 1 credit)
   const unlock = useCallback(async () => {
@@ -80,6 +85,10 @@ export function useNewsPreferences() {
     setError(null);
     try {
       const result = await updateNewsSources(sources);
+      console.log('[useNewsPreferences] Save result:', {
+        success: result.success,
+        savedSources: result.enabledSources?.length ?? 'null',
+      });
       if (result.success) {
         setEnabledSources(result.enabledSources);
       }
@@ -111,6 +120,7 @@ export function useNewsPreferences() {
     // Actions
     unlock,
     updateSources,
+    refreshPreferences: fetchPrefs,
   };
 }
 
