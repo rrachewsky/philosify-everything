@@ -323,11 +323,13 @@ function deduplicateArticles(articles) {
 // ============================================================
 
 /**
- * Fetch headlines in user's language — ALL topics + national/local.
- * International topics (world, business, science, technology) are fetched
- * in the user's language so sources naturally publish in that language.
- * National topic adds local source diversity (local newspapers/magazines).
- * This ensures all headlines are natively in the user's language.
+ * Fetch headlines from ALL GNews-supported languages for the "world" topic,
+ * giving truly global coverage (5 continents, all major source regions).
+ * Also fetches all topics in the user's language for local depth.
+ *
+ * This ensures sources from China, Israel, Iran, Brazil, Japan, Germany,
+ * Russia, Korea, etc. all appear regardless of the user's interface language.
+ * The AI summarizer and analysis translate content to the user's language.
  */
 export async function fetchAllHeadlines(env, lang = "en") {
   const apiKey = await getSecret(env.GNEWS_API_KEY);
@@ -335,22 +337,31 @@ export async function fetchAllHeadlines(env, lang = "en") {
 
   const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
 
-  // Debug: log key prefix to verify correct key is loaded
   console.log(`[News] API key starts with: ${apiKey.substring(0, 6)}...`);
-  console.log(`[News] Fetching all topics in "${gnewsLang}" (international + local mix)`);
+  console.log(`[News] Fetching GLOBAL headlines: "world" from ${GNEWS_LANGS.length} languages + all topics in "${gnewsLang}"`);
 
-  // Fetch ALL topics in user's language for natural translation
-  // This returns a mix of international coverage + local sources publishing in that language
-  const topicPromises = INTL_TOPICS.map((topic) =>
-    fetchTopicHeadlines(apiKey, topic, gnewsLang, 10)
-  );
+  const promises = [];
 
-  // Always include national/local news for local source diversity
-  // (local newspapers, agencies, magazines alongside major outlets)
-  topicPromises.push(fetchTopicHeadlines(apiKey, "nation", gnewsLang, 10));
+  // 1. Fetch "world" topic from ALL supported languages — global coverage
+  //    This pulls articles from sources in every region: WSJ (en), Xinhua (zh),
+  //    Haaretz (he), Al Jazeera (ar), Le Monde (fr), Der Spiegel (de), etc.
+  for (const fetchLang of GNEWS_LANGS) {
+    promises.push(fetchTopicHeadlines(apiKey, "world", fetchLang, 10));
+  }
 
-  const results = await Promise.all(topicPromises);
+  // 2. Fetch remaining topics in user's language for local depth
+  const otherTopics = INTL_TOPICS.filter((t) => t !== "world");
+  for (const topic of otherTopics) {
+    promises.push(fetchTopicHeadlines(apiKey, topic, gnewsLang, 10));
+  }
+
+  // 3. National/local news in user's language
+  promises.push(fetchTopicHeadlines(apiKey, "nation", gnewsLang, 10));
+
+  console.log(`[News] ${promises.length} API calls in parallel...`);
+  const results = await Promise.all(promises);
   const allArticles = deduplicateArticles(results.flat());
+  console.log(`[News] ${allArticles.length} articles after dedup (from ${promises.length} fetches)`);
 
   // Apply source blacklist + content filter
   const notBlocked = allArticles.filter((a) => !isBlockedSource(a.source));
@@ -362,20 +373,17 @@ export async function fetchAllHeadlines(env, lang = "en") {
 
   // Sort by: 1) source priority, 2) philosophical relevance, 3) date
   clean.sort((a, b) => {
-    // First: source quality (Tier 1 > Tier 2 > Others)
     const srcA = getSourcePriorityScore(a);
     const srcB = getSourcePriorityScore(b);
     if (srcB !== srcA) return srcB - srcA;
-    // Second: philosophical relevance
     const philA = getPhilosophicalScore(a);
     const philB = getPhilosophicalScore(b);
     if (philB !== philA) return philB - philA;
-    // Third: newest first
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
 
   const priorityCount = clean.filter(a => getSourcePriorityScore(a) > 0).length;
-  console.log(`[News] ${clean.length} clean headlines (${priorityCount} from priority sources, ${sourceBlocked} source-blocked, ${contentFiltered} content-filtered)`);
+  console.log(`[News] ${clean.length} clean global headlines (${priorityCount} priority, ${sourceBlocked} blocked, ${contentFiltered} filtered)`);
   return clean;
 }
 
