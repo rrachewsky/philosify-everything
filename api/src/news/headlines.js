@@ -430,9 +430,15 @@ async function summarizeArticles(articles, lang, env) {
 
   const batch = articles.map((a, i) => `[${i}] ${a.title}${a.description ? " — " + a.description : ""}`).join("\n");
 
-  const prompt = `You are a news editor. For each article below, write a concise summary of approximately 40 words.
-Write ALL summaries in the language with ISO code "${lang}".
-Return ONLY a valid JSON array: [{"id":0,"summary":"..."},{"id":1,"summary":"..."},...]
+  const prompt = `You are a multilingual news editor. For each article below:
+1. Translate the headline title into the language with ISO code "${lang}" (if it is already in "${lang}", keep it as-is).
+2. Write a concise summary of approximately 40 words in "${lang}".
+
+The articles may be in ANY language (English, Chinese, Arabic, Hebrew, Japanese, etc.).
+You MUST translate EVERY title and summary into "${lang}". No exceptions.
+
+Return ONLY a valid JSON array:
+[{"id":0,"title":"translated title in ${lang}","summary":"summary in ${lang}"},{"id":1,"title":"...","summary":"..."},...]
 No markdown fences, no explanation, ONLY the JSON array.
 
 Articles:
@@ -445,7 +451,7 @@ ${batch}`;
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.2, maxOutputTokens: 4096 },
+        generationConfig: { temperature: 0.2, maxOutputTokens: 8192 },
       }),
     });
 
@@ -460,12 +466,19 @@ ${batch}`;
     const summaries = JSON.parse(jsonStr);
 
     const map = {};
-    for (const s of summaries) map[s.id] = s.summary;
+    for (const s of summaries) map[s.id] = s;
 
-    console.log(`[News] Generated ${summaries.length} AI summaries (${lang})`);
-    return articles.map((a, i) => ({ ...a, aiSummary: map[i] || a.description || "" }));
+    console.log(`[News] Translated + summarized ${summaries.length} articles into "${lang}"`);
+    return articles.map((a, i) => ({
+      ...a,
+      // Keep original title in a separate field for reference
+      originalTitle: a.title,
+      // Replace title with translated version
+      title: map[i]?.title || a.title,
+      aiSummary: map[i]?.summary || a.description || "",
+    }));
   } catch (err) {
-    console.error(`[News] AI summary failed (${lang}): ${err.message}`);
+    console.error(`[News] AI translate+summary failed (${lang}): ${err.message}`);
     return articles;
   }
 }
