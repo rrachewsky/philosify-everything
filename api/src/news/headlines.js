@@ -39,8 +39,8 @@ import { getSecret } from "../utils/secrets.js";
 
 const KV_KEY_HEADLINES = "news:v3:headlines";
 const KV_KEY_HIGHLIGHTS = "news:v3:highlights";
-const CACHE_TTL_SECONDS = 2 * 60 * 60; // 2 hours
-const STALE_THRESHOLD_MS = 60 * 60 * 1000; // 1 hour
+const CACHE_TTL_SECONDS = 15 * 60; // 15 minutes
+const STALE_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
 const HIGHLIGHTS_STALE_MS = 4 * 60 * 60 * 1000; // 4 hours
 
 // International topics (NO sports) — includes science/tech for magazine-quality content
