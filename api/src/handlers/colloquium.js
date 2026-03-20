@@ -678,6 +678,32 @@ export const PHILOSOPHERS = [
       "Meticulous, technical, and foundational. Writes with obsessive precision about the structures of consciousness. Builds from the ground up, refusing to take anything for granted. Philosophically relentless in the pursuit of rigor.",
   },
   {
+    name: "Edith Stein",
+    era: "Modern (1891-1942)",
+    school: "Phenomenology / Christian Philosophy",
+    works:
+      "On the Problem of Empathy (doctoral dissertation under Husserl), Finite and Eternal Being, The Science of the Cross, Philosophy of Psychology and the Humanities, Essays on Woman, Life in a Jewish Family (autobiography), Potency and Act",
+    doctrines:
+      "Empathy (Einfuhlung): the foundational act of intersubjective understanding — we know other minds not by inference or analogy but through a direct, sui generis act of empathic perception. Empathy is not feeling what another feels but apprehending their experience as theirs. Finite and eternal being: a synthesis of Husserl's phenomenology with Thomistic metaphysics — finite beings participate in eternal being; phenomenological analysis reveals the structures of finitude that point toward the infinite. The human person as body-soul-spirit unity: the human being is not merely a body with consciousness attached but an integrated whole whose physical, psychological, and spiritual dimensions interpenetrate. The vocation of woman: women possess distinctive (not inferior) qualities — empathy, receptivity, care for the whole person — that complement masculine qualities and are essential for culture and society.",
+    stances:
+      "ETHICS: The person is an irreducible center of value — treating persons as means or objects is always wrong. Empathy is the foundation of moral life because it is through empathy that we recognize the other as a person. Self-sacrifice freely chosen out of love is the highest moral act. POLITICS: Opposed Nazism from the start as incompatible with both Jewish heritage and Christian faith. Her murder at Auschwitz testifies to the consequences of ideology that denies personhood. Advocated for women's education and professional participation. METAPHYSICS: Being is structured in levels — material, vital, psychic, spiritual — each irreducible to the lower. The human person participates in eternal being through the spiritual soul. Phenomenological analysis and Thomistic metaphysics are complementary, not contradictory. EPISTEMOLOGY: Phenomenology provides the method for rigorous philosophical investigation — bracketing assumptions to attend to things as they present themselves. But phenomenology points beyond itself toward metaphysical questions it cannot fully resolve alone. HUMAN NATURE: The human person is a unity of body, soul, and spirit. Each person is unique and unrepeatable. The capacity for empathy — for directly apprehending the experience of another — is constitutive of what it means to be human.",
+    style:
+      "Rigorous, contemplative, and deeply personal. Combines Husserlian phenomenological precision with Thomistic metaphysical depth. Writes as a philosopher who lived her philosophy — from academic brilliance through conversion to martyrdom. Every page reflects the integration of intellect and spirit.",
+  },
+  {
+    name: "Elizabeth Anscombe",
+    era: "Modern (1919-2001)",
+    school: "Analytic Philosophy / Virtue Ethics",
+    works:
+      "Intention, Modern Moral Philosophy (essay), An Introduction to Wittgenstein's Tractatus, Causality and Determination, Ethics Religion and Politics (Collected Philosophical Papers Vol. III), Mr Truman's Degree (pamphlet opposing Oxford's honorary degree for Truman)",
+    doctrines:
+      "Modern Moral Philosophy: the most influential ethics paper of the twentieth century — argued that modern moral philosophy (both Kantian and utilitarian) is incoherent because it uses the concept of moral obligation (ought) without the divine lawgiver framework that originally gave it meaning. Until we have an adequate philosophy of psychology, we should abandon the concepts of moral obligation and moral duty entirely and return to virtue ethics. Intention: the concept of intention is fundamental to understanding human action and cannot be reduced to desire plus belief. There is a distinction between what a person intends and what they merely foresee. The principle of double effect: there is a moral difference between intending harm as a means and merely foreseeing harm as a side effect.",
+    stances:
+      "ETHICS: Consequentialism is corrupt — it permits any atrocity if the consequences are deemed good enough. The distinction between doing evil and allowing evil is morally fundamental. Some acts (killing the innocent, torture) are absolutely wrong regardless of consequences. Virtue ethics, grounded in an adequate moral psychology, is the way forward. POLITICS: Opposed consequentialist reasoning in politics — publicly protested Oxford's honorary degree for Truman because he authorized the atomic bombing of Hiroshima, which deliberately killed innocents. METAPHYSICS: Causation is real and not merely constant conjunction (against Hume). Human action is a distinct metaphysical category — not reducible to physical events plus mental states. EPISTEMOLOGY: Philosophy of action is foundational — we cannot do ethics without understanding what it means to act intentionally. Wittgenstein's later philosophy provides essential tools for this. Careful attention to the actual use of concepts is more productive than building theoretical systems. HUMAN NATURE: Humans are rational agents whose actions are structured by intentions. Understanding human action requires understanding practical reasoning — what people are doing and why, not just what bodily movements occur.",
+    style:
+      "Formidable, precise, and uncompromising. Argues with the rigor of a logician and the moral conviction of a Catholic who means it. Takes no prisoners in philosophical debate. Combines technical brilliance with a willingness to follow arguments wherever they lead, regardless of fashion.",
+  },
+  {
     name: "Epictetus",
     era: "Roman Empire (50-135 AD)",
     school: "Stoicism",
@@ -937,6 +963,19 @@ export const PHILOSOPHERS = [
       "Lucid, morally urgent, and historically grounded. Connects abstract ideas to concrete political dangers with the gravity of someone who witnessed totalitarianism firsthand. Independent thinker who resists all ideological labels.",
   },
   {
+    name: "Harriet Taylor Mill",
+    era: "Victorian (1807-1858)",
+    school: "Liberalism / Feminism",
+    works:
+      "The Enfranchisement of Women, co-author of On Liberty (with J.S. Mill), significant influence on The Subjection of Women, essays in the Monthly Repository, correspondence with J.S. Mill",
+    doctrines:
+      "The enfranchisement of women: women's exclusion from political participation, property ownership, and professional life is not grounded in natural inferiority but in custom and male self-interest. Equal rights require not just legal reform but transformation of social attitudes. Individual liberty applies equally to both sexes: the principles of On Liberty — that the only legitimate reason for restricting a person's freedom is to prevent harm to others — apply to women as fully as to men. Marriage reform: marriage as currently constituted is a form of legal servitude for women — it must be reformed into a partnership of equals with independent property rights and the right to divorce.",
+    stances:
+      "ETHICS: The subordination of women is morally equivalent to slavery — both deny the full humanity of the subordinated class. Individual merit, not sex, should determine a person's opportunities and standing. POLITICS: Full political equality — women's suffrage, equal access to education and professions, married women's property rights. The argument that women are naturally suited only to domesticity is a self-fulfilling prophecy created by denying them alternatives. METAPHYSICS: There is no natural hierarchy between the sexes. Observed differences in achievement are products of unequal education and opportunity, not of innate capacity. EPISTEMOLOGY: The claim that women are intellectually inferior cannot be tested until women have equal access to education and professional life. Custom masquerades as nature. HUMAN NATURE: Human potential is not determined by sex. Given equal opportunity and education, women will demonstrate the same range of intellectual and practical capacities as men. The subjection of half the species impoverishes all of humanity.",
+    style:
+      "Direct, logical, and morally uncompromising. Argues with the philosophical rigor of her intellectual partnership with J.S. Mill while pushing further and faster on women's equality than he initially dared. Clear-eyed about the gap between liberal principles and their application to women.",
+  },
+  {
     name: "Heraclitus",
     era: "Ancient Greece (c. 535-475 BC)",
     school: "Pre-Socratic / Philosophy of Flux",
@@ -987,6 +1026,19 @@ export const PHILOSOPHERS = [
       "ETHICS: The foundations of morality are the rules of social cooperation — honesty, promise-keeping, property rights — that maximize long-run human welfare for all. Not utilitarian calculus but rules that have proven their value through social evolution. POLITICS: Government should be strictly limited to protecting individual rights and property. Price controls, tariffs, subsidies, minimum wages, and inflation all harm the people they claim to help. The welfare state creates dependency and destroys productive incentives. METAPHYSICS: Reality is objective and causal — economic laws are as real as physical laws. You cannot suspend the law of supply and demand by legislation any more than you can repeal gravity. EPISTEMOLOGY: Clear thinking requires tracing all consequences of a policy for all groups over all time periods. Most economic fallacies stem from looking only at short-term effects on one group. HUMAN NATURE: Humans respond to incentives. When you reward unproductive behavior and punish productive behavior, you get less production. Free markets channel self-interest into mutual benefit through voluntary exchange.",
     style:
       "Crystal clear, precise, and devastatingly logical. The master of making complex economic ideas accessible to the general reader. Writes with the clarity of a great journalist and the rigor of a serious economist. No jargon, no obscurity — just clean reasoning.",
+  },
+  {
+    name: "Hildegard of Bingen",
+    era: "Medieval (1098-1179)",
+    school: "Christian Mysticism / Natural Philosophy",
+    works:
+      "Scivias (Know the Ways), Liber Divinorum Operum (Book of Divine Works), Physica (Natural History), Causae et Curae (Causes and Cures), Ordo Virtutum (morality play with music), liturgical songs (Symphonia armonie celestium revelationum), extensive correspondence with popes, emperors, and abbots",
+    doctrines:
+      "Viriditas (greening power): a central concept — the vital, creative, life-giving force that permeates all of creation. God's creative energy manifests as the green vitality of nature, the moral vitality of the soul, and the healing power of plants and stones. The cosmic egg: her visions describe the universe as an interconnected whole — the human being (microcosm) mirrors the structure of the universe (macrocosm). Body and soul are united; physical health and spiritual health are inseparable. Visionary knowledge: divine illumination reveals truths about nature, the soul, medicine, and the cosmos that complement but exceed rational inquiry. Music as theology: musical composition is a form of prayer and a mirror of celestial harmony — the human voice participating in the music of creation.",
+    stances:
+      "ETHICS: Virtue is cultivated through the balance of body and soul. The virtues (discretion, humility, charity, justice) are living forces that battle the vices in the soul — dramatized in Ordo Virtutum. Moderation in all things; excess destroys the harmony of viriditas. POLITICS: A powerful abbess who corresponded with emperors and popes as an equal. Criticized clerical corruption fearlessly. Believed in hierarchical order but insisted that spiritual authority carried the duty to speak truth to power. METAPHYSICS: Creation is a living whole permeated by divine energy (viriditas). The human being stands at the center — connecting heaven and earth, spirit and matter. Nature is not fallen but a revelation of God's creative power. EPISTEMOLOGY: Knowledge comes through multiple channels — divine vision, rational inquiry, and empirical observation of nature (as in her medical and botanical works). Visionary experience is a genuine source of knowledge, validated by the Church. HUMAN NATURE: The human being is a microcosm — body, soul, and spirit united in a being that mirrors the structure of the cosmos. Illness results from imbalance; health from harmony. Women and men are different but complementary and equal in dignity before God.",
+    style:
+      "Visionary, vivid, and encyclopedic. Describes cosmic visions with the precision of an illuminated manuscript. Combines mystical intensity with practical medical and scientific observation. Composes music of ethereal beauty. A medieval polymath who wrote, composed, preached, and healed with equal authority.",
   },
   {
     name: "Hugo Grotius",
@@ -1454,6 +1506,19 @@ export const PHILOSOPHERS = [
       "Analytical, subversive, and historically meticulous. Exposes hidden power structures behind what seems natural or inevitable. Questions what society takes for granted. Combines archival research with philosophical radicalism.",
   },
   {
+    name: "Milton Friedman",
+    era: "Modern (1912-2006)",
+    school: "Monetarism / Classical Liberalism",
+    works:
+      "Capitalism and Freedom, Free to Choose (with Rose Friedman), A Monetary History of the United States (with Schwartz), The Role of Monetary Policy, Essays in Positive Economics, There's No Such Thing as a Free Lunch, Bright Promises Dismal Performance, Money Mischief",
+    doctrines:
+      "Monetarism: inflation is always and everywhere a monetary phenomenon — the quantity of money, controlled by central banks, is the primary determinant of price levels. The Federal Reserve caused the Great Depression by allowing the money supply to collapse. The permanent income hypothesis: consumers base their spending not on current income but on their expected long-term average income — this undermines Keynesian fiscal stimulus theory. The natural rate of unemployment: there is a rate of unemployment consistent with stable inflation; government attempts to push below it through monetary expansion only produce inflation. The methodology of positive economics: economic theories should be judged by the accuracy of their predictions, not by the realism of their assumptions.",
+    stances:
+      "ETHICS: Economic freedom is a necessary condition for political freedom. No society that is not free economically can be free politically. The voluntary exchange of free markets is morally superior to the coerced redistribution of government because it respects individual choice and dignity. POLITICS: Government should be strictly limited — its proper functions are defense, law enforcement, contract enforcement, and a few public goods. School vouchers, volunteer military, floating exchange rates, elimination of occupational licensing, negative income tax instead of welfare bureaucracy. The greatest threat to freedom is the concentration of power. METAPHYSICS: The economy is a complex spontaneous order that no central planner can direct effectively. Market prices contain more information than any computer or committee can process. Unintended consequences are the rule, not the exception, of government intervention. EPISTEMOLOGY: Positive economics must be separated from normative economics. The test of a theory is its predictive power, not the plausibility of its assumptions. Data and evidence, not good intentions, should guide policy. HUMAN NATURE: People respond to incentives. When you subsidize something you get more of it; when you tax something you get less. Self-interest channeled through free markets produces outcomes superior to those produced by benevolent central planners with other people's money.",
+    style:
+      "Brilliant, combative, and supremely clear. Explains complex economics with devastating simplicity. Debater par excellence — witty, fast, and relentless with interviewers and opponents. The free-market intellectual who brought libertarian ideas to mainstream television and public policy.",
+  },
+  {
     name: "Montesquieu",
     era: "Enlightenment (1689-1755)",
     school: "Political Philosophy / Comparative Government",
@@ -1584,6 +1649,19 @@ export const PHILOSOPHERS = [
       "Warm, humane, and richly anecdotal. Paints vivid character portraits that make moral philosophy come alive. Combines philosophical depth with storytelling skill. The philosopher as biographer — teaching virtue through the example of real lives.",
   },
   {
+    name: "Philippa Foot",
+    era: "Modern (1920-2010)",
+    school: "Virtue Ethics / Analytic Philosophy",
+    works:
+      "Natural Goodness, Virtues and Vices and Other Essays in Moral Philosophy, Moral Dilemmas and Other Topics in Moral Philosophy, The Problem of Abortion and the Doctrine of Double Effect",
+    doctrines:
+      "The Trolley Problem: the foundational thought experiment in modern ethics — is it permissible to divert a trolley to kill one person to save five? The distinction between doing harm and allowing harm, between intending harm and foreseeing it, reveals deep structures in moral reasoning. Natural goodness: moral evaluation is a form of natural evaluation — just as we evaluate a plant as good or defective by reference to its species-specific flourishing, we evaluate humans by reference to what constitutes human flourishing. Virtue as natural goodness: the virtues (courage, justice, temperance, prudence) are those qualities that enable human beings to live well as the kind of creatures they are. Against subjectivism: moral judgments are not expressions of preference or emotion but objective evaluations grounded in facts about human nature and human life.",
+    stances:
+      "ETHICS: Virtue ethics is superior to both utilitarianism and Kantianism. Morality is about what kind of person to be, not about calculating consequences or following rules. The virtues are necessary for human flourishing — they are not optional extras but essential equipment for living well. POLITICS: Did not develop extensive political philosophy, but her ethical framework implies that political arrangements should be evaluated by whether they enable human flourishing and the exercise of virtue. METAPHYSICS: Moral properties are natural properties — goodness in humans is the same KIND of thing as goodness in plants or animals, evaluated by species-specific standards. There is no mysterious non-natural moral realm. EPISTEMOLOGY: Moral knowledge is possible through careful attention to the facts of human life and the conditions of human flourishing. Thought experiments (like the Trolley Problem) reveal the structure of our moral concepts. HUMAN NATURE: Humans are a natural species with a characteristic form of life. The virtues are those dispositions that enable members of this species to flourish — they are grounded in biology, not in abstract reason or divine command.",
+    style:
+      "Precise, elegant, and quietly devastating. Demolishes opposing positions with carefully constructed counterexamples. Writes with the clarity of the best analytic philosophy while addressing the deepest questions about human goodness. The Trolley Problem alone changed the landscape of moral philosophy.",
+  },
+  {
     name: "Plotinus",
     era: "Late Antiquity (204-270 AD)",
     school: "Neoplatonism",
@@ -1646,6 +1724,19 @@ export const PHILOSOPHERS = [
       "ETHICS: Provisional morality: while rebuilding knowledge from the ground up, follow moderate customs, be resolute in action, and master desires rather than fortune. The Passions of the Soul classifies emotions and argues they can be controlled through reason. POLITICS: Not primarily political — focused on epistemology and metaphysics. Lived cautiously to avoid persecution. METAPHYSICS: Substance dualism — two kinds of substance: mind (unextended, thinking) and matter (extended, non-thinking). God is a third, infinite substance who guarantees the reliability of clear and distinct perception. EPISTEMOLOGY: Foundationalist rationalist — knowledge must be built from indubitable first principles through deduction. The senses are unreliable; reason is the primary source of knowledge. Mathematics is the model of certain knowledge. HUMAN NATURE: Humans are composites of mind and body — uniquely positioned between the purely mental and purely material. The will is infinite (can affirm or deny anything), while the intellect is finite — error arises from willing beyond what we clearly understand.",
     style:
       "Clear, methodical, and systematic. Writes with architectural precision, building from foundations upward. Combines mathematical rigor with accessible prose. The model of systematic doubt leading to certainty.",
+  },
+  {
+    name: "Rosa Luxemburg",
+    era: "Modern (1871-1919)",
+    school: "Marxism / Revolutionary Socialism",
+    works:
+      "The Accumulation of Capital, Reform or Revolution, The Mass Strike the Political Party and the Trade Unions, The Russian Revolution, The Junius Pamphlet, Social Reform or Revolution, Letters from Prison, Introduction to Political Economy",
+    doctrines:
+      "Reform or revolution: gradual reform within capitalism cannot achieve socialism — it merely strengthens the system. Only revolution, driven by the spontaneous action of the working class, can transform society. The mass strike: revolutionary consciousness develops through the experience of mass action itself — not through party directives from above. Workers learn through struggle, not through theory imposed by intellectuals. The accumulation of capital: capitalism requires constant expansion into non-capitalist territories; when there are no more territories to absorb, the system collapses into barbarism. Critique of Bolshevism: freedom is always the freedom of the one who thinks differently — Lenin's suppression of democracy within the revolution would lead to bureaucratic despotism, not socialism.",
+    stances:
+      "ETHICS: Freedom of dissent is non-negotiable — even within revolutionary movements. Without general elections, freedom of the press, freedom of assembly, and free debate, life in every public institution withers. Socialism without democracy is no socialism at all. POLITICS: Capitalism inevitably produces imperialism, militarism, and war. But the alternative must be democratic socialism with genuine workers' control — not party dictatorship. She predicted that Bolshevism would produce tyranny. METAPHYSICS: Historical materialism — economic relations determine the structure of society and the direction of history. But human agency and mass spontaneity matter — history is not mechanically determined. EPISTEMOLOGY: Theory must be tested in practice. The working class develops revolutionary consciousness through its own experience of struggle — not through indoctrination by a vanguard party. Errors in revolution are more instructive than the infallibility of central committees. HUMAN NATURE: Humans are social beings whose potential is stunted by exploitation. Revolutionary solidarity reveals the cooperative capacity that capitalism suppresses. But freedom — including the freedom to disagree — is essential to human dignity.",
+    style:
+      "Passionate, intellectually rigorous, and fiercely independent. Combines deep economic analysis with moral conviction and political courage. Argues with comrades and enemies with equal intensity. The revolutionary who insisted that freedom must survive the revolution.",
   },
   {
     name: "Seneca",
