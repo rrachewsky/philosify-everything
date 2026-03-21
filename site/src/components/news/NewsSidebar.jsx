@@ -292,38 +292,41 @@ export default function NewsSidebar({
         <button className="music-sidebar__close" onClick={onClose}>&times;</button>
       </div>
 
+      {/* Ticker — between header and content, same as Music's TopTenTicker position */}
+      {!selectedArticle && !analysisResult && !panelResult && breakingNews.length > 0 && (
+        <div className="music-sidebar__ticker">
+          <BreakingTicker
+            articles={breakingNews}
+            onSelect={selectArticle}
+          />
+        </div>
+      )}
+
       <div ref={contentRef} className="music-sidebar__content">
 
         {/* ── STATE 1: Search home (no article selected, no result) ── */}
         {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
           <>
-            {/* Breaking News Ticker — horizontal scroll, same as Music Top 50 */}
-            {breakingNews.length > 0 && (
-              <div style={{ marginBottom: '16px' }}>
-                <BreakingTicker
-                  articles={breakingNews}
-                  onSelect={selectArticle}
+            {/* Search Field — same structure as Music's search */}
+            <div className="music-search">
+              <div className="music-search__input-wrapper">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  className="music-search__input"
+                  placeholder={t('home.categories.news.searchPlaceholder', 'Search a topic, event, or theme...')}
+                  value={searchInput}
+                  onChange={handleInputChange}
+                  autoComplete="off"
                 />
-              </div>
-            )}
-
-            {/* Search Field — real-time debounced, same as Music/Literature/Cinema */}
-            <div style={{ marginBottom: '16px', position: 'relative' }}>
-              <input
-                ref={searchInputRef}
-                type="text"
-                className="music-search__input"
-                placeholder={t('home.categories.news.searchPlaceholder', 'Search a topic, event, or theme...')}
-                value={searchInput}
-                onChange={handleInputChange}
-              />
-              {searchLoading && (
-                <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)' }}>
-                  <div className="music-search__loading">
-                    <span></span><span></span><span></span>
+                {searchLoading && (
+                  <div className="music-search__spinner">
+                    <div className="music-search__loading">
+                      <span></span><span></span><span></span>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Search Error */}

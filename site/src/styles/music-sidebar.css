@@ -1350,19 +1350,8 @@
 }
 
 /* Auto-scrolling ticker (allows manual scroll too) */
-/* Breaking news ticker inside sidebar — override fixed positioning */
-.music-sidebar .top-ten-ticker {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-  width: 100%;
-  z-index: auto;
-  border-radius: 6px;
-}
-
 /* Allow full headlines in news ticker — no truncation */
-.music-sidebar .ticker-song {
+.music-sidebar__ticker .ticker-song {
   max-width: none;
   overflow: visible;
   text-overflow: unset;
