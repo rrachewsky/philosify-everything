@@ -353,7 +353,8 @@ export async function fetchBreakingNews(env) {
   const apiKey = await getSecret(env.NEWSAPI_AI_KEY);
   if (!apiKey) throw new Error("NEWSAPI_AI_KEY not configured");
 
-  const keyword = BREAKING_NEWS_KEYWORDS.join(" OR ");
+  // Use a focused subset — too many OR terms causes NewsAPI.ai to return 0
+  const keyword = "war OR election OR recession OR earthquake OR pandemic OR breakthrough OR Nobel OR assassination OR sanctions OR treaty";
 
   console.log(`[News] Fetching breaking news from Tier A sources...`);
 

@@ -1351,22 +1351,25 @@
 
 /* Auto-scrolling ticker (allows manual scroll too) */
 .news-ticker {
-  height: calc(100vh - 140px);
+  max-height: 160px;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
   mask-image: linear-gradient(to bottom,
     transparent 0%,
-    black 3%,
-    black 97%,
+    black 5%,
+    black 95%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(to bottom,
     transparent 0%,
-    black 3%,
-    black 97%,
+    black 5%,
+    black 95%,
     transparent 100%
   );
 }
