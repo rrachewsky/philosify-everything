@@ -357,12 +357,14 @@ export async function fetchBreakingNews(env) {
 
   // Fetch major stories — no source filter (let isBlockedSource clean up after).
   // Using keyword OR gives broad coverage; source filter was too restrictive with keywords.
+  // NewsAPI.ai uses "keyword" as array + "keywordOper" for OR logic
   const res = await fetch(`${NEWSAPI_BASE}/article/getArticles`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       action: "getArticles",
-      keyword: "war OR election OR recession OR earthquake OR pandemic OR breakthrough OR assassination OR sanctions OR treaty",
+      keyword: ["war", "election", "recession", "earthquake", "pandemic", "breakthrough", "assassination", "sanctions", "treaty", "summit"],
+      keywordOper: "or",
       lang: ["eng"],
       articlesPage: 1,
       articlesCount: 20,
