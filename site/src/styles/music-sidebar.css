@@ -1386,6 +1386,15 @@
   gap: 8px;
 }
 
+/* Reduce source/time opacity in ticker cards vs search results */
+.news-ticker--breaking .news-search-result__source {
+  opacity: 0.5;
+}
+
+.news-ticker--breaking .news-search-result__title {
+  font-size: 13px;
+}
+
 /* Highlights section */
 .news-highlights {
   margin-bottom: 16px;

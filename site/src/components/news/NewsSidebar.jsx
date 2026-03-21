@@ -328,7 +328,7 @@ export default function NewsSidebar({
             )}
             {breakingNews.length > 0 && (
               <div style={{ marginBottom: '16px' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', color: 'rgba(255,68,68,0.6)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '6px', paddingLeft: '4px' }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: '#ff00ff', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '8px', paddingLeft: '4px', fontFamily: "'Orbitron', sans-serif" }}>
                   {t('news.breakingNews', 'Breaking News')}
                 </div>
                 <BreakingTicker
