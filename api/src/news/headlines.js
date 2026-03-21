@@ -514,18 +514,8 @@ export async function getCachedBreakingNews(env, ctx = null, lang = "en") {
     return cached;
   }
 
-  // No cache — fetch now
-  try {
-    return await refreshBreakingNews(env, lang);
-  } catch (e) {
-    console.error(`[News] Breaking news fetch failed:`, e.message);
-    // Fallback to English cache
-    if (lang !== "en") {
-      const enRaw = await env.PHILOSIFY_KV.get(KV_KEY_BREAKING);
-      if (enRaw) return JSON.parse(enRaw);
-    }
-    return { articles: [], fetchedAt: new Date().toISOString(), count: 0, lang };
-  }
+  // No cache — fetch now (let errors propagate so we can diagnose)
+  return await refreshBreakingNews(env, lang);
 }
 
 /**
