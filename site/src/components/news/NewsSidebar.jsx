@@ -276,7 +276,10 @@ export default function NewsSidebar({
       {/* Header */}
       <div className="music-sidebar__header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <h2 className="music-sidebar__title">{t('home.categories.news.title', 'News')}</h2>
+          <span className="music-sidebar__title">
+            <span className="music-sidebar__icon">&#128240;</span>
+            {t('home.categories.news.title', 'News')}
+          </span>
           <button
             className={`news-filter-btn ${sourcesUnlocked ? 'news-filter-btn--unlocked' : ''}`}
             onClick={() => {
