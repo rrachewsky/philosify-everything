@@ -22,6 +22,7 @@ import '../TopTenTicker.css';
 // Top Books Ticker — uses EXACT same classes as Music TopTenTicker
 // ============================================================
 function TopBooksTicker({ onBookSelect }) {
+  const { t } = useTranslation();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
@@ -73,7 +74,7 @@ function TopBooksTicker({ onBookSelect }) {
     <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
       <div className="ticker-label">
         <span className="ticker-icon">{'\u{1F4DA}'}</span>
-        <span>TOP BOOKS</span>
+        <span>{t('topTen.labelBooks', 'TOP BOOKS')}</span>
       </div>
       <div
         className="ticker-track"

@@ -463,7 +463,11 @@
     "freeAnalysis": "Бесплатный анализ - нажмите для просмотра",
     "loginRequired": "Войдите, чтобы увидеть этот анализ",
     "signInToView": "Войдите, чтобы увидеть анализы Топ-50",
-    "free": "БЕСПЛАТНО"
+    "free": "БЕСПЛАТНО",
+    "labelMusic": "ТОП 50",
+    "labelBooks": "ТОП КНИГИ",
+    "labelCinema": "ТОП ФИЛЬМЫ",
+    "labelNews": "СРОЧНО"
   },
   "landing": {
     "searchPlaceholder": "Поиск песни...",

@@ -463,7 +463,11 @@
     "freeAnalysis": "무료 분석 - 클릭하여 보기",
     "loginRequired": "이 분석을 보려면 로그인하세요",
     "signInToView": "Top 50 분석을 보려면 로그인하세요",
-    "free": "무료"
+    "free": "무료",
+    "labelMusic": "TOP 50",
+    "labelBooks": "TOP 도서",
+    "labelCinema": "TOP 영화",
+    "labelNews": "속보"
   },
   "landing": {
     "searchPlaceholder": "노래 검색...",

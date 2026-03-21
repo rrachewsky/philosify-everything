@@ -463,7 +463,11 @@
     "freeAnalysis": "Free analysis - click to view",
     "loginRequired": "Sign in to view this analysis",
     "signInToView": "Sign in to view Top 50 analyses",
-    "free": "FREE"
+    "free": "FREE",
+    "labelMusic": "TOP 50",
+    "labelBooks": "TOP BOOKS",
+    "labelCinema": "TOP MOVIES",
+    "labelNews": "BREAKING"
   },
   "landing": {
     "searchPlaceholder": "Search for a song...",

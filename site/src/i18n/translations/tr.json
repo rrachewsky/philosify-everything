@@ -463,7 +463,11 @@
     "freeAnalysis": "Ücretsiz analiz - görüntülemek için tıklayın",
     "loginRequired": "Bu analizi görmek için giriş yapın",
     "signInToView": "Top 50 analizlerini görmek için giriş yapın",
-    "free": "ÜCRETSİZ"
+    "free": "ÜCRETSİZ",
+    "labelMusic": "TOP 50",
+    "labelBooks": "TOP KİTAPLAR",
+    "labelCinema": "TOP FİLMLER",
+    "labelNews": "SON DAKİKA"
   },
   "landing": {
     "searchPlaceholder": "Şarkı ara...",

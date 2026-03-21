@@ -463,7 +463,11 @@
     "freeAnalysis": "免费分析 - 点击查看",
     "loginRequired": "登录以查看此分析",
     "signInToView": "登录以查看Top 50分析",
-    "free": "免费"
+    "free": "免费",
+    "labelMusic": "热门50",
+    "labelBooks": "热门书籍",
+    "labelCinema": "热门电影",
+    "labelNews": "突发新闻"
   },
   "landing": {
     "searchPlaceholder": "搜索歌曲...",

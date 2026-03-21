@@ -463,7 +463,11 @@
     "freeAnalysis": "Gratis analyse - klik om te bekijken",
     "loginRequired": "Log in om deze analyse te bekijken",
     "signInToView": "Log in om Top 50 analyses te bekijken",
-    "free": "GRATIS"
+    "free": "GRATIS",
+    "labelMusic": "TOP 50",
+    "labelBooks": "TOP BOEKEN",
+    "labelCinema": "TOP FILMS",
+    "labelNews": "BREAKING"
   },
   "landing": {
     "searchPlaceholder": "Zoek een nummer...",

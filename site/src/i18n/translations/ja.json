@@ -463,7 +463,11 @@
     "freeAnalysis": "無料分析 - クリックして見る",
     "loginRequired": "この分析を見るにはログインしてください",
     "signInToView": "トップ50分析を見るにはログインしてください",
-    "free": "無料"
+    "free": "無料",
+    "labelMusic": "トップ50",
+    "labelBooks": "トップ書籍",
+    "labelCinema": "トップ映画",
+    "labelNews": "速報"
   },
   "landing": {
     "searchPlaceholder": "曲を検索...",

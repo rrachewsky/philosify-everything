@@ -21,6 +21,7 @@ import '../TopTenTicker.css';
 // Top Cinema Ticker — uses EXACT same classes as Music TopTenTicker
 // ============================================================
 function TopCinemaTicker({ onFilmSelect }) {
+  const { t } = useTranslation();
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
@@ -72,7 +73,7 @@ function TopCinemaTicker({ onFilmSelect }) {
     <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
       <div className="ticker-label">
         <span className="ticker-icon">&#127909;</span>
-        <span>TOP CINEMA</span>
+        <span>{t('topTen.labelCinema', 'TOP MOVIES')}</span>
       </div>
       <div
         className="ticker-track"

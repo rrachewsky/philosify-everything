@@ -463,7 +463,11 @@
     "freeAnalysis": "ניתוח חינמי - לחץ לצפייה",
     "loginRequired": "התחבר כדי לראות ניתוח זה",
     "signInToView": "התחבר כדי לראות ניתוחי Top 50",
-    "free": "חינם"
+    "free": "חינם",
+    "labelMusic": "טופ 50",
+    "labelBooks": "ספרים מובילים",
+    "labelCinema": "סרטים מובילים",
+    "labelNews": "חדשות חמות"
   },
   "landing": {
     "searchPlaceholder": "חפש שיר...",

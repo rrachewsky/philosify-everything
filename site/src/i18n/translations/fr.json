@@ -463,7 +463,11 @@
     "freeAnalysis": "Analyse gratuite - cliquez pour voir",
     "loginRequired": "Connectez-vous pour voir cette analyse",
     "signInToView": "Connectez-vous pour voir les analyses du Top 50",
-    "free": "GRATUIT"
+    "free": "GRATUIT",
+    "labelMusic": "TOP 50",
+    "labelBooks": "TOP LIVRES",
+    "labelCinema": "TOP FILMS",
+    "labelNews": "FLASH INFO"
   },
   "landing": {
     "searchPlaceholder": "Rechercher une chanson...",

@@ -463,7 +463,11 @@
     "freeAnalysis": "تحلیل رایگان - برای مشاهده کلیک کنید",
     "loginRequired": "برای مشاهده این تحلیل وارد شوید",
     "signInToView": "برای مشاهده تحلیل‌های ۵۰ برتر وارد شوید",
-    "free": "رایگان"
+    "free": "رایگان",
+    "labelMusic": "برترین ۵۰",
+    "labelBooks": "برترین کتاب‌ها",
+    "labelCinema": "برترین فیلم‌ها",
+    "labelNews": "فوری"
   },
   "landing": {
     "searchPlaceholder": "جستجوی آهنگ...",

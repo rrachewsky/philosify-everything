@@ -463,7 +463,11 @@
     "freeAnalysis": "تحليل مجاني - انقر للعرض",
     "loginRequired": "سجل دخول لعرض هذا التحليل",
     "signInToView": "سجل دخول لعرض تحليلات الخمسين الأوائل",
-    "free": "مجاني"
+    "free": "مجاني",
+    "labelMusic": "أفضل ٥٠",
+    "labelBooks": "أفضل الكتب",
+    "labelCinema": "أفضل الأفلام",
+    "labelNews": "عاجل"
   },
   "landing": {
     "searchPlaceholder": "ابحث عن أغنية...",

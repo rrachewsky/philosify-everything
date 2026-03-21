@@ -463,7 +463,11 @@
     "freeAnalysis": "Kostenlose Analyse - klicken zum Anzeigen",
     "loginRequired": "Melden Sie sich an, um diese Analyse zu sehen",
     "signInToView": "Melden Sie sich an, um die Top 50 Analysen zu sehen",
-    "free": "KOSTENLOS"
+    "free": "KOSTENLOS",
+    "labelMusic": "TOP 50",
+    "labelBooks": "TOP BÜCHER",
+    "labelCinema": "TOP FILME",
+    "labelNews": "EILMELDUNG"
   },
   "landing": {
     "searchPlaceholder": "Suche nach einem Lied...",

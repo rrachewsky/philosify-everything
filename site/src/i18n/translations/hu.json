@@ -463,7 +463,11 @@
     "freeAnalysis": "Ingyenes elemzés - kattints a megtekintéshez",
     "loginRequired": "Jelentkezz be az elemzés megtekintéséhez",
     "signInToView": "Jelentkezz be a Top 50 elemzések megtekintéséhez",
-    "free": "INGYENES"
+    "free": "INGYENES",
+    "labelMusic": "TOP 50",
+    "labelBooks": "TOP KÖNYVEK",
+    "labelCinema": "TOP FILMEK",
+    "labelNews": "FRISS"
   },
   "landing": {
     "searchPlaceholder": "Keress egy dalt...",
