@@ -30,7 +30,7 @@ function BreakingTicker({ articles, onSelect }) {
 
   const duplicated = [...articles, ...articles, ...articles];
   const count = articles.length;
-  const animationDuration = count * 11; // 11 seconds per item — Music is 8s, plus 1/3 slower for longer headlines
+  const animationDuration = count * 16; // 16 seconds per item — double Music's 8s for readable headlines
 
   const handleMouseDown = (e) => {
     if (!trackRef.current) return;
