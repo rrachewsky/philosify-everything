@@ -17,42 +17,43 @@ import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import '../../styles/music-sidebar.css';
 
 // ============================================================
-// Breaking News Ticker — horizontal right-to-left CSS animation
-// Same pattern as Music's TopTenTicker
+// Breaking News Ticker — uses EXACT same classes as Music TopTenTicker
+// Only differences: label text + item content
 // ============================================================
 function BreakingTicker({ articles, onSelect }) {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
   const trackRef = useRef(null);
 
   if (articles.length === 0) return null;
 
   const duplicated = [...articles, ...articles, ...articles];
-  const animationDuration = articles.length * 18; // 18 seconds per headline (1/3 speed)
+  const count = articles.length;
+  const animationDuration = count * 8; // 8 seconds per item — same as Music
 
   const handleMouseDown = (e) => {
     if (!trackRef.current) return;
     setIsDragging(true);
     setStartX(e.pageX - trackRef.current.offsetLeft);
-    setScrollLeft(trackRef.current.scrollLeft);
+    setScrollLeftState(trackRef.current.scrollLeft);
   };
   const handleMouseUp = () => setIsDragging(false);
   const handleMouseMove = (e) => {
     if (!isDragging || !trackRef.current) return;
     e.preventDefault();
     const x = e.pageX - trackRef.current.offsetLeft;
-    trackRef.current.scrollLeft = scrollLeft - (x - startX) * 2;
+    trackRef.current.scrollLeft = scrollLeftState - (x - startX) * 2;
   };
 
   return (
-    <div className="news-breaking-ticker" style={{ direction: 'ltr' }}>
-      <div className="news-breaking-ticker__label">
-        <span className="news-breaking-ticker__label-icon">&#9889;</span>
+    <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
+      <div className="ticker-label">
+        <span className="ticker-icon">&#9889;</span>
         <span>BREAKING</span>
       </div>
       <div
-        className="news-breaking-ticker__track"
+        className="ticker-track"
         ref={trackRef}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
@@ -60,18 +61,19 @@ function BreakingTicker({ articles, onSelect }) {
         onMouseMove={handleMouseMove}
       >
         <div
-          className={`news-breaking-ticker__content ${isDragging ? 'news-breaking-ticker__content--paused' : ''}`}
+          className={`ticker-content ${isDragging ? 'paused' : ''}`}
           style={{ animationDuration: `${animationDuration}s` }}
         >
           {duplicated.map((a, i) => (
             <button
               key={`${a.url || ''}-${i}`}
-              className="news-breaking-ticker__item"
+              className="ticker-item"
               onClick={() => onSelect(a)}
               style={{ direction: 'ltr' }}
             >
-              <span className="news-breaking-ticker__source">{a.source}</span>
-              <span className="news-breaking-ticker__title">{a.title}</span>
+              <span className="ticker-rank">{a.source}</span>
+              <span className="ticker-separator">—</span>
+              <span className="ticker-song">{a.title}</span>
             </button>
           ))}
         </div>

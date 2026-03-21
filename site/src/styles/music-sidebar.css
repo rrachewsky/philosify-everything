@@ -1350,160 +1350,22 @@
 }
 
 /* Auto-scrolling ticker (allows manual scroll too) */
-/* ============================================================
-   BREAKING NEWS TICKER — horizontal right-to-left animation
-   Same pattern as Music's TopTenTicker
-   ============================================================ */
-
-/* Same color pattern as Music's TopTenTicker */
-.news-breaking-ticker {
-  height: 32px;
-  background: linear-gradient(
-    90deg,
-    rgba(26, 10, 62, 0.95) 0%,
-    rgba(45, 27, 105, 0.9) 50%,
-    rgba(26, 10, 62, 0.95) 100%
-  );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
+/* Breaking news ticker inside sidebar — override fixed positioning */
+.music-sidebar .top-ten-ticker {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  width: 100%;
+  z-index: auto;
   border-radius: 6px;
-  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
-  box-shadow: 0 2px 15px rgba(124, 58, 237, 0.2);
-  direction: ltr !important;
 }
 
-/* BREAKING label — same as Music's .ticker-label */
-.news-breaking-ticker__label {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 10px;
-  background: linear-gradient(
-    135deg,
-    #be185d 0%,
-    #7c3aed 50%,
-    #5b21b6 100%
-  );
-  height: 100%;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: #fff;
-  text-transform: uppercase;
-  z-index: 2;
-  box-shadow: 2px 0 10px rgba(190, 24, 93, 0.2);
-  font-family: 'Orbitron', sans-serif;
-}
-
-.news-breaking-ticker__label-icon {
-  font-size: 13px;
-}
-
-.news-breaking-ticker__track {
-  flex: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
-  height: 100%;
-  cursor: grab;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.news-breaking-ticker__track::-webkit-scrollbar {
-  display: none;
-}
-
-.news-breaking-ticker__track:active {
-  cursor: grabbing;
-}
-
-.news-breaking-ticker__content {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  gap: 0;
-  width: max-content;
-  animation: news-ticker-scroll linear infinite;
-}
-
-.news-breaking-ticker__content--paused {
-  animation-play-state: paused;
-}
-
-@keyframes news-ticker-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-33.3333%);
-  }
-}
-
-/* Same as Music's .ticker-item */
-.news-breaking-ticker__item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-  font-family: inherit;
-  color: #ffffff;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.news-breaking-ticker__item:hover {
-  background: rgba(168, 85, 247, 0.3);
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-  transform: translateY(-1px);
-}
-
-/* Same as Music's .ticker-artist */
-.news-breaking-ticker__source {
-  color: #f472b6;
-  font-size: 12px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-/* No truncation — full headline visible */
-.news-breaking-ticker__title {
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-@media (max-width: 768px) {
-  .news-breaking-ticker {
-    height: 28px;
-  }
-  .news-breaking-ticker__label {
-    padding: 0 8px;
-    font-size: 10px;
-    gap: 4px;
-  }
-  .news-breaking-ticker__label-icon {
-    font-size: 12px;
-  }
-  .news-breaking-ticker__item {
-    padding: 2px 8px;
-    gap: 4px;
-  }
-  .news-breaking-ticker__source {
-    font-size: 10px;
-  }
-  .news-breaking-ticker__title {
-    font-size: 10px;
-  }
+/* Allow full headlines in news ticker — no truncation */
+.music-sidebar .ticker-song {
+  max-width: none;
+  overflow: visible;
+  text-overflow: unset;
 }
 
 /* Highlights section */
