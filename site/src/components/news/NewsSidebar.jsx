@@ -269,7 +269,15 @@ export default function NewsSidebar({
     }
   };
 
-  // Date formatter: dd/mm/yyyy hh:mm
+  // Date formatter: dd/mm/yyyy hh:mm (TZ)
+  const userTZ = useMemo(() => {
+    try {
+      return new Intl.DateTimeFormat('en', { timeZoneName: 'short' })
+        .formatToParts(new Date())
+        .find((p) => p.type === 'timeZoneName')?.value || '';
+    } catch { return ''; }
+  }, []);
+
   const formatDate = useCallback((dateStr) => {
     if (!dateStr) return '';
     const d = new Date(dateStr);
@@ -279,8 +287,8 @@ export default function NewsSidebar({
     const yyyy = d.getFullYear();
     const hh = String(d.getHours()).padStart(2, '0');
     const min = String(d.getMinutes()).padStart(2, '0');
-    return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
-  }, []);
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}${userTZ ? ` (${userTZ})` : ''}`;
+  }, [userTZ]);
 
   // Available sources as flat list for picker
   const availableSourcesList = useMemo(() => availableSources || {}, [availableSources]);
