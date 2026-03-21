@@ -383,30 +383,28 @@ export default function NewsSidebar({
 
         {/* ── STATE 2: Article selected (not yet analyzed) ── */}
         {selectedArticle && !analysisResult && !isAnalyzing && !panelResult && !panelLoading && (
-          <div className="news-headline__expanded-wrapper">
-            <button
-              className="music-sidebar__back"
-              onClick={clearArticle}
-            >
-              &larr; {t('news.backToSearch', { defaultValue: 'Back' })}
-            </button>
-
-            <div className="news-headline__expanded">
-              <h3 className="news-headline__title" style={{ fontSize: '16px', marginBottom: '8px' }}>
-                {selectedArticle.title}
-              </h3>
-              <div className="news-headline__meta" style={{ marginBottom: '12px' }}>
-                {selectedArticle.source}
-                {selectedArticle.publishedAt && (
-                  <> &middot; {formatDate(selectedArticle.publishedAt)}</>
-                )}
+          <div>
+            {/* Selected article — same pattern as Music's music-selected */}
+            <div className="music-selected">
+              <div className="music-selected__info">
+                <div className="music-selected__song">{selectedArticle.title}</div>
+                <div className="music-selected__artist">
+                  {selectedArticle.source}
+                  {selectedArticle.publishedAt && (
+                    <> &middot; {formatDate(selectedArticle.publishedAt)}</>
+                  )}
+                </div>
               </div>
-              {(selectedArticle.description || selectedArticle.aiSummary) && (
-                <p className="news-headline__summary">
-                  {selectedArticle.aiSummary || selectedArticle.description}
-                </p>
-              )}
+              <button className="music-selected__clear" onClick={clearArticle}>
+                &times;
+              </button>
             </div>
+
+            {(selectedArticle.description || selectedArticle.aiSummary) && (
+              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.5', margin: '12px 0' }}>
+                {selectedArticle.aiSummary || selectedArticle.description}
+              </p>
+            )}
 
             {/* Buttons — identical layout to Music/Cinema/Literature */}
             <div className="music-analyze__buttons-row">
