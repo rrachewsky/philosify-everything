@@ -510,7 +510,7 @@
       "news": {
         "title": "Nachrichten",
         "description": "Betrachte aktuelle Ereignisse durch eine philosophische Linse",
-        "searchPlaceholder": "Nachrichten-URL einfügen...",
+        "searchPlaceholder": "Thema, Ereignis oder Frage suchen...",
         "analyzeButton": "Artikel analysieren"
       },
       "ideas": {

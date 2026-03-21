@@ -510,7 +510,7 @@
       "news": {
         "title": "Haberler",
         "description": "Güncel olayları felsefi bir perspektiften inceleyin",
-        "searchPlaceholder": "Haber URL'si yapıştır...",
+        "searchPlaceholder": "Konu, olay veya tema arayin...",
         "analyzeButton": "Makale Analiz Et"
       },
       "ideas": {

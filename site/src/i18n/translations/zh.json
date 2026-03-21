@@ -510,7 +510,7 @@
       "news": {
         "title": "新闻",
         "description": "从哲学角度审视时事",
-        "searchPlaceholder": "粘贴新闻链接...",
+        "searchPlaceholder": "搜索主题、事件或话题...",
         "analyzeButton": "分析文章"
       },
       "ideas": {

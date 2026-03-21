@@ -510,7 +510,7 @@
       "news": {
         "title": "Nieuws",
         "description": "Bekijk actuele gebeurtenissen door een filosofische lens",
-        "searchPlaceholder": "Plak nieuws-URL...",
+        "searchPlaceholder": "Zoek een onderwerp, gebeurtenis of thema...",
         "analyzeButton": "Artikel Analyseren"
       },
       "ideas": {

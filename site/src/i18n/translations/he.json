@@ -510,7 +510,7 @@
       "news": {
         "title": "חדשות",
         "description": "בחן אירועים אקטואליים דרך פריזמה פילוסופית",
-        "searchPlaceholder": "הדבק קישור לכתבה...",
+        "searchPlaceholder": "...חפש נושא, אירוע או תחום",
         "analyzeButton": "נתח כתבה"
       },
       "ideas": {

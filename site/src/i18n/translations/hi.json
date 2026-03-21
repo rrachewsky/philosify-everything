@@ -510,7 +510,7 @@
       "news": {
         "title": "समाचार",
         "description": "दार्शनिक दृष्टिकोण से वर्तमान घटनाओं की जांच करें",
-        "searchPlaceholder": "समाचार URL पेस्ट करें...",
+        "searchPlaceholder": "विषय, घटना या मुद्दा खोजें...",
         "analyzeButton": "लेख का विश्लेषण"
       },
       "ideas": {

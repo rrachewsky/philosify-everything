@@ -510,7 +510,7 @@
       "news": {
         "title": "أخبار",
         "description": "افحص الأحداث الجارية من منظور فلسفي",
-        "searchPlaceholder": "الصق رابط الخبر...",
+        "searchPlaceholder": "...ابحث عن موضوع أو حدث أو قضية",
         "analyzeButton": "تحليل المقال"
       },
       "ideas": {

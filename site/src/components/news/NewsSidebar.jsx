@@ -195,9 +195,6 @@ export default function NewsSidebar({
   const [showSourcePicker, setShowSourcePicker] = useState(false);
   const [showPhilosopherPicker, setShowPhilosopherPicker] = useState(false);
 
-  // Local search input
-  const [searchInput, setSearchInput] = useState('');
-
   // News source preferences
   const {
     unlocked: sourcesUnlocked,
@@ -212,6 +209,8 @@ export default function NewsSidebar({
   } = useNewsPreferences();
 
   const {
+    searchInput,
+    setSearchInput,
     breakingNews,
     breakingLoading,
     searchResults,
@@ -430,93 +429,105 @@ export default function NewsSidebar({
               )}
             </div>
 
-            {/* Analyze button (1 credit) */}
-            <button
-              className="music-analyze__button"
-              onClick={() => analyzeArticle(userLang, 'grok')}
-              disabled={isAnalyzing}
-            >
-              {t('home.categories.news.analyzeButton', 'Analyze Article')}
-              <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
-            </button>
+            {/* Buttons — identical layout to Music/Cinema/Literature */}
+            <div className="music-analyze__buttons-row">
+              <button
+                className="music-analyze__button"
+                onClick={() => analyzeArticle(userLang, 'grok')}
+                disabled={isAnalyzing || panelLoading}
+              >
+                {t('home.categories.news.analyzeButton', 'Analyze Article')}
+                <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
+              </button>
+              <button
+                className="music-analyze__button music-analyze__button--panel"
+                onClick={() => setShowPhilosopherPicker(true)}
+                disabled={isAnalyzing || panelLoading}
+              >
+                {t('philosopherPanel.button', 'Philosopher Panel')}
+                <span className="music-analyze__cost">3 {t('philosopherPanel.credits', 'credits')}</span>
+              </button>
+            </div>
 
-            {/* Philosopher Panel button (3 credits) */}
-            <button
-              className="news-headline__panel-btn"
-              onClick={() => setShowPhilosopherPicker(true)}
-              disabled={panelLoading}
-            >
-              {t('philosopherPanel.title', 'Philosopher Panel')}
-              <span className="news-headline__panel-cost">3 {t('philosopherPanel.credits', 'credits')}</span>
-            </button>
-
-            {analysisError && (
-              <div className="music-error" style={{ marginTop: '12px' }}>
-                {analysisError}
-              </div>
+            {(analysisError || panelError) && (
+              <div className="music-error">{analysisError || panelError}</div>
             )}
           </div>
         )}
 
-        {/* ── STATE 3: Analyzing or Panel loading ── */}
+        {/* ── STATE 3: Analyzing or Panel loading — same timer as Music ── */}
         {(isAnalyzing || panelLoading) && (
-          <div className="music-sidebar__analyzing">
-            <div className="music-search__loading" style={{ marginBottom: '16px' }}>
-              <span></span><span></span><span></span>
+          <div className="music-timer">
+            <div className="music-timer__bar">
+              <div className="music-timer__fill"></div>
             </div>
-            <div className="music-sidebar__timer">
-              {formatTime(elapsedTime)}
+            <div className="music-timer__time">
+              <span>&#9201;</span> {formatTime(elapsedTime)}
             </div>
-            <p className="music-sidebar__analyzing-text">
+            <div className="music-timer__label">
               {panelLoading
-                ? t('philosopherPanel.analyzing', 'Philosophers debating...')
+                ? t('philosopherPanel.generating', 'Philosophers are analyzing...')
                 : t('news.analyzing', { defaultValue: 'Analyzing article...' })}
-            </p>
+            </div>
           </div>
         )}
 
-        {/* ── STATE 4a: Analysis result ── */}
+        {/* ── STATE 4a: Analysis result — same layout as Music ── */}
         {analysisResult && !panelResult && (
-          <div>
-            <button
-              className="music-sidebar__back"
-              onClick={clearArticle}
-            >
-              &larr; {t('news.backToSearch', { defaultValue: 'Back' })}
-            </button>
-            <ResultsContainer
-              result={analysisResult}
-              mediaType="news"
-            />
+          <div className="music-analysis">
+            <div className="music-analysis__header">
+              <span className="music-analysis__complete-icon">&#10003;</span>
+              {t('landing.analysisComplete', 'Analysis Complete')}
+            </div>
+            <div className="music-analysis__results-wrapper">
+              <ResultsContainer result={analysisResult} mediaType="news" showShareActions={true} />
+            </div>
+            <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+              <button
+                className="music-analyze__button music-analyze__button--panel"
+                onClick={() => setShowPhilosopherPicker(true)}
+              >
+                {t('philosopherPanel.button', 'Philosopher Panel')}
+                <span className="music-analyze__cost">3 {t('philosopherPanel.credits', 'credits')}</span>
+              </button>
+              <button
+                className="music-analyze__button music-analyze__button--another"
+                onClick={clearArticle}
+              >
+                {t('news.analyzeAnother', 'Analyze Another Story')}
+              </button>
+            </div>
           </div>
         )}
 
         {/* ── STATE 4b: Philosopher Panel result ── */}
         {panelResult && (
-          <div>
-            <button
-              className="music-sidebar__back"
-              onClick={clearArticle}
-            >
-              &larr; {t('news.backToSearch', { defaultValue: 'Back' })}
-            </button>
-            <ResultsContainer
-              result={{
-                song_name: selectedArticle?.title,
-                artist: selectedArticle?.source,
-                philosophical_analysis: panelResult,
-                media_type: 'news',
-                lang: userLang,
-                id: `panel-${Date.now()}`,
-              }}
-              mediaType="news"
-            />
-          </div>
-        )}
-
-        {panelError && (
-          <div className="music-error" style={{ marginTop: '12px' }}>
-            {panelError}
+          <div className="music-analysis">
+            <div className="music-analysis__header">
+              <span className="music-analysis__complete-icon">&#10003;</span>
+              {t('philosopherPanel.complete', 'Panel Analysis Complete')}
+            </div>
+            <div className="music-analysis__results-wrapper">
+              <ResultsContainer
+                result={{
+                  song_name: selectedArticle?.title,
+                  artist: selectedArticle?.source,
+                  philosophical_analysis: panelResult,
+                  media_type: 'news',
+                  lang: userLang,
+                  id: `panel-${Date.now()}`,
+                }}
+                mediaType="news"
+              />
+            </div>
+            <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+              <button
+                className="music-analyze__button music-analyze__button--another"
+                onClick={clearArticle}
+              >
+                {t('news.analyzeAnother', 'Analyze Another Story')}
+              </button>
+            </div>
           </div>
         )}
       </div>

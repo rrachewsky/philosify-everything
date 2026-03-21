@@ -16,6 +16,7 @@ export function useNews() {
   const [isOpen, setIsOpen] = useState(false);
 
   // Search state
+  const [searchInput, setSearchInput] = useState('');
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -104,18 +105,29 @@ export function useNews() {
     loadBreaking();
   }, [loadBreaking]);
 
-  // Close sidebar — clears ALL state
+  // Close sidebar — clears ALL state, clean slate on reopen
   const close = useCallback(() => {
     setIsOpen(false);
+    // Clear search
+    setSearchInput('');
+    setQuery('');
+    setSearchResults([]);
+    setSearchLoading(false);
+    setSearchError(null);
+    setLastQuery('');
+    setSearchFiltered(false);
+    // Clear article selection
     setSelectedArticle(null);
+    // Clear analysis
     setAnalysisResult(null);
     setAnalysisError(null);
+    setIsAnalyzing(false);
+    // Clear panel
     setPanelResult(null);
     setPanelError(null);
-    setIsAnalyzing(false);
     setPanelLoading(false);
+    // Clear timer
     setElapsedTime(0);
-    // Preserve search results so user can return to them
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -276,6 +288,8 @@ export function useNews() {
     open,
     close,
     // Search
+    searchInput,
+    setSearchInput,
     query,
     setQuery,
     search,

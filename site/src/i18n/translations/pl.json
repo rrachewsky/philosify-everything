@@ -510,7 +510,7 @@
       "news": {
         "title": "Wiadomości",
         "description": "Analizuj bieżące wydarzenia przez pryzmat filozofii",
-        "searchPlaceholder": "Wklej URL wiadomości...",
+        "searchPlaceholder": "Szukaj tematu, wydarzenia lub zagadnienia...",
         "analyzeButton": "Analizuj Artykuł"
       },
       "ideas": {

@@ -510,7 +510,7 @@
       "news": {
         "title": "ニュース",
         "description": "哲学的な視点で時事問題を検証する",
-        "searchPlaceholder": "ニュースURLを貼り付け...",
+        "searchPlaceholder": "トピック、イベント、テーマを検索...",
         "analyzeButton": "記事を分析"
       },
       "ideas": {

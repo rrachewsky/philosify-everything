@@ -510,7 +510,7 @@
       "news": {
         "title": "اخبار",
         "description": "رویدادهای جاری را از دیدگاه فلسفی بررسی کنید",
-        "searchPlaceholder": "لینک خبر را بچسبانید...",
+        "searchPlaceholder": "...جستجوی موضوع، رویداد یا مسئله",
         "analyzeButton": "تحلیل مقاله"
       },
       "ideas": {

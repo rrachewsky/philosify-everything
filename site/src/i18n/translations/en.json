@@ -510,7 +510,7 @@
       "news": {
         "title": "News",
         "description": "Examine current events through a philosophical lens",
-        "searchPlaceholder": "Paste news URL...",
+        "searchPlaceholder": "Search a topic, event, or theme...",
         "analyzeButton": "Analyze Article"
       },
       "ideas": {

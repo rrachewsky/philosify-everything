@@ -510,7 +510,7 @@
       "news": {
         "title": "Notizie",
         "description": "Esamina gli eventi attuali attraverso una lente filosofica",
-        "searchPlaceholder": "Incolla URL della notizia...",
+        "searchPlaceholder": "Cerca un tema, evento o argomento...",
         "analyzeButton": "Analizza Articolo"
       },
       "ideas": {

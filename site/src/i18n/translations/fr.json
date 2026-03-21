@@ -510,7 +510,7 @@
       "news": {
         "title": "Actualités",
         "description": "Examinez l'actualité à travers un prisme philosophique",
-        "searchPlaceholder": "Collez l'URL de l'article...",
+        "searchPlaceholder": "Rechercher un sujet, un evenement ou un theme...",
         "analyzeButton": "Analyser l'article"
       },
       "ideas": {

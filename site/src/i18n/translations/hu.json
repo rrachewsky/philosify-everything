@@ -510,7 +510,7 @@
       "news": {
         "title": "Hírek",
         "description": "Vizsgáld meg az aktuális eseményeket filozófiai szemszögből",
-        "searchPlaceholder": "Illeszd be a hír URL-jét...",
+        "searchPlaceholder": "Keressen temat, esemenyt vagy kerdest...",
         "analyzeButton": "Cikk Elemzése"
       },
       "ideas": {
