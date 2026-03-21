@@ -1386,9 +1386,9 @@
   gap: 8px;
 }
 
-/* Reduce source/time opacity in ticker cards vs search results */
+/* Brighter source/time in ticker cards for readability */
 .news-ticker--breaking .news-search-result__source {
-  opacity: 0.5;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .news-ticker--breaking .news-search-result__title {
