@@ -1350,49 +1350,122 @@
 }
 
 /* Auto-scrolling ticker (allows manual scroll too) */
-/* Breaking news ticker — uses same card style as search results */
-.news-ticker--breaking {
-  max-height: 180px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: relative;
-  scroll-behavior: auto;
-  -webkit-overflow-scrolling: touch;
-  mask-image: linear-gradient(to bottom,
-    transparent 0%,
-    black 6%,
-    black 94%,
-    transparent 100%
+/* ============================================================
+   BREAKING NEWS TICKER — horizontal right-to-left animation
+   Same pattern as Music's TopTenTicker
+   ============================================================ */
+
+.news-breaking-ticker {
+  height: 32px;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 10, 62, 0.95) 0%,
+    rgba(45, 27, 105, 0.9) 50%,
+    rgba(26, 10, 62, 0.95) 100%
   );
-  -webkit-mask-image: linear-gradient(to bottom,
-    transparent 0%,
-    black 6%,
-    black 94%,
-    transparent 100%
-  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  box-shadow: 0 2px 15px rgba(124, 58, 237, 0.15);
 }
 
-.news-ticker--breaking::-webkit-scrollbar {
-  width: 0;
+.news-breaking-ticker__track {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 100%;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.news-breaking-ticker__track::-webkit-scrollbar {
   display: none;
 }
-.news-ticker--breaking {
-  scrollbar-width: none;
+
+.news-breaking-ticker__track:active {
+  cursor: grabbing;
 }
 
-.news-ticker__track {
+.news-breaking-ticker__content {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  height: 100%;
+  gap: 0;
+  width: max-content;
+  animation: news-ticker-scroll linear infinite;
 }
 
-/* Brighter source/time in ticker cards for readability */
-.news-ticker--breaking .news-search-result__source {
-  color: rgba(255, 255, 255, 0.65);
+.news-breaking-ticker__content--paused {
+  animation-play-state: paused;
 }
 
-.news-ticker--breaking .news-search-result__title {
-  font-size: 13px;
+@keyframes news-ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.3333%);
+  }
+}
+
+.news-breaking-ticker__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: inherit;
+  color: #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.news-breaking-ticker__item:hover {
+  background: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}
+
+.news-breaking-ticker__source {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.news-breaking-ticker__title {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+  .news-breaking-ticker {
+    height: 28px;
+  }
+  .news-breaking-ticker__item {
+    padding: 2px 8px;
+    gap: 4px;
+  }
+  .news-breaking-ticker__source {
+    font-size: 10px;
+  }
+  .news-breaking-ticker__title {
+    font-size: 10px;
+    max-width: 200px;
+  }
 }
 
 /* Highlights section */

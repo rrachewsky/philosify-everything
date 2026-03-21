@@ -17,101 +17,59 @@ import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import '../../styles/music-sidebar.css';
 
 // ============================================================
-// Breaking News Ticker — same scroll mechanics as original
+// Breaking News Ticker — horizontal right-to-left CSS animation
+// Same pattern as Music's TopTenTicker
 // ============================================================
-function BreakingTicker({ articles, onSelect, timeAgo }) {
-  const tickerRef = useRef(null);
-  const pausedRef = useRef(false);
-  const resumeTimerRef = useRef(null);
-
-  const shuffled = useMemo(() => {
-    if (articles.length <= 3) return articles;
-    const copy = [...articles];
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy;
-  }, [articles]);
-
-  useEffect(() => {
-    const ticker = tickerRef.current;
-    if (!ticker || articles.length === 0) return;
-    let subPixel = 0;
-    let frameId;
-    const scroll = () => {
-      if (!pausedRef.current && ticker) {
-        subPixel += 0.15;
-        if (subPixel >= 1) {
-          ticker.scrollTop += 1;
-          subPixel -= 1;
-          const halfHeight = ticker.scrollHeight / 2;
-          if (halfHeight > 0 && ticker.scrollTop >= halfHeight) {
-            ticker.scrollTop -= halfHeight;
-          }
-        }
-      }
-      frameId = requestAnimationFrame(scroll);
-    };
-    frameId = requestAnimationFrame(scroll);
-    return () => cancelAnimationFrame(frameId);
-  }, [articles.length]);
-
-  const handleUserInteraction = useCallback(() => {
-    pausedRef.current = true;
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => {
-      pausedRef.current = false;
-    }, 8000);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    };
-  }, []);
+function BreakingTicker({ articles, onSelect }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const trackRef = useRef(null);
 
   if (articles.length === 0) return null;
 
-  // For seamless loop: need enough items so the scroll doesn't jump visibly.
-  // If very few articles, repeat them more times.
-  const repeatCount = articles.length < 5 ? 4 : 2;
-  const allItems = [];
-  for (let r = 0; r < repeatCount; r++) {
-    const source = r === 0 ? articles : shuffled;
-    source.forEach((a, i) => {
-      allItems.push({ ...a, _key: `${r}-${i}` });
-    });
-  }
+  const duplicated = [...articles, ...articles, ...articles];
+  const animationDuration = articles.length * 6; // 6 seconds per headline
+
+  const handleMouseDown = (e) => {
+    if (!trackRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - trackRef.current.offsetLeft);
+    setScrollLeft(trackRef.current.scrollLeft);
+  };
+  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseMove = (e) => {
+    if (!isDragging || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.offsetLeft;
+    trackRef.current.scrollLeft = scrollLeft - (x - startX) * 2;
+  };
 
   return (
-    <div
-      className="news-ticker--breaking"
-      ref={tickerRef}
-      onWheel={handleUserInteraction}
-      onTouchStart={handleUserInteraction}
-      onPointerDown={handleUserInteraction}
-    >
-      <div className="news-ticker__track">
-        {allItems.map((a) => (
-          <button
-            key={a._key}
-            className="news-search-result"
-            onClick={() => onSelect(a)}
-          >
-            {a.imageUrl && (
-              <img className="news-search-result__image" src={a.imageUrl} alt="" loading="lazy"
-                onError={(e) => { e.target.style.display = 'none'; }} />
-            )}
-            <div className="news-search-result__content">
-              <span className="news-search-result__source">
-                {a.source}
-                {a.publishedAt && <> &middot; {timeAgo(a.publishedAt)}</>}
-              </span>
-              <span className="news-search-result__title">{a.title}</span>
-            </div>
-          </button>
-        ))}
+    <div className="news-breaking-ticker">
+      <div
+        className="news-breaking-ticker__track"
+        ref={trackRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
+        <div
+          className={`news-breaking-ticker__content ${isDragging ? 'news-breaking-ticker__content--paused' : ''}`}
+          style={{ animationDuration: `${animationDuration}s` }}
+        >
+          {duplicated.map((a, i) => (
+            <button
+              key={`${a.url || ''}-${i}`}
+              className="news-breaking-ticker__item"
+              onClick={() => onSelect(a)}
+            >
+              <span className="news-breaking-ticker__source">{a.source}</span>
+              <span className="news-breaking-ticker__title">{a.title}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -326,16 +284,12 @@ export default function NewsSidebar({
         {/* ── STATE 1: Search home (no article selected, no result) ── */}
         {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
           <>
-            {/* Breaking News Ticker — no loading state, appears when data arrives */}
+            {/* Breaking News Ticker — horizontal scroll, same as Music Top 50 */}
             {breakingNews.length > 0 && (
               <div style={{ marginBottom: '16px' }}>
-                <div style={{ fontSize: '11px', fontWeight: '700', color: '#ff00ff', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '8px', paddingLeft: '4px', fontFamily: "'Orbitron', sans-serif" }}>
-                  {t('news.breakingNews', 'Breaking News')}
-                </div>
                 <BreakingTicker
                   articles={breakingNews}
                   onSelect={selectArticle}
-                  timeAgo={formatDate}
                 />
               </div>
             )}
