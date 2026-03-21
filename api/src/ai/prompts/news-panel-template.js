@@ -94,7 +94,7 @@ Each philosopher contributes their unique framework to identify the CAUSES:
 For EACH philosopher, write a subsection:
   **[Philosopher Name]** — *Analyzing the causes through [their school]*
   
-  What does this philosopher's framework reveal about WHY this happened?
+  What does this philosopher's framework reveal about why this happened?
   - Immediate causes (what triggered this event)
   - Root causes (deeper structural, cultural, or philosophical factors)
   - Historical precedents (when has something similar happened? what lessons apply?)

@@ -131,16 +131,16 @@ Analyze this news article and return JSON with EXACTLY these fields:
 ━━━ FIELD 1: "the_facts" (~200-300 words) ━━━
 
 Establish the objective facts using the 5W+H framework:
-- WHAT: What happened? What is the core event or development?
-- WHO: Who are the actors involved (individuals, institutions, governments)?
-- WHERE: Where did this occur (geographic, institutional, jurisdictional)?
-- WHEN: When did this happen (date, timeline, sequence of events)?
-- HOW: How did this event unfold (mechanism, process, chain of actions)?
-- WHY: Why did this happen according to the SOURCE (the source's stated reasons)?
+- What: What happened? What is the core event or development?
+- Who: Who are the actors involved (individuals, institutions, governments)?
+- Where: Where did this occur (geographic, institutional, jurisdictional)?
+- When: When did this happen (date, timeline, sequence of events)?
+- How: How did this event unfold (mechanism, process, chain of actions)?
+- Why: Why did this happen according to the SOURCE (the source's stated reasons)?
 
 RULES for this field:
 - State ONLY verified, objective facts. No opinion. No analysis.
-- The WHY here is the source's version of why — NOT your analysis.
+- The "Why" here is the source's version of why — NOT your analysis.
 - If facts are uncertain or unverified, say so explicitly.
 - Be precise with dates, names, and figures.
 
@@ -164,15 +164,15 @@ Evaluate the source's coverage:
 
 HITS (where the source gets it right):
 - Specific factual or analytical points the source handles correctly
-- WHY these points are correct (evidence, logic, data)
+- Why these points are correct (evidence, logic, data)
 
 MISSES (where the source gets it wrong):
 - Specific factual errors, distortions, or misleading framing
-- WHY these are errors (evidence, logic, data that contradicts)
+- Why these are errors (evidence, logic, data that contradicts)
 
 OMISSIONS (what the source leaves out):
 - Relevant information the source does not mention
-- WHY these omissions matter for understanding the full picture
+- Why these omissions matter for understanding the full picture
 
 RULES for this field:
 - Every hit and miss MUST have a concrete reason ("because...").
