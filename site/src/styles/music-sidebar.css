@@ -1208,7 +1208,7 @@
 
 .news-search-result__source {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1222,7 +1222,7 @@
 
 .news-search-result__desc {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.4;
 }
 
@@ -1362,6 +1362,7 @@
   white-space: normal;
   overflow: visible;
   text-overflow: unset;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Highlights section */

@@ -401,7 +401,7 @@ export default function NewsSidebar({
             </div>
 
             {(selectedArticle.description || selectedArticle.aiSummary) && (
-              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.5', margin: '12px 0' }}>
+              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.75)', lineHeight: '1.5', margin: '12px 0' }}>
                 {selectedArticle.aiSummary || selectedArticle.description}
               </p>
             )}
