@@ -219,18 +219,24 @@ export default function NewsSidebar({
     }
   }, [isOpen, selectedArticle, analysisResult]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchInput.trim().length >= 2) {
-      search(searchInput.trim());
-    }
-  };
+  // Debounced real-time search — same as Music/Literature/Cinema
+  const debounceRef = useRef(null);
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch(e);
+  const handleInputChange = useCallback((e) => {
+    const val = e.target.value;
+    setSearchInput(val);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const trimmed = val.trim();
+    if (trimmed.length >= 3) {
+      debounceRef.current = setTimeout(() => {
+        search(trimmed);
+      }, 600);
     }
-  };
+  }, [search, setSearchInput]);
+
+  useEffect(() => {
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, []);
 
   // Date formatter: dd/mm/yyyy hh:mm (TZ)
   const userTZ = useMemo(() => {
@@ -299,31 +305,24 @@ export default function NewsSidebar({
               </div>
             )}
 
-            {/* Search Field — Enter key submits, no separate button */}
-            <form onSubmit={handleSearch} style={{ marginBottom: '16px', position: 'relative' }}>
+            {/* Search Field — real-time debounced, same as Music/Literature/Cinema */}
+            <div style={{ marginBottom: '16px', position: 'relative' }}>
               <input
                 ref={searchInputRef}
                 type="text"
                 className="music-search__input"
                 placeholder={t('home.categories.news.searchPlaceholder', 'Search a topic, event, or theme...')}
                 value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                style={{ width: '100%', paddingRight: '40px' }}
+                onChange={handleInputChange}
               />
               {searchLoading && (
-                <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)' }}>
+                <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)' }}>
                   <div className="music-search__loading">
                     <span></span><span></span><span></span>
                   </div>
                 </div>
               )}
-              {!searchLoading && searchInput.trim().length >= 2 && (
-                <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', opacity: 0.4 }}>
-                  &#128269;
-                </div>
-              )}
-            </form>
+            </div>
 
             {/* Search Error */}
             {searchError && (
