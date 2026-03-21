@@ -387,34 +387,14 @@ export async function fetchBreakingNews(env) {
   const results = data.articles?.results ?? [];
   console.log(`[News] Breaking news API returned ${results.length} raw articles`);
 
-  if (results.length === 0) {
-    // Log the full response structure for diagnosis
-    console.error(`[News] Breaking news: 0 raw results. Response keys: ${Object.keys(data).join(", ")}. articles keys: ${data.articles ? Object.keys(data.articles).join(", ") : "N/A"}. Error: ${data.error || data.message || "none"}`);
-  }
-
   const normalized = results.map(normalizeNewsApiArticle);
   const notBlocked = normalized.filter((a) => !isBlockedSource(a.source));
   const clean = notBlocked.filter(isCleanArticle);
-
-  console.log(`[News] Breaking: ${results.length} raw → ${normalized.length} normalized → ${notBlocked.length} not-blocked → ${clean.length} clean`);
-  if (normalized.length > 0 && notBlocked.length === 0) {
-    console.error(`[News] ALL articles blocked! Sources: ${normalized.map(a => a.source).join(", ")}`);
-  }
 
   const deduped = deduplicateArticles(clean);
   const sorted = sortArticles(deduped);
 
   console.log(`[News] ${sorted.length} breaking news after curation`);
-  // Attach diagnostic counts to the array for debugging
-  sorted._diag = {
-    raw: results.length,
-    normalized: normalized.length,
-    notBlocked: notBlocked.length,
-    clean: clean.length,
-    deduped: deduped.length,
-    final: sorted.length,
-    sampleSources: normalized.slice(0, 5).map(a => a.source),
-  };
   return sorted;
 }
 
@@ -498,7 +478,6 @@ export async function refreshBreakingNews(env, lang = "en") {
       fetchedAt: new Date().toISOString(),
       count: articles.length,
       lang,
-      _diag: articles._diag || null,
     };
 
     // Always cache — even 0 results — to avoid hammering the API on every request

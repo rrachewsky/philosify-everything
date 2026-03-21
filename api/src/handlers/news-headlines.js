@@ -129,7 +129,7 @@ export async function handleBreakingNews(request, env, origin, ctx = null) {
         count: cached.count || 0,
         fetchedAt: cached.fetchedAt,
         lang: cached.lang || lang,
-        _diag: cached._diag || null,
+
       },
       200,
       origin,
