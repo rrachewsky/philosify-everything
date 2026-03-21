@@ -1,54 +1,44 @@
-// NewsSidebar - Slide-out Sidebar for Philosophical News Analysis
-// Users browse a slow auto-scrolling ticker of headlines.
-// Click a headline → new page with headline, summary, Panel button.
-// Same pattern as music/literature sidebars.
+// ============================================================
+// NewsSidebar — Search-based News module
+// ============================================================
+// STATE 1: Search home (breaking ticker + search field + results)
+// STATE 2: Article selected (headline, summary, Analyze button)
+// STATE 3: Analyzing (timer, loading)
+// STATE 4: Analysis result (ResultsContainer with 4 cards)
+// ============================================================
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ListenButton } from '../results/ListenButton';
-import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
+import { useNewsPreferences } from '../../hooks/useNewsPreferences.js';
+import { translateArticle } from '../../services/api/newsApi.js';
+import { NewsSourcePicker } from './NewsSourcePicker.jsx';
+import ResultsContainer from '../results/ResultsContainer.jsx';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
-import { ShareButton } from '../sharing/ShareButton';
-import { ShareToDMButton } from '../sharing/ShareToDMButton';
-import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
-import { NewsSourcePicker } from './NewsSourcePicker';
-import { useModal } from '../../hooks';
-import { useNewsPreferences } from '../../hooks/useNewsPreferences';
-import { setPendingAction } from '../../utils/pendingAction.js';
-import { ResultsContainer } from '../results/ResultsContainer';
-import { config } from '@/config';
 import '../../styles/music-sidebar.css';
 
-// Auto-scrolling vertical news ticker
-function NewsTicker({ highlights, headlines, onSelect, timeAgo }) {
+// ============================================================
+// Breaking News Ticker — same scroll mechanics as original
+// ============================================================
+function BreakingTicker({ articles, onSelect, timeAgo }) {
   const tickerRef = useRef(null);
   const pausedRef = useRef(false);
   const resumeTimerRef = useRef(null);
 
-  const allItems = useMemo(() => [
-    ...highlights.map((a) => ({ ...a, isHighlight: true })),
-    ...headlines,
-  ], [highlights, headlines]);
-
-  // Shuffled copy for the second half of the loop — avoids visible repetition
-  const shuffledItems = useMemo(() => {
-    if (allItems.length <= 3) return allItems;
-    const copy = [...allItems];
+  const shuffled = useMemo(() => {
+    if (articles.length <= 3) return articles;
+    const copy = [...articles];
     for (let i = copy.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [copy[i], copy[j]] = [copy[j], copy[i]];
     }
     return copy;
-  }, [allItems]);
+  }, [articles]);
 
-  // Single animation loop — runs forever, only moves when not paused
   useEffect(() => {
     const ticker = tickerRef.current;
-    if (!ticker || allItems.length === 0) return;
-
+    if (!ticker || articles.length === 0) return;
     let subPixel = 0;
     let frameId;
-
     const scroll = () => {
       if (!pausedRef.current && ticker) {
         subPixel += 0.15;
@@ -63,12 +53,10 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo }) {
       }
       frameId = requestAnimationFrame(scroll);
     };
-
     frameId = requestAnimationFrame(scroll);
     return () => cancelAnimationFrame(frameId);
-  }, [allItems.length]);
+  }, [articles.length]);
 
-  // User manual scroll: pause, resume after 8s idle
   const handleUserInteraction = useCallback(() => {
     pausedRef.current = true;
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
@@ -83,6 +71,28 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo }) {
     };
   }, []);
 
+  if (articles.length === 0) return null;
+
+  const renderItem = (a, keyPrefix, i) => (
+    <button
+      key={`${keyPrefix}-${i}`}
+      className="news-headline__item news-headline__item--highlight"
+      onClick={() => onSelect(a)}
+    >
+      {a.imageUrl && (
+        <img className="news-headline__image" src={a.imageUrl} alt="" loading="lazy"
+          onError={(e) => { e.target.style.display = 'none'; }} />
+      )}
+      <div className="news-headline__content">
+        <span className="news-headline__star">&#9889;</span>
+        <span className="news-headline__title">{a.title}</span>
+        <span className="news-headline__meta">
+          {a.source} &middot; {timeAgo(a.publishedAt)}
+        </span>
+      </div>
+    </button>
+  );
+
   return (
     <div
       className="news-ticker"
@@ -90,108 +100,103 @@ function NewsTicker({ highlights, headlines, onSelect, timeAgo }) {
       onWheel={handleUserInteraction}
       onTouchStart={handleUserInteraction}
       onPointerDown={handleUserInteraction}
+      style={{ maxHeight: '140px' }}
     >
       <div className="news-ticker__track">
-        {allItems.map((a, i) => (
-          <button
-            key={`a-${i}`}
-            className={`news-headline__item ${a.isHighlight ? 'news-headline__item--highlight' : ''}`}
-            onClick={() => onSelect(a)}
-          >
-            {a.imageUrl && (
-              <img className="news-headline__image" src={a.imageUrl} alt="" loading="lazy" />
-            )}
-            <div className="news-headline__content">
-              {a.isHighlight && <span className="news-headline__star">&#9733;</span>}
-              <span className="news-headline__title">{a.title}</span>
-              <span className="news-headline__meta">
-                {a.source} &middot; {timeAgo(a.publishedAt)}
-                {a.topic && <span className="news-headline__topic"> &middot; {a.topic}</span>}
-              </span>
-            </div>
-          </button>
-        ))}
-        {shuffledItems.map((a, i) => (
-          <button
-            key={`b-${i}`}
-            className={`news-headline__item ${a.isHighlight ? 'news-headline__item--highlight' : ''}`}
-            onClick={() => onSelect(a)}
-          >
-            {a.imageUrl && (
-              <img className="news-headline__image" src={a.imageUrl} alt="" loading="lazy" />
-            )}
-            <div className="news-headline__content">
-              {a.isHighlight && <span className="news-headline__star">&#9733;</span>}
-              <span className="news-headline__title">{a.title}</span>
-              <span className="news-headline__meta">
-                {a.source} &middot; {timeAgo(a.publishedAt)}
-                {a.topic && <span className="news-headline__topic"> &middot; {a.topic}</span>}
-              </span>
-            </div>
-          </button>
-        ))}
+        {articles.map((a, i) => renderItem(a, 'a', i))}
+        {shuffled.map((a, i) => renderItem(a, 'b', i))}
       </div>
     </div>
   );
 }
 
-export function NewsSidebar({
+// ============================================================
+// Search Result Card
+// ============================================================
+function SearchResultCard({ article, onSelect, userLang, timeAgo }) {
+  const [translating, setTranslating] = useState(false);
+  const [translated, setTranslated] = useState(null);
+  const needsTranslation = article.lang && article.lang !== 'eng' &&
+    article.lang !== (userLang === 'en' ? 'eng' : userLang);
+
+  const handleTranslate = async (e) => {
+    e.stopPropagation();
+    setTranslating(true);
+    try {
+      const result = await translateArticle(article.title, article.description, userLang);
+      setTranslated(result);
+    } catch (err) {
+      console.error('Translation failed:', err.message);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
+  const displayTitle = translated?.title || article.title;
+  const displayDesc = translated?.summary || article.description;
+
+  return (
+    <button
+      className="news-search-result"
+      onClick={() => onSelect({
+        ...article,
+        title: displayTitle,
+        description: displayDesc,
+        aiSummary: displayDesc,
+      })}
+    >
+      {article.imageUrl && (
+        <img className="news-search-result__image" src={article.imageUrl} alt="" loading="lazy"
+          onError={(e) => { e.target.style.display = 'none'; }} />
+      )}
+      <div className="news-search-result__content">
+        <span className="news-search-result__source">
+          {article.source}
+          {article.publishedAt && (
+            <> &middot; {timeAgo(article.publishedAt)}</>
+          )}
+        </span>
+        <span className="news-search-result__title">{displayTitle}</span>
+        {displayDesc && (
+          <span className="news-search-result__desc">
+            {displayDesc.substring(0, 150)}{displayDesc.length > 150 ? '...' : ''}
+          </span>
+        )}
+        {needsTranslation && !translated && (
+          <button
+            className="news-search-result__translate"
+            onClick={handleTranslate}
+            disabled={translating}
+          >
+            {translating ? '...' : '🌐 Translate'}
+          </button>
+        )}
+      </div>
+    </button>
+  );
+}
+
+// ============================================================
+// Main NewsSidebar Component
+// ============================================================
+export default function NewsSidebar({
   isOpen,
   onClose,
-  headlines,
-  highlights,
-  headlinesLoading,
-  headlinesError,
-  selectedArticle,
-  selectArticle,
-  clearArticle,
-  isAnalyzing,
-  analysisResult,
-  analysisError,
-  analyzeArticle,
-  panelLoading,
-  panelResult,
-  panelError,
-  elapsedTime,
-  formatTime,
-  analyzeWithPanel,
-  user,
+  news,
   balance,
-  lang,
-  onRefreshHeadlines,
+  onCreditsExhausted,
 }) {
   const { t, i18n } = useTranslation();
-  const [showPicker, setShowPicker] = useState(false);
-  const [showSourcePicker, setShowSourcePicker] = useState(false);
-  const sidebarRef = useRef(null);
+  const userLang = i18n.language || 'en';
   const contentRef = useRef(null);
+  const searchInputRef = useRef(null);
 
-  const loginModal = useModal();
-  const signupModal = useModal();
-  const forgotPasswordModal = useModal();
-  const paymentModal = useModal();
+  // Source picker state
+  const [showSourcePicker, setShowSourcePicker] = useState(false);
+  const [showPhilosopherPicker, setShowPhilosopherPicker] = useState(false);
 
-  // Headlines loading timer (chronometer)
-  const [headlineTimer, setHeadlineTimer] = useState(0);
-  const headlineTimerRef = useRef(null);
-
-  useEffect(() => {
-    if (headlinesLoading) {
-      setHeadlineTimer(0);
-      const start = Date.now();
-      headlineTimerRef.current = setInterval(() => {
-        setHeadlineTimer(((Date.now() - start) / 1000).toFixed(1));
-      }, 100);
-    } else {
-      if (headlineTimerRef.current) {
-        clearInterval(headlineTimerRef.current);
-        headlineTimerRef.current = null;
-      }
-    }
-    return () => {
-      if (headlineTimerRef.current) clearInterval(headlineTimerRef.current);
-    };
-  }, [headlinesLoading]);
+  // Local search input
+  const [searchInput, setSearchInput] = useState('');
 
   // News source preferences
   const {
@@ -206,472 +211,354 @@ export function NewsSidebar({
     refreshPreferences,
   } = useNewsPreferences();
 
-  // Lock body scroll when sidebar is open
+  const {
+    breakingNews,
+    breakingLoading,
+    searchResults,
+    searchLoading,
+    searchError,
+    lastQuery,
+    searchFiltered,
+    search,
+    searchAllSources,
+    selectedArticle,
+    selectArticle,
+    clearArticle,
+    isAnalyzing,
+    analysisResult,
+    analysisError,
+    analyzeArticle,
+    panelLoading,
+    panelResult,
+    panelError,
+    analyzeWithPanel,
+    elapsedTime,
+    formatTime,
+  } = news;
+
+  // Scroll to top when state changes
   useEffect(() => {
-    if (isOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.overflow = 'hidden';
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.overflow = '';
-      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
     }
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.overflow = '';
-      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
-  }, [isOpen]);
+  }, [selectedArticle, analysisResult, panelResult]);
 
-  // Removed: backdrop click to close - sidebar only closes via close button
-  // const handleBackdropClick = (e) => {
-  //   if (e.target === e.currentTarget) onClose();
-  // };
+  // Focus search input when sidebar opens
+  useEffect(() => {
+    if (isOpen && !selectedArticle && !analysisResult && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current?.focus(), 300);
+    }
+  }, [isOpen, selectedArticle, analysisResult]);
 
-  const handleAnalyzeArticle = async () => {
-    if (!user) {
-      signupModal.open();
-      return;
-    }
-    if (!balance || balance.total === undefined || balance.total < 1) {
-      if (selectedArticle) setPendingAction({ type: 'news-analysis', article: selectedArticle });
-      paymentModal.open();
-      return;
-    }
-    try {
-      await analyzeArticle(i18n.resolvedLanguage || i18n.language || 'en');
-    } catch (err) {
-      if (err.code === 'INSUFFICIENT_CREDITS') paymentModal.open();
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInput.trim().length >= 2) {
+      search(searchInput.trim());
     }
   };
 
-  const handleOpenPanel = () => {
-    if (!user) {
-      signupModal.open();
-      return;
-    }
-    if (!balance || balance.total === undefined || balance.total < 3) {
-      if (selectedArticle) {
-        setPendingAction({ type: 'news-analysis', article: selectedArticle });
-      }
-      paymentModal.open();
-      return;
-    }
-    setShowPicker(true);
-  };
-
-  const handlePanelConfirm = async (chosenPhilosophers) => {
-    setShowPicker(false);
-    try {
-      await analyzeWithPanel(chosenPhilosophers, lang || i18n.language || 'en');
-    } catch (err) {
-      if (err.code === 'INSUFFICIENT_CREDITS') {
-        paymentModal.open();
-      }
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
     }
   };
 
-  const timeAgo = (dateStr) => {
+  // Time ago formatter
+  const timeAgo = useCallback((dateStr) => {
     if (!dateStr) return '';
     const diff = Date.now() - new Date(dateStr).getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours < 1) return t('news.justNow', { defaultValue: 'Just now' });
-    if (hours < 24) return `${hours}h`;
-    return `${Math.floor(hours / 24)}d`;
-  };
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return t('news.justNow', { defaultValue: 'just now' });
+    if (mins < 60) return `${mins}m`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h`;
+    const days = Math.floor(hrs / 24);
+    return `${days}d`;
+  }, [t]);
+
+  // Available sources as flat list for picker
+  const availableSourcesList = useMemo(() => availableSources || {}, [availableSources]);
+  const enabledSourcesList = useMemo(
+    () => (enabledSources && enabledSources.length > 0 ? enabledSources : []),
+    [enabledSources],
+  );
+  const defaultSourcesList = useMemo(() => defaultSources || [], [defaultSources]);
+
+  if (!isOpen) return null;
 
   return (
-    <>
-      <div
-        className={`music-backdrop ${isOpen ? 'music-backdrop--open' : ''}`}
-      />
-      <div
-        ref={sidebarRef}
-        className={`music-sidebar ${isOpen ? 'music-sidebar--open' : ''}`}
-        role="dialog"
-        aria-modal="true"
-      >
-        <div className="music-sidebar__header">
-          <span className="music-sidebar__title">
-            <span className="music-sidebar__icon">&#128240;</span>
-            {t('home.categories.news.title', 'News')}
-          </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {user && (
-              <button
-                className={`news-filter-btn ${sourcesUnlocked ? 'news-filter-btn--unlocked' : ''}`}
-                onClick={() => {
-                  refreshPreferences();
-                  setShowSourcePicker(true);
-                }}
-                title={t('news.sourcePicker.title')}
-              >
-                <span style={{ marginRight: '4px' }}>&#9881;</span>
-                {t('news.sources')}
-              </button>
-            )}
-            <button className="music-sidebar__close" onClick={onClose}>
-              &times;
-            </button>
-          </div>
+    <div className={`music-sidebar ${isOpen ? 'music-sidebar--open' : ''}`}>
+      {/* Header */}
+      <div className="music-sidebar__header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <h2 className="music-sidebar__title">{t('home.categories.news.title', 'News')}</h2>
+          <button
+            className={`news-filter-btn ${sourcesUnlocked ? 'news-filter-btn--unlocked' : ''}`}
+            onClick={() => {
+              refreshPreferences();
+              setShowSourcePicker(true);
+            }}
+            title={t('news.sources', 'Sources')}
+          >
+            &#9881;
+          </button>
         </div>
+        <button className="music-sidebar__close" onClick={onClose}>&times;</button>
+      </div>
 
-        <div ref={contentRef} className="music-sidebar__content">
+      <div ref={contentRef} className="music-sidebar__content">
 
-          {/* ── STATE 1: Headlines ticker (no article selected, no result) ── */}
-          {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
-            <div className="news-headlines">
-              {headlinesLoading && (
-                <div className="news-headlines__loading" style={{ textAlign: 'center', padding: '40px 20px' }}>
-                  <div className="music-search__loading" style={{ marginBottom: '16px' }}>
-                    <span></span><span></span><span></span>
-                  </div>
-                  <div style={{ fontSize: '24px', fontWeight: 'bold', fontFamily: 'monospace', color: '#00f0ff', marginBottom: '8px' }}>
-                    {headlineTimer}s
-                  </div>
-                  <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>
-                    {t('news.loadingGlobal', { defaultValue: 'Loading global headlines...' })}
-                  </div>
+        {/* ── STATE 1: Search home (no article selected, no result) ── */}
+        {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
+          <>
+            {/* Breaking News Ticker */}
+            {breakingNews.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 'bold', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', paddingLeft: '4px' }}>
+                  {t('news.highlights', 'Breaking News')}
                 </div>
-              )}
-              {headlinesError && (
-                <div className="music-error">{headlinesError}</div>
-              )}
-              {!headlinesLoading && headlines.length === 0 && highlights.length === 0 && !headlinesError && (
-                <div className="news-headlines__empty">
-                  {t('news.noHeadlines', { defaultValue: 'No headlines available at the moment' })}
-                </div>
-              )}
-              {(highlights.length > 0 || headlines.length > 0) && (
-                <NewsTicker
-                  highlights={highlights}
-                  headlines={headlines}
+                <BreakingTicker
+                  articles={breakingNews}
                   onSelect={selectArticle}
                   timeAgo={timeAgo}
                 />
-              )}
-            </div>
-          )}
-
-          {/* ── STATE 2: Article selected — headline + summary + buttons ── */}
-          {selectedArticle && !panelResult && !analysisResult && (
-            <>
-              <div className="music-selected">
-                <div className="music-selected__info">
-                  <div className="music-selected__song">{selectedArticle.title}</div>
-                  <div className="music-selected__artist">
-                    {selectedArticle.source} &middot; {timeAgo(selectedArticle.publishedAt)}
-                  </div>
-                </div>
-                <button className="music-selected__clear" onClick={clearArticle}>
-                  &times;
-                </button>
               </div>
+            )}
 
-              {/* AI Summary */}
-              {(selectedArticle.aiSummary || selectedArticle.description) && (
-                <div className="news-summary-card">
-                  <p className="news-summary-card__text">
-                    {selectedArticle.aiSummary || selectedArticle.description}
-                  </p>
-                </div>
-              )}
-
-              {/* Two analysis buttons side by side */}
-              <div className="music-analyze">
-                {!isAnalyzing && !panelLoading ? (
-                  <div className="music-analyze__buttons-row">
-                    <button
-                      className="music-analyze__button"
-                      onClick={handleAnalyzeArticle}
-                      disabled={isAnalyzing}
-                    >
-                      {t('news.analyzeArticle', { defaultValue: 'Analyze Article' })}
-                      <span className="music-analyze__cost">
-                        1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}
-                      </span>
-                    </button>
-                    <button
-                      className="music-analyze__button music-analyze__button--panel"
-                      onClick={handleOpenPanel}
-                    >
-                      {t('philosopherPanel.button', { defaultValue: "Philosopher's Panel" })}
-                      <span className="music-analyze__cost">
-                        3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}
-                      </span>
-                    </button>
-                  </div>
-                ) : null}
-                {(isAnalyzing || panelLoading) && (
-                  <div className="music-timer">
-                    <div className="music-timer__bar">
-                      <div className="music-timer__fill"></div>
-                    </div>
-                    <div className="music-timer__time">
-                      <span>&#9201;</span> {formatTime(elapsedTime)}
-                    </div>
-                    <div className="music-timer__label">
-                      {panelLoading
-                        ? t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })
-                        : t('analyzing', { defaultValue: 'Analyzing...' })}
-                    </div>
-                  </div>
-                )}
-                {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
-              </div>
-            </>
-          )}
-
-          {/* Full analysis result (1 credit) */}
-          {analysisResult && !panelResult && (
-            <div className="music-analysis">
-              <ResultsContainer result={analysisResult} mediaType="news" />
-              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+            {/* Search Field */}
+            <form onSubmit={handleSearch} style={{ marginBottom: '16px' }}>
+              <div className="music-search">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  className="music-search__input"
+                  placeholder={t('home.categories.news.searchPlaceholder', 'Search a topic, event, or theme...')}
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
                 <button
-                  className="music-analyze__button music-analyze__button--panel"
-                  onClick={handleOpenPanel}
+                  type="submit"
+                  className="music-search__button"
+                  disabled={searchLoading || searchInput.trim().length < 2}
                 >
-                  {t('philosopherPanel.button', { defaultValue: "Philosopher's Panel" })}
-                  <span className="music-analyze__cost">
-                    3 {t('philosopherPanel.credits', { defaultValue: 'credits' })}
-                  </span>
-                </button>
-                <button
-                  className="music-analyze__button music-analyze__button--another"
-                  onClick={clearArticle}
-                >
-                  {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
+                  {searchLoading ? (
+                    <div className="music-search__loading">
+                      <span></span><span></span><span></span>
+                    </div>
+                  ) : (
+                    <span>&#128269;</span>
+                  )}
                 </button>
               </div>
-            </div>
-          )}
+            </form>
 
-          {/* ── STATE 3: Panel result only (no normal analysis) ── */}
-          {panelResult && !analysisResult && (
-            <div className="music-analysis">
-              <div className="music-analysis__header">
-                <span className="music-analysis__complete-icon">&#10003;</span>
-                {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel Complete' })}
+            {/* Search Error */}
+            {searchError && (
+              <div className="music-error" style={{ marginBottom: '12px' }}>
+                {searchError}
               </div>
-              <div className="listen-section">
-                <ListenButton result={{
-                  song_name: panelResult.title,
-                  artist: panelResult.artist || selectedArticle?.source || 'News',
-                  philosophical_analysis: panelResult.analysis,
-                  lang: panelResult.lang,
-                  id: panelResult.id,
-                }} />
-              </div>
-              <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: panelResult.analysis
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/\n/g, '<br/>')
-                    .replace(/^/, '<p>')
-                    .replace(/$/, '</p>')
-                }} />
-              </div>
-              {panelResult.id && (
-                <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
-                  <ShareButton
-                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
-                    shareText={t('share.shareNewsText', { title: panelResult.title })}
-                    songName={panelResult.title}
-                    artist={selectedArticle?.source || 'News'}
-                  />
-                  <ShareToDMButton
-                    analysisId={panelResult.id}
-                    songName={panelResult.title}
-                    artist={selectedArticle?.source || 'News'}
-                  />
-                  <ShareToCommunityButton
-                    analysisId={panelResult.id}
-                    songName={panelResult.title}
-                    artist={selectedArticle?.source || 'News'}
-                  />
+            )}
+
+            {/* Search Results */}
+            {searchResults.length > 0 && (
+              <div className="news-search-results">
+                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '8px', paddingLeft: '4px' }}>
+                  {searchResults.length} {t('news.results', { defaultValue: 'results' })}
+                  {searchFiltered && ` (${t('news.filteredSources', { defaultValue: 'from your sources' })})`}
                 </div>
-              )}
-              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
+                {searchResults.map((article, i) => (
+                  <SearchResultCard
+                    key={`${article.url || i}`}
+                    article={article}
+                    onSelect={selectArticle}
+                    userLang={userLang}
+                    timeAgo={timeAgo}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Empty filtered result */}
+            {lastQuery && !searchLoading && searchResults.length === 0 && !searchError && searchFiltered && (
+              <div className="news-headlines__empty" style={{ textAlign: 'center', padding: '30px 20px' }}>
+                <p>{t('news.noFilteredResults', { defaultValue: 'No results from your selected sources.' })}</p>
                 <button
                   className="music-analyze__button"
-                  onClick={handleAnalyzeArticle}
-                  disabled={isAnalyzing}
+                  onClick={searchAllSources}
+                  style={{ marginTop: '12px' }}
                 >
-                  {t('news.analyzeArticle', { defaultValue: 'Analyze Article' })}
-                  <span className="music-analyze__cost">
-                    1 {t('philosopherPanel.credit', { defaultValue: 'credit' })}
-                  </span>
-                </button>
-                <button
-                  className="music-analyze__button music-analyze__button--another"
-                  onClick={clearArticle}
-                >
-                  {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
+                  {t('news.searchAllSources', { defaultValue: 'Search all sources' })}
                 </button>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* ── STATE 4: BOTH analyses exist - combined view with dual listen buttons ── */}
-          {analysisResult && panelResult && (
-            <div className="music-analysis">
-              <div className="music-analysis__header">
-                <span className="music-analysis__complete-icon">&#10003;</span>
-                {t('landing.analysisComplete')} + {t('philosopherPanel.complete', { defaultValue: 'Panel' })}
+            {/* Empty unfiltered result */}
+            {lastQuery && !searchLoading && searchResults.length === 0 && !searchError && !searchFiltered && (
+              <div className="news-headlines__empty">
+                {t('news.noResults', { defaultValue: 'No articles found for this search.' })}
               </div>
-
-              {/* Normal analysis content (includes its own ListenButton via ResultsContainer) */}
-              <div className="music-analysis__results-wrapper">
-                <ResultsContainer result={analysisResult} mediaType="news" showShareActions={true} />
-              </div>
-
-              {/* Panel analysis content with its own ListenButton */}
-              <div className="music-analysis__header" style={{ marginTop: '1.5rem' }}>
-                <span className="music-analysis__complete-icon">&#9733;</span>
-                {t('philosopherPanel.complete', { defaultValue: 'Philosopher Panel' })}
-              </div>
-              <div className="listen-section">
-                <ListenButton result={{
-                  song_name: panelResult.title,
-                  artist: panelResult.artist || selectedArticle?.source || 'News',
-                  philosophical_analysis: panelResult.analysis,
-                  lang: panelResult.lang,
-                  id: panelResult.id,
-                }} />
-              </div>
-              <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: panelResult.analysis
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/\n/g, '<br/>')
-                    .replace(/^/, '<p>')
-                    .replace(/$/, '</p>')
-                }} />
-              </div>
-              {panelResult.id && (
-                <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
-                  <ShareButton
-                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
-                    shareText={t('share.shareNewsText', { title: panelResult.title })}
-                    songName={panelResult.title}
-                    artist={selectedArticle?.source || 'News'}
-                  />
-                  <ShareToDMButton
-                    analysisId={panelResult.id}
-                    songName={panelResult.title}
-                    artist={selectedArticle?.source || 'News'}
-                  />
-                  <ShareToCommunityButton
-                    analysisId={panelResult.id}
-                    songName={panelResult.title}
-                    artist={selectedArticle?.source || 'News'}
-                  />
-                </div>
-              )}
-              <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
-                <button
-                  className="music-analyze__button music-analyze__button--another"
-                  onClick={clearArticle}
-                >
-                  {t('news.analyzeAnother', { defaultValue: 'Analyze Another Story' })}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Philosopher Picker */}
-        {showPicker && (
-          <PhilosopherPicker
-            onConfirm={handlePanelConfirm}
-            onClose={() => setShowPicker(false)}
-            loading={panelLoading}
-          />
+            )}
+          </>
         )}
 
-        {/* Internal modals */}
-        {(loginModal.isOpen ||
-          signupModal.isOpen ||
-          forgotPasswordModal.isOpen ||
-          paymentModal.isOpen) && (
-          <div className="music-sidebar__modals">
-            {loginModal.isOpen && (
-              <LoginModal
-                isOpen={true}
-                onClose={loginModal.close}
-                onSwitchToSignup={() => { loginModal.close(); signupModal.open(); }}
-                onSwitchToForgot={() => { loginModal.close(); forgotPasswordModal.open(); }}
-              />
+        {/* ── STATE 2: Article selected (not yet analyzed) ── */}
+        {selectedArticle && !analysisResult && !isAnalyzing && !panelResult && !panelLoading && (
+          <div className="news-headline__expanded-wrapper">
+            <button
+              className="music-sidebar__back"
+              onClick={clearArticle}
+            >
+              &larr; {t('news.backToSearch', { defaultValue: 'Back' })}
+            </button>
+
+            <div className="news-headline__expanded">
+              <h3 className="news-headline__title" style={{ fontSize: '16px', marginBottom: '8px' }}>
+                {selectedArticle.title}
+              </h3>
+              <div className="news-headline__meta" style={{ marginBottom: '12px' }}>
+                {selectedArticle.source}
+                {selectedArticle.publishedAt && (
+                  <> &middot; {timeAgo(selectedArticle.publishedAt)}</>
+                )}
+              </div>
+              {(selectedArticle.description || selectedArticle.aiSummary) && (
+                <p className="news-headline__summary">
+                  {selectedArticle.aiSummary || selectedArticle.description}
+                </p>
+              )}
+            </div>
+
+            {/* Analyze button (1 credit) */}
+            <button
+              className="music-analyze__button"
+              onClick={() => analyzeArticle(userLang, 'grok')}
+              disabled={isAnalyzing}
+            >
+              {t('home.categories.news.analyzeButton', 'Analyze Article')}
+              <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
+            </button>
+
+            {/* Philosopher Panel button (3 credits) */}
+            <button
+              className="news-headline__panel-btn"
+              onClick={() => setShowPhilosopherPicker(true)}
+              disabled={panelLoading}
+            >
+              {t('philosopherPanel.title', 'Philosopher Panel')}
+              <span className="news-headline__panel-cost">3 {t('philosopherPanel.credits', 'credits')}</span>
+            </button>
+
+            {analysisError && (
+              <div className="music-error" style={{ marginTop: '12px' }}>
+                {analysisError}
+              </div>
             )}
-            {signupModal.isOpen && (
-              <SignupModal
-                isOpen={true}
-                onClose={signupModal.close}
-                onSwitchToLogin={() => { signupModal.close(); loginModal.open(); }}
-              />
-            )}
-            {forgotPasswordModal.isOpen && (
-              <ForgotPasswordModal
-                isOpen={true}
-                onClose={forgotPasswordModal.close}
-                onSwitchToLogin={() => { forgotPasswordModal.close(); loginModal.open(); }}
-              />
-            )}
-            {paymentModal.isOpen && <PaymentModal isOpen={true} onClose={paymentModal.close} />}
           </div>
         )}
 
-        {/* News Source Picker */}
-        <NewsSourcePicker
-          isOpen={showSourcePicker}
-          onClose={() => setShowSourcePicker(false)}
-          unlocked={sourcesUnlocked}
-          unlocking={sourcesUnlocking}
-          saving={sourcesSaving}
-          availableSources={availableSources}
-          enabledSources={enabledSources}
-          defaultSources={defaultSources}
-          onUnlock={unlockSources}
-          onSave={async (sources) => {
-            console.log('[NewsSidebar] Saving sources:', sources.length, 'unlocked:', sourcesUnlocked);
+        {/* ── STATE 3: Analyzing or Panel loading ── */}
+        {(isAnalyzing || panelLoading) && (
+          <div className="music-sidebar__analyzing">
+            <div className="music-search__loading" style={{ marginBottom: '16px' }}>
+              <span></span><span></span><span></span>
+            </div>
+            <div className="music-sidebar__timer">
+              {formatTime(elapsedTime)}
+            </div>
+            <p className="music-sidebar__analyzing-text">
+              {panelLoading
+                ? t('philosopherPanel.analyzing', 'Philosophers debating...')
+                : t('news.analyzing', { defaultValue: 'Analyzing article...' })}
+            </p>
+          </div>
+        )}
+
+        {/* ── STATE 4a: Analysis result ── */}
+        {analysisResult && !panelResult && (
+          <div>
+            <button
+              className="music-sidebar__back"
+              onClick={clearArticle}
+            >
+              &larr; {t('news.backToSearch', { defaultValue: 'Back' })}
+            </button>
+            <ResultsContainer
+              result={analysisResult}
+              mediaType="news"
+            />
+          </div>
+        )}
+
+        {/* ── STATE 4b: Philosopher Panel result ── */}
+        {panelResult && (
+          <div>
+            <button
+              className="music-sidebar__back"
+              onClick={clearArticle}
+            >
+              &larr; {t('news.backToSearch', { defaultValue: 'Back' })}
+            </button>
+            <ResultsContainer
+              result={{
+                song_name: selectedArticle?.title,
+                artist: selectedArticle?.source,
+                philosophical_analysis: panelResult,
+                media_type: 'news',
+                lang: userLang,
+                id: `panel-${Date.now()}`,
+              }}
+              mediaType="news"
+            />
+          </div>
+        )}
+
+        {panelError && (
+          <div className="music-error" style={{ marginTop: '12px' }}>
+            {panelError}
+          </div>
+        )}
+      </div>
+
+      {/* Source Picker Modal */}
+      <NewsSourcePicker
+        isOpen={showSourcePicker}
+        onClose={() => setShowSourcePicker(false)}
+        unlocked={sourcesUnlocked}
+        unlocking={sourcesUnlocking}
+        saving={sourcesSaving}
+        availableSources={availableSourcesList}
+        enabledSources={enabledSourcesList}
+        defaultSources={defaultSourcesList}
+        onUnlock={unlockSources}
+        onSave={async (sources) => {
+          try {
+            await updateSources(sources);
+            setShowSourcePicker(false);
+          } catch (err) {
+            console.error('[NewsSidebar] Save error:', err);
+            setShowSourcePicker(false);
+          }
+        }}
+        balance={balance}
+      />
+
+      {/* Philosopher Picker Modal */}
+      {showPhilosopherPicker && (
+        <PhilosopherPicker
+          onClose={() => setShowPhilosopherPicker(false)}
+          onConfirm={async (philosophers) => {
+            setShowPhilosopherPicker(false);
             try {
-              const result = await updateSources(sources);
-              console.log('[NewsSidebar] Save result:', result);
-              // Always close the modal after save attempt
-              setShowSourcePicker(false);
-              // Refresh headlines to apply new filter
-              if (onRefreshHeadlines) {
-                console.log('[NewsSidebar] Refreshing headlines...');
-                onRefreshHeadlines();
-              }
-              if (!result.success) {
-                console.error('[NewsSidebar] Save returned error:', result.error);
-              }
+              await analyzeWithPanel(philosophers, userLang);
             } catch (err) {
-              console.error('[NewsSidebar] Save error:', err);
-              // Still close modal on error
-              setShowSourcePicker(false);
+              if (err.code === 'INSUFFICIENT_CREDITS' && onCreditsExhausted) {
+                onCreditsExhausted();
+              }
             }
           }}
-          balance={balance}
         />
-      </div>
-    </>
+      )}
+    </div>
   );
 }

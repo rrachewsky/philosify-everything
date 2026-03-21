@@ -1,5 +1,5 @@
 // ============================================================
-// NEWS - HEADLINES FETCHER (GNews API)
+// NEWS - HEADLINES & SEARCH (NewsAPI.ai)
 // ============================================================
 // PHILOSOPHICAL MISSION:
 // Philosify focuses ONLY on news that sparks meaningful philosophical analysis.
@@ -22,65 +22,43 @@
 // ✗ Viral trends, memes, trivial content
 //
 // STRATEGY:
-// - Fetch world, business, science, technology, nation topics
+// - User searches a topic → NewsAPI.ai returns articles
+// - Breaking news ticker polls Tier A sources every 20 min
 // - Filter blocked sources (tabloids, propaganda, clickbait)
 // - Filter blocked words (sports, gossip, trivial)
 // - Prioritize quality sources (Reuters, WSJ, Economist, etc.)
 // - Score articles by philosophical keywords
 // - Sort by: source priority → philosophical relevance → date
-//
-// API BUDGET: Free tier = 100 requests/day
-// - 5 topics per language refresh, cached 2h
-// - Highlights: 1 search/4h per language
-// - English cron refresh hourly; other languages on-demand + cached
 // ============================================================
 
 import { getSecret } from "../utils/secrets.js";
 
-const KV_KEY_HEADLINES = "news:v3:headlines";
-const KV_KEY_HIGHLIGHTS = "news:v3:highlights";
-const CACHE_TTL_SECONDS = 15 * 60; // 15 minutes
-const STALE_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
-const HIGHLIGHTS_STALE_MS = 4 * 60 * 60 * 1000; // 4 hours
+const NEWSAPI_BASE = "https://eventregistry.org/api/v1";
 
-// International topics (NO sports) — includes science/tech for magazine-quality content
-const INTL_TOPICS = ["world", "business", "science", "technology"];
-
-// GNews supported languages
-const GNEWS_LANGS = ["en", "pt", "es", "fr", "de", "it", "nl", "ru", "zh", "ar", "he", "ja", "ko", "tr", "pl", "hu", "hi", "fa"];
+// KV cache keys
+const KV_KEY_BREAKING = "news:v3:breaking";
+const BREAKING_CACHE_TTL = 20 * 60; // 20 minutes
+const BREAKING_STALE_MS = 15 * 60 * 1000; // 15 minutes
+const SEARCH_CACHE_TTL = 5 * 60; // 5 minutes
 
 // ============================================================
-// HIGHLIGHT SEARCH QUERIES — translated per language
+// ISO 639-1 → ISO 639-3 mapping (NewsAPI.ai uses 639-3)
 // ============================================================
-// Each query is tuned for GNews search in the corresponding language.
-// GNews filters by article language, so search terms must match.
-// ============================================================
-const HIGHLIGHT_QUERIES = {
-  en: "innovation breakthrough OR startup success OR scientific discovery OR hero rescue OR freedom victory OR justice served OR entrepreneur achievement",
-  pt: "inovação avanço OR startup sucesso OR descoberta científica OR herói resgate OR vitória liberdade OR justiça feita OR empreendedor conquista",
-  es: "innovación avance OR startup éxito OR descubrimiento científico OR héroe rescate OR victoria libertad OR justicia hecha OR emprendedor logro",
-  fr: "innovation percée OR startup succès OR découverte scientifique OR héros sauvetage OR victoire liberté OR justice rendue OR entrepreneur réussite",
-  de: "Innovation Durchbruch OR Startup Erfolg OR wissenschaftliche Entdeckung OR Held Rettung OR Freiheit Sieg OR Gerechtigkeit OR Unternehmer Erfolg",
-  it: "innovazione svolta OR startup successo OR scoperta scientifica OR eroe salvataggio OR vittoria libertà OR giustizia fatta OR imprenditore successo",
-  nl: "innovatie doorbraak OR startup succes OR wetenschappelijke ontdekking OR held redding OR vrijheid overwinning OR gerechtigheid OR ondernemer succes",
-  ru: "инновация прорыв OR стартап успех OR научное открытие OR герой спасение OR победа свобода OR справедливость OR предприниматель достижение",
-  zh: "创新突破 OR 创业成功 OR 科学发现 OR 英雄救援 OR 自由胜利 OR 正义 OR 企业家成就",
-  ar: "ابتكار اختراق OR نجاح شركة ناشئة OR اكتشاف علمي OR بطل إنقاذ OR انتصار الحرية OR العدالة OR رائد أعمال",
-  he: "חדשנות פריצת דרך OR הצלחה סטארטאפ OR גילוי מדעי OR גיבור הצלה OR ניצחון חופש OR צדק OR יזם הישג",
-  ja: "イノベーション突破 OR スタートアップ成功 OR 科学的発見 OR 英雄救出 OR 自由の勝利 OR 正義 OR 起業家の成功",
-  ko: "혁신 돌파구 OR 스타트업 성공 OR 과학적 발견 OR 영웅 구조 OR 자유 승리 OR 정의 실현 OR 기업가 성취",
-  tr: "inovasyon atılım OR startup başarı OR bilimsel keşif OR kahraman kurtarma OR özgürlük zaferi OR adalet OR girişimci başarı",
-  pl: "innowacja przełom OR startup sukces OR odkrycie naukowe OR bohater ratunek OR zwycięstwo wolności OR sprawiedliwość OR przedsiębiorca sukces",
-  hu: "innováció áttörés OR startup siker OR tudományos felfedezés OR hős mentés OR szabadság győzelem OR igazságszolgáltatás OR vállalkozó siker",
+const LANG_MAP = {
+  en: "eng", pt: "por", es: "spa", fr: "fra", de: "deu",
+  it: "ita", nl: "nld", ru: "rus", zh: "zho", ar: "ara",
+  he: "heb", ja: "jpn", ko: "kor", tr: "tur", pl: "pol",
+  hu: "hun", hi: "hin", fa: "fas",
 };
+
+export function langToNewsApi(lang) {
+  return LANG_MAP[lang] || "eng";
+}
 
 // ============================================================
 // PHILOSOPHICAL KEYWORDS — prioritize meaningful content
 // ============================================================
-// Articles containing these keywords are scored higher and sorted first.
-// This ensures philosophically significant news rises to the top.
-// ============================================================
-const PHILOSOPHICAL_KEYWORDS = [
+export const PHILOSOPHICAL_KEYWORDS = [
   // Innovation & Achievement
   "breakthrough", "innovation", "discovery", "achievement", "pioneer",
   "revolutionize", "transform", "first ever", "historic", "milestone",
@@ -111,10 +89,7 @@ const PHILOSOPHICAL_KEYWORDS = [
 // ============================================================
 // BLOCKED SOURCES — unreliable, tabloid, clickbait, propaganda
 // ============================================================
-// Everything NOT in this blacklist is allowed (if it passes content filter).
-// This is more robust than a whitelist because GNews source names vary.
-// ============================================================
-const BLOCKED_SOURCES = [
+export const BLOCKED_SOURCES = [
   // Tabloids / gossip
   "daily mail", "dailymail", "the sun", "new york post", "ny post",
   "tmz", "page six", "us weekly", "people magazine", "e! news",
@@ -137,31 +112,20 @@ const BLOCKED_SOURCES = [
 // ============================================================
 // PRIORITY SOURCES — quality journalism, boosted in sorting
 // ============================================================
-// Articles from these sources get priority in the feed.
-// Tier 1: Wire services & top quality (highest priority)
-// Tier 2: Quality newspapers & magazines (high priority)
-// ============================================================
-const PRIORITY_SOURCES_TIER1 = [
-  // Wire Services (most reliable for facts)
+export const PRIORITY_SOURCES_TIER1 = [
   "reuters", "associated press", "ap news", "afp", "agence france",
-  // Top Quality International
   "the economist", "wall street journal", "wsj", "financial times",
   "bloomberg",
 ];
 
-const PRIORITY_SOURCES_TIER2 = [
-  // US Quality
+export const PRIORITY_SOURCES_TIER2 = [
   "reason", "reason magazine", "national review", "the free press",
   "free press", "city journal", "foreign affairs", "quillette",
-  // UK / Europe
   "the telegraph", "telegraph", "the times", "the spectator", "spectator",
   "neue zürcher", "nzz", "die welt", "le figaro",
-  // Israel / Middle East
   "times of israel", "jerusalem post", "i24 news", "i24news",
-  // Brazil / Latin America
   "gazeta do povo", "crusoé", "crusoe", "piauí", "piaui",
   "poder360", "jovem pan", "o antagonista", "antagonista",
-  // Tech / Science / Business
   "techcrunch", "tech crunch", "wired", "ars technica", "arstechnica",
   "mit technology review", "nature", "scientific american",
   "forbes", "fortune", "cnbc",
@@ -170,8 +134,8 @@ const PRIORITY_SOURCES_TIER2 = [
 // ============================================================
 // CONTENT FILTER — removes inappropriate/trivial articles
 // ============================================================
-const BLOCKED_WORDS = [
-  // Sports (trivial scores, not philosophically significant)
+export const BLOCKED_WORDS = [
+  // Sports
   "nfl", "nba", "fifa", "premier league", "champions league", "world cup",
   "touchdown", "goalkeeper", "quarterback", "soccer", "football match",
   "baseball", "basketball", "tennis", "cricket", "rugby", "boxing",
@@ -181,44 +145,60 @@ const BLOCKED_WORDS = [
   "lottery", "jackpot", "powerball", "mega millions", "lotto",
   "winning numbers", "scratch ticket", "casino", "slot machine",
   "betting odds", "sportsbook",
-  // Astrology & Superstition
+  // Astrology
   "horoscope", "zodiac", "astrology", "fortune teller", "psychic reading",
   "tarot", "numerology",
-  // Weather (trivial forecasts)
+  // Weather
   "weather forecast", "storm warning", "hurricane watch", "cold front",
   "heat wave warning", "flood watch", "tornado warning",
-  // Daily Market Noise (not policy-related)
+  // Market noise
   "stock closes", "dow jones", "s&p 500", "market recap", "trading day",
   "futures rise", "futures fall", "nasdaq closes",
-  // Traffic & Local Trivial
+  // Traffic
   "traffic jam", "road closure", "commute time", "parking ticket",
   // Fashion & Entertainment
   "best dressed", "fashion week", "red carpet", "award show outfit",
   "grammy", "oscar", "emmy", "golden globe", "mtv awards",
   "met gala", "runway", "designer collection",
-  // Viral / Memes / Trivial Internet
+  // Viral / Memes
   "viral video", "tiktok trend", "meme", "goes viral", "internet breaks",
   "trending on", "challenge goes viral",
-  // Depravation / inappropriate
+  // Inappropriate
   "porn", "xxx", "nude", "naked", "sex tape", "prostitut",
   "rape", "molest", "pedophil", "incest",
-  // Excessive violence / gore
+  // Gore
   "dismember", "decapitat", "torture video", "execution video",
-  // Tabloid / gossip
+  // Tabloid
   "kardashian", "reality tv", "celebrity gossip", "onlyfans",
   "dating rumor", "breakup", "divorce filing", "baby bump",
 ];
 
-function isCleanArticle(article) {
+// ============================================================
+// BREAKING NEWS — Tier A sources + event keywords
+// ============================================================
+const BREAKING_NEWS_SOURCES_TIER_A = [
+  "reuters.com", "apnews.com", "afp.com", "efe.com",
+  "bbc.co.uk", "npr.org", "pbs.org", "swissinfo.ch", "abc.net.au",
+];
+
+const BREAKING_NEWS_KEYWORDS = [
+  "war", "invasion", "attack", "coup", "assassination", "missile", "ceasefire", "nuclear",
+  "election", "referendum", "impeachment", "sanctions", "treaty", "summit",
+  "market crash", "recession", "default", "rate decision", "bank collapse",
+  "earthquake", "tsunami", "pandemic", "outbreak", "eruption",
+  "discovery", "breakthrough", "Nobel", "historic",
+];
+
+// ============================================================
+// FILTER / SCORE FUNCTIONS
+// ============================================================
+
+export function isCleanArticle(article) {
   const text = `${article.title} ${article.description || ""}`.toLowerCase();
   return !BLOCKED_WORDS.some((word) => text.includes(word));
 }
 
-/**
- * Score article by philosophical relevance (higher = more relevant).
- * Used for sorting priority, not filtering.
- */
-function getPhilosophicalScore(article) {
+export function getPhilosophicalScore(article) {
   const text = `${article.title} ${article.description || ""}`.toLowerCase();
   let score = 0;
   for (const keyword of PHILOSOPHICAL_KEYWORDS) {
@@ -227,16 +207,9 @@ function getPhilosophicalScore(article) {
   return score;
 }
 
-/**
- * Score article by source quality (higher = more trusted).
- * Tier 1 sources (wire services, top quality) = 10 points
- * Tier 2 sources (quality journalism) = 5 points
- * Other sources = 0 points
- */
-function getSourcePriorityScore(article) {
+export function getSourcePriorityScore(article) {
   const source = (article.source || "").toLowerCase();
   if (!source) return 0;
-  
   for (const s of PRIORITY_SOURCES_TIER1) {
     if (source.includes(s) || s.includes(source)) return 10;
   }
@@ -246,84 +219,19 @@ function getSourcePriorityScore(article) {
   return 0;
 }
 
-/**
- * Check if article is from a blocked source.
- */
-function isBlockedSource(sourceName) {
+export function isBlockedSource(sourceName) {
   const name = (sourceName || "").toLowerCase().trim();
-  if (!name) return true; // no source = blocked
+  if (!name) return true;
   return BLOCKED_SOURCES.some((s) => name.includes(s) || s.includes(name));
 }
 
-// ============================================================
-// API FETCHERS
-// ============================================================
-
-async function fetchTopicHeadlines(apiKey, topic, lang = "en", max = 10) {
-  const url = `https://gnews.io/api/v4/top-headlines?topic=${topic}&lang=${lang}&max=${max}&token=${apiKey}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    const text = await response.text();
-    console.error(`[News] GNews API error for topic "${topic}" lang="${lang}": ${response.status} ${text}`);
-    return [];
-  }
-
-  const data = await response.json();
-  if (!data.articles || data.articles.length === 0) {
-    console.warn(`[News] GNews returned 0 articles for topic="${topic}" lang="${lang}". Possible quota exceeded.`);
-  }
-  return (data.articles || []).map((article) => ({
-    title: article.title,
-    description: article.description || "",
-    source: article.source?.name || "Unknown",
-    sourceUrl: article.source?.url || "",
-    url: article.url,
-    imageUrl: article.image || null,
-    publishedAt: article.publishedAt,
-    topic,
-  }));
-}
-
-async function fetchSearchArticles(apiKey, query, lang = "en", max = 10) {
-  const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&lang=${lang}&max=${max}&sortby=publishedAt&token=${apiKey}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    const text = await response.text();
-    console.error(`[News] GNews search error for "${query}": ${response.status} ${text}`);
-    return [];
-  }
-
-  const data = await response.json();
-  return (data.articles || []).map((article) => ({
-    title: article.title,
-    description: article.description || "",
-    source: article.source?.name || "Unknown",
-    sourceUrl: article.source?.url || "",
-    url: article.url,
-    imageUrl: article.image || null,
-    publishedAt: article.publishedAt,
-    highlight: true,
-  }));
-}
-
-/**
- * Deduplicate articles — removes exact title matches AND fuzzy matches
- * (same story from different languages with slightly different titles).
- * Uses normalized keywords to catch "Trump signs order" vs "Trump assina decreto".
- */
-function deduplicateArticles(articles) {
+export function deduplicateArticles(articles) {
   const seen = new Set();
   const seenFuzzy = new Set();
   return articles.filter((article) => {
-    // Exact match on full title
     const exactKey = article.title.toLowerCase().trim();
     if (seen.has(exactKey)) return false;
     seen.add(exactKey);
-
-    // Fuzzy match: extract significant words (4+ chars), sort, take first 5
-    // This catches the same story reported in different languages
     const words = exactKey
       .replace(/[^a-zA-Z\u00C0-\u024F\u0400-\u04FF\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\uAC00-\uD7AF ]/g, " ")
       .split(/\s+/)
@@ -335,66 +243,12 @@ function deduplicateArticles(articles) {
       if (seenFuzzy.has(words)) return false;
       seenFuzzy.add(words);
     }
-
     return true;
   });
 }
 
-// ============================================================
-// MAIN FETCHERS
-// ============================================================
-
-/**
- * Fetch headlines from ALL GNews-supported languages for the "world" topic,
- * giving truly global coverage (5 continents, all major source regions).
- * Also fetches all topics in the user's language for local depth.
- *
- * This ensures sources from China, Israel, Iran, Brazil, Japan, Germany,
- * Russia, Korea, etc. all appear regardless of the user's interface language.
- * The AI summarizer and analysis translate content to the user's language.
- */
-export async function fetchAllHeadlines(env, lang = "en") {
-  const apiKey = await getSecret(env.GNEWS_API_KEY);
-  if (!apiKey) throw new Error("GNEWS_API_KEY not configured");
-
-  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
-
-  console.log(`[News] API key starts with: ${apiKey.substring(0, 6)}...`);
-  console.log(`[News] Fetching GLOBAL headlines: "world" from ${GNEWS_LANGS.length} languages + all topics in "${gnewsLang}"`);
-
-  const promises = [];
-
-  // 1. Fetch "world" topic from ALL supported languages — global coverage
-  //    This pulls articles from sources in every region: WSJ (en), Xinhua (zh),
-  //    Haaretz (he), Al Jazeera (ar), Le Monde (fr), Der Spiegel (de), etc.
-  for (const fetchLang of GNEWS_LANGS) {
-    promises.push(fetchTopicHeadlines(apiKey, "world", fetchLang, 10));
-  }
-
-  // 2. Fetch remaining topics in user's language for local depth
-  const otherTopics = INTL_TOPICS.filter((t) => t !== "world");
-  for (const topic of otherTopics) {
-    promises.push(fetchTopicHeadlines(apiKey, topic, gnewsLang, 10));
-  }
-
-  // 3. National/local news in user's language
-  promises.push(fetchTopicHeadlines(apiKey, "nation", gnewsLang, 10));
-
-  console.log(`[News] ${promises.length} API calls in parallel...`);
-  const results = await Promise.all(promises);
-  const allArticles = deduplicateArticles(results.flat());
-  console.log(`[News] ${allArticles.length} articles after dedup (from ${promises.length} fetches)`);
-
-  // Apply source blacklist + content filter
-  const notBlocked = allArticles.filter((a) => !isBlockedSource(a.source));
-  const clean = notBlocked.filter(isCleanArticle);
-  const sourceBlocked = allArticles.length - notBlocked.length;
-  const contentFiltered = notBlocked.length - clean.length;
-  if (sourceBlocked > 0) console.log(`[News] Blocked ${sourceBlocked} articles from unreliable sources`);
-  if (contentFiltered > 0) console.log(`[News] Filtered ${contentFiltered} inappropriate articles`);
-
-  // Sort by: 1) source priority, 2) philosophical relevance, 3) date
-  clean.sort((a, b) => {
+function sortArticles(articles) {
+  return articles.sort((a, b) => {
     const srcA = getSourcePriorityScore(a);
     const srcB = getSourcePriorityScore(b);
     if (srcB !== srcA) return srcB - srcA;
@@ -403,50 +257,153 @@ export async function fetchAllHeadlines(env, lang = "en") {
     if (philB !== philA) return philB - philA;
     return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
   });
-
-  const priorityCount = clean.filter(a => getSourcePriorityScore(a) > 0).length;
-  console.log(`[News] ${clean.length} clean global headlines (${priorityCount} priority, ${sourceBlocked} blocked, ${contentFiltered} filtered)`);
-  return clean;
 }
 
-/**
- * Fetch highlight articles (positive impact stories) in user's language.
- * Uses language-specific search queries so results are natively translated.
- */
-export async function fetchHighlights(env, lang = "en") {
-  const apiKey = await getSecret(env.GNEWS_API_KEY);
-  if (!apiKey) throw new Error("GNEWS_API_KEY not configured");
+// ============================================================
+// NEWSAPI.AI — article normalizer
+// ============================================================
 
-  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
-  const query = HIGHLIGHT_QUERIES[gnewsLang] || HIGHLIGHT_QUERIES.en;
+function normalizeNewsApiArticle(article) {
+  return {
+    title: article.title || "",
+    description: article.body?.substring(0, 300) || "",
+    content: article.body || "",
+    source: article.source?.title || article.source?.uri || "",
+    sourceUrl: article.source?.uri ? `https://${article.source.uri}` : "",
+    url: article.url || "",
+    imageUrl: article.image || null,
+    publishedAt: article.date && article.time
+      ? `${article.date}T${article.time}Z`
+      : article.dateTime || new Date().toISOString(),
+    lang: article.lang || "eng",
+    sentiment: article.sentiment ?? null,
+  };
+}
 
-  console.log(`[News] Fetching highlights in "${gnewsLang}" (positive impact stories)...`);
+// ============================================================
+// NEWSAPI.AI — search articles
+// ============================================================
 
-  const articles = await fetchSearchArticles(apiKey, query, gnewsLang, 10);
-  const clean = deduplicateArticles(articles)
+export async function searchNewsArticles(env, query, lang = "en", sourceUris = [], count = 20) {
+  const apiKey = await getSecret(env.NEWSAPI_AI_KEY);
+  if (!apiKey) throw new Error("NEWSAPI_AI_KEY not configured");
+
+  const newsApiLang = langToNewsApi(lang);
+
+  const body = {
+    action: "getArticles",
+    keyword: query,
+    lang: [newsApiLang],
+    articlesPage: 1,
+    articlesCount: count,
+    articlesSortBy: "date",
+    articlesSortByAsc: false,
+    dataType: ["news"],
+    forceMaxDataTimeWindow: 31,
+    resultType: "articles",
+    apiKey,
+  };
+
+  // If user has specific sources, pass them to the API
+  if (sourceUris.length > 0) {
+    body.sourceUri = sourceUris;
+  }
+
+  console.log(`[News] Searching NewsAPI.ai: "${query}" lang=${newsApiLang} sources=${sourceUris.length || "all"}`);
+
+  const res = await fetch(`${NEWSAPI_BASE}/article/getArticles`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    console.error(`[News] NewsAPI.ai error: ${res.status} ${errText.substring(0, 200)}`);
+    throw new Error(`NewsAPI.ai error: ${res.status}`);
+  }
+
+  const data = await res.json();
+  const results = data.articles?.results ?? [];
+
+  console.log(`[News] NewsAPI.ai returned ${results.length} articles (total: ${data.articles?.totalResults ?? 0})`);
+
+  const articles = results.map(normalizeNewsApiArticle);
+
+  // Apply curation: dedup, block sources, block content, sort
+  const deduped = deduplicateArticles(articles);
+  const notBlocked = deduped.filter((a) => !isBlockedSource(a.source));
+  const clean = notBlocked.filter(isCleanArticle);
+  const sorted = sortArticles(clean);
+
+  const blocked = deduped.length - notBlocked.length;
+  const filtered = notBlocked.length - clean.length;
+  if (blocked > 0) console.log(`[News] Blocked ${blocked} articles from unreliable sources`);
+  if (filtered > 0) console.log(`[News] Filtered ${filtered} inappropriate articles`);
+  console.log(`[News] ${sorted.length} clean articles after curation`);
+
+  return sorted;
+}
+
+// ============================================================
+// NEWSAPI.AI — breaking news fetch (Tier A sources + keywords)
+// ============================================================
+
+export async function fetchBreakingNews(env) {
+  const apiKey = await getSecret(env.NEWSAPI_AI_KEY);
+  if (!apiKey) throw new Error("NEWSAPI_AI_KEY not configured");
+
+  const keyword = BREAKING_NEWS_KEYWORDS.join(" OR ");
+
+  console.log(`[News] Fetching breaking news from Tier A sources...`);
+
+  const res = await fetch(`${NEWSAPI_BASE}/article/getArticles`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "getArticles",
+      keyword,
+      sourceUri: BREAKING_NEWS_SOURCES_TIER_A,
+      lang: ["eng", "por", "spa", "fra", "deu"],
+      articlesPage: 1,
+      articlesCount: 15,
+      articlesSortBy: "date",
+      articlesSortByAsc: false,
+      dataType: ["news"],
+      forceMaxDataTimeWindow: 1, // last 24 hours
+      resultType: "articles",
+      apiKey,
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    console.error(`[News] Breaking news API error: ${res.status} ${errText.substring(0, 200)}`);
+    throw new Error(`Breaking news fetch failed: ${res.status}`);
+  }
+
+  const data = await res.json();
+  const results = data.articles?.results ?? [];
+
+  const articles = results
+    .map(normalizeNewsApiArticle)
     .filter((a) => !isBlockedSource(a.source))
     .filter(isCleanArticle);
 
-  // Sort by: 1) source priority, 2) philosophical relevance, 3) date
-  clean.sort((a, b) => {
-    const srcA = getSourcePriorityScore(a);
-    const srcB = getSourcePriorityScore(b);
-    if (srcB !== srcA) return srcB - srcA;
-    const philA = getPhilosophicalScore(a);
-    const philB = getPhilosophicalScore(b);
-    if (philB !== philA) return philB - philA;
-    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-  });
+  const deduped = deduplicateArticles(articles);
+  const sorted = sortArticles(deduped);
 
-  console.log(`[News] ${clean.length} highlight articles`);
-  return clean;
+  console.log(`[News] ${sorted.length} breaking news articles`);
+  return sorted;
 }
 
 // ============================================================
-// AI SUMMARIZER — ~40-word summary per article via Gemini Flash
+// AI SUMMARIZER — for breaking news ticker only
+// Translates titles + generates 40-word summaries in user language
+// Search results skip this (user is active, latency matters)
 // ============================================================
 
-async function summarizeArticles(articles, lang, env) {
+export async function summarizeArticles(articles, lang, env) {
   const apiKey = await getSecret(env.GEMINI_API_KEY);
   if (!apiKey || articles.length === 0) return articles;
 
@@ -493,9 +450,7 @@ ${batch}`;
     console.log(`[News] Translated + summarized ${summaries.length} articles into "${lang}"`);
     return articles.map((a, i) => ({
       ...a,
-      // Keep original title in a separate field for reference
       originalTitle: a.title,
-      // Replace title with translated version
       title: map[i]?.title || a.title,
       aiSummary: map[i]?.summary || a.description || "",
     }));
@@ -509,10 +464,14 @@ ${batch}`;
 // CACHE MANAGEMENT
 // ============================================================
 
-export async function refreshHeadlines(env, lang = "en") {
+/**
+ * Refresh breaking news and cache in KV (called by cron every 20 min)
+ */
+export async function refreshBreakingNews(env, lang = "en") {
   try {
-    let articles = await fetchAllHeadlines(env, lang);
+    let articles = await fetchBreakingNews(env);
     articles = await summarizeArticles(articles, lang, env);
+
     const cached = {
       articles,
       fetchedAt: new Date().toISOString(),
@@ -520,113 +479,69 @@ export async function refreshHeadlines(env, lang = "en") {
       lang,
     };
 
-    // Never cache empty results — they indicate API errors or quota issues
     if (articles.length > 0) {
-      const kvKey = lang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${lang}`;
+      const kvKey = lang === "en" ? KV_KEY_BREAKING : `${KV_KEY_BREAKING}:${lang}`;
       await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
-        expirationTtl: CACHE_TTL_SECONDS,
+        expirationTtl: BREAKING_CACHE_TTL,
       });
-      console.log(`[News] Cached ${articles.length} headlines (${lang})`);
+      console.log(`[News] Cached ${articles.length} breaking news (${lang})`);
     } else {
-      console.warn(`[News] NOT caching empty headlines (${lang}) — possible API issue`);
+      console.warn(`[News] NOT caching empty breaking news (${lang}) — possible API issue`);
     }
 
     return cached;
   } catch (err) {
-    console.error(`[News] Failed to refresh headlines (${lang}): ${err.message}`);
-    throw err;
-  }
-}
-
-export async function refreshHighlights(env, lang = "en") {
-  try {
-    const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
-    let articles = await fetchHighlights(env, gnewsLang);
-    articles = await summarizeArticles(articles, gnewsLang, env);
-    const cached = {
-      articles,
-      fetchedAt: new Date().toISOString(),
-      count: articles.length,
-      lang: gnewsLang,
-    };
-
-    if (articles.length > 0) {
-      const kvKey = gnewsLang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${gnewsLang}`;
-      await env.PHILOSIFY_KV.put(kvKey, JSON.stringify(cached), {
-        expirationTtl: CACHE_TTL_SECONDS * 2,
-      });
-      console.log(`[News] Cached ${articles.length} highlights (${gnewsLang})`);
-    } else {
-      console.warn(`[News] NOT caching empty highlights (${gnewsLang}) — possible API issue`);
-    }
-
-    return cached;
-  } catch (err) {
-    console.error(`[News] Failed to refresh highlights (${lang}): ${err.message}`);
+    console.error(`[News] Failed to refresh breaking news (${lang}): ${err.message}`);
     throw err;
   }
 }
 
 /**
- * Get cached headlines. If stale, refresh in background.
- * @param {string} lang - User language for local news mix
+ * Get cached breaking news. If stale, refresh in background.
  */
-export async function getCachedHeadlines(env, ctx = null, lang = "en") {
-  const gnewsLang = GNEWS_LANGS.includes(lang) ? lang : "en";
-  // Language-specific cache keys for both headlines and highlights
-  const headlinesKey = gnewsLang === "en" ? KV_KEY_HEADLINES : `${KV_KEY_HEADLINES}:${gnewsLang}`;
-  const highlightsKey = gnewsLang === "en" ? KV_KEY_HIGHLIGHTS : `${KV_KEY_HIGHLIGHTS}:${gnewsLang}`;
+export async function getCachedBreakingNews(env, ctx = null, lang = "en") {
+  const kvKey = lang === "en" ? KV_KEY_BREAKING : `${KV_KEY_BREAKING}:${lang}`;
+  const raw = await env.PHILOSIFY_KV.get(kvKey);
 
-  const [headlinesRaw, highlightsRaw] = await Promise.all([
-    env.PHILOSIFY_KV.get(headlinesKey),
-    env.PHILOSIFY_KV.get(highlightsKey),
-  ]);
-
-  let headlines = null;
-  let highlights = null;
-
-  if (headlinesRaw) {
-    headlines = JSON.parse(headlinesRaw);
-    const age = Date.now() - new Date(headlines.fetchedAt).getTime();
-    if (age > STALE_THRESHOLD_MS && ctx) {
-      ctx.waitUntil(refreshHeadlines(env, gnewsLang).catch((e) =>
-        console.error(`[News] Background headlines refresh failed:`, e.message)
+  if (raw) {
+    const cached = JSON.parse(raw);
+    const age = Date.now() - new Date(cached.fetchedAt).getTime();
+    if (age > BREAKING_STALE_MS && ctx) {
+      ctx.waitUntil(refreshBreakingNews(env, lang).catch((e) =>
+        console.error(`[News] Background breaking refresh failed:`, e.message)
       ));
     }
-  } else {
-    try {
-      headlines = await refreshHeadlines(env, gnewsLang);
-    } catch (e) {
-      console.error(`[News] Headlines fetch failed:`, e.message);
-      // Fallback to English cache
-      if (gnewsLang !== "en") {
-        const enRaw = await env.PHILOSIFY_KV.get(KV_KEY_HEADLINES);
-        if (enRaw) headlines = JSON.parse(enRaw);
-      }
-    }
+    return cached;
   }
 
-  if (highlightsRaw) {
-    highlights = JSON.parse(highlightsRaw);
-    const age = Date.now() - new Date(highlights.fetchedAt).getTime();
-    if (age > HIGHLIGHTS_STALE_MS && ctx) {
-      ctx.waitUntil(refreshHighlights(env, gnewsLang).catch((e) =>
-        console.error(`[News] Background highlights refresh failed:`, e.message)
-      ));
+  // No cache — fetch now
+  try {
+    return await refreshBreakingNews(env, lang);
+  } catch (e) {
+    console.error(`[News] Breaking news fetch failed:`, e.message);
+    // Fallback to English cache
+    if (lang !== "en") {
+      const enRaw = await env.PHILOSIFY_KV.get(KV_KEY_BREAKING);
+      if (enRaw) return JSON.parse(enRaw);
     }
-  } else {
-    try {
-      highlights = await refreshHighlights(env, gnewsLang);
-    } catch (e) {
-      console.error(`[News] Highlights fetch failed:`, e.message);
-    }
+    return { articles: [], fetchedAt: new Date().toISOString(), count: 0, lang };
   }
+}
 
-  return {
-    articles: headlines?.articles || [],
-    highlights: highlights?.articles || [],
-    count: (headlines?.count || 0) + (highlights?.count || 0),
-    fetchedAt: headlines?.fetchedAt || new Date().toISOString(),
-    lang: gnewsLang,
-  };
+/**
+ * Get cached search results (5 min TTL)
+ */
+export async function getCachedSearch(env, cacheKey) {
+  const raw = await env.PHILOSIFY_KV.get(cacheKey);
+  if (raw) return JSON.parse(raw);
+  return null;
+}
+
+/**
+ * Cache search results
+ */
+export async function cacheSearchResults(env, cacheKey, data) {
+  await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(data), {
+    expirationTtl: SEARCH_CACHE_TTL,
+  });
 }

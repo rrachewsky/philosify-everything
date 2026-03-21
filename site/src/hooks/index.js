@@ -23,3 +23,4 @@ export { useLiteratureSidebar } from './useLiteratureSidebar.js';
 export { useBookSearch } from './useBookSearch.js';
 export { useIdeas } from './useIdeas.js';
 export { useNewsPreferences } from './useNewsPreferences.js';
+export { useNews } from './useNews.js';

@@ -14,7 +14,7 @@ import { getSupabaseCredentials } from "../utils/supabase.js";
 // AVAILABLE NEWS SOURCES - Preset list for user selection
 // ============================================================
 // Organized by category for the frontend UI.
-// Keys must match source names returned by GNews API (lowercase comparison).
+// Keys must match source names returned by NewsAPI.ai (lowercase comparison).
 // ============================================================
 
 export const NEWS_SOURCES = {
@@ -502,4 +502,153 @@ export async function handleUpdateNewsPreferences(request, env, origin) {
     console.error("[NewsPreferences] Update error:", err.message);
     return jsonResponse({ error: err.message }, 500, origin, env);
   }
+}
+
+// ============================================================
+// SOURCE URI MAP — maps source IDs to NewsAPI.ai domain URIs
+// ============================================================
+
+export const SOURCE_URI_MAP = {
+  // Wire Services
+  "reuters": "reuters.com",
+  "ap": "apnews.com",
+  "afp": "afp.com",
+  "efe": "efe.com",
+  "xinhua": "xinhuanet.com",
+  "tass": "tass.com",
+  "kyodo": "kyodonews.net",
+  "yonhap": "yna.co.kr",
+  "pti": "ptinews.com",
+  // Business & Finance
+  "wall-street-journal": "wsj.com",
+  "bloomberg": "bloomberg.com",
+  "financial-times": "ft.com",
+  "economist": "economist.com",
+  "forbes": "forbes.com",
+  "cnbc": "cnbc.com",
+  "fortune": "fortune.com",
+  "marketwatch": "marketwatch.com",
+  "business-insider": "businessinsider.com",
+  "nikkei-asia": "asia.nikkei.com",
+  "infomoney": "infomoney.com.br",
+  "expansion": "expansion.mx",
+  "cinco-dias": "cincodias.elpais.com",
+  // Quality News
+  "bbc": "bbc.co.uk",
+  "abc-news": "abcnews.go.com",
+  "cbs-news": "cbsnews.com",
+  "nbc-news": "nbcnews.com",
+  "npr": "npr.org",
+  "pbs": "pbs.org",
+  "new-york-times": "nytimes.com",
+  "washington-post": "washingtonpost.com",
+  "usa-today": "usatoday.com",
+  "politico": "politico.com",
+  "axios": "axios.com",
+  "the-hill": "thehill.com",
+  "sky-news": "news.sky.com",
+  "telegraph": "telegraph.co.uk",
+  "the-times": "thetimes.co.uk",
+  "guardian": "theguardian.com",
+  // Opinion & Analysis
+  "reason": "reason.com",
+  "national-review": "nationalreview.com",
+  "the-free-press": "thefp.com",
+  "city-journal": "city-journal.org",
+  "foreign-affairs": "foreignaffairs.com",
+  "quillette": "quillette.com",
+  "spectator": "spectator.co.uk",
+  // Tech & Science
+  "techcrunch": "techcrunch.com",
+  "wired": "wired.com",
+  "ars-technica": "arstechnica.com",
+  "mit-technology-review": "technologyreview.com",
+  "nature": "nature.com",
+  "scientific-american": "scientificamerican.com",
+  "the-verge": "theverge.com",
+  "cnet": "cnet.com",
+  "new-scientist": "newscientist.com",
+  "phys-org": "phys.org",
+  "space-com": "space.com",
+  "live-science": "livescience.com",
+  // Europe
+  "der-spiegel": "spiegel.de",
+  "faz": "faz.net",
+  "die-welt": "welt.de",
+  "le-monde": "lemonde.fr",
+  "le-figaro": "lefigaro.fr",
+  "liberation": "liberation.fr",
+  "el-pais": "elpais.com",
+  "el-mundo": "elmundo.es",
+  "abc-spain": "abc.es",
+  "la-vanguardia": "lavanguardia.com",
+  "corriere-della-sera": "corriere.it",
+  "la-repubblica": "repubblica.it",
+  "la-stampa": "lastampa.it",
+  "irish-times": "irishtimes.com",
+  "rte": "rte.ie",
+  "swissinfo": "swissinfo.ch",
+  "nzz": "nzz.ch",
+  "de-telegraaf": "telegraaf.nl",
+  // Americas
+  "globe-and-mail": "theglobeandmail.com",
+  "national-post": "nationalpost.com",
+  "cbc": "cbc.ca",
+  "folha": "folha.uol.com.br",
+  "estadao": "estadao.com.br",
+  "gazeta-do-povo": "gazetadopovo.com.br",
+  "jovem-pan": "jovempan.com.br",
+  "uol": "uol.com.br",
+  "g1": "g1.globo.com",
+  "cnn-brasil": "cnnbrasil.com.br",
+  "infobae": "infobae.com",
+  "clarin": "clarin.com",
+  "la-nacion": "lanacion.com.ar",
+  "el-universal": "eluniversal.com.mx",
+  "el-comercio": "elcomercio.pe",
+  "el-tiempo": "eltiempo.com",
+  "miami-herald": "miamiherald.com",
+  // Asia Pacific
+  "south-china-morning-post": "scmp.com",
+  "japan-times": "japantimes.co.jp",
+  "korea-herald": "koreaherald.com",
+  "korea-times": "koreatimes.co.kr",
+  "times-of-india": "timesofindia.indiatimes.com",
+  "hindustan-times": "hindustantimes.com",
+  "indian-express": "indianexpress.com",
+  "ndtv": "ndtv.com",
+  "straits-times": "straitstimes.com",
+  "channel-news-asia": "channelnewsasia.com",
+  "bangkok-post": "bangkokpost.com",
+  "jakarta-post": "thejakartapost.com",
+  "philippine-star": "philstar.com",
+  "abc-australia": "abc.net.au",
+  "stuff-nz": "stuff.co.nz",
+  // Middle East & Africa
+  "times-of-israel": "timesofisrael.com",
+  "jerusalem-post": "jpost.com",
+  "i24-news": "i24news.tv",
+  "haaretz": "haaretz.com",
+  "al-jazeera": "aljazeera.com",
+  "al-arabiya": "alarabiya.net",
+  "arab-news": "arabnews.com",
+  "gulf-news": "gulfnews.com",
+  "the-national-uae": "thenationalnews.com",
+  "daily-sabah": "dailysabah.com",
+  "hurriyet": "hurriyetdailynews.com",
+  "daily-maverick": "dailymaverick.co.za",
+  "news24": "news24.com",
+  "east-african": "theeastafrican.co.ke",
+  "punch-nigeria": "punchng.com",
+};
+
+/**
+ * Convert user's enabled_sources array to NewsAPI.ai sourceUri array.
+ * Returns only the URIs that have a mapping — unknown sources are skipped.
+ */
+export function sourcesToUris(enabledSources) {
+  if (!enabledSources || !Array.isArray(enabledSources)) return [];
+  return enabledSources
+    .map((id) => SOURCE_URI_MAP[id])
+    .filter(Boolean);
 }

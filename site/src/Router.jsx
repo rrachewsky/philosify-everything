@@ -23,11 +23,11 @@ import { IdeasHub } from './components/ideas';
 import { MusicSidebar } from './components/music/MusicSidebar';
 import { LiteratureSidebar } from './components/literature/LiteratureSidebar';
 import { CinemaSidebar } from './components/cinema/CinemaSidebar';
-import { NewsSidebar } from './components/news/NewsSidebar';
+import NewsSidebar from './components/news/NewsSidebar';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
 import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas } from './hooks';
 import { useCinemaSidebar } from './hooks/useCinemaSidebar.js';
-import { useNewsSidebar } from './hooks/useNewsSidebar.js';
+import { useNews } from './hooks/useNews.js';
 import { useCommunity } from './hooks/useCommunity.js';
 import { logger, getPendingAction } from './utils';
 
@@ -280,7 +280,7 @@ export function Router() {
   const ideas = useIdeas();
   const music = useMusicSidebar();
   const literature = useLiteratureSidebar();
-  const news = useNewsSidebar();
+  const news = useNews();
   const cinema = useCinemaSidebar();
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
@@ -462,27 +462,9 @@ export function Router() {
         <NewsSidebar
           isOpen={news.isOpen}
           onClose={news.close}
-          headlines={news.headlines}
-          highlights={news.highlights}
-          headlinesLoading={news.headlinesLoading}
-          headlinesError={news.headlinesError}
-          selectedArticle={news.selectedArticle}
-          selectArticle={news.selectArticle}
-          clearArticle={news.clearArticle}
-          isAnalyzing={news.isAnalyzing}
-          analysisResult={news.analysisResult}
-          analysisError={news.analysisError}
-          analyzeArticle={news.analyzeArticle}
-          panelLoading={news.panelLoading}
-          panelResult={news.panelResult}
-          panelError={news.panelError}
-          elapsedTime={news.elapsedTime}
-          formatTime={news.formatTime}
-          analyzeWithPanel={news.analyzeWithPanel}
-          onRefreshHeadlines={news.loadHeadlines}
-          user={music.user}
+          news={news}
           balance={music.balance}
-          lang={music.lang}
+          onCreditsExhausted={() => setComingSoonCategory('credits')}
         />
 
         {/* Cinema Sidebar (Films) */}

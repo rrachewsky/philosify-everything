@@ -23,7 +23,8 @@ import { handleSearch, handleAnalyze, handleBookSearch, handleBookAnalyze } from
 import { handleBookAnalysisHistory } from "./src/handlers/book-analysis-history.js";
 import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js";
 import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
-import { handleNewsHeadlines } from "./src/handlers/news-headlines.js";
+import { handleNewsSearch, handleBreakingNews } from "./src/handlers/news-headlines.js";
+import { handleNewsTranslate } from "./src/handlers/news-translate.js";
 import { handleNewsTTS } from "./src/handlers/news-tts.js";
 import {
   handleGetNewsPreferences,
@@ -32,7 +33,7 @@ import {
 } from "./src/handlers/news-preferences.js";
 import { handlePanelHistory } from "./src/handlers/panel-history.js";
 import { handleUserHistory } from "./src/handlers/user-history.js";
-import { refreshHeadlines, refreshHighlights } from "./src/news/index.js";
+import { refreshBreakingNews } from "./src/news/index.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
 import {
@@ -3303,10 +3304,18 @@ export default {
       }
 
       // ============================================================
-      // NEWS HEADLINES — Public, cached headlines from GNews API
+      // NEWS — Search + Breaking News + TTS + Translate
       // ============================================================
-      if (url.pathname === "/api/news/headlines" && request.method === "GET") {
-        return handleNewsHeadlines(request, env, origin, ctx);
+      if (url.pathname === "/api/news/search" && request.method === "GET") {
+        return handleNewsSearch(request, env, origin, ctx);
+      }
+
+      if (url.pathname === "/api/news/breaking" && request.method === "GET") {
+        return handleBreakingNews(request, env, origin, ctx);
+      }
+
+      if (url.pathname === "/api/news/translate" && request.method === "POST") {
+        return handleNewsTranslate(request, env, origin);
       }
 
       if (url.pathname === "/api/news/tts" && request.method === "POST") {
@@ -3554,21 +3563,13 @@ export default {
       }
     }
 
-    // News headlines refresh — only at the top of each hour to stay within API quota
-    if (now.getUTCMinutes() < 5) {
+    // Breaking news refresh — every 20 minutes (cron runs every 5 min, so check minutes)
+    if (now.getUTCMinutes() % 20 < 5) {
       ctx.waitUntil(
-        refreshHeadlines(env).catch((err) =>
-          console.error("[Cron] News headlines refresh failed:", err.message),
+        refreshBreakingNews(env).catch((err) =>
+          console.error("[Cron] Breaking news refresh failed:", err.message),
         ),
       );
-      // Highlights refresh — every 4 hours (hours 0, 4, 8, 12, 16, 20)
-      if (hour % 4 === 0) {
-        ctx.waitUntil(
-          refreshHighlights(env).catch((err) =>
-            console.error("[Cron] News highlights refresh failed:", err.message),
-          ),
-        );
-      }
     }
 
     // User-proposed colloquium: staggered philosopher replies (every 5 min)

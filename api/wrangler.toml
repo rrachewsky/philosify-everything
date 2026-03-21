@@ -228,11 +228,11 @@ binding = "GOOGLE_BOOKS_API_KEY"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "GOOGLE_BOOKS_API_KEY"
 
-# GNEWS_API_KEY - GNews API for News headlines
+# NEWSAPI_AI_KEY - NewsAPI.ai for News search + breaking news
 [[env.production.secrets_store_secrets]]
-binding = "GNEWS_API_KEY"
+binding = "NEWSAPI_AI_KEY"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
-secret_name = "GNEWS_API_KEY"
+secret_name = "NEWSAPI_AI_KEY"
 
 # TMDB_API_KEY - TMDB API for Cinema sidebar
 [[env.production.secrets_store_secrets]]

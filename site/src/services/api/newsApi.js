@@ -1,22 +1,64 @@
-// API service for News headlines and analysis
+// API service for News search, breaking news, and preferences
 import { config } from '@/config';
 
 /**
- * Fetch cached news headlines in the user's language
+ * Search news articles by topic/query
+ * @param {string} query - Search query
  * @param {string} [lang='en'] - Language code
+ * @returns {Promise<{articles: Array, count: number, query: string, lang: string, filtered: boolean}>}
  */
-export async function fetchNewsHeadlines(lang = 'en') {
-  const response = await fetch(`${config.apiUrl}/api/news/headlines?lang=${lang}`, {
+export async function searchNews(query, lang = 'en') {
+  const params = new URLSearchParams({ q: query, lang });
+  const response = await fetch(`${config.apiUrl}/api/news/search?${params}`, {
     method: 'GET',
     credentials: 'include',
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch headlines: ${response.status}`);
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || `Search failed: ${response.status}`);
   }
 
-  const data = await response.json();
-  return data;
+  return response.json();
+}
+
+/**
+ * Fetch breaking news for ticker
+ * @param {string} [lang='en'] - Language code
+ * @returns {Promise<{articles: Array, count: number, fetchedAt: string}>}
+ */
+export async function fetchBreakingNews(lang = 'en') {
+  const response = await fetch(`${config.apiUrl}/api/news/breaking?lang=${lang}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch breaking news: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Translate a single article title + description on demand
+ * @param {string} text - Text to translate
+ * @param {string} lang - Target language
+ * @returns {Promise<{title: string, summary: string}>}
+ */
+export async function translateArticle(title, description, lang) {
+  const response = await fetch(`${config.apiUrl}/api/news/translate`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, description, lang }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Translation failed: ${response.status}`);
+  }
+
+  return response.json();
 }
 
 /**
@@ -38,7 +80,6 @@ export async function getNewsPreferences() {
 
 /**
  * Unlock custom source selection (costs 1 credit)
- * @returns {Promise<{success: boolean, unlocked: boolean, credits?: number, remaining?: number}>}
  */
 export async function unlockNewsSources() {
   const response = await fetch(`${config.apiUrl}/api/user/news-preferences/unlock`, {
@@ -59,15 +100,12 @@ export async function unlockNewsSources() {
 /**
  * Update enabled news sources
  * @param {string[]} sources - Array of source IDs
- * @returns {Promise<{success: boolean, enabledSources: string[]}>}
  */
 export async function updateNewsSources(sources) {
   const response = await fetch(`${config.apiUrl}/api/user/news-preferences`, {
     method: 'PUT',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sources }),
   });
 
