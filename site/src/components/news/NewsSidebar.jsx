@@ -96,15 +96,19 @@ function BreakingTicker({ articles, onSelect, timeAgo }) {
         {allItems.map((a) => (
           <button
             key={a._key}
-            className="news-headline__item news-headline__item--breaking"
+            className="news-search-result"
             onClick={() => onSelect(a)}
           >
-            <div className="news-headline__content">
-              <span className="news-headline__breaking-badge">BREAKING</span>
-              <span className="news-headline__title">{a.title}</span>
-              <span className="news-headline__meta">
-                {a.source} &middot; {timeAgo(a.publishedAt)}
+            {a.imageUrl && (
+              <img className="news-search-result__image" src={a.imageUrl} alt="" loading="lazy"
+                onError={(e) => { e.target.style.display = 'none'; }} />
+            )}
+            <div className="news-search-result__content">
+              <span className="news-search-result__source">
+                {a.source}
+                {a.publishedAt && <> &middot; {timeAgo(a.publishedAt)}</>}
               </span>
+              <span className="news-search-result__title">{a.title}</span>
             </div>
           </button>
         ))}
