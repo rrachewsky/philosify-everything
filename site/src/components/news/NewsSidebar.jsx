@@ -300,7 +300,8 @@ export default function NewsSidebar({
             }}
             title={t('news.sources', 'Sources')}
           >
-            &#9881;
+            <span style={{ fontSize: '13px', marginRight: '4px' }}>&#9881;</span>
+            <span style={{ fontSize: '11px' }}>{t('news.sources', 'Sources')}</span>
           </button>
         </div>
         <button className="music-sidebar__close" onClick={onClose}>&times;</button>
