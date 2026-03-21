@@ -16,6 +16,98 @@ import { setPendingAction } from '../../utils/pendingAction.js';
 import { config } from '@/config';
 import { requestPhilosopherPanel } from '../../services/api/philosopherPanel.js';
 import '../../styles/music-sidebar.css';
+import '../TopTenTicker.css';
+
+// ============================================================
+// Top Books Ticker — uses EXACT same classes as Music TopTenTicker
+// ============================================================
+function TopBooksTicker({ onBookSelect }) {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const trackRef = useRef(null);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch(`${config.apiUrl}/api/books/top`);
+        if (response.ok) {
+          const data = await response.json();
+          setBooks(data.books || []);
+        }
+      } catch (error) {
+        console.error('Failed to fetch top books:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+    const interval = setInterval(fetchBooks, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading || books.length === 0) return null;
+
+  const duplicated = [...books, ...books, ...books];
+  const count = books.length;
+  const animationDuration = count * 8;
+
+  const handleMouseDown = (e) => {
+    if (!trackRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - trackRef.current.offsetLeft);
+    setScrollLeftState(trackRef.current.scrollLeft);
+  };
+  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseMove = (e) => {
+    if (!isDragging || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.offsetLeft;
+    trackRef.current.scrollLeft = scrollLeftState - (x - startX) * 2;
+  };
+
+  return (
+    <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
+      <div className="ticker-label">
+        <span className="ticker-icon">{'\u{1F4DA}'}</span>
+        <span>TOP BOOKS</span>
+      </div>
+      <div
+        className="ticker-track"
+        ref={trackRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
+        <div
+          className={`ticker-content ${isDragging ? 'paused' : ''}`}
+          style={{ animationDuration: `${animationDuration}s` }}
+        >
+          {duplicated.map((book, i) => {
+            const rank = (i % count) + 1;
+            return (
+              <button
+                key={`${book.id}-${i}`}
+                className="ticker-item"
+                onClick={() => onBookSelect(book)}
+                style={{ direction: 'ltr' }}
+              >
+                <span className="ticker-rank">#{rank}</span>
+                <span className="ticker-song">{book.title}</span>
+                <span className="ticker-separator">-</span>
+                <span className="ticker-artist">{book.author}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function LiteratureSidebar({
   isOpen,
@@ -324,7 +416,17 @@ export function LiteratureSidebar({
           </button>
         </div>
 
-        {/* No ticker for books — go straight to content */}
+        {/* Top Books Ticker - between header and search */}
+        {!selectedBook && !analysisResult && (
+          <div className="music-sidebar__ticker">
+            <TopBooksTicker onBookSelect={(book) => {
+              selectBook(book);
+              if (!user) {
+                signupModal.open();
+              }
+            }} />
+          </div>
+        )}
 
         <div ref={contentRef} className="music-sidebar__content">
           <div className="music-search">

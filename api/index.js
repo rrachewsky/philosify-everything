@@ -41,6 +41,8 @@ import {
   handleRefreshTop10,
   handleScheduledTop10,
 } from "./src/handlers/top10.js";
+import { handleBooksTop, fetchTopBooks } from "./src/handlers/books-top.js";
+import { handleCinemaTop, fetchTopFilms } from "./src/handlers/cinema-top.js";
 import { generateDailyQuestion } from "./src/handlers/daily-question.js";
 import {
   handleColloquiumCron,
@@ -414,6 +416,16 @@ export default {
       // Top 10 Refresh - Admin only
       if (url.pathname === "/api/top10/refresh" && request.method === "POST") {
         return handleRefreshTop10(request, env, origin);
+      }
+
+      // Top Books Feed - Public (for literature ticker)
+      if (url.pathname === "/api/books/top" && request.method === "GET") {
+        return handleBooksTop(request, env, origin, ctx);
+      }
+
+      // Top Cinema Feed - Public (for cinema ticker)
+      if (url.pathname === "/api/cinema/top" && request.method === "GET") {
+        return handleCinemaTop(request, env, origin, ctx);
       }
 
       // [REMOVED] Stripe diagnostic endpoint - removed per security audit (LOW-4)
@@ -3604,6 +3616,26 @@ export default {
       ctx.waitUntil(
         cleanupPushQueue(env).catch((err) =>
           console.error("[Cron] Push queue cleanup failed:", err.message),
+        ),
+      );
+    }
+
+    // Top Books feed refresh — every 6 hours (0, 6, 12, 18 UTC)
+    // Gate on minute < 5 to avoid redundant fetches from */5 cron
+    const minute = now.getUTCMinutes();
+    if (hour % 6 === 0 && minute < 5) {
+      ctx.waitUntil(
+        fetchTopBooks(env).catch((err) =>
+          console.error("[Cron] Top Books refresh failed:", err.message),
+        ),
+      );
+    }
+
+    // Top Cinema feed refresh — every 3 hours (0, 3, 6, 9, 12, 15, 18, 21 UTC)
+    if (hour % 3 === 0 && minute < 5) {
+      ctx.waitUntil(
+        fetchTopFilms(env).catch((err) =>
+          console.error("[Cron] Top Cinema refresh failed:", err.message),
         ),
       );
     }

@@ -228,6 +228,12 @@ binding = "GOOGLE_BOOKS_API_KEY"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "GOOGLE_BOOKS_API_KEY"
 
+# NYT_BOOKS_API_KEY - NYT Bestsellers API for Literature ticker
+[[env.production.secrets_store_secrets]]
+binding = "NYT_BOOKS_API_KEY"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "NYT_BOOKS_API_KEY"
+
 # NEWSAPI_AI_KEY - NewsAPI.ai for News search + breaking news
 [[env.production.secrets_store_secrets]]
 binding = "NEWSAPI_AI_KEY"

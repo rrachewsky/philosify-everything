@@ -15,6 +15,98 @@ import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import { config } from '@/config';
 import '../../styles/music-sidebar.css';
+import '../TopTenTicker.css';
+
+// ============================================================
+// Top Cinema Ticker — uses EXACT same classes as Music TopTenTicker
+// ============================================================
+function TopCinemaTicker({ onFilmSelect }) {
+  const [films, setFilms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const trackRef = useRef(null);
+
+  useEffect(() => {
+    const fetchFilms = async () => {
+      try {
+        const response = await fetch(`${config.apiUrl}/api/cinema/top`);
+        if (response.ok) {
+          const data = await response.json();
+          setFilms(data.films || []);
+        }
+      } catch (error) {
+        console.error('Failed to fetch top films:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFilms();
+    const interval = setInterval(fetchFilms, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading || films.length === 0) return null;
+
+  const duplicated = [...films, ...films, ...films];
+  const count = films.length;
+  const animationDuration = count * 8;
+
+  const handleMouseDown = (e) => {
+    if (!trackRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - trackRef.current.offsetLeft);
+    setScrollLeftState(trackRef.current.scrollLeft);
+  };
+  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseMove = (e) => {
+    if (!isDragging || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.offsetLeft;
+    trackRef.current.scrollLeft = scrollLeftState - (x - startX) * 2;
+  };
+
+  return (
+    <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
+      <div className="ticker-label">
+        <span className="ticker-icon">&#127909;</span>
+        <span>TOP CINEMA</span>
+      </div>
+      <div
+        className="ticker-track"
+        ref={trackRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
+        <div
+          className={`ticker-content ${isDragging ? 'paused' : ''}`}
+          style={{ animationDuration: `${animationDuration}s` }}
+        >
+          {duplicated.map((film, i) => {
+            const rank = (i % count) + 1;
+            return (
+              <button
+                key={`${film.id}-${i}`}
+                className="ticker-item"
+                onClick={() => onFilmSelect(film)}
+                style={{ direction: 'ltr' }}
+              >
+                <span className="ticker-rank">#{rank}</span>
+                <span className="ticker-song">{film.title}</span>
+                <span className="ticker-separator">-</span>
+                <span className="ticker-artist">{film.star || film.year || ''}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function CinemaSidebar({
   isOpen,
@@ -162,6 +254,18 @@ export function CinemaSidebar({
             &times;
           </button>
         </div>
+
+        {/* Top Cinema Ticker - between header and search */}
+        {!selectedFilm && !panelResult && !analysisResult && (
+          <div className="music-sidebar__ticker">
+            <TopCinemaTicker onFilmSelect={(film) => {
+              selectFilm(film);
+              if (!user) {
+                signupModal.open();
+              }
+            }} />
+          </div>
+        )}
 
         <div ref={contentRef} className="music-sidebar__content">
           {/* Search input — hidden once a film is selected */}
