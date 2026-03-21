@@ -353,25 +353,23 @@ export async function fetchBreakingNews(env) {
   const apiKey = await getSecret(env.NEWSAPI_AI_KEY);
   if (!apiKey) throw new Error("NEWSAPI_AI_KEY not configured");
 
-  // Use a focused subset — too many OR terms causes NewsAPI.ai to return 0
-  const keyword = "war OR election OR recession OR earthquake OR pandemic OR breakthrough OR Nobel OR assassination OR sanctions OR treaty";
+  console.log(`[News] Fetching breaking news...`);
 
-  console.log(`[News] Fetching breaking news from Tier A sources...`);
-
+  // Fetch major stories — no source filter (let isBlockedSource clean up after).
+  // Using keyword OR gives broad coverage; source filter was too restrictive with keywords.
   const res = await fetch(`${NEWSAPI_BASE}/article/getArticles`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       action: "getArticles",
-      keyword,
-      sourceUri: BREAKING_NEWS_SOURCES_TIER_A,
-      lang: ["eng", "por", "spa", "fra", "deu"],
+      keyword: "war OR election OR recession OR earthquake OR pandemic OR breakthrough OR assassination OR sanctions OR treaty",
+      lang: ["eng"],
       articlesPage: 1,
-      articlesCount: 15,
+      articlesCount: 20,
       articlesSortBy: "date",
       articlesSortByAsc: false,
       dataType: ["news"],
-      forceMaxDataTimeWindow: 1, // last 24 hours
+      forceMaxDataTimeWindow: 3,
       resultType: "articles",
       apiKey,
     }),
@@ -385,6 +383,7 @@ export async function fetchBreakingNews(env) {
 
   const data = await res.json();
   const results = data.articles?.results ?? [];
+  console.log(`[News] Breaking news API returned ${results.length} raw articles`);
 
   const articles = results
     .map(normalizeNewsApiArticle)
@@ -394,7 +393,7 @@ export async function fetchBreakingNews(env) {
   const deduped = deduplicateArticles(articles);
   const sorted = sortArticles(deduped);
 
-  console.log(`[News] ${sorted.length} breaking news articles`);
+  console.log(`[News] ${sorted.length} breaking news after curation`);
   return sorted;
 }
 

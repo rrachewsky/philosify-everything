@@ -73,38 +73,41 @@ function BreakingTicker({ articles, onSelect, timeAgo }) {
 
   if (articles.length === 0) return null;
 
-  const renderItem = (a, keyPrefix, i) => (
-    <button
-      key={`${keyPrefix}-${i}`}
-      className="news-headline__item news-headline__item--highlight"
-      onClick={() => onSelect(a)}
-    >
-      {a.imageUrl && (
-        <img className="news-headline__image" src={a.imageUrl} alt="" loading="lazy"
-          onError={(e) => { e.target.style.display = 'none'; }} />
-      )}
-      <div className="news-headline__content">
-        <span className="news-headline__star">&#9889;</span>
-        <span className="news-headline__title">{a.title}</span>
-        <span className="news-headline__meta">
-          {a.source} &middot; {timeAgo(a.publishedAt)}
-        </span>
-      </div>
-    </button>
-  );
+  // For seamless loop: need enough items so the scroll doesn't jump visibly.
+  // If very few articles, repeat them more times.
+  const repeatCount = articles.length < 5 ? 4 : 2;
+  const allItems = [];
+  for (let r = 0; r < repeatCount; r++) {
+    const source = r === 0 ? articles : shuffled;
+    source.forEach((a, i) => {
+      allItems.push({ ...a, _key: `${r}-${i}` });
+    });
+  }
 
   return (
     <div
-      className="news-ticker"
+      className="news-ticker news-ticker--breaking"
       ref={tickerRef}
       onWheel={handleUserInteraction}
       onTouchStart={handleUserInteraction}
       onPointerDown={handleUserInteraction}
-      style={{ maxHeight: '140px' }}
     >
       <div className="news-ticker__track">
-        {articles.map((a, i) => renderItem(a, 'a', i))}
-        {shuffled.map((a, i) => renderItem(a, 'b', i))}
+        {allItems.map((a) => (
+          <button
+            key={a._key}
+            className="news-headline__item news-headline__item--breaking"
+            onClick={() => onSelect(a)}
+          >
+            <div className="news-headline__content">
+              <span className="news-headline__breaking-badge">BREAKING</span>
+              <span className="news-headline__title">{a.title}</span>
+              <span className="news-headline__meta">
+                {a.source} &middot; {timeAgo(a.publishedAt)}
+              </span>
+            </div>
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -312,10 +315,17 @@ export default function NewsSidebar({
         {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
           <>
             {/* Breaking News Ticker */}
+            {breakingLoading && breakingNews.length === 0 && (
+              <div style={{ marginBottom: '16px', textAlign: 'center', padding: '12px' }}>
+                <div className="music-search__loading" style={{ marginBottom: '4px' }}>
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+            )}
             {breakingNews.length > 0 && (
               <div style={{ marginBottom: '16px' }}>
-                <div style={{ fontSize: '11px', fontWeight: 'bold', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px', paddingLeft: '4px' }}>
-                  {t('news.highlights', 'Breaking News')}
+                <div style={{ fontSize: '10px', fontWeight: 'bold', color: 'rgba(255,68,68,0.6)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '6px', paddingLeft: '4px' }}>
+                  {t('news.breakingNews', 'Breaking News')}
                 </div>
                 <BreakingTicker
                   articles={breakingNews}
