@@ -341,31 +341,31 @@ export default function NewsSidebar({
             )}
 
             {/* Search Field */}
-            <form onSubmit={handleSearch} style={{ marginBottom: '16px' }}>
-              <div className="music-search">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  className="music-search__input"
-                  placeholder={t('home.categories.news.searchPlaceholder', 'Search a topic, event, or theme...')}
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                />
-                <button
-                  type="submit"
-                  className="music-search__button"
-                  disabled={searchLoading || searchInput.trim().length < 2}
-                >
-                  {searchLoading ? (
-                    <div className="music-search__loading">
-                      <span></span><span></span><span></span>
-                    </div>
-                  ) : (
-                    <span>&#128269;</span>
-                  )}
-                </button>
-              </div>
+            <form onSubmit={handleSearch} style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
+              <input
+                ref={searchInputRef}
+                type="text"
+                className="music-search__input"
+                placeholder={t('home.categories.news.searchPlaceholder', 'Search a topic, event, or theme...')}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                style={{ flex: 1 }}
+              />
+              <button
+                type="submit"
+                className="music-search__button"
+                disabled={searchLoading || searchInput.trim().length < 2}
+                style={{ flexShrink: 0 }}
+              >
+                {searchLoading ? (
+                  <div className="music-search__loading">
+                    <span></span><span></span><span></span>
+                  </div>
+                ) : (
+                  <span>&#128269;</span>
+                )}
+              </button>
             </form>
 
             {/* Search Error */}
