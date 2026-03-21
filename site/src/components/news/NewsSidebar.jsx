@@ -29,7 +29,7 @@ function BreakingTicker({ articles, onSelect }) {
   if (articles.length === 0) return null;
 
   const duplicated = [...articles, ...articles, ...articles];
-  const animationDuration = articles.length * 6; // 6 seconds per headline
+  const animationDuration = articles.length * 18; // 18 seconds per headline (1/3 speed)
 
   const handleMouseDown = (e) => {
     if (!trackRef.current) return;
@@ -46,7 +46,11 @@ function BreakingTicker({ articles, onSelect }) {
   };
 
   return (
-    <div className="news-breaking-ticker">
+    <div className="news-breaking-ticker" style={{ direction: 'ltr' }}>
+      <div className="news-breaking-ticker__label">
+        <span className="news-breaking-ticker__label-icon">&#9889;</span>
+        <span>BREAKING</span>
+      </div>
       <div
         className="news-breaking-ticker__track"
         ref={trackRef}
@@ -64,6 +68,7 @@ function BreakingTicker({ articles, onSelect }) {
               key={`${a.url || ''}-${i}`}
               className="news-breaking-ticker__item"
               onClick={() => onSelect(a)}
+              style={{ direction: 'ltr' }}
             >
               <span className="news-breaking-ticker__source">{a.source}</span>
               <span className="news-breaking-ticker__title">{a.title}</span>
@@ -294,8 +299,8 @@ export default function NewsSidebar({
               </div>
             )}
 
-            {/* Search Field */}
-            <form onSubmit={handleSearch} style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
+            {/* Search Field — Enter key submits, no separate button */}
+            <form onSubmit={handleSearch} style={{ marginBottom: '16px', position: 'relative' }}>
               <input
                 ref={searchInputRef}
                 type="text"
@@ -304,22 +309,20 @@ export default function NewsSidebar({
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                style={{ flex: 1 }}
+                style={{ width: '100%', paddingRight: '40px' }}
               />
-              <button
-                type="submit"
-                className="music-search__button"
-                disabled={searchLoading || searchInput.trim().length < 2}
-                style={{ flexShrink: 0 }}
-              >
-                {searchLoading ? (
+              {searchLoading && (
+                <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)' }}>
                   <div className="music-search__loading">
                     <span></span><span></span><span></span>
                   </div>
-                ) : (
-                  <span>&#128269;</span>
-                )}
-              </button>
+                </div>
+              )}
+              {!searchLoading && searchInput.trim().length >= 2 && (
+                <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', opacity: 0.4 }}>
+                  &#128269;
+                </div>
+              )}
             </form>
 
             {/* Search Error */}
