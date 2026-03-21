@@ -86,7 +86,7 @@ function BreakingTicker({ articles, onSelect, timeAgo }) {
 
   return (
     <div
-      className="news-ticker news-ticker--breaking"
+      className="news-ticker--breaking"
       ref={tickerRef}
       onWheel={handleUserInteraction}
       onTouchStart={handleUserInteraction}
@@ -318,14 +318,7 @@ export default function NewsSidebar({
         {/* ── STATE 1: Search home (no article selected, no result) ── */}
         {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
           <>
-            {/* Breaking News Ticker */}
-            {breakingLoading && breakingNews.length === 0 && (
-              <div style={{ marginBottom: '16px', textAlign: 'center', padding: '12px' }}>
-                <div className="music-search__loading" style={{ marginBottom: '4px' }}>
-                  <span></span><span></span><span></span>
-                </div>
-              </div>
-            )}
+            {/* Breaking News Ticker — no loading state, appears when data arrives */}
             {breakingNews.length > 0 && (
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ fontSize: '11px', fontWeight: '700', color: '#ff00ff', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '8px', paddingLeft: '4px', fontFamily: "'Orbitron', sans-serif" }}>
