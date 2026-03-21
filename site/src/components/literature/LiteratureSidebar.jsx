@@ -74,7 +74,7 @@ function TopBooksTicker({ onBookSelect }) {
     <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
       <div className="ticker-label">
         <span className="ticker-icon">{'\u{1F4DA}'}</span>
-        <span>{t('topTen.labelBooks', 'TOP BOOKS')}</span>
+        <span>{t('topTen.labelBooks', 'TOP 50')}</span>
       </div>
       <div
         className="ticker-track"

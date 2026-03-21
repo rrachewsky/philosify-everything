@@ -73,7 +73,7 @@ function TopCinemaTicker({ onFilmSelect }) {
     <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
       <div className="ticker-label">
         <span className="ticker-icon">&#127909;</span>
-        <span>{t('topTen.labelCinema', 'TOP MOVIES')}</span>
+        <span>{t('topTen.labelCinema', 'TOP 50')}</span>
       </div>
       <div
         className="ticker-track"

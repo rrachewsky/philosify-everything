@@ -465,8 +465,8 @@
     "signInToView": "トップ50分析を見るにはログインしてください",
     "free": "無料",
     "labelMusic": "トップ50",
-    "labelBooks": "トップ書籍",
-    "labelCinema": "トップ映画",
+    "labelBooks": "トップ50",
+    "labelCinema": "トップ50",
     "labelNews": "速報"
   },
   "landing": {
