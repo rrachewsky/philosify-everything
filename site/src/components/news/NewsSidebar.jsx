@@ -269,18 +269,18 @@ export default function NewsSidebar({
     }
   };
 
-  // Time ago formatter
-  const timeAgo = useCallback((dateStr) => {
+  // Date formatter: dd/mm/yyyy hh:mm
+  const formatDate = useCallback((dateStr) => {
     if (!dateStr) return '';
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return t('news.justNow', { defaultValue: 'just now' });
-    if (mins < 60) return `${mins}m`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h`;
-    const days = Math.floor(hrs / 24);
-    return `${days}d`;
-  }, [t]);
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+  }, []);
 
   // Available sources as flat list for picker
   const availableSourcesList = useMemo(() => availableSources || {}, [availableSources]);
@@ -327,7 +327,7 @@ export default function NewsSidebar({
                 <BreakingTicker
                   articles={breakingNews}
                   onSelect={selectArticle}
-                  timeAgo={timeAgo}
+                  timeAgo={formatDate}
                 />
               </div>
             )}
@@ -380,7 +380,7 @@ export default function NewsSidebar({
                     article={article}
                     onSelect={selectArticle}
                     userLang={userLang}
-                    timeAgo={timeAgo}
+                    timeAgo={formatDate}
                   />
                 ))}
               </div>
@@ -426,7 +426,7 @@ export default function NewsSidebar({
               <div className="news-headline__meta" style={{ marginBottom: '12px' }}>
                 {selectedArticle.source}
                 {selectedArticle.publishedAt && (
-                  <> &middot; {timeAgo(selectedArticle.publishedAt)}</>
+                  <> &middot; {formatDate(selectedArticle.publishedAt)}</>
                 )}
               </div>
               {(selectedArticle.description || selectedArticle.aiSummary) && (
