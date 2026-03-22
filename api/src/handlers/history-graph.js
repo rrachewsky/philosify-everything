@@ -105,9 +105,6 @@ async function buildGraphData(env) {
       longitude: n.longitude,
       val: nodeVal(n),
       color: NODE_COLORS[n.type] || '#FFFFFF',
-      fx: null,
-      fy: null,
-      fz: yearToZ(n.year_numeric),
     })),
     links: edges.map(e => ({
       source: e.source_id,

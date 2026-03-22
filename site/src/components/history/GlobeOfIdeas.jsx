@@ -81,15 +81,16 @@ export function GlobeOfIdeas() {
   const cameraRef = useRef(null);
   const frameRef = useRef(null);
   const playRef = useRef(null);
-  const controlsRef = useRef(null);
+  const cleanupRef = useRef(null);
 
   const [currentYear, setCurrentYear] = useState(MIN_YEAR);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(DEFAULT_PLAYBACK_SPEED);
   const [selected, setSelected] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
+  const [initError, setInitError] = useState(null);
 
-  const { graphData, loading } = useHistoryGraph();
+  const { graphData, loading, error: fetchError } = useHistoryGraph();
 
   // Filter nodes/links visible at current year
   const getVisibleData = useCallback(
@@ -122,86 +123,120 @@ export function GlobeOfIdeas() {
   useEffect(() => {
     if (!containerRef.current || !graphData) return;
 
-    let cleanup = () => {};
+    let isMounted = true;
+    cleanupRef.current = null;
 
     import('three-globe')
       .then(({ default: ThreeGlobe }) => {
-        if (!containerRef.current) return;
+        // Check if component is still mounted
+        if (!isMounted || !containerRef.current) return;
 
-        const width = containerRef.current.clientWidth;
-        const height = containerRef.current.clientHeight;
+        try {
+          const width = containerRef.current.clientWidth;
+          const height = containerRef.current.clientHeight;
 
-        // Scene
-        const scene = new THREE.Scene();
-        sceneRef.current = scene;
+          // Scene
+          const scene = new THREE.Scene();
+          sceneRef.current = scene;
 
-        // Camera
-        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera.position.z = 250;
-        cameraRef.current = camera;
+          // Camera
+          const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+          camera.position.z = 250;
+          cameraRef.current = camera;
 
-        // Renderer
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(width, height);
-        renderer.setClearColor(0x222222, 1);
-        containerRef.current.appendChild(renderer.domElement);
-        rendererRef.current = renderer;
+          // Renderer
+          const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+          renderer.setSize(width, height);
+          renderer.setClearColor(0x222222, 1);
+          containerRef.current.appendChild(renderer.domElement);
+          rendererRef.current = renderer;
 
-        // Lighting
-        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(1, 1, 1);
-        scene.add(dirLight);
+          // Lighting
+          scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+          const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+          dirLight.position.set(1, 1, 1);
+          scene.add(dirLight);
 
-        // Globe
-        const globe = new ThreeGlobe()
-          .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
-          .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-          .atmosphereColor('#89CFF0')
-          .atmosphereAltitude(0.15);
+          // Globe
+          const globe = new ThreeGlobe()
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
+            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+            .atmosphereColor('#89CFF0')
+            .atmosphereAltitude(0.15);
 
-        scene.add(globe);
-        globeRef.current = globe;
+          scene.add(globe);
+          globeRef.current = globe;
 
-        // Slow auto-rotation
-        let rotAngle = 0;
+          // Slow auto-rotation
+          let rotAngle = 0;
 
-        // Animation loop
-        const animate = () => {
-          frameRef.current = requestAnimationFrame(animate);
-          rotAngle += 0.0008;
-          globe.rotation.y = rotAngle;
-          renderer.render(scene, camera);
-        };
-        animate();
+          // Animation loop
+          const animate = () => {
+            frameRef.current = requestAnimationFrame(animate);
+            rotAngle += 0.0008;
+            globe.rotation.y = rotAngle;
+            renderer.render(scene, camera);
+          };
+          animate();
 
-        // Resize handler
-        const handleResize = () => {
-          if (!containerRef.current) return;
-          const w = containerRef.current.clientWidth;
-          const h = containerRef.current.clientHeight;
-          camera.aspect = w / h;
-          camera.updateProjectionMatrix();
-          renderer.setSize(w, h);
-        };
-        window.addEventListener('resize', handleResize);
+          // Resize handler
+          const handleResize = () => {
+            if (!containerRef.current) return;
+            const w = containerRef.current.clientWidth;
+            const h = containerRef.current.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+          };
+          window.addEventListener('resize', handleResize);
 
-        cleanup = () => {
-          window.removeEventListener('resize', handleResize);
-          if (frameRef.current) cancelAnimationFrame(frameRef.current);
-          if (rendererRef.current) {
-            rendererRef.current.dispose();
-            if (containerRef.current && rendererRef.current.domElement) {
-              containerRef.current.removeChild(rendererRef.current.domElement);
+          // Store cleanup function
+          cleanupRef.current = () => {
+            window.removeEventListener('resize', handleResize);
+            if (frameRef.current) {
+              cancelAnimationFrame(frameRef.current);
+              frameRef.current = null;
             }
+            if (rendererRef.current) {
+              try {
+                rendererRef.current.dispose();
+              } catch (e) {
+                console.warn('[GlobeOfIdeas] Renderer dispose error:', e);
+              }
+              try {
+                if (containerRef.current && rendererRef.current.domElement?.parentNode === containerRef.current) {
+                  containerRef.current.removeChild(rendererRef.current.domElement);
+                }
+              } catch (e) {
+                console.warn('[GlobeOfIdeas] DOM cleanup error:', e);
+              }
+              rendererRef.current = null;
+            }
+            globeRef.current = null;
+            sceneRef.current = null;
+            cameraRef.current = null;
+          };
+        } catch (err) {
+          console.error('[GlobeOfIdeas] Three.js initialization error:', err);
+          if (isMounted) {
+            setInitError('Failed to initialize 3D globe');
           }
-        };
+        }
       })
       .catch((err) => {
         console.error('[GlobeOfIdeas] Failed to load three-globe:', err);
+        if (isMounted) {
+          setInitError('Failed to load 3D library');
+        }
       });
 
-    return () => cleanup();
+    return () => {
+      isMounted = false;
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
+      }
+    };
   }, [graphData]);
 
   // Update globe data when year changes

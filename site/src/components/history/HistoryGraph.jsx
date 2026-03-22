@@ -3,9 +3,8 @@
 // Interactive visualization of 2,600 years of philosophical thought
 // ============================================================
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHistoryGraph } from '@hooks/useHistoryGraph';
-import { GlobeOfIdeas } from './GlobeOfIdeas';
 
 const NODE_COLORS = {
   philosopher: '#D6158C',
@@ -14,14 +13,6 @@ const NODE_COLORS = {
   era: '#FAFAFB',
   content: '#F4C430',
   battle: '#FF4444',
-};
-
-const TRADITION_RING = {
-  western: null,
-  chinese: '#FFD700',
-  indian: '#FF8C00',
-  islamic: '#00CC66',
-  universal: null,
 };
 
 const BATTLE_COLORS = {
@@ -59,221 +50,158 @@ const BATTLE_LABELS = {
 export function HistoryGraph() {
   const containerRef = useRef(null);
   const graphRef = useRef(null);
-  const rotationRef = useRef(null);
-  const idleRef = useRef(null);
   const [selected, setSelected] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [showLegend, setShowLegend] = useState(false);
-  const [view, setView] = useState('graph'); // 'graph' | 'globe'
-  const { graphData, loading, error } = useHistoryGraph();
+  const [initError, setInitError] = useState(null);
+  const { graphData, loading, error: fetchError } = useHistoryGraph();
 
-  const startRotation = useCallback((Graph) => {
-    let angle = 0;
-    rotationRef.current = setInterval(() => {
-      const g = Graph || graphRef.current;
-      if (!g) return;
-      g.cameraPosition({
-        x: 500 * Math.sin(angle),
-        z: 500 * Math.cos(angle),
-      });
-      angle += Math.PI / 900;
-    }, 50);
-  }, []);
-
-  const stopRotation = useCallback(() => {
-    if (rotationRef.current) {
-      clearInterval(rotationRef.current);
-      rotationRef.current = null;
-    }
-  }, []);
-
-  const resetIdleTimer = useCallback(() => {
-    if (idleRef.current) {
-      clearTimeout(idleRef.current);
-    }
-    idleRef.current = setTimeout(() => {
-      if (graphRef.current) startRotation(graphRef.current);
-    }, 10000);
-  }, [startRotation]);
-
-  const handleNodeClick = useCallback(
-    (node) => {
-      setSelected(node);
-      setSelectedType('node');
-      stopRotation();
-      resetIdleTimer();
-    },
-    [stopRotation, resetIdleTimer]
-  );
-
-  const handleLinkClick = useCallback(
-    (link) => {
-      setSelected(link);
-      setSelectedType('edge');
- stopRotation();
-      resetIdleTimer();
-    },
-    [stopRotation, resetIdleTimer]
-  );
-
-  const handleBackgroundClick = useCallback(() => {
-    setSelected(null);
-    resetIdleTimer();
-  }, [resetIdleTimer]);
-
+  // Initialize 3D Force Graph - simple pattern like the example
   useEffect(() => {
     if (!graphData || !containerRef.current) return;
 
-    // Dynamically import 3d-force-graph (ES module)
+    let isMounted = true;
+    let Graph = null;
+
     import('3d-force-graph')
       .then(({ default: ForceGraph3D }) => {
-        if (graphRef.current) {
-          graphRef.current._destructor?.();
+        if (!isMounted || !containerRef.current) return;
+
+        try {
+          // Clean up previous instance
+          if (graphRef.current) {
+            graphRef.current._destructor?.();
+            graphRef.current = null;
+          }
+
+          // Initialize with better force configuration
+          Graph = ForceGraph3D()(containerRef.current)
+            .graphData(graphData)
+            .backgroundColor('#222222')
+            .nodeLabel((node) => `${node.label} (${node.years || node.era || ''})`)
+            .nodeColor((node) => NODE_COLORS[node.type] || '#FFFFFF')
+            .nodeVal((node) => {
+              if (node.type === 'era') return 12;
+              if (node.type === 'battle') return 10;
+              if (node.weight === 'maximum') return 8;
+              if (node.weight === 'high') return 6;
+              if (node.weight === 'minor') return 2;
+              return 4;
+            })
+            .nodeOpacity(0.9)
+            .linkColor((link) =>
+              link.battle_dimension
+                ? BATTLE_COLORS[link.battle_dimension]
+                : BATTLE_COLORS[link.relation] || 'rgba(255,255,255,0.3)'
+            )
+            .linkWidth((link) => (link.weight || 0.5) * 1.5)
+            .linkOpacity(0.6)
+            .linkDirectionalArrowLength(3)
+            .linkDirectionalArrowRelPos(1)
+            // Force configuration for better clustering
+            .d3AlphaDecay(0.02)
+            .d3VelocityDecay(0.3)
+            .d3Force('link', (d3) => d3.forceLink()
+              .distance(30)
+              .strength(0.7)
+            )
+            .d3Force('charge', (d3) => d3.forceManyBody()
+              .strength(-120)
+              .distanceMax(200)
+            )
+            .d3Force('center', (d3) => d3.forceCenter())
+            .d3Force('collision', (d3) => d3.forceCollide()
+              .radius((node) => {
+                if (node.type === 'era') return 15;
+                if (node.type === 'battle') return 12;
+                if (node.weight === 'maximum') return 10;
+                if (node.weight === 'high') return 8;
+                return 6;
+              })
+              .strength(0.8)
+            )
+            .warmupTicks(100)
+            .cooldownTicks(200)
+            .onNodeClick((node) => {
+              setSelected(node);
+              setSelectedType('node');
+            })
+            .onLinkClick((link) => {
+              setSelected(link);
+              setSelectedType('edge');
+            })
+            .onBackgroundClick(() => {
+              setSelected(null);
+            });
+
+          graphRef.current = Graph;
+        } catch (err) {
+          console.error('[HistoryGraph] Initialization error:', err);
+          if (isMounted) {
+            setInitError('Failed to initialize 3D graph');
+          }
         }
-
-        const Graph = ForceGraph3D()(containerRef.current)
-          .graphData(graphData)
-          .backgroundColor('#222222')
-          .nodeLabel((node) => `${node.label} (${node.years || node.era || ''})`)
-          .nodeColor((node) => NODE_COLORS[node.type] || '#FFFFFF')
-          .nodeVal((node) => {
-            if (node.type === 'era') return 12;
-            if (node.type === 'battle') return 10;
-            if (node.weight === 'maximum') return 8;
-            if (node.weight === 'high') return 6;
-            if (node.weight === 'minor') return 2;
-            return 4;
-          })
-          .nodeOpacity(0.9)
-          .linkColor((link) =>
-            link.battle_dimension
-              ? BATTLE_COLORS[link.battle_dimension]
-              : BATTLE_COLORS[link.relation] || 'rgba(255,255,255,0.3)'
-          )
-          .linkWidth((link) => (link.weight || 0.5) * 2)
-          .linkOpacity(0.7)
-          .linkDirectionalArrowLength(3)
-          .linkDirectionalArrowRelPos(1)
-          .onNodeClick(handleNodeClick)
-          .onLinkClick(handleLinkClick)
-          .onBackgroundClick(handleBackgroundClick);
-
-        graphRef.current = Graph;
-        startRotation(Graph);
       })
       .catch((err) => {
         console.error('[HistoryGraph] Failed to load 3d-force-graph:', err);
+        if (isMounted) {
+          setInitError('Failed to load 3D library');
+        }
       });
 
     return () => {
-      stopRotation();
-      if (idleRef.current) clearTimeout(idleRef.current);
-      graphRef.current?._destructor?.();
+      isMounted = false;
+      if (graphRef.current) {
+        try {
+          graphRef.current._destructor?.();
+        } catch (e) {
+          console.warn('[HistoryGraph] Cleanup error:', e);
+        }
+        graphRef.current = null;
+      }
     };
-  }, [graphData, startRotation, stopRotation, handleNodeClick, handleLinkClick, handleBackgroundClick]);
+  }, [graphData]);
 
-  // If globe view is selected, render GlobeOfIdeas instead
-  if (view === 'globe') {
+  // Show error state
+  if (initError || fetchError) {
     return (
-      <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-        {/* View toggle */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 12,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: 0,
-            zIndex: 50,
-            border: '1px solid #D6158C',
-            borderRadius: 6,
-            overflow: 'hidden',
-          }}
-        >
+      <div style={{ 
+        position: 'relative', 
+        width: '100%', 
+        height: '100%', 
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#222222',
+        color: '#F2F2F5'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>&#9888;</div>
+          <div style={{ fontSize: 14, color: '#FF4444' }}>
+            {initError || 'Failed to load graph data'}
+          </div>
           <button
-            onClick={() => setView('graph')}
+            onClick={() => window.location.reload()}
             style={{
-              padding: '6px 16px',
-              fontSize: 11,
-              letterSpacing: 1,
-              background: 'rgba(34,34,34,0.9)',
-              color: '#FAFAFB',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            ◎ IDEAS GRAPH
-          </button>
-          <button
-            onClick={() => setView('globe')}
-            style={{
-              padding: '6px 16px',
-              fontSize: 11,
-              letterSpacing: 1,
+              marginTop: 16,
+              padding: '8px 16px',
               background: '#D6158C',
-              color: '#FAFAFB',
               border: 'none',
+              borderRadius: 6,
+              color: '#fff',
               cursor: 'pointer',
             }}
           >
-            🌍 GLOBE
+            Retry
           </button>
         </div>
-        <GlobeOfIdeas />
       </div>
     );
   }
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-      {/* View toggle */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 12,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          gap: 0,
-          zIndex: 50,
-          border: '1px solid #D6158C',
-          borderRadius: 6,
-          overflow: 'hidden',
-        }}
-      >
-        <button
-          onClick={() => setView('graph')}
-          style={{
-            padding: '6px 16px',
-            fontSize: 11,
-            letterSpacing: 1,
-            background: '#D6158C',
-            color: '#FAFAFB',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          ◎ IDEAS GRAPH
-        </button>
-        <button
-          onClick={() => setView('globe')}
-          style={{
-            padding: '6px 16px',
-            fontSize: 11,
-            letterSpacing: 1,
-            background: 'rgba(34,34,34,0.9)',
-            color: '#FAFAFB',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          🌍 GLOBE
-        </button>
-      </div>
-
       {loading && <LoadingState />}
-      {error && <ErrorState />}
       <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 
       {/* Legend toggle */}
@@ -448,28 +376,6 @@ function Legend() {
           <span style={{ fontSize: 11 }}>{label}</span>
         </div>
       ))}
-
-      <div style={{ fontSize: 11, color: '#89CFF0', marginTop: 12, marginBottom: 6 }}>TRADITIONS</div>
-      {[
-        ['Chinese', '#FFD700'],
-        ['Indian', '#FF8C00'],
-        ['Islamic', '#00CC66'],
-        ['Western', '#888'],
-      ].map(([t, c]) => (
-        <div key={t} style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-          <div
-            style={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              border: `2px solid ${c}`,
-              marginRight: 8,
-              flexShrink: 0,
-            }}
-          />
-          <span style={{ fontSize: 12 }}>{t}</span>
-        </div>
-      ))}
     </div>
   );
 }
@@ -491,26 +397,6 @@ function LoadingState() {
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>&#9678;</div>
         <div style={{ fontSize: 14, color: '#89CFF0', letterSpacing: 2 }}>MAPPING 2,600 YEARS OF IDEAS</div>
-      </div>
-    </div>
-  );
-}
-
-function ErrorState() {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#F2F2F5',
-        zIndex: 10,
-      }}
-    >
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 14, color: '#FF4444' }}>Graph temporarily unavailable</div>
       </div>
     </div>
   );
