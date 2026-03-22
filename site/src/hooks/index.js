@@ -26,3 +26,4 @@ export { useNewsPreferences } from './useNewsPreferences.js';
 export { useNews } from './useNews.js';
 export { useHistoryGraph } from './useHistoryGraph.js';
 export { useHistorySidebar } from './useHistorySidebar.js';
+export { useGlobe } from './useGlobe.js';

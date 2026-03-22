@@ -5,6 +5,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useHistoryGraph } from '@hooks/useHistoryGraph';
+import { GlobeOfIdeas } from './GlobeOfIdeas';
 
 const NODE_COLORS = {
   philosopher: '#D6158C',
@@ -63,6 +64,7 @@ export function HistoryGraph() {
   const [selected, setSelected] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [showLegend, setShowLegend] = useState(false);
+  const [view, setView] = useState('graph'); // 'graph' | 'globe'
   const { graphData, loading, error } = useHistoryGraph();
 
   const startRotation = useCallback((Graph) => {
@@ -170,8 +172,106 @@ export function HistoryGraph() {
     };
   }, [graphData, startRotation, stopRotation, handleNodeClick, handleLinkClick, handleBackgroundClick]);
 
+  // If globe view is selected, render GlobeOfIdeas instead
+  if (view === 'globe') {
+    return (
+      <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+        {/* View toggle */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 12,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: 0,
+            zIndex: 50,
+            border: '1px solid #D6158C',
+            borderRadius: 6,
+            overflow: 'hidden',
+          }}
+        >
+          <button
+            onClick={() => setView('graph')}
+            style={{
+              padding: '6px 16px',
+              fontSize: 11,
+              letterSpacing: 1,
+              background: 'rgba(34,34,34,0.9)',
+              color: '#FAFAFB',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            ◎ IDEAS GRAPH
+          </button>
+          <button
+            onClick={() => setView('globe')}
+            style={{
+              padding: '6px 16px',
+              fontSize: 11,
+              letterSpacing: 1,
+              background: '#D6158C',
+              color: '#FAFAFB',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            🌍 GLOBE
+          </button>
+        </div>
+        <GlobeOfIdeas />
+      </div>
+    );
+  }
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+      {/* View toggle */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 12,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: 0,
+          zIndex: 50,
+          border: '1px solid #D6158C',
+          borderRadius: 6,
+          overflow: 'hidden',
+        }}
+      >
+        <button
+          onClick={() => setView('graph')}
+          style={{
+            padding: '6px 16px',
+            fontSize: 11,
+            letterSpacing: 1,
+            background: '#D6158C',
+            color: '#FAFAFB',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          ◎ IDEAS GRAPH
+        </button>
+        <button
+          onClick={() => setView('globe')}
+          style={{
+            padding: '6px 16px',
+            fontSize: 11,
+            letterSpacing: 1,
+            background: 'rgba(34,34,34,0.9)',
+            color: '#FAFAFB',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          🌍 GLOBE
+        </button>
+      </div>
+
       {loading && <LoadingState />}
       {error && <ErrorState />}
       <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
