@@ -528,6 +528,10 @@
         "description": "Verbind met denkers en deel filosofische inzichten",
         "searchPlaceholder": "Zoek in community...",
         "analyzeButton": "Community Verkennen"
+      },
+      "history": {
+        "title": "Geschiedenis",
+        "description": "Ontdek 2.600 jaar filosofisch denken"
       }
     },
     "comingSoonDesc": {
@@ -539,7 +543,8 @@
     }
   },
   "nav": {
-    "backToHome": "Terug naar Home"
+    "backToHome": "Terug naar Home",
+    "history": "Geschiedenis van de Filosofie"
   },
   "community": {
     "title": "Community",

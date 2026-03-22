@@ -528,6 +528,10 @@
         "description": "Connect with fellow philosophers",
         "searchPlaceholder": "Find community members...",
         "analyzeButton": "Join Community"
+      },
+      "history": {
+        "title": "History",
+        "description": "Explore 2,600 years of philosophical thought"
       }
     },
     "comingSoonDesc": {
@@ -539,7 +543,8 @@
     }
   },
   "nav": {
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "history": "History of Philosophy"
   },
   "community": {
     "title": "Community",

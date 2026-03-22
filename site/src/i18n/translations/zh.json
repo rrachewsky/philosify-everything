@@ -528,6 +528,10 @@
         "description": "与思想者交流，分享哲学见解",
         "searchPlaceholder": "在社区中搜索...",
         "analyzeButton": "探索社区"
+      },
+      "history": {
+        "title": "历史",
+        "description": "探索2600年的哲学思想"
       }
     },
     "comingSoonDesc": {
@@ -539,7 +543,8 @@
     }
   },
   "nav": {
-    "backToHome": "返回首页"
+    "backToHome": "返回首页",
+    "history": "哲学史"
   },
   "community": {
     "title": "社区",

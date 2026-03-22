@@ -528,6 +528,10 @@
         "description": "Połącz się z myślicielami i dziel się filozoficznymi spostrzeżeniami",
         "searchPlaceholder": "Szukaj w społeczności...",
         "analyzeButton": "Odkryj Społeczność"
+      },
+      "history": {
+        "title": "Historia",
+        "description": "Odkryj 2600 lat myśli filozoficznej"
       }
     },
     "comingSoonDesc": {
@@ -539,7 +543,8 @@
     }
   },
   "nav": {
-    "backToHome": "Powrót do Strony Głównej"
+    "backToHome": "Powrót do Strony Głównej",
+    "history": "Historia Filozofii"
   },
   "community": {
     "title": "Społeczność",

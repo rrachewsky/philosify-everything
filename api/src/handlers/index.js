@@ -11,3 +11,6 @@ export { handleBookAnalyze } from './book-analyze.js';
 export { handleBookAnalysisHistory } from './book-analysis-history.js';
 export { handleBookAnalysisDetail } from './book-analysis-detail.js';
 
+// History Graph
+export { handleHistoryGraph, handleHistoryExtract, refreshGraphCache } from './history-graph.js';
+

@@ -33,6 +33,7 @@ import {
 } from "./src/handlers/news-preferences.js";
 import { handlePanelHistory } from "./src/handlers/panel-history.js";
 import { handleUserHistory } from "./src/handlers/user-history.js";
+import { handleHistoryGraph, handleHistoryExtract, refreshGraphCache } from "./src/handlers/history-graph.js";
 import { refreshBreakingNews } from "./src/news/index.js";
 import { handleTTS } from "./src/handlers/tts.js";
 import { handleGeminiTTS, handleClearTTSCache } from "./src/tts/gemini.js";
@@ -3471,6 +3472,17 @@ export default {
         return handleUserHistory(request, env, origin);
       }
 
+      // ============================================================
+      // HISTORY GRAPH — Philosophy-History 3D Force Graph
+      // ============================================================
+      if (url.pathname === "/api/history/graph" && request.method === "GET") {
+        return handleHistoryGraph(request, env, origin, ctx);
+      }
+
+      if (url.pathname === "/api/history/graph/extract" && request.method === "POST") {
+        return handleHistoryExtract(request, env, origin);
+      }
+
       // Temporary diagnostic: check profiles table and auth trigger
       if (url.pathname === "/api/admin/diagnose-auth" && request.method === "GET") {
         const adminSecret = request.headers.get("X-Admin-Secret");
@@ -3641,6 +3653,15 @@ export default {
       ctx.waitUntil(
         fetchTopFilms(env).catch((err) =>
           console.error("[Cron] Top Cinema refresh failed:", err.message),
+        ),
+      );
+    }
+
+    // History Graph cache refresh — every 6 hours (0, 6, 12, 18 UTC)
+    if (hour % 6 === 0 && minute < 5) {
+      ctx.waitUntil(
+        refreshGraphCache(env).catch((err) =>
+          console.error("[Cron] History Graph refresh failed:", err.message),
         ),
       );
     }

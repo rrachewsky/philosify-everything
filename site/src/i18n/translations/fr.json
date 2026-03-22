@@ -528,6 +528,10 @@
         "description": "Connectez-vous avec des penseurs et partagez des idées philosophiques",
         "searchPlaceholder": "Rechercher dans la communauté...",
         "analyzeButton": "Explorer la communauté"
+      },
+      "history": {
+        "title": "Histoire",
+        "description": "Explorez 2 600 ans de pensée philosophique"
       }
     },
     "comingSoonDesc": {
@@ -539,7 +543,8 @@
     }
   },
   "nav": {
-    "backToHome": "Retour à l'Accueil"
+    "backToHome": "Retour à l'Accueil",
+    "history": "Histoire de la Philosophie"
   },
   "community": {
     "title": "Communauté",

@@ -24,8 +24,9 @@ import { MusicSidebar } from './components/music/MusicSidebar';
 import { LiteratureSidebar } from './components/literature/LiteratureSidebar';
 import { CinemaSidebar } from './components/cinema/CinemaSidebar';
 import NewsSidebar from './components/news/NewsSidebar';
+import { HistorySidebar } from './components/history';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
-import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas } from './hooks';
+import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas, useHistorySidebar } from './hooks';
 import { useCinemaSidebar } from './hooks/useCinemaSidebar.js';
 import { useNews } from './hooks/useNews.js';
 import { useCommunity } from './hooks/useCommunity.js';
@@ -282,6 +283,7 @@ export function Router() {
   const literature = useLiteratureSidebar();
   const news = useNews();
   const cinema = useCinemaSidebar();
+  const history = useHistorySidebar();
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
   // NOTE: Modal Scoping Rule
@@ -308,11 +310,13 @@ export function Router() {
         news.open();
       } else if (category === 'films') {
         cinema.open();
+      } else if (category === 'history') {
+        history.open();
       } else {
         setComingSoonCategory(category);
       }
     },
-    [ideas, literature, news, cinema]
+    [ideas, literature, news, cinema, history]
   );
 
   // Close ComingSoon sidebar
@@ -342,7 +346,7 @@ export function Router() {
                    else if (type === 'films') result ? cinema.openWithResult(result) : cinema.open();
                   else result ? music.openWithResult(result) : music.open();
                 }}
-                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || !!comingSoonCategory}
+                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || !!comingSoonCategory}
               />
             }
           />
@@ -500,6 +504,9 @@ export function Router() {
           onClose={closeComingSoon}
           category={comingSoonCategory}
         />
+
+        {/* History Sidebar (Philosophy Graph - Free) */}
+        <HistorySidebar isOpen={history.isOpen} onClose={history.close} />
       </Suspense>
     </BrowserRouter>
   );

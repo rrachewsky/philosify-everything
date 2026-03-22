@@ -169,7 +169,7 @@ export function HomePage({
   }, []);
 
   // Stagger category labels 1 by 1, starting 5s after video autoplay
-  const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news'];
+  const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news', 'history'];
   const LABEL_START_DELAY = 5000; // 5s after video starts
   const LABEL_STAGGER = 400; // 400ms between each label
   const isAuthenticated = !!user;
@@ -321,7 +321,7 @@ export function HomePage({
           {/* Category labels below video in 3 columns (styled differently per breakpoint) */}
           {user && (
             <div className="mobile-category-labels">
-              {['music', 'ideas', 'films', 'books', 'community', 'news'].map((id) => (
+              {['music', 'ideas', 'films', 'books', 'community', 'news', 'history'].map((id) => (
                 <button
                   key={`mobile-${id}`}
                   className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}

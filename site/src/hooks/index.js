@@ -24,3 +24,5 @@ export { useBookSearch } from './useBookSearch.js';
 export { useIdeas } from './useIdeas.js';
 export { useNewsPreferences } from './useNewsPreferences.js';
 export { useNews } from './useNews.js';
+export { useHistoryGraph } from './useHistoryGraph.js';
+export { useHistorySidebar } from './useHistorySidebar.js';

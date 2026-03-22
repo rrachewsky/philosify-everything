@@ -528,6 +528,10 @@
         "description": "思想家とつながり、哲学的な洞察を共有する",
         "searchPlaceholder": "コミュニティで検索...",
         "analyzeButton": "コミュニティを探索"
+      },
+      "history": {
+        "title": "歴史",
+        "description": "2600年の哲学思想を探る"
       }
     },
     "comingSoonDesc": {
@@ -539,7 +543,8 @@
     }
   },
   "nav": {
-    "backToHome": "ホームに戻る"
+    "backToHome": "ホームに戻る",
+    "history": "哲学の歴史"
   },
   "community": {
     "title": "コミュニティ",
