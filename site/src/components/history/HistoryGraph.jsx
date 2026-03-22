@@ -98,30 +98,26 @@ export function HistoryGraph() {
             .linkOpacity(0.6)
             .linkDirectionalArrowLength(3)
             .linkDirectionalArrowRelPos(1)
-            // Force configuration for better clustering
+            // Force simulation parameters
             .d3AlphaDecay(0.02)
             .d3VelocityDecay(0.3)
-            .d3Force('link', (d3) => d3.forceLink()
-              .distance(30)
-              .strength(0.7)
-            )
-            .d3Force('charge', (d3) => d3.forceManyBody()
-              .strength(-120)
-              .distanceMax(200)
-            )
-            .d3Force('center', (d3) => d3.forceCenter())
-            .d3Force('collision', (d3) => d3.forceCollide()
-              .radius((node) => {
-                if (node.type === 'era') return 15;
-                if (node.type === 'battle') return 12;
-                if (node.weight === 'maximum') return 10;
-                if (node.weight === 'high') return 8;
-                return 6;
-              })
-              .strength(0.8)
-            )
             .warmupTicks(100)
-            .cooldownTicks(200)
+            .cooldownTicks(200);
+
+          // Configure forces after initialization using the correct API
+          // d3Force(name) returns the force, which can then be configured
+          const linkForce = Graph.d3Force('link');
+          if (linkForce) {
+            linkForce.distance(50).strength(0.5);
+          }
+
+          const chargeForce = Graph.d3Force('charge');
+          if (chargeForce) {
+            chargeForce.strength(-150).distanceMax(300);
+          }
+
+          // Set up click handlers
+          Graph
             .onNodeClick((node) => {
               setSelected(node);
               setSelectedType('node');

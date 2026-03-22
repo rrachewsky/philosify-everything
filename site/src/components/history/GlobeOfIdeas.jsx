@@ -92,6 +92,9 @@ export function GlobeOfIdeas() {
 
   const { graphData, loading, error: fetchError } = useHistoryGraph();
 
+  // Show error state
+  const displayError = initError || fetchError;
+
   // Filter nodes/links visible at current year
   const getVisibleData = useCallback(
     (year, data) => {
@@ -378,6 +381,45 @@ export function GlobeOfIdeas() {
   const sliderValue = ((currentYear - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
 
   const visibleCount = graphData ? getVisibleData(currentYear, graphData).nodes.length : 0;
+
+  // Show error state
+  if (displayError) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#222222',
+          color: '#F2F2F5',
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>&#9888;</div>
+          <div style={{ fontSize: 14, color: '#FF4444' }}>
+            {initError || 'Failed to load globe data'}
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              marginTop: 16,
+              padding: '8px 16px',
+              background: '#D6158C',
+              border: 'none',
+              borderRadius: 6,
+              color: '#fff',
+              cursor: 'pointer',
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', background: '#222222' }}>
