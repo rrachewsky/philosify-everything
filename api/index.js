@@ -42,7 +42,7 @@ import {
   handleScheduledTop10,
 } from "./src/handlers/top10.js";
 import { handleBooksTop, fetchTopBooks } from "./src/handlers/books-top.js";
-import { handleCinemaTop, fetchTopFilms } from "./src/handlers/cinema-top.js";
+import { handleCinemaTop, handleCinemaDiagnose, fetchTopFilms } from "./src/handlers/cinema-top.js";
 import { generateDailyQuestion } from "./src/handlers/daily-question.js";
 import {
   handleColloquiumCron,
@@ -426,6 +426,11 @@ export default {
       // Top Cinema Feed - Public (for cinema ticker)
       if (url.pathname === "/api/cinema/top" && request.method === "GET") {
         return handleCinemaTop(request, env, origin, ctx);
+      }
+
+      // Cinema diagnostic (admin only)
+      if (url.pathname === "/api/cinema/diagnose" && request.method === "GET") {
+        return handleCinemaDiagnose(request, env, origin);
       }
 
       // [REMOVED] Stripe diagnostic endpoint - removed per security audit (LOW-4)

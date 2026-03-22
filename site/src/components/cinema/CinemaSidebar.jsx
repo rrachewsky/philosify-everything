@@ -32,13 +32,18 @@ function TopCinemaTicker({ onFilmSelect }) {
   useEffect(() => {
     const fetchFilms = async () => {
       try {
+        console.log('[CinemaTicker] Fetching from:', `${config.apiUrl}/api/cinema/top`);
         const response = await fetch(`${config.apiUrl}/api/cinema/top`);
+        console.log('[CinemaTicker] Response status:', response.status);
         if (response.ok) {
           const data = await response.json();
+          console.log('[CinemaTicker] Got films:', data.films?.length || 0);
           setFilms(data.films || []);
+        } else {
+          console.error('[CinemaTicker] Response not OK:', response.status);
         }
       } catch (error) {
-        console.error('Failed to fetch top films:', error);
+        console.error('[CinemaTicker] Failed to fetch top films:', error);
       } finally {
         setLoading(false);
       }

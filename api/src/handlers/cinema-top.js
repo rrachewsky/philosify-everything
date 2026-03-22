@@ -69,12 +69,16 @@ async function fetchTMDb(endpoint, apiKey) {
   const url = `${TMDB_BASE}${endpoint}${separator}api_key=${apiKey}`;
 
   try {
+    console.log(`[Cinema] Fetching: ${endpoint}`);
     const response = await fetch(url);
+    console.log(`[Cinema] Response for ${endpoint}: ${response.status}`);
     if (!response.ok) {
-      console.error(`[Cinema] TMDb error for ${endpoint}: ${response.status}`);
+      const errorText = await response.text().catch(() => "");
+      console.error(`[Cinema] TMDb error for ${endpoint}: ${response.status} - ${errorText.substring(0, 200)}`);
       return [];
     }
     const data = await response.json();
+    console.log(`[Cinema] Got ${data.results?.length || 0} results for ${endpoint}`);
     return data.results || [];
   } catch (error) {
     console.error(`[Cinema] TMDb fetch failed for ${endpoint}: ${error.message}`);
@@ -189,77 +193,177 @@ function isPhilosophicallyRelevant(film) {
 // ============================================================
 
 export async function fetchTopFilms(env) {
-  console.log("[Cinema] Starting top films fetch...");
+  const debug = { step: "start" };
+  
+  try {
+    debug.step = "getSecret";
+    const apiKey = await getSecret(env.TMDB_API_KEY);
+    debug.keyLength = apiKey?.length || 0;
+    
+    if (!apiKey) {
+      return { films: [], count: 0, fetchedAt: new Date().toISOString(), sources: [], _debug: "NO_API_KEY" };
+    }
 
-  const apiKey = await getSecret(env.TMDB_API_KEY);
-  if (!apiKey) {
-    console.error("[Cinema] TMDB_API_KEY not configured — skipping");
-    return null;
+    debug.step = "fetchTMDb";
+    // Fetch all three sources in parallel
+    const results = await Promise.allSettled([
+      fetchTMDb("/trending/movie/week", apiKey),
+      fetchTMDb("/trending/tv/week", apiKey),
+      fetchTMDb("/movie/top_rated?page=1", apiKey),
+    ]);
+
+    const trendingMovies = results[0].status === "fulfilled" ? results[0].value : [];
+    const trendingTV = results[1].status === "fulfilled" ? results[1].value : [];
+    const topRated = results[2].status === "fulfilled" ? results[2].value : [];
+    
+    debug.counts = {
+      movies: trendingMovies.length,
+      tv: trendingTV.length,
+      topRated: topRated.length,
+    };
+    
+    debug.errors = results
+      .map((r, i) => r.status === "rejected" ? `${["movies","tv","topRated"][i]}: ${r.reason}` : null)
+      .filter(Boolean);
+
+    debug.step = "normalize";
+    // Normalize
+    const allFilms = [
+      ...trendingMovies.map((m) => normalizeMovie(m, "trending_movie")),
+      ...trendingTV.map((m) => normalizeMovie(m, "trending_tv")),
+      ...topRated.map((m) => normalizeMovie(m, "top_rated")),
+    ];
+
+    if (allFilms.length === 0) {
+      return { 
+        films: [], 
+        count: 0, 
+        fetchedAt: new Date().toISOString(), 
+        sources: [],
+        _debug: debug,
+      };
+    }
+
+    debug.step = "deduplicate";
+    // Deduplicate
+    const unique = deduplicateFilms(allFilms);
+
+    // Filter philosophical relevance
+    const relevant = unique.filter(isPhilosophicallyRelevant);
+
+    // Score and sort
+    const scored = relevant
+      .map((film) => ({ ...film, _score: scoreFilm(film) }))
+      .sort((a, b) => b._score - a._score)
+      .slice(0, 50);
+
+    // Remove internal score
+    const ranked = scored.map((film) => {
+      const { _score, ...rest } = film;
+      return rest;
+    });
+
+    debug.step = "enrichWithStars";
+    // Fetch lead actors for the final top 50
+    const withStars = await enrichWithStars(ranked, apiKey);
+
+    const sources = [...new Set(withStars.map((f) => f.source))];
+    const payload = {
+      films: withStars,
+      count: withStars.length,
+      fetchedAt: new Date().toISOString(),
+      sources,
+    };
+
+    // Write to KV
+    if (env.PHILOSIFY_KV) {
+      await env.PHILOSIFY_KV.put(KV_KEY, JSON.stringify(payload), {
+        expirationTtl: KV_TTL_SECONDS,
+      });
+    }
+
+    return payload;
+  } catch (error) {
+    return { 
+      films: [], 
+      count: 0, 
+      fetchedAt: new Date().toISOString(), 
+      sources: [],
+      _debug: { ...debug, error: error.message },
+    };
+  }
+}
+
+// ============================================================
+// HANDLER — GET /api/cinema/diagnose (admin only)
+// ============================================================
+
+export async function handleCinemaDiagnose(request, env, origin) {
+  const corsHeaders = getCorsHeaders(origin, env);
+  
+  // Require admin secret
+  const adminSecret = request.headers.get("X-Admin-Secret");
+  const expectedSecret = await getSecret(env.ADMIN_SECRET);
+  if (!adminSecret || adminSecret !== expectedSecret) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
   }
 
-  // Fetch all three sources in parallel
-  const [trendingMovies, trendingTV, topRated] = await Promise.all([
-    fetchTMDb("/trending/movie/week", apiKey),
-    fetchTMDb("/trending/tv/week", apiKey),
-    fetchTMDb("/movie/top_rated?page=1", apiKey),
-  ]);
-
-  console.log(
-    `[Cinema] Raw counts — trending movies: ${trendingMovies.length}, trending TV: ${trendingTV.length}, top rated: ${topRated.length}`,
-  );
-
-  // Normalize
-  const allFilms = [
-    ...trendingMovies.map((m) => normalizeMovie(m, "trending_movie")),
-    ...trendingTV.map((m) => normalizeMovie(m, "trending_tv")),
-    ...topRated.map((m) => normalizeMovie(m, "top_rated")),
-  ];
-
-  if (allFilms.length === 0) {
-    console.warn("[Cinema] All sources returned empty — skipping KV write");
-    return null;
-  }
-
-  // Deduplicate
-  const unique = deduplicateFilms(allFilms);
-  console.log(`[Cinema] After dedup: ${unique.length}`);
-
-  // Filter philosophical relevance
-  const relevant = unique.filter(isPhilosophicallyRelevant);
-  console.log(`[Cinema] After relevance filter: ${relevant.length}`);
-
-  // Score and sort
-  const scored = relevant
-    .map((film) => ({ ...film, _score: scoreFilm(film) }))
-    .sort((a, b) => b._score - a._score)
-    .slice(0, 50);
-
-  // Remove internal score
-  const ranked = scored.map((film) => {
-    const { _score, ...rest } = film;
-    return rest;
-  });
-
-  // Fetch lead actors for the final top 50
-  const withStars = await enrichWithStars(ranked, apiKey);
-
-  const sources = [...new Set(withStars.map((f) => f.source))];
-  const payload = {
-    films: withStars,
-    count: withStars.length,
-    fetchedAt: new Date().toISOString(),
-    sources,
+  const results = {
+    timestamp: new Date().toISOString(),
+    tmdbKeyExists: false,
+    tmdbKeyLength: 0,
+    trendingMovies: { status: null, count: 0, error: null },
+    trendingTV: { status: null, count: 0, error: null },
+    topRated: { status: null, count: 0, error: null },
   };
 
-  // Write to KV
-  if (env.PHILOSIFY_KV) {
-    await env.PHILOSIFY_KV.put(KV_KEY, JSON.stringify(payload), {
-      expirationTtl: KV_TTL_SECONDS,
-    });
-    console.log(`[Cinema] Cached ${withStars.length} films in KV (TTL: ${KV_TTL_SECONDS}s)`);
+  try {
+    const apiKey = await getSecret(env.TMDB_API_KEY);
+    results.tmdbKeyExists = !!apiKey;
+    results.tmdbKeyLength = apiKey?.length || 0;
+
+    if (!apiKey) {
+      return new Response(JSON.stringify(results), {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    // Test each endpoint
+    const endpoints = [
+      { name: "trendingMovies", path: "/trending/movie/week" },
+      { name: "trendingTV", path: "/trending/tv/week" },
+      { name: "topRated", path: "/movie/top_rated?page=1" },
+    ];
+
+    for (const ep of endpoints) {
+      try {
+        const separator = ep.path.includes("?") ? "&" : "?";
+        const url = `${TMDB_BASE}${ep.path}${separator}api_key=${apiKey}`;
+        const res = await fetch(url);
+        results[ep.name].status = res.status;
+        if (res.ok) {
+          const data = await res.json();
+          results[ep.name].count = data.results?.length || 0;
+        } else {
+          const errText = await res.text();
+          results[ep.name].error = errText.substring(0, 200);
+        }
+      } catch (err) {
+        results[ep.name].error = err.message;
+      }
+    }
+  } catch (err) {
+    results.error = err.message;
   }
 
-  return payload;
+  return new Response(JSON.stringify(results, null, 2), {
+    status: 200,
+    headers: { "Content-Type": "application/json", ...corsHeaders },
+  });
 }
 
 // ============================================================
@@ -274,24 +378,6 @@ export async function handleCinemaTop(request, env, origin, ctx) {
     if (env.PHILOSIFY_KV) {
       const cached = await env.PHILOSIFY_KV.get(KV_KEY);
       if (cached) {
-        console.log("[Cinema] Serving from KV cache");
-
-        // Background refresh if data is older than 2.5 hours (stale-while-revalidate)
-        try {
-          const parsed = JSON.parse(cached);
-          const age = Date.now() - new Date(parsed.fetchedAt).getTime();
-          if (age > 2.5 * 60 * 60 * 1000 && ctx && ctx.waitUntil) {
-            console.log("[Cinema] Cache stale — background refresh");
-            ctx.waitUntil(
-              fetchTopFilms(env).catch((err) =>
-                console.error("[Cinema] Background refresh failed:", err.message),
-              ),
-            );
-          }
-        } catch (e) {
-          // Parse error — just serve the cached string
-        }
-
         return new Response(cached, {
           status: 200,
           headers: {
@@ -304,27 +390,7 @@ export async function handleCinemaTop(request, env, origin, ctx) {
     }
 
     // No cache — fetch fresh
-    console.log("[Cinema] No cache — fetching fresh data");
     const payload = await fetchTopFilms(env);
-
-    if (!payload) {
-      return new Response(
-        JSON.stringify({
-          films: [],
-          count: 0,
-          fetchedAt: new Date().toISOString(),
-          sources: [],
-        }),
-        {
-          status: 200,
-          headers: {
-            "Content-Type": "application/json",
-            "Cache-Control": "public, max-age=300",
-            ...corsHeaders,
-          },
-        },
-      );
-    }
 
     return new Response(JSON.stringify(payload), {
       status: 200,
@@ -335,14 +401,13 @@ export async function handleCinemaTop(request, env, origin, ctx) {
       },
     });
   } catch (error) {
-    console.error("[Cinema] Handler error:", error.message);
     return new Response(
       JSON.stringify({
         films: [],
         count: 0,
         fetchedAt: new Date().toISOString(),
         sources: [],
-        error: "Failed to fetch top films",
+        _error: error.message,
       }),
       {
         status: 200,
