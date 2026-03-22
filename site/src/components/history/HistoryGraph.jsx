@@ -60,6 +60,34 @@ export function HistoryGraph() {
   useEffect(() => {
     if (!graphData || !containerRef.current) return;
 
+    // Debug: Log the data we received
+    console.log('[HistoryGraph] graphData received:', {
+      nodeCount: graphData.nodes?.length,
+      linkCount: graphData.links?.length,
+      sampleNodes: graphData.nodes?.slice(0, 3),
+      sampleLinks: graphData.links?.slice(0, 3),
+    });
+
+    // Validate links - ensure source/target reference existing node IDs
+    const nodeIds = new Set(graphData.nodes?.map((n) => n.id) || []);
+    const validLinks = (graphData.links || []).filter((link) => {
+      const srcId = typeof link.source === 'object' ? link.source.id : link.source;
+      const tgtId = typeof link.target === 'object' ? link.target.id : link.target;
+      const valid = nodeIds.has(srcId) && nodeIds.has(tgtId);
+      if (!valid) {
+        console.warn('[HistoryGraph] Invalid link (missing node):', { srcId, tgtId, link });
+      }
+      return valid;
+    });
+
+    console.log('[HistoryGraph] Valid links:', validLinks.length, 'of', graphData.links?.length);
+
+    // Create clean graph data with validated links
+    const cleanGraphData = {
+      nodes: graphData.nodes || [],
+      links: validLinks,
+    };
+
     let isMounted = true;
     let Graph = null;
 
@@ -74,9 +102,11 @@ export function HistoryGraph() {
             graphRef.current = null;
           }
 
+          console.log('[HistoryGraph] Initializing ForceGraph3D with', cleanGraphData.nodes.length, 'nodes');
+
           // Initialize with better force configuration
           Graph = ForceGraph3D()(containerRef.current)
-            .graphData(graphData)
+            .graphData(cleanGraphData)
             .backgroundColor('#222222')
             .nodeLabel((node) => `${node.label} (${node.years || node.era || ''})`)
             .nodeColor((node) => NODE_COLORS[node.type] || '#FFFFFF')
@@ -199,6 +229,26 @@ export function HistoryGraph() {
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
       {loading && <LoadingState />}
       <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+
+      {/* Debug: Show node/link count */}
+      {graphData && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            background: 'rgba(0,0,0,0.8)',
+            color: '#89CFF0',
+            padding: '6px 10px',
+            borderRadius: 4,
+            fontSize: 11,
+            fontFamily: 'monospace',
+            zIndex: 50,
+          }}
+        >
+          Nodes: {graphData.nodes?.length || 0} | Links: {graphData.links?.length || 0}
+        </div>
+      )}
 
       {/* Legend toggle */}
       <button

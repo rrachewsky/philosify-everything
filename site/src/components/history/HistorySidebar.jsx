@@ -1,12 +1,10 @@
 // ============================================================
-// HISTORY SIDEBAR - Container for the 3D Philosophy Visualizations
+// HISTORY SIDEBAR - Container for the 3D Philosophy Graph
 // Free module - no credits required
-// Supports two views: Ideas Graph (force-directed) and Globe of Ideas (geographic)
 // ============================================================
 
-import React, { useState } from 'react';
+import React from 'react';
 import { HistoryGraph } from './HistoryGraph';
-import { GlobeOfIdeas } from './GlobeOfIdeas';
 
 // Error boundary to catch 3D rendering crashes
 class HistoryErrorBoundary extends React.Component {
@@ -129,39 +127,19 @@ const contentStyle = {
   overflow: 'hidden',
 };
 
-const VIEW_MODES = {
-  GRAPH: 'graph',
-  GLOBE: 'globe',
-};
-
-const viewToggleContainerStyle = {
-  display: 'flex',
-  gap: 4,
-  background: 'rgba(34, 34, 34, 0.9)',
-  borderRadius: 6,
-  padding: 3,
-  border: '1px solid #333',
-};
-
-const viewToggleButtonStyle = (isActive) => ({
-  background: isActive ? '#D6158C' : 'transparent',
-  border: 'none',
-  borderRadius: 4,
-  color: isActive ? '#FAFAFB' : '#89CFF0',
-  padding: '6px 12px',
-  fontSize: 11,
-  fontWeight: 500,
-  cursor: 'pointer',
-  letterSpacing: 0.5,
-  transition: 'all 0.2s ease',
+const titleStyle = {
+  fontFamily: "'Orbitron', sans-serif",
+  fontSize: 14,
+  fontWeight: 700,
+  color: '#F2F2F5',
+  letterSpacing: 1.5,
+  textTransform: 'uppercase',
   display: 'flex',
   alignItems: 'center',
-  gap: 6,
-});
+  gap: 8,
+};
 
 export function HistorySidebar({ isOpen, onClose }) {
-  const [viewMode, setViewMode] = useState(VIEW_MODES.GRAPH);
-
   if (!isOpen) return null;
 
   return (
@@ -174,42 +152,17 @@ export function HistorySidebar({ isOpen, onClose }) {
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </button>
-
-          {/* View Toggle - Center */}
-          <div style={viewToggleContainerStyle}>
-            <button
-              style={viewToggleButtonStyle(viewMode === VIEW_MODES.GRAPH)}
-              onClick={() => setViewMode(VIEW_MODES.GRAPH)}
-              title="Ideas Graph - Force-directed 3D visualization"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="5" cy="12" r="2" />
-                <circle cx="19" cy="6" r="2" />
-                <circle cx="19" cy="18" r="2" />
-                <path d="M7 12h8M17 7l-8 4M17 17l-8-4" />
-              </svg>
-              Ideas Graph
-            </button>
-            <button
-              style={viewToggleButtonStyle(viewMode === VIEW_MODES.GLOBE)}
-              onClick={() => setViewMode(VIEW_MODES.GLOBE)}
-              title="Globe of Ideas - Geographic spread through time"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              </svg>
-              Globe of Ideas
-            </button>
+          <div style={titleStyle}>
+            <span style={{ color: '#D6158C' }}>&#9678;</span>
+            History of Philosophy
           </div>
-
           <div style={{ width: 36 }} /> {/* Spacer for alignment */}
         </div>
 
-        {/* Graph/Globe Container */}
+        {/* Graph Container */}
         <div style={contentStyle}>
           <HistoryErrorBoundary onClose={onClose}>
-            {viewMode === VIEW_MODES.GRAPH ? <HistoryGraph /> : <GlobeOfIdeas />}
+            <HistoryGraph />
           </HistoryErrorBoundary>
         </div>
       </div>
