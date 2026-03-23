@@ -56,8 +56,70 @@ function createGlowMaterial(color) {
   });
 }
 
+// Create text label sprite for philosopher name
+function createTextSprite(text, color) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  // Set font and measure text
+  const fontSize = 48;
+  ctx.font = `${fontSize}px Arial, sans-serif`;
+  const textWidth = ctx.measureText(text).width;
+  
+  // Size canvas to fit text with padding
+  canvas.width = textWidth + 20;
+  canvas.height = fontSize + 16;
+  
+  // Re-set font after resize
+  ctx.font = `${fontSize}px Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  
+  // Draw text with slight shadow for readability
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetX = 1;
+  ctx.shadowOffsetY = 1;
+  ctx.fillStyle = color;
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  
+  const material = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 0.9,
+    depthTest: false, // Always visible
+  });
+  
+  const sprite = new THREE.Sprite(material);
+  
+  // Scale sprite based on text width
+  const scale = 0.08;
+  sprite.scale.set(canvas.width * scale, canvas.height * scale, 1);
+  
+  return sprite;
+}
+
+// Create thin line connecting label to satellite
+function createLabelLine(startPos, endPos, color) {
+  const points = [startPos, endPos];
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  
+  const material = new THREE.LineBasicMaterial({
+    color: new THREE.Color(color),
+    transparent: true,
+    opacity: 0.3,
+    linewidth: 1,
+  });
+  
+  return new THREE.Line(geometry, material);
+}
+
 // Fixed altitude above Earth surface for all philosophers (in Earth-local units)
 const SATELLITE_ALTITUDE = 30;
+const LABEL_OFFSET = 5; // Distance from satellite to label
 
 // Create satellite mesh - positioned directly above city, attached to Earth
 function createSatellite(node, earthRadius) {
@@ -103,6 +165,19 @@ function createSatellite(node, earthRadius) {
     ring.userData.pulsePhase = Math.random() * Math.PI * 2; // Random phase for variety
     group.add(ring);
   }
+  
+  // Name label - positioned outward from satellite
+  const labelSprite = createTextSprite(node.name, traditionColorHex);
+  labelSprite.position.set(0, LABEL_OFFSET, 0); // Offset above the satellite (local coords)
+  labelSprite.userData.isLabel = true;
+  group.add(labelSprite);
+  
+  // Thin line connecting label to satellite sphere
+  const labelLineStart = new THREE.Vector3(0, coreSize + 0.2, 0);
+  const labelLineEnd = new THREE.Vector3(0, LABEL_OFFSET - 1.5, 0);
+  const labelLine = createLabelLine(labelLineStart, labelLineEnd, traditionColorHex);
+  labelLine.userData.isLabelLine = true;
+  group.add(labelLine);
   
   // Position directly above city at fixed altitude
   // This position is in Earth-local coordinates (satellite is child of Earth)
@@ -219,6 +294,53 @@ function createSchoolConnection(sourcePos, targetPos, schoolName) {
   return line;
 }
 
+// Create tether line from satellite down to city location on Earth surface
+function createTetherLine(surfacePos, satellitePos, traditionColor) {
+  const color = new THREE.Color(traditionColor);
+  
+  // Straight line from satellite to surface
+  const points = [satellitePos.clone(), surfacePos.clone()];
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  
+  // Very thin, subtle tether
+  const material = new THREE.LineBasicMaterial({
+    color: color,
+    transparent: true,
+    opacity: 0.25, // Subtle but visible
+    linewidth: 1,
+  });
+  
+  const line = new THREE.Line(geometry, material);
+  line.userData = { isTetherLine: true };
+  
+  return line;
+}
+
+// Create influence chain line (philosopher to follower)
+function createInfluenceLine(sourcePos, targetPos) {
+  // Create slightly curved line for influence connections
+  const midPoint = new THREE.Vector3().addVectors(sourcePos, targetPos).multiplyScalar(0.5);
+  const distance = sourcePos.distanceTo(targetPos);
+  midPoint.multiplyScalar(1 + distance * 0.0015); // Subtle outward curve
+  
+  const curve = new THREE.QuadraticBezierCurve3(sourcePos, midPoint, targetPos);
+  const points = curve.getPoints(32);
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  
+  // Green-tinted line for influence (ideas flowing)
+  const material = new THREE.LineBasicMaterial({
+    color: 0x4CAF50, // Green for influence
+    transparent: true,
+    opacity: 0.18, // Subtle
+    linewidth: 1,
+  });
+  
+  const line = new THREE.Line(geometry, material);
+  line.userData = { isInfluenceLine: true };
+  
+  return line;
+}
+
 export const ConstellationScene = forwardRef(function ConstellationScene({
   nodes,
   edges,
@@ -238,6 +360,8 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   const satellitesRef = useRef(new Map());
   const connectionsRef = useRef(new Map());
   const schoolConnectionsRef = useRef([]); // Hair-thin school connections
+  const tetherLinesRef = useRef(new Map()); // Tether lines from satellite to city
+  const influenceLinesRef = useRef([]); // Influence chain lines
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
   const isAnimatingRef = useRef(false);
@@ -499,11 +623,18 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const earth = earthRef.current;
     const currentIds = new Set(nodes.map(n => n.id));
 
-    // Remove satellites that are no longer visible
+    // Remove satellites and their tether lines that are no longer visible
     satellitesRef.current.forEach((satellite, id) => {
       if (!currentIds.has(id)) {
         earth.remove(satellite); // Remove from Earth, not scene
         satellitesRef.current.delete(id);
+        
+        // Remove associated tether line
+        const tetherLine = tetherLinesRef.current.get(id);
+        if (tetherLine) {
+          earth.remove(tetherLine);
+          tetherLinesRef.current.delete(id);
+        }
       }
     });
 
@@ -514,9 +645,15 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         earth.add(satellite); // Add to Earth so satellites rotate WITH Earth
         satellitesRef.current.set(node.id, satellite);
 
-        // Launch animation - start at surface, animate to altitude
+        // Create tether line from satellite to city on Earth surface
         const surfacePos = satellite.userData.surfacePosition;
         const targetPos = satellite.userData.targetPosition;
+        const traditionColor = TRADITION_COLORS[node.tradition] || '#FFFFFF';
+        const tetherLine = createTetherLine(surfacePos, targetPos, traditionColor);
+        earth.add(tetherLine);
+        tetherLinesRef.current.set(node.id, tetherLine);
+
+        // Launch animation - start at surface, animate to altitude
         satellite.position.copy(surfacePos); // Start at Earth surface
         satellite.scale.set(0.1, 0.1, 0.1);
 
@@ -633,6 +770,45 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
       }
     });
   }, [nodes]);
+
+  // Create influence chain lines (philosopher → follower) - showing propagation of ideas
+  useEffect(() => {
+    if (!earthRef.current) return;
+
+    const earth = earthRef.current;
+
+    // Remove old influence lines
+    influenceLinesRef.current.forEach(line => {
+      earth.remove(line);
+    });
+    influenceLinesRef.current = [];
+
+    // Filter edges for influence types (chain of ideas propagation)
+    // Handle both API format (type) and seed data format (relationship_type)
+    const influenceTypes = [
+      'influence', 'student', 'teacher_of', 'influenced_by', 
+      'transmitted_by', 'fulfills_legacy_of'
+    ];
+    
+    const influenceEdges = edges.filter(e => {
+      const edgeType = e.type || e.relationship_type || '';
+      return influenceTypes.includes(edgeType);
+    });
+
+    influenceEdges.forEach(edge => {
+      const sourceSatellite = satellitesRef.current.get(edge.source_id);
+      const targetSatellite = satellitesRef.current.get(edge.target_id);
+
+      if (sourceSatellite && targetSatellite) {
+        const sourcePos = sourceSatellite.userData.targetPosition || sourceSatellite.position;
+        const targetPos = targetSatellite.userData.targetPosition || targetSatellite.position;
+
+        const line = createInfluenceLine(sourcePos, targetPos);
+        earth.add(line);
+        influenceLinesRef.current.push(line);
+      }
+    });
+  }, [edges, nodes]);
 
   // Highlight selected node
   useEffect(() => {
