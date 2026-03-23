@@ -56,7 +56,10 @@ function createGlowMaterial(color) {
   });
 }
 
-// Create satellite mesh
+// Fixed altitude above Earth surface for all philosophers (in Earth-local units)
+const SATELLITE_ALTITUDE = 30;
+
+// Create satellite mesh - positioned directly above city, attached to Earth
 function createSatellite(node, earthRadius) {
   const group = new THREE.Group();
   group.userData = { nodeId: node.id, node, isAutoEnriched: node.auto_enriched || false };
@@ -101,23 +104,15 @@ function createSatellite(node, earthRadius) {
     group.add(ring);
   }
   
-  // Position based on birth location and orbital position
-  const birthPos = latLngToVector3(node.latitude, node.longitude, earthRadius);
-  const orbital = node.orbital_position || { x: 0, y: 0, z: 0, altitude: 130 };
-  
-  // Final position: birth location direction, but at orbital distance
-  const direction = birthPos.clone().normalize();
-  const finalPos = direction.multiplyScalar(orbital.altitude);
-  
-  // Apply orbital offsets
-  finalPos.x += orbital.x * 0.5;
-  finalPos.y += orbital.y * 0.5;
-  finalPos.z += orbital.z * 0.3;
+  // Position directly above city at fixed altitude
+  // This position is in Earth-local coordinates (satellite is child of Earth)
+  const finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + SATELLITE_ALTITUDE);
+  const surfacePos = latLngToVector3(node.latitude, node.longitude, earthRadius);
   
   group.position.copy(finalPos);
   
-  // Store birth position for launch animation
-  group.userData.birthPosition = birthPos.clone();
+  // Store positions for launch animation (Earth-local coordinates)
+  group.userData.surfacePosition = surfacePos.clone();
   group.userData.targetPosition = finalPos.clone();
   
   return group;
@@ -172,6 +167,58 @@ function createConnection(edge, sourcePos, targetPos, allNodes) {
   return line;
 }
 
+// School-of-thought color mapping (lighter tones for hair-thin lines)
+const SCHOOL_COLORS = {
+  'Objectivism': 0xFFD700,
+  'Stoicism': 0x87CEEB,
+  'Existentialism': 0x9370DB,
+  'Confucianism': 0xDC143C,
+  'Taoism': 0x228B22,
+  'Buddhism': 0xFFB347,
+  'Utilitarianism': 0x20B2AA,
+  'Rationalism': 0x4169E1,
+  'Empiricism': 0x32CD32,
+  'Marxism': 0xB22222,
+  'Platonism': 0xE6E6FA,
+  'Aristotelianism': 0xF0E68C,
+  'Phenomenology': 0xDDA0DD,
+  'Analytic Philosophy': 0xADD8E6,
+  'Classical Liberalism': 0x98FB98,
+  'German Idealism': 0xD8BFD8,
+  'Neoplatonism': 0xE0B0FF,
+  'Social Contract Theory': 0xF5DEB3,
+};
+
+// Create hair-thin line connecting philosophers of the same school
+function createSchoolConnection(sourcePos, targetPos, schoolName) {
+  const color = SCHOOL_COLORS[schoolName] || 0xAAAAAA;
+  
+  // Create curved line (slight curve to distinguish from edge connections)
+  const midPoint = new THREE.Vector3().addVectors(sourcePos, targetPos).multiplyScalar(0.5);
+  const distance = sourcePos.distanceTo(targetPos);
+  midPoint.multiplyScalar(1 + distance * 0.001); // Very subtle curve
+  
+  const curve = new THREE.QuadraticBezierCurve3(sourcePos, midPoint, targetPos);
+  const points = curve.getPoints(24);
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  
+  // Hair-thin, very low opacity line
+  const material = new THREE.LineBasicMaterial({
+    color: color,
+    transparent: true,
+    opacity: 0.12, // Very subtle
+    linewidth: 1,
+  });
+  
+  const line = new THREE.Line(geometry, material);
+  line.userData = { 
+    isSchoolConnection: true,
+    schoolName,
+  };
+  
+  return line;
+}
+
 export const ConstellationScene = forwardRef(function ConstellationScene({
   nodes,
   edges,
@@ -190,6 +237,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   const earthRef = useRef(null);
   const satellitesRef = useRef(new Map());
   const connectionsRef = useRef(new Map());
+  const schoolConnectionsRef = useRef([]); // Hair-thin school connections
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
   const isAnimatingRef = useRef(false);
@@ -446,33 +494,33 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
 
   // Update satellites when nodes change
   useEffect(() => {
-    if (!sceneRef.current) return;
+    if (!sceneRef.current || !earthRef.current) return;
 
-    const scene = sceneRef.current;
+    const earth = earthRef.current;
     const currentIds = new Set(nodes.map(n => n.id));
 
     // Remove satellites that are no longer visible
     satellitesRef.current.forEach((satellite, id) => {
       if (!currentIds.has(id)) {
-        scene.remove(satellite);
+        earth.remove(satellite); // Remove from Earth, not scene
         satellitesRef.current.delete(id);
       }
     });
 
-    // Add new satellites
+    // Add new satellites as CHILDREN of Earth (so they rotate with Earth)
     nodes.forEach(node => {
       if (!satellitesRef.current.has(node.id)) {
         const satellite = createSatellite(node, 100);
-        scene.add(satellite);
+        earth.add(satellite); // Add to Earth so satellites rotate WITH Earth
         satellitesRef.current.set(node.id, satellite);
 
-        // Launch animation
-        const birthPos = satellite.userData.birthPosition;
+        // Launch animation - start at surface, animate to altitude
+        const surfacePos = satellite.userData.surfacePosition;
         const targetPos = satellite.userData.targetPosition;
-        satellite.position.copy(birthPos.clone().multiplyScalar(1.02)); // Start just above surface
+        satellite.position.copy(surfacePos); // Start at Earth surface
         satellite.scale.set(0.1, 0.1, 0.1);
 
-        // Animate to final position
+        // Animate to final position (Earth-local coordinates)
         const startTime = performance.now();
         const duration = 1500;
 
@@ -481,7 +529,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
           const progress = Math.min(elapsed / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3); // Ease out cubic
 
-          satellite.position.lerpVectors(birthPos.clone().multiplyScalar(1.02), targetPos, eased);
+          satellite.position.lerpVectors(surfacePos, targetPos, eased);
           satellite.scale.setScalar(0.1 + eased * 0.9);
 
           if (progress < 1) {
@@ -493,22 +541,22 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     });
   }, [nodes]);
 
-  // Update connections when edges change
+  // Update connections when edges change (influence/opposition/student relationships)
   useEffect(() => {
-    if (!sceneRef.current) return;
+    if (!sceneRef.current || !earthRef.current) return;
 
-    const scene = sceneRef.current;
+    const earth = earthRef.current;
     const currentEdgeKeys = new Set(edges.map(e => `${e.source_id}-${e.target_id}`));
 
     // Remove connections that are no longer visible
     connectionsRef.current.forEach((line, key) => {
       if (!currentEdgeKeys.has(key)) {
-        scene.remove(line);
+        earth.remove(line); // Connections are also children of Earth
         connectionsRef.current.delete(key);
       }
     });
 
-    // Add new connections
+    // Add new connections (attached to Earth so they rotate with it)
     edges.forEach(edge => {
       const key = `${edge.source_id}-${edge.target_id}`;
       if (!connectionsRef.current.has(key)) {
@@ -516,11 +564,12 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         const targetSatellite = satellitesRef.current.get(edge.target_id);
 
         if (sourceSatellite && targetSatellite) {
+          // Use Earth-local positions (targetPosition is already in Earth coordinates)
           const sourcePos = sourceSatellite.userData.targetPosition || sourceSatellite.position;
           const targetPos = targetSatellite.userData.targetPosition || targetSatellite.position;
           
           const line = createConnection(edge, sourcePos, targetPos, allNodes);
-          scene.add(line);
+          earth.add(line); // Add to Earth so connections rotate with satellites
           connectionsRef.current.set(key, line);
 
           // Fade in animation
@@ -536,6 +585,54 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
       }
     });
   }, [edges, allNodes]);
+
+  // Create school-of-thought hair-thin connections
+  useEffect(() => {
+    if (!earthRef.current) return;
+
+    const earth = earthRef.current;
+
+    // Remove old school connections
+    schoolConnectionsRef.current.forEach(line => {
+      earth.remove(line);
+    });
+    schoolConnectionsRef.current = [];
+
+    // Group nodes by school_of_thought
+    const schoolGroups = new Map();
+    nodes.forEach(node => {
+      const school = node.school_of_thought;
+      if (school) {
+        if (!schoolGroups.has(school)) {
+          schoolGroups.set(school, []);
+        }
+        schoolGroups.get(school).push(node);
+      }
+    });
+
+    // Create hair-thin connections between philosophers of the same school
+    schoolGroups.forEach((schoolNodes, schoolName) => {
+      // Only connect if there are 2+ philosophers in the school
+      if (schoolNodes.length < 2) return;
+
+      // Connect each pair (but limit to avoid too many lines)
+      for (let i = 0; i < schoolNodes.length; i++) {
+        for (let j = i + 1; j < schoolNodes.length; j++) {
+          const sourceSatellite = satellitesRef.current.get(schoolNodes[i].id);
+          const targetSatellite = satellitesRef.current.get(schoolNodes[j].id);
+
+          if (sourceSatellite && targetSatellite) {
+            const sourcePos = sourceSatellite.userData.targetPosition || sourceSatellite.position;
+            const targetPos = targetSatellite.userData.targetPosition || targetSatellite.position;
+
+            const line = createSchoolConnection(sourcePos, targetPos, schoolName);
+            earth.add(line);
+            schoolConnectionsRef.current.push(line);
+          }
+        }
+      }
+    });
+  }, [nodes]);
 
   // Highlight selected node
   useEffect(() => {
@@ -555,12 +652,14 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   // Expose flyToNode method
   useImperativeHandle(ref, () => ({
     flyToNode: (node) => {
-      if (!cameraRef.current || !node) return;
+      if (!cameraRef.current || !node || !earthRef.current) return;
       
       const satellite = satellitesRef.current.get(node.id);
       if (satellite) {
-        const pos = satellite.userData.targetPosition || satellite.position;
-        const direction = pos.clone().normalize();
+        // Get satellite position in world coordinates (accounting for Earth rotation)
+        const worldPos = new THREE.Vector3();
+        satellite.getWorldPosition(worldPos);
+        const direction = worldPos.clone().normalize();
         targetCameraRef.current = direction.multiplyScalar(250);
         isAnimatingRef.current = true;
       }

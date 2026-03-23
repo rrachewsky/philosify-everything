@@ -1264,10 +1264,10 @@ export const SEED_NODES = [
     name: 'Ayn Rand',
     birth_year: 1905,
     death_year: 1982,
-    birth_city: 'Saint Petersburg',
-    birth_country_modern: 'Russia',
-    latitude: 59.9311,
-    longitude: 30.3609,
+    birth_city: 'New York', // Relocated 1926, permanent residence
+    birth_country_modern: 'United States',
+    latitude: 40.7128, // New York City coordinates
+    longitude: -74.0060,
     school_of_thought: 'Objectivism',
     tradition: 'western',
     key_ideas: [
