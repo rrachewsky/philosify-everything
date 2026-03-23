@@ -392,6 +392,19 @@ export const PHILOSOPHERS = [
       "Passionate, eloquent, and uncompromising in his commitment to individual liberty. Writes with Victorian moral seriousness combined with rigorous logical consistency. Appeals simultaneously to reason and to the moral imagination. The philosopher of pure voluntarism.",
   },
   {
+    name: "Auguste Comte",
+    era: "Modern (1798-1857)",
+    school: "Positivism / Sociology",
+    works:
+      "The Course in Positive Philosophy (Cours de philosophie positive, 6 vols), System of Positive Polity (Systeme de politique positive, 4 vols), A General View of Positivism, The Catechism of Positive Religion",
+    doctrines:
+      "The Law of Three Stages: human thought and society progress through three stages — the theological (phenomena explained by supernatural beings), the metaphysical (abstract forces and essences), and the positive (scientific observation and laws). Positivism: genuine knowledge is limited to observable phenomena and their relations; metaphysical and theological speculation is meaningless. The hierarchy of sciences: sciences develop from simple to complex — mathematics, astronomy, physics, chemistry, biology, and finally sociology (a term Comte coined). The Religion of Humanity: in the positive stage, humanity itself becomes the object of veneration; altruism (another Comte coinage) replaces theological morality.",
+    stances:
+      "ETHICS: Altruism is the foundation of morality — 'Live for others' (vivre pour autrui). Self-interest must be subordinated to social duty. The positive morality is based on scientific understanding of human nature and social needs, not divine command. POLITICS: Society should be reorganized according to scientific principles, guided by a spiritual power (sociologist-priests) and a temporal power (industrial leaders). Order and progress must be balanced. Rejected both revolutionary anarchy and reactionary theocracy. METAPHYSICS: Metaphysics is the illusion of the second stage — mature thought abandons questions about essences, first causes, and ultimate purposes. We can know only phenomena and their laws, never things-in-themselves. EPISTEMOLOGY: Knowledge is limited to positive (observable, verifiable) facts and their relations. The scientific method, properly understood, is the only path to genuine knowledge. Each science has its own methods appropriate to its subject matter. HUMAN NATURE: Humans are social beings whose individual development recapitulates the three stages. Altruistic instincts exist alongside egoistic ones; civilization's task is to strengthen the former. The intellect should serve the heart — feeling, not reason, should guide action.",
+    style:
+      "Systematic, encyclopedic, and prophetic. Writes with the conviction of a founder establishing a new intellectual and spiritual order. Combines rigorous classification with messianic fervor. The architect of sociology as a science.",
+  },
+  {
     name: "Averroes",
     era: "Medieval Islamic Spain (1126-1198 AD)",
     school: "Aristotelianism / Islamic Rationalism",
@@ -663,6 +676,19 @@ export const PHILOSOPHERS = [
       "ETHICS: Moral obligations are grounded in God's will (modified divine command theory). The will, not the intellect, is the noblest human faculty because it is truly free. POLITICS: Not primarily a political philosopher; focused on metaphysics and theology. METAPHYSICS: Being is univocal — the concept of being applies in the same basic sense to God and creatures. Individuals are what is most real; universals exist but do not exhaust what is real about individuals. EPISTEMOLOGY: The human intellect can know singular things directly (contra Aquinas, who held that intellect knows only universals). Intuitive cognition grasps existing particulars directly. HUMAN NATURE: The will is the defining human faculty — it is self-determining and free, not determined by the intellect's presentation of the good. Human dignity lies in freedom of choice.",
     style:
       "Extraordinarily subtle and technically precise. Earned the title 'the Subtle Doctor.' Builds intricate distinctions with relentless logical rigor. Difficult but philosophically powerful — every move is precisely motivated.",
+  },
+  {
+    name: "Edmund Burke",
+    era: "Enlightenment (1729-1797)",
+    school: "Conservatism / Classical Liberalism",
+    works:
+      "Reflections on the Revolution in France, A Philosophical Enquiry into the Origin of Our Ideas of the Sublime and Beautiful, Thoughts on the Cause of the Present Discontents, Speech on Conciliation with America, Letter to a Noble Lord, Letters on a Regicide Peace, An Appeal from the New to the Old Whigs",
+    doctrines:
+      "Prejudice and prescription: inherited wisdom embodied in customs, institutions, and traditions is more reliable than abstract reason — 'prejudice' (pre-judgment) contains the accumulated experience of generations. The social contract across generations: society is a partnership 'between those who are living, those who are dead, and those who are to be born.' Revolution vs. reform: violent revolution destroys the organic growth of institutions; gradual reform preserves what is valuable while correcting abuses. The sublime and beautiful: aesthetic categories with distinct psychological bases — the sublime evokes terror and awe (vastness, power, darkness); the beautiful evokes love and pleasure (smallness, smoothness, delicacy). Representation: a representative owes constituents his judgment, not mere obedience to their opinions.",
+    stances:
+      "ETHICS: Virtue is cultivated through habit, tradition, and the 'moral imagination' — not derived from abstract principles. Manners are more important than laws in civilizing humanity. The 'unbought grace of life' — chivalry, honor, loyalty — are essential to social order. POLITICS: Constitutional liberty grows organically from a nation's history — it cannot be manufactured by revolutionary decree. Defended the Glorious Revolution of 1688 (which preserved English liberties) while condemning the French Revolution (which destroyed all inherited order). Supported American colonists' appeal to English constitutional rights. Opposed the East India Company's abuses in India. METAPHYSICS: Human reason is limited; we cannot redesign society from first principles. The complexity of human affairs exceeds any individual's or committee's understanding. Providence works through historical development. EPISTEMOLOGY: Practical wisdom (prudence) is superior to theoretical reasoning in politics. Circumstances, not abstract principles, determine right action. History and experience are better guides than philosophy. HUMAN NATURE: Humans are creatures of habit, sentiment, and attachment — not calculating machines. We need inherited frameworks of meaning (religion, tradition, community) to flourish. Naked reason without the 'wardrobe of moral imagination' leaves humanity cold and vulnerable.",
+    style:
+      "Eloquent, passionate, and prophetic. Combines philosophical depth with rhetorical magnificence. Writes with moral urgency against revolutionary destruction. The supreme prose stylist of political philosophy — every sentence resonates with the weight of civilization under threat.",
   },
   {
     name: "Edmund Husserl",
