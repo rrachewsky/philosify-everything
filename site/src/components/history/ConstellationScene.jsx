@@ -663,12 +663,90 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
       }
     };
 
+    // Touch event handlers for mobile
+    let lastTouchDistance = 0;
+    let lastTouchCenter = { x: 0, y: 0 };
+
+    const handleTouchStart = (e) => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        // Single touch - start drag
+        isDragging = true;
+        previousMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      } else if (e.touches.length === 2) {
+        // Two touches - start pinch zoom
+        isDragging = false;
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastTouchDistance = Math.sqrt(dx * dx + dy * dy);
+        lastTouchCenter = {
+          x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+          y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+        };
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      e.preventDefault();
+      if (e.touches.length === 1 && isDragging && !isAnimatingRef.current) {
+        // Single touch drag - rotate globe
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - previousMouse.x;
+        const deltaY = touch.clientY - previousMouse.y;
+
+        spherical.theta -= deltaX * 0.008;
+        spherical.phi -= deltaY * 0.008;
+        spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
+
+        camera.position.setFromSpherical(spherical);
+        camera.lookAt(0, 0, 0);
+
+        previousMouse = { x: touch.clientX, y: touch.clientY };
+
+        // Update mouse for raycasting
+        const rect = container.getBoundingClientRect();
+        mouseRef.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+        mouseRef.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+      } else if (e.touches.length === 2) {
+        // Pinch zoom
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const touchDistance = Math.sqrt(dx * dx + dy * dy);
+
+        if (lastTouchDistance > 0) {
+          const scale = lastTouchDistance / touchDistance;
+          spherical.radius = Math.max(150, Math.min(600, spherical.radius * scale));
+          camera.position.setFromSpherical(spherical);
+          camera.lookAt(0, 0, 0);
+        }
+
+        lastTouchDistance = touchDistance;
+      }
+    };
+
+    const handleTouchEnd = (e) => {
+      if (e.touches.length === 0) {
+        isDragging = false;
+        lastTouchDistance = 0;
+      } else if (e.touches.length === 1) {
+        // Switched from pinch to single touch
+        isDragging = true;
+        previousMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        lastTouchDistance = 0;
+      }
+    };
+
     container.addEventListener('mousedown', handleMouseDown);
     container.addEventListener('mousemove', handleMouseMove);
     container.addEventListener('mouseup', handleMouseUp);
     container.addEventListener('mouseleave', handleMouseUp);
     container.addEventListener('wheel', handleWheel, { passive: false });
     container.addEventListener('click', handleClick);
+    
+    // Touch events for mobile
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd);
 
     // Animation loop
     let animationId;
@@ -754,6 +832,9 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
       container.removeEventListener('mouseleave', handleMouseUp);
       container.removeEventListener('wheel', handleWheel);
       container.removeEventListener('click', handleClick);
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
       renderer.dispose();
       container.removeChild(renderer.domElement);
     };

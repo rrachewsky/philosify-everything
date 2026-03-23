@@ -38,6 +38,14 @@ function ErrorState({ error, onRetry }) {
 export function ConstellationOfIdeas() {
   const sceneRef = useRef(null);
   const [showSearch, setShowSearch] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+
+  // Detect mobile on resize
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 600);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   const {
     data,
@@ -160,7 +168,7 @@ export function ConstellationOfIdeas() {
 
       {/* Year Display */}
       <div style={styles.yearDisplay}>
-        <span style={styles.yearText}>{formatYear(currentYear)}</span>
+        <span style={{ ...styles.yearText, fontSize: isMobile ? 24 : 32 }}>{formatYear(currentYear)}</span>
         <span style={styles.nodeCount}>{visibleNodes.length} philosophers</span>
       </div>
 
@@ -176,8 +184,12 @@ export function ConstellationOfIdeas() {
         </svg>
       </button>
 
-      {/* Legend */}
-      <div style={styles.legend}>
+      {/* Legend - positioned below year on mobile */}
+      <div style={{ 
+        ...styles.legend, 
+        top: isMobile ? 75 : 16,
+        padding: isMobile ? '8px 12px' : '12px 16px',
+      }}>
         <div style={styles.legendTitle}>Traditions</div>
         {Object.entries(TRADITION_COLORS).map(([tradition, color]) => (
           <div key={tradition} style={styles.legendItem}>
@@ -317,22 +329,23 @@ const styles = {
     cursor: 'pointer',
   },
 
-  // Year display
+  // Year display - positioned to avoid legend on mobile
   yearDisplay: {
     position: 'absolute',
     top: 16,
     left: '50%',
     transform: 'translateX(-50%)',
     textAlign: 'center',
-    zIndex: 100,
+    zIndex: 101, // Above legend
+    pointerEvents: 'none',
   },
   yearText: {
     display: 'block',
     fontFamily: "'Orbitron', monospace",
-    fontSize: 32,
+    fontSize: 32, // Overridden inline for mobile
     fontWeight: 700,
     color: '#F2F2F5',
-    textShadow: '0 2px 20px rgba(214, 21, 140, 0.5)',
+    textShadow: '0 2px 20px rgba(214, 21, 140, 0.5), 0 0 10px rgba(0, 0, 0, 0.8)',
   },
   nodeCount: {
     display: 'block',
@@ -360,7 +373,7 @@ const styles = {
     backdropFilter: 'blur(8px)',
   },
 
-  // Legend
+  // Legend - position overridden inline for mobile
   legend: {
     position: 'absolute',
     top: 16,
