@@ -858,7 +858,31 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     });
   }, [selectedNode]);
 
-  // Expose flyToNode method
+  // Zoom functions
+  const zoomIn = useCallback(() => {
+    if (!cameraRef.current) return;
+    const camera = cameraRef.current;
+    const direction = camera.position.clone().normalize();
+    const newDistance = Math.max(150, camera.position.length() - 30);
+    camera.position.copy(direction.multiplyScalar(newDistance));
+  }, []);
+
+  const zoomOut = useCallback(() => {
+    if (!cameraRef.current) return;
+    const camera = cameraRef.current;
+    const direction = camera.position.clone().normalize();
+    const newDistance = Math.min(800, camera.position.length() + 30);
+    camera.position.copy(direction.multiplyScalar(newDistance));
+  }, []);
+
+  const resetView = useCallback(() => {
+    if (!cameraRef.current) return;
+    const camera = cameraRef.current;
+    camera.position.set(0, 100, 350);
+    camera.lookAt(0, 0, 0);
+  }, []);
+
+  // Expose flyToNode and zoom methods
   useImperativeHandle(ref, () => ({
     flyToNode: (node) => {
       if (!cameraRef.current || !node || !earthRef.current) return;
@@ -873,7 +897,10 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         isAnimatingRef.current = true;
       }
     },
-  }), []);
+    zoomIn,
+    zoomOut,
+    resetView,
+  }), [zoomIn, zoomOut, resetView]);
 
   return (
     <div
@@ -885,7 +912,87 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         top: 0,
         left: 0,
       }}
-    />
+    >
+      {/* Zoom Controls */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '20px',
+          right: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          zIndex: 100,
+        }}
+      >
+        <button
+          onClick={zoomIn}
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            background: 'rgba(20, 20, 30, 0.8)',
+            color: '#fff',
+            fontSize: '20px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => e.target.style.background = 'rgba(40, 40, 60, 0.9)'}
+          onMouseLeave={(e) => e.target.style.background = 'rgba(20, 20, 30, 0.8)'}
+          title="Zoom In"
+        >
+          +
+        </button>
+        <button
+          onClick={zoomOut}
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            background: 'rgba(20, 20, 30, 0.8)',
+            color: '#fff',
+            fontSize: '20px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => e.target.style.background = 'rgba(40, 40, 60, 0.9)'}
+          onMouseLeave={(e) => e.target.style.background = 'rgba(20, 20, 30, 0.8)'}
+          title="Zoom Out"
+        >
+          −
+        </button>
+        <button
+          onClick={resetView}
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            background: 'rgba(20, 20, 30, 0.8)',
+            color: '#fff',
+            fontSize: '14px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => e.target.style.background = 'rgba(40, 40, 60, 0.9)'}
+          onMouseLeave={(e) => e.target.style.background = 'rgba(20, 20, 30, 0.8)'}
+          title="Reset View"
+        >
+          ⟲
+        </button>
+      </div>
+    </div>
   );
 });
 

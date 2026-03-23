@@ -98,8 +98,8 @@ export function useConstellation() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Timeline state
-  const [currentYear, setCurrentYear] = useState(MIN_YEAR);
+  // Timeline state - start at MAX_YEAR to show all philosophers by default
+  const [currentYear, setCurrentYear] = useState(MAX_YEAR);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   
