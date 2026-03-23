@@ -330,9 +330,11 @@ export const SEED_NODES = [
     name: 'Seneca',
     birth_year: -4,
     death_year: 65,
-    birth_city: 'Rome', // Moved as child, entire career in Rome
-    birth_country_modern: 'Italy',
-    latitude: 41.9028, // Rome coordinates
+    birth_city: 'Corduba',
+    birth_country_modern: 'Spain',
+    residence_city: 'Rome', // Moved as child
+    residence_country: 'Italy',
+    latitude: 41.9028, // Positioned at Rome (residence)
     longitude: 12.4964,
     school_of_thought: 'Stoicism',
     tradition: 'western',
@@ -386,9 +388,11 @@ export const SEED_NODES = [
     name: 'Plotinus',
     birth_year: 204,
     death_year: 270,
-    birth_city: 'Rome', // Relocated 244 AD, founded school there
-    birth_country_modern: 'Italy',
-    latitude: 41.9028, // Rome coordinates
+    birth_city: 'Lycopolis',
+    birth_country_modern: 'Egypt',
+    residence_city: 'Rome', // Relocated 244 AD
+    residence_country: 'Italy',
+    latitude: 41.9028, // Positioned at Rome (residence)
     longitude: 12.4964,
     school_of_thought: 'Neoplatonism',
     tradition: 'western',
@@ -1038,9 +1042,11 @@ export const SEED_NODES = [
     name: 'Karl Marx',
     birth_year: 1818,
     death_year: 1883,
-    birth_city: 'London', // Relocated 1849, permanent residence
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.5074, // London coordinates
+    birth_city: 'Trier',
+    birth_country_modern: 'Germany',
+    residence_city: 'London', // Relocated 1849
+    residence_country: 'United Kingdom',
+    latitude: 51.5074, // Positioned at London (residence)
     longitude: -0.1278,
     school_of_thought: 'Marxism',
     tradition: 'western',
@@ -1152,9 +1158,11 @@ export const SEED_NODES = [
     name: 'Ludwig Wittgenstein',
     birth_year: 1889,
     death_year: 1951,
-    birth_city: 'Cambridge', // Relocated 1929, became British citizen
-    birth_country_modern: 'United Kingdom',
-    latitude: 52.2053, // Cambridge coordinates
+    birth_city: 'Vienna',
+    birth_country_modern: 'Austria',
+    residence_city: 'Cambridge', // Relocated 1929
+    residence_country: 'United Kingdom',
+    latitude: 52.2053, // Positioned at Cambridge (residence)
     longitude: 0.1218,
     school_of_thought: 'Analytic Philosophy',
     tradition: 'western',
@@ -1208,9 +1216,11 @@ export const SEED_NODES = [
     name: 'Karl Popper',
     birth_year: 1902,
     death_year: 1994,
-    birth_city: 'London', // Relocated 1946, permanent residence
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.5074, // London coordinates
+    birth_city: 'Vienna',
+    birth_country_modern: 'Austria',
+    residence_city: 'London', // Relocated 1946
+    residence_country: 'United Kingdom',
+    latitude: 51.5074, // Positioned at London (residence)
     longitude: -0.1278,
     school_of_thought: 'Critical Rationalism',
     tradition: 'western',
@@ -1264,9 +1274,11 @@ export const SEED_NODES = [
     name: 'Ayn Rand',
     birth_year: 1905,
     death_year: 1982,
-    birth_city: 'New York', // Relocated 1926, permanent residence
-    birth_country_modern: 'United States',
-    latitude: 40.7128, // New York City coordinates
+    birth_city: 'Saint Petersburg',
+    birth_country_modern: 'Russia',
+    residence_city: 'New York', // Relocated 1926
+    residence_country: 'United States',
+    latitude: 40.7128, // Positioned at New York (residence)
     longitude: -74.0060,
     school_of_thought: 'Objectivism',
     tradition: 'western',
@@ -1292,9 +1304,11 @@ export const SEED_NODES = [
     name: 'Hannah Arendt',
     birth_year: 1906,
     death_year: 1975,
-    birth_city: 'New York', // Relocated 1941, permanent residence
-    birth_country_modern: 'United States',
-    latitude: 40.7128, // New York City coordinates
+    birth_city: 'Linden',
+    birth_country_modern: 'Germany',
+    residence_city: 'New York', // Relocated 1941
+    residence_country: 'United States',
+    latitude: 40.7128, // Positioned at New York (residence)
     longitude: -74.0060,
     school_of_thought: 'Political Philosophy',
     tradition: 'western',
@@ -1348,9 +1362,11 @@ export const SEED_NODES = [
     name: 'Albert Camus',
     birth_year: 1913,
     death_year: 1960,
-    birth_city: 'Paris', // Relocated 1940, French citizen
-    birth_country_modern: 'France',
-    latitude: 48.8566, // Paris coordinates
+    birth_city: 'Mondovi',
+    birth_country_modern: 'Algeria',
+    residence_city: 'Paris', // Relocated 1940
+    residence_country: 'France',
+    latitude: 48.8566, // Positioned at Paris (residence)
     longitude: 2.3522,
     school_of_thought: 'Absurdism',
     tradition: 'western',
@@ -1460,9 +1476,11 @@ export const SEED_NODES = [
     name: 'Ludwig von Mises',
     birth_year: 1881,
     death_year: 1973,
-    birth_city: 'New York', // Relocated 1940, permanent residence
-    birth_country_modern: 'United States',
-    latitude: 40.7128, // New York City coordinates
+    birth_city: 'Lemberg',
+    birth_country_modern: 'Ukraine', // Was Austria-Hungary
+    residence_city: 'New York', // Relocated 1940
+    residence_country: 'United States',
+    latitude: 40.7128, // Positioned at New York (residence)
     longitude: -74.0060,
     school_of_thought: 'Austrian Economics',
     tradition: 'western',

@@ -87,6 +87,14 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
         <div style={styles.location}>
           {node.birth_city}, {node.birth_country_modern}
         </div>
+        {node.residence_city && (
+          <>
+            <div style={{ ...styles.sectionLabel, marginTop: '8px' }}>Residence</div>
+            <div style={styles.location}>
+              {node.residence_city}, {node.residence_country}
+            </div>
+          </>
+        )}
       </div>
 
       {/* School */}
