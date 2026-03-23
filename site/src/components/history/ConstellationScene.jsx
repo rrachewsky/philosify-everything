@@ -57,31 +57,45 @@ function createGlowMaterial(color) {
 }
 
 // Create text label sprite for philosopher name
-function createTextSprite(text, color) {
+// isFoundational: true for major philosophers (historical_weight >= 0.9)
+// isMostFoundational: true for THE foundational philosophers (historical_weight === 1.0)
+function createTextSprite(text, color, isFoundational = false, isMostFoundational = false) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   
-  // Set font and measure text
-  const fontSize = 48;
-  ctx.font = `${fontSize}px Arial, sans-serif`;
+  // Larger font for foundational philosophers
+  const baseFontSize = 48;
+  const fontSize = isMostFoundational ? 64 : (isFoundational ? 56 : baseFontSize);
+  const fontWeight = isFoundational ? 'bold' : 'normal';
+  
+  ctx.font = `${fontWeight} ${fontSize}px Arial, sans-serif`;
   const textWidth = ctx.measureText(text).width;
   
   // Size canvas to fit text with padding
-  canvas.width = textWidth + 20;
-  canvas.height = fontSize + 16;
+  canvas.width = textWidth + 24;
+  canvas.height = fontSize + 20;
   
   // Re-set font after resize
-  ctx.font = `${fontSize}px Arial, sans-serif`;
+  ctx.font = `${fontWeight} ${fontSize}px Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   
-  // Draw text with slight shadow for readability
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-  ctx.shadowBlur = 4;
-  ctx.shadowOffsetX = 1;
-  ctx.shadowOffsetY = 1;
+  // Draw text with shadow for readability (stronger shadow for foundational)
+  ctx.shadowColor = isFoundational ? 'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.8)';
+  ctx.shadowBlur = isFoundational ? 6 : 4;
+  ctx.shadowOffsetX = isFoundational ? 2 : 1;
+  ctx.shadowOffsetY = isFoundational ? 2 : 1;
   ctx.fillStyle = color;
   ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  
+  // Add subtle glow outline for most foundational
+  if (isMostFoundational) {
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 8;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.5;
+    ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
+  }
   
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
@@ -89,14 +103,15 @@ function createTextSprite(text, color) {
   const material = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
-    opacity: 0.9,
+    opacity: isMostFoundational ? 1.0 : (isFoundational ? 0.95 : 0.9),
     depthTest: false, // Always visible
   });
   
   const sprite = new THREE.Sprite(material);
   
-  // Scale sprite based on text width
-  const scale = 0.08;
+  // Scale sprite - larger for foundational philosophers
+  const baseScale = 0.08;
+  const scale = isMostFoundational ? 0.10 : (isFoundational ? 0.09 : baseScale);
   sprite.scale.set(canvas.width * scale, canvas.height * scale, 1);
   
   return sprite;
@@ -117,8 +132,10 @@ function createLabelLine(startPos, endPos, color) {
   return new THREE.Line(geometry, material);
 }
 
-// Fixed altitude above Earth surface for all philosophers (in Earth-local units)
-const SATELLITE_ALTITUDE = 30;
+// Base altitude above Earth surface (in Earth-local units)
+const BASE_ALTITUDE = 25;
+const FOUNDATIONAL_ALTITUDE_BOOST = 10; // Extra altitude for foundational (weight >= 0.9)
+const MOST_FOUNDATIONAL_ALTITUDE_BOOST = 20; // Extra altitude for most foundational (weight === 1.0)
 const LABEL_OFFSET = 5; // Distance from satellite to label
 
 // Create satellite mesh - positioned directly above city, attached to Earth
@@ -126,26 +143,39 @@ function createSatellite(node, earthRadius) {
   const group = new THREE.Group();
   group.userData = { nodeId: node.id, node, isAutoEnriched: node.auto_enriched || false };
   
+  // Determine if philosopher is foundational based on historical_weight
+  const weight = node.historical_weight || 0.5;
+  const isMostFoundational = weight >= 1.0; // Socrates, Plato, Aristotle, Kant, Confucius, Buddha
+  const isFoundational = weight >= 0.9; // Major figures in philosophy
+  
+  // Calculate altitude - foundational philosophers orbit higher
+  let altitude = BASE_ALTITUDE;
+  if (isMostFoundational) {
+    altitude += MOST_FOUNDATIONAL_ALTITUDE_BOOST;
+  } else if (isFoundational) {
+    altitude += FOUNDATIONAL_ALTITUDE_BOOST;
+  }
+  
   // Get tradition color
   const traditionColorHex = TRADITION_COLORS[node.tradition] || '#FFFFFF';
   const color = new THREE.Color(traditionColorHex);
   
-  // Core sphere - slightly larger for nodes with high mention counts
+  // Core sphere - larger for foundational philosophers
   const mentionBonus = Math.min(0.5, (node.mention_count || 0) * 0.02);
-  const coreSize = 0.8 + mentionBonus;
+  const foundationalBonus = isMostFoundational ? 0.6 : (isFoundational ? 0.3 : 0);
+  const coreSize = 0.8 + mentionBonus + foundationalBonus;
   const coreGeometry = new THREE.SphereGeometry(coreSize, 16, 16);
   const coreMaterial = new THREE.MeshBasicMaterial({
     color: color,
     transparent: true,
-    opacity: 0.9,
+    opacity: isMostFoundational ? 1.0 : 0.9,
   });
   const core = new THREE.Mesh(coreGeometry, coreMaterial);
   group.add(core);
   
-  // Outer glow (larger for higher historical weight + mention count boost)
-  const baseWeight = node.historical_weight || 0.5;
+  // Outer glow (larger for foundational philosophers)
   const mentionWeight = Math.min(0.3, (node.mention_count || 0) * 0.01);
-  const glowScale = 3 + (baseWeight + mentionWeight) * 4;
+  const glowScale = 3 + (weight + mentionWeight) * 4 + (isMostFoundational ? 3 : (isFoundational ? 1.5 : 0));
   const glowMaterial = createGlowMaterial(`rgb(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)})`);
   const glow = new THREE.Sprite(glowMaterial);
   glow.scale.set(glowScale, glowScale, 1);
@@ -166,22 +196,23 @@ function createSatellite(node, earthRadius) {
     group.add(ring);
   }
   
-  // Name label - positioned outward from satellite
-  const labelSprite = createTextSprite(node.name, traditionColorHex);
-  labelSprite.position.set(0, LABEL_OFFSET, 0); // Offset above the satellite (local coords)
+  // Name label - bold and larger for foundational philosophers
+  const labelOffset = LABEL_OFFSET + (isMostFoundational ? 2 : (isFoundational ? 1 : 0));
+  const labelSprite = createTextSprite(node.name, traditionColorHex, isFoundational, isMostFoundational);
+  labelSprite.position.set(0, labelOffset, 0); // Offset above the satellite (local coords)
   labelSprite.userData.isLabel = true;
   group.add(labelSprite);
   
   // Thin line connecting label to satellite sphere
   const labelLineStart = new THREE.Vector3(0, coreSize + 0.2, 0);
-  const labelLineEnd = new THREE.Vector3(0, LABEL_OFFSET - 1.5, 0);
+  const labelLineEnd = new THREE.Vector3(0, labelOffset - 1.5, 0);
   const labelLine = createLabelLine(labelLineStart, labelLineEnd, traditionColorHex);
   labelLine.userData.isLabelLine = true;
   group.add(labelLine);
   
-  // Position directly above city at fixed altitude
+  // Position directly above city at calculated altitude
   // This position is in Earth-local coordinates (satellite is child of Earth)
-  const finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + SATELLITE_ALTITUDE);
+  const finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + altitude);
   const surfacePos = latLngToVector3(node.latitude, node.longitude, earthRadius);
   
   group.position.copy(finalPos);
@@ -189,6 +220,8 @@ function createSatellite(node, earthRadius) {
   // Store positions for launch animation (Earth-local coordinates)
   group.userData.surfacePosition = surfacePos.clone();
   group.userData.targetPosition = finalPos.clone();
+  group.userData.isFoundational = isFoundational;
+  group.userData.isMostFoundational = isMostFoundational;
   
   return group;
 }
