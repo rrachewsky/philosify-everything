@@ -157,8 +157,8 @@ const LABEL_OFFSET = 5; // Distance from satellite to label
 
 // Spacing configuration for overlapping philosophers
 const PROXIMITY_THRESHOLD = 0.5; // Degrees - philosophers within this distance are considered "same location"
-const SPREAD_RADIUS = 8; // Units to spread philosophers apart tangentially
-const ALTITUDE_VARIATION = 4; // Units of altitude difference within groups for perspective
+const SPREAD_RADIUS = 18; // Units to spread philosophers apart tangentially (increased for readability)
+const ALTITUDE_VARIATION = 10; // Units of altitude difference within groups for perspective
 
 // Group nodes by proximity and calculate spread offsets
 // Returns a Map of nodeId -> { offsetX, offsetZ, altitudeOffset } in tangent space
