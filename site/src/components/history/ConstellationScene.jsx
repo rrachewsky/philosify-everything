@@ -64,42 +64,58 @@ function createTextSprite(text, color, isFoundational = false, isMostFoundationa
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   
+  // Use higher resolution for sharper text (2x for retina displays)
+  const pixelRatio = Math.min(window.devicePixelRatio || 1, 3);
+  
   // Larger font for foundational philosophers
-  const baseFontSize = 48;
-  const fontSize = isMostFoundational ? 64 : (isFoundational ? 56 : baseFontSize);
+  const baseFontSize = 64; // Increased base size for sharpness
+  const fontSize = isMostFoundational ? 80 : (isFoundational ? 72 : baseFontSize);
   const fontWeight = isFoundational ? 'bold' : 'normal';
   
   ctx.font = `${fontWeight} ${fontSize}px Arial, sans-serif`;
   const textWidth = ctx.measureText(text).width;
   
-  // Size canvas to fit text with padding
-  canvas.width = textWidth + 24;
-  canvas.height = fontSize + 20;
+  // Size canvas to fit text with padding (scaled for pixel ratio)
+  const canvasWidth = (textWidth + 32) * pixelRatio;
+  const canvasHeight = (fontSize + 28) * pixelRatio;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  
+  // Scale context for high DPI rendering
+  ctx.scale(pixelRatio, pixelRatio);
   
   // Re-set font after resize
   ctx.font = `${fontWeight} ${fontSize}px Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   
+  // Enable font smoothing
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  
   // Draw text with shadow for readability (stronger shadow for foundational)
-  ctx.shadowColor = isFoundational ? 'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.8)';
-  ctx.shadowBlur = isFoundational ? 6 : 4;
+  ctx.shadowColor = isFoundational ? 'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.85)';
+  ctx.shadowBlur = isFoundational ? 8 : 5;
   ctx.shadowOffsetX = isFoundational ? 2 : 1;
   ctx.shadowOffsetY = isFoundational ? 2 : 1;
   ctx.fillStyle = color;
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  ctx.fillText(text, (canvasWidth / pixelRatio) / 2, (canvasHeight / pixelRatio) / 2);
   
   // Add subtle glow outline for most foundational
   if (isMostFoundational) {
     ctx.shadowColor = color;
-    ctx.shadowBlur = 8;
+    ctx.shadowBlur = 10;
     ctx.strokeStyle = color;
     ctx.lineWidth = 0.5;
-    ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
+    ctx.strokeText(text, (canvasWidth / pixelRatio) / 2, (canvasHeight / pixelRatio) / 2);
   }
   
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
+  // Improve texture filtering for sharpness
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.anisotropy = 16;
   
   const material = new THREE.SpriteMaterial({
     map: texture,
@@ -110,10 +126,10 @@ function createTextSprite(text, color, isFoundational = false, isMostFoundationa
   
   const sprite = new THREE.Sprite(material);
   
-  // Scale sprite - larger for foundational philosophers
-  const baseScale = 0.08;
-  const scale = isMostFoundational ? 0.10 : (isFoundational ? 0.09 : baseScale);
-  sprite.scale.set(canvas.width * scale, canvas.height * scale, 1);
+  // Scale sprite - account for pixel ratio, larger for foundational philosophers
+  const baseScale = 0.06 / pixelRatio;
+  const scale = isMostFoundational ? 0.075 / pixelRatio : (isFoundational ? 0.068 / pixelRatio : baseScale);
+  sprite.scale.set(canvasWidth * scale, canvasHeight * scale, 1);
   
   return sprite;
 }
@@ -142,9 +158,10 @@ const LABEL_OFFSET = 5; // Distance from satellite to label
 // Spacing configuration for overlapping philosophers
 const PROXIMITY_THRESHOLD = 0.5; // Degrees - philosophers within this distance are considered "same location"
 const SPREAD_RADIUS = 8; // Units to spread philosophers apart tangentially
+const ALTITUDE_VARIATION = 4; // Units of altitude difference within groups for perspective
 
 // Group nodes by proximity and calculate spread offsets
-// Returns a Map of nodeId -> { offsetX, offsetZ } in tangent space
+// Returns a Map of nodeId -> { offsetX, offsetZ, altitudeOffset } in tangent space
 function calculateSpreadOffsets(nodes) {
   const offsets = new Map();
   const groups = [];
@@ -174,7 +191,7 @@ function calculateSpreadOffsets(nodes) {
 
   // Calculate offsets for each group
   groups.forEach((group) => {
-    // Sort by historical weight (highest first) so most important are centered
+    // Sort by historical weight (highest first) so most important are centered/highest
     group.sort((a, b) => (b.historical_weight || 0.5) - (a.historical_weight || 0.5));
 
     const count = group.length;
@@ -186,20 +203,25 @@ function calculateSpreadOffsets(nodes) {
     group.forEach((node, index) => {
       if (count === 1) {
         // Only one philosopher - no offset needed
-        offsets.set(node.id, { offsetX: 0, offsetZ: 0 });
+        offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: 0 });
       } else if (index === 0 && topStaysCentered) {
-        // Most important philosopher stays at center
-        offsets.set(node.id, { offsetX: 0, offsetZ: 0 });
+        // Most important philosopher stays at center and highest altitude
+        offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: ALTITUDE_VARIATION });
       } else {
-        // Spread others in a circle around center
+        // Spread others in a circle around center with varying altitudes
         // Adjust index if top is centered (so index 1 becomes position 0 in the circle)
         const circleIndex = topStaysCentered ? index - 1 : index;
         const angle = (circleIndex / spreadCount) * Math.PI * 2;
         // Increase radius slightly for larger groups
         const radius = SPREAD_RADIUS * (1 + (spreadCount - 1) * 0.12);
+        // Vary altitude based on position in group (higher weight = higher altitude)
+        const altitudeOffset = topStaysCentered 
+          ? -circleIndex * (ALTITUDE_VARIATION / spreadCount) // Lower than center
+          : (spreadCount - circleIndex - 1) * (ALTITUDE_VARIATION / spreadCount); // Graduated
         offsets.set(node.id, {
           offsetX: Math.cos(angle) * radius,
           offsetZ: Math.sin(angle) * radius,
+          altitudeOffset,
         });
       }
     });
@@ -282,7 +304,9 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   
   // Position directly above city at calculated altitude
   // This position is in Earth-local coordinates (satellite is child of Earth)
-  let finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + altitude);
+  // Apply altitude offset from spread calculation if provided
+  const altitudeBoost = spreadOffset?.altitudeOffset || 0;
+  let finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + altitude + altitudeBoost);
   const surfacePos = latLngToVector3(node.latitude, node.longitude, earthRadius);
   
   // Apply spread offset if provided (to separate overlapping philosophers)
@@ -1003,20 +1027,23 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         left: 0,
       }}
     >
-      {/* Zoom Controls */}
+      {/* Zoom Controls - moved up ~2cm (75px) */}
       <div
         style={{
           position: 'absolute',
-          bottom: '20px',
+          bottom: '95px',
           right: '20px',
           display: 'flex',
           flexDirection: 'column',
           gap: '8px',
-          zIndex: 100,
+          zIndex: 1000,
+          pointerEvents: 'auto',
         }}
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         <button
-          onClick={zoomIn}
+          onClick={(e) => { e.stopPropagation(); zoomIn(); }}
           style={{
             width: '40px',
             height: '40px',
@@ -1038,7 +1065,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
           +
         </button>
         <button
-          onClick={zoomOut}
+          onClick={(e) => { e.stopPropagation(); zoomOut(); }}
           style={{
             width: '40px',
             height: '40px',
@@ -1060,7 +1087,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
           −
         </button>
         <button
-          onClick={resetView}
+          onClick={(e) => { e.stopPropagation(); resetView(); }}
           style={{
             width: '40px',
             height: '40px',
