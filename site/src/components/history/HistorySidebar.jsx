@@ -1,10 +1,10 @@
 // ============================================================
-// HISTORY SIDEBAR - Container for the 3D Philosophy Graph
+// HISTORY SIDEBAR - Container for the Constellation of Ideas
 // Free module - no credits required
 // ============================================================
 
 import React from 'react';
-import { HistoryGraph } from './HistoryGraph';
+import { ConstellationOfIdeas } from './ConstellationOfIdeas.jsx';
 
 // Error boundary to catch 3D rendering crashes
 class HistoryErrorBoundary extends React.Component {
@@ -159,10 +159,10 @@ export function HistorySidebar({ isOpen, onClose }) {
           <div style={{ width: 36 }} /> {/* Spacer for alignment */}
         </div>
 
-        {/* Graph Container */}
+        {/* Constellation Container */}
         <div style={contentStyle}>
           <HistoryErrorBoundary onClose={onClose}>
-            <HistoryGraph />
+            <ConstellationOfIdeas />
           </HistoryErrorBoundary>
         </div>
       </div>

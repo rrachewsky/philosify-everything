@@ -1,0 +1,312 @@
+// ============================================================
+// useConstellation - Data fetching and state management for Constellation of Ideas
+// ============================================================
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
+
+// Timeline constants
+const MIN_YEAR = -600;
+const MAX_YEAR = 2026;
+const YEARS_PER_SECOND_1X = 2.5; // At 1x speed, ~17 minutes for full timeline
+
+// Battle dimension weights for Y-position calculation
+const BATTLE_WEIGHTS = {
+  reason_faith: 0.20,
+  reality_mysticism: 0.20,
+  individual_collective: 0.15,
+  freedom_coercion: 0.15,
+  value_nihilism: 0.10,
+  market_planning: 0.05,
+  beauty_chaos: 0.10,
+  good_evil: 0.05,
+};
+
+// Tradition hemisphere base positions (X coordinate)
+const TRADITION_BASE_X = {
+  western: -60,
+  chinese: 60,
+  indian: 40,
+  islamic: 20,
+};
+
+// Battle dimension colors
+export const BATTLE_COLORS = {
+  reason_faith: '#FFD700',        // Gold
+  reality_mysticism: '#00BFFF',   // Deep Sky Blue
+  individual_collective: '#D6158C', // Magenta (Philosify brand)
+  freedom_coercion: '#32CD32',    // Lime Green
+  value_nihilism: '#FF6347',      // Tomato
+  market_planning: '#9370DB',     // Medium Purple
+  beauty_chaos: '#FF69B4',        // Hot Pink
+  good_evil: '#20B2AA',           // Light Sea Green
+};
+
+// Tradition colors for satellites
+export const TRADITION_COLORS = {
+  western: '#FAFAFB',   // Cool white
+  chinese: '#FFD700',   // Gold
+  indian: '#FF8C00',    // Deep orange
+  islamic: '#00CED1',   // Dark turquoise
+};
+
+// Calculate orbital position based on battle scores and tradition
+export function calculateOrbitalPosition(node) {
+  const battles = node.battles || {};
+  
+  // Y position: weighted average of battle scores (-1 to +1 range, scale to orbital space)
+  let yScore = 0;
+  Object.entries(BATTLE_WEIGHTS).forEach(([battle, weight]) => {
+    const score = battles[battle] || 0;
+    yScore += score * weight;
+  });
+  
+  // Scale Y to orbital range (-80 to +80)
+  const y = yScore * 80;
+  
+  // X position: based on tradition with jitter
+  const baseX = TRADITION_BASE_X[node.tradition] || 0;
+  const schoolJitter = (hashString(node.school_of_thought || '') % 30) - 15;
+  const x = baseX + schoolJitter;
+  
+  // Z position: based on era with some clustering
+  const eraDepth = ((node.birth_year + 600) / 2626) * 60 - 30; // -30 to +30
+  const z = eraDepth + (hashString(node.name) % 20) - 10;
+  
+  // Altitude: base + bonus for historical weight
+  const BASE_ALTITUDE = 130;
+  const ALTITUDE_BONUS = 40;
+  const altitude = BASE_ALTITUDE + (node.historical_weight || 0.5) * ALTITUDE_BONUS;
+  
+  return { x, y, z, altitude };
+}
+
+// Simple string hash for consistent jitter
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+}
+
+export function useConstellation() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Timeline state
+  const [currentYear, setCurrentYear] = useState(MIN_YEAR);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  
+  // Selection state
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedEdge, setSelectedEdge] = useState(null);
+  const [hoveredNode, setHoveredNode] = useState(null);
+  
+  // Refs for animation
+  const animationRef = useRef(null);
+  const lastTimeRef = useRef(null);
+
+  // Fetch constellation data
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchData() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(`${API_URL}/api/history/constellation`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const json = await response.json();
+
+        // Calculate orbital positions for each node
+        const nodesWithPositions = json.nodes.map(node => ({
+          ...node,
+          orbital_position: node.orbital_position || calculateOrbitalPosition(node),
+        }));
+
+        if (!cancelled) {
+          setData({
+            ...json,
+            nodes: nodesWithPositions,
+          });
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('[useConstellation] Fetch error:', err);
+        if (!cancelled) {
+          setError(err);
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Timeline playback
+  useEffect(() => {
+    if (!isPlaying) {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
+      }
+      lastTimeRef.current = null;
+      return;
+    }
+
+    const animate = (timestamp) => {
+      if (lastTimeRef.current === null) {
+        lastTimeRef.current = timestamp;
+      }
+
+      const deltaMs = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
+
+      // Calculate years to advance
+      const yearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed;
+
+      setCurrentYear(prev => {
+        const next = prev + yearsToAdvance;
+        if (next >= MAX_YEAR) {
+          setIsPlaying(false);
+          return MAX_YEAR;
+        }
+        return next;
+      });
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isPlaying, playbackSpeed]);
+
+  // Get visible nodes based on current year
+  const getVisibleNodes = useCallback(() => {
+    if (!data?.nodes) return [];
+    return data.nodes.filter(node => node.birth_year <= currentYear);
+  }, [data, currentYear]);
+
+  // Get visible edges (both nodes must be visible, with 1.8s delay)
+  const getVisibleEdges = useCallback(() => {
+    if (!data?.edges || !data?.nodes) return [];
+    
+    const visibleNodeIds = new Set(getVisibleNodes().map(n => n.id));
+    
+    return data.edges.filter(edge => {
+      const sourceNode = data.nodes.find(n => n.id === edge.source_id);
+      const targetNode = data.nodes.find(n => n.id === edge.target_id);
+      
+      if (!sourceNode || !targetNode) return false;
+      if (!visibleNodeIds.has(edge.source_id) || !visibleNodeIds.has(edge.target_id)) return false;
+      
+      // Edge appears 1.8 seconds (real time) after the later node
+      // At 1x speed, 1.8 seconds = ~4.5 years
+      const laterBirthYear = Math.max(sourceNode.birth_year, targetNode.birth_year);
+      const delayYears = (1.8 * YEARS_PER_SECOND_1X * playbackSpeed);
+      
+      return currentYear >= laterBirthYear + delayYears;
+    });
+  }, [data, currentYear, playbackSpeed, getVisibleNodes]);
+
+  // Jump to era
+  const jumpToEra = useCallback((year) => {
+    setCurrentYear(year);
+    setIsPlaying(false);
+  }, []);
+
+  // Toggle playback
+  const togglePlay = useCallback(() => {
+    setIsPlaying(prev => !prev);
+  }, []);
+
+  // Search for philosopher
+  const searchPhilosopher = useCallback((query) => {
+    if (!data?.nodes || !query) return [];
+    const lowerQuery = query.toLowerCase();
+    return data.nodes.filter(node => 
+      node.name.toLowerCase().includes(lowerQuery)
+    ).slice(0, 10);
+  }, [data]);
+
+  // Find philosopher by ID
+  const findPhilosopher = useCallback((id) => {
+    return data?.nodes?.find(n => n.id === id) || null;
+  }, [data]);
+
+  // Get connections for a node
+  const getNodeConnections = useCallback((nodeId) => {
+    if (!data?.edges) return [];
+    return data.edges.filter(e => 
+      e.source_id === nodeId || e.target_id === nodeId
+    );
+  }, [data]);
+
+  // Format year for display
+  const formatYear = useCallback((year) => {
+    if (year < 0) return `${Math.abs(Math.round(year))} BC`;
+    return `${Math.round(year)} AD`;
+  }, []);
+
+  return {
+    // Data
+    data,
+    loading,
+    error,
+    
+    // Timeline
+    currentYear,
+    setCurrentYear,
+    isPlaying,
+    setIsPlaying,
+    playbackSpeed,
+    setPlaybackSpeed,
+    togglePlay,
+    jumpToEra,
+    formatYear,
+    MIN_YEAR,
+    MAX_YEAR,
+    
+    // Visibility
+    getVisibleNodes,
+    getVisibleEdges,
+    
+    // Selection
+    selectedNode,
+    setSelectedNode,
+    selectedEdge,
+    setSelectedEdge,
+    hoveredNode,
+    setHoveredNode,
+    
+    // Search
+    searchPhilosopher,
+    findPhilosopher,
+    getNodeConnections,
+  };
+}
+
+export default useConstellation;

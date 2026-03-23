@@ -352,6 +352,23 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       // Also log save status for debugging
       console.log(`[CinemaAnalyze] Save status - Supabase: ${savedRecord ? 'OK (ID: ' + savedRecord.id + ')' : 'FAILED'}, KV key: ${cacheKey}`);
 
+      // Constellation Graph Enrichment (Tier 1: rule-based extraction)
+      if (savedRecord?.id) {
+        try {
+          const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
+          const extractionResult = await extractRuleBased(
+            { id: savedRecord.id, ...result },
+            "cinema",
+            env,
+          );
+          console.log(
+            `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
+          );
+        } catch (err) {
+          console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+        }
+      }
+
       // Confirm credit
       await confirmReservation(env, reservation.reservationId, `cinema-analysis:${title.substring(0, 50)}`);
 

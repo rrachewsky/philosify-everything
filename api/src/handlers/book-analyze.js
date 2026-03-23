@@ -389,6 +389,21 @@ export async function handleBookAnalyze(
     const saveFailed = !savedRecord || !savedRecord.id;
     if (saveFailed) {
       console.error(`[BookAnalysis] CRITICAL: Analysis generated but save failed!`);
+    } else {
+      // Constellation Graph Enrichment (Tier 1: rule-based extraction)
+      try {
+        const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
+        const extractionResult = await extractRuleBased(
+          { id: savedRecord.id, ...analysis },
+          "literature",
+          env,
+        );
+        console.log(
+          `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
+        );
+      } catch (err) {
+        console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+      }
     }
 
     const responseData = {

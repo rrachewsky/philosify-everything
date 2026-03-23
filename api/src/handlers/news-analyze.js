@@ -313,6 +313,23 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
       // Update KV with the real Supabase ID
       await env.PHILOSIFY_KV.put(cacheKey, JSON.stringify(result));
 
+      // Constellation Graph Enrichment (Tier 1: rule-based extraction)
+      if (result.id) {
+        try {
+          const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
+          const extractionResult = await extractRuleBased(
+            { id: result.id, ...result },
+            "news",
+            env,
+          );
+          console.log(
+            `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
+          );
+        } catch (err) {
+          console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+        }
+      }
+
       // Confirm credit
       await confirmReservation(env, reservation.reservationId, `news-analysis:${title.substring(0, 50)}`);
 

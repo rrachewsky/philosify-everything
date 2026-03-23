@@ -3483,6 +3483,29 @@ export default {
         return handleHistoryExtract(request, env, origin);
       }
 
+      // ============================================================
+      // CONSTELLATION OF IDEAS — 3D visualization of 2,600 years of thought
+      // ============================================================
+      if (url.pathname === "/api/history/constellation" && request.method === "GET") {
+        const { handleConstellation } = await import("./src/handlers/constellation.js");
+        return handleConstellation(request, env, origin);
+      }
+
+      if (url.pathname === "/api/history/constellation/cache-clear" && request.method === "POST") {
+        const adminSecret = request.headers.get("X-Admin-Secret");
+        const expected = await getSecret(env.ADMIN_SECRET);
+        if (!adminSecret || adminSecret !== expected) {
+          return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+        }
+        const { handleConstellationCacheClear } = await import("./src/handlers/constellation.js");
+        return handleConstellationCacheClear(request, env, origin);
+      }
+
+      if (url.pathname === "/api/history/constellation/stats" && request.method === "GET") {
+        const { handleConstellationStats } = await import("./src/handlers/constellation.js");
+        return handleConstellationStats(request, env, origin);
+      }
+
       // Temporary diagnostic: check profiles table and auth trigger
       if (url.pathname === "/api/admin/diagnose-auth" && request.method === "GET") {
         const adminSecret = request.headers.get("X-Admin-Secret");
@@ -3663,6 +3686,27 @@ export default {
         refreshGraphCache(env).catch((err) =>
           console.error("[Cron] History Graph refresh failed:", err.message),
         ),
+      );
+    }
+
+    // Constellation of Ideas: Tier 2 LLM extraction sweep — every 30 minutes
+    // Processes analyses that have Tier 1 but not Tier 2 extraction
+    if (minute % 30 < 5) {
+      ctx.waitUntil(
+        (async () => {
+          try {
+            const { sweepLLMExtraction } = await import("./src/extractors/constellation-llm-extractor.js");
+            const results = await sweepLLMExtraction(env);
+            console.log(`[Cron] Constellation Tier 2: ${results.processed} processed, ${results.success} success`);
+
+            // Also run auto-merge after LLM sweep
+            const { runMergeOperations } = await import("./src/extractors/constellation-merge.js");
+            const mergeResults = await runMergeOperations(env);
+            console.log(`[Cron] Constellation merge: ${mergeResults.edges.merged} edges, ${mergeResults.nodes.promoted} nodes`);
+          } catch (err) {
+            console.error("[Cron] Constellation sweep failed:", err.message);
+          }
+        })(),
       );
     }
   },

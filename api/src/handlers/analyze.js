@@ -814,6 +814,23 @@ export async function handleAnalyze(
           );
         }
       }
+
+      // 9. Constellation Graph Enrichment (Tier 1: rule-based extraction)
+      // Extracts philosopher mentions and connections from the analysis text
+      try {
+        const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
+        const extractionResult = await extractRuleBased(
+          { id: savedRecord.id, ...analysis },
+          "music",
+          env,
+        );
+        console.log(
+          `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
+        );
+      } catch (err) {
+        // Non-fatal — the analysis is already saved. Log and continue.
+        console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+      }
     }
 
     // NOTE: TTS is now generated on-demand via /api/tts endpoint (Gemini)
