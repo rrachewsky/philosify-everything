@@ -1275,7 +1275,7 @@ export const SEED_NODES = [
       'Rational self-interest is the proper moral purpose',
       'Individual rights are absolute and inalienable'
     ],
-    historical_weight: 0.6,
+    historical_weight: 1.0, // Founder of Objectivism - among the greatest
     battles: {
       reason_faith: 1.0,
       reality_mysticism: 1.0,
