@@ -3,6 +3,7 @@
 // ============================================================
 
 import React, { useRef, useEffect, useImperativeHandle, forwardRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as THREE from 'three';
 import { TRADITION_COLORS, BATTLE_COLORS } from '@hooks/useConstellation';
 
@@ -138,8 +139,77 @@ const FOUNDATIONAL_ALTITUDE_BOOST = 10; // Extra altitude for foundational (weig
 const MOST_FOUNDATIONAL_ALTITUDE_BOOST = 20; // Extra altitude for most foundational (weight === 1.0)
 const LABEL_OFFSET = 5; // Distance from satellite to label
 
+// Spacing configuration for overlapping philosophers
+const PROXIMITY_THRESHOLD = 0.5; // Degrees - philosophers within this distance are considered "same location"
+const SPREAD_RADIUS = 8; // Units to spread philosophers apart tangentially
+
+// Group nodes by proximity and calculate spread offsets
+// Returns a Map of nodeId -> { offsetX, offsetZ } in tangent space
+function calculateSpreadOffsets(nodes) {
+  const offsets = new Map();
+  const groups = [];
+  const assigned = new Set();
+
+  // Group nodes by proximity
+  nodes.forEach((node) => {
+    if (assigned.has(node.id)) return;
+
+    const group = [node];
+    assigned.add(node.id);
+
+    nodes.forEach((other) => {
+      if (assigned.has(other.id)) return;
+      const latDiff = Math.abs(node.latitude - other.latitude);
+      const lngDiff = Math.abs(node.longitude - other.longitude);
+      if (latDiff < PROXIMITY_THRESHOLD && lngDiff < PROXIMITY_THRESHOLD) {
+        group.push(other);
+        assigned.add(other.id);
+      }
+    });
+
+    if (group.length > 1) {
+      groups.push(group);
+    }
+  });
+
+  // Calculate offsets for each group
+  groups.forEach((group) => {
+    // Sort by historical weight (highest first) so most important are centered
+    group.sort((a, b) => (b.historical_weight || 0.5) - (a.historical_weight || 0.5));
+
+    const count = group.length;
+    // Check if the top philosopher (first after sorting) should stay centered
+    const topPhilosopher = group[0];
+    const topStaysCentered = topPhilosopher.historical_weight >= 0.9;
+    const spreadCount = topStaysCentered ? count - 1 : count;
+    
+    group.forEach((node, index) => {
+      if (count === 1) {
+        // Only one philosopher - no offset needed
+        offsets.set(node.id, { offsetX: 0, offsetZ: 0 });
+      } else if (index === 0 && topStaysCentered) {
+        // Most important philosopher stays at center
+        offsets.set(node.id, { offsetX: 0, offsetZ: 0 });
+      } else {
+        // Spread others in a circle around center
+        // Adjust index if top is centered (so index 1 becomes position 0 in the circle)
+        const circleIndex = topStaysCentered ? index - 1 : index;
+        const angle = (circleIndex / spreadCount) * Math.PI * 2;
+        // Increase radius slightly for larger groups
+        const radius = SPREAD_RADIUS * (1 + (spreadCount - 1) * 0.12);
+        offsets.set(node.id, {
+          offsetX: Math.cos(angle) * radius,
+          offsetZ: Math.sin(angle) * radius,
+        });
+      }
+    });
+  });
+
+  return offsets;
+}
+
 // Create satellite mesh - positioned directly above city, attached to Earth
-function createSatellite(node, earthRadius) {
+function createSatellite(node, earthRadius, spreadOffset = null) {
   const group = new THREE.Group();
   group.userData = { nodeId: node.id, node, isAutoEnriched: node.auto_enriched || false };
   
@@ -212,8 +282,23 @@ function createSatellite(node, earthRadius) {
   
   // Position directly above city at calculated altitude
   // This position is in Earth-local coordinates (satellite is child of Earth)
-  const finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + altitude);
+  let finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + altitude);
   const surfacePos = latLngToVector3(node.latitude, node.longitude, earthRadius);
+  
+  // Apply spread offset if provided (to separate overlapping philosophers)
+  if (spreadOffset && (spreadOffset.offsetX !== 0 || spreadOffset.offsetZ !== 0)) {
+    // Calculate tangent vectors at this position (perpendicular to radial direction)
+    const radial = finalPos.clone().normalize();
+    
+    // Use world up as reference, cross with radial to get tangent
+    const worldUp = new THREE.Vector3(0, 1, 0);
+    const tangentX = new THREE.Vector3().crossVectors(worldUp, radial).normalize();
+    const tangentZ = new THREE.Vector3().crossVectors(radial, tangentX).normalize();
+    
+    // Apply offset in tangent space
+    finalPos.add(tangentX.multiplyScalar(spreadOffset.offsetX));
+    finalPos.add(tangentZ.multiplyScalar(spreadOffset.offsetZ));
+  }
   
   group.position.copy(finalPos);
   
@@ -385,6 +470,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   onEdgeSelect,
   currentYear,
 }, ref) {
+  const { t } = useTranslation();
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
@@ -671,10 +757,14 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
       }
     });
 
+    // Calculate spread offsets for overlapping philosophers
+    const spreadOffsets = calculateSpreadOffsets(nodes);
+
     // Add new satellites as CHILDREN of Earth (so they rotate with Earth)
     nodes.forEach(node => {
       if (!satellitesRef.current.has(node.id)) {
-        const satellite = createSatellite(node, 100);
+        const spreadOffset = spreadOffsets.get(node.id) || null;
+        const satellite = createSatellite(node, 100, spreadOffset);
         earth.add(satellite); // Add to Earth so satellites rotate WITH Earth
         satellitesRef.current.set(node.id, satellite);
 
@@ -943,7 +1033,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
           }}
           onMouseEnter={(e) => e.target.style.background = 'rgba(40, 40, 60, 0.9)'}
           onMouseLeave={(e) => e.target.style.background = 'rgba(20, 20, 30, 0.8)'}
-          title="Zoom In"
+          title={t('constellation.zoomIn')}
         >
           +
         </button>
@@ -965,7 +1055,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
           }}
           onMouseEnter={(e) => e.target.style.background = 'rgba(40, 40, 60, 0.9)'}
           onMouseLeave={(e) => e.target.style.background = 'rgba(20, 20, 30, 0.8)'}
-          title="Zoom Out"
+          title={t('constellation.zoomOut')}
         >
           −
         </button>
@@ -987,7 +1077,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
           }}
           onMouseEnter={(e) => e.target.style.background = 'rgba(40, 40, 60, 0.9)'}
           onMouseLeave={(e) => e.target.style.background = 'rgba(20, 20, 30, 0.8)'}
-          title="Reset View"
+          title={t('constellation.resetView')}
         >
           ⟲
         </button>
