@@ -5,16 +5,18 @@
 import React from 'react';
 import { BATTLE_COLORS, TRADITION_COLORS } from '@hooks/useConstellation';
 
-// Battle dimension labels
+// Battle dimension labels with descriptions
+// Format: [positiveLabel, negativeLabel, description]
+// Score +1 = positive (left), Score -1 = negative (right)
 const BATTLE_LABELS = {
-  reason_faith: ['Reason', 'Faith'],
-  reality_mysticism: ['Reality', 'Mysticism'],
-  individual_collective: ['Individual', 'Collective'],
-  freedom_coercion: ['Freedom', 'Coercion'],
-  value_nihilism: ['Value', 'Nihilism'],
-  market_planning: ['Market', 'Planning'],
-  beauty_chaos: ['Beauty', 'Chaos'],
-  good_evil: ['Good', 'Evil'],
+  reason_faith: ['Reason', 'Faith', 'Source of knowledge'],
+  reality_mysticism: ['Reality', 'Mysticism', 'Nature of existence'],
+  individual_collective: ['Individual', 'Collective', 'Moral focus'],
+  freedom_coercion: ['Freedom', 'Coercion', 'Political stance'],
+  value_nihilism: ['Value', 'Nihilism', 'Meaning & purpose'],
+  market_planning: ['Market', 'Planning', 'Economic system'],
+  beauty_chaos: ['Beauty', 'Chaos', 'Aesthetic view'],
+  good_evil: ['Good', 'Evil', 'Moral realism'],
 };
 
 // Connection type labels and colors
@@ -28,33 +30,48 @@ const CONNECTION_COLORS = {
 };
 
 function BattleBar({ battle, score }) {
-  const [leftLabel, rightLabel] = BATTLE_LABELS[battle] || ['Left', 'Right'];
+  const [positiveLabel, negativeLabel, description] = BATTLE_LABELS[battle] || ['Left', 'Right', ''];
   const color = BATTLE_COLORS[battle] || '#888';
-  // Score: -1 to +1, center is 0
-  const percent = ((score + 1) / 2) * 100;
+  
+  // Score: -1 to +1
+  // +1 = fully positive (Reason, Reality, Individual, etc.)
+  // -1 = fully negative (Faith, Mysticism, Collective, etc.)
+  const isPositive = score >= 0;
+  const intensity = Math.abs(score);
+  const intensityPercent = intensity * 100;
+  
+  // Determine which label to highlight
+  const dominantLabel = isPositive ? positiveLabel : negativeLabel;
+  const oppositeLabel = isPositive ? negativeLabel : positiveLabel;
+  
+  // Intensity description
+  const getIntensityWord = (val) => {
+    if (val >= 0.9) return 'Strongly';
+    if (val >= 0.7) return 'Clearly';
+    if (val >= 0.5) return 'Moderately';
+    if (val >= 0.3) return 'Somewhat';
+    return 'Slightly';
+  };
 
   return (
     <div style={styles.battleRow}>
-      <span style={styles.battleLabel}>{leftLabel}</span>
+      <div style={styles.battleHeader}>
+        <span style={{ ...styles.battleDominant, color }}>{dominantLabel}</span>
+        <span style={styles.battleVs}>vs</span>
+        <span style={styles.battleOpposite}>{oppositeLabel}</span>
+      </div>
       <div style={styles.battleTrack}>
-        <div style={styles.battleCenter} />
         <div
           style={{
             ...styles.battleFill,
-            left: score < 0 ? `${percent}%` : '50%',
-            width: `${Math.abs(score) * 50}%`,
-            background: color,
-          }}
-        />
-        <div
-          style={{
-            ...styles.battleMarker,
-            left: `${percent}%`,
-            background: color,
+            width: `${intensityPercent}%`,
+            background: `linear-gradient(90deg, ${color}, ${color}88)`,
           }}
         />
       </div>
-      <span style={styles.battleLabel}>{rightLabel}</span>
+      <div style={styles.battleIntensity}>
+        {getIntensityWord(intensity)} {dominantLabel.toLowerCase()}-oriented
+      </div>
     </div>
   );
 }
@@ -368,54 +385,58 @@ const styles = {
   battles: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 12,
   },
 
   battleRow: {
     display: 'flex',
-    alignItems: 'center',
-    gap: 8,
+    flexDirection: 'column',
+    gap: 4,
   },
 
-  battleLabel: {
+  battleHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+  },
+
+  battleDominant: {
+    fontSize: 12,
+    fontWeight: 600,
+  },
+
+  battleVs: {
     fontSize: 9,
-    color: 'rgba(255, 255, 255, 0.5)',
-    width: 55,
-    textAlign: 'center',
+    color: 'rgba(255, 255, 255, 0.3)',
+    fontStyle: 'italic',
+  },
+
+  battleOpposite: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.4)',
   },
 
   battleTrack: {
-    flex: 1,
+    width: '100%',
     height: 6,
     background: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 3,
     position: 'relative',
-  },
-
-  battleCenter: {
-    position: 'absolute',
-    left: '50%',
-    top: 0,
-    bottom: 0,
-    width: 1,
-    background: 'rgba(255, 255, 255, 0.3)',
+    overflow: 'hidden',
   },
 
   battleFill: {
     position: 'absolute',
+    left: 0,
     top: 0,
     height: '100%',
     borderRadius: 3,
-    opacity: 0.6,
   },
 
-  battleMarker: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 10,
-    height: 10,
-    borderRadius: '50%',
+  battleIntensity: {
+    fontSize: 9,
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontStyle: 'italic',
   },
 
   connectionsList: {
