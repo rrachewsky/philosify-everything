@@ -5,9 +5,18 @@
 // ============================================================
 
 // ═══════════════════════════════════════════════════════════
-// SCHOOL COLORS - 42 philosophical schools
+// SCHOOL COLORS - 49 philosophical schools (42 Western + 7 Eastern)
 // ═══════════════════════════════════════════════════════════
 export const SCHOOL_COLORS = {
+  // EASTERN TRADITIONS
+  'Confucian': '#C4A747',
+  'Daoist': '#5D8C3E',
+  'Mohist': '#6B8BA4',
+  'Legalist': '#8B4513',
+  'Buddhist': '#F4A460',
+  'Jain': '#CD853F',
+  'Vedanta': '#DAA520',
+  // WESTERN TRADITIONS
   'Pre-Socratic': '#89CFF0',
   'Sophist': '#E05A5A',
   'Socratic': '#D6158C',
@@ -56,6 +65,15 @@ export const SCHOOL_COLORS = {
 // SCHOOL STANCES - Binary only: pro or anti (reason & objectivity)
 // ═══════════════════════════════════════════════════════════
 export const SCHOOL_STANCES = {
+  // EASTERN TRADITIONS
+  'Confucian': 'pro',      // Emphasis on rational ethics and social order
+  'Daoist': 'anti',        // Wu wei, mystical, beyond rational categories
+  'Mohist': 'pro',         // Logical argumentation, consequentialist ethics
+  'Legalist': 'anti',      // Amoral statecraft, collective over individual
+  'Buddhist': 'anti',      // Transcends reason, seeks liberation from illusion
+  'Jain': 'anti',          // Mystical liberation, asceticism
+  'Vedanta': 'anti',       // World as illusion (maya), mystical unity
+  // WESTERN TRADITIONS
   'Pre-Socratic': 'pro',
   'Sophist': 'anti',
   'Socratic': 'pro',
@@ -101,9 +119,264 @@ export const SCHOOL_STANCES = {
 };
 
 // ═══════════════════════════════════════════════════════════
-// SEED_NODES - 168 philosophers
+// SEED_NODES - 181 philosophers (168 Western + 13 Eastern)
 // ═══════════════════════════════════════════════════════════
 export const SEED_NODES = [
+  // ═══════════════════════════════════════════════════════════
+  // EASTERN PHILOSOPHY - 13 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // INDIAN TRADITION (6)
+  {
+    id: 'mahavira',
+    name: 'Mahavira',
+    birth_year: -599,
+    death_year: -527,
+    dates: 'c.599–527 BC',
+    birth_city: 'Vaishali',
+    birth_country_modern: 'India',
+    latitude: 25.9833,
+    longitude: 85.1333,
+    school_of_thought: 'Jainism',
+    school: 'Jain',
+    tradition: 'indian',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Ahimsa (non-violence); anekantavada (many-sidedness of truth); liberation through asceticism'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.6, freedom_coercion: 0.8, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.9 }
+  },
+  {
+    id: 'buddha',
+    name: 'Siddhartha Gautama (Buddha)',
+    birth_year: -563,
+    death_year: -483,
+    dates: 'c.563–483 BC',
+    birth_city: 'Lumbini',
+    birth_country_modern: 'Nepal',
+    latitude: 27.4833,
+    longitude: 83.2833,
+    school_of_thought: 'Buddhism',
+    school: 'Buddhist',
+    tradition: 'indian',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Four Noble Truths; Eightfold Path; impermanence and non-self (anatta)'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.1, individual_collective: 0.5, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'nagarjuna',
+    name: 'Nagarjuna',
+    birth_year: 150,
+    death_year: 250,
+    dates: 'c.150–250 AD',
+    birth_city: 'Vidarbha',
+    birth_country_modern: 'India',
+    latitude: 20.7500,
+    longitude: 78.7500,
+    school_of_thought: 'Madhyamaka Buddhism',
+    school: 'Buddhist',
+    tradition: 'indian',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Emptiness (sunyata); two truths doctrine; middle way between eternalism and nihilism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.5, reality_mysticism: -0.2, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.6 }
+  },
+  {
+    id: 'shankara',
+    name: 'Adi Shankara',
+    birth_year: 788,
+    death_year: 820,
+    dates: '788–820 AD',
+    birth_city: 'Kaladi',
+    birth_country_modern: 'India',
+    latitude: 10.1675,
+    longitude: 76.4411,
+    school_of_thought: 'Advaita Vedanta',
+    school: 'Vedanta',
+    tradition: 'indian',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Brahman alone is real; world is illusion (maya); Atman is Brahman; liberation through knowledge'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.4, reality_mysticism: -0.3, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
+  },
+  {
+    id: 'ramanuja',
+    name: 'Ramanuja',
+    birth_year: 1017,
+    death_year: 1137,
+    dates: '1017–1137 AD',
+    birth_city: 'Sriperumbudur',
+    birth_country_modern: 'India',
+    latitude: 12.9667,
+    longitude: 79.9500,
+    school_of_thought: 'Vishishtadvaita Vedanta',
+    school: 'Vedanta',
+    tradition: 'indian',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Qualified non-dualism; souls as real parts of Brahman; bhakti (devotion) path to liberation'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.8 }
+  },
+  {
+    id: 'gandhi',
+    name: 'Mahatma Gandhi',
+    birth_year: 1869,
+    death_year: 1948,
+    dates: '1869–1948',
+    birth_city: 'Porbandar',
+    birth_country_modern: 'India',
+    latitude: 21.6417,
+    longitude: 69.6293,
+    school_of_thought: 'Satyagraha / Nonviolence',
+    school: 'Vedanta',
+    tradition: 'indian',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Satyagraha (truth-force); ahimsa (non-violence); swaraj (self-rule through self-discipline)'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.3, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 1.0 }
+  },
+
+  // CHINESE TRADITION (7)
+  {
+    id: 'laozi',
+    name: 'Laozi',
+    birth_year: -571,
+    death_year: -471,
+    dates: 'c.571–471 BC',
+    birth_city: 'Luoyi',
+    birth_country_modern: 'China',
+    latitude: 34.6197,
+    longitude: 112.4540,
+    school_of_thought: 'Taoism',
+    school: 'Daoist',
+    tradition: 'chinese',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['The Tao that can be told is not the eternal Tao; wu wei (non-action); simplicity and naturalness'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.2, reality_mysticism: -0.2, individual_collective: 0.5, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+  {
+    id: 'confucius',
+    name: 'Confucius',
+    birth_year: -551,
+    death_year: -479,
+    dates: '551–479 BC',
+    birth_city: 'Qufu',
+    birth_country_modern: 'China',
+    latitude: 35.5961,
+    longitude: 116.9913,
+    school_of_thought: 'Confucianism',
+    school: 'Confucian',
+    tradition: 'chinese',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Ren (benevolence); li (ritual propriety); the junzi (noble person) cultivates virtue'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.0, freedom_coercion: 0.3, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.9 }
+  },
+  {
+    id: 'mozi',
+    name: 'Mozi',
+    birth_year: -470,
+    death_year: -391,
+    dates: 'c.470–391 BC',
+    birth_city: 'Lu State',
+    birth_country_modern: 'China',
+    latitude: 35.5961,
+    longitude: 116.9913,
+    school_of_thought: 'Mohism',
+    school: 'Mohist',
+    tradition: 'chinese',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Universal love without partiality; consequentialist ethics; opposition to offensive warfare'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.3, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.8 }
+  },
+  {
+    id: 'mencius',
+    name: 'Mencius',
+    birth_year: -372,
+    death_year: -289,
+    dates: 'c.372–289 BC',
+    birth_city: 'Zoucheng',
+    birth_country_modern: 'China',
+    latitude: 35.4047,
+    longitude: 116.9658,
+    school_of_thought: 'Confucianism',
+    school: 'Confucian',
+    tradition: 'chinese',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Human nature is inherently good; benevolent government; four beginnings of virtue'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.2, freedom_coercion: 0.4, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
+  },
+  {
+    id: 'zhuangzi',
+    name: 'Zhuangzi',
+    birth_year: -369,
+    death_year: -286,
+    dates: 'c.369–286 BC',
+    birth_city: 'Meng',
+    birth_country_modern: 'China',
+    latitude: 34.4300,
+    longitude: 115.6500,
+    school_of_thought: 'Taoism',
+    school: 'Daoist',
+    tradition: 'chinese',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Butterfly dream (what is reality?); embrace spontaneity; all perspectives are relative'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.3, reality_mysticism: -0.1, individual_collective: 0.7, freedom_coercion: 0.8, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+  {
+    id: 'xunzi',
+    name: 'Xunzi',
+    birth_year: -310,
+    death_year: -235,
+    dates: 'c.310–235 BC',
+    birth_city: 'Zhao',
+    birth_country_modern: 'China',
+    latitude: 37.8706,
+    longitude: 114.5305,
+    school_of_thought: 'Confucianism',
+    school: 'Confucian',
+    tradition: 'chinese',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Human nature is evil; goodness is acquired; ritual and education transform nature'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.2, freedom_coercion: 0.2, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+  {
+    id: 'han_fei',
+    name: 'Han Fei',
+    birth_year: -280,
+    death_year: -233,
+    dates: 'c.280–233 BC',
+    birth_city: 'Han State',
+    birth_country_modern: 'China',
+    latitude: 34.7500,
+    longitude: 113.6500,
+    school_of_thought: 'Legalism',
+    school: 'Legalist',
+    tradition: 'chinese',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Law and punishment maintain order; the ruler must be impersonal; human nature is self-interested'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.8, individual_collective: -0.5, freedom_coercion: -0.7, value_nihilism: 0.3, market_planning: -0.5, beauty_chaos: 0.2, good_evil: 0.2 }
+  },
+
   // ═══════════════════════════════════════════════════════════
   // ERA 1: ANCIENT GREEK (c.624–322 BC) - 16 philosophers
   // ═══════════════════════════════════════════════════════════
@@ -3461,6 +3734,22 @@ export const SEED_NODES = [
 // SEED_EDGES - Influence relationships
 // ═══════════════════════════════════════════════════════════
 export const SEED_EDGES = [
+  // CHINESE TRADITION
+  { source_id: 'confucius', target_id: 'mencius', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'confucius', target_id: 'xunzi', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'xunzi', target_id: 'han_fei', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'laozi', target_id: 'zhuangzi', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'mozi', target_id: 'xunzi', relationship_type: 'influenced', weight: 2 },
+
+  // INDIAN TRADITION
+  { source_id: 'buddha', target_id: 'nagarjuna', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'shankara', target_id: 'ramanuja', relationship_type: 'reacted against', weight: 3 },
+  { source_id: 'buddha', target_id: 'gandhi', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'mahavira', target_id: 'gandhi', relationship_type: 'influenced', weight: 2 },
+
+  // CROSS-TRADITION (East-West)
+  { source_id: 'schopenhauer', target_id: 'buddha', relationship_type: 'influenced by', weight: 3 },
+
   // PRE-SOCRATIC CHAIN
   { source_id: 'thales', target_id: 'anaximander', relationship_type: 'influenced', weight: 3 },
   { source_id: 'anaximander', target_id: 'anaximenes', relationship_type: 'influenced', weight: 2 },
