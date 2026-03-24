@@ -18,7 +18,7 @@ export const ERAS = [
   { id: 'classical', label: 'Classical', startYear: -450, endYear: -300 },
   { id: 'hellenistic', label: 'Hellenistic', startYear: -300, endYear: 200 },
   { id: 'medieval', label: 'Medieval', startYear: 200, endYear: 1400 },
-  { id: 'renaissance', label: 'Renaissance', startYear: 1400, endYear: 1600 },
+  { id: 'renaissance', label: 'Renaissance', filterByMovement: true },
   { id: 'enlightenment', label: 'Enlightenment', filterByMovement: true },
   { id: 'counter_enlightenment', label: 'Counter-Enlightenment', filterByMovement: true },
   { id: 'modern', label: 'Modern', startYear: 1800, endYear: 1950 },
@@ -239,9 +239,15 @@ export function useConstellation() {
     if (selectedEra) {
       const era = ERAS.find(e => e.id === selectedEra);
       if (era) {
-        // Movement-based filtering (Enlightenment vs Counter-Enlightenment)
+        // Movement-based filtering (Enlightenment, Counter-Enlightenment, Renaissance)
+        // Supports both string and array movement fields
         if (era.filterByMovement) {
-          return data.nodes.filter(node => node.movement === selectedEra);
+          return data.nodes.filter(node => {
+            if (Array.isArray(node.movement)) {
+              return node.movement.includes(selectedEra);
+            }
+            return node.movement === selectedEra;
+          });
         }
         // Time-based filtering
         return data.nodes.filter(node => 

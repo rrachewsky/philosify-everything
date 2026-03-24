@@ -532,6 +532,35 @@ export const SEED_NODES = [
 
   // RENAISSANCE / EARLY MODERN
   {
+    id: 'leonardo',
+    name: 'Leonardo da Vinci',
+    birth_year: 1452,
+    death_year: 1519,
+    birth_city: 'Vinci',
+    birth_country_modern: 'Italy',
+    latitude: 43.7833,
+    longitude: 10.9333,
+    school_of_thought: 'Renaissance Humanism',
+    tradition: 'western',
+    movement: 'renaissance', // RENAISSANCE POLYMATH
+    key_ideas: [
+      'Art and science are complementary paths to truth',
+      'Observation and experiment reveal natural laws',
+      'The human body is a divine machine'
+    ],
+    historical_weight: 0.9,
+    battles: {
+      reason_faith: 0.8,
+      reality_mysticism: 0.8,
+      individual_collective: 0.8,
+      freedom_coercion: 0.6,
+      value_nihilism: 0.9,
+      market_planning: 0.0,
+      beauty_chaos: 0.95,
+      good_evil: 0.7
+    }
+  },
+  {
     id: 'machiavelli',
     name: 'Niccolo Machiavelli',
     birth_year: 1469,
@@ -542,6 +571,7 @@ export const SEED_NODES = [
     longitude: 11.2558,
     school_of_thought: 'Political Realism',
     tradition: 'western',
+    movement: 'renaissance', // RENAISSANCE MOVEMENT
     key_ideas: [
       'The ends justify the means in politics',
       'It is better to be feared than loved',
@@ -560,6 +590,35 @@ export const SEED_NODES = [
     }
   },
   {
+    id: 'bruno',
+    name: 'Giordano Bruno',
+    birth_year: 1548,
+    death_year: 1600,
+    birth_city: 'Nola',
+    birth_country_modern: 'Italy',
+    latitude: 40.9247,
+    longitude: 14.5278,
+    school_of_thought: 'Renaissance Naturalism',
+    tradition: 'western',
+    movement: 'renaissance', // RENAISSANCE MARTYR FOR REASON
+    key_ideas: [
+      'The universe is infinite with countless worlds',
+      'God is immanent in all of nature',
+      'Memory and imagination unlock cosmic knowledge'
+    ],
+    historical_weight: 0.7,
+    battles: {
+      reason_faith: 0.9, // Burned at the stake for defending reason
+      reality_mysticism: 0.7,
+      individual_collective: 0.8,
+      freedom_coercion: 0.9, // Died for intellectual freedom
+      value_nihilism: 0.8,
+      market_planning: 0.0,
+      beauty_chaos: 0.7,
+      good_evil: 0.7
+    }
+  },
+  {
     id: 'bacon',
     name: 'Francis Bacon',
     birth_year: 1561,
@@ -570,7 +629,7 @@ export const SEED_NODES = [
     longitude: -0.1278,
     school_of_thought: 'Empiricism',
     tradition: 'western',
-    movement: 'enlightenment', // ENLIGHTENMENT PRECURSOR
+    movement: ['renaissance', 'enlightenment'], // Renaissance polymath & Enlightenment precursor
     key_ideas: [
       'Knowledge is power',
       'The scientific method: observation and induction',
@@ -589,6 +648,35 @@ export const SEED_NODES = [
     }
   },
   {
+    id: 'galileo',
+    name: 'Galileo Galilei',
+    birth_year: 1564,
+    death_year: 1642,
+    birth_city: 'Pisa',
+    birth_country_modern: 'Italy',
+    latitude: 43.7228,
+    longitude: 10.4017,
+    school_of_thought: 'Scientific Method',
+    tradition: 'western',
+    movement: 'renaissance', // RENAISSANCE SCIENTIST-PHILOSOPHER
+    key_ideas: [
+      'The book of nature is written in mathematics',
+      'Experiment and observation over authority',
+      'Earth moves around the Sun (heliocentrism)'
+    ],
+    historical_weight: 0.9,
+    battles: {
+      reason_faith: 0.95, // Championed reason against Church
+      reality_mysticism: 0.95, // Reality via observation
+      individual_collective: 0.7,
+      freedom_coercion: 0.8, // Persecuted for truth
+      value_nihilism: 0.9,
+      market_planning: 0.0,
+      beauty_chaos: 0.8,
+      good_evil: 0.8
+    }
+  },
+  {
     id: 'hobbes',
     name: 'Thomas Hobbes',
     birth_year: 1588,
@@ -599,6 +687,7 @@ export const SEED_NODES = [
     longitude: -2.3467,
     school_of_thought: 'Social Contract Theory',
     tradition: 'western',
+    movement: 'renaissance', // Late Renaissance political philosopher
     key_ideas: [
       'Life without government is solitary, poor, nasty, brutish, short',
       'The social contract creates the Leviathan state',
@@ -627,6 +716,7 @@ export const SEED_NODES = [
     longitude: 0.7500,
     school_of_thought: 'Rationalism',
     tradition: 'western',
+    movement: 'renaissance', // Late Renaissance rationalist
     key_ideas: [
       'I think, therefore I am (Cogito ergo sum)',
       'Mind and body are distinct substances (dualism)',
@@ -655,6 +745,7 @@ export const SEED_NODES = [
     longitude: 4.9041,
     school_of_thought: 'Rationalism / Pantheism',
     tradition: 'western',
+    movement: 'renaissance', // Late Renaissance rationalist
     key_ideas: [
       'God and Nature are one substance (Deus sive Natura)',
       'Freedom is understanding necessity',
@@ -698,6 +789,35 @@ export const SEED_NODES = [
       value_nihilism: 0.7,
       market_planning: 0.7,
       beauty_chaos: 0.5,
+      good_evil: 0.7
+    }
+  },
+  {
+    id: 'newton',
+    name: 'Isaac Newton',
+    birth_year: 1643,
+    death_year: 1727,
+    birth_city: 'Woolsthorpe-by-Colsterworth',
+    birth_country_modern: 'United Kingdom',
+    latitude: 52.8067,
+    longitude: -0.6356,
+    school_of_thought: 'Natural Philosophy',
+    tradition: 'western',
+    movement: ['renaissance', 'enlightenment'], // Culmination of Renaissance science, foundation of Enlightenment
+    key_ideas: [
+      'Laws of motion govern all physical bodies',
+      'Universal gravitation binds the cosmos',
+      'Mathematics is the language of nature'
+    ],
+    historical_weight: 0.95,
+    battles: {
+      reason_faith: 0.9,
+      reality_mysticism: 0.95, // Empirical observation of reality
+      individual_collective: 0.7,
+      freedom_coercion: 0.6,
+      value_nihilism: 0.9,
+      market_planning: 0.0,
+      beauty_chaos: 0.9, // Mathematical beauty
       good_evil: 0.7
     }
   },
@@ -2129,6 +2249,15 @@ export const SEED_EDGES = [
   { source_id: 'al_farabi', target_id: 'avicenna', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.8, description: 'Avicenna built on Al-Farabis Neoplatonic Aristotelianism' },
   { source_id: 'avicenna', target_id: 'al_ghazali', relationship_type: 'opposes', primary_battle: 'reason_faith', weight: 0.9, description: 'Al-Ghazali attacked Avicennas rationalism in The Incoherence' },
   { source_id: 'al_ghazali', target_id: 'averroes', relationship_type: 'opposes', primary_battle: 'reason_faith', weight: 0.9, description: 'Averroes wrote The Incoherence of the Incoherence against Al-Ghazali' },
+  
+  // RENAISSANCE
+  { source_id: 'aristotle', target_id: 'leonardo', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.7, description: 'Leonardo embraced Aristotelian observation of nature' },
+  { source_id: 'leonardo', target_id: 'galileo', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.6, description: 'Galileo continued Leonardo\'s empirical investigation of nature' },
+  { source_id: 'bruno', target_id: 'spinoza', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.6, description: 'Bruno\'s pantheism anticipated Spinoza\'s God-Nature identity' },
+  { source_id: 'galileo', target_id: 'newton', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.9, description: 'Newton built directly on Galileo\'s laws of motion' },
+  { source_id: 'descartes', target_id: 'newton', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.7, description: 'Newton\'s mathematical physics extended Cartesian mechanism' },
+  { source_id: 'newton', target_id: 'locke', relationship_type: 'contemporary_of', primary_battle: 'reason_faith', weight: 0.7, description: 'Locke and Newton were friends; Locke saw Newton as model of reason' },
+  { source_id: 'leibniz', target_id: 'newton', relationship_type: 'opposes', primary_battle: 'reason_faith', weight: 0.8, description: 'Newton and Leibniz disputed priority of calculus and nature of space' },
   
   // EARLY MODERN
   { source_id: 'bacon', target_id: 'hobbes', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.5, description: 'Hobbes served as Bacons secretary and absorbed empiricism' },
