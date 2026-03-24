@@ -1,2327 +1,3708 @@
 // ============================================================
 // Constellation Seed Data - Verified Historical Philosopher Data
 // ALL DATA MUST BE HISTORICALLY ACCURATE AND VERIFIABLE
+// VERSION 2.2 FINAL - 168 philosophers · 42 schools · 41 champions · binary stance (VERIFIED)
 // ============================================================
 
-// PHILOSOPHERS - The Constellation Nodes
-// Negative years = BC (e.g., -470 = 470 BC)
+// ═══════════════════════════════════════════════════════════
+// SCHOOL COLORS - 42 philosophical schools
+// ═══════════════════════════════════════════════════════════
+export const SCHOOL_COLORS = {
+  'Pre-Socratic': '#89CFF0',
+  'Sophist': '#E05A5A',
+  'Socratic': '#D6158C',
+  'Platonic': '#B044B0',
+  'Aristotelian': '#1A7FBD',
+  'Epicurean': '#2EA87E',
+  'Stoic': '#3AAFCF',
+  'Skeptic': '#8C8CA0',
+  'Neo-Platonic': '#9B6EC8',
+  'Islamic': '#D4952A',
+  'Scholastic': '#7A6040',
+  'Mystical': '#C46090',
+  'Humanist': '#E88030',
+  'Political Realist': '#A05060',
+  'Naturalist': '#40A050',
+  'Empiricist': '#4488CC',
+  'Rationalist': '#D6158C',
+  'Counter-Enlightenment': '#C05030',
+  'German Idealism': '#8855AA',
+  'Enlightenment': '#F5C518',
+  'Positivist': '#22AA88',
+  'Utilitarian': '#44BB66',
+  'Voluntarist': '#D84040',
+  'Existentialist': '#885530',
+  'Vitalist': '#88AA22',
+  'Marxist': '#CC4444',
+  'Phenomenology': '#6688AA',
+  'Pragmatist': '#EE8833',
+  'Analytic': '#378ADD',
+  'Critical Theory': '#AA4466',
+  'Postmodern': '#666688',
+  'Objectivist': '#D6158C',
+  'Post-Randian Realism': '#EF9F27',
+  'Liberal': '#4499BB',
+  'Philosophy of Science': '#33AA99',
+  'Neo-Pragmatist': '#CC7722',
+  'Virtue Ethics': '#55AA55',
+  'Sociologist': '#997744',
+  'Political': '#778844',
+  'Libertarian': '#2EA87E',
+  'Naturalist (Contemporary)': '#44AA44',
+  'Anarcho-Capitalist': '#AA6600',
+};
+
+// ═══════════════════════════════════════════════════════════
+// SCHOOL STANCES - Binary only: pro or anti (reason & objectivity)
+// ═══════════════════════════════════════════════════════════
+export const SCHOOL_STANCES = {
+  'Pre-Socratic': 'pro',
+  'Sophist': 'anti',
+  'Socratic': 'pro',
+  'Platonic': 'pro',
+  'Aristotelian': 'pro',
+  'Epicurean': 'pro',
+  'Stoic': 'pro',
+  'Skeptic': 'anti',
+  'Neo-Platonic': 'anti',
+  'Islamic': 'pro',
+  'Scholastic': 'pro',
+  'Mystical': 'anti',
+  'Humanist': 'pro',
+  'Political Realist': 'pro',
+  'Naturalist': 'pro',
+  'Empiricist': 'pro',
+  'Rationalist': 'pro',
+  'Counter-Enlightenment': 'anti',
+  'German Idealism': 'anti',
+  'Enlightenment': 'pro',
+  'Positivist': 'pro',
+  'Utilitarian': 'anti',
+  'Voluntarist': 'anti',
+  'Existentialist': 'anti',
+  'Vitalist': 'anti',
+  'Marxist': 'anti',
+  'Phenomenology': 'anti',
+  'Pragmatist': 'anti',
+  'Analytic': 'pro',
+  'Critical Theory': 'anti',
+  'Postmodern': 'anti',
+  'Objectivist': 'pro',
+  'Post-Randian Realism': 'pro',
+  'Liberal': 'anti',
+  'Philosophy of Science': 'anti',
+  'Neo-Pragmatist': 'anti',
+  'Virtue Ethics': 'anti',
+  'Sociologist': 'anti',
+  'Political': 'anti',
+  'Libertarian': 'pro',
+  'Naturalist (Contemporary)': 'pro',
+  'Anarcho-Capitalist': 'pro',
+};
+
+// ═══════════════════════════════════════════════════════════
+// SEED_NODES - 168 philosophers
+// ═══════════════════════════════════════════════════════════
 export const SEED_NODES = [
   // ═══════════════════════════════════════════════════════════
-  // TRUNK 1: GREEK/WESTERN TRADITION
+  // ERA 1: ANCIENT GREEK (c.624–322 BC) - 16 philosophers
   // ═══════════════════════════════════════════════════════════
-  
-  // PRE-SOCRATICS
+
+  // PRE-SOCRATIC (10)
   {
     id: 'thales',
     name: 'Thales',
     birth_year: -624,
     death_year: -546,
+    dates: 'c.624–546 BC',
     birth_city: 'Miletus',
     birth_country_modern: 'Turkey',
     latitude: 37.5306,
     longitude: 27.2783,
     school_of_thought: 'Milesian School',
+    school: 'Pre-Socratic',
     tradition: 'western',
-    key_ideas: [
-      'Water is the fundamental substance of all things',
-      'All things are full of gods (panpsychism)',
-      'First to seek natural explanations over myth'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.6,
-      individual_collective: 0.3,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.5,
-      market_planning: 0.0,
-      beauty_chaos: 0.4,
-      good_evil: 0.4
-    }
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['First philosopher; rational principles in nature'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+  {
+    id: 'anaximander',
+    name: 'Anaximander',
+    birth_year: -610,
+    death_year: -546,
+    dates: 'c.610–546 BC',
+    birth_city: 'Miletus',
+    birth_country_modern: 'Turkey',
+    latitude: 37.5306,
+    longitude: 27.2783,
+    school_of_thought: 'Milesian School',
+    school: 'Pre-Socratic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Apeiron as first principle; rational cosmology'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.5 }
+  },
+  {
+    id: 'anaximenes',
+    name: 'Anaximenes',
+    birth_year: -586,
+    death_year: -526,
+    dates: 'c.586–526 BC',
+    birth_city: 'Miletus',
+    birth_country_modern: 'Turkey',
+    latitude: 37.5306,
+    longitude: 27.2783,
+    school_of_thought: 'Milesian School',
+    school: 'Pre-Socratic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Air as rational first principle'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
     id: 'pythagoras',
     name: 'Pythagoras',
     birth_year: -570,
     death_year: -495,
+    dates: 'c.570–495 BC',
     birth_city: 'Samos',
     birth_country_modern: 'Greece',
-    latitude: 37.7573,
-    longitude: 26.9738,
+    latitude: 37.7575,
+    longitude: 26.9761,
     school_of_thought: 'Pythagoreanism',
+    school: 'Pre-Socratic',
     tradition: 'western',
-    key_ideas: [
-      'Numbers are the essence of all things',
-      'The soul is immortal and transmigrates',
-      'Harmony and proportion govern the cosmos'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.5,
-      reality_mysticism: 0.3,
-      individual_collective: 0.4,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.9,
-      good_evil: 0.6
-    }
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Mathematical structure underlies all reality'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
   },
   {
     id: 'heraclitus',
     name: 'Heraclitus',
     birth_year: -535,
     death_year: -475,
+    dates: 'c.535–475 BC',
     birth_city: 'Ephesus',
     birth_country_modern: 'Turkey',
     latitude: 37.9394,
     longitude: 27.3417,
-    school_of_thought: 'Heracliteanism',
+    school_of_thought: 'Ephesian School',
+    school: 'Pre-Socratic',
     tradition: 'western',
-    key_ideas: [
-      'Everything flows; you cannot step in the same river twice',
-      'Fire is the primordial element; all is flux',
-      'Logos (reason) governs all change'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.4,
-      individual_collective: 0.5,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.6,
-      market_planning: 0.0,
-      beauty_chaos: 0.3,
-      good_evil: 0.5
-    }
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Flux over permanence; paradox over logic; logos invoked but reason never systematized — seeds of irrationalism'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
     id: 'parmenides',
     name: 'Parmenides',
     birth_year: -515,
     death_year: -450,
+    dates: 'c.515–450 BC',
     birth_city: 'Elea',
     birth_country_modern: 'Italy',
-    latitude: 40.1619,
-    longitude: 15.1511,
+    latitude: 40.1614,
+    longitude: 15.1531,
     school_of_thought: 'Eleatic School',
+    school: 'Pre-Socratic',
     tradition: 'western',
-    key_ideas: [
-      'Being is one, eternal, and unchanging',
-      'Change and motion are illusions',
-      'Only reason can grasp true reality'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.7,
-      individual_collective: 0.4,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.6,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.5
-    }
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Being is one; logical monism over the senses'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+  {
+    id: 'anaxagoras',
+    name: 'Anaxagoras',
+    birth_year: -500,
+    death_year: -428,
+    dates: 'c.500–428 BC',
+    birth_city: 'Clazomenae',
+    birth_country_modern: 'Turkey',
+    latitude: 38.3650,
+    longitude: 26.7803,
+    school_of_thought: 'Pluralism',
+    school: 'Pre-Socratic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Nous (mind) orders matter rationally'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+  {
+    id: 'empedocles',
+    name: 'Empedocles',
+    birth_year: -494,
+    death_year: -434,
+    dates: 'c.494–434 BC',
+    birth_city: 'Akragas',
+    birth_country_modern: 'Italy',
+    latitude: 37.2906,
+    longitude: 13.5833,
+    school_of_thought: 'Pluralism',
+    school: 'Pre-Socratic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Four elements; natural causation without myth'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.5 }
+  },
+  {
+    id: 'zeno_of_elea',
+    name: 'Zeno of Elea',
+    birth_year: -490,
+    death_year: -430,
+    dates: 'c.490–430 BC',
+    birth_city: 'Elea',
+    birth_country_modern: 'Italy',
+    latitude: 40.1614,
+    longitude: 15.1531,
+    school_of_thought: 'Eleatic School',
+    school: 'Pre-Socratic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Logical paradoxes defending rational monism'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
     id: 'democritus',
     name: 'Democritus',
     birth_year: -460,
     death_year: -370,
+    dates: 'c.460–370 BC',
     birth_city: 'Abdera',
     birth_country_modern: 'Greece',
     latitude: 40.9500,
     longitude: 24.9833,
     school_of_thought: 'Atomism',
+    school: 'Pre-Socratic',
     tradition: 'western',
-    key_ideas: [
-      'Reality consists of atoms moving through void',
-      'All qualities emerge from atomic arrangement',
-      'Cheerfulness (euthymia) is the highest good'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.9,
-      individual_collective: 0.6,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Atomism; materialist reason; void and atoms'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
-  // CLASSICAL ATHENS
+  // SOPHIST (3)
+  {
+    id: 'protagoras',
+    name: 'Protagoras',
+    birth_year: -490,
+    death_year: -420,
+    dates: 'c.490–420 BC',
+    birth_city: 'Abdera',
+    birth_country_modern: 'Greece',
+    latitude: 40.9500,
+    longitude: 24.9833,
+    school_of_thought: 'Sophism',
+    school: 'Sophist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Man is the measure; cognitive relativism'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+  {
+    id: 'gorgias',
+    name: 'Gorgias',
+    birth_year: -483,
+    death_year: -375,
+    dates: 'c.483–375 BC',
+    birth_city: 'Leontinoi',
+    birth_country_modern: 'Italy',
+    latitude: 37.2872,
+    longitude: 14.9925,
+    school_of_thought: 'Sophism',
+    school: 'Sophist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Nothing exists; radical rhetorical nihilism'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.0, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: -0.2, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+  },
+  {
+    id: 'thrasymachus',
+    name: 'Thrasymachus',
+    birth_year: -459,
+    death_year: -400,
+    dates: 'c.459–400 BC',
+    birth_city: 'Chalcedon',
+    birth_country_modern: 'Turkey',
+    latitude: 40.9833,
+    longitude: 29.0333,
+    school_of_thought: 'Sophism',
+    school: 'Sophist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Justice is the advantage of the stronger'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.3, freedom_coercion: 0.2, value_nihilism: 0.1, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.0 }
+  },
+
+  // SOCRATIC (1)
   {
     id: 'socrates',
     name: 'Socrates',
     birth_year: -470,
     death_year: -399,
+    dates: 'c.470–399 BC',
     birth_city: 'Athens',
     birth_country_modern: 'Greece',
     latitude: 37.9838,
     longitude: 23.7275,
     school_of_thought: 'Socratic Method',
+    school: 'Socratic',
     tradition: 'western',
-    key_ideas: [
-      'The unexamined life is not worth living',
-      'Knowledge is virtue; ignorance is the root of evil',
-      'I know that I know nothing (Socratic irony)'
-    ],
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Dialectic method; logos; the examined life'],
     historical_weight: 1.0,
-    battles: {
-      reason_faith: 1.0,
-      reality_mysticism: 0.8,
-      individual_collective: 0.7,
-      freedom_coercion: 0.6,
-      value_nihilism: 1.0,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.9
-    }
+    battles: { reason_faith: 0.95, reality_mysticism: 0.85, individual_collective: 0.7, freedom_coercion: 0.7, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.9 }
   },
+
+  // PLATONIC (1)
   {
     id: 'plato',
     name: 'Plato',
     birth_year: -428,
     death_year: -348,
+    dates: 'c.428–348 BC',
     birth_city: 'Athens',
     birth_country_modern: 'Greece',
     latitude: 37.9838,
     longitude: 23.7275,
     school_of_thought: 'Platonism',
+    school: 'Platonic',
     tradition: 'western',
-    // Philosophical precursor to Counter-Enlightenment, but lived 2000 years before - Classical era
-    key_ideas: [
-      'The Forms are the true reality; matter is shadow',
-      'The soul is immortal and has three parts',
-      'The philosopher-king should rule the ideal state'
-    ],
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Eternal Forms; objective truth; reason over senses'],
     historical_weight: 1.0,
-    // COUNTER-ENLIGHTENMENT PRECURSOR: Forms = primacy of consciousness over existence
-    battles: {
-      reason_faith: 0.5,        // Used reason but for mystical/transcendent ends
-      reality_mysticism: -0.7,  // Forms more real than physical world - primacy of consciousness
-      individual_collective: -0.4, // Philosopher-kings rule; rigid caste system
-      freedom_coercion: -0.3,   // State censorship, controlled breeding, no individual rights
-      value_nihilism: 0.9,      // Strong belief in objective Good (but transcendent)
-      market_planning: -0.4,    // Communal property for guardians, state control
-      beauty_chaos: 0.9,        // Strong aesthetic order
-      good_evil: 0.8            // Objective Good exists (as Form)
-    }
+    battles: { reason_faith: 0.85, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.9, good_evil: 0.85 }
   },
+
+  // ARISTOTELIAN (1)
   {
     id: 'aristotle',
     name: 'Aristotle',
     birth_year: -384,
     death_year: -322,
+    dates: '384–322 BC',
     birth_city: 'Stagira',
     birth_country_modern: 'Greece',
     latitude: 40.5269,
-    longitude: 23.7525,
+    longitude: 23.7508,
     school_of_thought: 'Aristotelianism',
+    school: 'Aristotelian',
     tradition: 'western',
-    key_ideas: [
-      'Eudaimonia (flourishing) is the highest good',
-      'Reality is knowable through reason and observation',
-      'Virtue is the mean between extremes'
-    ],
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Logic; empiricism; objective science and ethics'],
     historical_weight: 1.0,
-    battles: {
-      reason_faith: 1.0,
-      reality_mysticism: 1.0,
-      individual_collective: 0.7,
-      freedom_coercion: 0.6,
-      value_nihilism: 1.0,
-      market_planning: 0.4,
-      beauty_chaos: 0.8,
-      good_evil: 0.9
-    }
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.8, freedom_coercion: 0.7, value_nihilism: 1.0, market_planning: 0.3, beauty_chaos: 0.9, good_evil: 0.95 }
   },
 
-  // HELLENISTIC
+  // ═══════════════════════════════════════════════════════════
+  // ERA 2: HELLENISTIC & ROMAN (c.341 BC – 529 AD) - 14 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // EPICUREAN (2)
   {
     id: 'epicurus',
     name: 'Epicurus',
     birth_year: -341,
     death_year: -270,
-    birth_city: 'Athens', // Founded school there (The Garden)
+    dates: '341–270 BC',
+    birth_city: 'Samos',
     birth_country_modern: 'Greece',
-    latitude: 37.9838, // Athens coordinates
-    longitude: 23.7275,
+    latitude: 37.7575,
+    longitude: 26.9761,
     school_of_thought: 'Epicureanism',
+    school: 'Epicurean',
     tradition: 'western',
-    key_ideas: [
-      'Pleasure (absence of pain) is the highest good',
-      'The gods exist but do not intervene in human affairs',
-      'Death is nothing to us; the soul dissolves at death'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.9,
-      individual_collective: 0.8,
-      freedom_coercion: 0.7,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Reason guides pleasure; atomic ethics'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.8, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
-    id: 'zeno_citium',
+    id: 'lucretius',
+    name: 'Lucretius',
+    birth_year: -99,
+    death_year: -55,
+    dates: 'c.99–55 BC',
+    birth_city: 'Rome',
+    birth_country_modern: 'Italy',
+    latitude: 41.9028,
+    longitude: 12.4964,
+    school_of_thought: 'Epicureanism',
+    school: 'Epicurean',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['De Rerum Natura; atomism; reason over religion'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.6 }
+  },
+
+  // STOIC (6)
+  {
+    id: 'zeno_of_citium',
     name: 'Zeno of Citium',
     birth_year: -334,
     death_year: -262,
-    birth_city: 'Athens', // Founded Stoicism at the Stoa Poikile
-    birth_country_modern: 'Greece',
-    latitude: 37.9838, // Athens coordinates
-    longitude: 23.7275,
+    dates: 'c.334–262 BC',
+    birth_city: 'Citium',
+    birth_country_modern: 'Cyprus',
+    latitude: 34.9186,
+    longitude: 33.6362,
     school_of_thought: 'Stoicism',
+    school: 'Stoic',
     tradition: 'western',
-    key_ideas: [
-      'Live according to nature and reason',
-      'Virtue is the only good; externals are indifferent',
-      'The universe is governed by divine providence (logos)'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.6,
-      individual_collective: 0.5,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.9
-    }
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Universal Logos; virtue through reason'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
-
-  // ROMAN
+  {
+    id: 'chrysippus',
+    name: 'Chrysippus',
+    birth_year: -279,
+    death_year: -206,
+    dates: 'c.279–206 BC',
+    birth_city: 'Soli',
+    birth_country_modern: 'Turkey',
+    latitude: 36.7500,
+    longitude: 34.5500,
+    school_of_thought: 'Stoicism',
+    school: 'Stoic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Systematic Stoic logic; master of the syllogism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.85, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.85 }
+  },
   {
     id: 'cicero',
     name: 'Cicero',
     birth_year: -106,
     death_year: -43,
+    dates: '106–43 BC',
     birth_city: 'Arpinum',
     birth_country_modern: 'Italy',
     latitude: 41.6494,
     longitude: 13.6083,
-    school_of_thought: 'Eclectic / Academic Skepticism',
+    school_of_thought: 'Stoicism / Eclecticism',
+    school: 'Stoic',
     tradition: 'western',
-    key_ideas: [
-      'Natural law is the foundation of justice',
-      'The best life combines contemplation and action',
-      'Rhetoric is essential to civic virtue'
-    ],
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Natural law; rational statecraft and rhetoric'],
     historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.6,
-      individual_collective: 0.5,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.7,
-      market_planning: 0.3,
-      beauty_chaos: 0.7,
-      good_evil: 0.7
-    }
+    battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.8, market_planning: 0.3, beauty_chaos: 0.7, good_evil: 0.8 }
   },
   {
     id: 'seneca',
     name: 'Seneca',
     birth_year: -4,
     death_year: 65,
+    dates: 'c.4 BC–65 AD',
     birth_city: 'Corduba',
     birth_country_modern: 'Spain',
-    residence_city: 'Rome', // Moved as child
-    residence_country: 'Italy',
-    latitude: 41.9028, // Positioned at Rome (residence)
-    longitude: 12.4964,
+    latitude: 37.8916,
+    longitude: -4.7728,
     school_of_thought: 'Stoicism',
+    school: 'Stoic',
     tradition: 'western',
-    key_ideas: [
-      'Virtue is sufficient for happiness',
-      'We suffer more in imagination than in reality',
-      'Time is our most precious resource'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.6,
-      individual_collective: 0.6,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.9
-    }
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Reason and virtue; natural philosophy'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
+  },
+  {
+    id: 'epictetus',
+    name: 'Epictetus',
+    birth_year: 50,
+    death_year: 135,
+    dates: 'c.50–135 AD',
+    birth_city: 'Hierapolis',
+    birth_country_modern: 'Turkey',
+    latitude: 37.9239,
+    longitude: 29.1269,
+    school_of_thought: 'Stoicism',
+    school: 'Stoic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Logos; only what is in our rational control'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.7, freedom_coercion: 0.8, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
     id: 'marcus_aurelius',
     name: 'Marcus Aurelius',
     birth_year: 121,
     death_year: 180,
+    dates: '121–180 AD',
     birth_city: 'Rome',
     birth_country_modern: 'Italy',
     latitude: 41.9028,
     longitude: 12.4964,
     school_of_thought: 'Stoicism',
+    school: 'Stoic',
     tradition: 'western',
-    key_ideas: [
-      'Focus only on what you can control',
-      'All is change; accept impermanence',
-      'Duty to the common good above personal desire'
-    ],
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Rational self-governance; universal reason'],
     historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.5,
-      individual_collective: 0.4,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.9
-    }
+    battles: { reason_faith: 0.85, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
+
+  // SKEPTIC (3)
+  {
+    id: 'pyrrho',
+    name: 'Pyrrho',
+    birth_year: -360,
+    death_year: -270,
+    dates: 'c.360–270 BC',
+    birth_city: 'Elis',
+    birth_country_modern: 'Greece',
+    latitude: 37.8879,
+    longitude: 21.3806,
+    school_of_thought: 'Pyrrhonism',
+    school: 'Skeptic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Radical skepticism; suspend all judgment'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.1, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+  {
+    id: 'carneades',
+    name: 'Carneades',
+    birth_year: -214,
+    death_year: -129,
+    dates: 'c.214–129 BC',
+    birth_city: 'Cyrene',
+    birth_country_modern: 'Libya',
+    latitude: 32.8240,
+    longitude: 21.8569,
+    school_of_thought: 'Academic Skepticism',
+    school: 'Skeptic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Academic skepticism; only probability'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.3 }
+  },
+  {
+    id: 'sextus_empiricus',
+    name: 'Sextus Empiricus',
+    birth_year: 160,
+    death_year: 210,
+    dates: 'c.160–210 AD',
+    birth_city: 'Unknown',
+    birth_country_modern: 'Greece',
+    latitude: 37.9838,
+    longitude: 23.7275,
+    school_of_thought: 'Pyrrhonism',
+    school: 'Skeptic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Pyrrhonism; no objective knowledge possible'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.1, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.0, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+  },
+
+  // NEO-PLATONIC (3)
   {
     id: 'plotinus',
     name: 'Plotinus',
     birth_year: 204,
     death_year: 270,
+    dates: 'c.204–270 AD',
     birth_city: 'Lycopolis',
     birth_country_modern: 'Egypt',
-    residence_city: 'Rome', // Relocated 244 AD
-    residence_country: 'Italy',
-    latitude: 41.9028, // Positioned at Rome (residence)
-    longitude: 12.4964,
+    latitude: 27.1833,
+    longitude: 31.1667,
     school_of_thought: 'Neoplatonism',
+    school: 'Neo-Platonic',
     tradition: 'western',
-    key_ideas: [
-      'The One is the source of all reality',
-      'Reality emanates from the One in levels',
-      'The soul ascends through contemplation to unity'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.5,
-      reality_mysticism: 0.2,
-      individual_collective: 0.5,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.9,
-      good_evil: 0.8
-    }
-  },
-
-  // LATE ANTIQUITY / MEDIEVAL
-  {
-    id: 'augustine',
-    name: 'Augustine of Hippo',
-    birth_year: 354,
-    death_year: 430,
-    birth_city: 'Thagaste',
-    birth_country_modern: 'Algeria',
-    latitude: 36.2772,
-    longitude: 7.9536,
-    school_of_thought: 'Christian Platonism',
-    tradition: 'western',
-    key_ideas: [
-      'Original sin corrupts human will',
-      'The City of God vs the City of Man',
-      'Evil is the absence of good, not a substance'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.3,
-      reality_mysticism: 0.3,
-      individual_collective: 0.3,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.8
-    }
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['The One beyond reason; mystical emanation; reality is graded emanation from ineffable source'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
   },
   {
-    id: 'boethius',
-    name: 'Boethius',
-    birth_year: 477,
-    death_year: 524,
-    birth_city: 'Rome',
-    birth_country_modern: 'Italy',
-    latitude: 41.9028,
-    longitude: 12.4964,
-    school_of_thought: 'Neoplatonism / Scholasticism',
+    id: 'porphyry',
+    name: 'Porphyry',
+    birth_year: 234,
+    death_year: 305,
+    dates: 'c.234–305 AD',
+    birth_city: 'Tyre',
+    birth_country_modern: 'Lebanon',
+    latitude: 33.2705,
+    longitude: 35.2038,
+    school_of_thought: 'Neoplatonism',
+    school: 'Neo-Platonic',
     tradition: 'western',
-    key_ideas: [
-      'Philosophy is the consolation of the soul',
-      'Fortune is a wheel; accept its turning',
-      'True happiness lies in the Good itself'
-    ],
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Neoplatonist mystic; reason as ladder to supra-rational unity'],
     historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.5,
-      reality_mysticism: 0.4,
-      individual_collective: 0.5,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.8
-    }
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
   },
   {
-    id: 'aquinas',
-    name: 'Thomas Aquinas',
-    birth_year: 1225,
-    death_year: 1274,
-    birth_city: 'Roccasecca',
-    birth_country_modern: 'Italy',
-    latitude: 41.5063,
-    longitude: 13.6686,
-    school_of_thought: 'Thomism / Scholasticism',
+    id: 'proclus',
+    name: 'Proclus',
+    birth_year: 412,
+    death_year: 485,
+    dates: '412–485 AD',
+    birth_city: 'Constantinople',
+    birth_country_modern: 'Turkey',
+    latitude: 41.0082,
+    longitude: 28.9784,
+    school_of_thought: 'Neoplatonism',
+    school: 'Neo-Platonic',
     tradition: 'western',
-    key_ideas: [
-      'Faith and reason are compatible; both lead to truth',
-      'Five ways to prove God\'s existence',
-      'Natural law is participation in eternal law'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.5,
-      reality_mysticism: 0.6,
-      individual_collective: 0.4,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.9
-    }
-  },
-  {
-    id: 'ockham',
-    name: 'William of Ockham',
-    birth_year: 1287,
-    death_year: 1347,
-    birth_city: 'Ockham',
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.2833,
-    longitude: -0.4333,
-    school_of_thought: 'Nominalism',
-    tradition: 'western',
-    key_ideas: [
-      'Entities should not be multiplied beyond necessity',
-      'Universals are names, not real entities',
-      'Faith and reason have separate domains'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.7,
-      individual_collective: 0.6,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.5,
-      market_planning: 0.0,
-      beauty_chaos: 0.4,
-      good_evil: 0.5
-    }
-  },
-
-  // RENAISSANCE / EARLY MODERN
-  {
-    id: 'leonardo',
-    name: 'Leonardo da Vinci',
-    birth_year: 1452,
-    death_year: 1519,
-    birth_city: 'Vinci',
-    birth_country_modern: 'Italy',
-    latitude: 43.7833,
-    longitude: 10.9333,
-    school_of_thought: 'Renaissance Humanism',
-    tradition: 'western',
-    movement: 'renaissance', // RENAISSANCE POLYMATH
-    key_ideas: [
-      'Art and science are complementary paths to truth',
-      'Observation and experiment reveal natural laws',
-      'The human body is a divine machine'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.8,
-      individual_collective: 0.8,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.95,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'machiavelli',
-    name: 'Niccolo Machiavelli',
-    birth_year: 1469,
-    death_year: 1527,
-    birth_city: 'Florence',
-    birth_country_modern: 'Italy',
-    latitude: 43.7696,
-    longitude: 11.2558,
-    school_of_thought: 'Political Realism',
-    tradition: 'western',
-    movement: 'renaissance', // RENAISSANCE MOVEMENT
-    key_ideas: [
-      'The ends justify the means in politics',
-      'It is better to be feared than loved',
-      'Virtue (virtu) is effective political action'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.8,
-      individual_collective: 0.5,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.4,
-      market_planning: 0.0,
-      beauty_chaos: 0.3,
-      good_evil: 0.2
-    }
-  },
-  {
-    id: 'bruno',
-    name: 'Giordano Bruno',
-    birth_year: 1548,
-    death_year: 1600,
-    birth_city: 'Nola',
-    birth_country_modern: 'Italy',
-    latitude: 40.9247,
-    longitude: 14.5278,
-    school_of_thought: 'Renaissance Naturalism',
-    tradition: 'western',
-    movement: 'renaissance', // RENAISSANCE MARTYR FOR REASON
-    key_ideas: [
-      'The universe is infinite with countless worlds',
-      'God is immanent in all of nature',
-      'Memory and imagination unlock cosmic knowledge'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.9, // Burned at the stake for defending reason
-      reality_mysticism: 0.7,
-      individual_collective: 0.8,
-      freedom_coercion: 0.9, // Died for intellectual freedom
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'bacon',
-    name: 'Francis Bacon',
-    birth_year: 1561,
-    death_year: 1626,
-    birth_city: 'London',
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.5074,
-    longitude: -0.1278,
-    school_of_thought: 'Empiricism',
-    tradition: 'western',
-    movement: ['renaissance', 'enlightenment'], // Renaissance polymath & Enlightenment precursor
-    key_ideas: [
-      'Knowledge is power',
-      'The scientific method: observation and induction',
-      'Idols of the mind distort understanding'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.9,
-      individual_collective: 0.6,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'galileo',
-    name: 'Galileo Galilei',
-    birth_year: 1564,
-    death_year: 1642,
-    birth_city: 'Pisa',
-    birth_country_modern: 'Italy',
-    latitude: 43.7228,
-    longitude: 10.4017,
-    school_of_thought: 'Scientific Method',
-    tradition: 'western',
-    movement: 'renaissance', // RENAISSANCE SCIENTIST-PHILOSOPHER
-    key_ideas: [
-      'The book of nature is written in mathematics',
-      'Experiment and observation over authority',
-      'Earth moves around the Sun (heliocentrism)'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.95, // Championed reason against Church
-      reality_mysticism: 0.95, // Reality via observation
-      individual_collective: 0.7,
-      freedom_coercion: 0.8, // Persecuted for truth
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.8,
-      good_evil: 0.8
-    }
-  },
-  {
-    id: 'hobbes',
-    name: 'Thomas Hobbes',
-    birth_year: 1588,
-    death_year: 1679,
-    birth_city: 'Westport',
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.3492,
-    longitude: -2.3467,
-    school_of_thought: 'Social Contract Theory',
-    tradition: 'western',
-    movement: 'renaissance', // Late Renaissance political philosopher
-    key_ideas: [
-      'Life without government is solitary, poor, nasty, brutish, short',
-      'The social contract creates the Leviathan state',
-      'All matter is in motion; thought is computation'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.9,
-      individual_collective: 0.3,
-      freedom_coercion: 0.2,
-      value_nihilism: 0.5,
-      market_planning: 0.0,
-      beauty_chaos: 0.3,
-      good_evil: 0.4
-    }
-  },
-  {
-    id: 'descartes',
-    name: 'Rene Descartes',
-    birth_year: 1596,
-    death_year: 1650,
-    birth_city: 'La Haye en Touraine',
-    birth_country_modern: 'France',
-    latitude: 47.0000,
-    longitude: 0.7500,
-    school_of_thought: 'Rationalism',
-    tradition: 'western',
-    movement: 'renaissance', // Late Renaissance rationalist
-    key_ideas: [
-      'I think, therefore I am (Cogito ergo sum)',
-      'Mind and body are distinct substances (dualism)',
-      'Clear and distinct ideas are the mark of truth'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.8,
-      individual_collective: 0.7,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'spinoza',
-    name: 'Baruch Spinoza',
-    birth_year: 1632,
-    death_year: 1677,
-    birth_city: 'Amsterdam',
-    birth_country_modern: 'Netherlands',
-    latitude: 52.3676,
-    longitude: 4.9041,
-    school_of_thought: 'Rationalism / Pantheism',
-    tradition: 'western',
-    movement: 'renaissance', // Late Renaissance rationalist
-    key_ideas: [
-      'God and Nature are one substance (Deus sive Natura)',
-      'Freedom is understanding necessity',
-      'Emotions arise from inadequate ideas'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.6,
-      individual_collective: 0.5,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'locke',
-    name: 'John Locke',
-    birth_year: 1632,
-    death_year: 1704,
-    birth_city: 'Wrington',
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.3667,
-    longitude: -2.7667,
-    school_of_thought: 'Empiricism / Liberalism',
-    tradition: 'western',
-    movement: 'enlightenment', // ENLIGHTENMENT
-    key_ideas: [
-      'The mind is a blank slate (tabula rasa)',
-      'Natural rights: life, liberty, and property',
-      'Government derives legitimacy from consent'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.8,
-      individual_collective: 0.9,
-      freedom_coercion: 0.9,
-      value_nihilism: 0.7,
-      market_planning: 0.7,
-      beauty_chaos: 0.5,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'newton',
-    name: 'Isaac Newton',
-    birth_year: 1643,
-    death_year: 1727,
-    birth_city: 'Woolsthorpe-by-Colsterworth',
-    birth_country_modern: 'United Kingdom',
-    latitude: 52.8067,
-    longitude: -0.6356,
-    school_of_thought: 'Natural Philosophy',
-    tradition: 'western',
-    movement: ['renaissance', 'enlightenment'], // Culmination of Renaissance science, foundation of Enlightenment
-    key_ideas: [
-      'Laws of motion govern all physical bodies',
-      'Universal gravitation binds the cosmos',
-      'Mathematics is the language of nature'
-    ],
-    historical_weight: 0.95,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.95, // Empirical observation of reality
-      individual_collective: 0.7,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.9, // Mathematical beauty
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'leibniz',
-    name: 'Gottfried Wilhelm Leibniz',
-    birth_year: 1646,
-    death_year: 1716,
-    birth_city: 'Leipzig',
-    birth_country_modern: 'Germany',
-    latitude: 51.3397,
-    longitude: 12.3731,
-    school_of_thought: 'Rationalism',
-    tradition: 'western',
-    key_ideas: [
-      'Monads are the ultimate simple substances',
-      'This is the best of all possible worlds',
-      'Pre-established harmony explains mind-body coordination'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.5,
-      individual_collective: 0.6,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.8,
-      good_evil: 0.8
-    }
-  },
-
-  // ENLIGHTENMENT
-  {
-    id: 'hume',
-    name: 'David Hume',
-    birth_year: 1711,
-    death_year: 1776,
-    birth_city: 'Edinburgh',
-    birth_country_modern: 'United Kingdom',
-    latitude: 55.9533,
-    longitude: -3.1883,
-    school_of_thought: 'Empiricism / Skepticism',
-    tradition: 'western',
-    movement: 'enlightenment', // ENLIGHTENMENT: Empiricism, skepticism of dogma
-    key_ideas: [
-      'All ideas derive from sense impressions',
-      'Causation is habit, not necessity',
-      'Reason is the slave of the passions'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.9,
-      individual_collective: 0.7,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.5,
-      market_planning: 0.5,
-      beauty_chaos: 0.5,
-      good_evil: 0.4
-    }
-  },
-  {
-    id: 'rousseau',
-    name: 'Jean-Jacques Rousseau',
-    birth_year: 1712,
-    death_year: 1778,
-    birth_city: 'Geneva',
-    birth_country_modern: 'Switzerland',
-    latitude: 46.2044,
-    longitude: 6.1432,
-    school_of_thought: 'Social Contract / Romanticism',
-    tradition: 'western',
-    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT SEED
-    key_ideas: [
-      'Man is born free, but everywhere he is in chains',
-      'The general will is the basis of legitimate government',
-      'Civilization corrupts natural human goodness'
-    ],
-    historical_weight: 0.8,
-    // COUNTER-ENLIGHTENMENT SEED: Sentiment over reason, General Will over individual
-    battles: {
-      reason_faith: -0.4,       // Elevated feeling/sentiment over reason
-      reality_mysticism: -0.5,  // Noble savage myth, idealized nature
-      individual_collective: -0.7, // General Will supersedes individual will
-      freedom_coercion: -0.5,   // "Forced to be free" - submission to General Will
-      value_nihilism: 0.3,      // Natural goodness exists but society corrupts
-      market_planning: -0.5,    // Suspicious of commerce and property
-      beauty_chaos: 0.5,        // Natural beauty over civilization
-      good_evil: 0.3            // Moral sense exists but is corrupted
-    }
-  },
-  {
-    id: 'adam_smith',
-    name: 'Adam Smith',
-    birth_year: 1723,
-    death_year: 1790,
-    birth_city: 'Kirkcaldy',
-    birth_country_modern: 'United Kingdom',
-    latitude: 56.1118,
-    longitude: -3.1596,
-    school_of_thought: 'Classical Liberalism',
-    tradition: 'western',
-    movement: 'enlightenment', // ENLIGHTENMENT: Free markets, individual liberty
-    key_ideas: [
-      'The invisible hand coordinates markets',
-      'Division of labor increases productivity',
-      'Self-interest can serve the common good'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.8,
-      individual_collective: 0.8,
-      freedom_coercion: 0.8,
-      value_nihilism: 0.8,
-      market_planning: 0.9,
-      beauty_chaos: 0.5,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'kant',
-    name: 'Immanuel Kant',
-    birth_year: 1724,
-    death_year: 1804,
-    birth_city: 'Konigsberg',
-    birth_country_modern: 'Russia',
-    latitude: 54.7104,
-    longitude: 20.4522,
-    school_of_thought: 'Transcendental Idealism',
-    tradition: 'western',
-    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT
-    key_ideas: [
-      'The mind shapes experience through categories',
-      'Act only according to maxims you could universalize',
-      'We cannot know things-in-themselves'
-    ],
-    historical_weight: 1.0,
-    // COUNTER-ENLIGHTENMENT: Severed reason from reality, duty over happiness
-    battles: {
-      reason_faith: 0.3,        // Used reason but severed it from reality
-      reality_mysticism: -0.7,  // Noumena unknowable; mind constitutes phenomena - primacy of consciousness
-      individual_collective: 0.2,  // Duty over happiness; individual subordinate to moral law
-      freedom_coercion: 0.3,    // Categorical imperative as self-imposed coercion
-      value_nihilism: 0.5,      // Believed in morality but grounded in duty, not values
-      market_planning: 0.0,     // Neutral
-      beauty_chaos: 0.7,        // Aesthetic order, sublime
-      good_evil: 0.6            // Objective morality exists but through duty
-    }
-  },
-  {
-    id: 'burke',
-    name: 'Edmund Burke',
-    birth_year: 1729,
-    death_year: 1797,
-    birth_city: 'Dublin',
-    birth_country_modern: 'Ireland',
-    latitude: 53.3498,
-    longitude: -6.2603,
-    school_of_thought: 'Classical Conservatism',
-    tradition: 'western',
-    movement: 'enlightenment', // ENLIGHTENMENT
-    key_ideas: [
-      'Tradition embodies accumulated wisdom',
-      'Society is a contract across generations',
-      'Gradual reform, not violent revolution'
-    ],
-    historical_weight: 0.7,
-    // ENLIGHTENMENT: Reason + prudence; supported American Revolution, opposed tyranny
-    battles: {
-      reason_faith: 0.6,        // Reason + prudence; tradition as accumulated wisdom
-      reality_mysticism: 0.7,   // Practical wisdom grounded in reality
-      individual_collective: 0.6,  // Defended property rights and liberty
-      freedom_coercion: 0.7,    // Opposed tyranny; supported American independence
-      value_nihilism: 0.8,      // Strong belief in objective moral order
-      market_planning: 0.6,     // Favored free commerce
-      beauty_chaos: 0.8,        // Aesthetic order, sublime
-      good_evil: 0.8            // Clear moral realism
-    }
-  },
-  {
-    id: 'bentham',
-    name: 'Jeremy Bentham',
-    birth_year: 1748,
-    death_year: 1832,
-    birth_city: 'London',
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.5074,
-    longitude: -0.1278,
-    school_of_thought: 'Utilitarianism',
-    tradition: 'western',
-    movement: 'enlightenment', // ENLIGHTENMENT
-    key_ideas: [
-      'The greatest happiness for the greatest number',
-      'Pleasure and pain are the sovereign masters',
-      'All laws should maximize utility'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.8,
-      individual_collective: 0.3,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.6,
-      market_planning: 0.3,
-      beauty_chaos: 0.3,
-      good_evil: 0.5
-    }
-  },
-
-  // 19TH CENTURY
-  {
-    id: 'hegel',
-    name: 'Georg Wilhelm Friedrich Hegel',
-    birth_year: 1770,
-    death_year: 1831,
-    birth_city: 'Stuttgart',
-    birth_country_modern: 'Germany',
-    latitude: 48.7758,
-    longitude: 9.1829,
-    school_of_thought: 'German Idealism',
-    tradition: 'western',
-    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT APEX
-    key_ideas: [
-      'History moves through thesis, antithesis, synthesis',
-      'The real is the rational',
-      'Spirit (Geist) unfolds through history'
-    ],
-    historical_weight: 0.9,
-    // COUNTER-ENLIGHTENMENT APEX: Geist creates reality, individual dissolved into State
-    battles: {
-      reason_faith: 0.1,        // Rationalist language for mystical content
-      reality_mysticism: -0.9,  // Geist/Spirit creates reality - extreme primacy of consciousness
-      individual_collective: -0.9, // Individual dissolved into State/History/Geist
-      freedom_coercion: -0.7,   // Freedom = recognition of necessity; State is supreme
-      value_nihilism: 0.2,      // Values exist but are historical/collective, not objective
-      market_planning: -0.4,    // State over market
-      beauty_chaos: 0.6,        // Dialectical order
-      good_evil: 0.1            // Good = alignment with History/Geist
-    }
-  },
-  {
-    id: 'schopenhauer',
-    name: 'Arthur Schopenhauer',
-    birth_year: 1788,
-    death_year: 1860,
-    birth_city: 'Danzig',
-    birth_country_modern: 'Poland',
-    latitude: 54.3520,
-    longitude: 18.6466,
-    school_of_thought: 'Pessimism / Voluntarism',
-    tradition: 'western',
-    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT
-    key_ideas: [
-      'The world is will and representation',
-      'Life is suffering driven by blind will',
-      'Escape through art, compassion, or asceticism'
-    ],
-    historical_weight: 0.7,
-    // COUNTER-ENLIGHTENMENT: Blind irrational Will as metaphysical substrate
-    battles: {
-      reason_faith: -0.5,       // Reason is slave to irrational Will
-      reality_mysticism: -0.8,  // Blind Will as thing-in-itself - primacy of consciousness/will
-      individual_collective: 0.1,  // Individual suffering, but dissolution of self is goal
-      freedom_coercion: 0.2,    // Pessimism about freedom; Will enslaves us
-      value_nihilism: -0.6,     // Life is suffering; quasi-nihilistic
-      market_planning: 0.0,     // Indifferent
-      beauty_chaos: 0.7,        // Art as temporary escape from Will
-      good_evil: -0.2           // Moral pessimism; compassion as only virtue
-    }
-  },
-  {
-    id: 'comte',
-    name: 'Auguste Comte',
-    birth_year: 1798,
-    death_year: 1857,
-    birth_city: 'Montpellier',
-    birth_country_modern: 'France',
-    latitude: 43.6108,
-    longitude: 3.8767,
-    school_of_thought: 'Positivism',
-    tradition: 'western',
-    key_ideas: [
-      'Knowledge progresses through three stages',
-      'Only observable phenomena constitute knowledge',
-      'Sociology as the science of society'
-    ],
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Systematic Neoplatonism; divine intellect above discursive reason'],
     historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.9,
-      individual_collective: -0.3,
-      freedom_coercion: 0.0,
-      value_nihilism: 0.5,
-      market_planning: -0.2,
-      beauty_chaos: 0.3,
-      good_evil: 0.4
-    }
-  },
-  {
-    id: 'mill',
-    name: 'John Stuart Mill',
-    birth_year: 1806,
-    death_year: 1873,
-    birth_city: 'London',
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.5074,
-    longitude: -0.1278,
-    school_of_thought: 'Utilitarianism / Liberalism',
-    tradition: 'western',
-    key_ideas: [
-      'Higher pleasures are qualitatively superior',
-      'The harm principle limits government power',
-      'Liberty is essential for individual development'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.8,
-      individual_collective: 0.7,
-      freedom_coercion: 0.8,
-      value_nihilism: 0.7,
-      market_planning: 0.4,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'kierkegaard',
-    name: 'Soren Kierkegaard',
-    birth_year: 1813,
-    death_year: 1855,
-    birth_city: 'Copenhagen',
-    birth_country_modern: 'Denmark',
-    latitude: 55.6761,
-    longitude: 12.5683,
-    school_of_thought: 'Existentialism',
-    tradition: 'western',
-    key_ideas: [
-      'Existence precedes essence (for individuals)',
-      'The leap of faith transcends reason',
-      'Authenticity requires subjective commitment'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: -0.2,
-      reality_mysticism: 0.3,
-      individual_collective: 0.9,
-      freedom_coercion: 0.7,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'marx',
-    name: 'Karl Marx',
-    birth_year: 1818,
-    death_year: 1883,
-    birth_city: 'Trier',
-    birth_country_modern: 'Germany',
-    residence_city: 'London', // Relocated 1849
-    residence_country: 'United Kingdom',
-    latitude: 51.5074, // Positioned at London (residence)
-    longitude: -0.1278,
-    school_of_thought: 'Marxism',
-    tradition: 'western',
-    key_ideas: [
-      'History is class struggle',
-      'Capitalism alienates workers from their labor',
-      'Religion is the opium of the people'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.7,
-      individual_collective: -1.0,
-      freedom_coercion: -0.6,
-      value_nihilism: 0.4,
-      market_planning: -1.0,
-      beauty_chaos: 0.0,
-      good_evil: 0.2
-    }
-  },
-  {
-    id: 'nietzsche',
-    name: 'Friedrich Nietzsche',
-    birth_year: 1844,
-    death_year: 1900,
-    birth_city: 'Rocken',
-    birth_country_modern: 'Germany',
-    latitude: 51.2167,
-    longitude: 12.1167,
-    school_of_thought: 'Existentialism / Perspectivism',
-    tradition: 'western',
-    key_ideas: [
-      'God is dead; we have killed him',
-      'The Ubermensch creates new values',
-      'Will to power is the fundamental drive'
-    ],
-    historical_weight: 0.9,
-    // COMPLEX: Diagnosed Counter-Enlightenment nihilism but solution ambiguous
-    battles: {
-      reason_faith: 0.4,        // Valued reason but also instinct/passion
-      reality_mysticism: 0.3,   // More realist than Kant/Hegel but perspectivism
-      individual_collective: 0.9,  // Strongly individualist; anti-State, anti-herd
-      freedom_coercion: 0.7,    // Master morality; self-overcoming
-      value_nihilism: 0.1,      // Diagnosed nihilism; tried to overcome it (ambiguous success)
-      market_planning: 0.2,     // Aristocratic disdain for both
-      beauty_chaos: 0.6,        // Dionysian/Apollonian; tragic beauty
-      good_evil: -0.3           // "Beyond good and evil" - revaluation of values
-    }
-  },
-
-  // 20TH CENTURY
-  {
-    id: 'husserl',
-    name: 'Edmund Husserl',
-    birth_year: 1859,
-    death_year: 1938,
-    birth_city: 'Prostejov',
-    birth_country_modern: 'Czech Republic',
-    latitude: 49.4719,
-    longitude: 17.1114,
-    school_of_thought: 'Phenomenology',
-    tradition: 'western',
-    key_ideas: [
-      'To the things themselves!',
-      'Bracket assumptions to study consciousness',
-      'Intentionality: consciousness is always of something'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.5,
-      individual_collective: 0.6,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'russell',
-    name: 'Bertrand Russell',
-    birth_year: 1872,
-    death_year: 1970,
-    birth_city: 'Trellech',
-    birth_country_modern: 'United Kingdom',
-    latitude: 51.7500,
-    longitude: -2.7333,
-    school_of_thought: 'Analytic Philosophy',
-    tradition: 'western',
-    key_ideas: [
-      'Logic is the essence of philosophy',
-      'Descriptions theory resolves puzzles of reference',
-      'Knowledge by acquaintance vs description'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 1.0,
-      reality_mysticism: 0.9,
-      individual_collective: 0.7,
-      freedom_coercion: 0.7,
-      value_nihilism: 0.6,
-      market_planning: 0.2,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'wittgenstein',
-    name: 'Ludwig Wittgenstein',
-    birth_year: 1889,
-    death_year: 1951,
-    birth_city: 'Vienna',
-    birth_country_modern: 'Austria',
-    residence_city: 'Cambridge', // Relocated 1929
-    residence_country: 'United Kingdom',
-    latitude: 52.2053, // Positioned at Cambridge (residence)
-    longitude: 0.1218,
-    school_of_thought: 'Analytic Philosophy',
-    tradition: 'western',
-    key_ideas: [
-      'The limits of my language are the limits of my world',
-      'Meaning is use in a language game',
-      'Philosophy is therapy for conceptual confusion'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.5,
-      individual_collective: 0.5,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.5,
-      market_planning: 0.0,
-      beauty_chaos: 0.4,
-      good_evil: 0.4
-    }
-  },
-  {
-    id: 'heidegger',
-    name: 'Martin Heidegger',
-    birth_year: 1889,
-    death_year: 1976,
-    birth_city: 'Messkirch',
-    birth_country_modern: 'Germany',
-    latitude: 47.9939,
-    longitude: 9.1122,
-    school_of_thought: 'Phenomenology / Existentialism',
-    tradition: 'western',
-    key_ideas: [
-      'Being-in-the-world is our fundamental condition',
-      'Dasein is thrown into existence',
-      'Technology reveals and conceals Being'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.3,
-      reality_mysticism: 0.2,
-      individual_collective: 0.4,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.4,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.3
-    }
-  },
-  {
-    id: 'popper',
-    name: 'Karl Popper',
-    birth_year: 1902,
-    death_year: 1994,
-    birth_city: 'Vienna',
-    birth_country_modern: 'Austria',
-    residence_city: 'London', // Relocated 1946
-    residence_country: 'United Kingdom',
-    latitude: 51.5074, // Positioned at London (residence)
-    longitude: -0.1278,
-    school_of_thought: 'Critical Rationalism',
-    tradition: 'western',
-    key_ideas: [
-      'Falsifiability is the criterion of science',
-      'Open society vs its enemies',
-      'Piecemeal social engineering, not utopian planning'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.9,
-      individual_collective: 0.8,
-      freedom_coercion: 0.8,
-      value_nihilism: 0.7,
-      market_planning: 0.6,
-      beauty_chaos: 0.5,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'sartre',
-    name: 'Jean-Paul Sartre',
-    birth_year: 1905,
-    death_year: 1980,
-    birth_city: 'Paris',
-    birth_country_modern: 'France',
-    latitude: 48.8566,
-    longitude: 2.3522,
-    school_of_thought: 'Existentialism',
-    tradition: 'western',
-    key_ideas: [
-      'Existence precedes essence',
-      'We are condemned to be free',
-      'Bad faith is self-deception about freedom'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.6,
-      individual_collective: 0.5,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.4,
-      market_planning: -0.3,
-      beauty_chaos: 0.3,
-      good_evil: 0.3
-    }
-  },
-  {
-    id: 'rand',
-    name: 'Ayn Rand',
-    birth_year: 1905,
-    death_year: 1982,
-    birth_city: 'Saint Petersburg',
-    birth_country_modern: 'Russia',
-    residence_city: 'New York', // Relocated 1926
-    residence_country: 'United States',
-    latitude: 40.7128, // Positioned at New York (residence)
-    longitude: -74.0060,
-    school_of_thought: 'Objectivism',
-    tradition: 'western',
-    key_ideas: [
-      'Reason is mans only means of knowledge',
-      'Rational self-interest is the proper moral purpose',
-      'Individual rights are absolute and inalienable'
-    ],
-    historical_weight: 1.0, // Founder of Objectivism - among the greatest
-    battles: {
-      reason_faith: 1.0,
-      reality_mysticism: 1.0,
-      individual_collective: 1.0,
-      freedom_coercion: 1.0,
-      value_nihilism: 1.0,
-      market_planning: 1.0,
-      beauty_chaos: 0.9,
-      good_evil: 0.9
-    }
-  },
-  {
-    id: 'arendt',
-    name: 'Hannah Arendt',
-    birth_year: 1906,
-    death_year: 1975,
-    birth_city: 'Linden',
-    birth_country_modern: 'Germany',
-    residence_city: 'New York', // Relocated 1941
-    residence_country: 'United States',
-    latitude: 40.7128, // Positioned at New York (residence)
-    longitude: -74.0060,
-    school_of_thought: 'Political Philosophy',
-    tradition: 'western',
-    key_ideas: [
-      'The banality of evil in totalitarianism',
-      'Action is the highest human capacity',
-      'The public realm is where freedom appears'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.7,
-      individual_collective: 0.6,
-      freedom_coercion: 0.8,
-      value_nihilism: 0.7,
-      market_planning: 0.3,
-      beauty_chaos: 0.5,
-      good_evil: 0.8
-    }
-  },
-  {
-    id: 'beauvoir',
-    name: 'Simone de Beauvoir',
-    birth_year: 1908,
-    death_year: 1986,
-    birth_city: 'Paris',
-    birth_country_modern: 'France',
-    latitude: 48.8566,
-    longitude: 2.3522,
-    school_of_thought: 'Existentialism / Feminism',
-    tradition: 'western',
-    key_ideas: [
-      'One is not born, but becomes, a woman',
-      'The Other: women defined by male perspective',
-      'Freedom requires material conditions'
-    ],
-    historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.6,
-      individual_collective: 0.5,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.5,
-      market_planning: -0.2,
-      beauty_chaos: 0.4,
-      good_evil: 0.5
-    }
-  },
-  {
-    id: 'camus',
-    name: 'Albert Camus',
-    birth_year: 1913,
-    death_year: 1960,
-    birth_city: 'Mondovi',
-    birth_country_modern: 'Algeria',
-    residence_city: 'Paris', // Relocated 1940
-    residence_country: 'France',
-    latitude: 48.8566, // Positioned at Paris (residence)
-    longitude: 2.3522,
-    school_of_thought: 'Absurdism',
-    tradition: 'western',
-    key_ideas: [
-      'The absurd: life has no inherent meaning',
-      'One must imagine Sisyphus happy',
-      'Revolt against absurdity without nihilism'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.7,
-      individual_collective: 0.7,
-      freedom_coercion: 0.7,
-      value_nihilism: 0.3,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'rawls',
-    name: 'John Rawls',
-    birth_year: 1921,
-    death_year: 2002,
-    birth_city: 'Baltimore',
-    birth_country_modern: 'United States',
-    latitude: 39.2904,
-    longitude: -76.6122,
-    school_of_thought: 'Political Liberalism',
-    tradition: 'western',
-    key_ideas: [
-      'Justice as fairness behind a veil of ignorance',
-      'The difference principle: inequalities benefit the worst-off',
-      'Primary goods: what rational persons want'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.7,
-      individual_collective: 0.2,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.6,
-      market_planning: -0.3,
-      beauty_chaos: 0.4,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'foucault',
-    name: 'Michel Foucault',
-    birth_year: 1926,
-    death_year: 1984,
-    birth_city: 'Poitiers',
-    birth_country_modern: 'France',
-    latitude: 46.5802,
-    longitude: 0.3404,
-    school_of_thought: 'Post-structuralism',
-    tradition: 'western',
-    key_ideas: [
-      'Power-knowledge: truth is a product of power',
-      'Discipline creates docile bodies',
-      'Genealogy uncovers contingent origins'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.3,
-      reality_mysticism: 0.2,
-      individual_collective: 0.0,
-      freedom_coercion: 0.2,
-      value_nihilism: -0.2,
-      market_planning: -0.2,
-      beauty_chaos: -0.2,
-      good_evil: 0.0
-    }
-  },
-  {
-    id: 'hayek',
-    name: 'Friedrich Hayek',
-    birth_year: 1899,
-    death_year: 1992,
-    birth_city: 'Freiburg', // Final residence (moved London 1931, Chicago, then Freiburg)
-    birth_country_modern: 'Germany',
-    latitude: 47.9990, // Freiburg coordinates
-    longitude: 7.8421,
-    school_of_thought: 'Classical Liberalism',
-    tradition: 'western',
-    key_ideas: [
-      'The knowledge problem makes central planning impossible',
-      'Spontaneous order emerges from individual action',
-      'The road to serfdom: planning leads to tyranny'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.8,
-      individual_collective: 0.9,
-      freedom_coercion: 0.9,
-      value_nihilism: 0.7,
-      market_planning: 1.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'mises',
-    name: 'Ludwig von Mises',
-    birth_year: 1881,
-    death_year: 1973,
-    birth_city: 'Lemberg',
-    birth_country_modern: 'Ukraine', // Was Austria-Hungary
-    residence_city: 'New York', // Relocated 1940
-    residence_country: 'United States',
-    latitude: 40.7128, // Positioned at New York (residence)
-    longitude: -74.0060,
-    school_of_thought: 'Austrian Economics',
-    tradition: 'western',
-    key_ideas: [
-      'Human action is purposeful behavior',
-      'Economic calculation requires market prices',
-      'Socialism cannot rationally allocate resources'
-    ],
-    historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.9,
-      reality_mysticism: 0.9,
-      individual_collective: 0.9,
-      freedom_coercion: 0.9,
-      value_nihilism: 0.7,
-      market_planning: 1.0,
-      beauty_chaos: 0.4,
-      good_evil: 0.7
-    }
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
   },
 
   // ═══════════════════════════════════════════════════════════
-  // TRUNK 2: CHINESE TRADITION
+  // ERA 3: MEDIEVAL (c.800–1400) - 14 philosophers
   // ═══════════════════════════════════════════════════════════
-  {
-    id: 'laozi',
-    name: 'Laozi',
-    birth_year: -571,
-    death_year: -471,
-    birth_city: 'Luoyi',
-    birth_country_modern: 'China',
-    latitude: 34.6197,
-    longitude: 112.4540,
-    school_of_thought: 'Taoism',
-    tradition: 'chinese',
-    key_ideas: [
-      'The Tao that can be told is not the eternal Tao',
-      'Wu wei: action through non-action',
-      'Simplicity, patience, compassion'
-    ],
-    historical_weight: 0.9,
-    battles: {
-      reason_faith: 0.2,
-      reality_mysticism: -0.2,
-      individual_collective: 0.5,
-      freedom_coercion: 0.7,
-      value_nihilism: 0.6,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'confucius',
-    name: 'Confucius',
-    birth_year: -551,
-    death_year: -479,
-    birth_city: 'Qufu',
-    birth_country_modern: 'China',
-    latitude: 35.5961,
-    longitude: 116.9913,
-    school_of_thought: 'Confucianism',
-    tradition: 'chinese',
-    key_ideas: [
-      'Ren (benevolence) is the supreme virtue',
-      'Li (ritual propriety) maintains social harmony',
-      'The junzi (noble person) cultivates virtue'
-    ],
-    historical_weight: 1.0,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.6,
-      individual_collective: 0.0,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.9
-    }
-  },
-  {
-    id: 'mozi',
-    name: 'Mozi',
-    birth_year: -470,
-    death_year: -391,
-    birth_city: 'Lu State',
-    birth_country_modern: 'China',
-    latitude: 35.5961,
-    longitude: 116.9913,
-    school_of_thought: 'Mohism',
-    tradition: 'chinese',
-    key_ideas: [
-      'Universal love without partiality',
-      'Consequentialist ethics: benefit to all',
-      'Opposition to offensive warfare'
-    ],
-    historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.7,
-      individual_collective: -0.3,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.3,
-      good_evil: 0.8
-    }
-  },
-  {
-    id: 'mencius',
-    name: 'Mencius',
-    birth_year: -372,
-    death_year: -289,
-    birth_city: 'Zoucheng',
-    birth_country_modern: 'China',
-    latitude: 35.4047,
-    longitude: 116.9658,
-    school_of_thought: 'Confucianism',
-    tradition: 'chinese',
-    key_ideas: [
-      'Human nature is inherently good',
-      'Benevolent government serves the people',
-      'The four beginnings: compassion, shame, courtesy, right/wrong'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.6,
-      individual_collective: 0.2,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.9
-    }
-  },
-  {
-    id: 'zhuangzi',
-    name: 'Zhuangzi',
-    birth_year: -369,
-    death_year: -286,
-    birth_city: 'Meng',
-    birth_country_modern: 'China',
-    latitude: 34.4300,
-    longitude: 115.6500,
-    school_of_thought: 'Taoism',
-    tradition: 'chinese',
-    key_ideas: [
-      'The butterfly dream: what is reality?',
-      'Embrace spontaneity and naturalness',
-      'All perspectives are relative'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.3,
-      reality_mysticism: -0.1,
-      individual_collective: 0.7,
-      freedom_coercion: 0.8,
-      value_nihilism: 0.5,
-      market_planning: 0.0,
-      beauty_chaos: 0.4,
-      good_evil: 0.5
-    }
-  },
-  {
-    id: 'xunzi',
-    name: 'Xunzi',
-    birth_year: -310,
-    death_year: -235,
-    birth_city: 'Zhao',
-    birth_country_modern: 'China',
-    latitude: 37.8706,
-    longitude: 114.5305,
-    school_of_thought: 'Confucianism',
-    tradition: 'chinese',
-    key_ideas: [
-      'Human nature is evil; goodness is acquired',
-      'Ritual and education transform nature',
-      'Order requires hierarchy and discipline'
-    ],
-    historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.7,
-      individual_collective: -0.2,
-      freedom_coercion: 0.2,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'han_fei',
-    name: 'Han Fei',
-    birth_year: -280,
-    death_year: -233,
-    birth_city: 'Han State',
-    birth_country_modern: 'China',
-    latitude: 34.7500,
-    longitude: 113.6500,
-    school_of_thought: 'Legalism',
-    tradition: 'chinese',
-    key_ideas: [
-      'Law and punishment maintain order',
-      'The ruler must be strong and impersonal',
-      'Human nature is self-interested'
-    ],
-    historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.8,
-      individual_collective: -0.5,
-      freedom_coercion: -0.7,
-      value_nihilism: 0.3,
-      market_planning: -0.5,
-      beauty_chaos: 0.2,
-      good_evil: 0.2
-    }
-  },
 
-  // ═══════════════════════════════════════════════════════════
-  // TRUNK 3: INDIAN TRADITION
-  // ═══════════════════════════════════════════════════════════
-  {
-    id: 'mahavira',
-    name: 'Mahavira',
-    birth_year: -599,
-    death_year: -527,
-    birth_city: 'Vaishali',
-    birth_country_modern: 'India',
-    latitude: 25.9833,
-    longitude: 85.1333,
-    school_of_thought: 'Jainism',
-    tradition: 'indian',
-    key_ideas: [
-      'Ahimsa: non-violence is the supreme dharma',
-      'Many-sidedness of truth (anekantavada)',
-      'Liberation through asceticism and non-attachment'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.4,
-      reality_mysticism: 0.3,
-      individual_collective: 0.6,
-      freedom_coercion: 0.8,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.9
-    }
-  },
-  {
-    id: 'buddha',
-    name: 'Siddhartha Gautama',
-    birth_year: -563,
-    death_year: -483,
-    birth_city: 'Lumbini',
-    birth_country_modern: 'Nepal',
-    latitude: 27.4833,
-    longitude: 83.2833,
-    school_of_thought: 'Buddhism',
-    tradition: 'indian',
-    key_ideas: [
-      'The Four Noble Truths: suffering, cause, cessation, path',
-      'The Eightfold Path to liberation',
-      'Impermanence and non-self (anatta)'
-    ],
-    historical_weight: 1.0,
-    battles: {
-      reason_faith: 0.5,
-      reality_mysticism: 0.1,
-      individual_collective: 0.5,
-      freedom_coercion: 0.7,
-      value_nihilism: 0.6,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.8
-    }
-  },
-  {
-    id: 'nagarjuna',
-    name: 'Nagarjuna',
-    birth_year: 150,
-    death_year: 250,
-    birth_city: 'Vidarbha',
-    birth_country_modern: 'India',
-    latitude: 20.7500,
-    longitude: 78.7500,
-    school_of_thought: 'Madhyamaka Buddhism',
-    tradition: 'indian',
-    key_ideas: [
-      'Emptiness (sunyata): all phenomena lack inherent existence',
-      'The two truths: conventional and ultimate',
-      'The middle way between eternalism and nihilism'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.5,
-      reality_mysticism: -0.2,
-      individual_collective: 0.4,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.5,
-      market_planning: 0.0,
-      beauty_chaos: 0.4,
-      good_evil: 0.6
-    }
-  },
-  {
-    id: 'shankara',
-    name: 'Adi Shankara',
-    birth_year: 788,
-    death_year: 820,
-    birth_city: 'Kaladi',
-    birth_country_modern: 'India',
-    latitude: 10.1675,
-    longitude: 76.4411,
-    school_of_thought: 'Advaita Vedanta',
-    tradition: 'indian',
-    key_ideas: [
-      'Brahman alone is real; the world is illusion (maya)',
-      'Atman is identical with Brahman',
-      'Liberation through knowledge, not action'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.4,
-      reality_mysticism: -0.3,
-      individual_collective: 0.6,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.7
-    }
-  },
-  {
-    id: 'ramanuja',
-    name: 'Ramanuja',
-    birth_year: 1017,
-    death_year: 1137,
-    birth_city: 'Sriperumbudur',
-    birth_country_modern: 'India',
-    latitude: 12.9667,
-    longitude: 79.9500,
-    school_of_thought: 'Vishishtadvaita Vedanta',
-    tradition: 'indian',
-    key_ideas: [
-      'Qualified non-dualism: souls are real parts of Brahman',
-      'Devotion (bhakti) is the path to liberation',
-      'God is personal and accessible'
-    ],
-    historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.3,
-      reality_mysticism: 0.1,
-      individual_collective: 0.4,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.8
-    }
-  },
-  {
-    id: 'gandhi',
-    name: 'Mahatma Gandhi',
-    birth_year: 1869,
-    death_year: 1948,
-    birth_city: 'Porbandar',
-    birth_country_modern: 'India',
-    latitude: 21.6417,
-    longitude: 69.6293,
-    school_of_thought: 'Satyagraha / Nonviolence',
-    tradition: 'indian',
-    key_ideas: [
-      'Satyagraha: truth-force as political weapon',
-      'Ahimsa: non-violence in thought, word, and deed',
-      'Swaraj: self-rule begins with self-discipline'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.3,
-      reality_mysticism: 0.3,
-      individual_collective: 0.3,
-      freedom_coercion: 0.9,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 1.0
-    }
-  },
-
-  // ═══════════════════════════════════════════════════════════
-  // TRUNK 4: ISLAMIC TRADITION
-  // ═══════════════════════════════════════════════════════════
+  // ISLAMIC (5)
   {
     id: 'al_kindi',
     name: 'Al-Kindi',
     birth_year: 801,
     death_year: 873,
+    dates: 'c.801–873',
     birth_city: 'Kufa',
     birth_country_modern: 'Iraq',
-    latitude: 32.0167,
+    latitude: 32.0300,
     longitude: 44.4000,
     school_of_thought: 'Islamic Philosophy',
-    tradition: 'islamic',
-    key_ideas: [
-      'Philosophy and revelation are compatible',
-      'First Islamic philosopher to engage Greek thought',
-      'The intellect as connection to divine truth'
-    ],
-    historical_weight: 0.5,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.5,
-      individual_collective: 0.4,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.7
-    }
+    school: 'Islamic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['First Arab philosopher; reason and revelation compatible'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
     id: 'al_farabi',
     name: 'Al-Farabi',
     birth_year: 872,
     death_year: 950,
+    dates: 'c.872–950',
     birth_city: 'Farab',
     birth_country_modern: 'Kazakhstan',
-    latitude: 42.3000,
-    longitude: 68.2167,
-    school_of_thought: 'Islamic Neoplatonism',
-    tradition: 'islamic',
-    key_ideas: [
-      'The virtuous city ruled by philosopher-prophet',
-      'Emanation from the One to the many',
-      'Philosophy and religion express same truths differently'
-    ],
-    historical_weight: 0.6,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.4,
-      individual_collective: 0.3,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.7
-    }
+    latitude: 42.3167,
+    longitude: 68.2500,
+    school_of_thought: 'Islamic Aristotelianism',
+    school: 'Islamic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Aristotelian rationalism; philosopher-king ideal'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
     id: 'avicenna',
-    name: 'Avicenna (Ibn Sina)',
+    name: 'Avicenna',
     birth_year: 980,
     death_year: 1037,
+    dates: '980–1037',
     birth_city: 'Afshana',
     birth_country_modern: 'Uzbekistan',
-    latitude: 39.7500,
-    longitude: 64.4167,
+    latitude: 39.7681,
+    longitude: 64.4556,
     school_of_thought: 'Islamic Aristotelianism',
-    tradition: 'islamic',
-    key_ideas: [
-      'The Necessary Existent: God exists by nature',
-      'Essence-existence distinction in contingent beings',
-      'The Flying Man: proof of souls self-awareness'
-    ],
-    historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.5,
-      individual_collective: 0.5,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.7,
-      good_evil: 0.7
-    }
+    school: 'Islamic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Rationalist metaphysics; floating man argument'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.75, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.75 }
   },
   {
     id: 'al_ghazali',
     name: 'Al-Ghazali',
     birth_year: 1058,
     death_year: 1111,
+    dates: '1058–1111',
     birth_city: 'Tus',
     birth_country_modern: 'Iran',
-    latitude: 36.4500,
-    longitude: 59.5000,
-    school_of_thought: 'Asharism / Sufism',
-    tradition: 'islamic',
-    key_ideas: [
-      'Incoherence of the Philosophers: critique of falsafa',
-      'Occasionalism: God is the only true cause',
-      'Mystical experience surpasses rational argument'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: -0.2,
-      reality_mysticism: -0.3,
-      individual_collective: 0.3,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.7,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.8
-    }
+    latitude: 36.5900,
+    longitude: 59.5400,
+    school_of_thought: 'Islamic Theology',
+    school: 'Islamic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Incoherence of philosophers; faith over reason'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
     id: 'averroes',
-    name: 'Averroes (Ibn Rushd)',
+    name: 'Averroes',
     birth_year: 1126,
     death_year: 1198,
+    dates: '1126–1198',
     birth_city: 'Cordoba',
     birth_country_modern: 'Spain',
-    latitude: 37.8882,
-    longitude: -4.7794,
+    latitude: 37.8916,
+    longitude: -4.7728,
     school_of_thought: 'Islamic Aristotelianism',
-    tradition: 'islamic',
-    key_ideas: [
-      'Philosophy is obligatory for those capable of it',
-      'Natural causation is real, not merely divine habit',
-      'Transmitted Aristotle to medieval Europe'
-    ],
+    school: 'Islamic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["Aristotle's great commentator; reason is autonomous"],
     historical_weight: 0.8,
-    battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.8,
-      individual_collective: 0.5,
-      freedom_coercion: 0.5,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.7
-    }
+    battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
+  },
+
+  // SCHOLASTIC (7)
+  {
+    id: 'anselm',
+    name: 'Anselm',
+    birth_year: 1033,
+    death_year: 1109,
+    dates: '1033–1109',
+    birth_city: 'Aosta',
+    birth_country_modern: 'Italy',
+    latitude: 45.7372,
+    longitude: 7.3150,
+    school_of_thought: 'Scholasticism',
+    school: 'Scholastic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Faith precedes reason; ontological argument subordinates logic to theology — reason as servant of revelation'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+  {
+    id: 'peter_abelard',
+    name: 'Peter Abelard',
+    birth_year: 1079,
+    death_year: 1142,
+    dates: '1079–1142',
+    birth_city: 'Le Pallet',
+    birth_country_modern: 'France',
+    latitude: 47.1478,
+    longitude: -1.3358,
+    school_of_thought: 'Scholasticism',
+    school: 'Scholastic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Dialectics; skepticism of scriptural authority'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
     id: 'maimonides',
     name: 'Maimonides',
     birth_year: 1138,
     death_year: 1204,
+    dates: '1138–1204',
     birth_city: 'Cordoba',
     birth_country_modern: 'Spain',
-    latitude: 37.8882,
-    longitude: -4.7794,
+    latitude: 37.8916,
+    longitude: -4.7728,
     school_of_thought: 'Jewish Aristotelianism',
-    tradition: 'islamic',
-    key_ideas: [
-      'Guide for the Perplexed: reconciling faith and reason',
-      'Negative theology: we can only say what God is not',
-      'The 13 principles of Jewish faith'
-    ],
-    historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.6,
-      individual_collective: 0.5,
-      freedom_coercion: 0.4,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.6,
-      good_evil: 0.8
-    }
+    school: 'Scholastic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Rationalist theology; reason compatible with Torah'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.75, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.75 }
   },
   {
-    id: 'ibn_khaldun',
-    name: 'Ibn Khaldun',
-    birth_year: 1332,
-    death_year: 1406,
-    birth_city: 'Tunis',
-    birth_country_modern: 'Tunisia',
-    latitude: 36.8065,
-    longitude: 10.1815,
-    school_of_thought: 'Philosophy of History',
-    tradition: 'islamic',
-    key_ideas: [
-      'Asabiyyah: group solidarity as historical force',
-      'Civilizations rise and fall in cycles',
-      'Founder of sociology and historiography'
-    ],
+    id: 'roger_bacon',
+    name: 'Roger Bacon',
+    birth_year: 1214,
+    death_year: 1292,
+    dates: 'c.1214–1292',
+    birth_city: 'Ilchester',
+    birth_country_modern: 'United Kingdom',
+    latitude: 50.9667,
+    longitude: -2.6833,
+    school_of_thought: 'Scholasticism / Empiricism',
+    school: 'Scholastic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Empirical science; observation over authority'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.75, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+  {
+    id: 'thomas_aquinas',
+    name: 'Thomas Aquinas',
+    birth_year: 1225,
+    death_year: 1274,
+    dates: '1225–1274',
+    birth_city: 'Roccasecca',
+    birth_country_modern: 'Italy',
+    latitude: 41.5063,
+    longitude: 13.6686,
+    school_of_thought: 'Thomism',
+    school: 'Scholastic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Reason and faith reconciled; natural law'],
+    historical_weight: 0.95,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.85 }
+  },
+  {
+    id: 'duns_scotus',
+    name: 'Duns Scotus',
+    birth_year: 1266,
+    death_year: 1308,
+    dates: '1266–1308',
+    birth_city: 'Duns',
+    birth_country_modern: 'United Kingdom',
+    latitude: 55.7728,
+    longitude: -2.3522,
+    school_of_thought: 'Scotism',
+    school: 'Scholastic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ["Will primacy over intellect; divine voluntarism — God's will not bound by reason"],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+  {
+    id: 'william_of_ockham',
+    name: 'William of Ockham',
+    birth_year: 1287,
+    death_year: 1347,
+    dates: 'c.1287–1347',
+    birth_city: 'Ockham',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.2833,
+    longitude: -0.4333,
+    school_of_thought: 'Nominalism',
+    school: 'Scholastic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["Nominalism; Occam's Razor; empirical logic"],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.75, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+
+  // MYSTICAL (2)
+  {
+    id: 'bernard_of_clairvaux',
+    name: 'Bernard of Clairvaux',
+    birth_year: 1090,
+    death_year: 1153,
+    dates: '1090–1153',
+    birth_city: 'Fontaine-lès-Dijon',
+    birth_country_modern: 'France',
+    latitude: 47.3387,
+    longitude: 5.0341,
+    school_of_thought: 'Christian Mysticism',
+    school: 'Mystical',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Love and faith over dialectical reason'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+  {
+    id: 'meister_eckhart',
+    name: 'Meister Eckhart',
+    birth_year: 1260,
+    death_year: 1328,
+    dates: 'c.1260–1328',
+    birth_city: 'Tambach',
+    birth_country_modern: 'Germany',
+    latitude: 50.7900,
+    longitude: 10.6100,
+    school_of_thought: 'Christian Mysticism',
+    school: 'Mystical',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Mystical union with God beyond rational concepts'],
     historical_weight: 0.7,
-    battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.7,
-      individual_collective: 0.0,
-      freedom_coercion: 0.3,
-      value_nihilism: 0.6,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.6
-    }
-  }
+    battles: { reason_faith: 0.1, reality_mysticism: 0.0, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // ERA 4: RENAISSANCE (1400–1620) - 7 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // HUMANIST (3)
+  {
+    id: 'pico_della_mirandola',
+    name: 'Pico della Mirandola',
+    birth_year: 1463,
+    death_year: 1494,
+    dates: '1463–1494',
+    birth_city: 'Mirandola',
+    birth_country_modern: 'Italy',
+    latitude: 44.8872,
+    longitude: 11.0656,
+    school_of_thought: 'Renaissance Humanism',
+    school: 'Humanist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Human dignity; eclectic rational humanism'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
+  },
+  {
+    id: 'erasmus',
+    name: 'Erasmus',
+    birth_year: 1466,
+    death_year: 1536,
+    dates: '1466–1536',
+    birth_city: 'Rotterdam',
+    birth_country_modern: 'Netherlands',
+    latitude: 51.9244,
+    longitude: 4.4777,
+    school_of_thought: 'Christian Humanism',
+    school: 'Humanist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Christian humanism; rational reform of the Church'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.75, reality_mysticism: 0.65, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
+  },
+  {
+    id: 'thomas_more',
+    name: 'Thomas More',
+    birth_year: 1478,
+    death_year: 1535,
+    dates: '1478–1535',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Christian Humanism',
+    school: 'Humanist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Utopian rationalism; social reform'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.65, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.65 }
+  },
+
+  // POLITICAL REALIST (1)
+  {
+    id: 'machiavelli',
+    name: 'Niccolò Machiavelli',
+    birth_year: 1469,
+    death_year: 1527,
+    dates: '1469–1527',
+    birth_city: 'Florence',
+    birth_country_modern: 'Italy',
+    latitude: 43.7696,
+    longitude: 11.2558,
+    school_of_thought: 'Political Realism',
+    school: 'Political Realist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Political reason divorced from religious morality'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+
+  // NATURALIST (1)
+  {
+    id: 'giordano_bruno',
+    name: 'Giordano Bruno',
+    birth_year: 1548,
+    death_year: 1600,
+    dates: '1548–1600',
+    birth_city: 'Nola',
+    birth_country_modern: 'Italy',
+    latitude: 40.9247,
+    longitude: 14.5278,
+    school_of_thought: 'Renaissance Naturalism',
+    school: 'Naturalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Infinite universe; reason and science over dogma'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.8, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
+  },
+
+  // SKEPTIC (1)
+  {
+    id: 'montaigne',
+    name: 'Michel de Montaigne',
+    birth_year: 1533,
+    death_year: 1592,
+    dates: '1533–1592',
+    birth_city: 'Château de Montaigne',
+    birth_country_modern: 'France',
+    latitude: 44.8667,
+    longitude: 0.0333,
+    school_of_thought: 'Skepticism',
+    school: 'Skeptic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Que sais-je? — radical self-doubt suspends all objective knowledge; skepticism as a way of life'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
+  },
+
+  // EMPIRICIST (1)
+  {
+    id: 'francis_bacon',
+    name: 'Francis Bacon',
+    birth_year: 1561,
+    death_year: 1626,
+    dates: '1561–1626',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Empiricism',
+    school: 'Empiricist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Inductive method; idols of the mind; new science'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // ERA 5: EARLY MODERN (1588–1750) - 10 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // EMPIRICIST (3)
+  {
+    id: 'thomas_hobbes',
+    name: 'Thomas Hobbes',
+    birth_year: 1588,
+    death_year: 1679,
+    dates: '1588–1679',
+    birth_city: 'Westport',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.3492,
+    longitude: -2.3467,
+    school_of_thought: 'Materialism',
+    school: 'Empiricist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Mechanistic materialism; rational social contract'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.9, individual_collective: 0.3, freedom_coercion: 0.2, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.4 }
+  },
+  {
+    id: 'john_locke',
+    name: 'John Locke',
+    birth_year: 1632,
+    death_year: 1704,
+    dates: '1632–1704',
+    birth_city: 'Wrington',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.3667,
+    longitude: -2.7667,
+    school_of_thought: 'Empiricism / Liberalism',
+    school: 'Empiricist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Tabula rasa; experience as the ground of knowledge'],
+    historical_weight: 0.95,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'george_berkeley',
+    name: 'George Berkeley',
+    birth_year: 1685,
+    death_year: 1753,
+    dates: '1685–1753',
+    birth_city: 'Kilkenny',
+    birth_country_modern: 'Ireland',
+    latitude: 52.6541,
+    longitude: -7.2448,
+    school_of_thought: 'Idealism',
+    school: 'Empiricist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Esse est percipi — existence requires a perceiver; denies mind-independent reality'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.1, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // RATIONALIST (5)
+  {
+    id: 'rene_descartes',
+    name: 'René Descartes',
+    birth_year: 1596,
+    death_year: 1650,
+    dates: '1596–1650',
+    birth_city: 'La Haye en Touraine',
+    birth_country_modern: 'France',
+    latitude: 47.0000,
+    longitude: 0.7500,
+    school_of_thought: 'Rationalism',
+    school: 'Rationalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Cogito; clear and distinct ideas; method of doubt'],
+    historical_weight: 0.95,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.7, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+  {
+    id: 'baruch_spinoza',
+    name: 'Baruch Spinoza',
+    birth_year: 1632,
+    death_year: 1677,
+    dates: '1632–1677',
+    birth_city: 'Amsterdam',
+    birth_country_modern: 'Netherlands',
+    latitude: 52.3676,
+    longitude: 4.9041,
+    school_of_thought: 'Rationalism / Pantheism',
+    school: 'Rationalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Geometric ethics; reason as the highest freedom'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
+  },
+  {
+    id: 'malebranche',
+    name: 'Malebranche',
+    birth_year: 1638,
+    death_year: 1715,
+    dates: '1638–1715',
+    birth_city: 'Paris',
+    birth_country_modern: 'France',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    school_of_thought: 'Occasionalism',
+    school: 'Rationalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Vision in God; occasionalism; Cartesian theology'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+  {
+    id: 'leibniz',
+    name: 'G. W. Leibniz',
+    birth_year: 1646,
+    death_year: 1716,
+    dates: '1646–1716',
+    birth_city: 'Leipzig',
+    birth_country_modern: 'Germany',
+    latitude: 51.3397,
+    longitude: 12.3731,
+    school_of_thought: 'Rationalism',
+    school: 'Rationalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Principle of sufficient reason; monads; calculus'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.8 }
+  },
+  {
+    id: 'christian_wolff',
+    name: 'Christian Wolff',
+    birth_year: 1679,
+    death_year: 1754,
+    dates: '1679–1754',
+    birth_city: 'Breslau',
+    birth_country_modern: 'Poland',
+    latitude: 51.1079,
+    longitude: 17.0385,
+    school_of_thought: 'Leibnizian Rationalism',
+    school: 'Rationalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Systematic Leibnizian rationalism'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.75, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.65, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+
+  // MYSTICAL (1)
+  {
+    id: 'blaise_pascal',
+    name: 'Blaise Pascal',
+    birth_year: 1623,
+    death_year: 1662,
+    dates: '1623–1662',
+    birth_city: 'Clermont-Ferrand',
+    birth_country_modern: 'France',
+    latitude: 45.7772,
+    longitude: 3.0870,
+    school_of_thought: 'Jansenism',
+    school: 'Mystical',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Heart has reasons reason cannot know; the wager'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+
+  // COUNTER-ENLIGHTENMENT (1)
+  {
+    id: 'giambattista_vico',
+    name: 'Giambattista Vico',
+    birth_year: 1668,
+    death_year: 1744,
+    dates: '1668–1744',
+    birth_city: 'Naples',
+    birth_country_modern: 'Italy',
+    latitude: 40.8518,
+    longitude: 14.2681,
+    school_of_thought: 'Historicism',
+    school: 'Counter-Enlightenment',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Verum factum: we know only what we make — denies objective reality independent of human construction'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // ERA 6: ENLIGHTENMENT (1687–1804) - 14 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // ENLIGHTENMENT (6)
+  {
+    id: 'montesquieu',
+    name: 'Montesquieu',
+    birth_year: 1689,
+    death_year: 1755,
+    dates: '1689–1755',
+    birth_city: 'La Brède',
+    birth_country_modern: 'France',
+    latitude: 44.6833,
+    longitude: -0.5333,
+    school_of_thought: 'Political Philosophy',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Rational analysis of laws; separation of powers'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.7, freedom_coercion: 0.85, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'voltaire',
+    name: 'Voltaire',
+    birth_year: 1694,
+    death_year: 1778,
+    dates: '1694–1778',
+    birth_city: 'Paris',
+    birth_country_modern: 'France',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    school_of_thought: 'Enlightenment',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Reason vs. superstition, tyranny, and fanaticism'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.8, individual_collective: 0.8, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.7, good_evil: 0.6 }
+  },
+  {
+    id: 'diderot',
+    name: 'Diderot',
+    birth_year: 1713,
+    death_year: 1784,
+    dates: '1713–1784',
+    birth_city: 'Langres',
+    birth_country_modern: 'France',
+    latitude: 47.8633,
+    longitude: 5.3336,
+    school_of_thought: 'Materialism / Encyclopedism',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Encyclopédie; materialism; human knowledge catalogued'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
+  {
+    id: 'adam_smith',
+    name: 'Adam Smith',
+    birth_year: 1723,
+    death_year: 1790,
+    dates: '1723–1790',
+    birth_city: 'Kirkcaldy',
+    birth_country_modern: 'United Kingdom',
+    latitude: 56.1118,
+    longitude: -3.1596,
+    school_of_thought: 'Classical Economics',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Rational self-interest; invisible hand; moral sentiments'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'lessing',
+    name: 'G. E. Lessing',
+    birth_year: 1729,
+    death_year: 1781,
+    dates: '1729–1781',
+    birth_city: 'Kamenz',
+    birth_country_modern: 'Germany',
+    latitude: 51.2689,
+    longitude: 14.0936,
+    school_of_thought: 'Enlightenment',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Rational theology; toleration; education of humanity'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
+  },
+  {
+    id: 'condorcet',
+    name: 'Condorcet',
+    birth_year: 1743,
+    death_year: 1794,
+    dates: '1743–1794',
+    birth_city: 'Ribemont',
+    birth_country_modern: 'France',
+    latitude: 49.7972,
+    longitude: 3.4661,
+    school_of_thought: 'Enlightenment',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Indefinite human progress through reason and science'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+
+  // EMPIRICIST (1)
+  {
+    id: 'david_hume',
+    name: 'David Hume',
+    birth_year: 1711,
+    death_year: 1776,
+    dates: '1711–1776',
+    birth_city: 'Edinburgh',
+    birth_country_modern: 'United Kingdom',
+    latitude: 55.9533,
+    longitude: -3.1883,
+    school_of_thought: 'Empiricism / Skepticism',
+    school: 'Empiricist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Causation is habit not necessity; induction unjustifiable — destroys the rational foundations of science'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.4, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.3 }
+  },
+
+  // COUNTER-ENLIGHTENMENT (5)
+  {
+    id: 'rousseau',
+    name: 'J.-J. Rousseau',
+    birth_year: 1712,
+    death_year: 1778,
+    dates: '1712–1778',
+    birth_city: 'Geneva',
+    birth_country_modern: 'Switzerland',
+    latitude: 46.2044,
+    longitude: 6.1432,
+    school_of_thought: 'Social Contract / Romanticism',
+    school: 'Counter-Enlightenment',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Nature and sentiment over civilization and reason'],
+    historical_weight: 0.85,
+    battles: { reason_faith: -0.4, reality_mysticism: -0.5, individual_collective: -0.7, freedom_coercion: -0.5, value_nihilism: 0.3, market_planning: -0.5, beauty_chaos: 0.5, good_evil: 0.3 }
+  },
+  {
+    id: 'edmund_burke',
+    name: 'Edmund Burke',
+    birth_year: 1729,
+    death_year: 1797,
+    dates: '1729–1797',
+    birth_city: 'Dublin',
+    birth_country_modern: 'Ireland',
+    latitude: 53.3498,
+    longitude: -6.2603,
+    school_of_thought: 'Conservatism',
+    school: 'Counter-Enlightenment',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Tradition and prejudice over abstract rationalism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.5, beauty_chaos: 0.7, good_evil: 0.6 }
+  },
+  {
+    id: 'hamann',
+    name: 'J. G. Hamann',
+    birth_year: 1730,
+    death_year: 1788,
+    dates: '1730–1788',
+    birth_city: 'Königsberg',
+    birth_country_modern: 'Russia',
+    latitude: 54.7104,
+    longitude: 20.4522,
+    school_of_thought: 'Counter-Enlightenment',
+    school: 'Counter-Enlightenment',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Faith and language over Enlightenment reason'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
+  },
+  {
+    id: 'jacobi',
+    name: 'F. H. Jacobi',
+    birth_year: 1743,
+    death_year: 1819,
+    dates: '1743–1819',
+    birth_city: 'Düsseldorf',
+    birth_country_modern: 'Germany',
+    latitude: 51.2277,
+    longitude: 6.7735,
+    school_of_thought: 'Glaubensphilosophie',
+    school: 'Counter-Enlightenment',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Leap of faith; Glaubensphilosophie against Spinoza'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+  {
+    id: 'herder',
+    name: 'J. G. Herder',
+    birth_year: 1744,
+    death_year: 1803,
+    dates: '1744–1803',
+    birth_city: 'Mohrungen',
+    birth_country_modern: 'Poland',
+    latitude: 53.9167,
+    longitude: 19.9333,
+    school_of_thought: 'Counter-Enlightenment',
+    school: 'Counter-Enlightenment',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Cultural particularity; Volksgeist over universal reason'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
+  },
+
+  // GERMAN IDEALISM (1)
+  {
+    id: 'immanuel_kant',
+    name: 'Immanuel Kant',
+    birth_year: 1724,
+    death_year: 1804,
+    dates: '1724–1804',
+    birth_city: 'Königsberg',
+    birth_country_modern: 'Russia',
+    latitude: 54.7104,
+    longitude: 20.4522,
+    school_of_thought: 'Transcendental Idealism',
+    school: 'German Idealism',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Thing-in-itself unknowable; reason bounded; duty-ethics divorced from reality — arch-enemy of Objectivism'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.3, reality_mysticism: -0.7, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.6 }
+  },
+
+  // UTILITARIAN (1)
+  {
+    id: 'jeremy_bentham',
+    name: 'Jeremy Bentham',
+    birth_year: 1748,
+    death_year: 1832,
+    dates: '1748–1832',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Utilitarianism',
+    school: 'Utilitarian',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Felicific calculus: aggregate utility can override individual rights — collectivism in rational disguise'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.2, beauty_chaos: 0.3, good_evil: 0.4 }
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // ERA 7: 19TH CENTURY (1770–1900) - 18 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // COUNTER-ENLIGHTENMENT (1)
+  {
+    id: 'de_maistre',
+    name: 'J. de Maistre',
+    birth_year: 1753,
+    death_year: 1821,
+    dates: '1753–1821',
+    birth_city: 'Chambéry',
+    birth_country_modern: 'France',
+    latitude: 45.5646,
+    longitude: 5.9178,
+    school_of_thought: 'Reactionary Conservatism',
+    school: 'Counter-Enlightenment',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Theocratic authority and tradition over rationalism'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.0, reality_mysticism: 0.1, individual_collective: -0.4, freedom_coercion: -0.3, value_nihilism: 0.5, market_planning: -0.2, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // GERMAN IDEALISM (4)
+  {
+    id: 'schiller',
+    name: 'Friedrich Schiller',
+    birth_year: 1759,
+    death_year: 1805,
+    dates: '1759–1805',
+    birth_city: 'Marbach am Neckar',
+    birth_country_modern: 'Germany',
+    latitude: 48.9372,
+    longitude: 9.2586,
+    school_of_thought: 'German Idealism / Aesthetics',
+    school: 'German Idealism',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ["Aesthetic education; play-drive dissolves rational-natural divide; Kant's heir in aesthetics"],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.5 }
+  },
+  {
+    id: 'fichte',
+    name: 'J. G. Fichte',
+    birth_year: 1762,
+    death_year: 1814,
+    dates: '1762–1814',
+    birth_city: 'Rammenau',
+    birth_country_modern: 'Germany',
+    latitude: 51.1528,
+    longitude: 14.1278,
+    school_of_thought: 'German Idealism',
+    school: 'German Idealism',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Absolute Ego as primary; collapses objective reality into subject'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.3, reality_mysticism: -0.5, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'hegel',
+    name: 'G. W. F. Hegel',
+    birth_year: 1770,
+    death_year: 1831,
+    dates: '1770–1831',
+    birth_city: 'Stuttgart',
+    birth_country_modern: 'Germany',
+    latitude: 48.7758,
+    longitude: 9.1829,
+    school_of_thought: 'Absolute Idealism',
+    school: 'German Idealism',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Dialectical Spirit; individual dissolved into collective History; root of totalitarianism'],
+    historical_weight: 0.95,
+    battles: { reason_faith: 0.1, reality_mysticism: -0.9, individual_collective: -0.9, freedom_coercion: -0.7, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.6, good_evil: 0.1 }
+  },
+  {
+    id: 'schelling',
+    name: 'F. W. J. Schelling',
+    birth_year: 1775,
+    death_year: 1854,
+    dates: '1775–1854',
+    birth_city: 'Leonberg',
+    birth_country_modern: 'Germany',
+    latitude: 48.8000,
+    longitude: 9.0167,
+    school_of_thought: 'German Idealism',
+    school: 'German Idealism',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Nature philosophy; subject-object identity; late mysticism'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.3, reality_mysticism: -0.4, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
+  },
+
+  // POSITIVIST (2)
+  {
+    id: 'auguste_comte',
+    name: 'Auguste Comte',
+    birth_year: 1798,
+    death_year: 1857,
+    dates: '1798–1857',
+    birth_city: 'Montpellier',
+    birth_country_modern: 'France',
+    latitude: 43.6108,
+    longitude: 3.8767,
+    school_of_thought: 'Positivism',
+    school: 'Positivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Three stages; science replaces theology and metaphysics'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: -0.3, freedom_coercion: 0.0, value_nihilism: 0.5, market_planning: -0.2, beauty_chaos: 0.3, good_evil: 0.4 }
+  },
+  {
+    id: 'herbert_spencer',
+    name: 'Herbert Spencer',
+    birth_year: 1820,
+    death_year: 1903,
+    dates: '1820–1903',
+    birth_city: 'Derby',
+    birth_country_modern: 'United Kingdom',
+    latitude: 52.9225,
+    longitude: -1.4746,
+    school_of_thought: 'Social Darwinism',
+    school: 'Positivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Synthetic philosophy; social evolution; scientism'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.6, market_planning: 0.6, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+
+  // VOLUNTARIST (2)
+  {
+    id: 'schopenhauer',
+    name: 'Arthur Schopenhauer',
+    birth_year: 1788,
+    death_year: 1860,
+    dates: '1788–1860',
+    birth_city: 'Danzig',
+    birth_country_modern: 'Poland',
+    latitude: 54.3520,
+    longitude: 18.6466,
+    school_of_thought: 'Pessimism',
+    school: 'Voluntarist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Blind Will underlies reality; reason is its servant'],
+    historical_weight: 0.8,
+    battles: { reason_faith: -0.5, reality_mysticism: -0.8, individual_collective: 0.1, freedom_coercion: 0.2, value_nihilism: -0.6, market_planning: 0.0, beauty_chaos: 0.7, good_evil: -0.2 }
+  },
+  {
+    id: 'nietzsche',
+    name: 'Friedrich Nietzsche',
+    birth_year: 1844,
+    death_year: 1900,
+    dates: '1844–1900',
+    birth_city: 'Röcken',
+    birth_country_modern: 'Germany',
+    latitude: 51.2167,
+    longitude: 12.1167,
+    school_of_thought: 'Perspectivism',
+    school: 'Voluntarist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Will to Power; death of God; perspectivism'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.9, freedom_coercion: 0.7, value_nihilism: 0.1, market_planning: 0.2, beauty_chaos: 0.6, good_evil: -0.3 }
+  },
+
+  // UTILITARIAN (1)
+  {
+    id: 'john_stuart_mill',
+    name: 'John Stuart Mill',
+    birth_year: 1806,
+    death_year: 1873,
+    dates: '1806–1873',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Utilitarianism / Liberalism',
+    school: 'Utilitarian',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Harm principle subordinates individual to society; utility trumps rights — altruism with a logical veneer'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.4, freedom_coercion: 0.6, value_nihilism: 0.6, market_planning: 0.3, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // EXISTENTIALIST (1)
+  {
+    id: 'kierkegaard',
+    name: 'S. Kierkegaard',
+    birth_year: 1813,
+    death_year: 1855,
+    dates: '1813–1855',
+    birth_city: 'Copenhagen',
+    birth_country_modern: 'Denmark',
+    latitude: 55.6761,
+    longitude: 12.5683,
+    school_of_thought: 'Existentialism',
+    school: 'Existentialist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Leap of faith; subjectivity is truth; against Hegel'],
+    historical_weight: 0.75,
+    battles: { reason_faith: -0.2, reality_mysticism: 0.3, individual_collective: 0.9, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
+  },
+
+  // MARXIST (1)
+  {
+    id: 'karl_marx',
+    name: 'Karl Marx',
+    birth_year: 1818,
+    death_year: 1883,
+    dates: '1818–1883',
+    birth_city: 'Trier',
+    birth_country_modern: 'Germany',
+    latitude: 49.7557,
+    longitude: 6.6394,
+    school_of_thought: 'Marxism',
+    school: 'Marxist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Dialectical materialism inverts Hegel but retains irrationalism; collectivism; anti-individual'],
+    historical_weight: 0.95,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.7, individual_collective: -1.0, freedom_coercion: -0.6, value_nihilism: 0.4, market_planning: -1.0, beauty_chaos: 0.0, good_evil: 0.2 }
+  },
+
+  // PRAGMATIST (3)
+  {
+    id: 'charles_peirce',
+    name: 'Charles S. Peirce',
+    birth_year: 1839,
+    death_year: 1914,
+    dates: '1839–1914',
+    birth_city: 'Cambridge',
+    birth_country_modern: 'United States',
+    latitude: 42.3736,
+    longitude: -71.1097,
+    school_of_thought: 'Pragmatism',
+    school: 'Pragmatist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Truth as long-run consensus of inquirers — replaces correspondence to reality with social agreement'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'william_james',
+    name: 'William James',
+    birth_year: 1842,
+    death_year: 1910,
+    dates: '1842–1910',
+    birth_city: 'New York',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Pragmatism',
+    school: 'Pragmatist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Truth is what works — explicitly rejects correspondence theory of truth; pragmatic cash-value'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'john_dewey',
+    name: 'John Dewey',
+    birth_year: 1859,
+    death_year: 1952,
+    dates: '1859–1952',
+    birth_city: 'Burlington',
+    birth_country_modern: 'United States',
+    latitude: 44.4759,
+    longitude: -73.2121,
+    school_of_thought: 'Instrumentalism',
+    school: 'Pragmatist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Instrumentalism; truth as tool for biological adaptation; no objective standards independent of use'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+
+  // ANALYTIC (1)
+  {
+    id: 'gottlob_frege',
+    name: 'Gottlob Frege',
+    birth_year: 1848,
+    death_year: 1925,
+    dates: '1848–1925',
+    birth_city: 'Wismar',
+    birth_country_modern: 'Germany',
+    latitude: 53.8917,
+    longitude: 11.4583,
+    school_of_thought: 'Logicism',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Logical foundations of mathematics; objectivity of sense'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+
+  // PHENOMENOLOGY (1)
+  {
+    id: 'edmund_husserl',
+    name: 'Edmund Husserl',
+    birth_year: 1859,
+    death_year: 1938,
+    dates: '1859–1938',
+    birth_city: 'Prostějov',
+    birth_country_modern: 'Czech Republic',
+    latitude: 49.4719,
+    longitude: 17.1114,
+    school_of_thought: 'Phenomenology',
+    school: 'Phenomenology',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Phenomenological reduction brackets objective reality; consciousness constitutes the world'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // VITALIST (1)
+  {
+    id: 'henri_bergson',
+    name: 'Henri Bergson',
+    birth_year: 1859,
+    death_year: 1941,
+    dates: '1859–1941',
+    birth_city: 'Paris',
+    birth_country_modern: 'France',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    school_of_thought: 'Vitalism',
+    school: 'Vitalist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Élan vital; intuition over intellect and mechanism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // ERA 8: 20TH CENTURY (1864–1999) - 40 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // SOCIOLOGIST (1)
+  {
+    id: 'max_weber',
+    name: 'Max Weber',
+    birth_year: 1864,
+    death_year: 1920,
+    dates: '1864–1920',
+    birth_city: 'Erfurt',
+    birth_country_modern: 'Germany',
+    latitude: 50.9787,
+    longitude: 11.0328,
+    school_of_thought: 'Sociology',
+    school: 'Sociologist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Disenchantment: reason strips meaning from the world; value-free science cannot ground ethics — fact-value split'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.2, market_planning: 0.3, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+
+  // ANALYTIC (6)
+  {
+    id: 'bertrand_russell',
+    name: 'Bertrand Russell',
+    birth_year: 1872,
+    death_year: 1970,
+    dates: '1872–1970',
+    birth_city: 'Trellech',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.7500,
+    longitude: -2.7333,
+    school_of_thought: 'Analytic Philosophy',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Logical atomism; scientific philosophy; anti-mysticism'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 1.0, reality_mysticism: 0.9, individual_collective: 0.7, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.2, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+  {
+    id: 'g_e_moore',
+    name: 'G. E. Moore',
+    birth_year: 1873,
+    death_year: 1958,
+    dates: '1873–1958',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Common Sense Realism',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Common sense realism; naturalistic fallacy in ethics'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'ludwig_wittgenstein',
+    name: 'Ludwig Wittgenstein',
+    birth_year: 1889,
+    death_year: 1951,
+    dates: '1889–1951',
+    birth_city: 'Vienna',
+    birth_country_modern: 'Austria',
+    latitude: 48.2082,
+    longitude: 16.3738,
+    school_of_thought: 'Analytic Philosophy',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Late: language games dissolve objective meaning; meaning is use, not correspondence to reality'],
+    historical_weight: 0.9,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'gilbert_ryle',
+    name: 'Gilbert Ryle',
+    birth_year: 1900,
+    death_year: 1976,
+    dates: '1900–1976',
+    birth_city: 'Brighton',
+    birth_country_modern: 'United Kingdom',
+    latitude: 50.8225,
+    longitude: -0.1372,
+    school_of_thought: 'Ordinary Language Philosophy',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Category mistakes; ordinary language analysis'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+  {
+    id: 'w_v_o_quine',
+    name: 'W. V. O. Quine',
+    birth_year: 1908,
+    death_year: 2000,
+    dates: '1908–2000',
+    birth_city: 'Akron',
+    birth_country_modern: 'United States',
+    latitude: 41.0814,
+    longitude: -81.5190,
+    school_of_thought: 'Naturalized Epistemology',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Naturalized epistemology; no analytic/synthetic distinction'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+  {
+    id: 'bernard_williams',
+    name: 'Bernard Williams',
+    birth_year: 1929,
+    death_year: 2003,
+    dates: '1929–2003',
+    birth_city: 'Westcliff-on-Sea',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5417,
+    longitude: 0.6833,
+    school_of_thought: 'Ethics',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Integrity and internal reasons dissolve objective moral standards — moral relativism with analytic credentials'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
+  },
+
+  // POSITIVIST (2)
+  {
+    id: 'rudolf_carnap',
+    name: 'Rudolf Carnap',
+    birth_year: 1891,
+    death_year: 1970,
+    dates: '1891–1970',
+    birth_city: 'Ronsdorf',
+    birth_country_modern: 'Germany',
+    latitude: 51.2333,
+    longitude: 7.1833,
+    school_of_thought: 'Logical Positivism',
+    school: 'Positivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Logical syntax; Vienna Circle verificationism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+  {
+    id: 'a_j_ayer',
+    name: 'A. J. Ayer',
+    birth_year: 1910,
+    death_year: 1989,
+    dates: '1910–1989',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Logical Positivism',
+    school: 'Positivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Language Truth and Logic; strict verificationism'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+
+  // EXISTENTIALIST (4)
+  {
+    id: 'martin_heidegger',
+    name: 'Martin Heidegger',
+    birth_year: 1889,
+    death_year: 1976,
+    dates: '1889–1976',
+    birth_city: 'Meßkirch',
+    birth_country_modern: 'Germany',
+    latitude: 47.9939,
+    longitude: 9.1122,
+    school_of_thought: 'Existential Phenomenology',
+    school: 'Existentialist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Being over cognition; Dasein; critique of Cartesian reason'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
+  },
+  {
+    id: 'jean_paul_sartre',
+    name: 'Jean-Paul Sartre',
+    birth_year: 1905,
+    death_year: 1980,
+    dates: '1905–1980',
+    birth_city: 'Paris',
+    birth_country_modern: 'France',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    school_of_thought: 'Existentialism',
+    school: 'Existentialist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Existence precedes essence — denies human nature; radical freedom has no rational grounding in reality'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: -0.3, beauty_chaos: 0.3, good_evil: 0.3 }
+  },
+  {
+    id: 'simone_de_beauvoir',
+    name: 'Simone de Beauvoir',
+    birth_year: 1908,
+    death_year: 1986,
+    dates: '1908–1986',
+    birth_city: 'Paris',
+    birth_country_modern: 'France',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    school_of_thought: 'Existentialist Feminism',
+    school: 'Existentialist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Existentialist feminism; situation over nature; no objective human essence or sex-based identity'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: -0.2, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'albert_camus',
+    name: 'Albert Camus',
+    birth_year: 1913,
+    death_year: 1960,
+    dates: '1913–1960',
+    birth_city: 'Mondovi',
+    birth_country_modern: 'Algeria',
+    latitude: 36.4667,
+    longitude: 7.4333,
+    school_of_thought: 'Absurdism',
+    school: 'Existentialist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Absurdism: universe is irrational and indifferent; revolt without rational foundation'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.5, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // PHENOMENOLOGY (3)
+  {
+    id: 'emmanuel_levinas',
+    name: 'Emmanuel Levinas',
+    birth_year: 1906,
+    death_year: 1995,
+    dates: '1906–1995',
+    birth_city: 'Kaunas',
+    birth_country_modern: 'Lithuania',
+    latitude: 54.8985,
+    longitude: 23.9036,
+    school_of_thought: 'Phenomenology / Ethics',
+    school: 'Phenomenology',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ["Ethics as first philosophy before metaphysics — inverts Rand's hierarchy; the Other commands absolutely"],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+  {
+    id: 'merleau_ponty',
+    name: 'Maurice Merleau-Ponty',
+    birth_year: 1908,
+    death_year: 1961,
+    dates: '1908–1961',
+    birth_city: 'Rochefort-sur-Mer',
+    birth_country_modern: 'France',
+    latitude: 45.9333,
+    longitude: -0.9667,
+    school_of_thought: 'Phenomenology',
+    school: 'Phenomenology',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Embodied cognition dissolves subject-object distinction; no mind-independent reality accessible'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
+  },
+  {
+    id: 'paul_ricoeur',
+    name: 'Paul Ricoeur',
+    birth_year: 1913,
+    death_year: 2005,
+    dates: '1913–2005',
+    birth_city: 'Valence',
+    birth_country_modern: 'France',
+    latitude: 44.9333,
+    longitude: 4.8917,
+    school_of_thought: 'Hermeneutic Phenomenology',
+    school: 'Phenomenology',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Hermeneutics; all understanding is interpretation; no unmediated access to objective meaning'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
+  },
+
+  // CRITICAL THEORY (5)
+  {
+    id: 'walter_benjamin',
+    name: 'Walter Benjamin',
+    birth_year: 1892,
+    death_year: 1940,
+    dates: '1892–1940',
+    birth_city: 'Berlin',
+    birth_country_modern: 'Germany',
+    latitude: 52.5200,
+    longitude: 13.4050,
+    school_of_thought: 'Critical Theory',
+    school: 'Critical Theory',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Marxist aesthetics; dialectical image; history as catastrophe — no rational progress'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: 0.2, market_planning: -0.3, beauty_chaos: 0.5, good_evil: 0.3 }
+  },
+  {
+    id: 'max_horkheimer',
+    name: 'Max Horkheimer',
+    birth_year: 1895,
+    death_year: 1973,
+    dates: '1895–1973',
+    birth_city: 'Stuttgart',
+    birth_country_modern: 'Germany',
+    latitude: 48.7758,
+    longitude: 9.1829,
+    school_of_thought: 'Critical Theory',
+    school: 'Critical Theory',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Instrumental reason as domination; Enlightenment itself becomes myth — attacks reason at its root'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+  {
+    id: 'herbert_marcuse',
+    name: 'Herbert Marcuse',
+    birth_year: 1898,
+    death_year: 1979,
+    dates: '1898–1979',
+    birth_city: 'Berlin',
+    birth_country_modern: 'Germany',
+    latitude: 52.5200,
+    longitude: 13.4050,
+    school_of_thought: 'Critical Theory',
+    school: 'Critical Theory',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['One-dimensional man; technological reason as repression'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: -0.4, freedom_coercion: 0.2, value_nihilism: 0.2, market_planning: -0.5, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+  {
+    id: 'theodor_adorno',
+    name: 'Theodor Adorno',
+    birth_year: 1903,
+    death_year: 1969,
+    dates: '1903–1969',
+    birth_city: 'Frankfurt',
+    birth_country_modern: 'Germany',
+    latitude: 50.1109,
+    longitude: 8.6821,
+    school_of_thought: 'Critical Theory',
+    school: 'Critical Theory',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Negative dialectics; no positive knowledge possible; Enlightenment inevitably turns into barbarism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.1, market_planning: -0.4, beauty_chaos: 0.4, good_evil: 0.2 }
+  },
+  {
+    id: 'jurgen_habermas',
+    name: 'Jürgen Habermas',
+    birth_year: 1929,
+    death_year: null,
+    dates: '1929–',
+    birth_city: 'Düsseldorf',
+    birth_country_modern: 'Germany',
+    latitude: 51.2277,
+    longitude: 6.7735,
+    school_of_thought: 'Critical Theory',
+    school: 'Critical Theory',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Communicative reason is intersubjective not objective — truth by consensus, not by correspondence to reality'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: -0.2, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+
+  // RATIONALIST (1)
+  {
+    id: 'noam_chomsky',
+    name: 'Noam Chomsky',
+    birth_year: 1928,
+    death_year: null,
+    dates: '1928–',
+    birth_city: 'Philadelphia',
+    birth_country_modern: 'United States',
+    latitude: 39.9526,
+    longitude: -75.1652,
+    school_of_thought: 'Generative Grammar',
+    school: 'Rationalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Innate grammar; generative rationalism; language universals'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.6, market_planning: -0.3, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // PHILOSOPHY OF SCIENCE (3)
+  {
+    id: 'karl_popper',
+    name: 'Karl Popper',
+    birth_year: 1902,
+    death_year: 1994,
+    dates: '1902–1994',
+    birth_city: 'Vienna',
+    birth_country_modern: 'Austria',
+    latitude: 48.2082,
+    longitude: 16.3738,
+    school_of_thought: 'Critical Rationalism',
+    school: 'Philosophy of Science',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Falsificationism; critical rationalism; open society'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'thomas_kuhn',
+    name: 'Thomas Kuhn',
+    birth_year: 1922,
+    death_year: 1996,
+    dates: '1922–1996',
+    birth_city: 'Cincinnati',
+    birth_country_modern: 'United States',
+    latitude: 39.1031,
+    longitude: -84.5120,
+    school_of_thought: 'Philosophy of Science',
+    school: 'Philosophy of Science',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Paradigm shifts; scientific revolutions incommensurable — no objective progress in science'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'paul_feyerabend',
+    name: 'Paul Feyerabend',
+    birth_year: 1924,
+    death_year: 1994,
+    dates: '1924–1994',
+    birth_city: 'Vienna',
+    birth_country_modern: 'Austria',
+    latitude: 48.2082,
+    longitude: 16.3738,
+    school_of_thought: 'Epistemological Anarchism',
+    school: 'Philosophy of Science',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Against method; epistemological anarchism'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.3 }
+  },
+
+  // OBJECTIVIST (3 in 20th century)
+  {
+    id: 'ayn_rand',
+    name: 'Ayn Rand',
+    birth_year: 1905,
+    death_year: 1982,
+    dates: '1905–1982',
+    birth_city: 'Saint Petersburg',
+    birth_country_modern: 'Russia',
+    latitude: 59.9311,
+    longitude: 30.3609,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ["Reason as man's absolute; Objectivism; rational self-interest"],
+    historical_weight: 1.0,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.9, good_evil: 0.9 }
+  },
+  {
+    id: 'barbara_branden',
+    name: 'Barbara Branden',
+    birth_year: 1929,
+    death_year: 2013,
+    dates: '1929–2013',
+    birth_city: 'Winnipeg',
+    birth_country_modern: 'Canada',
+    latitude: 49.8951,
+    longitude: -97.1384,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Passion of Ayn Rand; early movement organizer'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.85, beauty_chaos: 0.7, good_evil: 0.8 }
+  },
+  {
+    id: 'nathaniel_branden',
+    name: 'Nathaniel Branden',
+    birth_year: 1930,
+    death_year: 2014,
+    dates: '1930–2014',
+    birth_city: 'Brampton',
+    birth_country_modern: 'Canada',
+    latitude: 43.7315,
+    longitude: -79.7624,
+    school_of_thought: 'Objectivism / Psychology',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Psychology of self-esteem; chief popularizer of Objectivism'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.85, beauty_chaos: 0.7, good_evil: 0.85 }
+  },
+
+  // POLITICAL (1)
+  {
+    id: 'hannah_arendt',
+    name: 'Hannah Arendt',
+    birth_year: 1906,
+    death_year: 1975,
+    dates: '1906–1975',
+    birth_city: 'Linden',
+    birth_country_modern: 'Germany',
+    latitude: 52.3667,
+    longitude: 9.6833,
+    school_of_thought: 'Political Philosophy',
+    school: 'Political',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Political action over individual reason; vita activa over vita contemplativa — the collective precedes the individual'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.3, freedom_coercion: 0.6, value_nihilism: 0.5, market_planning: 0.2, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+
+  // MARXIST (1 in 20th century)
+  {
+    id: 'louis_althusser',
+    name: 'Louis Althusser',
+    birth_year: 1918,
+    death_year: 1990,
+    dates: '1918–1990',
+    birth_city: 'Birmandreis',
+    birth_country_modern: 'Algeria',
+    latitude: 36.7333,
+    longitude: 3.0500,
+    school_of_thought: 'Structural Marxism',
+    school: 'Marxist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Scientific Marxism; individuals are effects of ideology — no autonomous rational subject'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: -0.6, freedom_coercion: -0.3, value_nihilism: 0.3, market_planning: -0.7, beauty_chaos: 0.2, good_evil: 0.2 }
+  },
+
+  // LIBERAL (2)
+  {
+    id: 'john_rawls',
+    name: 'John Rawls',
+    birth_year: 1921,
+    death_year: 2002,
+    dates: '1921–2002',
+    birth_city: 'Baltimore',
+    birth_country_modern: 'United States',
+    latitude: 39.2904,
+    longitude: -76.6122,
+    school_of_thought: 'Political Liberalism',
+    school: 'Liberal',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Veil of ignorance erases individual identity; distributive justice violates rights; egalitarianism over merit'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: -0.3, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+  {
+    id: 'robert_nozick',
+    name: 'Robert Nozick',
+    birth_year: 1938,
+    death_year: 2002,
+    dates: '1938–2002',
+    birth_city: 'Brooklyn',
+    birth_country_modern: 'United States',
+    latitude: 40.6782,
+    longitude: -73.9442,
+    school_of_thought: 'Libertarianism',
+    school: 'Liberal',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Libertarian natural rights; self-ownership; Anarchy State and Utopia — closest liberal to Objectivism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+
+  // POSTMODERN (5)
+  {
+    id: 'lyotard',
+    name: 'Jean-François Lyotard',
+    birth_year: 1924,
+    death_year: 1998,
+    dates: '1924–1998',
+    birth_city: 'Versailles',
+    birth_country_modern: 'France',
+    latitude: 48.8014,
+    longitude: 2.1301,
+    school_of_thought: 'Postmodernism',
+    school: 'Postmodern',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Incredulity toward metanarratives; end of grand reason'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.1, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+  {
+    id: 'gilles_deleuze',
+    name: 'Gilles Deleuze',
+    birth_year: 1925,
+    death_year: 1995,
+    dates: '1925–1995',
+    birth_city: 'Paris',
+    birth_country_modern: 'France',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    school_of_thought: 'Post-structuralism',
+    school: 'Postmodern',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Difference and repetition; anti-dialectics; rhizome'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+  },
+  {
+    id: 'michel_foucault',
+    name: 'Michel Foucault',
+    birth_year: 1926,
+    death_year: 1984,
+    dates: '1926–1984',
+    birth_city: 'Poitiers',
+    birth_country_modern: 'France',
+    latitude: 46.5802,
+    longitude: 0.3404,
+    school_of_thought: 'Post-structuralism',
+    school: 'Postmodern',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Power-knowledge regimes; genealogy of truth'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.0, freedom_coercion: 0.2, value_nihilism: -0.2, market_planning: -0.2, beauty_chaos: -0.2, good_evil: 0.0 }
+  },
+  {
+    id: 'jean_baudrillard',
+    name: 'Jean Baudrillard',
+    birth_year: 1929,
+    death_year: 2007,
+    dates: '1929–2007',
+    birth_city: 'Reims',
+    birth_country_modern: 'France',
+    latitude: 49.2583,
+    longitude: 4.0317,
+    school_of_thought: 'Postmodernism',
+    school: 'Postmodern',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Hyperreality; simulation replaces the real'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.0, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: -0.1, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+  },
+  {
+    id: 'jacques_derrida',
+    name: 'Jacques Derrida',
+    birth_year: 1930,
+    death_year: 2004,
+    dates: '1930–2004',
+    birth_city: 'El Biar',
+    birth_country_modern: 'Algeria',
+    latitude: 36.7683,
+    longitude: 3.0308,
+    school_of_thought: 'Deconstruction',
+    school: 'Postmodern',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Deconstruction; all texts endlessly defer meaning'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.0, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+  },
+
+  // VIRTUE ETHICS (1)
+  {
+    id: 'alasdair_macintyre',
+    name: 'Alasdair MacIntyre',
+    birth_year: 1929,
+    death_year: null,
+    dates: '1929–',
+    birth_city: 'Glasgow',
+    birth_country_modern: 'United Kingdom',
+    latitude: 55.8642,
+    longitude: -4.2518,
+    school_of_thought: 'Virtue Ethics',
+    school: 'Virtue Ethics',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Tradition-dependent rationality — no universal reason, only internal standards of practices'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // NEO-PRAGMATIST (1)
+  {
+    id: 'richard_rorty',
+    name: 'Richard Rorty',
+    birth_year: 1931,
+    death_year: 2007,
+    dates: '1931–2007',
+    birth_city: 'New York',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Neo-pragmatism',
+    school: 'Neo-Pragmatist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['No mirror of nature; truth is contingent and social'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
+  },
+
+  // ANARCHO-CAPITALIST (1 in 20th century)
+  {
+    id: 'murray_rothbard',
+    name: 'Murray Rothbard',
+    birth_year: 1926,
+    death_year: 1995,
+    dates: '1926–1995',
+    birth_city: 'New York',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Anarcho-Capitalism',
+    school: 'Anarcho-Capitalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Man, Economy and State (1962); The Ethics of Liberty (1982); founder of anarcho-capitalism on natural rights'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.7, market_planning: 1.0, beauty_chaos: 0.4, good_evil: 0.7 }
+  },
+
+  // ═══════════════════════════════════════════════════════════
+  // ERA 9: CONTEMPORARY (1926–present) - 35 philosophers
+  // ═══════════════════════════════════════════════════════════
+
+  // ANALYTIC (6)
+  {
+    id: 'hilary_putnam',
+    name: 'Hilary Putnam',
+    birth_year: 1926,
+    death_year: 2016,
+    dates: '1926–2016',
+    birth_city: 'Chicago',
+    birth_country_modern: 'United States',
+    latitude: 41.8781,
+    longitude: -87.6298,
+    school_of_thought: 'Internal Realism',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['No view from nowhere; internal realism denies mind-independent objective reality — Kant recycled'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'alvin_plantinga',
+    name: 'Alvin Plantinga',
+    birth_year: 1932,
+    death_year: null,
+    dates: '1932–',
+    birth_city: 'Ann Arbor',
+    birth_country_modern: 'United States',
+    latitude: 42.2808,
+    longitude: -83.7430,
+    school_of_thought: 'Reformed Epistemology',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Belief in God as properly basic — bypasses reason entirely; faith without rational justification is anti-reason'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.1, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+  {
+    id: 'david_lewis',
+    name: 'David Lewis',
+    birth_year: 1941,
+    death_year: 2001,
+    dates: '1941–2001',
+    birth_city: 'Oberlin',
+    birth_country_modern: 'United States',
+    latitude: 41.2939,
+    longitude: -82.2171,
+    school_of_thought: 'Modal Realism',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Modal realism; possible worlds; logical rigor'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+  {
+    id: 'derek_parfit',
+    name: 'Derek Parfit',
+    birth_year: 1942,
+    death_year: 2017,
+    dates: '1942–2017',
+    birth_city: 'Chengdu',
+    birth_country_modern: 'China',
+    latitude: 30.5728,
+    longitude: 104.0668,
+    school_of_thought: 'Ethics / Personal Identity',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Personal identity; objective reasons; reasons and persons'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'peter_railton',
+    name: 'Peter Railton',
+    birth_year: 1950,
+    death_year: null,
+    dates: '1950–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 42.2808,
+    longitude: -83.7430,
+    school_of_thought: 'Moral Realism',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Moral realism; naturalist metaethics'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'nick_bostrom',
+    name: 'Nick Bostrom',
+    birth_year: 1973,
+    death_year: null,
+    dates: '1973–',
+    birth_city: 'Helsingborg',
+    birth_country_modern: 'Sweden',
+    latitude: 56.0465,
+    longitude: 12.6945,
+    school_of_thought: 'Philosophy of AI',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Simulation argument; existential risk; rational futurism'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+
+  // OBJECTIVIST (18 in Contemporary)
+  {
+    id: 'leonard_peikoff',
+    name: 'Leonard Peikoff',
+    birth_year: 1933,
+    death_year: null,
+    dates: '1933–',
+    birth_city: 'Winnipeg',
+    birth_country_modern: 'Canada',
+    latitude: 49.8951,
+    longitude: -97.1384,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["Rand's designated heir; OPAR (1991); founder of ARI"],
+    historical_weight: 0.7,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.85, good_evil: 0.9 }
+  },
+  {
+    id: 'edwin_locke',
+    name: 'Edwin Locke',
+    birth_year: 1938,
+    death_year: null,
+    dates: '1938–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 39.2904,
+    longitude: -76.6122,
+    school_of_thought: 'Objectivism / Psychology',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Prime Movers (2000); goal-setting theory; Objectivist psychology of achievement'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.85, market_planning: 0.8, beauty_chaos: 0.6, good_evil: 0.8 }
+  },
+  {
+    id: 'allan_gotthelf',
+    name: 'Allan Gotthelf',
+    birth_year: 1942,
+    death_year: 2013,
+    dates: '1942–2013',
+    birth_city: 'Brooklyn',
+    birth_country_modern: 'United States',
+    latitude: 40.6782,
+    longitude: -73.9442,
+    school_of_thought: 'Objectivism / Aristotle',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Gotthelf on Aristotle; philosophy of biology; Objectivist scholar'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.9, market_planning: 0.8, beauty_chaos: 0.7, good_evil: 0.85 }
+  },
+  {
+    id: 'michael_berliner',
+    name: 'Michael Berliner',
+    birth_year: 1942,
+    death_year: null,
+    dates: '1942–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 34.0522,
+    longitude: -118.2437,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["ARI co-founder and former executive director; Rand's philosophy and education reform"],
+    historical_weight: 0.45,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.85, beauty_chaos: 0.6, good_evil: 0.8 }
+  },
+  {
+    id: 'harry_binswanger',
+    name: 'Harry Binswanger',
+    birth_year: 1944,
+    death_year: null,
+    dates: '1944–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['How We Know (2014); consciousness; ARI senior fellow'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.95, beauty_chaos: 0.7, good_evil: 0.9 }
+  },
+  {
+    id: 'andrew_bernstein',
+    name: 'Andrew Bernstein',
+    birth_year: 1949,
+    death_year: null,
+    dates: '1949–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Capitalist Manifesto; Objectivism in history and culture'],
+    historical_weight: 0.45,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.8 }
+  },
+  {
+    id: 'peter_schwartz',
+    name: 'Peter Schwartz',
+    birth_year: 1949,
+    death_year: null,
+    dates: '1949–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['In Defense of Selfishness (2015); The Foreign Policy of Self-Interest; ARI senior fellow'],
+    historical_weight: 0.45,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.95, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.85 }
+  },
+  {
+    id: 'tara_smith',
+    name: 'Tara Smith',
+    birth_year: 1961,
+    death_year: null,
+    dates: '1961–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 30.2672,
+    longitude: -97.7431,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["Viable Values (2000); Rand's Normative Ethics (2006)"],
+    historical_weight: 0.55,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 0.95, beauty_chaos: 0.7, good_evil: 0.95 }
+  },
+  {
+    id: 'yaron_brook',
+    name: 'Yaron Brook',
+    birth_year: 1961,
+    death_year: null,
+    dates: '1961–',
+    birth_city: 'Israel',
+    birth_country_modern: 'Israel',
+    latitude: 32.0853,
+    longitude: 34.7818,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Equal Is Unfair; ARI executive chairman; Objectivist activism'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.6, good_evil: 0.9 }
+  },
+  {
+    id: 'robert_mayhew',
+    name: 'Robert Mayhew',
+    birth_year: 1963,
+    death_year: null,
+    dates: '1963–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 33.4942,
+    longitude: -111.9261,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["Editor of Rand's Q&A volumes; Essays on Ayn Rand's fiction; Objectivist scholarship"],
+    historical_weight: 0.45,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.85, market_planning: 0.8, beauty_chaos: 0.7, good_evil: 0.8 }
+  },
+  {
+    id: 'darryl_wright',
+    name: 'Darryl Wright',
+    birth_year: 1963,
+    death_year: null,
+    dates: '1963–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 34.1478,
+    longitude: -118.1445,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Objectivist ethics and metaethics; Harvey Mudd College; normative theory'],
+    historical_weight: 0.45,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.85, beauty_chaos: 0.6, good_evil: 0.85 }
+  },
+  {
+    id: 'craig_biddle',
+    name: 'Craig Biddle',
+    birth_year: 1967,
+    death_year: null,
+    dates: '1967–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 39.7392,
+    longitude: -104.9903,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Loving Life (2002); The Objective Standard; Objectivist ethics'],
+    historical_weight: 0.45,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.6, good_evil: 0.9 }
+  },
+  {
+    id: 'onkar_ghate',
+    name: 'Onkar Ghate',
+    birth_year: 1970,
+    death_year: null,
+    dates: '1970–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'Canada',
+    latitude: 33.6846,
+    longitude: -117.8265,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["ARI chief philosophy officer; Rand's epistemology and ethics"],
+    historical_weight: 0.5,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.7, good_evil: 0.9 }
+  },
+  {
+    id: 'gregory_salmieri',
+    name: 'Gregory Salmieri',
+    birth_year: 1975,
+    death_year: null,
+    dates: '1975–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 40.5008,
+    longitude: -74.4474,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['A Companion to Ayn Rand (2016); Objectivist epistemology'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.9, beauty_chaos: 0.7, good_evil: 0.9 }
+  },
+  {
+    id: 'elan_journo',
+    name: 'Elan Journo',
+    birth_year: 1978,
+    death_year: null,
+    dates: '1978–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 33.6846,
+    longitude: -117.8265,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Winning the Unwinnable War (2009); ARI fellow; foreign policy and self-interest'],
+    historical_weight: 0.45,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.85 }
+  },
+  {
+    id: 'ben_bayer',
+    name: 'Ben Bayer',
+    birth_year: 1980,
+    death_year: null,
+    dates: '1980–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 33.6846,
+    longitude: -117.8265,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ["ARI fellow; epistemology; Rand's theory of concepts and perception"],
+    historical_weight: 0.4,
+    battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.85 }
+  },
+  {
+    id: 'don_watkins',
+    name: 'Don Watkins',
+    birth_year: 1981,
+    death_year: null,
+    dates: '1981–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 33.6846,
+    longitude: -117.8265,
+    school_of_thought: 'Objectivism',
+    school: 'Objectivist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Equal Is Unfair (2016); Free Market Revolution; ARI fellow; capitalism and rights'],
+    historical_weight: 0.4,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.9, market_planning: 1.0, beauty_chaos: 0.6, good_evil: 0.85 }
+  },
+
+  // POST-RANDIAN REALISM (3)
+  {
+    id: 'david_kelley',
+    name: 'David Kelley',
+    birth_year: 1949,
+    death_year: null,
+    dates: '1949–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 38.9072,
+    longitude: -77.0369,
+    school_of_thought: 'Post-Randian Realism',
+    school: 'Post-Randian Realism',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['The Evidence of the Senses; open Objectivism; Atlas Society'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.7, good_evil: 0.85 }
+  },
+  {
+    id: 'stephen_hicks',
+    name: 'Stephen Hicks',
+    birth_year: 1960,
+    death_year: null,
+    dates: '1960–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'Canada',
+    latitude: 41.8781,
+    longitude: -87.6298,
+    school_of_thought: 'Post-Randian Realism',
+    school: 'Post-Randian Realism',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Explaining Postmodernism (2004); Rand-influenced realism'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.9, market_planning: 0.85, beauty_chaos: 0.7, good_evil: 0.8 }
+  },
+  {
+    id: 'robert_tracinski',
+    name: 'Robert Tracinski',
+    birth_year: 1968,
+    death_year: null,
+    dates: '1968–',
+    birth_city: 'Unknown',
+    birth_country_modern: 'United States',
+    latitude: 38.0293,
+    longitude: -78.4767,
+    school_of_thought: 'Post-Randian Realism',
+    school: 'Post-Randian Realism',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Tracinski Letter; Rand-influenced cultural and political commentary'],
+    historical_weight: 0.4,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.85, market_planning: 0.85, beauty_chaos: 0.6, good_evil: 0.75 }
+  },
+
+  // LIBERTARIAN (1)
+  {
+    id: 'tibor_machan',
+    name: 'Tibor Machan',
+    birth_year: 1939,
+    death_year: 2016,
+    dates: '1939–2016',
+    birth_city: 'Budapest',
+    birth_country_modern: 'Hungary',
+    latitude: 47.4979,
+    longitude: 19.0402,
+    school_of_thought: 'Libertarianism',
+    school: 'Libertarian',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Libertarian ethics; Rand-influenced natural rights'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.75, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+
+  // ANARCHO-CAPITALIST (3)
+  {
+    id: 'walter_block',
+    name: 'Walter Block',
+    birth_year: 1941,
+    death_year: null,
+    dates: '1941–',
+    birth_city: 'Brooklyn',
+    birth_country_modern: 'United States',
+    latitude: 40.6782,
+    longitude: -73.9442,
+    school_of_thought: 'Anarcho-Capitalism',
+    school: 'Anarcho-Capitalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Defending the Undefendable (1976); non-aggression principle to radical conclusions; Rothbardian'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.6, market_planning: 1.0, beauty_chaos: 0.4, good_evil: 0.6 }
+  },
+  {
+    id: 'david_friedman',
+    name: 'David Friedman',
+    birth_year: 1945,
+    death_year: null,
+    dates: '1945–',
+    birth_city: 'New York',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Anarcho-Capitalism',
+    school: 'Anarcho-Capitalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Machinery of Freedom (1973); consequentialist anarcho-capitalism; private defense agencies'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.6, market_planning: 1.0, beauty_chaos: 0.4, good_evil: 0.6 }
+  },
+  {
+    id: 'hans_hermann_hoppe',
+    name: 'Hans-Hermann Hoppe',
+    birth_year: 1949,
+    death_year: null,
+    dates: '1949–',
+    birth_city: 'Peine',
+    birth_country_modern: 'Germany',
+    latitude: 52.3167,
+    longitude: 10.2167,
+    school_of_thought: 'Anarcho-Capitalism',
+    school: 'Anarcho-Capitalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Democracy: The God That Failed (2001); argumentation ethics; Misesian praxeology meets natural order'],
+    historical_weight: 0.5,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.6, market_planning: 1.0, beauty_chaos: 0.3, good_evil: 0.5 }
+  },
+
+  // UTILITARIAN (1)
+  {
+    id: 'peter_singer',
+    name: 'Peter Singer',
+    birth_year: 1946,
+    death_year: null,
+    dates: '1946–',
+    birth_city: 'Melbourne',
+    birth_country_modern: 'Australia',
+    latitude: -37.8136,
+    longitude: 144.9631,
+    school_of_thought: 'Preference Utilitarianism',
+    school: 'Utilitarian',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Impartial utilitarianism; rational but demands self-sacrifice; animal rights dissolve human exceptionalism'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: -0.2, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+
+  // LIBERAL (1)
+  {
+    id: 'martha_nussbaum',
+    name: 'Martha Nussbaum',
+    birth_year: 1947,
+    death_year: null,
+    dates: '1947–',
+    birth_city: 'New York',
+    birth_country_modern: 'United States',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    school_of_thought: 'Capabilities Approach',
+    school: 'Liberal',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Capabilities require redistribution overriding individual rights; cosmopolitan obligations deny national sovereignty'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: -0.3, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
+  // NATURALIST (CONTEMPORARY) (2)
+  {
+    id: 'daniel_dennett',
+    name: 'Daniel Dennett',
+    birth_year: 1942,
+    death_year: 2024,
+    dates: '1942–2024',
+    birth_city: 'Boston',
+    birth_country_modern: 'United States',
+    latitude: 42.3601,
+    longitude: -71.0589,
+    school_of_thought: 'Naturalism',
+    school: 'Naturalist (Contemporary)',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Consciousness explained; Darwinian reason'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.3, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+  {
+    id: 'patricia_churchland',
+    name: 'Patricia Churchland',
+    birth_year: 1943,
+    death_year: null,
+    dates: '1943–',
+    birth_city: 'Oliver',
+    birth_country_modern: 'Canada',
+    latitude: 49.1833,
+    longitude: -119.5500,
+    school_of_thought: 'Neurophilosophy',
+    school: 'Naturalist (Contemporary)',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Neurophilosophy; eliminative materialism'],
+    historical_weight: 0.55,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+
+  // CRITICAL THEORY (1 in Contemporary)
+  {
+    id: 'slavoj_zizek',
+    name: 'Slavoj Žižek',
+    birth_year: 1949,
+    death_year: null,
+    dates: '1949–',
+    birth_city: 'Ljubljana',
+    birth_country_modern: 'Slovenia',
+    latitude: 46.0569,
+    longitude: 14.5058,
+    school_of_thought: 'Lacanian Marxism',
+    school: 'Critical Theory',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Lacanian Marxism; the Real is inaccessible; ideology pervades all apparent rationality'],
+    historical_weight: 0.6,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.4, good_evil: 0.2 }
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════
-// EDGES - Intellectual Connections
+// SEED_EDGES - Influence relationships
 // ═══════════════════════════════════════════════════════════
 export const SEED_EDGES = [
-  // PRE-SOCRATICS → CLASSICAL
-  { source_id: 'thales', target_id: 'pythagoras', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.5, description: 'Pythagoras inherited natural philosophy from Milesian tradition' },
-  { source_id: 'heraclitus', target_id: 'socrates', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.6, description: 'Heraclitus doctrine of flux influenced Socratic dialectic' },
-  { source_id: 'parmenides', target_id: 'plato', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.8, description: 'Parmenides Being-thinking inspired Platonic Forms' },
-  
-  // SOCRATIC LINEAGE
-  { source_id: 'socrates', target_id: 'plato', relationship_type: 'teacher_of', primary_battle: 'reason_faith', weight: 1.0, description: 'Socrates was Platos teacher; Plato recorded the dialogues' },
-  { source_id: 'plato', target_id: 'aristotle', relationship_type: 'teacher_of', primary_battle: 'reality_mysticism', weight: 1.0, description: 'Aristotle studied at Platos Academy for 20 years' },
-  { source_id: 'plato', target_id: 'aristotle', relationship_type: 'opposes', primary_battle: 'reality_mysticism', weight: 0.9, description: 'Aristotle rejected separate Forms: universals exist in particulars' },
-  
+  // PRE-SOCRATIC CHAIN
+  { source_id: 'thales', target_id: 'anaximander', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'anaximander', target_id: 'anaximenes', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'pythagoras', target_id: 'plato', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'parmenides', target_id: 'plato', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'parmenides', target_id: 'zeno_of_elea', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'heraclitus', target_id: 'plato', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'democritus', target_id: 'epicurus', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'anaxagoras', target_id: 'socrates', relationship_type: 'influenced', weight: 2 },
+
+  // CLASSICAL
+  { source_id: 'socrates', target_id: 'plato', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'plato', target_id: 'aristotle', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'plato', target_id: 'plotinus', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'epicurus', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'aristotle', target_id: 'zeno_of_citium', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'aristotle', target_id: 'averroes', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'thomas_aquinas', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'al_farabi', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'avicenna', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'francis_bacon', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'aristotle', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'allan_gotthelf', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'david_kelley', relationship_type: 'influenced', weight: 3 },
+
   // HELLENISTIC
-  { source_id: 'democritus', target_id: 'epicurus', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.9, description: 'Epicurus adopted atomism from Democritus' },
-  { source_id: 'socrates', target_id: 'zeno_citium', relationship_type: 'influenced_by', primary_battle: 'good_evil', weight: 0.7, description: 'Stoicism traced its ethics back to Socratic virtue' },
-  
-  // ROMAN STOICS
-  { source_id: 'zeno_citium', target_id: 'seneca', relationship_type: 'influenced_by', primary_battle: 'good_evil', weight: 0.8, description: 'Seneca was a major interpreter of Stoic philosophy' },
-  { source_id: 'seneca', target_id: 'marcus_aurelius', relationship_type: 'influenced_by', primary_battle: 'good_evil', weight: 0.7, description: 'Marcus Aurelius studied Stoic texts including Seneca' },
-  
-  // NEOPLATONISM
-  { source_id: 'plato', target_id: 'plotinus', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.9, description: 'Plotinus systematized Platonic metaphysics into Neoplatonism' },
-  { source_id: 'plotinus', target_id: 'augustine', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.8, description: 'Augustine converted through Neoplatonic books' },
-  
-  // MEDIEVAL
-  { source_id: 'aristotle', target_id: 'aquinas', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.9, description: 'Aquinas synthesized Aristotle with Christian theology' },
-  { source_id: 'averroes', target_id: 'aquinas', relationship_type: 'transmitted_by', primary_battle: 'reason_faith', weight: 0.8, description: 'Averroes commentaries transmitted Aristotle to Latin West' },
-  { source_id: 'aquinas', target_id: 'ockham', relationship_type: 'opposes', primary_battle: 'reality_mysticism', weight: 0.6, description: 'Ockham nominalism rejected Thomistic realism' },
-  
-  // ISLAMIC TRANSMISSION
-  { source_id: 'aristotle', target_id: 'al_farabi', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.9, description: 'Al-Farabi was the Second Teacher after Aristotle' },
-  { source_id: 'al_farabi', target_id: 'avicenna', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.8, description: 'Avicenna built on Al-Farabis Neoplatonic Aristotelianism' },
-  { source_id: 'avicenna', target_id: 'al_ghazali', relationship_type: 'opposes', primary_battle: 'reason_faith', weight: 0.9, description: 'Al-Ghazali attacked Avicennas rationalism in The Incoherence' },
-  { source_id: 'al_ghazali', target_id: 'averroes', relationship_type: 'opposes', primary_battle: 'reason_faith', weight: 0.9, description: 'Averroes wrote The Incoherence of the Incoherence against Al-Ghazali' },
-  
+  { source_id: 'epicurus', target_id: 'lucretius', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'zeno_of_citium', target_id: 'chrysippus', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'zeno_of_citium', target_id: 'cicero', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'zeno_of_citium', target_id: 'seneca', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'zeno_of_citium', target_id: 'epictetus', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'epictetus', target_id: 'marcus_aurelius', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'pyrrho', target_id: 'sextus_empiricus', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'pyrrho', target_id: 'carneades', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'plotinus', target_id: 'porphyry', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'plotinus', target_id: 'proclus', relationship_type: 'influenced', weight: 2 },
+
+  // MEDIEVAL ISLAMIC
+  { source_id: 'al_kindi', target_id: 'al_farabi', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'al_farabi', target_id: 'avicenna', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'avicenna', target_id: 'averroes', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'avicenna', target_id: 'thomas_aquinas', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'al_ghazali', target_id: 'averroes', relationship_type: 'reacted against', weight: 2 },
+
+  // MEDIEVAL SCHOLASTIC
+  { source_id: 'anselm', target_id: 'thomas_aquinas', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'thomas_aquinas', target_id: 'duns_scotus', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'thomas_aquinas', target_id: 'william_of_ockham', relationship_type: 'influenced', weight: 2 },
+
   // RENAISSANCE
-  { source_id: 'aristotle', target_id: 'leonardo', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.7, description: 'Leonardo embraced Aristotelian observation of nature' },
-  { source_id: 'leonardo', target_id: 'galileo', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.6, description: 'Galileo continued Leonardo\'s empirical investigation of nature' },
-  { source_id: 'bruno', target_id: 'spinoza', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.6, description: 'Bruno\'s pantheism anticipated Spinoza\'s God-Nature identity' },
-  { source_id: 'galileo', target_id: 'newton', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.9, description: 'Newton built directly on Galileo\'s laws of motion' },
-  { source_id: 'descartes', target_id: 'newton', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.7, description: 'Newton\'s mathematical physics extended Cartesian mechanism' },
-  { source_id: 'newton', target_id: 'locke', relationship_type: 'contemporary_of', primary_battle: 'reason_faith', weight: 0.7, description: 'Locke and Newton were friends; Locke saw Newton as model of reason' },
-  { source_id: 'leibniz', target_id: 'newton', relationship_type: 'opposes', primary_battle: 'reason_faith', weight: 0.8, description: 'Newton and Leibniz disputed priority of calculus and nature of space' },
-  
-  // EARLY MODERN
-  { source_id: 'bacon', target_id: 'hobbes', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.5, description: 'Hobbes served as Bacons secretary and absorbed empiricism' },
-  { source_id: 'descartes', target_id: 'spinoza', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.8, description: 'Spinoza radicalized Cartesian rationalism' },
-  { source_id: 'descartes', target_id: 'leibniz', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.7, description: 'Leibniz engaged critically with Cartesian philosophy' },
-  { source_id: 'locke', target_id: 'hume', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.8, description: 'Hume radicalized Lockean empiricism' },
-  
-  // ENLIGHTENMENT
-  { source_id: 'hume', target_id: 'kant', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.9, description: 'Hume awakened Kant from his dogmatic slumber' },
-  { source_id: 'rousseau', target_id: 'kant', relationship_type: 'influenced_by', primary_battle: 'freedom_coercion', weight: 0.6, description: 'Rousseau influenced Kants moral philosophy' },
-  { source_id: 'locke', target_id: 'adam_smith', relationship_type: 'influenced_by', primary_battle: 'freedom_coercion', weight: 0.6, description: 'Smith built on Lockean natural rights and property' },
-  
+  { source_id: 'plato', target_id: 'pico_della_mirandola', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'plato', target_id: 'erasmus', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'francis_bacon', target_id: 'thomas_hobbes', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'francis_bacon', target_id: 'john_locke', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'francis_bacon', target_id: 'rene_descartes', relationship_type: 'influenced', weight: 2 },
+
+  // EARLY MODERN RATIONALISM
+  { source_id: 'rene_descartes', target_id: 'baruch_spinoza', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'rene_descartes', target_id: 'leibniz', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'rene_descartes', target_id: 'malebranche', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'rene_descartes', target_id: 'david_hume', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'baruch_spinoza', target_id: 'leibniz', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'baruch_spinoza', target_id: 'hegel', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'baruch_spinoza', target_id: 'jacobi', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leibniz', target_id: 'christian_wolff', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'leibniz', target_id: 'immanuel_kant', relationship_type: 'influenced', weight: 2 },
+
+  // EMPIRICISM INTO ENLIGHTENMENT
+  { source_id: 'john_locke', target_id: 'david_hume', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'john_locke', target_id: 'george_berkeley', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'john_locke', target_id: 'voltaire', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_locke', target_id: 'rousseau', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_locke', target_id: 'condorcet', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'david_hume', target_id: 'immanuel_kant', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'david_hume', target_id: 'adam_smith', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'david_hume', target_id: 'jeremy_bentham', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'rousseau', target_id: 'immanuel_kant', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'rousseau', target_id: 'herder', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'rousseau', target_id: 'edmund_burke', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'rousseau', target_id: 'schiller', relationship_type: 'influenced', weight: 2 },
+
+  // GERMAN IDEALISM
+  { source_id: 'immanuel_kant', target_id: 'fichte', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'immanuel_kant', target_id: 'schelling', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'immanuel_kant', target_id: 'hegel', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'immanuel_kant', target_id: 'schopenhauer', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'immanuel_kant', target_id: 'herder', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'fichte', target_id: 'schelling', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'fichte', target_id: 'hegel', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'schelling', target_id: 'hegel', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'schelling', target_id: 'kierkegaard', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'hegel', target_id: 'karl_marx', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'hegel', target_id: 'kierkegaard', relationship_type: 'reacted against', weight: 3 },
+  { source_id: 'hegel', target_id: 'nietzsche', relationship_type: 'reacted against', weight: 2 },
+  { source_id: 'hegel', target_id: 'max_horkheimer', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'hegel', target_id: 'theodor_adorno', relationship_type: 'influenced', weight: 2 },
+
   // 19TH CENTURY
-  { source_id: 'kant', target_id: 'hegel', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.9, description: 'Hegel developed post-Kantian idealism' },
-  { source_id: 'hegel', target_id: 'marx', relationship_type: 'influenced_by', primary_battle: 'individual_collective', weight: 0.9, description: 'Marx inverted Hegelian dialectic into materialism' },
-  { source_id: 'kant', target_id: 'schopenhauer', relationship_type: 'influenced_by', primary_battle: 'reality_mysticism', weight: 0.8, description: 'Schopenhauer transformed Kants thing-in-itself into Will' },
-  { source_id: 'schopenhauer', target_id: 'nietzsche', relationship_type: 'influenced_by', primary_battle: 'value_nihilism', weight: 0.8, description: 'Nietzsche began as Schopenhauerian but transformed the will' },
-  { source_id: 'bentham', target_id: 'mill', relationship_type: 'teacher_of', primary_battle: 'good_evil', weight: 0.8, description: 'Mill was raised in Benthams utilitarian circle' },
-  { source_id: 'hume', target_id: 'comte', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.7, description: 'Humes empiricism shaped Comtes positivism' },
-  
-  // 20TH CENTURY ANALYTIC
-  { source_id: 'russell', target_id: 'wittgenstein', relationship_type: 'teacher_of', primary_battle: 'reason_faith', weight: 0.9, description: 'Wittgenstein studied with Russell at Cambridge' },
-  { source_id: 'husserl', target_id: 'heidegger', relationship_type: 'teacher_of', primary_battle: 'reality_mysticism', weight: 0.9, description: 'Heidegger was Husserls assistant and transformed phenomenology' },
-  
+  { source_id: 'schopenhauer', target_id: 'nietzsche', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'schopenhauer', target_id: 'henri_bergson', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'nietzsche', target_id: 'martin_heidegger', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'nietzsche', target_id: 'michel_foucault', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'nietzsche', target_id: 'gilles_deleuze', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'nietzsche', target_id: 'lyotard', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_stuart_mill', target_id: 'herbert_spencer', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_stuart_mill', target_id: 'bertrand_russell', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'jeremy_bentham', target_id: 'john_stuart_mill', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'karl_marx', target_id: 'max_horkheimer', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'karl_marx', target_id: 'herbert_marcuse', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'karl_marx', target_id: 'louis_althusser', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'karl_marx', target_id: 'walter_benjamin', relationship_type: 'influenced', weight: 2 },
+
   // EXISTENTIALISM
-  { source_id: 'kierkegaard', target_id: 'heidegger', relationship_type: 'influenced_by', primary_battle: 'individual_collective', weight: 0.7, description: 'Kierkegaards existential themes shaped Heideggers Dasein' },
-  { source_id: 'heidegger', target_id: 'sartre', relationship_type: 'influenced_by', primary_battle: 'freedom_coercion', weight: 0.9, description: 'Sartre adapted Heideggerian phenomenology for French existentialism' },
-  { source_id: 'sartre', target_id: 'beauvoir', relationship_type: 'contemporary_of', primary_battle: 'freedom_coercion', weight: 0.8, description: 'Beauvoir and Sartre developed existentialism together' },
-  { source_id: 'sartre', target_id: 'camus', relationship_type: 'contemporary_of', primary_battle: 'value_nihilism', weight: 0.7, description: 'Camus and Sartre were allies then opponents on violence' },
-  
-  // LIBERALISM / ECONOMICS
-  { source_id: 'mises', target_id: 'hayek', relationship_type: 'teacher_of', primary_battle: 'market_planning', weight: 0.9, description: 'Hayek was Mises student and colleague in Vienna' },
-  { source_id: 'mises', target_id: 'rand', relationship_type: 'influenced_by', primary_battle: 'market_planning', weight: 0.6, description: 'Rand adopted Austrian economics from Mises' },
-  { source_id: 'hayek', target_id: 'popper', relationship_type: 'contemporary_of', primary_battle: 'reason_faith', weight: 0.6, description: 'Hayek and Popper were allied critics of central planning' },
-  
-  // RAND'S CONNECTIONS
-  { source_id: 'aristotle', target_id: 'rand', relationship_type: 'fulfills_legacy_of', primary_battle: 'reason_faith', weight: 1.0, description: 'Rand claimed to fulfill Aristotelian realism and eudaimonism' },
-  { source_id: 'rand', target_id: 'kant', relationship_type: 'opposes_legacy_of', primary_battle: 'reason_faith', weight: 0.9, description: 'Rand viewed Kant as the destroyer of reason and the individual' },
-  { source_id: 'rand', target_id: 'hegel', relationship_type: 'opposes_legacy_of', primary_battle: 'individual_collective', weight: 0.7, description: 'Rand opposed Hegelian collectivism and historicism' },
-  { source_id: 'locke', target_id: 'rand', relationship_type: 'fulfills_legacy_of', primary_battle: 'freedom_coercion', weight: 0.6, description: 'Rand built on Lockean natural rights tradition' },
-  { source_id: 'rand', target_id: 'marx', relationship_type: 'opposes_legacy_of', primary_battle: 'individual_collective', weight: 0.9, description: 'Rand explicitly opposed Marxist collectivism' },
-  { source_id: 'nietzsche', target_id: 'rand', relationship_type: 'influenced_by', primary_battle: 'value_nihilism', weight: 0.4, description: 'Early Rand admired Nietzsche; later explicitly rejected him' },
-  { source_id: 'rand', target_id: 'rawls', relationship_type: 'opposes', primary_battle: 'individual_collective', weight: 0.7, description: 'Objectivism opposes Rawlsian redistributive justice' },
-  
-  // POLITICAL PHILOSOPHY
-  { source_id: 'marx', target_id: 'arendt', relationship_type: 'opposes_legacy_of', primary_battle: 'freedom_coercion', weight: 0.7, description: 'Arendt analyzed and criticized totalitarianism including Marxism' },
-  { source_id: 'hegel', target_id: 'foucault', relationship_type: 'influenced_by', primary_battle: 'individual_collective', weight: 0.5, description: 'Foucault engaged critically with Hegelian dialectic' },
-  { source_id: 'nietzsche', target_id: 'foucault', relationship_type: 'influenced_by', primary_battle: 'value_nihilism', weight: 0.8, description: 'Foucault adopted Nietzschean genealogy' },
-  
-  // CHINESE CONNECTIONS
-  { source_id: 'confucius', target_id: 'mencius', relationship_type: 'influenced_by', primary_battle: 'good_evil', weight: 0.9, description: 'Mencius developed Confucian ethics toward human goodness' },
-  { source_id: 'confucius', target_id: 'xunzi', relationship_type: 'influenced_by', primary_battle: 'good_evil', weight: 0.8, description: 'Xunzi was a Confucian who argued human nature is evil' },
-  { source_id: 'xunzi', target_id: 'han_fei', relationship_type: 'teacher_of', primary_battle: 'freedom_coercion', weight: 0.7, description: 'Han Fei studied under Xunzi but developed Legalism' },
-  { source_id: 'laozi', target_id: 'zhuangzi', relationship_type: 'influenced_by', primary_battle: 'freedom_coercion', weight: 0.9, description: 'Zhuangzi expanded Taoist philosophy with parables' },
-  
-  // INDIAN CONNECTIONS
-  { source_id: 'buddha', target_id: 'nagarjuna', relationship_type: 'fulfills_legacy_of', primary_battle: 'reality_mysticism', weight: 0.9, description: 'Nagarjuna systematized Buddhist emptiness doctrine' },
-  { source_id: 'shankara', target_id: 'ramanuja', relationship_type: 'opposes', primary_battle: 'reality_mysticism', weight: 0.8, description: 'Ramanuja argued against Shankaras radical non-dualism' },
-  { source_id: 'buddha', target_id: 'gandhi', relationship_type: 'influenced_by', primary_battle: 'good_evil', weight: 0.6, description: 'Gandhi incorporated Buddhist ahimsa into political action' },
-  
-  // CROSS-TRADITION
-  { source_id: 'aristotle', target_id: 'avicenna', relationship_type: 'influenced_by', primary_battle: 'reason_faith', weight: 0.9, description: 'Avicenna synthesized Aristotelian and Islamic thought' },
-  { source_id: 'averroes', target_id: 'maimonides', relationship_type: 'contemporary_of', primary_battle: 'reason_faith', weight: 0.6, description: 'Both worked in Cordoba reconciling reason and scripture' },
-  { source_id: 'schopenhauer', target_id: 'buddha', relationship_type: 'influenced_by', primary_battle: 'value_nihilism', weight: 0.7, description: 'Schopenhauer imported Buddhist ideas into Western philosophy' },
+  { source_id: 'kierkegaard', target_id: 'martin_heidegger', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'kierkegaard', target_id: 'jean_paul_sartre', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'martin_heidegger', target_id: 'jean_paul_sartre', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'martin_heidegger', target_id: 'jacques_derrida', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'martin_heidegger', target_id: 'michel_foucault', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'jean_paul_sartre', target_id: 'simone_de_beauvoir', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'jean_paul_sartre', target_id: 'albert_camus', relationship_type: 'influenced', weight: 2 },
+
+  // ANALYTIC TRADITION
+  { source_id: 'gottlob_frege', target_id: 'bertrand_russell', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'gottlob_frege', target_id: 'ludwig_wittgenstein', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'bertrand_russell', target_id: 'ludwig_wittgenstein', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'bertrand_russell', target_id: 'rudolf_carnap', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'bertrand_russell', target_id: 'a_j_ayer', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'bertrand_russell', target_id: 'w_v_o_quine', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ludwig_wittgenstein', target_id: 'gilbert_ryle', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ludwig_wittgenstein', target_id: 'richard_rorty', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'w_v_o_quine', target_id: 'david_lewis', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'w_v_o_quine', target_id: 'hilary_putnam', relationship_type: 'influenced', weight: 2 },
+
+  // PHENOMENOLOGY
+  { source_id: 'edmund_husserl', target_id: 'martin_heidegger', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'edmund_husserl', target_id: 'merleau_ponty', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'edmund_husserl', target_id: 'jean_paul_sartre', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'edmund_husserl', target_id: 'emmanuel_levinas', relationship_type: 'influenced', weight: 2 },
+
+  // PRAGMATISM
+  { source_id: 'charles_peirce', target_id: 'william_james', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'charles_peirce', target_id: 'john_dewey', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'william_james', target_id: 'john_dewey', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'william_james', target_id: 'richard_rorty', relationship_type: 'influenced', weight: 2 },
+
+  // FRANKFURT SCHOOL
+  { source_id: 'max_horkheimer', target_id: 'theodor_adorno', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'max_horkheimer', target_id: 'herbert_marcuse', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'max_horkheimer', target_id: 'jurgen_habermas', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'theodor_adorno', target_id: 'jurgen_habermas', relationship_type: 'influenced', weight: 2 },
+
+  // POSTMODERN
+  { source_id: 'michel_foucault', target_id: 'jacques_derrida', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'michel_foucault', target_id: 'jean_baudrillard', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'thomas_kuhn', target_id: 'paul_feyerabend', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_rawls', target_id: 'robert_nozick', relationship_type: 'reacted against', weight: 2 },
+  { source_id: 'john_rawls', target_id: 'martha_nussbaum', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // OBJECTIVIST LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'aristotle', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'john_locke', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'baruch_spinoza', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'nietzsche', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'immanuel_kant', target_id: 'ayn_rand', relationship_type: 'reacted against', weight: 3 },
+
+  // Rand's direct disciples
+  { source_id: 'ayn_rand', target_id: 'leonard_peikoff', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ayn_rand', target_id: 'nathaniel_branden', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ayn_rand', target_id: 'barbara_branden', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ayn_rand', target_id: 'harry_binswanger', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ayn_rand', target_id: 'allan_gotthelf', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ayn_rand', target_id: 'david_kelley', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ayn_rand', target_id: 'tibor_machan', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ayn_rand', target_id: 'peter_schwartz', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ayn_rand', target_id: 'michael_berliner', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ayn_rand', target_id: 'edwin_locke', relationship_type: 'influenced', weight: 2 },
+
+  // Peikoff's influence (second generation orthodox)
+  { source_id: 'leonard_peikoff', target_id: 'tara_smith', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'onkar_ghate', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'harry_binswanger', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'andrew_bernstein', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'yaron_brook', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'gregory_salmieri', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'craig_biddle', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'leonard_peikoff', target_id: 'peter_schwartz', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'michael_berliner', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'robert_mayhew', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'elan_journo', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'leonard_peikoff', target_id: 'darryl_wright', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'leonard_peikoff', target_id: 'ben_bayer', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'leonard_peikoff', target_id: 'don_watkins', relationship_type: 'influenced', weight: 1 },
+
+  // Peikoff vs Kelley — the schism
+  { source_id: 'leonard_peikoff', target_id: 'david_kelley', relationship_type: 'split from', weight: 2 },
+
+  // Kelley's Post-Randian school
+  { source_id: 'david_kelley', target_id: 'stephen_hicks', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'david_kelley', target_id: 'robert_tracinski', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'stephen_hicks', target_id: 'robert_tracinski', relationship_type: 'influenced', weight: 1 },
+
+  // Allan Gotthelf's scholarly influence
+  { source_id: 'allan_gotthelf', target_id: 'gregory_salmieri', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'allan_gotthelf', target_id: 'darryl_wright', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'allan_gotthelf', target_id: 'robert_mayhew', relationship_type: 'influenced', weight: 2 },
+
+  // Nathaniel Branden's divergence
+  { source_id: 'nathaniel_branden', target_id: 'david_kelley', relationship_type: 'influenced', weight: 1 },
+
+  // Contemporary Objectivist work
+  { source_id: 'tara_smith', target_id: 'gregory_salmieri', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'harry_binswanger', target_id: 'onkar_ghate', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'harry_binswanger', target_id: 'ben_bayer', relationship_type: 'influenced', weight: 1 },
+
+  // Yaron Brook cross-influence
+  { source_id: 'yaron_brook', target_id: 'don_watkins', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'yaron_brook', target_id: 'elan_journo', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // ANARCHO-CAPITALIST LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'john_locke', target_id: 'murray_rothbard', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ayn_rand', target_id: 'murray_rothbard', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'immanuel_kant', target_id: 'murray_rothbard', relationship_type: 'reacted against', weight: 1 },
+
+  // Rothbard's school
+  { source_id: 'murray_rothbard', target_id: 'walter_block', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'murray_rothbard', target_id: 'hans_hermann_hoppe', relationship_type: 'influenced', weight: 3 },
+
+  // Friedman's distinct lineage
+  { source_id: 'adam_smith', target_id: 'david_friedman', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'murray_rothbard', target_id: 'david_friedman', relationship_type: 'reacted against', weight: 1 },
+
+  // Hoppe's extensions
+  { source_id: 'hans_hermann_hoppe', target_id: 'walter_block', relationship_type: 'influenced', weight: 1 },
+
+  // Rand/Objectivist tension with anarcho-capitalism
+  { source_id: 'ayn_rand', target_id: 'murray_rothbard', relationship_type: 'reacted against', weight: 2 },
+  { source_id: 'leonard_peikoff', target_id: 'murray_rothbard', relationship_type: 'reacted against', weight: 1 },
+  { source_id: 'tibor_machan', target_id: 'murray_rothbard', relationship_type: 'reacted against', weight: 1 },
 ];
 
-export default { SEED_NODES, SEED_EDGES };
+export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES };
