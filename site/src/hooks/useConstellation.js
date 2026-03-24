@@ -103,8 +103,9 @@ export function calculateOrbitalPosition(node) {
   const z = eraDepth + (hashString(node.name) % 20) - 10;
   
   // Altitude: base + bonus for historical weight
+  // Increased bonus for clearer visual hierarchy (champions orbit higher)
   const BASE_ALTITUDE = 130;
-  const ALTITUDE_BONUS = 40;
+  const ALTITUDE_BONUS = 60;
   const altitude = BASE_ALTITUDE + (node.historical_weight || 0.5) * ALTITUDE_BONUS;
   
   return { x, y, z, altitude };
@@ -318,11 +319,27 @@ export function useConstellation() {
     setIsPlaying(false);
   }, []);
 
-  // Get unique schools from data
+  // Get unique schools from data, sorted chronologically by earliest philosopher birth year
   const getSchools = useCallback(() => {
     if (!data?.nodes) return [];
+    
+    // Build a map of school -> earliest birth year
+    const schoolEarliestYear = {};
+    data.nodes.forEach(n => {
+      if (n.school && n.birth_year != null) {
+        if (!(n.school in schoolEarliestYear) || n.birth_year < schoolEarliestYear[n.school]) {
+          schoolEarliestYear[n.school] = n.birth_year;
+        }
+      }
+    });
+    
+    // Get unique schools and sort by earliest birth year (chronological order)
     const schoolSet = new Set(data.nodes.map(n => n.school).filter(Boolean));
-    return Array.from(schoolSet).sort();
+    return Array.from(schoolSet).sort((a, b) => {
+      const yearA = schoolEarliestYear[a] ?? 9999;
+      const yearB = schoolEarliestYear[b] ?? 9999;
+      return yearA - yearB;
+    });
   }, [data]);
 
   // Toggle playback

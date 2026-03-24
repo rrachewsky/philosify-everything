@@ -2906,7 +2906,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ["Rand's designated heir; OPAR (1991); founder of ARI"],
-    historical_weight: 0.7,
+    historical_weight: 0.85,
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.85, good_evil: 0.9 }
   },
   {
@@ -2982,7 +2982,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['How We Know (2014); consciousness; ARI senior fellow'],
-    historical_weight: 0.55,
+    historical_weight: 0.7,
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.95, beauty_chaos: 0.7, good_evil: 0.9 }
   },
   {
@@ -3020,7 +3020,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['In Defense of Selfishness (2015); The Foreign Policy of Self-Interest; ARI senior fellow'],
-    historical_weight: 0.45,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.95, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.85 }
   },
   {
@@ -3039,7 +3039,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ["Viable Values (2000); Rand's Normative Ethics (2006)"],
-    historical_weight: 0.55,
+    historical_weight: 0.6,
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 0.95, beauty_chaos: 0.7, good_evil: 0.95 }
   },
   {
@@ -3058,7 +3058,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Equal Is Unfair; ARI executive chairman; Objectivist activism'],
-    historical_weight: 0.5,
+    historical_weight: 0.7,
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -3134,7 +3134,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ["ARI chief philosophy officer; Rand's epistemology and ethics"],
-    historical_weight: 0.5,
+    historical_weight: 0.7,
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.7, good_evil: 0.9 }
   },
   {
@@ -3153,7 +3153,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['A Companion to Ayn Rand (2016); Objectivist epistemology'],
-    historical_weight: 0.5,
+    historical_weight: 0.55,
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.9, beauty_chaos: 0.7, good_evil: 0.9 }
   },
   {
