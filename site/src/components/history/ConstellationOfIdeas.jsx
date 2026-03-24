@@ -4,7 +4,7 @@
 // ============================================================
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useConstellation, BATTLE_COLORS, TRADITION_COLORS } from '@hooks/useConstellation';
+import { useConstellation, BATTLE_COLORS, TRADITION_COLORS, ERAS } from '@hooks/useConstellation';
 import { ConstellationScene } from './ConstellationScene.jsx';
 import { TimelineControls } from './TimelineControls.jsx';
 import { ConstellationInfoPanel } from './ConstellationInfoPanel.jsx';
@@ -155,6 +155,35 @@ export function ConstellationOfIdeas() {
   const visibleNodes = getVisibleNodes();
   const visibleEdges = getVisibleEdges();
 
+  // Get date range text for active filter
+  const getFilterDateRange = () => {
+    if (selectedEra) {
+      const era = ERAS.find(e => e.id === selectedEra);
+      if (era) {
+        if (era.filterByMovement) {
+          // For movement-based eras, calculate from visible nodes
+          if (visibleNodes.length > 0) {
+            const years = visibleNodes.map(n => n.birth_year).filter(y => y != null);
+            const minYear = Math.min(...years);
+            const maxYear = Math.max(...years);
+            return `${formatYear(minYear)} – ${formatYear(maxYear)}`;
+          }
+          return era.label;
+        }
+        return `${formatYear(era.startYear)} – ${formatYear(era.endYear)}`;
+      }
+    }
+    if (selectedSchool && visibleNodes.length > 0) {
+      const years = visibleNodes.map(n => n.birth_year).filter(y => y != null);
+      const minYear = Math.min(...years);
+      const maxYear = Math.max(...years);
+      return `${formatYear(minYear)} – ${formatYear(maxYear)}`;
+    }
+    return null;
+  };
+
+  const filterDateRange = getFilterDateRange();
+
   return (
     <div style={styles.container}>
       {/* 3D Scene */}
@@ -173,8 +202,15 @@ export function ConstellationOfIdeas() {
 
       {/* Year Display */}
       <div style={styles.yearDisplay}>
-        <span style={{ ...styles.yearText, fontSize: isMobile ? 24 : 32 }}>{formatYear(currentYear)}</span>
-        <span style={styles.nodeCount}>{visibleNodes.length} philosophers</span>
+        <span style={{ ...styles.yearText, fontSize: isMobile ? 24 : 32 }}>
+          {filterDateRange || formatYear(currentYear)}
+        </span>
+        <span style={styles.nodeCount}>
+          {selectedEra || selectedSchool 
+            ? `${visibleNodes.length} philosophers · ${selectedEra ? ERAS.find(e => e.id === selectedEra)?.label : selectedSchool}`
+            : `${visibleNodes.length} philosophers`
+          }
+        </span>
       </div>
 
       {/* Search Button */}
