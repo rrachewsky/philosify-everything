@@ -192,7 +192,7 @@ export const SEED_NODES = [
     longitude: 23.7275,
     school_of_thought: 'Platonism',
     tradition: 'western',
-    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT PRECURSOR
+    // Philosophical precursor to Counter-Enlightenment, but lived 2000 years before - Classical era
     key_ideas: [
       'The Forms are the true reality; matter is shadow',
       'The soul is immortal and has three parts',
