@@ -1,9 +1,9 @@
 // ============================================================
-// TIMELINE CONTROLS - Play/pause, scrubber, era filtering
+// TIMELINE CONTROLS - Play/pause, scrubber, era filtering, school filtering
 // ============================================================
 
 import React, { useCallback, useRef, useState } from 'react';
-import { ERAS } from '@hooks/useConstellation';
+import { ERAS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
 const SPEEDS = [0.5, 1, 2, 4, 8];
 
@@ -20,10 +20,14 @@ export function TimelineControls({
   maxYear,
   selectedEra,
   toggleEraFilter,
+  selectedSchool,
+  toggleSchoolFilter,
+  schools = [],
 }) {
   const sliderRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showEras, setShowEras] = useState(false);
+  const [showSchools, setShowSchools] = useState(false);
 
   // Calculate slider position (0-100)
   const sliderPercent = ((currentYear - minYear) / (maxYear - minYear)) * 100;
@@ -108,6 +112,57 @@ export function TimelineControls({
                   ...styles.eraButtonClear,
                 }}
                 onClick={() => toggleEraFilter(selectedEra)}
+              >
+                ✕ Clear
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* School filter buttons */}
+      <div style={styles.schoolRow}>
+        <button
+          style={styles.schoolToggle}
+          onClick={() => setShowSchools(!showSchools)}
+          aria-label="Filter by school"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24" />
+          </svg>
+        </button>
+        
+        {showSchools && (
+          <div style={styles.schoolButtons}>
+            {schools.map(school => {
+              const color = SCHOOL_COLORS[school] || '#888';
+              const isSelected = selectedSchool === school;
+              return (
+                <button
+                  key={school}
+                  style={{
+                    ...styles.schoolButton,
+                    borderColor: isSelected ? color : 'rgba(255, 255, 255, 0.1)',
+                    background: isSelected ? `${color}33` : 'rgba(255, 255, 255, 0.08)',
+                    color: isSelected ? '#F2F2F5' : 'rgba(255, 255, 255, 0.7)',
+                  }}
+                  onClick={() => toggleSchoolFilter(school)}
+                  title={school}
+                >
+                  <span style={{ ...styles.schoolDot, background: color }} />
+                  {school}
+                </button>
+              );
+            })}
+            {/* Clear school filter */}
+            {selectedSchool && (
+              <button
+                style={{
+                  ...styles.schoolButton,
+                  ...styles.eraButtonClear,
+                }}
+                onClick={() => toggleSchoolFilter(selectedSchool)}
               >
                 ✕ Clear
               </button>
@@ -248,6 +303,58 @@ const styles = {
     background: 'rgba(255, 100, 100, 0.15)',
     borderColor: 'rgba(255, 100, 100, 0.4)',
     color: 'rgba(255, 150, 150, 0.9)',
+  },
+
+  schoolRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginBottom: 16,
+  },
+
+  schoolToggle: {
+    width: 32,
+    height: 32,
+    background: 'rgba(255, 255, 255, 0.1)',
+    border: 'none',
+    borderRadius: 6,
+    color: '#F2F2F5',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+
+  schoolButtons: {
+    display: 'flex',
+    gap: 6,
+    flexWrap: 'wrap',
+    maxHeight: 120,
+    overflowY: 'auto',
+    paddingRight: 8,
+  },
+
+  schoolButton: {
+    padding: '4px 10px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 10,
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
+    whiteSpace: 'nowrap',
+  },
+
+  schoolDot: {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    flexShrink: 0,
   },
 
   controlsRow: {

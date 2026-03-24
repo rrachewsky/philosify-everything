@@ -8,6 +8,7 @@ import { BATTLE_COLORS, TRADITION_COLORS } from '@hooks/useConstellation';
 // Battle dimension labels with descriptions
 // Format: [positiveLabel, negativeLabel, description]
 // Score +1 = positive (left), Score -1 = negative (right)
+// Labels always show positive first: "Individual vs Collective" (not swapped based on score)
 const BATTLE_LABELS = {
   reason_faith: ['Reason', 'Faith', 'Source of knowledge'],
   reality_mysticism: ['Reality', 'Mysticism', 'Nature of existence'],
@@ -40,9 +41,8 @@ function BattleBar({ battle, score }) {
   const intensity = Math.abs(score);
   const intensityPercent = intensity * 100;
   
-  // Determine which label to highlight
+  // Determine which label is dominant (for description)
   const dominantLabel = isPositive ? positiveLabel : negativeLabel;
-  const oppositeLabel = isPositive ? negativeLabel : positiveLabel;
   
   // Intensity description
   const getIntensityWord = (val) => {
@@ -56,9 +56,10 @@ function BattleBar({ battle, score }) {
   return (
     <div style={styles.battleRow}>
       <div style={styles.battleHeader}>
-        <span style={{ ...styles.battleDominant, color }}>{dominantLabel}</span>
+        {/* Always show labels in consistent order: positive vs negative */}
+        <span style={{ ...styles.battleDominant, color: isPositive ? color : '#888' }}>{positiveLabel}</span>
         <span style={styles.battleVs}>vs</span>
-        <span style={styles.battleOpposite}>{oppositeLabel}</span>
+        <span style={{ ...styles.battleOpposite, color: !isPositive ? color : undefined }}>{negativeLabel}</span>
       </div>
       <div style={styles.battleTrack}>
         <div

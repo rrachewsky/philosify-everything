@@ -65,6 +65,9 @@ export function ConstellationOfIdeas() {
     getVisibleEdges,
     selectedEra,
     toggleEraFilter,
+    selectedSchool,
+    toggleSchoolFilter,
+    getSchools,
     selectedNode,
     setSelectedNode,
     selectedEdge,
@@ -215,6 +218,9 @@ export function ConstellationOfIdeas() {
         maxYear={MAX_YEAR}
         selectedEra={selectedEra}
         toggleEraFilter={toggleEraFilter}
+        selectedSchool={selectedSchool}
+        toggleSchoolFilter={toggleSchoolFilter}
+        schools={getSchools()}
       />
 
       {/* Info Panel (selected node/edge) */}

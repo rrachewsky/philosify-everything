@@ -3,6 +3,10 @@
 // ============================================================
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { SCHOOL_COLORS } from '@/data/constellationSeedData.js';
+
+// Re-export for convenience
+export { SCHOOL_COLORS };
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 
@@ -135,6 +139,9 @@ export function useConstellation() {
   // Era filter state (null = show all based on timeline, string = filter by era)
   const [selectedEra, setSelectedEra] = useState(null);
   
+  // School filter state (null = show all, string = filter by school)
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  
   // Refs for animation
   const animationRef = useRef(null);
   const lastTimeRef = useRef(null);
@@ -231,9 +238,18 @@ export function useConstellation() {
     };
   }, [isPlaying, playbackSpeed]);
 
-  // Get visible nodes based on current year OR selected era filter
+  // Get visible nodes based on current year OR selected era/school filter
   const getVisibleNodes = useCallback(() => {
     if (!data?.nodes) return [];
+    
+    let filteredNodes = data.nodes;
+    
+    // If a school is selected, filter by school first
+    if (selectedSchool) {
+      filteredNodes = filteredNodes.filter(node => node.school === selectedSchool);
+      // When filtering by school, show all members regardless of timeline
+      return filteredNodes;
+    }
     
     // If an era is selected, filter by era (ignoring timeline)
     if (selectedEra) {
@@ -242,7 +258,7 @@ export function useConstellation() {
         // Movement-based filtering (Enlightenment, Counter-Enlightenment, Renaissance)
         // Supports both string and array movement fields
         if (era.filterByMovement) {
-          return data.nodes.filter(node => {
+          return filteredNodes.filter(node => {
             if (Array.isArray(node.movement)) {
               return node.movement.includes(selectedEra);
             }
@@ -250,15 +266,15 @@ export function useConstellation() {
           });
         }
         // Time-based filtering
-        return data.nodes.filter(node => 
+        return filteredNodes.filter(node => 
           node.birth_year >= era.startYear && node.birth_year < era.endYear
         );
       }
     }
     
     // Otherwise, filter by timeline (show all philosophers born before currentYear)
-    return data.nodes.filter(node => node.birth_year <= currentYear);
-  }, [data, currentYear, selectedEra]);
+    return filteredNodes.filter(node => node.birth_year <= currentYear);
+  }, [data, currentYear, selectedEra, selectedSchool]);
 
   // Get visible edges (both nodes must be visible, with 1.8s delay)
   const getVisibleEdges = useCallback(() => {
@@ -291,8 +307,23 @@ export function useConstellation() {
   // Toggle era filter (click = select, click again = deselect)
   const toggleEraFilter = useCallback((eraId) => {
     setSelectedEra(prev => prev === eraId ? null : eraId);
+    setSelectedSchool(null); // Clear school filter when era changes
     setIsPlaying(false);
   }, []);
+
+  // Toggle school filter (click = select, click again = deselect)
+  const toggleSchoolFilter = useCallback((schoolName) => {
+    setSelectedSchool(prev => prev === schoolName ? null : schoolName);
+    setSelectedEra(null); // Clear era filter when school changes
+    setIsPlaying(false);
+  }, []);
+
+  // Get unique schools from data
+  const getSchools = useCallback(() => {
+    if (!data?.nodes) return [];
+    const schoolSet = new Set(data.nodes.map(n => n.school).filter(Boolean));
+    return Array.from(schoolSet).sort();
+  }, [data]);
 
   // Toggle playback
   const togglePlay = useCallback(() => {
@@ -354,6 +385,12 @@ export function useConstellation() {
     selectedEra,
     setSelectedEra,
     toggleEraFilter,
+    
+    // School filter
+    selectedSchool,
+    setSelectedSchool,
+    toggleSchoolFilter,
+    getSchools,
     
     // Selection
     selectedNode,
