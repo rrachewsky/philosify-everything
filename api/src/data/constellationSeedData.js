@@ -198,15 +198,16 @@ export const SEED_NODES = [
       'The philosopher-king should rule the ideal state'
     ],
     historical_weight: 1.0,
+    // COUNTER-ENLIGHTENMENT PRECURSOR: Forms = primacy of consciousness over existence
     battles: {
-      reason_faith: 0.8,
-      reality_mysticism: 0.5,
-      individual_collective: 0.3,
-      freedom_coercion: 0.2,
-      value_nihilism: 0.9,
-      market_planning: 0.0,
-      beauty_chaos: 0.9,
-      good_evil: 0.8
+      reason_faith: 0.5,        // Used reason but for mystical/transcendent ends
+      reality_mysticism: -0.7,  // Forms more real than physical world - primacy of consciousness
+      individual_collective: -0.4, // Philosopher-kings rule; rigid caste system
+      freedom_coercion: -0.3,   // State censorship, controlled breeding, no individual rights
+      value_nihilism: 0.9,      // Strong belief in objective Good (but transcendent)
+      market_planning: -0.4,    // Communal property for guardians, state control
+      beauty_chaos: 0.9,        // Strong aesthetic order
+      good_evil: 0.8            // Objective Good exists (as Form)
     }
   },
   {
@@ -772,15 +773,16 @@ export const SEED_NODES = [
       'Civilization corrupts natural human goodness'
     ],
     historical_weight: 0.8,
+    // COUNTER-ENLIGHTENMENT SEED: Sentiment over reason, General Will over individual
     battles: {
-      reason_faith: 0.3,
-      reality_mysticism: 0.3,
-      individual_collective: -0.3,
-      freedom_coercion: 0.2,
-      value_nihilism: 0.6,
-      market_planning: -0.3,
-      beauty_chaos: 0.5,
-      good_evil: 0.4
+      reason_faith: -0.4,       // Elevated feeling/sentiment over reason
+      reality_mysticism: -0.5,  // Noble savage myth, idealized nature
+      individual_collective: -0.7, // General Will supersedes individual will
+      freedom_coercion: -0.5,   // "Forced to be free" - submission to General Will
+      value_nihilism: 0.3,      // Natural goodness exists but society corrupts
+      market_planning: -0.5,    // Suspicious of commerce and property
+      beauty_chaos: 0.5,        // Natural beauty over civilization
+      good_evil: 0.3            // Moral sense exists but is corrupted
     }
   },
   {
@@ -828,15 +830,16 @@ export const SEED_NODES = [
       'We cannot know things-in-themselves'
     ],
     historical_weight: 1.0,
+    // COUNTER-ENLIGHTENMENT: Severed reason from reality, duty over happiness
     battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.4,
-      individual_collective: 0.5,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.8,
-      market_planning: 0.0,
-      beauty_chaos: 0.8,
-      good_evil: 0.8
+      reason_faith: 0.3,        // Used reason but severed it from reality
+      reality_mysticism: -0.7,  // Noumena unknowable; mind constitutes phenomena - primacy of consciousness
+      individual_collective: 0.2,  // Duty over happiness; individual subordinate to moral law
+      freedom_coercion: 0.3,    // Categorical imperative as self-imposed coercion
+      value_nihilism: 0.5,      // Believed in morality but grounded in duty, not values
+      market_planning: 0.0,     // Neutral
+      beauty_chaos: 0.7,        // Aesthetic order, sublime
+      good_evil: 0.6            // Objective morality exists but through duty
     }
   },
   {
@@ -848,7 +851,7 @@ export const SEED_NODES = [
     birth_country_modern: 'Ireland',
     latitude: 53.3498,
     longitude: -6.2603,
-    school_of_thought: 'Conservatism',
+    school_of_thought: 'Classical Conservatism',
     tradition: 'western',
     key_ideas: [
       'Tradition embodies accumulated wisdom',
@@ -856,15 +859,16 @@ export const SEED_NODES = [
       'Gradual reform, not violent revolution'
     ],
     historical_weight: 0.7,
+    // ENLIGHTENMENT: Reason + prudence; supported American Revolution, opposed tyranny
     battles: {
-      reason_faith: 0.3,
-      reality_mysticism: 0.4,
-      individual_collective: 0.4,
-      freedom_coercion: 0.6,
-      value_nihilism: 0.7,
-      market_planning: 0.5,
-      beauty_chaos: 0.7,
-      good_evil: 0.7
+      reason_faith: 0.6,        // Reason + prudence; tradition as accumulated wisdom
+      reality_mysticism: 0.7,   // Practical wisdom grounded in reality
+      individual_collective: 0.6,  // Defended property rights and liberty
+      freedom_coercion: 0.7,    // Opposed tyranny; supported American independence
+      value_nihilism: 0.8,      // Strong belief in objective moral order
+      market_planning: 0.6,     // Favored free commerce
+      beauty_chaos: 0.8,        // Aesthetic order, sublime
+      good_evil: 0.8            // Clear moral realism
     }
   },
   {
@@ -914,15 +918,16 @@ export const SEED_NODES = [
       'Spirit (Geist) unfolds through history'
     ],
     historical_weight: 0.9,
+    // COUNTER-ENLIGHTENMENT APEX: Geist creates reality, individual dissolved into State
     battles: {
-      reason_faith: 0.4,
-      reality_mysticism: 0.2,
-      individual_collective: -0.2,
-      freedom_coercion: 0.2,
-      value_nihilism: 0.7,
-      market_planning: -0.2,
-      beauty_chaos: 0.6,
-      good_evil: 0.5
+      reason_faith: 0.1,        // Rationalist language for mystical content
+      reality_mysticism: -0.9,  // Geist/Spirit creates reality - extreme primacy of consciousness
+      individual_collective: -0.9, // Individual dissolved into State/History/Geist
+      freedom_coercion: -0.7,   // Freedom = recognition of necessity; State is supreme
+      value_nihilism: 0.2,      // Values exist but are historical/collective, not objective
+      market_planning: -0.4,    // State over market
+      beauty_chaos: 0.6,        // Dialectical order
+      good_evil: 0.1            // Good = alignment with History/Geist
     }
   },
   {
@@ -942,15 +947,16 @@ export const SEED_NODES = [
       'Escape through art, compassion, or asceticism'
     ],
     historical_weight: 0.7,
+    // COUNTER-ENLIGHTENMENT: Blind irrational Will as metaphysical substrate
     battles: {
-      reason_faith: 0.6,
-      reality_mysticism: 0.3,
-      individual_collective: 0.6,
-      freedom_coercion: 0.5,
-      value_nihilism: -0.3,
-      market_planning: 0.0,
-      beauty_chaos: 0.8,
-      good_evil: 0.3
+      reason_faith: -0.5,       // Reason is slave to irrational Will
+      reality_mysticism: -0.8,  // Blind Will as thing-in-itself - primacy of consciousness/will
+      individual_collective: 0.1,  // Individual suffering, but dissolution of self is goal
+      freedom_coercion: 0.2,    // Pessimism about freedom; Will enslaves us
+      value_nihilism: -0.6,     // Life is suffering; quasi-nihilistic
+      market_planning: 0.0,     // Indifferent
+      beauty_chaos: 0.7,        // Art as temporary escape from Will
+      good_evil: -0.2           // Moral pessimism; compassion as only virtue
     }
   },
   {
@@ -1076,7 +1082,7 @@ export const SEED_NODES = [
     birth_country_modern: 'Germany',
     latitude: 51.2167,
     longitude: 12.1167,
-    school_of_thought: 'Existentialism / Nihilism',
+    school_of_thought: 'Existentialism / Perspectivism',
     tradition: 'western',
     key_ideas: [
       'God is dead; we have killed him',
@@ -1084,15 +1090,16 @@ export const SEED_NODES = [
       'Will to power is the fundamental drive'
     ],
     historical_weight: 0.9,
+    // COMPLEX: Diagnosed Counter-Enlightenment nihilism but solution ambiguous
     battles: {
-      reason_faith: 0.7,
-      reality_mysticism: 0.6,
-      individual_collective: 0.9,
-      freedom_coercion: 0.7,
-      value_nihilism: 0.3,
-      market_planning: 0.0,
-      beauty_chaos: 0.5,
-      good_evil: 0.2
+      reason_faith: 0.4,        // Valued reason but also instinct/passion
+      reality_mysticism: 0.3,   // More realist than Kant/Hegel but perspectivism
+      individual_collective: 0.9,  // Strongly individualist; anti-State, anti-herd
+      freedom_coercion: 0.7,    // Master morality; self-overcoming
+      value_nihilism: 0.1,      // Diagnosed nihilism; tried to overcome it (ambiguous success)
+      market_planning: 0.2,     // Aristocratic disdain for both
+      beauty_chaos: 0.6,        // Dionysian/Apollonian; tragic beauty
+      good_evil: -0.3           // "Beyond good and evil" - revaluation of values
     }
   },
 
