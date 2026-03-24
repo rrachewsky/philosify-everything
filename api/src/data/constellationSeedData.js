@@ -125,7 +125,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['First philosopher; rational principles in nature'],
-    historical_weight: 0.9,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -182,7 +182,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Mathematical structure underlies all reality'],
-    historical_weight: 0.8,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.8, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
   },
   {
@@ -220,7 +220,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Being is one; logical monism over the senses'],
-    historical_weight: 0.8,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -296,7 +296,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Atomism; materialist reason; void and atoms'],
-    historical_weight: 0.8,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -317,7 +317,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Man is the measure; cognitive relativism'],
-    historical_weight: 0.75,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
   },
   {
@@ -443,7 +443,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Reason guides pleasure; atomic ethics'],
-    historical_weight: 0.9,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.8, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
@@ -483,7 +483,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Universal Logos; virtue through reason'],
-    historical_weight: 0.9,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -521,7 +521,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Natural law; rational statecraft and rhetoric'],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.8, market_planning: 0.3, beauty_chaos: 0.7, good_evil: 0.8 }
   },
   {
@@ -540,7 +540,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Reason and virtue; natural philosophy'],
-    historical_weight: 0.75,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.85, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -559,7 +559,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Logos; only what is in our rational control'],
-    historical_weight: 0.75,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.7, freedom_coercion: 0.8, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -578,7 +578,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Rational self-governance; universal reason'],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.85, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
 
@@ -599,7 +599,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Radical skepticism; suspend all judgment'],
-    historical_weight: 0.75,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.1, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
   },
   {
@@ -658,7 +658,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['The One beyond reason; mystical emanation; reality is graded emanation from ineffable source'],
-    historical_weight: 0.85,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.3, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
   },
   {
@@ -759,7 +759,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Rationalist metaphysics; floating man argument'],
-    historical_weight: 0.9,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.85, reality_mysticism: 0.75, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.75 }
   },
   {
@@ -797,7 +797,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ["Aristotle's great commentator; reason is autonomous"],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
 
@@ -856,7 +856,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Rationalist theology; reason compatible with Torah'],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.75, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.75 }
   },
   {
@@ -894,7 +894,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Reason and faith reconciled; natural law'],
-    historical_weight: 0.95,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.85 }
   },
   {
@@ -972,7 +972,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Mystical union with God beyond rational concepts'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.1, reality_mysticism: 0.0, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
   },
 
@@ -1016,7 +1016,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Christian humanism; rational reform of the Church'],
-    historical_weight: 0.8,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.75, reality_mysticism: 0.65, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
   },
   {
@@ -1056,7 +1056,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Political reason divorced from religious morality'],
-    historical_weight: 0.85,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.8, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
   },
 
@@ -1077,7 +1077,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Infinite universe; reason and science over dogma'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.8, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
   },
 
@@ -1098,7 +1098,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Que sais-je? — radical self-doubt suspends all objective knowledge; skepticism as a way of life'],
-    historical_weight: 0.75,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
   },
 
@@ -1119,7 +1119,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Inductive method; idols of the mind; new science'],
-    historical_weight: 0.8,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -1144,7 +1144,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Mechanistic materialism; rational social contract'],
-    historical_weight: 0.8,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.8, reality_mysticism: 0.9, individual_collective: 0.3, freedom_coercion: 0.2, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.4 }
   },
   {
@@ -1163,7 +1163,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Tabula rasa; experience as the ground of knowledge'],
-    historical_weight: 0.95,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -1203,7 +1203,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Cogito; clear and distinct ideas; method of doubt'],
-    historical_weight: 0.95,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.7, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -1300,7 +1300,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Heart has reasons reason cannot know; the wager'],
-    historical_weight: 0.75,
+    historical_weight: 0.6,
     battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
 
@@ -1346,7 +1346,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Rational analysis of laws; separation of powers'],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.7, freedom_coercion: 0.85, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -1365,7 +1365,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Reason vs. superstition, tyranny, and fanaticism'],
-    historical_weight: 0.9,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.95, reality_mysticism: 0.8, individual_collective: 0.8, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.7, good_evil: 0.6 }
   },
   {
@@ -1403,7 +1403,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: false,
     key_ideas: ['Rational self-interest; invisible hand; moral sentiments'],
-    historical_weight: 0.9,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -1462,7 +1462,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Causation is habit not necessity; induction unjustifiable — destroys the rational foundations of science'],
-    historical_weight: 0.9,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.3, reality_mysticism: 0.4, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.3 }
   },
 
@@ -1483,7 +1483,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Nature and sentiment over civilization and reason'],
-    historical_weight: 0.85,
+    historical_weight: 0.7,
     battles: { reason_faith: -0.4, reality_mysticism: -0.5, individual_collective: -0.7, freedom_coercion: -0.5, value_nihilism: 0.3, market_planning: -0.5, beauty_chaos: 0.5, good_evil: 0.3 }
   },
   {
@@ -1559,7 +1559,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Cultural particularity; Volksgeist over universal reason'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
   },
 
@@ -1601,7 +1601,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Felicific calculus: aggregate utility can override individual rights — collectivism in rational disguise'],
-    historical_weight: 0.8,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.2, beauty_chaos: 0.3, good_evil: 0.4 }
   },
 
@@ -1685,7 +1685,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Dialectical Spirit; individual dissolved into collective History; root of totalitarianism'],
-    historical_weight: 0.95,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.1, reality_mysticism: -0.9, individual_collective: -0.9, freedom_coercion: -0.7, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.6, good_evil: 0.1 }
   },
   {
@@ -1725,7 +1725,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Three stages; science replaces theology and metaphysics'],
-    historical_weight: 0.75,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: -0.3, freedom_coercion: 0.0, value_nihilism: 0.5, market_planning: -0.2, beauty_chaos: 0.3, good_evil: 0.4 }
   },
   {
@@ -1765,7 +1765,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Blind Will underlies reality; reason is its servant'],
-    historical_weight: 0.8,
+    historical_weight: 1.0,
     battles: { reason_faith: -0.5, reality_mysticism: -0.8, individual_collective: 0.1, freedom_coercion: 0.2, value_nihilism: -0.6, market_planning: 0.0, beauty_chaos: 0.7, good_evil: -0.2 }
   },
   {
@@ -1784,7 +1784,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Will to Power; death of God; perspectivism'],
-    historical_weight: 0.9,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.9, freedom_coercion: 0.7, value_nihilism: 0.1, market_planning: 0.2, beauty_chaos: 0.6, good_evil: -0.3 }
   },
 
@@ -1805,7 +1805,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Harm principle subordinates individual to society; utility trumps rights — altruism with a logical veneer'],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.4, freedom_coercion: 0.6, value_nihilism: 0.6, market_planning: 0.3, beauty_chaos: 0.5, good_evil: 0.5 }
   },
 
@@ -1847,7 +1847,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Dialectical materialism inverts Hegel but retains irrationalism; collectivism; anti-individual'],
-    historical_weight: 0.95,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.6, reality_mysticism: 0.7, individual_collective: -1.0, freedom_coercion: -0.6, value_nihilism: 0.4, market_planning: -1.0, beauty_chaos: 0.0, good_evil: 0.2 }
   },
 
@@ -1868,7 +1868,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Truth as long-run consensus of inquirers — replaces correspondence to reality with social agreement'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
@@ -1927,7 +1927,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Logical foundations of mathematics; objectivity of sense'],
-    historical_weight: 0.8,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -1948,7 +1948,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Phenomenological reduction brackets objective reality; consciousness constitutes the world'],
-    historical_weight: 0.8,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.6, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
 
@@ -1969,7 +1969,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Élan vital; intuition over intellect and mechanism'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
   },
 
@@ -1994,7 +1994,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Disenchantment: reason strips meaning from the world; value-free science cannot ground ethics — fact-value split'],
-    historical_weight: 0.8,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.2, market_planning: 0.3, beauty_chaos: 0.3, good_evil: 0.2 }
   },
 
@@ -2053,7 +2053,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Late: language games dissolve objective meaning; meaning is use, not correspondence to reality'],
-    historical_weight: 0.9,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
@@ -2171,7 +2171,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Being over cognition; Dasein; critique of Cartesian reason'],
-    historical_weight: 0.85,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
   },
   {
@@ -2190,7 +2190,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Existence precedes essence — denies human nature; radical freedom has no rational grounding in reality'],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: -0.3, beauty_chaos: 0.3, good_evil: 0.3 }
   },
   {
@@ -2327,7 +2327,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Instrumental reason as domination; Enlightenment itself becomes myth — attacks reason at its root'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.3, good_evil: 0.2 }
   },
   {
@@ -2365,7 +2365,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Negative dialectics; no positive knowledge possible; Enlightenment inevitably turns into barbarism'],
-    historical_weight: 0.7,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.1, market_planning: -0.4, beauty_chaos: 0.4, good_evil: 0.2 }
   },
   {
@@ -2384,7 +2384,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Communicative reason is intersubjective not objective — truth by consensus, not by correspondence to reality'],
-    historical_weight: 0.7,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: -0.2, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 
@@ -2426,7 +2426,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Falsificationism; critical rationalism; open society'],
-    historical_weight: 0.8,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -2544,7 +2544,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Political action over individual reason; vita activa over vita contemplativa — the collective precedes the individual'],
-    historical_weight: 0.75,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.3, freedom_coercion: 0.6, value_nihilism: 0.5, market_planning: 0.2, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -2586,7 +2586,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Veil of ignorance erases individual identity; distributive justice violates rights; egalitarianism over merit'],
-    historical_weight: 0.75,
+    historical_weight: 0.7,
     battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: -0.3, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -2605,7 +2605,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Libertarian natural rights; self-ownership; Anarchy State and Utopia — closest liberal to Objectivism'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.7 }
   },
 
@@ -2664,7 +2664,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Power-knowledge regimes; genealogy of truth'],
-    historical_weight: 0.85,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.0, freedom_coercion: 0.2, value_nihilism: -0.2, market_planning: -0.2, beauty_chaos: -0.2, good_evil: 0.0 }
   },
   {
@@ -2702,7 +2702,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: false,
     key_ideas: ['Deconstruction; all texts endlessly defer meaning'],
-    historical_weight: 0.8,
+    historical_weight: 0.85,
     battles: { reason_faith: 0.2, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.0, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
   },
 
@@ -2723,7 +2723,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['Tradition-dependent rationality — no universal reason, only internal standards of practices'],
-    historical_weight: 0.65,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
 
@@ -2744,7 +2744,7 @@ export const SEED_NODES = [
     stance: 'anti',
     is_champion: true,
     key_ideas: ['No mirror of nature; truth is contingent and social'],
-    historical_weight: 0.65,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
   },
 
@@ -2765,7 +2765,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Man, Economy and State (1962); The Ethics of Liberty (1982); founder of anarcho-capitalism on natural rights'],
-    historical_weight: 0.75,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.7, market_planning: 1.0, beauty_chaos: 0.4, good_evil: 0.7 }
   },
 
@@ -3231,7 +3231,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['The Evidence of the Senses; open Objectivism; Atlas Society'],
-    historical_weight: 0.6,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.7, good_evil: 0.85 }
   },
   {
@@ -3288,9 +3288,9 @@ export const SEED_NODES = [
     school: 'Libertarian',
     tradition: 'western',
     stance: 'pro',
-    is_champion: false,
+    is_champion: true,
     key_ideas: ['Libertarian ethics; Rand-influenced natural rights'],
-    historical_weight: 0.5,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.75, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.7 }
   },
 
@@ -3412,7 +3412,7 @@ export const SEED_NODES = [
     stance: 'pro',
     is_champion: true,
     key_ideas: ['Consciousness explained; Darwinian reason'],
-    historical_weight: 0.7,
+    historical_weight: 1.0,
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.3, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
