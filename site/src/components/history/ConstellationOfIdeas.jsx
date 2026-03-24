@@ -63,6 +63,8 @@ export function ConstellationOfIdeas() {
     MAX_YEAR,
     getVisibleNodes,
     getVisibleEdges,
+    selectedEra,
+    toggleEraFilter,
     selectedNode,
     setSelectedNode,
     selectedEdge,
@@ -211,6 +213,8 @@ export function ConstellationOfIdeas() {
         formatYear={formatYear}
         minYear={MIN_YEAR}
         maxYear={MAX_YEAR}
+        selectedEra={selectedEra}
+        toggleEraFilter={toggleEraFilter}
       />
 
       {/* Info Panel (selected node/edge) */}

@@ -1,21 +1,9 @@
 // ============================================================
-// TIMELINE CONTROLS - Play/pause, scrubber, era jumps
+// TIMELINE CONTROLS - Play/pause, scrubber, era filtering
 // ============================================================
 
 import React, { useCallback, useRef, useState } from 'react';
-
-// Era markers for quick navigation
-const ERAS = [
-  { label: 'Pre-Socratics', year: -600 },
-  { label: 'Classical', year: -470 },
-  { label: 'Hellenistic', year: -300 },
-  { label: 'Medieval', year: 400 },
-  { label: 'Renaissance', year: 1400 },
-  { label: 'Enlightenment', year: 1650 },
-  { label: 'Modern', year: 1800 },
-  { label: 'Contemporary', year: 1900 },
-  { label: 'Now', year: 2026 },
-];
+import { ERAS } from '@hooks/useConstellation';
 
 const SPEEDS = [0.5, 1, 2, 4, 8];
 
@@ -30,6 +18,8 @@ export function TimelineControls({
   formatYear,
   minYear,
   maxYear,
+  selectedEra,
+  toggleEraFilter,
 }) {
   const sliderRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -99,18 +89,29 @@ export function TimelineControls({
           <div style={styles.eraButtons}>
             {ERAS.map(era => (
               <button
-                key={era.label}
+                key={era.id}
                 style={{
                   ...styles.eraButton,
-                  ...(currentYear >= era.year && currentYear < (ERAS[ERAS.indexOf(era) + 1]?.year || maxYear + 1)
-                    ? styles.eraButtonActive
-                    : {}),
+                  ...(selectedEra === era.id ? styles.eraButtonActive : {}),
                 }}
-                onClick={() => jumpToEra(era.year)}
+                onClick={() => toggleEraFilter(era.id)}
+                title={`${era.startYear < 0 ? Math.abs(era.startYear) + ' BC' : era.startYear} - ${era.endYear < 0 ? Math.abs(era.endYear) + ' BC' : era.endYear}`}
               >
                 {era.label}
               </button>
             ))}
+            {/* Show All button */}
+            {selectedEra && (
+              <button
+                style={{
+                  ...styles.eraButton,
+                  ...styles.eraButtonClear,
+                }}
+                onClick={() => toggleEraFilter(selectedEra)}
+              >
+                ✕ Clear
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -241,6 +242,12 @@ const styles = {
     background: 'rgba(214, 21, 140, 0.3)',
     borderColor: '#D6158C',
     color: '#F2F2F5',
+  },
+
+  eraButtonClear: {
+    background: 'rgba(255, 100, 100, 0.15)',
+    borderColor: 'rgba(255, 100, 100, 0.4)',
+    color: 'rgba(255, 150, 150, 0.9)',
   },
 
   controlsRow: {

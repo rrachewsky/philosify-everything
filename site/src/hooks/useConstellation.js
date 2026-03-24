@@ -11,6 +11,28 @@ const MIN_YEAR = -600;
 const MAX_YEAR = 2026;
 const YEARS_PER_SECOND_1X = 2.5; // At 1x speed, ~17 minutes for full timeline
 
+// Era definitions with year ranges
+export const ERAS = [
+  { id: 'presocratics', label: 'Pre-Socratics', startYear: -700, endYear: -450 },
+  { id: 'classical', label: 'Classical', startYear: -450, endYear: -300 },
+  { id: 'hellenistic', label: 'Hellenistic', startYear: -300, endYear: 200 },
+  { id: 'medieval', label: 'Medieval', startYear: 200, endYear: 1400 },
+  { id: 'renaissance', label: 'Renaissance', startYear: 1400, endYear: 1600 },
+  { id: 'enlightenment', label: 'Enlightenment', startYear: 1600, endYear: 1800 },
+  { id: 'modern', label: 'Modern', startYear: 1800, endYear: 1950 },
+  { id: 'contemporary', label: 'Contemporary', startYear: 1950, endYear: 2030 },
+];
+
+// Get era for a philosopher based on birth year
+function getPhilosopherEra(birthYear) {
+  for (const era of ERAS) {
+    if (birthYear >= era.startYear && birthYear < era.endYear) {
+      return era.id;
+    }
+  }
+  return 'contemporary'; // Default for edge cases
+}
+
 // Battle dimension weights for Y-position calculation
 const BATTLE_WEIGHTS = {
   reason_faith: 0.20,
@@ -108,6 +130,9 @@ export function useConstellation() {
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [hoveredNode, setHoveredNode] = useState(null);
   
+  // Era filter state (null = show all based on timeline, string = filter by era)
+  const [selectedEra, setSelectedEra] = useState(null);
+  
   // Refs for animation
   const animationRef = useRef(null);
   const lastTimeRef = useRef(null);
@@ -204,11 +229,23 @@ export function useConstellation() {
     };
   }, [isPlaying, playbackSpeed]);
 
-  // Get visible nodes based on current year
+  // Get visible nodes based on current year OR selected era filter
   const getVisibleNodes = useCallback(() => {
     if (!data?.nodes) return [];
+    
+    // If an era is selected, filter by era (ignoring timeline)
+    if (selectedEra) {
+      const era = ERAS.find(e => e.id === selectedEra);
+      if (era) {
+        return data.nodes.filter(node => 
+          node.birth_year >= era.startYear && node.birth_year < era.endYear
+        );
+      }
+    }
+    
+    // Otherwise, filter by timeline (show all philosophers born before currentYear)
     return data.nodes.filter(node => node.birth_year <= currentYear);
-  }, [data, currentYear]);
+  }, [data, currentYear, selectedEra]);
 
   // Get visible edges (both nodes must be visible, with 1.8s delay)
   const getVisibleEdges = useCallback(() => {
@@ -232,9 +269,15 @@ export function useConstellation() {
     });
   }, [data, currentYear, playbackSpeed, getVisibleNodes]);
 
-  // Jump to era
+  // Jump to era (for timeline scrubbing)
   const jumpToEra = useCallback((year) => {
     setCurrentYear(year);
+    setIsPlaying(false);
+  }, []);
+
+  // Toggle era filter (click = select, click again = deselect)
+  const toggleEraFilter = useCallback((eraId) => {
+    setSelectedEra(prev => prev === eraId ? null : eraId);
     setIsPlaying(false);
   }, []);
 
@@ -293,6 +336,11 @@ export function useConstellation() {
     // Visibility
     getVisibleNodes,
     getVisibleEdges,
+    
+    // Era filter
+    selectedEra,
+    setSelectedEra,
+    toggleEraFilter,
     
     // Selection
     selectedNode,
