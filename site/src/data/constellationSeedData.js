@@ -192,6 +192,7 @@ export const SEED_NODES = [
     longitude: 23.7275,
     school_of_thought: 'Platonism',
     tradition: 'western',
+    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT PRECURSOR
     key_ideas: [
       'The Forms are the true reality; matter is shadow',
       'The soul is immortal and has three parts',
@@ -569,6 +570,7 @@ export const SEED_NODES = [
     longitude: -0.1278,
     school_of_thought: 'Empiricism',
     tradition: 'western',
+    movement: 'enlightenment', // ENLIGHTENMENT PRECURSOR
     key_ideas: [
       'Knowledge is power',
       'The scientific method: observation and induction',
@@ -681,6 +683,7 @@ export const SEED_NODES = [
     longitude: -2.7667,
     school_of_thought: 'Empiricism / Liberalism',
     tradition: 'western',
+    movement: 'enlightenment', // ENLIGHTENMENT
     key_ideas: [
       'The mind is a blank slate (tabula rasa)',
       'Natural rights: life, liberty, and property',
@@ -739,6 +742,7 @@ export const SEED_NODES = [
     longitude: -3.1883,
     school_of_thought: 'Empiricism / Skepticism',
     tradition: 'western',
+    movement: 'enlightenment', // ENLIGHTENMENT: Empiricism, skepticism of dogma
     key_ideas: [
       'All ideas derive from sense impressions',
       'Causation is habit, not necessity',
@@ -767,6 +771,7 @@ export const SEED_NODES = [
     longitude: 6.1432,
     school_of_thought: 'Social Contract / Romanticism',
     tradition: 'western',
+    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT SEED
     key_ideas: [
       'Man is born free, but everywhere he is in chains',
       'The general will is the basis of legitimate government',
@@ -796,6 +801,7 @@ export const SEED_NODES = [
     longitude: -3.1596,
     school_of_thought: 'Classical Liberalism',
     tradition: 'western',
+    movement: 'enlightenment', // ENLIGHTENMENT: Free markets, individual liberty
     key_ideas: [
       'The invisible hand coordinates markets',
       'Division of labor increases productivity',
@@ -824,6 +830,7 @@ export const SEED_NODES = [
     longitude: 20.4522,
     school_of_thought: 'Transcendental Idealism',
     tradition: 'western',
+    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT
     key_ideas: [
       'The mind shapes experience through categories',
       'Act only according to maxims you could universalize',
@@ -853,6 +860,7 @@ export const SEED_NODES = [
     longitude: -6.2603,
     school_of_thought: 'Classical Conservatism',
     tradition: 'western',
+    movement: 'enlightenment', // ENLIGHTENMENT
     key_ideas: [
       'Tradition embodies accumulated wisdom',
       'Society is a contract across generations',
@@ -882,6 +890,7 @@ export const SEED_NODES = [
     longitude: -0.1278,
     school_of_thought: 'Utilitarianism',
     tradition: 'western',
+    movement: 'enlightenment', // ENLIGHTENMENT
     key_ideas: [
       'The greatest happiness for the greatest number',
       'Pleasure and pain are the sovereign masters',
@@ -912,6 +921,7 @@ export const SEED_NODES = [
     longitude: 9.1829,
     school_of_thought: 'German Idealism',
     tradition: 'western',
+    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT APEX
     key_ideas: [
       'History moves through thesis, antithesis, synthesis',
       'The real is the rational',
@@ -941,6 +951,7 @@ export const SEED_NODES = [
     longitude: 18.6466,
     school_of_thought: 'Pessimism / Voluntarism',
     tradition: 'western',
+    movement: 'counter_enlightenment', // COUNTER-ENLIGHTENMENT
     key_ideas: [
       'The world is will and representation',
       'Life is suffering driven by blind will',
