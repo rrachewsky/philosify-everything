@@ -619,12 +619,9 @@ const styles = {
   },
 
   connectionName: {
-    fontSize: 14,
-    fontWeight: 700,
+    fontSize: 13,
     color: '#FFFFFF',
     flex: 1,
-    textShadow: '0 1px 3px rgba(0, 0, 0, 0.6)',
-    letterSpacing: 0.3,
   },
 
   connectionType: {
