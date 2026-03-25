@@ -84,21 +84,43 @@ function BattleBar({ battle, score }) {
 function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear }) {
   const connections = getNodeConnections(node.id);
   const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
+  const [imageError, setImageError] = React.useState(false);
+
+  // Reset image error when node changes
+  React.useEffect(() => {
+    setImageError(false);
+  }, [node.id]);
 
   return (
     <div style={styles.content}>
-      {/* Header */}
-      <div style={styles.header}>
-        <div
-          style={{
-            ...styles.traditionIndicator,
-            background: schoolColor,
-          }}
-        />
-        <div>
+      {/* Portrait + Header */}
+      <div style={styles.headerWithPortrait}>
+        {/* Portrait */}
+        {node.portrait && !imageError ? (
+          <div style={styles.portraitContainer}>
+            <img
+              src={node.portrait}
+              alt={node.name}
+              style={styles.portrait}
+              onError={() => setImageError(true)}
+            />
+          </div>
+        ) : (
+          <div style={{ ...styles.portraitPlaceholder, background: schoolColor }}>
+            <span style={styles.portraitInitial}>
+              {node.name.charAt(0)}
+            </span>
+          </div>
+        )}
+        
+        {/* Name and dates */}
+        <div style={styles.headerText}>
           <h2 style={styles.name}>{node.name}</h2>
           <div style={styles.dates}>
             {formatYear(node.birth_year)} – {formatYear(node.death_year)}
+          </div>
+          <div style={{ ...styles.schoolBadge, background: schoolColor }}>
+            {node.school}
           </div>
         </div>
       </div>
@@ -395,6 +417,63 @@ const styles = {
     paddingRight: 32,
   },
 
+  headerWithPortrait: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 14,
+    marginBottom: 20,
+    paddingRight: 32,
+  },
+
+  portraitContainer: {
+    width: 72,
+    height: 90,
+    borderRadius: 8,
+    overflow: 'hidden',
+    flexShrink: 0,
+    border: '2px solid rgba(255, 255, 255, 0.15)',
+    background: 'rgba(0, 0, 0, 0.3)',
+  },
+
+  portrait: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+
+  portraitPlaceholder: {
+    width: 72,
+    height: 90,
+    borderRadius: 8,
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '2px solid rgba(255, 255, 255, 0.15)',
+  },
+
+  portraitInitial: {
+    fontSize: 32,
+    fontWeight: 700,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+  },
+
+  headerText: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  schoolBadge: {
+    display: 'inline-block',
+    fontSize: 10,
+    fontWeight: 600,
+    color: '#000',
+    padding: '3px 8px',
+    borderRadius: 4,
+    marginTop: 6,
+  },
+
   traditionIndicator: {
     width: 4,
     height: 40,
@@ -403,7 +482,7 @@ const styles = {
   },
 
   name: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 700,
     color: '#F2F2F5',
     margin: 0,
@@ -411,9 +490,9 @@ const styles = {
   },
 
   dates: {
-    fontSize: 12,
+    fontSize: 11,
     color: 'rgba(255, 255, 255, 0.5)',
-    marginTop: 4,
+    marginTop: 3,
   },
 
   section: {

@@ -135,6 +135,84 @@ export const SCHOOL_STANCES = {
 };
 
 // ═══════════════════════════════════════════════════════════
+// PHILOSOPHER PORTRAITS - Wikipedia Commons URLs for major philosophers
+// ═══════════════════════════════════════════════════════════
+export const PHILOSOPHER_PORTRAITS = {
+  // Ancient Greeks
+  'socrates': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Socrate_du_Louvre.jpg/150px-Socrate_du_Louvre.jpg',
+  'plato': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Plato_Silanion_Musei_Capitolini_MC1377.jpg/150px-Plato_Silanion_Musei_Capitolini_MC1377.jpg',
+  'aristotle': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Aristotle_Altemps_Inv8575.jpg/150px-Aristotle_Altemps_Inv8575.jpg',
+  'epicurus': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Epikouros_BM_1843.jpg/150px-Epikouros_BM_1843.jpg',
+  'zeno_citium': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Paolo_Monti_-_Servizio_fotografico_%28Napoli%2C_1969%29_-_BEIC_6353768.jpg/150px-Paolo_Monti_-_Servizio_fotografico_%28Napoli%2C_1969%29_-_BEIC_6353768.jpg',
+  'marcus_aurelius': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/MSR-ra-61-b-1-DM.jpg/150px-MSR-ra-61-b-1-DM.jpg',
+  'seneca': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Seneca-berlinantikensammlung-1.jpg/150px-Seneca-berlinantikensammlung-1.jpg',
+  'epictetus': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Epictetus.jpg/150px-Epictetus.jpg',
+  
+  // Medieval & Islamic
+  'augustine': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Saint_Augustine_by_Philippe_de_Champaigne.jpg/150px-Saint_Augustine_by_Philippe_de_Champaigne.jpg',
+  'aquinas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/St-thomas-aquinas.jpg/150px-St-thomas-aquinas.jpg',
+  'avicenna': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Avicenna_TajsijkiArtist.jpg/150px-Avicenna_TajsijkiArtist.jpg',
+  'averroes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Averroes_closeup.jpg/150px-Averroes_closeup.jpg',
+  'maimonides': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Maimonides-2.jpg/150px-Maimonides-2.jpg',
+  
+  // Modern - Rationalists & Empiricists
+  'descartes': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg/150px-Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg',
+  'spinoza': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Spinoza.jpg/150px-Spinoza.jpg',
+  'leibniz': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Gottfried_Wilhelm_von_Leibniz.jpg/150px-Gottfried_Wilhelm_von_Leibniz.jpg',
+  'locke': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/JohnLocke.png/150px-JohnLocke.png',
+  'hume': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Painting_of_David_Hume.jpg/150px-Painting_of_David_Hume.jpg',
+  'berkeley': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Bishop_George_Berkeley.jpg/150px-Bishop_George_Berkeley.jpg',
+  'bacon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Francis_Bacon%2C_Viscount_St_Alban_from_NPG_%282%29.jpg/150px-Francis_Bacon%2C_Viscount_St_Alban_from_NPG_%282%29.jpg',
+  
+  // German Idealism & Enlightenment
+  'kant': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Immanuel_Kant_%28painted_portrait%29.jpg/150px-Immanuel_Kant_%28painted_portrait%29.jpg',
+  'hegel': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Hegel_portrait_by_Schlesinger_1831.jpg/150px-Hegel_portrait_by_Schlesinger_1831.jpg',
+  'schopenhauer': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Arthur_Schopenhauer_by_J_Sch%C3%A4fer%2C_1859b.jpg/150px-Arthur_Schopenhauer_by_J_Sch%C3%A4fer%2C_1859b.jpg',
+  'fichte': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Johann_Gottlieb_Fichte_by_Friedrich_Bury.jpg/150px-Johann_Gottlieb_Fichte_by_Friedrich_Bury.jpg',
+  'voltaire': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Nicolas_de_Largilli%C3%A8re_-_Portrait_de_Voltaire_%281694-1778%29_en_1718_-_P208_-_mus%C3%A9e_Carnavalet.jpg/150px-Nicolas_de_Largilli%C3%A8re_-_Portrait_de_Voltaire_%281694-1778%29_en_1718_-_P208_-_mus%C3%A9e_Carnavalet.jpg',
+  'rousseau': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Jean-Jacques_Rousseau_%28painted_portrait%29.jpg/150px-Jean-Jacques_Rousseau_%28painted_portrait%29.jpg',
+  'montesquieu': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Montesquieu_1.png/150px-Montesquieu_1.png',
+  
+  // 19th Century
+  'nietzsche': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Nietzsche187a.jpg/150px-Nietzsche187a.jpg',
+  'kierkegaard': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Kierkegaard.jpg/150px-Kierkegaard.jpg',
+  'marx': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Karl_Marx_001.jpg/150px-Karl_Marx_001.jpg',
+  'mill': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/John_Stuart_Mill_by_London_Stereoscopic_Company%2C_c1870.jpg/150px-John_Stuart_Mill_by_London_Stereoscopic_Company%2C_c1870.jpg',
+  'bentham': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Jeremy_Bentham_by_Henry_William_Pickersgill_detail.jpg/150px-Jeremy_Bentham_by_Henry_William_Pickersgill_detail.jpg',
+  'darwin': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Charles_Darwin_seated_crop.jpg/150px-Charles_Darwin_seated_crop.jpg',
+  
+  // 20th Century
+  'russell': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Bertrand_Russell_1957.jpg/150px-Bertrand_Russell_1957.jpg',
+  'wittgenstein': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Ludwig_Wittgenstein.jpg/150px-Ludwig_Wittgenstein.jpg',
+  'heidegger': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Martin_Heidegger_for_WP.jpg/150px-Martin_Heidegger_for_WP.jpg',
+  'sartre': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Sartre_1967_crop.jpg/150px-Sartre_1967_crop.jpg',
+  'camus': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Albert_Camus%2C_gagnant_de_prix_Nobel%2C_portrait_en_buste%2C_pos%C3%A9_au_bureau%2C_faisant_face_%C3%A0_gauche%2C_cigarette_de_tabagisme.jpg/150px-Albert_Camus%2C_gagnant_de_prix_Nobel%2C_portrait_en_buste%2C_pos%C3%A9_au_bureau%2C_faisant_face_%C3%A0_gauche%2C_cigarette_de_tabagisme.jpg',
+  'beauvoir': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Simone_de_Beauvoir2.png/150px-Simone_de_Beauvoir2.png',
+  'husserl': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Edmund_Husserl_1900.jpg/150px-Edmund_Husserl_1900.jpg',
+  'popper': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Karl_Popper.jpg/150px-Karl_Popper.jpg',
+  'arendt': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Hannah_Arendt_1975_%28cropped%29.jpg/150px-Hannah_Arendt_1975_%28cropped%29.jpg',
+  'rand': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ayn_Rand_%281943_Talbot_portrait%29.jpg/150px-Ayn_Rand_%281943_Talbot_portrait%29.jpg',
+  'hayek': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Friedrich_Hayek_portrait.jpg/150px-Friedrich_Hayek_portrait.jpg',
+  'mises': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Ludwig_von_Mises.jpg/150px-Ludwig_von_Mises.jpg',
+  'foucault': 'https://upload.wikimedia.org/wikipedia/en/thumb/3/39/Michel_Foucault.jpg/150px-Michel_Foucault.jpg',
+  'derrida': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Derrida-by-Pablo-Secca.jpg/150px-Derrida-by-Pablo-Secca.jpg',
+  
+  // American
+  'jefferson': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Thomas_Jefferson_by_Rembrandt_Peale%2C_1800.jpg/150px-Thomas_Jefferson_by_Rembrandt_Peale%2C_1800.jpg',
+  'paine': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Thomas_Paine_rev1.jpg/150px-Thomas_Paine_rev1.jpg',
+  'emerson': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Ralph_Waldo_Emerson_ca1857_retouched.jpg/150px-Ralph_Waldo_Emerson_ca1857_retouched.jpg',
+  'thoreau': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Henry_David_Thoreau.jpg/150px-Benjamin_D._Maxham_-_Henry_David_Thoreau_-_Restored.jpg',
+  'james': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/William_James_b1842c.jpg/150px-William_James_b1842c.jpg',
+  'dewey': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/John_Dewey_cph.3a51565.jpg/150px-John_Dewey_cph.3a51565.jpg',
+  
+  // Eastern
+  'confucius': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Confucius_Tang_Dynasty.jpg/150px-Confucius_Tang_Dynasty.jpg',
+  'laozi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Zhang_Lu-Laozi_Riding_an_Ox.jpg/150px-Zhang_Lu-Laozi_Riding_an_Ox.jpg',
+  'buddha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Seated_Buddha_Amitabha_statue.jpg/150px-Seated_Buddha_Amitabha_statue.jpg',
+  'gandhi': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Mahatma-Gandhi%2C_studio%2C_1931.jpg/150px-Mahatma-Gandhi%2C_studio%2C_1931.jpg',
+};
+
+// ═══════════════════════════════════════════════════════════
 // SEED_NODES - 219 philosophers (206 Western + 13 Eastern)
 // ═══════════════════════════════════════════════════════════
 export const SEED_NODES = [
@@ -4907,4 +4985,4 @@ export const SEED_EDGES = [
   { source_id: 'karl_jaspers', target_id: 'hannah_arendt', relationship_type: 'influenced', weight: 2 },
 ];
 
-export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES };
+export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES, PHILOSOPHER_PORTRAITS };

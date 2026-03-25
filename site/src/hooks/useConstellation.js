@@ -3,10 +3,10 @@
 // ============================================================
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { SCHOOL_COLORS } from '@/data/constellationSeedData.js';
+import { SCHOOL_COLORS, PHILOSOPHER_PORTRAITS } from '@/data/constellationSeedData.js';
 
 // Re-export for convenience
-export { SCHOOL_COLORS };
+export { SCHOOL_COLORS, PHILOSOPHER_PORTRAITS };
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 
@@ -167,10 +167,11 @@ export function useConstellation() {
 
         const json = await response.json();
 
-        // Calculate orbital positions for each node
+        // Calculate orbital positions and add portraits for each node
         const nodesWithPositions = json.nodes.map(node => ({
           ...node,
           orbital_position: node.orbital_position || calculateOrbitalPosition(node),
+          portrait: PHILOSOPHER_PORTRAITS[node.id] || null,
         }));
 
         if (!cancelled) {
