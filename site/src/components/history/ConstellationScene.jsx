@@ -17,10 +17,9 @@ const CONNECTION_COLORS = {
   contemporary: 0xFF9800,
 };
 
-// Earth texture URLs - High quality textures from unpkg (no city lights - anachronistic for 600 BC philosophers)
+// Earth texture URLs (NASA Blue Marble)
 const EARTH_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-blue-marble.jpg';
 const EARTH_BUMP = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-topology.png';
-const EARTH_SPECULAR = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-water.png';
 const STAR_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/night-sky.png';
 
 // Convert lat/lng to 3D position on sphere
@@ -646,33 +645,18 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     directionalLight.position.set(100, 100, 100);
     scene.add(directionalLight);
 
-    // Earth with high-quality textures
     const textureLoader = new THREE.TextureLoader();
-    const earthGeometry = new THREE.SphereGeometry(100, 128, 128); // Higher polygon count for smoother sphere
+    const earthGeometry = new THREE.SphereGeometry(100, 64, 64);
     const earthMaterial = new THREE.MeshPhongMaterial({
-      color: 0x1a4d7c, // Fallback blue color
-      specular: new THREE.Color(0x444444),
-      shininess: 15,
+      map: textureLoader.load(EARTH_TEXTURE),
+      bumpMap: textureLoader.load(EARTH_BUMP),
+      bumpScale: 1,
+      specular: new THREE.Color(0x333333),
+      shininess: 5,
     });
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     scene.add(earth);
     earthRef.current = earth;
-    
-    // Load high-quality textures asynchronously
-    textureLoader.load(EARTH_TEXTURE, (texture) => {
-      texture.anisotropy = 16; // Better texture quality at angles
-      earthMaterial.map = texture;
-      earthMaterial.needsUpdate = true;
-    });
-    textureLoader.load(EARTH_BUMP, (texture) => {
-      earthMaterial.normalMap = texture; // Use as normal map for better depth
-      earthMaterial.normalScale = new THREE.Vector2(0.8, 0.8);
-      earthMaterial.needsUpdate = true;
-    });
-    textureLoader.load(EARTH_SPECULAR, (texture) => {
-      earthMaterial.specularMap = texture; // Ocean reflections
-      earthMaterial.needsUpdate = true;
-    });
 
     // Atmosphere glow
     const atmosphereGeometry = new THREE.SphereGeometry(102, 64, 64);
@@ -866,9 +850,8 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Rotate Earth - clearly visible rotation
       if (earthRef.current) {
-        earthRef.current.rotation.y += 0.003;
+        earthRef.current.rotation.y += 0.0005;
       }
 
       // Camera fly-to animation
