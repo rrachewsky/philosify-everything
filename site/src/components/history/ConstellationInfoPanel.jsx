@@ -30,6 +30,10 @@ const CONNECTION_COLORS = {
   contemporary: '#FF9800',
 };
 
+// Influence direction colors
+const INFLUENCE_RECEIVED_COLOR = '#D6158C'; // Magenta - philosophers who influenced this one
+const INFLUENCE_GIVEN_COLOR = '#3AAFCF';    // Cyan - philosophers this one influenced
+
 function BattleBar({ battle, score }) {
   const [positiveLabel, negativeLabel, description] = BATTLE_LABELS[battle] || ['Left', 'Right', ''];
   const color = BATTLE_COLORS[battle] || '#888';
@@ -145,38 +149,105 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
         </div>
       )}
 
-      {/* Connections */}
-      {connections.length > 0 && (
-        <div style={styles.section}>
-          <div style={styles.sectionLabel}>
-            Connections ({connections.length})
-          </div>
-          <div style={styles.connectionsList}>
-            {connections.map((edge, i) => {
-              const otherId = edge.source_id === node.id ? edge.target_id : edge.source_id;
-              const other = findPhilosopher(otherId);
-              if (!other) return null;
-              
-              return (
-                <button
-                  key={i}
-                  style={styles.connectionItem}
-                  onClick={() => onNodeSelect(otherId)}
-                >
-                  <span
-                    style={{
-                      ...styles.connectionDot,
-                      background: CONNECTION_COLORS[edge.type] || '#888',
-                    }}
-                  />
-                  <span style={styles.connectionName}>{other.name}</span>
-                  <span style={styles.connectionType}>{edge.type}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      {/* Connections - Split by influence direction */}
+      {connections.length > 0 && (() => {
+        // Separate influences received vs given
+        const influencedBy = connections.filter(
+          edge => edge.type === 'influence' && edge.target_id === node.id
+        );
+        const influenced = connections.filter(
+          edge => edge.type === 'influence' && edge.source_id === node.id
+        );
+        const otherConnections = connections.filter(
+          edge => edge.type !== 'influence'
+        );
+
+        return (
+          <>
+            {/* Influenced By - Magenta */}
+            {influencedBy.length > 0 && (
+              <div style={styles.section}>
+                <div style={{ ...styles.sectionLabel, color: INFLUENCE_RECEIVED_COLOR }}>
+                  Influenced By ({influencedBy.length})
+                </div>
+                <div style={styles.connectionsList}>
+                  {influencedBy.map((edge, i) => {
+                    const other = findPhilosopher(edge.source_id);
+                    if (!other) return null;
+                    return (
+                      <button
+                        key={i}
+                        style={styles.connectionItem}
+                        onClick={() => onNodeSelect(edge.source_id)}
+                      >
+                        <span style={{ ...styles.connectionDot, background: INFLUENCE_RECEIVED_COLOR }} />
+                        <span style={styles.connectionName}>{other.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Influenced - Cyan */}
+            {influenced.length > 0 && (
+              <div style={styles.section}>
+                <div style={{ ...styles.sectionLabel, color: INFLUENCE_GIVEN_COLOR }}>
+                  Influenced ({influenced.length})
+                </div>
+                <div style={styles.connectionsList}>
+                  {influenced.map((edge, i) => {
+                    const other = findPhilosopher(edge.target_id);
+                    if (!other) return null;
+                    return (
+                      <button
+                        key={i}
+                        style={styles.connectionItem}
+                        onClick={() => onNodeSelect(edge.target_id)}
+                      >
+                        <span style={{ ...styles.connectionDot, background: INFLUENCE_GIVEN_COLOR }} />
+                        <span style={styles.connectionName}>{other.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Other Connections */}
+            {otherConnections.length > 0 && (
+              <div style={styles.section}>
+                <div style={styles.sectionLabel}>
+                  Other Connections ({otherConnections.length})
+                </div>
+                <div style={styles.connectionsList}>
+                  {otherConnections.map((edge, i) => {
+                    const otherId = edge.source_id === node.id ? edge.target_id : edge.source_id;
+                    const other = findPhilosopher(otherId);
+                    if (!other) return null;
+                    return (
+                      <button
+                        key={i}
+                        style={styles.connectionItem}
+                        onClick={() => onNodeSelect(otherId)}
+                      >
+                        <span
+                          style={{
+                            ...styles.connectionDot,
+                            background: CONNECTION_COLORS[edge.type] || '#888',
+                          }}
+                        />
+                        <span style={styles.connectionName}>{other.name}</span>
+                        <span style={styles.connectionType}>{edge.type}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }

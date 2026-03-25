@@ -91,23 +91,22 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d', { alpha: true });
   
-  // Use higher resolution for sharper text (3x for crisp rendering)
-  const pixelRatio = Math.min(window.devicePixelRatio || 1, 3) * 1.5;
+  // High resolution for crystal clear text (3x base, no cap)
+  const pixelRatio = 3;
   
-  // Larger font for foundational philosophers - using system fonts for best rendering
-  // Lighter weights for sharper, more defined text
+  // Font settings - medium weight for clarity (not too thin, not too bold)
   const baseFontSize = 72;
   const fontSize = isMostFoundational ? 96 : (isFoundational ? 84 : baseFontSize);
-  const fontWeight = isMostFoundational ? '600' : (isFoundational ? '500' : '400');
+  const fontWeight = isMostFoundational ? '500' : (isFoundational ? '500' : '400');
   
-  // Use system font stack optimized for screen rendering
+  // System font stack optimized for screen rendering
   const fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
   
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   const textWidth = ctx.measureText(text).width;
   
-  // Size canvas to fit text with generous padding (scaled for pixel ratio)
-  const padding = 48;
+  // Size canvas to fit text with padding
+  const padding = 40;
   const canvasWidth = (textWidth + padding * 2) * pixelRatio;
   const canvasHeight = (fontSize + padding) * pixelRatio;
   canvas.width = canvasWidth;
@@ -115,6 +114,9 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   
   // Scale context for high DPI rendering
   ctx.scale(pixelRatio, pixelRatio);
+  
+  // Disable image smoothing for crisp edges
+  ctx.imageSmoothingEnabled = false;
   
   // Re-set font after resize
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
@@ -124,11 +126,11 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   const centerX = (canvasWidth / pixelRatio) / 2;
   const centerY = (canvasHeight / pixelRatio) / 2;
   
-  // School-colored card background with slight transparency
-  const bgPadding = 16;
-  const radius = 8;
+  // School-colored card background
+  const bgPadding = 14;
+  const radius = 6;
   const bgWidth = textWidth + bgPadding * 2;
-  const bgHeight = fontSize * 0.9;
+  const bgHeight = fontSize * 0.85;
   const bgX = centerX - bgWidth / 2;
   const bgY = centerY - bgHeight / 2;
   
@@ -138,44 +140,31 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   const g = parseInt(hex.substr(2, 2), 16);
   const b = parseInt(hex.substr(4, 2), 16);
   
-  // Draw card background with school color (slightly transparent for depth)
-  const bgOpacity = isMostFoundational ? 0.95 : (isFoundational ? 0.9 : 0.85);
-  ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${bgOpacity})`;
+  // Draw solid card background with school color
+  ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
   ctx.beginPath();
   ctx.roundRect(bgX, bgY, bgWidth, bgHeight, radius);
   ctx.fill();
   
-  // Add subtle border for definition
-  ctx.strokeStyle = `rgba(255, 255, 255, 0.3)`;
-  ctx.lineWidth = 2;
+  // Crisp border for definition
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+  ctx.lineWidth = 1;
   ctx.stroke();
   
   // Determine text color based on background luminance
   const textColor = getContrastTextColor(schoolColor);
   
-  // Minimal subtle shadow for depth without thickening text
-  ctx.shadowColor = textColor === '#FFFFFF' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.3)';
-  ctx.shadowBlur = 2;
-  ctx.shadowOffsetX = 1;
-  ctx.shadowOffsetY = 1;
-  
-  // Draw clean, sharp text
+  // Draw sharp text - NO shadow, NO blur
   ctx.fillStyle = textColor;
   ctx.fillText(text, centerX, centerY);
   
-  // Reset shadow for any additional rendering
-  ctx.shadowColor = 'transparent';
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
-  
-  // Create texture from canvas
+  // Create texture from canvas - settings for SHARP rendering
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
-  texture.minFilter = THREE.LinearMipmapLinearFilter;
-  texture.magFilter = THREE.LinearFilter;
-  texture.anisotropy = 16;
-  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearFilter;    // No mipmap blur
+  texture.magFilter = THREE.LinearFilter;    // Smooth when close (NearestFilter too pixelated)
+  texture.generateMipmaps = false;           // Disable blurry LODs
+  texture.anisotropy = 16;                   // Keep anisotropic filtering
   
   // Calculate card dimensions in world units
   const baseScale = 0.05 / pixelRatio;
@@ -252,8 +241,8 @@ const LABEL_OFFSET = 5; // Distance from satellite to label
 // Spacing configuration for overlapping philosophers
 const PROXIMITY_THRESHOLD = 2.0; // Degrees - wider threshold to catch more overlaps
 const BASE_SPREAD_RADIUS = 20; // Base units to spread philosophers apart tangentially
-const ALTITUDE_VARIATION = 35; // Large vertical separation so tilting Earth reveals lower cards
-const LABEL_STAGGER = 20; // Substantial vertical gap between card layers for depth reading
+const ALTITUDE_VARIATION = 15; // Vertical separation for tilting Earth to reveal lower cards
+const LABEL_STAGGER = 12; // Vertical gap between card layers for depth reading
 
 // Group nodes by proximity and calculate spread offsets
 // Returns a Map of nodeId -> { offsetX, offsetZ, altitudeOffset } in tangent space
@@ -303,8 +292,8 @@ function calculateSpreadOffsets(nodes) {
         // Only one philosopher - no offset needed
         offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: 0 });
       } else if (index === 0 && topStaysCentered) {
-        // Most important philosopher stays at center and highest altitude
-        offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: ALTITUDE_VARIATION * 1.5 });
+        // Most important philosopher stays at center and slightly elevated
+        offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: ALTITUDE_VARIATION * 1.2 });
       } else {
         const circleIndex = topStaysCentered ? index - 1 : index;
         
