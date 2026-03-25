@@ -4,7 +4,7 @@
 // different voices per chunk, adds silence gaps, concatenates.
 // ============================================================
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, getCorsHeaders } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getSecret } from "../utils/secrets.js";
 
@@ -256,10 +256,7 @@ async function saveToR2(env, key, buffer) {
 }
 
 export async function handleNewsTTS(request, env, origin) {
-  const cors = {
-    "Access-Control-Allow-Origin": origin || "*",
-    "Access-Control-Allow-Credentials": "true",
-  };
+  const cors = getCorsHeaders(origin, env);
 
   try {
     const user = await getUserFromAuth(request, env);

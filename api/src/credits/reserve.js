@@ -36,6 +36,8 @@ export async function reserveCredit(env, userId) {
       credits: result.credits
     };
   } catch (error) {
-    throw new Error(`Failed to reserve credit: ${error.message}`);
+    // SECURITY: Log detailed error server-side, return generic message to client
+    console.error(`[Credits] Reserve error:`, error.message);
+    throw new Error(`Credit reservation failed. Please try again.`);
   }
 }

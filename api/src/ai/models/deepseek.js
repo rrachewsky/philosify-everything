@@ -64,12 +64,13 @@ Distinguish between artistic critique and philosophical messaging.`;
     return response.choices[0].message.content;
 
   } catch (error) {
+    // SECURITY: Log detailed error server-side, return generic message to client
     console.error(`[DeepSeek] API error:`, error.message);
     console.error(`[DeepSeek] Error details:`, error);
     if (error.response) {
       console.error(`[DeepSeek] Response status:`, error.response.status);
       console.error(`[DeepSeek] Response data:`, error.response.data);
     }
-    throw new Error(`DeepSeek API error: ${error.message}`);
+    throw new Error(`Analysis service temporarily unavailable. Please try again.`);
   }
 }

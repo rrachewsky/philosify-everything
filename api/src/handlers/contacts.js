@@ -58,13 +58,14 @@ export async function handleMatchContacts(request, env, origin) {
     const body = await request.json();
     const { phoneNumbers } = body;
 
+    // SECURITY: Limit to 100 to prevent phone number enumeration attacks
     if (
       !Array.isArray(phoneNumbers) ||
       phoneNumbers.length === 0 ||
-      phoneNumbers.length > 500
+      phoneNumbers.length > 100
     ) {
       return jsonResponse(
-        { error: "phoneNumbers must be an array of 1-500 E.164 numbers" },
+        { error: "phoneNumbers must be an array of 1-100 E.164 numbers" },
         400,
         origin,
         env,

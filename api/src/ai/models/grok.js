@@ -94,10 +94,11 @@ Distinguish between artistic critique and philosophical messaging.`;
     ) {
       console.error(`[Grok] ⚠️ Request timeout after ${timeoutMs}ms`);
       throw new Error(
-        `Grok API timeout: Analysis took too long (${timeoutMs}ms). Your credit has been refunded.`,
+        `Analysis service timeout. Your credit has been refunded.`,
       );
     }
 
-    throw new Error(`Grok API error: ${error.message}`);
+    // SECURITY: Log detailed error server-side, return generic message to client
+    throw new Error(`Analysis service temporarily unavailable. Please try again.`);
   }
 }

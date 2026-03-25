@@ -41,7 +41,9 @@ export async function releaseReservation(
       freeRemaining: result.free_remaining,
     };
   } catch (error) {
-    throw new Error(`Failed to release reservation: ${error.message}`);
+    // SECURITY: Log detailed error server-side, return generic message to client
+    console.error(`[Credits] Release error:`, error.message);
+    throw new Error(`Credit release failed. Please contact support if credits are missing.`);
   }
 }
 

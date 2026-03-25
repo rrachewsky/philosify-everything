@@ -86,13 +86,14 @@ Distinguish between artistic critique and philosophical messaging.`;
     return response.choices[0].message.content;
 
   } catch (error) {
+    // SECURITY: Log detailed error server-side, return generic message to client
     console.error(`[OpenAI] API error:`, error.message);
     
     if (error.message?.includes('timeout') || error.message?.includes('Timeout') || error.name === 'AbortError') {
       console.error(`[OpenAI] ⚠️ Request timeout after ${timeoutMs}ms`);
-      throw new Error(`OpenAI API timeout: Analysis took too long. Your credit has been refunded.`);
+      throw new Error(`Analysis service timeout. Your credit has been refunded.`);
     }
     
-    throw new Error(`OpenAI API error: ${error.message}`);
+    throw new Error(`Analysis service temporarily unavailable. Please try again.`);
   }
 }

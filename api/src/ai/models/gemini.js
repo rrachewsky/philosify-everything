@@ -155,21 +155,21 @@ ${prompt}`;
       if (response.status === 504 || response.status === 524) {
         console.error(`[Gemini] ⚠️ Request timeout after ${timeoutMs}ms`);
         throw new Error(
-          `Gemini API timeout: Analysis took too long (${timeoutMs}ms). Your credit has been refunded.`,
+          `Analysis service timeout. Your credit has been refunded.`,
         );
       }
 
-      // Provide more specific error messages
+      // SECURITY: Log detailed error server-side, return generic message to client
       if (errorData.error?.message) {
-        throw new Error(`Gemini API error: ${errorData.error.message}`);
+        console.error(`[Gemini] API error details:`, errorData.error.message);
       }
       if (errorData.error?.status) {
-        throw new Error(
-          `Gemini API error: ${errorData.error.status} - ${errorData.error.message || errorText}`,
+        console.error(
+          `[Gemini] API error status:`, errorData.error.status, errorData.error.message || errorText,
         );
       }
       throw new Error(
-        `Gemini API error: ${response.status} - ${errorText.substring(0, 200)}`,
+        `Analysis service temporarily unavailable. Please try again.`,
       );
     }
 

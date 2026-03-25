@@ -147,6 +147,9 @@ const MAX_TITLE_LENGTH = 200;
 const MAX_CONTENT_LENGTH = 5000;
 const MAX_REPLY_LENGTH = 3000;
 const PAGE_SIZE = 20;
+// SECURITY: Validates ISO 8601 timestamps for PostgREST filter parameters
+const ISO_TIMESTAMP_RE =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
 const VALID_CATEGORIES = [
   "general",
   "ethics",
@@ -186,6 +189,9 @@ export async function handleGetForumThreads(request, env, origin) {
     }
 
     if (before) {
+      if (!ISO_TIMESTAMP_RE.test(before)) {
+        return jsonResponse({ error: "Invalid timestamp format" }, 400, origin, env);
+      }
       query = query.lt("last_reply_at", before);
     }
 

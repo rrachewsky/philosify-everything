@@ -11,6 +11,10 @@
 //   - Philosopher roster (with pricing)
 
 import { jsonResponse } from "../utils/index.js";
+
+// SECURITY: Validates ISO 8601 timestamps for PostgREST filter parameters
+const ISO_TIMESTAMP_RE =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
@@ -67,7 +71,12 @@ export async function handleGetColloquiums(request, env, origin) {
   try {
     // Fetch colloquium threads (storefront data only)
     let filter = "category=eq.colloquium";
-    if (before) filter += `&last_reply_at=lt.${before}`;
+    if (before) {
+      if (!ISO_TIMESTAMP_RE.test(before)) {
+        return jsonResponse({ error: "Invalid timestamp format" }, 400, origin, env);
+      }
+      filter += `&last_reply_at=lt.${before}`;
+    }
 
     const threads = await pg(env, "GET", "forum_threads", {
       filter,

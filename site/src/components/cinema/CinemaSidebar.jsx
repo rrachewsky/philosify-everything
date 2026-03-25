@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import DOMPurify from 'dompurify';
 import { ResultsContainer } from '../results/ResultsContainer';
 import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
@@ -460,13 +461,15 @@ export function CinemaSidebar({
               </div>
               <div className="music-analysis__results-wrapper">
                 <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: panelResult.analysis
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/\n/g, '<br/>')
-                    .replace(/^/, '<p>')
-                    .replace(/$/, '</p>')
+                  __html: DOMPurify.sanitize(
+                    panelResult.analysis
+                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                      .replace(/\n\n/g, '</p><p>')
+                      .replace(/\n/g, '<br/>')
+                      .replace(/^/, '<p>')
+                      .replace(/$/, '</p>')
+                  )
                 }} />
               </div>
               {panelResult.id && (
@@ -559,13 +562,15 @@ export function CinemaSidebar({
               </div>
               <div className="music-analysis__results-wrapper">
                 <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: panelResult.analysis
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/\n/g, '<br/>')
-                    .replace(/^/, '<p>')
-                    .replace(/$/, '</p>')
+                  __html: DOMPurify.sanitize(
+                    panelResult.analysis
+                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                      .replace(/\n\n/g, '</p><p>')
+                      .replace(/\n/g, '<br/>')
+                      .replace(/^/, '<p>')
+                      .replace(/$/, '</p>')
+                  )
                 }} />
               </div>
               {panelResult.id && (

@@ -347,6 +347,7 @@ export function extractJSON(text) {
     );
     return parsed;
   } catch (error) {
+    // SECURITY: Log detailed error server-side, return generic message to client
     console.error("[ExtractJSON] Parse error:", error.message);
     console.error(
       "[ExtractJSON] JSON string (first 500):",
@@ -356,7 +357,7 @@ export function extractJSON(text) {
       "[ExtractJSON] JSON string (last 500):",
       jsonStr.substring(Math.max(0, jsonStr.length - 500)),
     );
-    throw new Error(`Failed to parse JSON: ${error.message}`);
+    throw new Error(`Analysis response parsing failed. Please try again.`);
   }
 }
 

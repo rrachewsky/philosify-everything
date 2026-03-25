@@ -39,7 +39,11 @@ export async function registerServiceWorker() {
       });
 
       // Listen for service worker messages
+      // SECURITY: Verify message source is our service worker
       navigator.serviceWorker.addEventListener('message', (event) => {
+        // Only accept messages from our own service worker
+        if (event.source !== navigator.serviceWorker.controller) return;
+        
         if (event.data && event.data.type === 'SW_UPDATE_AVAILABLE') {
           logger.log('[PWA] SW update available — user can refresh at their convenience');
           window.dispatchEvent(new CustomEvent('sw-update-available'));
