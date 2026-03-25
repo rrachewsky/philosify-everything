@@ -57,11 +57,37 @@ function createGlowMaterial(color) {
   });
 }
 
+// Calculate relative luminance of a hex color (for contrast calculation)
+// Returns value 0-1, where 0 is black and 1 is white
+function getRelativeLuminance(hexColor) {
+  // Parse hex color
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16) / 255;
+  const g = parseInt(hex.substr(2, 2), 16) / 255;
+  const b = parseInt(hex.substr(4, 2), 16) / 255;
+  
+  // Apply gamma correction
+  const R = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+  const G = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+  const B = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+  
+  // Calculate luminance
+  return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+}
+
+// Determine if white or black text has better contrast against a background color
+function getContrastTextColor(bgHexColor) {
+  const luminance = getRelativeLuminance(bgHexColor);
+  // Use white text on dark backgrounds, black on light backgrounds
+  // Threshold of 0.4 slightly favors white text for better space-theme aesthetics
+  return luminance > 0.4 ? '#000000' : '#FFFFFF';
+}
+
 // Create double-sided angled card for philosopher name
-// Creates a 3D card with text visible from both sides, angled toward viewer
+// Creates a 3D card with school-colored background and high-contrast text
 // isFoundational: true for major philosophers (historical_weight >= 0.9)
 // isMostFoundational: true for THE foundational philosophers (historical_weight === 1.0)
-function createTextCard(text, color, isFoundational = false, isMostFoundational = false) {
+function createTextCard(text, schoolColor, isFoundational = false, isMostFoundational = false) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d', { alpha: true });
   
@@ -97,46 +123,51 @@ function createTextCard(text, color, isFoundational = false, isMostFoundational 
   const centerX = (canvasWidth / pixelRatio) / 2;
   const centerY = (canvasHeight / pixelRatio) / 2;
   
-  // Optional: subtle card background for better readability
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-  const bgPadding = 8;
-  const radius = 6;
+  // School-colored card background with slight transparency
+  const bgPadding = 16;
+  const radius = 8;
   const bgWidth = textWidth + bgPadding * 2;
-  const bgHeight = fontSize * 0.8;
+  const bgHeight = fontSize * 0.9;
   const bgX = centerX - bgWidth / 2;
   const bgY = centerY - bgHeight / 2;
   
-  // Rounded rectangle background
+  // Parse school color for rgba
+  const hex = schoolColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  // Draw card background with school color (slightly transparent for depth)
+  const bgOpacity = isMostFoundational ? 0.95 : (isFoundational ? 0.9 : 0.85);
+  ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${bgOpacity})`;
   ctx.beginPath();
   ctx.roundRect(bgX, bgY, bgWidth, bgHeight, radius);
   ctx.fill();
   
-  // Draw strong black outline/stroke first for maximum readability
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.95)';
-  ctx.lineWidth = isMostFoundational ? 5 : (isFoundational ? 4 : 3);
+  // Add subtle border for definition
+  ctx.strokeStyle = `rgba(255, 255, 255, 0.3)`;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  
+  // Determine text color based on background luminance
+  const textColor = getContrastTextColor(schoolColor);
+  const outlineColor = textColor === '#FFFFFF' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.5)';
+  
+  // Draw text outline for extra crispness
+  ctx.strokeStyle = outlineColor;
+  ctx.lineWidth = isMostFoundational ? 4 : (isFoundational ? 3 : 2);
   ctx.lineJoin = 'round';
   ctx.miterLimit = 2;
   ctx.strokeText(text, centerX, centerY);
   
-  // Draw text with shadow for depth
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-  ctx.shadowBlur = isMostFoundational ? 10 : (isFoundational ? 6 : 4);
-  ctx.shadowOffsetX = 1;
-  ctx.shadowOffsetY = 1;
-  ctx.fillStyle = color;
+  // Draw main text
+  ctx.fillStyle = textColor;
   ctx.fillText(text, centerX, centerY);
   
-  // Reset shadow and draw again for brightness
-  ctx.shadowColor = 'transparent';
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
-  ctx.fillText(text, centerX, centerY);
-  
-  // Add colored glow for champions (most foundational)
+  // Add subtle glow for champions (most foundational)
   if (isMostFoundational) {
-    ctx.shadowColor = color;
-    ctx.shadowBlur = 12;
+    ctx.shadowColor = textColor === '#FFFFFF' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 8;
     ctx.fillText(text, centerX, centerY);
   }
   
