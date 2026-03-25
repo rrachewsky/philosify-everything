@@ -17,11 +17,10 @@ const CONNECTION_COLORS = {
   contemporary: 0xFF9800,
 };
 
-// Earth texture URLs - High quality 4K textures
+// Earth texture URLs - High quality 4K textures (no city lights - anachronistic for 600 BC philosophers)
 const EARTH_TEXTURE = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_atmos_4096.jpg';
 const EARTH_BUMP = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_normal_2048.jpg';
 const EARTH_SPECULAR = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_specular_2048.jpg';
-const EARTH_LIGHTS = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_lights_2048.png';
 const STAR_TEXTURE = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/starfield.png';
 
 // Convert lat/lng to 3D position on sphere
@@ -661,22 +660,6 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     textureLoader.load(EARTH_SPECULAR, (texture) => {
       earthMaterial.specularMap = texture; // Ocean reflections
       earthMaterial.needsUpdate = true;
-    });
-    
-    // Night side city lights layer
-    const lightsGeometry = new THREE.SphereGeometry(100.1, 128, 128);
-    const lightsMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0,
-      blending: THREE.AdditiveBlending,
-    });
-    const lightsLayer = new THREE.Mesh(lightsGeometry, lightsMaterial);
-    earth.add(lightsLayer);
-    textureLoader.load(EARTH_LIGHTS, (texture) => {
-      lightsMaterial.map = texture;
-      lightsMaterial.opacity = 0.6;
-      lightsMaterial.needsUpdate = true;
     });
 
     // Atmosphere glow
