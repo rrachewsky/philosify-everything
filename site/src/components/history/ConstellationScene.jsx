@@ -17,11 +17,11 @@ const CONNECTION_COLORS = {
   contemporary: 0xFF9800,
 };
 
-// Earth texture URLs - High quality 4K textures (no city lights - anachronistic for 600 BC philosophers)
-const EARTH_TEXTURE = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_atmos_4096.jpg';
-const EARTH_BUMP = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_normal_2048.jpg';
-const EARTH_SPECULAR = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_specular_2048.jpg';
-const STAR_TEXTURE = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/starfield.png';
+// Earth texture URLs - High quality textures from unpkg (no city lights - anachronistic for 600 BC philosophers)
+const EARTH_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-blue-marble.jpg';
+const EARTH_BUMP = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-topology.png';
+const EARTH_SPECULAR = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-water.png';
+const STAR_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/night-sky.png';
 
 // Convert lat/lng to 3D position on sphere
 function latLngToVector3(lat, lng, radius) {
