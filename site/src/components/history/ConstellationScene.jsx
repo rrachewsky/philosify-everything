@@ -79,8 +79,8 @@ function getRelativeLuminance(hexColor) {
 function getContrastTextColor(bgHexColor) {
   const luminance = getRelativeLuminance(bgHexColor);
   // Use white text on dark backgrounds, black on light backgrounds
-  // Threshold of 0.4 slightly favors white text for better space-theme aesthetics
-  return luminance > 0.4 ? '#000000' : '#FFFFFF';
+  // Lower threshold (0.25) ensures light colors like grey get black text for readability
+  return luminance > 0.25 ? '#000000' : '#FFFFFF';
 }
 
 // Create double-sided angled card for philosopher name
@@ -95,9 +95,10 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   const pixelRatio = Math.min(window.devicePixelRatio || 1, 3) * 1.5;
   
   // Larger font for foundational philosophers - using system fonts for best rendering
+  // Lighter weights for sharper, more defined text
   const baseFontSize = 72;
   const fontSize = isMostFoundational ? 96 : (isFoundational ? 84 : baseFontSize);
-  const fontWeight = isMostFoundational ? '800' : (isFoundational ? '700' : '600');
+  const fontWeight = isMostFoundational ? '600' : (isFoundational ? '500' : '400');
   
   // Use system font stack optimized for screen rendering
   const fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
@@ -151,25 +152,22 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   
   // Determine text color based on background luminance
   const textColor = getContrastTextColor(schoolColor);
-  const outlineColor = textColor === '#FFFFFF' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.5)';
   
-  // Draw text outline for extra crispness
-  ctx.strokeStyle = outlineColor;
-  ctx.lineWidth = isMostFoundational ? 4 : (isFoundational ? 3 : 2);
-  ctx.lineJoin = 'round';
-  ctx.miterLimit = 2;
-  ctx.strokeText(text, centerX, centerY);
+  // Minimal subtle shadow for depth without thickening text
+  ctx.shadowColor = textColor === '#FFFFFF' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.3)';
+  ctx.shadowBlur = 2;
+  ctx.shadowOffsetX = 1;
+  ctx.shadowOffsetY = 1;
   
-  // Draw main text
+  // Draw clean, sharp text
   ctx.fillStyle = textColor;
   ctx.fillText(text, centerX, centerY);
   
-  // Add subtle glow for champions (most foundational)
-  if (isMostFoundational) {
-    ctx.shadowColor = textColor === '#FFFFFF' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.5)';
-    ctx.shadowBlur = 8;
-    ctx.fillText(text, centerX, centerY);
-  }
+  // Reset shadow for any additional rendering
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
   
   // Create texture from canvas
   const texture = new THREE.CanvasTexture(canvas);
