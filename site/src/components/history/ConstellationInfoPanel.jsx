@@ -34,6 +34,9 @@ const CONNECTION_COLORS = {
 const INFLUENCE_RECEIVED_COLOR = '#D6158C'; // Magenta - philosophers who influenced this one
 const INFLUENCE_GIVEN_COLOR = '#3AAFCF';    // Cyan - philosophers this one influenced
 
+// Helper to get edge type (handles both API format 'type' and seed data format 'relationship_type')
+const getEdgeType = (edge) => edge.type || edge.relationship_type || '';
+
 function BattleBar({ battle, score }) {
   const [positiveLabel, negativeLabel, description] = BATTLE_LABELS[battle] || ['Left', 'Right', ''];
   const color = BATTLE_COLORS[battle] || '#888';
@@ -175,13 +178,13 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
       {connections.length > 0 && (() => {
         // Separate influences received vs given
         const influencedBy = connections.filter(
-          edge => edge.type === 'influence' && edge.target_id === node.id
+          edge => (getEdgeType(edge) === 'influence' || getEdgeType(edge) === 'influenced') && edge.target_id === node.id
         );
         const influenced = connections.filter(
-          edge => edge.type === 'influence' && edge.source_id === node.id
+          edge => (getEdgeType(edge) === 'influence' || getEdgeType(edge) === 'influenced') && edge.source_id === node.id
         );
         const otherConnections = connections.filter(
-          edge => edge.type !== 'influence'
+          edge => getEdgeType(edge) !== 'influence' && getEdgeType(edge) !== 'influenced'
         );
 
         return (
@@ -256,11 +259,11 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
                         <span
                           style={{
                             ...styles.connectionDot,
-                            background: CONNECTION_COLORS[edge.type] || '#888',
+                            background: CONNECTION_COLORS[getEdgeType(edge)] || '#888',
                           }}
                         />
                         <span style={styles.connectionName}>{other.name}</span>
-                        <span style={styles.connectionType}>{edge.type}</span>
+                        <span style={styles.connectionType}>{getEdgeType(edge)}</span>
                       </button>
                     );
                   })}
@@ -277,7 +280,8 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
 function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear }) {
   const source = findPhilosopher(edge.source_id);
   const target = findPhilosopher(edge.target_id);
-  const typeColor = CONNECTION_COLORS[edge.type] || '#888';
+  const edgeType = getEdgeType(edge);
+  const typeColor = CONNECTION_COLORS[edgeType] || '#888';
 
   if (!source || !target) return null;
 
@@ -291,7 +295,7 @@ function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear }) {
               background: typeColor,
             }}
           />
-          {edge.type.charAt(0).toUpperCase() + edge.type.slice(1)}
+          {edgeType.charAt(0).toUpperCase() + edgeType.slice(1)}
         </div>
       </div>
 
@@ -305,7 +309,7 @@ function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear }) {
         </button>
 
         <div style={styles.edgeArrow}>
-          {edge.type === 'opposition' ? '↔' : '→'}
+          {edgeType === 'opposition' ? '↔' : '→'}
         </div>
 
         <button
