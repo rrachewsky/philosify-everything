@@ -3,7 +3,7 @@
 // ============================================================
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { TRADITION_COLORS } from '@hooks/useConstellation';
+import { TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
 export function ConstellationSearch({
   searchPhilosopher,
@@ -85,7 +85,7 @@ export function ConstellationSearch({
         {results.length > 0 && (
           <div style={styles.results}>
             {results.map((node, index) => {
-              const traditionColor = TRADITION_COLORS[node.tradition] || '#fff';
+              const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
               return (
                 <button
                   key={node.id}
@@ -99,7 +99,7 @@ export function ConstellationSearch({
                   <div
                     style={{
                       ...styles.traditionDot,
-                      background: traditionColor,
+                      background: schoolColor,
                     }}
                   />
                   <div style={styles.resultInfo}>

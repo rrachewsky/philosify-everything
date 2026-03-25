@@ -3,7 +3,7 @@
 // ============================================================
 
 import React from 'react';
-import { BATTLE_COLORS, TRADITION_COLORS } from '@hooks/useConstellation';
+import { BATTLE_COLORS, TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
 // Battle dimension labels with descriptions
 // Format: [positiveLabel, negativeLabel, description]
@@ -79,7 +79,7 @@ function BattleBar({ battle, score }) {
 
 function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear }) {
   const connections = getNodeConnections(node.id);
-  const traditionColor = TRADITION_COLORS[node.tradition] || '#fff';
+  const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
 
   return (
     <div style={styles.content}>
@@ -88,7 +88,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
         <div
           style={{
             ...styles.traditionIndicator,
-            background: traditionColor,
+            background: schoolColor,
           }}
         />
         <div>
