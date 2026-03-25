@@ -88,15 +88,20 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
   const connections = getNodeConnections(node.id);
   const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
   const [imageError, setImageError] = React.useState(false);
+  const contentRef = React.useRef(null);
 
-  // Reset image error when node changes
+  // Reset image error and scroll to top when node changes
   React.useEffect(() => {
     setImageError(false);
+    // Scroll to top when philosopher changes
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
   }, [node.id]);
 
   return (
-    <div style={styles.content}>
-      {/* Portrait + Header */}
+    <div ref={contentRef} style={styles.content}>
+      {/* Portrait + Header (compact layout) */}
       <div style={styles.headerWithPortrait}>
         {/* Portrait */}
         {node.portrait && !imageError ? (
@@ -116,38 +121,22 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
           </div>
         )}
         
-        {/* Name and dates */}
+        {/* Name, dates, birthplace, school - all compact */}
         <div style={styles.headerText}>
           <h2 style={styles.name}>{node.name}</h2>
           <div style={styles.dates}>
             {formatYear(node.birth_year)} – {formatYear(node.death_year)}
           </div>
-          <div style={{ ...styles.schoolBadge, background: schoolColor }}>
-            {node.school}
+          <div style={styles.birthplace}>
+            {node.birth_city}, {node.birth_country_modern}
+          </div>
+          <div style={styles.schoolRow}>
+            <span style={{ ...styles.schoolBadge, background: schoolColor }}>
+              {node.school}
+            </span>
+            <span style={styles.schoolOfThought}>{node.school_of_thought}</span>
           </div>
         </div>
-      </div>
-
-      {/* Location */}
-      <div style={styles.section}>
-        <div style={styles.sectionLabel}>Birthplace</div>
-        <div style={styles.location}>
-          {node.birth_city}, {node.birth_country_modern}
-        </div>
-        {node.residence_city && (
-          <>
-            <div style={{ ...styles.sectionLabel, marginTop: '8px' }}>Residence</div>
-            <div style={styles.location}>
-              {node.residence_city}, {node.residence_country}
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* School */}
-      <div style={styles.section}>
-        <div style={styles.sectionLabel}>School of Thought</div>
-        <div style={styles.school}>{node.school_of_thought}</div>
       </div>
 
       {/* Key Ideas */}
@@ -282,11 +271,19 @@ function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear }) {
   const target = findPhilosopher(edge.target_id);
   const edgeType = getEdgeType(edge);
   const typeColor = CONNECTION_COLORS[edgeType] || '#888';
+  const contentRef = React.useRef(null);
+
+  // Scroll to top when edge changes
+  React.useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, [edge.source_id, edge.target_id]);
 
   if (!source || !target) return null;
 
   return (
-    <div style={styles.content}>
+    <div ref={contentRef} style={styles.content}>
       <div style={styles.edgeHeader}>
         <div style={styles.edgeType}>
           <span
@@ -340,11 +337,25 @@ export function ConstellationInfoPanel({
   onClose,
   onNodeSelect,
   formatYear,
+  isMobile = false,
 }) {
+  // Mobile: bottom sheet covering 80% of screen
+  // Desktop: right sidebar
+  const containerStyle = isMobile
+    ? styles.containerMobile
+    : styles.container;
+
+  const closeButtonStyle = isMobile
+    ? styles.closeButtonMobile
+    : styles.closeButton;
+
   return (
-    <div style={styles.container}>
+    <div style={containerStyle}>
+      {/* Drag handle for mobile */}
+      {isMobile && <div style={styles.dragHandle} />}
+      
       {/* Close button */}
-      <button style={styles.closeButton} onClick={onClose} aria-label="Close">
+      <button style={closeButtonStyle} onClick={onClose} aria-label="Close">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M18 6L6 18M6 6l12 12" />
         </svg>
@@ -374,6 +385,7 @@ export function ConstellationInfoPanel({
 }
 
 const styles = {
+  // Desktop: right sidebar
   container: {
     position: 'absolute',
     top: 70,
@@ -388,6 +400,36 @@ const styles = {
     zIndex: 150,
     display: 'flex',
     flexDirection: 'column',
+  },
+
+  // Mobile: bottom sheet covering 80% of screen
+  containerMobile: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '80vh',
+    background: 'rgba(15, 15, 25, 0.98)',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderBottom: 'none',
+    backdropFilter: 'blur(16px)',
+    overflow: 'hidden',
+    zIndex: 200,
+    display: 'flex',
+    flexDirection: 'column',
+    boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.5), 0 -2px 8px rgba(0, 0, 0, 0.3)',
+  },
+
+  // Drag handle indicator for mobile
+  dragHandle: {
+    width: 40,
+    height: 4,
+    background: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 2,
+    margin: '12px auto 8px',
+    flexShrink: 0,
   },
 
   closeButton: {
@@ -407,8 +449,26 @@ const styles = {
     zIndex: 10,
   },
 
+  // Mobile close button - larger tap target
+  closeButtonMobile: {
+    position: 'absolute',
+    top: 8,
+    right: 12,
+    width: 40,
+    height: 40,
+    background: 'rgba(255, 255, 255, 0.15)',
+    border: 'none',
+    borderRadius: 20,
+    color: '#F2F2F5',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+
   content: {
-    padding: 20,
+    padding: 16,
     overflowY: 'auto',
     flex: 1,
   },
@@ -424,15 +484,15 @@ const styles = {
   headerWithPortrait: {
     display: 'flex',
     alignItems: 'flex-start',
-    gap: 14,
-    marginBottom: 20,
+    gap: 12,
+    marginBottom: 12,
     paddingRight: 32,
   },
 
   portraitContainer: {
-    width: 72,
-    height: 90,
-    borderRadius: 8,
+    width: 64,
+    height: 80,
+    borderRadius: 6,
     overflow: 'hidden',
     flexShrink: 0,
     border: '2px solid rgba(255, 255, 255, 0.15)',
@@ -446,9 +506,9 @@ const styles = {
   },
 
   portraitPlaceholder: {
-    width: 72,
-    height: 90,
-    borderRadius: 8,
+    width: 64,
+    height: 80,
+    borderRadius: 6,
     flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
@@ -457,7 +517,7 @@ const styles = {
   },
 
   portraitInitial: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 700,
     color: 'rgba(255, 255, 255, 0.9)',
     textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
@@ -499,16 +559,35 @@ const styles = {
     marginTop: 3,
   },
 
+  birthplace: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.4)',
+    marginTop: 2,
+  },
+
+  schoolRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 6,
+    flexWrap: 'wrap',
+  },
+
+  schoolOfThought: {
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.6)',
+  },
+
   section: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
 
   sectionLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 800,
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
-    marginBottom: 10,
+    letterSpacing: 1.2,
+    marginBottom: 6,
     textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
   },
 

@@ -273,6 +273,7 @@ export function ConstellationOfIdeas() {
           }}
           onNodeSelect={handleNodeSelect}
           formatYear={formatYear}
+          isMobile={isMobile}
         />
       )}
 
