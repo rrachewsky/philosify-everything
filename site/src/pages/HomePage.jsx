@@ -193,34 +193,10 @@ export function HomePage({
     };
   }, [isAuthenticated]);
 
-  // Replay video + re-stagger labels when sidebar closes
+  // Track sidebar state (no replay on close - animation runs once on sign in only)
   useEffect(() => {
-    if (prevSidebarOpen.current && !anySidebarOpen && isAuthenticated) {
-      // Sidebar just closed — replay video
-      if (videoRef.current) {
-        videoRef.current.currentTime = 0;
-        videoRef.current.play().catch(() => {});
-      }
-      // Re-stagger labels
-      setVideoEnded(false);
-      setVisibleLabels([]);
-      const timers = MOBILE_LABEL_ORDER.map((id, i) =>
-        setTimeout(() => {
-          setVisibleLabels((prev) => [...prev, id]);
-        }, LABEL_START_DELAY + i * LABEL_STAGGER)
-      );
-      const fallback = setTimeout(() => {
-        setVideoEnded(true);
-        setVisibleLabels(MOBILE_LABEL_ORDER);
-      }, 10000);
-      prevSidebarOpen.current = anySidebarOpen;
-      return () => {
-        timers.forEach(clearTimeout);
-        clearTimeout(fallback);
-      };
-    }
     prevSidebarOpen.current = anySidebarOpen;
-  }, [anySidebarOpen, isAuthenticated]);
+  }, [anySidebarOpen]);
 
   return (
     <>
