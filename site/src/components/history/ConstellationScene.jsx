@@ -95,13 +95,13 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   // High resolution for crystal clear text (3x base, no cap)
   const pixelRatio = 3;
   
-  // Font settings - medium weight for clarity (not too thin, not too bold)
+  // Font settings - Arial Narrow, NO bold, sharp rendering
   const baseFontSize = 72;
   const fontSize = isMostFoundational ? 96 : (isFoundational ? 84 : baseFontSize);
-  const fontWeight = isMostFoundational ? '500' : (isFoundational ? '500' : '400');
+  const fontWeight = '400'; // Always normal weight - NO bold
   
-  // System font stack optimized for screen rendering
-  const fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+  // Arial Narrow as primary, with condensed fallbacks
+  const fontFamily = '"Arial Narrow", "Helvetica Neue Condensed", "Arial", sans-serif';
   
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   const textWidth = ctx.measureText(text).width;
