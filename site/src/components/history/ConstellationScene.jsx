@@ -62,22 +62,26 @@ function createGlowMaterial(color) {
 // isMostFoundational: true for THE foundational philosophers (historical_weight === 1.0)
 function createTextSprite(text, color, isFoundational = false, isMostFoundational = false) {
   const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { alpha: true });
   
-  // Use higher resolution for sharper text (2x for retina displays)
-  const pixelRatio = Math.min(window.devicePixelRatio || 1, 3);
+  // Use higher resolution for sharper text (3x for crisp rendering)
+  const pixelRatio = Math.min(window.devicePixelRatio || 1, 3) * 1.5;
   
-  // Larger font for foundational philosophers
-  const baseFontSize = 64; // Increased base size for sharpness
-  const fontSize = isMostFoundational ? 80 : (isFoundational ? 72 : baseFontSize);
-  const fontWeight = isFoundational ? 'bold' : 'normal';
+  // Larger font for foundational philosophers - using system fonts for best rendering
+  const baseFontSize = 72; // Increased base size for sharpness
+  const fontSize = isMostFoundational ? 96 : (isFoundational ? 84 : baseFontSize);
+  const fontWeight = isMostFoundational ? '800' : (isFoundational ? '700' : '600');
   
-  ctx.font = `${fontWeight} ${fontSize}px Arial, sans-serif`;
+  // Use system font stack optimized for screen rendering
+  const fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+  
+  ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   const textWidth = ctx.measureText(text).width;
   
-  // Size canvas to fit text with padding (scaled for pixel ratio)
-  const canvasWidth = (textWidth + 32) * pixelRatio;
-  const canvasHeight = (fontSize + 28) * pixelRatio;
+  // Size canvas to fit text with generous padding (scaled for pixel ratio)
+  const padding = 48;
+  const canvasWidth = (textWidth + padding * 2) * pixelRatio;
+  const canvasHeight = (fontSize + padding) * pixelRatio;
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
   
@@ -85,50 +89,67 @@ function createTextSprite(text, color, isFoundational = false, isMostFoundationa
   ctx.scale(pixelRatio, pixelRatio);
   
   // Re-set font after resize
-  ctx.font = `${fontWeight} ${fontSize}px Arial, sans-serif`;
+  ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   
-  // Enable font smoothing
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high';
+  // Disable image smoothing for crisp text edges
+  ctx.imageSmoothingEnabled = false;
   
-  // Draw text with shadow for readability (stronger shadow for foundational)
-  ctx.shadowColor = isFoundational ? 'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.85)';
-  ctx.shadowBlur = isFoundational ? 8 : 5;
-  ctx.shadowOffsetX = isFoundational ? 2 : 1;
-  ctx.shadowOffsetY = isFoundational ? 2 : 1;
+  const centerX = (canvasWidth / pixelRatio) / 2;
+  const centerY = (canvasHeight / pixelRatio) / 2;
+  
+  // Draw strong black outline/stroke first for maximum readability
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.95)';
+  ctx.lineWidth = isMostFoundational ? 6 : (isFoundational ? 5 : 4);
+  ctx.lineJoin = 'round';
+  ctx.miterLimit = 2;
+  ctx.strokeText(text, centerX, centerY);
+  
+  // Draw text with shadow for depth
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+  ctx.shadowBlur = isMostFoundational ? 12 : (isFoundational ? 8 : 6);
+  ctx.shadowOffsetX = 2;
+  ctx.shadowOffsetY = 2;
   ctx.fillStyle = color;
-  ctx.fillText(text, (canvasWidth / pixelRatio) / 2, (canvasHeight / pixelRatio) / 2);
+  ctx.fillText(text, centerX, centerY);
   
-  // Add subtle glow outline for most foundational
+  // Reset shadow and draw again for brightness
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+  ctx.fillText(text, centerX, centerY);
+  
+  // Add colored glow for champions (most foundational)
   if (isMostFoundational) {
     ctx.shadowColor = color;
-    ctx.shadowBlur = 10;
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 0.5;
-    ctx.strokeText(text, (canvasWidth / pixelRatio) / 2, (canvasHeight / pixelRatio) / 2);
+    ctx.shadowBlur = 15;
+    ctx.fillText(text, centerX, centerY);
   }
   
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
-  // Improve texture filtering for sharpness
-  texture.minFilter = THREE.LinearFilter;
+  // Use nearest filter for pixel-perfect text at close range, linear for distance
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.anisotropy = 16;
+  texture.generateMipmaps = true;
   
   const material = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
-    opacity: isMostFoundational ? 1.0 : (isFoundational ? 0.95 : 0.9),
+    opacity: 1.0, // Full opacity for maximum visibility
     depthTest: false, // Always visible
+    depthWrite: false,
+    sizeAttenuation: true,
   });
   
   const sprite = new THREE.Sprite(material);
   
   // Scale sprite - account for pixel ratio, larger for foundational philosophers
-  const baseScale = 0.06 / pixelRatio;
-  const scale = isMostFoundational ? 0.075 / pixelRatio : (isFoundational ? 0.068 / pixelRatio : baseScale);
+  const baseScale = 0.055 / pixelRatio;
+  const scale = isMostFoundational ? 0.072 / pixelRatio : (isFoundational ? 0.064 / pixelRatio : baseScale);
   sprite.scale.set(canvasWidth * scale, canvasHeight * scale, 1);
   
   return sprite;
@@ -248,9 +269,9 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
     altitude += FOUNDATIONAL_ALTITUDE_BOOST;
   }
   
-  // Get tradition color
-  const traditionColorHex = TRADITION_COLORS[node.tradition] || '#FFFFFF';
-  const color = new THREE.Color(traditionColorHex);
+  // Get school color (primary) with tradition as fallback
+  const schoolColorHex = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#FFFFFF';
+  const color = new THREE.Color(schoolColorHex);
   
   // Core sphere - larger for foundational philosophers
   const mentionBonus = Math.min(0.5, (node.mention_count || 0) * 0.02);
@@ -290,7 +311,7 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   
   // Name label - bold and larger for foundational philosophers
   const labelOffset = LABEL_OFFSET + (isMostFoundational ? 2 : (isFoundational ? 1 : 0));
-  const labelSprite = createTextSprite(node.name, traditionColorHex, isFoundational, isMostFoundational);
+  const labelSprite = createTextSprite(node.name, schoolColorHex, isFoundational, isMostFoundational);
   labelSprite.position.set(0, labelOffset, 0); // Offset above the satellite (local coords)
   labelSprite.userData.isLabel = true;
   group.add(labelSprite);
@@ -298,7 +319,7 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   // Thin line connecting label to satellite sphere
   const labelLineStart = new THREE.Vector3(0, coreSize + 0.2, 0);
   const labelLineEnd = new THREE.Vector3(0, labelOffset - 1.5, 0);
-  const labelLine = createLabelLine(labelLineStart, labelLineEnd, traditionColorHex);
+  const labelLine = createLabelLine(labelLineStart, labelLineEnd, schoolColorHex);
   labelLine.userData.isLabelLine = true;
   group.add(labelLine);
   
@@ -861,8 +882,8 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         // Create tether line from satellite to city on Earth surface
         const surfacePos = satellite.userData.surfacePosition;
         const targetPos = satellite.userData.targetPosition;
-        const traditionColor = TRADITION_COLORS[node.tradition] || '#FFFFFF';
-        const tetherLine = createTetherLine(surfacePos, targetPos, traditionColor);
+        const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#FFFFFF';
+        const tetherLine = createTetherLine(surfacePos, targetPos, schoolColor);
         earth.add(tetherLine);
         tetherLinesRef.current.set(node.id, tetherLine);
 
