@@ -500,12 +500,12 @@ const styles = {
   },
 
   sectionLabel: {
-    fontSize: 10,
-    fontWeight: 700,
-    color: 'rgba(255, 255, 255, 0.4)',
+    fontSize: 12,
+    fontWeight: 800,
     textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 8,
+    letterSpacing: 1.5,
+    marginBottom: 10,
+    textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
   },
 
   location: {
@@ -599,27 +599,32 @@ const styles = {
   connectionItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
-    padding: '8px 12px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: 'none',
-    borderRadius: 6,
+    gap: 10,
+    padding: '10px 14px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: 8,
     cursor: 'pointer',
     width: '100%',
     textAlign: 'left',
+    transition: 'all 0.15s ease',
   },
 
   connectionDot: {
-    width: 8,
-    height: 8,
+    width: 10,
+    height: 10,
     borderRadius: '50%',
     flexShrink: 0,
+    boxShadow: '0 0 6px currentColor',
   },
 
   connectionName: {
-    fontSize: 13,
-    color: '#F2F2F5',
+    fontSize: 14,
+    fontWeight: 700,
+    color: '#FFFFFF',
     flex: 1,
+    textShadow: '0 1px 3px rgba(0, 0, 0, 0.6)',
+    letterSpacing: 0.3,
   },
 
   connectionType: {

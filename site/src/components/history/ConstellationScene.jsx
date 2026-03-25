@@ -839,9 +839,9 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Rotate Earth slowly
+      // Rotate Earth - visible but relaxed pace
       if (earthRef.current) {
-        earthRef.current.rotation.y += 0.0005;
+        earthRef.current.rotation.y += 0.002;
       }
 
       // Camera fly-to animation
