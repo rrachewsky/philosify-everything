@@ -251,9 +251,9 @@ const LABEL_OFFSET = 5; // Distance from satellite to label
 
 // Spacing configuration for overlapping philosophers
 const PROXIMITY_THRESHOLD = 2.0; // Degrees - wider threshold to catch more overlaps
-const BASE_SPREAD_RADIUS = 25; // Base units to spread philosophers apart tangentially
-const ALTITUDE_VARIATION = 15; // Units of altitude difference within groups for perspective
-const LABEL_STAGGER = 8; // Additional vertical stagger between adjacent labels
+const BASE_SPREAD_RADIUS = 20; // Base units to spread philosophers apart tangentially
+const ALTITUDE_VARIATION = 35; // Large vertical separation so tilting Earth reveals lower cards
+const LABEL_STAGGER = 20; // Substantial vertical gap between card layers for depth reading
 
 // Group nodes by proximity and calculate spread offsets
 // Returns a Map of nodeId -> { offsetX, offsetZ, altitudeOffset } in tangent space
@@ -315,24 +315,23 @@ function calculateSpreadOffsets(nodes) {
           const cols = Math.ceil(Math.sqrt(spreadCount));
           const row = Math.floor(circleIndex / cols);
           const col = circleIndex % cols;
-          // Offset rows to create staggered pattern
+          // Offset rows to create staggered pattern (horizontal zigzag)
           const rowOffset = (row % 2) * 0.5;
-          const spacing = BASE_SPREAD_RADIUS * 1.5;
+          const spacing = BASE_SPREAD_RADIUS * 1.2;
           
           offsetX = (col - cols / 2 + rowOffset) * spacing;
-          offsetZ = (row - Math.ceil(spreadCount / cols) / 2) * spacing;
-          // Stagger altitude to prevent label overlap
-          altitudeOffset = -row * LABEL_STAGGER - col * (LABEL_STAGGER / 2);
+          offsetZ = (row - Math.ceil(spreadCount / cols) / 2) * spacing * 0.5;
+          // Progressive altitude: each card lower than previous for depth viewing
+          altitudeOffset = -circleIndex * LABEL_STAGGER;
         } else {
-          // Circle layout for small groups
+          // Circle layout for small groups - spread horizontally with vertical stagger
           const angle = (circleIndex / spreadCount) * Math.PI * 2;
-          // Larger radius for better separation
-          const radius = BASE_SPREAD_RADIUS * (1 + (spreadCount - 1) * 0.2);
+          const radius = BASE_SPREAD_RADIUS * (1 + (spreadCount - 1) * 0.15);
           
           offsetX = Math.cos(angle) * radius;
-          offsetZ = Math.sin(angle) * radius;
-          // Vary altitude based on position in circle
-          altitudeOffset = Math.sin(angle * 2) * LABEL_STAGGER;
+          offsetZ = Math.sin(angle) * radius * 0.3; // Flatten Z spread
+          // Progressive altitude: each card at different height for tilted viewing
+          altitudeOffset = -circleIndex * LABEL_STAGGER;
         }
         
         offsets.set(node.id, { offsetX, offsetZ, altitudeOffset });
