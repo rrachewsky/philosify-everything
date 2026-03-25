@@ -59,6 +59,14 @@ export const SCHOOL_COLORS = {
   'Libertarian': '#2EA87E',
   'Naturalist (Contemporary)': '#44AA44',
   'Anarcho-Capitalist': '#AA6600',
+  // NEW SCHOOLS
+  'Austrian Economics': '#D4952A',
+  'Voluntaryist': '#5BAD8F',
+  'Abolitionist': '#4A90D9',
+  'Anarcho-Communist': '#CC3333',
+  'Egoist': '#885500',
+  'Transcendentalist': '#44AA77',
+  'Church Fathers': '#8B6914',
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -116,10 +124,18 @@ export const SCHOOL_STANCES = {
   'Libertarian': 'pro',
   'Naturalist (Contemporary)': 'pro',
   'Anarcho-Capitalist': 'pro',
+  // NEW SCHOOLS
+  'Austrian Economics': 'pro',
+  'Voluntaryist': 'pro',
+  'Abolitionist': 'pro',
+  'Anarcho-Communist': 'anti',
+  'Egoist': 'anti',
+  'Transcendentalist': 'anti',
+  'Church Fathers': 'anti',
 };
 
 // ═══════════════════════════════════════════════════════════
-// SEED_NODES - 185 philosophers (172 Western + 13 Eastern)
+// SEED_NODES - 219 philosophers (206 Western + 13 Eastern)
 // ═══════════════════════════════════════════════════════════
 export const SEED_NODES = [
   // ═══════════════════════════════════════════════════════════
@@ -953,6 +969,27 @@ export const SEED_NODES = [
     historical_weight: 0.6,
     battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
   },
+
+  // CHURCH FATHERS (1)
+  {
+    id: 'augustine',
+    name: 'Augustine of Hippo',
+    birth_year: 354,
+    death_year: 430,
+    dates: '354–430 AD',
+    birth_city: 'Thagaste',
+    birth_country_modern: 'Algeria',
+    latitude: 36.2667,
+    longitude: 8.3167,
+    school_of_thought: 'Christian Platonism',
+    school: 'Church Fathers',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Faith over reason; original sin; City of God; divine illumination'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
+  },
   {
     id: 'proclus',
     name: 'Proclus',
@@ -1354,6 +1391,27 @@ export const SEED_NODES = [
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.8, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
   },
 
+  // ABOLITIONIST (1)
+  {
+    id: 'la_boetie',
+    name: 'Étienne de La Boétie',
+    birth_year: 1530,
+    death_year: 1563,
+    dates: '1530–1563',
+    birth_city: 'Sarlat',
+    birth_country_modern: 'France',
+    latitude: 44.8903,
+    longitude: 1.2164,
+    school_of_thought: 'Classical Liberalism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Discourse on Voluntary Servitude; tyranny rests on consent; liberty through refusal'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.75 }
+  },
+
   // SKEPTIC (1)
   {
     id: 'montaigne',
@@ -1554,6 +1612,84 @@ export const SEED_NODES = [
     key_ideas: ['Systematic Leibnizian rationalism'],
     historical_weight: 0.55,
     battles: { reason_faith: 0.75, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.65, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+  },
+
+  // ABOLITIONIST / CLASSICAL LIBERAL (4)
+  {
+    id: 'hugo_grotius',
+    name: 'Hugo Grotius',
+    birth_year: 1583,
+    death_year: 1645,
+    dates: '1583–1645',
+    birth_city: 'Delft',
+    birth_country_modern: 'Netherlands',
+    latitude: 52.0116,
+    longitude: 4.3571,
+    school_of_thought: 'Natural Law',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Natural law foundation; law of nations; rights independent of theology'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.75 }
+  },
+  {
+    id: 'john_milton',
+    name: 'John Milton',
+    birth_year: 1608,
+    death_year: 1674,
+    dates: '1608–1674',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Classical Liberalism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Areopagitica; freedom of thought and press as absolute; individual conscience'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.7, reality_mysticism: 0.65, individual_collective: 0.85, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.6, good_evil: 0.7 }
+  },
+  {
+    id: 'algernon_sidney',
+    name: 'Algernon Sidney',
+    birth_year: 1623,
+    death_year: 1683,
+    dates: '1623–1683',
+    birth_city: 'Penshurst',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.1833,
+    longitude: 0.1833,
+    school_of_thought: 'Republican Liberty',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Discourses Concerning Government; republican liberty; pre-Locke rights theory'],
+    historical_weight: 0.65,
+    battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.85, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.75 }
+  },
+  {
+    id: 'isaac_newton',
+    name: 'Isaac Newton',
+    birth_year: 1642,
+    death_year: 1727,
+    dates: '1642–1727',
+    birth_city: 'Woolsthorpe',
+    birth_country_modern: 'United Kingdom',
+    latitude: 52.8061,
+    longitude: -0.6336,
+    school_of_thought: 'Natural Philosophy',
+    school: 'Naturalist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Mathematical principles of natural philosophy; universal gravitation; scientific method'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.85, market_planning: 0.5, beauty_chaos: 0.8, good_evil: 0.7 }
   },
 
   // MYSTICAL (1)
@@ -1794,6 +1930,46 @@ export const SEED_NODES = [
     key_ideas: ['Federalism; checks and balances; faction theory; Bill of Rights'],
     historical_weight: 0.85,
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.85, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.75 }
+  },
+
+  // ABOLITIONIST / CLASSICAL LIBERAL (2)
+  {
+    id: 'mary_wollstonecraft',
+    name: 'Mary Wollstonecraft',
+    birth_year: 1759,
+    death_year: 1797,
+    dates: '1759–1797',
+    birth_city: 'London',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    school_of_thought: 'Classical Liberalism / Feminism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['A Vindication of the Rights of Woman; reason has no sex; equality through education'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.6, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'wilhelm_von_humboldt',
+    name: 'Wilhelm von Humboldt',
+    birth_year: 1767,
+    death_year: 1835,
+    dates: '1767–1835',
+    birth_city: 'Potsdam',
+    birth_country_modern: 'Germany',
+    latitude: 52.3906,
+    longitude: 13.0645,
+    school_of_thought: 'Classical Liberalism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Limits of State Action; individual development as the highest end; minimal government'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.6, good_evil: 0.75 }
   },
 
   // EMPIRICIST (1)
@@ -2099,6 +2275,263 @@ export const SEED_NODES = [
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.6, market_planning: 0.6, beauty_chaos: 0.4, good_evil: 0.5 }
   },
 
+  // ABOLITIONIST / CLASSICAL LIBERAL (4)
+  {
+    id: 'frederic_bastiat',
+    name: 'Frédéric Bastiat',
+    birth_year: 1801,
+    death_year: 1850,
+    dates: '1801–1850',
+    birth_city: 'Bayonne',
+    birth_country_modern: 'France',
+    latitude: 43.4929,
+    longitude: -1.4748,
+    school_of_thought: 'Classical Liberalism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['The Law; property rights; the state as legal plunder; broken window fallacy'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.85 }
+  },
+  {
+    id: 'alexis_de_tocqueville',
+    name: 'Alexis de Tocqueville',
+    birth_year: 1805,
+    death_year: 1859,
+    dates: '1805–1859',
+    birth_city: 'Paris',
+    birth_country_modern: 'France',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    school_of_thought: 'Classical Liberalism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Democracy in America; liberty over equality; tyranny of the majority; civic virtue'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.75 }
+  },
+  {
+    id: 'frederick_douglass',
+    name: 'Frederick Douglass',
+    birth_year: 1818,
+    death_year: 1895,
+    dates: '1818–1895',
+    birth_city: 'Talbot County',
+    birth_country_modern: 'United States',
+    latitude: 38.7762,
+    longitude: -76.1723,
+    school_of_thought: 'Natural Rights Abolitionism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Natural rights to demolish slavery; reason as liberation; self-ownership'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.85, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.9 }
+  },
+  {
+    id: 'lord_acton',
+    name: 'Lord Acton',
+    birth_year: 1834,
+    death_year: 1902,
+    dates: '1834–1902',
+    birth_city: 'Naples',
+    birth_country_modern: 'Italy',
+    latitude: 40.8518,
+    longitude: 14.2681,
+    school_of_thought: 'Classical Liberalism',
+    school: 'Abolitionist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Power corrupts absolutely; liberty as the supreme political value; conscience over authority'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.85 }
+  },
+
+  // TRANSCENDENTALIST (2)
+  {
+    id: 'ralph_waldo_emerson',
+    name: 'Ralph Waldo Emerson',
+    birth_year: 1803,
+    death_year: 1882,
+    dates: '1803–1882',
+    birth_city: 'Boston',
+    birth_country_modern: 'United States',
+    latitude: 42.3601,
+    longitude: -71.0589,
+    school_of_thought: 'Transcendentalism',
+    school: 'Transcendentalist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Over-Soul; intuition over reason; nature mysticism; self-reliance'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.8, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.5, beauty_chaos: 0.7, good_evil: 0.6 }
+  },
+  {
+    id: 'henry_david_thoreau',
+    name: 'Henry David Thoreau',
+    birth_year: 1817,
+    death_year: 1862,
+    dates: '1817–1862',
+    birth_city: 'Concord',
+    birth_country_modern: 'United States',
+    latitude: 42.4604,
+    longitude: -71.3489,
+    school_of_thought: 'Transcendentalism',
+    school: 'Transcendentalist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Civil Disobedience; mystical individualism; simplicity; conscience over law'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.6, market_planning: 0.5, beauty_chaos: 0.7, good_evil: 0.65 }
+  },
+
+  // EGOIST (1)
+  {
+    id: 'max_stirner',
+    name: 'Max Stirner',
+    birth_year: 1806,
+    death_year: 1856,
+    dates: '1806–1856',
+    birth_city: 'Bayreuth',
+    birth_country_modern: 'Germany',
+    latitude: 49.9456,
+    longitude: 11.5713,
+    school_of_thought: 'Egoism',
+    school: 'Egoist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['The Ego and Its Own; all abstractions are spooks; pure egoism; the unique one'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 1.0, freedom_coercion: 0.8, value_nihilism: 0.2, market_planning: 0.5, beauty_chaos: 0.4, good_evil: 0.3 }
+  },
+
+  // VOLUNTARYIST (2)
+  {
+    id: 'lysander_spooner',
+    name: 'Lysander Spooner',
+    birth_year: 1808,
+    death_year: 1887,
+    dates: '1808–1887',
+    birth_city: 'Athol',
+    birth_country_modern: 'United States',
+    latitude: 42.5959,
+    longitude: -72.2265,
+    school_of_thought: 'Voluntaryism',
+    school: 'Voluntaryist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['No Treason; natural rights; Constitution has no authority; individual over state'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.75, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'auberon_herbert',
+    name: 'Auberon Herbert',
+    birth_year: 1838,
+    death_year: 1906,
+    dates: '1838–1906',
+    birth_city: 'Highclere',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.3333,
+    longitude: -1.3833,
+    school_of_thought: 'Voluntaryism',
+    school: 'Voluntaryist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Voluntary taxation; no coercion ever justified; individual sovereignty; the true liberty'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.95, freedom_coercion: 1.0, value_nihilism: 0.8, market_planning: 0.85, beauty_chaos: 0.5, good_evil: 0.85 }
+  },
+
+  // ANARCHO-COMMUNIST (4)
+  {
+    id: 'pierre_joseph_proudhon',
+    name: 'Pierre-Joseph Proudhon',
+    birth_year: 1809,
+    death_year: 1865,
+    dates: '1809–1865',
+    birth_city: 'Besançon',
+    birth_country_modern: 'France',
+    latitude: 47.2378,
+    longitude: 6.0241,
+    school_of_thought: 'Mutualism',
+    school: 'Anarcho-Communist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: true,
+    key_ideas: ['Property is theft; mutualist anarchism; federalism; anti-state, anti-capitalist'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.3, freedom_coercion: 0.7, value_nihilism: 0.4, market_planning: 0.2, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'mikhail_bakunin',
+    name: 'Mikhail Bakunin',
+    birth_year: 1814,
+    death_year: 1876,
+    dates: '1814–1876',
+    birth_city: 'Pryamukhino',
+    birth_country_modern: 'Russia',
+    latitude: 57.1522,
+    longitude: 34.6019,
+    school_of_thought: 'Collectivist Anarchism',
+    school: 'Anarcho-Communist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Collectivist anarchism; destroy the state and God; revolutionary violence'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.2, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.1, beauty_chaos: 0.3, good_evil: 0.3 }
+  },
+  {
+    id: 'friedrich_engels',
+    name: 'Friedrich Engels',
+    birth_year: 1820,
+    death_year: 1895,
+    dates: '1820–1895',
+    birth_city: 'Barmen',
+    birth_country_modern: 'Germany',
+    latitude: 51.2667,
+    longitude: 7.2000,
+    school_of_thought: 'Marxism',
+    school: 'Marxist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Co-author of Communist Manifesto; historical materialism; dialectics of nature'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.7, individual_collective: -0.9, freedom_coercion: -0.5, value_nihilism: 0.4, market_planning: -0.9, beauty_chaos: 0.0, good_evil: 0.2 }
+  },
+  {
+    id: 'peter_kropotkin',
+    name: 'Peter Kropotkin',
+    birth_year: 1842,
+    death_year: 1921,
+    dates: '1842–1921',
+    birth_city: 'Moscow',
+    birth_country_modern: 'Russia',
+    latitude: 55.7558,
+    longitude: 37.6173,
+    school_of_thought: 'Anarcho-Communism',
+    school: 'Anarcho-Communist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Mutual aid; communist anarchism; no individual property; scientific anarchism'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.1, freedom_coercion: 0.6, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+
   // VOLUNTARIST (2)
   {
     id: 'schopenhauer',
@@ -2349,6 +2782,225 @@ export const SEED_NODES = [
     battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.2, market_planning: 0.3, beauty_chaos: 0.3, good_evil: 0.2 }
   },
 
+  // PROCESS PHILOSOPHY (1)
+  {
+    id: 'alfred_whitehead',
+    name: 'Alfred North Whitehead',
+    birth_year: 1861,
+    death_year: 1947,
+    dates: '1861–1947',
+    birth_city: 'Ramsgate',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.3361,
+    longitude: 1.4164,
+    school_of_thought: 'Process Philosophy',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Process philosophy; reality as becoming not being; organism over mechanism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.5 }
+  },
+
+  // ANARCHO-COMMUNIST (1)
+  {
+    id: 'emma_goldman',
+    name: 'Emma Goldman',
+    birth_year: 1869,
+    death_year: 1940,
+    dates: '1869–1940',
+    birth_city: 'Kaunas',
+    birth_country_modern: 'Lithuania',
+    latitude: 54.8985,
+    longitude: 23.9036,
+    school_of_thought: 'Anarcho-Communism',
+    school: 'Anarcho-Communist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Anarcho-communism; free love; anti-capitalism; individual freedom through collective liberation'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.3, freedom_coercion: 0.7, value_nihilism: 0.4, market_planning: 0.1, beauty_chaos: 0.5, good_evil: 0.4 }
+  },
+
+  // VOLUNTARYIST (4)
+  {
+    id: 'albert_jay_nock',
+    name: 'Albert Jay Nock',
+    birth_year: 1870,
+    death_year: 1945,
+    dates: '1870–1945',
+    birth_city: 'Scranton',
+    birth_country_modern: 'United States',
+    latitude: 41.4090,
+    longitude: -75.6624,
+    school_of_thought: 'Voluntaryism',
+    school: 'Voluntaryist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Our Enemy the State; radical individualism; the remnant; anti-mass society'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'h_l_mencken',
+    name: 'H. L. Mencken',
+    birth_year: 1880,
+    death_year: 1956,
+    dates: '1880–1956',
+    birth_city: 'Baltimore',
+    birth_country_modern: 'United States',
+    latitude: 39.2904,
+    longitude: -76.6122,
+    school_of_thought: 'Voluntaryism',
+    school: 'Voluntaryist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The iconoclast of individualism; enemy of mass conformity; critic of democracy'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.7, market_planning: 0.75, beauty_chaos: 0.6, good_evil: 0.7 }
+  },
+  {
+    id: 'isabel_paterson',
+    name: 'Isabel Paterson',
+    birth_year: 1886,
+    death_year: 1961,
+    dates: '1886–1961',
+    birth_city: 'Manitoulin Island',
+    birth_country_modern: 'Canada',
+    latitude: 45.7667,
+    longitude: -82.2833,
+    school_of_thought: 'Voluntaryism',
+    school: 'Voluntaryist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The God of the Machine; founding mother of American libertarianism; energy circuit of production'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.85, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'rose_wilder_lane',
+    name: 'Rose Wilder Lane',
+    birth_year: 1886,
+    death_year: 1968,
+    dates: '1886–1968',
+    birth_city: 'De Smet',
+    birth_country_modern: 'United States',
+    latitude: 44.3869,
+    longitude: -97.5503,
+    school_of_thought: 'Voluntaryism',
+    school: 'Voluntaryist',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Discovery of Freedom; individual sovereignty; founding mother of libertarianism'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.75 }
+  },
+
+  // AUSTRIAN ECONOMICS (4)
+  {
+    id: 'ludwig_von_mises',
+    name: 'Ludwig von Mises',
+    birth_year: 1881,
+    death_year: 1973,
+    dates: '1881–1973',
+    birth_city: 'Lemberg',
+    birth_country_modern: 'Ukraine',
+    latitude: 49.8397,
+    longitude: 24.0297,
+    school_of_thought: 'Austrian Economics',
+    school: 'Austrian Economics',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Human Action; praxeology; rational economic calculation; critique of socialism'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.85, market_planning: 1.0, beauty_chaos: 0.5, good_evil: 0.85 }
+  },
+  {
+    id: 'henry_hazlitt',
+    name: 'Henry Hazlitt',
+    birth_year: 1894,
+    death_year: 1993,
+    dates: '1894–1993',
+    birth_city: 'Philadelphia',
+    birth_country_modern: 'United States',
+    latitude: 39.9526,
+    longitude: -75.1652,
+    school_of_thought: 'Austrian Economics',
+    school: 'Austrian Economics',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Economics in One Lesson; seen and unseen; close friend and ally of Ayn Rand'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'friedrich_hayek',
+    name: 'Friedrich Hayek',
+    birth_year: 1899,
+    death_year: 1992,
+    dates: '1899–1992',
+    birth_city: 'Vienna',
+    birth_country_modern: 'Austria',
+    latitude: 48.2082,
+    longitude: 16.3738,
+    school_of_thought: 'Austrian Economics',
+    school: 'Austrian Economics',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Spontaneous order; Road to Serfdom; knowledge problem; critique of central planning'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'milton_friedman',
+    name: 'Milton Friedman',
+    birth_year: 1912,
+    death_year: 2006,
+    dates: '1912–2006',
+    birth_city: 'Brooklyn',
+    birth_country_modern: 'United States',
+    latitude: 40.6782,
+    longitude: -73.9442,
+    school_of_thought: 'Chicago Economics',
+    school: 'Austrian Economics',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Capitalism and Freedom; monetarism; free markets; school choice'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+
+  // EXISTENTIALIST (1)
+  {
+    id: 'karl_jaspers',
+    name: 'Karl Jaspers',
+    birth_year: 1883,
+    death_year: 1969,
+    dates: '1883–1969',
+    birth_city: 'Oldenburg',
+    birth_country_modern: 'Germany',
+    latitude: 53.1435,
+    longitude: 8.2146,
+    school_of_thought: 'Existentialism',
+    school: 'Existentialist',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Existenz; transcendence; limits of reason; boundary situations'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+  },
+
   // ANALYTIC (6)
   {
     id: 'bertrand_russell',
@@ -2463,6 +3115,44 @@ export const SEED_NODES = [
     key_ideas: ['Integrity and internal reasons dissolve objective moral standards — moral relativism with analytic credentials'],
     historical_weight: 0.6,
     battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
+  },
+  {
+    id: 'john_searle',
+    name: 'John Searle',
+    birth_year: 1932,
+    death_year: null,
+    dates: '1932–',
+    birth_city: 'Denver',
+    birth_country_modern: 'United States',
+    latitude: 39.7392,
+    longitude: -104.9903,
+    school_of_thought: 'Philosophy of Mind',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Chinese Room argument; social construction of reality; intentionality'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.6, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+  },
+  {
+    id: 'saul_kripke',
+    name: 'Saul Kripke',
+    birth_year: 1940,
+    death_year: 2022,
+    dates: '1940–2022',
+    birth_city: 'Bay Shore',
+    birth_country_modern: 'United States',
+    latitude: 40.7254,
+    longitude: -73.2454,
+    school_of_thought: 'Analytic Philosophy',
+    school: 'Analytic',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Naming and Necessity; rigid designators; modal logic; necessity a posteriori'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.75, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
   // POSITIVIST (2)
@@ -4105,6 +4795,116 @@ export const SEED_EDGES = [
   { source_id: 'ayn_rand', target_id: 'murray_rothbard', relationship_type: 'reacted against', weight: 2 },
   { source_id: 'leonard_peikoff', target_id: 'murray_rothbard', relationship_type: 'reacted against', weight: 1 },
   { source_id: 'tibor_machan', target_id: 'murray_rothbard', relationship_type: 'reacted against', weight: 1 },
+
+  // ═══════════════════════════════════════════════════════════
+  // CHURCH FATHERS & MEDIEVAL
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'plotinus', target_id: 'augustine', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'plato', target_id: 'augustine', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'augustine', target_id: 'thomas_aquinas', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'augustine', target_id: 'anselm', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // EARLY MODERN ADDITIONS
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'la_boetie', target_id: 'montaigne', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'hugo_grotius', target_id: 'john_locke', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'hugo_grotius', target_id: 'thomas_hobbes', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_milton', target_id: 'john_locke', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'algernon_sidney', target_id: 'john_locke', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'algernon_sidney', target_id: 'thomas_jefferson', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'isaac_newton', target_id: 'voltaire', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'isaac_newton', target_id: 'immanuel_kant', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'isaac_newton', target_id: 'david_hume', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'francis_bacon', target_id: 'isaac_newton', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // ENLIGHTENMENT ABOLITIONIST LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'john_locke', target_id: 'mary_wollstonecraft', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'rousseau', target_id: 'mary_wollstonecraft', relationship_type: 'reacted against', weight: 2 },
+  { source_id: 'wilhelm_von_humboldt', target_id: 'john_stuart_mill', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'immanuel_kant', target_id: 'wilhelm_von_humboldt', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // 19TH CENTURY CLASSICAL LIBERAL / ABOLITIONIST
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'adam_smith', target_id: 'frederic_bastiat', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'jean_baptiste_say', target_id: 'frederic_bastiat', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'montesquieu', target_id: 'alexis_de_tocqueville', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'edmund_burke', target_id: 'alexis_de_tocqueville', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'thomas_paine', target_id: 'frederick_douglass', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_locke', target_id: 'frederick_douglass', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'frederic_bastiat', target_id: 'lord_acton', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'alexis_de_tocqueville', target_id: 'lord_acton', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // TRANSCENDENTALIST LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'immanuel_kant', target_id: 'ralph_waldo_emerson', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'plotinus', target_id: 'ralph_waldo_emerson', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ralph_waldo_emerson', target_id: 'henry_david_thoreau', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ralph_waldo_emerson', target_id: 'nietzsche', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'henry_david_thoreau', target_id: 'gandhi', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // EGOIST LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'hegel', target_id: 'max_stirner', relationship_type: 'reacted against', weight: 3 },
+  { source_id: 'max_stirner', target_id: 'nietzsche', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'max_stirner', target_id: 'mikhail_bakunin', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // VOLUNTARYIST LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'john_locke', target_id: 'lysander_spooner', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'lysander_spooner', target_id: 'murray_rothbard', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'herbert_spencer', target_id: 'auberon_herbert', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'auberon_herbert', target_id: 'albert_jay_nock', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'albert_jay_nock', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'h_l_mencken', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'isabel_paterson', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'rose_wilder_lane', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // ANARCHO-COMMUNIST LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'pierre_joseph_proudhon', target_id: 'mikhail_bakunin', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'pierre_joseph_proudhon', target_id: 'peter_kropotkin', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'mikhail_bakunin', target_id: 'peter_kropotkin', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'mikhail_bakunin', target_id: 'emma_goldman', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'peter_kropotkin', target_id: 'emma_goldman', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'karl_marx', target_id: 'friedrich_engels', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'friedrich_engels', target_id: 'karl_marx', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'karl_marx', target_id: 'mikhail_bakunin', relationship_type: 'reacted against', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // AUSTRIAN ECONOMICS LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'adam_smith', target_id: 'ludwig_von_mises', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'immanuel_kant', target_id: 'ludwig_von_mises', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ludwig_von_mises', target_id: 'friedrich_hayek', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ludwig_von_mises', target_id: 'henry_hazlitt', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ludwig_von_mises', target_id: 'murray_rothbard', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'ludwig_von_mises', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'friedrich_hayek', target_id: 'milton_friedman', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'henry_hazlitt', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // ANALYTIC ADDITIONS
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'bertrand_russell', target_id: 'alfred_whitehead', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'alfred_whitehead', target_id: 'bertrand_russell', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'gottlob_frege', target_id: 'saul_kripke', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ludwig_wittgenstein', target_id: 'john_searle', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'saul_kripke', target_id: 'hilary_putnam', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // EXISTENTIALIST ADDITIONS
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'immanuel_kant', target_id: 'karl_jaspers', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'kierkegaard', target_id: 'karl_jaspers', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'karl_jaspers', target_id: 'hannah_arendt', relationship_type: 'influenced', weight: 2 },
 ];
 
 export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES };
