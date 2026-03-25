@@ -311,7 +311,7 @@ export const PHILOSOPHER_PORTRAITS = {
   'emmanuel_levinas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Emmanuel_L%C3%A9vinas.jpg/150px-Emmanuel_L%C3%A9vinas.jpg',
   'hannah_arendt': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Hannah_Arendt_1975_%28cropped%29.jpg/150px-Hannah_Arendt_1975_%28cropped%29.jpg',
   'friedrich_hayek': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Friedrich_Hayek_portrait.jpg/150px-Friedrich_Hayek_portrait.jpg',
-  'ayn_rand': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ayn_Rand_%281943_Talbot_portrait%29.jpg/150px-Ayn_Rand_%281943_Talbot_portrait%29.jpg',
+  'ayn_rand': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ayn_Rand_%281943_Talbot_portrait%29.jpg/220px-Ayn_Rand_%281943_Talbot_portrait%29.jpg',
   'w_v_o_quine': 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Quine.jpg/150px-Quine.jpg',
   'austin': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/JL_Austin.jpg/150px-JL_Austin.jpg',
   'john_rawls': 'https://upload.wikimedia.org/wikipedia/en/thumb/5/58/John_Rawls_%281971_photo_portrait%29.jpg/150px-John_Rawls_%281971_photo_portrait%29.jpg',
