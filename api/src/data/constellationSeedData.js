@@ -119,7 +119,7 @@ export const SCHOOL_STANCES = {
 };
 
 // ═══════════════════════════════════════════════════════════
-// SEED_NODES - 181 philosophers (168 Western + 13 Eastern)
+// SEED_NODES - 185 philosophers (172 Western + 13 Eastern)
 // ═══════════════════════════════════════════════════════════
 export const SEED_NODES = [
   // ═══════════════════════════════════════════════════════════
@@ -1599,7 +1599,7 @@ export const SEED_NODES = [
   },
 
   // ═══════════════════════════════════════════════════════════
-  // ERA 6: ENLIGHTENMENT (1687–1804) - 14 philosophers
+  // ERA 6: ENLIGHTENMENT (1687–1804) - 18 philosophers
   // ═══════════════════════════════════════════════════════════
 
   // ENLIGHTENMENT (6)
@@ -1716,6 +1716,84 @@ export const SEED_NODES = [
     key_ideas: ['Indefinite human progress through reason and science'],
     historical_weight: 0.6,
     battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+
+  // AMERICAN ENLIGHTENMENT (4)
+  {
+    id: 'john_adams',
+    name: 'John Adams',
+    birth_year: 1735,
+    death_year: 1826,
+    dates: '1735–1826',
+    birth_city: 'Braintree',
+    birth_country_modern: 'United States',
+    latitude: 42.2529,
+    longitude: -71.0023,
+    school_of_thought: 'Republican Political Philosophy',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Mixed government; balance of powers; republican virtue'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.75, freedom_coercion: 0.85, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.5, good_evil: 0.75 }
+  },
+  {
+    id: 'thomas_paine',
+    name: 'Thomas Paine',
+    birth_year: 1737,
+    death_year: 1809,
+    dates: '1737–1809',
+    birth_city: 'Thetford',
+    birth_country_modern: 'United Kingdom',
+    latitude: 52.4176,
+    longitude: 0.7445,
+    school_of_thought: 'Radical Enlightenment',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Natural rights; popular sovereignty; anti-monarchy; "Common Sense"'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.95, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'thomas_jefferson',
+    name: 'Thomas Jefferson',
+    birth_year: 1743,
+    death_year: 1826,
+    dates: '1743–1826',
+    birth_city: 'Shadwell',
+    birth_country_modern: 'United States',
+    latitude: 37.9883,
+    longitude: -78.4536,
+    school_of_thought: 'Natural Rights Philosophy',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Natural rights; "life, liberty, pursuit of happiness"; separation of church and state'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.75, beauty_chaos: 0.6, good_evil: 0.8 }
+  },
+  {
+    id: 'james_madison',
+    name: 'James Madison',
+    birth_year: 1751,
+    death_year: 1836,
+    dates: '1751–1836',
+    birth_city: 'Port Conway',
+    birth_country_modern: 'United States',
+    latitude: 38.3,
+    longitude: -77.3,
+    school_of_thought: 'Constitutional Theory',
+    school: 'Enlightenment',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Federalism; checks and balances; faction theory; Bill of Rights'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.85, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.75 }
   },
 
   // EMPIRICIST (1)
@@ -3748,7 +3826,7 @@ export const SEED_EDGES = [
   { source_id: 'mahavira', target_id: 'gandhi', relationship_type: 'influenced', weight: 2 },
 
   // CROSS-TRADITION (East-West)
-  { source_id: 'schopenhauer', target_id: 'buddha', relationship_type: 'influenced by', weight: 3 },
+  { source_id: 'buddha', target_id: 'schopenhauer', relationship_type: 'influenced', weight: 3 },
 
   // PRE-SOCRATIC CHAIN
   { source_id: 'thales', target_id: 'anaximander', relationship_type: 'influenced', weight: 3 },
@@ -3772,8 +3850,7 @@ export const SEED_EDGES = [
   { source_id: 'aristotle', target_id: 'avicenna', relationship_type: 'influenced', weight: 3 },
   { source_id: 'aristotle', target_id: 'francis_bacon', relationship_type: 'influenced', weight: 2 },
   { source_id: 'aristotle', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 3 },
-  { source_id: 'aristotle', target_id: 'allan_gotthelf', relationship_type: 'influenced', weight: 3 },
-  { source_id: 'aristotle', target_id: 'david_kelley', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'aristotle', target_id: 'allan_gotthelf', relationship_type: 'influenced', weight: 2 },
 
   // HELLENISTIC
   { source_id: 'epicurus', target_id: 'lucretius', relationship_type: 'influenced', weight: 3 },
@@ -3800,8 +3877,21 @@ export const SEED_EDGES = [
   { source_id: 'thomas_aquinas', target_id: 'william_of_ockham', relationship_type: 'influenced', weight: 2 },
 
   // RENAISSANCE
-  { source_id: 'plato', target_id: 'pico_della_mirandola', relationship_type: 'influenced', weight: 2 },
-  { source_id: 'plato', target_id: 'erasmus', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'plato', target_id: 'pico_della_mirandola', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'plato', target_id: 'erasmus', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'plotinus', target_id: 'pico_della_mirandola', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'proclus', target_id: 'pico_della_mirandola', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'plotinus', target_id: 'giordano_bruno', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'plotinus', target_id: 'meister_eckhart', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'cicero', target_id: 'erasmus', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'cicero', target_id: 'thomas_more', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'erasmus', target_id: 'thomas_more', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'seneca', target_id: 'montaigne', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'epictetus', target_id: 'montaigne', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'cicero', target_id: 'montaigne', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'montaigne', target_id: 'blaise_pascal', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'montaigne', target_id: 'rene_descartes', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'giordano_bruno', target_id: 'baruch_spinoza', relationship_type: 'influenced', weight: 2 },
   { source_id: 'francis_bacon', target_id: 'thomas_hobbes', relationship_type: 'influenced', weight: 2 },
   { source_id: 'francis_bacon', target_id: 'john_locke', relationship_type: 'influenced', weight: 2 },
   { source_id: 'francis_bacon', target_id: 'rene_descartes', relationship_type: 'influenced', weight: 2 },
@@ -3816,10 +3906,12 @@ export const SEED_EDGES = [
   { source_id: 'baruch_spinoza', target_id: 'jacobi', relationship_type: 'influenced', weight: 2 },
   { source_id: 'leibniz', target_id: 'christian_wolff', relationship_type: 'influenced', weight: 3 },
   { source_id: 'leibniz', target_id: 'immanuel_kant', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'christian_wolff', target_id: 'immanuel_kant', relationship_type: 'influenced', weight: 3 },
 
   // EMPIRICISM INTO ENLIGHTENMENT
   { source_id: 'john_locke', target_id: 'david_hume', relationship_type: 'influenced', weight: 3 },
   { source_id: 'john_locke', target_id: 'george_berkeley', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'george_berkeley', target_id: 'david_hume', relationship_type: 'influenced', weight: 2 },
   { source_id: 'john_locke', target_id: 'voltaire', relationship_type: 'influenced', weight: 2 },
   { source_id: 'john_locke', target_id: 'rousseau', relationship_type: 'influenced', weight: 2 },
   { source_id: 'john_locke', target_id: 'condorcet', relationship_type: 'influenced', weight: 2 },
@@ -3830,6 +3922,22 @@ export const SEED_EDGES = [
   { source_id: 'rousseau', target_id: 'herder', relationship_type: 'influenced', weight: 2 },
   { source_id: 'rousseau', target_id: 'edmund_burke', relationship_type: 'influenced', weight: 2 },
   { source_id: 'rousseau', target_id: 'schiller', relationship_type: 'influenced', weight: 2 },
+
+  // AMERICAN ENLIGHTENMENT
+  { source_id: 'john_locke', target_id: 'thomas_jefferson', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'john_locke', target_id: 'john_adams', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'john_locke', target_id: 'thomas_paine', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'john_locke', target_id: 'james_madison', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'montesquieu', target_id: 'thomas_jefferson', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'montesquieu', target_id: 'john_adams', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'montesquieu', target_id: 'james_madison', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'cicero', target_id: 'john_adams', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'rousseau', target_id: 'thomas_paine', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'voltaire', target_id: 'thomas_jefferson', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'voltaire', target_id: 'thomas_paine', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'david_hume', target_id: 'james_madison', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'thomas_paine', target_id: 'thomas_jefferson', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'thomas_jefferson', target_id: 'james_madison', relationship_type: 'influenced', weight: 3 },
 
   // GERMAN IDEALISM
   { source_id: 'immanuel_kant', target_id: 'fichte', relationship_type: 'influenced', weight: 3 },
@@ -3882,6 +3990,11 @@ export const SEED_EDGES = [
   { source_id: 'ludwig_wittgenstein', target_id: 'richard_rorty', relationship_type: 'influenced', weight: 2 },
   { source_id: 'w_v_o_quine', target_id: 'david_lewis', relationship_type: 'influenced', weight: 2 },
   { source_id: 'w_v_o_quine', target_id: 'hilary_putnam', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'bertrand_russell', target_id: 'karl_popper', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'ludwig_wittgenstein', target_id: 'karl_popper', relationship_type: 'reacted against', weight: 2 },
+  { source_id: 'david_hume', target_id: 'karl_popper', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'karl_popper', target_id: 'thomas_kuhn', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'karl_popper', target_id: 'paul_feyerabend', relationship_type: 'influenced', weight: 3 },
 
   // PHENOMENOLOGY
   { source_id: 'edmund_husserl', target_id: 'martin_heidegger', relationship_type: 'influenced', weight: 3 },
