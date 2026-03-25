@@ -633,19 +633,28 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     directionalLight.position.set(100, 100, 100);
     scene.add(directionalLight);
 
-    // Earth
+    // Earth with fallback color if textures fail
     const textureLoader = new THREE.TextureLoader();
     const earthGeometry = new THREE.SphereGeometry(100, 64, 64);
     const earthMaterial = new THREE.MeshPhongMaterial({
-      map: textureLoader.load(EARTH_TEXTURE),
-      bumpMap: textureLoader.load(EARTH_BUMP),
-      bumpScale: 1,
+      color: 0x1a4d7c, // Fallback blue color
       specular: new THREE.Color(0x333333),
       shininess: 5,
     });
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     scene.add(earth);
     earthRef.current = earth;
+    
+    // Load textures asynchronously
+    textureLoader.load(EARTH_TEXTURE, (texture) => {
+      earthMaterial.map = texture;
+      earthMaterial.needsUpdate = true;
+    });
+    textureLoader.load(EARTH_BUMP, (texture) => {
+      earthMaterial.bumpMap = texture;
+      earthMaterial.bumpScale = 1;
+      earthMaterial.needsUpdate = true;
+    });
 
     // Atmosphere glow
     const atmosphereGeometry = new THREE.SphereGeometry(102, 64, 64);
@@ -839,9 +848,9 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Rotate Earth - visible but relaxed pace
+      // Rotate Earth - clearly visible rotation
       if (earthRef.current) {
-        earthRef.current.rotation.y += 0.002;
+        earthRef.current.rotation.y += 0.003;
       }
 
       // Camera fly-to animation
