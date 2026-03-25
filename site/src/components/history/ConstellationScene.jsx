@@ -57,10 +57,11 @@ function createGlowMaterial(color) {
   });
 }
 
-// Create text label sprite for philosopher name
+// Create double-sided angled card for philosopher name
+// Creates a 3D card with text visible from both sides, angled toward viewer
 // isFoundational: true for major philosophers (historical_weight >= 0.9)
 // isMostFoundational: true for THE foundational philosophers (historical_weight === 1.0)
-function createTextSprite(text, color, isFoundational = false, isMostFoundational = false) {
+function createTextCard(text, color, isFoundational = false, isMostFoundational = false) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d', { alpha: true });
   
@@ -68,7 +69,7 @@ function createTextSprite(text, color, isFoundational = false, isMostFoundationa
   const pixelRatio = Math.min(window.devicePixelRatio || 1, 3) * 1.5;
   
   // Larger font for foundational philosophers - using system fonts for best rendering
-  const baseFontSize = 72; // Increased base size for sharpness
+  const baseFontSize = 72;
   const fontSize = isMostFoundational ? 96 : (isFoundational ? 84 : baseFontSize);
   const fontWeight = isMostFoundational ? '800' : (isFoundational ? '700' : '600');
   
@@ -93,24 +94,35 @@ function createTextSprite(text, color, isFoundational = false, isMostFoundationa
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   
-  // Disable image smoothing for crisp text edges
-  ctx.imageSmoothingEnabled = false;
-  
   const centerX = (canvasWidth / pixelRatio) / 2;
   const centerY = (canvasHeight / pixelRatio) / 2;
   
+  // Optional: subtle card background for better readability
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+  const bgPadding = 8;
+  const radius = 6;
+  const bgWidth = textWidth + bgPadding * 2;
+  const bgHeight = fontSize * 0.8;
+  const bgX = centerX - bgWidth / 2;
+  const bgY = centerY - bgHeight / 2;
+  
+  // Rounded rectangle background
+  ctx.beginPath();
+  ctx.roundRect(bgX, bgY, bgWidth, bgHeight, radius);
+  ctx.fill();
+  
   // Draw strong black outline/stroke first for maximum readability
   ctx.strokeStyle = 'rgba(0, 0, 0, 0.95)';
-  ctx.lineWidth = isMostFoundational ? 6 : (isFoundational ? 5 : 4);
+  ctx.lineWidth = isMostFoundational ? 5 : (isFoundational ? 4 : 3);
   ctx.lineJoin = 'round';
   ctx.miterLimit = 2;
   ctx.strokeText(text, centerX, centerY);
   
   // Draw text with shadow for depth
   ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-  ctx.shadowBlur = isMostFoundational ? 12 : (isFoundational ? 8 : 6);
-  ctx.shadowOffsetX = 2;
-  ctx.shadowOffsetY = 2;
+  ctx.shadowBlur = isMostFoundational ? 10 : (isFoundational ? 6 : 4);
+  ctx.shadowOffsetX = 1;
+  ctx.shadowOffsetY = 1;
   ctx.fillStyle = color;
   ctx.fillText(text, centerX, centerY);
   
@@ -124,35 +136,67 @@ function createTextSprite(text, color, isFoundational = false, isMostFoundationa
   // Add colored glow for champions (most foundational)
   if (isMostFoundational) {
     ctx.shadowColor = color;
-    ctx.shadowBlur = 15;
+    ctx.shadowBlur = 12;
     ctx.fillText(text, centerX, centerY);
   }
   
+  // Create texture from canvas
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
-  // Use nearest filter for pixel-perfect text at close range, linear for distance
   texture.minFilter = THREE.LinearMipmapLinearFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.anisotropy = 16;
   texture.generateMipmaps = true;
   
-  const material = new THREE.SpriteMaterial({
+  // Calculate card dimensions in world units
+  const baseScale = 0.05 / pixelRatio;
+  const scale = isMostFoundational ? 0.065 / pixelRatio : (isFoundational ? 0.058 / pixelRatio : baseScale);
+  const cardWidth = canvasWidth * scale;
+  const cardHeight = canvasHeight * scale;
+  
+  // Create double-sided plane geometry
+  const geometry = new THREE.PlaneGeometry(cardWidth, cardHeight);
+  
+  // Front side material
+  const frontMaterial = new THREE.MeshBasicMaterial({
     map: texture,
     transparent: true,
-    opacity: 1.0, // Full opacity for maximum visibility
-    depthTest: false, // Always visible
+    opacity: 1.0,
+    side: THREE.FrontSide,
+    depthTest: true,
     depthWrite: false,
-    sizeAttenuation: true,
   });
   
-  const sprite = new THREE.Sprite(material);
+  // Back side material (same texture, will appear mirrored which is fine for readability)
+  const backMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 1.0,
+    side: THREE.BackSide,
+    depthTest: true,
+    depthWrite: false,
+  });
   
-  // Scale sprite - account for pixel ratio, larger for foundational philosophers
-  const baseScale = 0.055 / pixelRatio;
-  const scale = isMostFoundational ? 0.072 / pixelRatio : (isFoundational ? 0.064 / pixelRatio : baseScale);
-  sprite.scale.set(canvasWidth * scale, canvasHeight * scale, 1);
+  // Create a group to hold both sides
+  const cardGroup = new THREE.Group();
   
-  return sprite;
+  const frontMesh = new THREE.Mesh(geometry, frontMaterial);
+  const backMesh = new THREE.Mesh(geometry.clone(), backMaterial);
+  
+  cardGroup.add(frontMesh);
+  cardGroup.add(backMesh);
+  
+  // Store metadata for later use
+  cardGroup.userData.isTextCard = true;
+  cardGroup.userData.cardWidth = cardWidth;
+  cardGroup.userData.cardHeight = cardHeight;
+  
+  return cardGroup;
+}
+
+// Legacy sprite function kept for compatibility but redirects to card
+function createTextSprite(text, color, isFoundational = false, isMostFoundational = false) {
+  return createTextCard(text, color, isFoundational, isMostFoundational);
 }
 
 // Create thin line connecting label to satellite
@@ -793,6 +837,41 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
             }
           });
         }
+        
+        // Rotate text cards to face camera (billboard effect with vertical constraint)
+        satellite.children.forEach((child) => {
+          if (child.userData?.isLabel && child.userData?.isTextCard) {
+            // Get card's world position
+            const cardWorldPos = new THREE.Vector3();
+            child.getWorldPosition(cardWorldPos);
+            
+            // Calculate direction from card to camera in world space
+            const directionToCamera = new THREE.Vector3();
+            directionToCamera.subVectors(camera.position, cardWorldPos);
+            
+            // Project onto horizontal plane (keep cards upright)
+            directionToCamera.y = 0;
+            
+            // Only rotate if we have a valid direction
+            if (directionToCamera.lengthSq() > 0.0001) {
+              directionToCamera.normalize();
+              
+              // Calculate target rotation angle in world space
+              const worldAngle = Math.atan2(directionToCamera.x, directionToCamera.z);
+              
+              // Get the satellite's world rotation (includes Earth rotation)
+              const satelliteWorldQuat = new THREE.Quaternion();
+              satellite.getWorldQuaternion(satelliteWorldQuat);
+              
+              // Extract Y rotation from satellite's world quaternion
+              const euler = new THREE.Euler().setFromQuaternion(satelliteWorldQuat, 'YXZ');
+              const parentYRotation = euler.y;
+              
+              // Apply rotation relative to parent's world rotation
+              child.rotation.y = worldAngle - parentYRotation;
+            }
+          }
+        });
       });
 
       // Hover detection
