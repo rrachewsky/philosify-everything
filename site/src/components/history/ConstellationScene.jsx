@@ -5,7 +5,7 @@
 import React, { useRef, useEffect, useImperativeHandle, forwardRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as THREE from 'three';
-import { TRADITION_COLORS, BATTLE_COLORS } from '@hooks/useConstellation';
+import { TRADITION_COLORS, BATTLE_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
 // Connection type colors
 const CONNECTION_COLORS = {
@@ -384,31 +384,16 @@ function createConnection(edge, sourcePos, targetPos, allNodes) {
   return line;
 }
 
-// School-of-thought color mapping (lighter tones for hair-thin lines)
-const SCHOOL_COLORS = {
-  'Objectivism': 0xFFD700,
-  'Stoicism': 0x87CEEB,
-  'Existentialism': 0x9370DB,
-  'Confucianism': 0xDC143C,
-  'Taoism': 0x228B22,
-  'Buddhism': 0xFFB347,
-  'Utilitarianism': 0x20B2AA,
-  'Rationalism': 0x4169E1,
-  'Empiricism': 0x32CD32,
-  'Marxism': 0xB22222,
-  'Platonism': 0xE6E6FA,
-  'Aristotelianism': 0xF0E68C,
-  'Phenomenology': 0xDDA0DD,
-  'Analytic Philosophy': 0xADD8E6,
-  'Classical Liberalism': 0x98FB98,
-  'German Idealism': 0xD8BFD8,
-  'Neoplatonism': 0xE0B0FF,
-  'Social Contract Theory': 0xF5DEB3,
-};
+// Helper to convert hex string (#RRGGBB) to THREE.js integer
+function hexStringToInt(hex) {
+  if (typeof hex === 'number') return hex;
+  return parseInt(hex.replace('#', ''), 16);
+}
 
 // Create hair-thin line connecting philosophers of the same school
 function createSchoolConnection(sourcePos, targetPos, schoolName) {
-  const color = SCHOOL_COLORS[schoolName] || 0xAAAAAA;
+  const hexColor = SCHOOL_COLORS[schoolName] || '#AAAAAA';
+  const color = hexStringToInt(hexColor);
   
   // Create curved line (slight curve to distinguish from edge connections)
   const midPoint = new THREE.Vector3().addVectors(sourcePos, targetPos).multiplyScalar(0.5);
