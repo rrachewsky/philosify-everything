@@ -76,12 +76,24 @@ function getRelativeLuminance(hexColor) {
   return 0.2126 * R + 0.7152 * G + 0.0722 * B;
 }
 
-// Determine if white or black text has better contrast against a background color
+// Calculate WCAG contrast ratio between two luminance values
+function getContrastRatio(L1, L2) {
+  const lighter = Math.max(L1, L2);
+  const darker = Math.min(L1, L2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+// Determine if white or black text has MAXIMUM contrast against a background color
 function getContrastTextColor(bgHexColor) {
-  const luminance = getRelativeLuminance(bgHexColor);
-  // Use white text only on VERY dark backgrounds, black text for everything else
-  // Threshold of 0.15 ensures cyan, orange, grey, etc. all get black text for max readability
-  return luminance > 0.15 ? '#000000' : '#FFFFFF';
+  const bgLuminance = getRelativeLuminance(bgHexColor);
+  const whiteLuminance = 1.0; // #FFFFFF
+  const blackLuminance = 0.0; // #000000
+  
+  const contrastWithWhite = getContrastRatio(bgLuminance, whiteLuminance);
+  const contrastWithBlack = getContrastRatio(bgLuminance, blackLuminance);
+  
+  // Return whichever gives MAXIMUM contrast
+  return contrastWithWhite > contrastWithBlack ? '#FFFFFF' : '#000000';
 }
 
 // Create double-sided angled card for philosopher name
