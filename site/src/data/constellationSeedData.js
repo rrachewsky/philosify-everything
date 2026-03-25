@@ -269,7 +269,7 @@ export const PHILOSOPHER_PORTRAITS = {
   'levinas': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Emmanuel_L%C3%A9vinas.jpg/150px-Emmanuel_L%C3%A9vinas.jpg',
   'arendt': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Hannah_Arendt_1975_%28cropped%29.jpg/150px-Hannah_Arendt_1975_%28cropped%29.jpg',
   'hayek': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Friedrich_Hayek_portrait.jpg/150px-Friedrich_Hayek_portrait.jpg',
-  'rand': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ayn_Rand_%281943_Talbot_portrait%29.jpg/150px-Ayn_Rand_%281943_Talbot_portrait%29.jpg',
+  'ayn_rand': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ayn_Rand_%281943_Talbot_portrait%29.jpg/150px-Ayn_Rand_%281943_Talbot_portrait%29.jpg',
   'quine': 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f8/Quine.jpg/150px-Quine.jpg',
   'austin': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/JL_Austin.jpg/150px-JL_Austin.jpg',
   'ryle': 'https://upload.wikimedia.org/wikipedia/en/thumb/9/91/Gilbert_Ryle.jpg/150px-Gilbert_Ryle.jpg',
@@ -292,7 +292,7 @@ export const PHILOSOPHER_PORTRAITS = {
   'kripke': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Kripke.JPG/150px-Kripke.JPG',
   'singer': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Peter_Singer_MIT_Veritas.jpg/150px-Peter_Singer_MIT_Veritas.jpg',
   'nussbaum': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Martha_Nussbaum_wikipedia_10-10.jpg/150px-Martha_Nussbaum_wikipedia_10-10.jpg',
-  'rothbard': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/MurrayBookchin.jpg/150px-MurrayBookchin.jpg',
+  'murray_rothbard': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Murray_Rothbard.jpg/150px-Murray_Rothbard.jpg',
   
   // ═══════════════════════════════════════════════════════════
   // AMERICAN
@@ -307,6 +307,17 @@ export const PHILOSOPHER_PORTRAITS = {
   'james': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/William_James_b1842c.jpg/150px-William_James_b1842c.jpg',
   'dewey': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/John_Dewey_cph.3a51565.jpg/150px-John_Dewey_cph.3a51565.jpg',
   'santayana': 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/George_Santayana.jpg/150px-George_Santayana.jpg',
+  
+  // ═══════════════════════════════════════════════════════════
+  // OBJECTIVISM & POST-RANDIAN REALISM
+  // ═══════════════════════════════════════════════════════════
+  'nathaniel_branden': 'https://upload.wikimedia.org/wikipedia/en/thumb/e/e5/Nathaniel_Branden.jpg/150px-Nathaniel_Branden.jpg',
+  'barbara_branden': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Barbara_Branden_%28cropped%29.jpg/150px-Barbara_Branden_%28cropped%29.jpg',
+  'leonard_peikoff': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Leonard_Peikoff_in_2010.jpg/150px-Leonard_Peikoff_in_2010.jpg',
+  'harry_binswanger': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Harry_Binswanger.jpg/150px-Harry_Binswanger.jpg',
+  'yaron_brook': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Yaron_Brook_by_Gage_Skidmore.jpg/150px-Yaron_Brook_by_Gage_Skidmore.jpg',
+  'tara_smith': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Tara_Smith_philosopher.jpg/150px-Tara_Smith_philosopher.jpg',
+  'david_kelley': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/David_Kelley.jpg/150px-David_Kelley.jpg',
   
   // ═══════════════════════════════════════════════════════════
   // EASTERN PHILOSOPHY
