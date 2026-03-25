@@ -78,9 +78,9 @@ function getRelativeLuminance(hexColor) {
 // Determine if white or black text has better contrast against a background color
 function getContrastTextColor(bgHexColor) {
   const luminance = getRelativeLuminance(bgHexColor);
-  // Use white text on dark backgrounds, black on light backgrounds
-  // Lower threshold (0.25) ensures light colors like grey get black text for readability
-  return luminance > 0.25 ? '#000000' : '#FFFFFF';
+  // Use white text only on VERY dark backgrounds, black text for everything else
+  // Threshold of 0.15 ensures cyan, orange, grey, etc. all get black text for max readability
+  return luminance > 0.15 ? '#000000' : '#FFFFFF';
 }
 
 // Create double-sided angled card for philosopher name
@@ -250,9 +250,10 @@ const MOST_FOUNDATIONAL_ALTITUDE_BOOST = 20; // Extra altitude for most foundati
 const LABEL_OFFSET = 5; // Distance from satellite to label
 
 // Spacing configuration for overlapping philosophers
-const PROXIMITY_THRESHOLD = 0.5; // Degrees - philosophers within this distance are considered "same location"
-const SPREAD_RADIUS = 18; // Units to spread philosophers apart tangentially (increased for readability)
-const ALTITUDE_VARIATION = 10; // Units of altitude difference within groups for perspective
+const PROXIMITY_THRESHOLD = 2.0; // Degrees - wider threshold to catch more overlaps
+const BASE_SPREAD_RADIUS = 25; // Base units to spread philosophers apart tangentially
+const ALTITUDE_VARIATION = 15; // Units of altitude difference within groups for perspective
+const LABEL_STAGGER = 8; // Additional vertical stagger between adjacent labels
 
 // Group nodes by proximity and calculate spread offsets
 // Returns a Map of nodeId -> { offsetX, offsetZ, altitudeOffset } in tangent space
@@ -261,7 +262,7 @@ function calculateSpreadOffsets(nodes) {
   const groups = [];
   const assigned = new Set();
 
-  // Group nodes by proximity
+  // Group nodes by proximity (use wider threshold)
   nodes.forEach((node) => {
     if (assigned.has(node.id)) return;
 
@@ -294,29 +295,47 @@ function calculateSpreadOffsets(nodes) {
     const topStaysCentered = topPhilosopher.historical_weight >= 0.9;
     const spreadCount = topStaysCentered ? count - 1 : count;
     
+    // For large groups, use a grid/spiral layout instead of pure circle
+    const useGridLayout = count > 6;
+    
     group.forEach((node, index) => {
       if (count === 1) {
         // Only one philosopher - no offset needed
         offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: 0 });
       } else if (index === 0 && topStaysCentered) {
         // Most important philosopher stays at center and highest altitude
-        offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: ALTITUDE_VARIATION });
+        offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: ALTITUDE_VARIATION * 1.5 });
       } else {
-        // Spread others in a circle around center with varying altitudes
-        // Adjust index if top is centered (so index 1 becomes position 0 in the circle)
         const circleIndex = topStaysCentered ? index - 1 : index;
-        const angle = (circleIndex / spreadCount) * Math.PI * 2;
-        // Increase radius slightly for larger groups
-        const radius = SPREAD_RADIUS * (1 + (spreadCount - 1) * 0.12);
-        // Vary altitude based on position in group (higher weight = higher altitude)
-        const altitudeOffset = topStaysCentered 
-          ? -circleIndex * (ALTITUDE_VARIATION / spreadCount) // Lower than center
-          : (spreadCount - circleIndex - 1) * (ALTITUDE_VARIATION / spreadCount); // Graduated
-        offsets.set(node.id, {
-          offsetX: Math.cos(angle) * radius,
-          offsetZ: Math.sin(angle) * radius,
-          altitudeOffset,
-        });
+        
+        let offsetX, offsetZ, altitudeOffset;
+        
+        if (useGridLayout) {
+          // Grid/spiral layout for large groups - better separation
+          const cols = Math.ceil(Math.sqrt(spreadCount));
+          const row = Math.floor(circleIndex / cols);
+          const col = circleIndex % cols;
+          // Offset rows to create staggered pattern
+          const rowOffset = (row % 2) * 0.5;
+          const spacing = BASE_SPREAD_RADIUS * 1.5;
+          
+          offsetX = (col - cols / 2 + rowOffset) * spacing;
+          offsetZ = (row - Math.ceil(spreadCount / cols) / 2) * spacing;
+          // Stagger altitude to prevent label overlap
+          altitudeOffset = -row * LABEL_STAGGER - col * (LABEL_STAGGER / 2);
+        } else {
+          // Circle layout for small groups
+          const angle = (circleIndex / spreadCount) * Math.PI * 2;
+          // Larger radius for better separation
+          const radius = BASE_SPREAD_RADIUS * (1 + (spreadCount - 1) * 0.2);
+          
+          offsetX = Math.cos(angle) * radius;
+          offsetZ = Math.sin(angle) * radius;
+          // Vary altitude based on position in circle
+          altitudeOffset = Math.sin(angle * 2) * LABEL_STAGGER;
+        }
+        
+        offsets.set(node.id, { offsetX, offsetZ, altitudeOffset });
       }
     });
   });
