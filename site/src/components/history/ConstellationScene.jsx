@@ -17,10 +17,12 @@ const CONNECTION_COLORS = {
   contemporary: 0xFF9800,
 };
 
-// Earth texture URLs (NASA Blue Marble)
-const EARTH_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-blue-marble.jpg';
-const EARTH_BUMP = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-topology.png';
-const STAR_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/night-sky.png';
+// Earth texture URLs - High quality 4K textures
+const EARTH_TEXTURE = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_atmos_4096.jpg';
+const EARTH_BUMP = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_normal_2048.jpg';
+const EARTH_SPECULAR = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_specular_2048.jpg';
+const EARTH_LIGHTS = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/earth_lights_2048.png';
+const STAR_TEXTURE = 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/planets/starfield.png';
 
 // Convert lat/lng to 3D position on sphere
 function latLngToVector3(lat, lng, radius) {
@@ -633,27 +635,48 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     directionalLight.position.set(100, 100, 100);
     scene.add(directionalLight);
 
-    // Earth with fallback color if textures fail
+    // Earth with high-quality textures
     const textureLoader = new THREE.TextureLoader();
-    const earthGeometry = new THREE.SphereGeometry(100, 64, 64);
+    const earthGeometry = new THREE.SphereGeometry(100, 128, 128); // Higher polygon count for smoother sphere
     const earthMaterial = new THREE.MeshPhongMaterial({
       color: 0x1a4d7c, // Fallback blue color
-      specular: new THREE.Color(0x333333),
-      shininess: 5,
+      specular: new THREE.Color(0x444444),
+      shininess: 15,
     });
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
     scene.add(earth);
     earthRef.current = earth;
     
-    // Load textures asynchronously
+    // Load high-quality textures asynchronously
     textureLoader.load(EARTH_TEXTURE, (texture) => {
+      texture.anisotropy = 16; // Better texture quality at angles
       earthMaterial.map = texture;
       earthMaterial.needsUpdate = true;
     });
     textureLoader.load(EARTH_BUMP, (texture) => {
-      earthMaterial.bumpMap = texture;
-      earthMaterial.bumpScale = 1;
+      earthMaterial.normalMap = texture; // Use as normal map for better depth
+      earthMaterial.normalScale = new THREE.Vector2(0.8, 0.8);
       earthMaterial.needsUpdate = true;
+    });
+    textureLoader.load(EARTH_SPECULAR, (texture) => {
+      earthMaterial.specularMap = texture; // Ocean reflections
+      earthMaterial.needsUpdate = true;
+    });
+    
+    // Night side city lights layer
+    const lightsGeometry = new THREE.SphereGeometry(100.1, 128, 128);
+    const lightsMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+    });
+    const lightsLayer = new THREE.Mesh(lightsGeometry, lightsMaterial);
+    earth.add(lightsLayer);
+    textureLoader.load(EARTH_LIGHTS, (texture) => {
+      lightsMaterial.map = texture;
+      lightsMaterial.opacity = 0.6;
+      lightsMaterial.needsUpdate = true;
     });
 
     // Atmosphere glow
