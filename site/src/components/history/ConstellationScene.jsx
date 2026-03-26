@@ -763,16 +763,21 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     // Touch event handlers for mobile
     let lastTouchDistance = 0;
     let lastTouchCenter = { x: 0, y: 0 };
+    let touchStartPos = { x: 0, y: 0 };
+    let touchStartTime = 0;
+    const TAP_THRESHOLD = 20; // pixels
+    const TAP_TIME_THRESHOLD = 300; // ms
 
     const handleTouchStart = (e) => {
       e.preventDefault();
       if (e.touches.length === 1) {
-        // Single touch - start drag
-        isDragging = true;
-        previousMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        // Update mouseRef for tap-to-select (raycast needs this position)
-        const rect = container.getBoundingClientRect();
         const touch = e.touches[0];
+        isDragging = true;
+        previousMouse = { x: touch.clientX, y: touch.clientY };
+        touchStartPos = { x: touch.clientX, y: touch.clientY };
+        touchStartTime = Date.now();
+        // Update mouseRef for raycast
+        const rect = container.getBoundingClientRect();
         mouseRef.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
         mouseRef.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
       } else if (e.touches.length === 2) {
@@ -828,12 +833,43 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
 
     const handleTouchEnd = (e) => {
       if (e.touches.length === 0) {
+        // Check if this was a tap (short time, small movement)
+        const touch = e.changedTouches[0];
+        const dx = touch.clientX - touchStartPos.x;
+        const dy = touch.clientY - touchStartPos.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const duration = Date.now() - touchStartTime;
+
+        if (distance < TAP_THRESHOLD && duration < TAP_TIME_THRESHOLD) {
+          // This is a TAP - select philosopher directly
+          const rect = container.getBoundingClientRect();
+          mouseRef.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+          mouseRef.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+
+          raycasterRef.current.setFromCamera(mouseRef.current, camera);
+          const satellites = Array.from(satellitesRef.current.values());
+          const intersects = raycasterRef.current.intersectObjects(satellites, true);
+
+          if (intersects.length > 0) {
+            let obj = intersects[0].object;
+            while (obj && !obj.userData.nodeId) {
+              obj = obj.parent;
+            }
+            if (obj?.userData.nodeId) {
+              onNodeSelect(obj.userData.nodeId);
+            }
+          }
+        }
+
         isDragging = false;
         lastTouchDistance = 0;
       } else if (e.touches.length === 1) {
         // Switched from pinch to single touch
         isDragging = true;
-        previousMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        const touch = e.touches[0];
+        previousMouse = { x: touch.clientX, y: touch.clientY };
+        touchStartPos = { x: touch.clientX, y: touch.clientY };
+        touchStartTime = Date.now();
         lastTouchDistance = 0;
       }
     };
