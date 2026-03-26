@@ -121,7 +121,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
           </div>
         )}
         
-        {/* Name, dates, birthplace, school - all compact */}
+        {/* Name, dates, birthplace, era, school - all compact */}
         <div style={styles.headerText}>
           <h2 style={styles.name}>{node.name}</h2>
           <div style={styles.dates}>
@@ -130,11 +130,9 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
           <div style={styles.birthplace}>
             {node.birth_city}, {node.birth_country_modern}
           </div>
-          <div style={styles.schoolRow}>
-            <span style={{ ...styles.schoolBadge, background: schoolColor }}>
-              {node.school}
-            </span>
-            <span style={styles.schoolOfThought}>{node.school_of_thought}</span>
+          <div style={styles.era}>{node.school_of_thought}</div>
+          <div style={{ ...styles.schoolBadge, background: schoolColor }}>
+            {node.school}
           </div>
         </div>
       </div>
@@ -535,7 +533,7 @@ const styles = {
     color: '#000',
     padding: '3px 8px',
     borderRadius: 4,
-    marginTop: 6,
+    marginTop: 4,
   },
 
   traditionIndicator: {
@@ -555,27 +553,21 @@ const styles = {
 
   dates: {
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: 'rgba(255, 255, 255, 0.85)',
     marginTop: 3,
   },
 
   birthplace: {
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.4)',
+    color: 'rgba(255, 255, 255, 0.7)',
     marginTop: 2,
   },
 
-  schoolRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
+  era: {
+    fontSize: 12,
+    color: '#D6158C',
+    fontWeight: 600,
     marginTop: 6,
-    flexWrap: 'wrap',
-  },
-
-  schoolOfThought: {
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.6)',
   },
 
   section: {
