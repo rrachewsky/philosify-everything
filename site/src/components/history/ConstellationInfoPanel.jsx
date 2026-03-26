@@ -407,17 +407,20 @@ const styles = {
     left: 0,
     right: 0,
     height: '80vh',
+    maxHeight: '80vh',
     background: 'rgba(15, 15, 25, 0.98)',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     border: '1px solid rgba(255, 255, 255, 0.15)',
     borderBottom: 'none',
     backdropFilter: 'blur(16px)',
-    overflow: 'hidden',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     zIndex: 200,
     display: 'flex',
     flexDirection: 'column',
     boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.5), 0 -2px 8px rgba(0, 0, 0, 0.3)',
+    WebkitOverflowScrolling: 'touch',
   },
 
   // Drag handle indicator for mobile
@@ -466,9 +469,10 @@ const styles = {
   },
 
   content: {
-    padding: 16,
+    padding: '16px 16px 32px 16px',
     overflowY: 'auto',
     flex: 1,
+    WebkitOverflowScrolling: 'touch',
   },
 
   header: {
