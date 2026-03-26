@@ -770,6 +770,11 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         // Single touch - start drag
         isDragging = true;
         previousMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        // Update mouseRef for tap-to-select (raycast needs this position)
+        const rect = container.getBoundingClientRect();
+        const touch = e.touches[0];
+        mouseRef.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+        mouseRef.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
       } else if (e.touches.length === 2) {
         // Two touches - start pinch zoom
         isDragging = false;
