@@ -765,8 +765,8 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     let lastTouchCenter = { x: 0, y: 0 };
     let touchStartPos = { x: 0, y: 0 };
     let touchStartTime = 0;
-    const TAP_THRESHOLD = 20; // pixels
-    const TAP_TIME_THRESHOLD = 300; // ms
+    const TAP_THRESHOLD = 50; // pixels - generous for mobile
+    const TAP_TIME_THRESHOLD = 500; // ms - generous for mobile
 
     const handleTouchStart = (e) => {
       e.preventDefault();
@@ -852,11 +852,14 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
 
           if (intersects.length > 0) {
             let obj = intersects[0].object;
-            while (obj && !obj.userData.nodeId) {
+            // Traverse up to find the group with nodeId or node
+            while (obj && !obj.userData.nodeId && !obj.userData.node) {
               obj = obj.parent;
             }
             if (obj?.userData.nodeId) {
               onNodeSelect(obj.userData.nodeId);
+            } else if (obj?.userData.node?.id) {
+              onNodeSelect(obj.userData.node.id);
             }
           }
         }
