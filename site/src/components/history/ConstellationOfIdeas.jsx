@@ -4,7 +4,7 @@
 // ============================================================
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useConstellation, BATTLE_COLORS, TRADITION_COLORS, ERAS } from '@hooks/useConstellation';
+import { useConstellation, BATTLE_COLORS, ERAS } from '@hooks/useConstellation';
 import { ConstellationScene } from './ConstellationScene.jsx';
 import { TimelineControls } from './TimelineControls.jsx';
 import { ConstellationInfoPanel } from './ConstellationInfoPanel.jsx';
@@ -225,21 +225,6 @@ export function ConstellationOfIdeas() {
         </svg>
       </button>
 
-      {/* Legend - positioned below year on mobile */}
-      <div style={{ 
-        ...styles.legend, 
-        top: isMobile ? 75 : 16,
-        padding: isMobile ? '8px 12px' : '12px 16px',
-      }}>
-        <div style={styles.legendTitle}>Traditions</div>
-        {Object.entries(TRADITION_COLORS).map(([tradition, color]) => (
-          <div key={tradition} style={styles.legendItem}>
-            <span style={{ ...styles.legendDot, backgroundColor: color }} />
-            <span style={styles.legendLabel}>{tradition.charAt(0).toUpperCase() + tradition.slice(1)}</span>
-          </div>
-        ))}
-      </div>
-
       {/* Timeline Controls */}
       <TimelineControls
         currentYear={currentYear}
@@ -287,19 +272,7 @@ export function ConstellationOfIdeas() {
         />
       )}
 
-      {/* Hover tooltip - tap to open full info panel */}
-      {hoveredNode && !selectedNode && (
-        <div 
-          style={styles.tooltip}
-          onClick={() => setSelectedNode(hoveredNode)}
-        >
-          <div style={styles.tooltipName}>{hoveredNode.name}</div>
-          <div style={styles.tooltipDates}>
-            {formatYear(hoveredNode.birth_year)} – {formatYear(hoveredNode.death_year)}
-          </div>
-          <div style={styles.tooltipSchool}>{hoveredNode.school_of_thought}</div>
-        </div>
-      )}
+
     </div>
   );
 }
@@ -457,37 +430,6 @@ const styles = {
   legendLabel: {
     fontSize: 11,
     color: '#F2F2F5',
-  },
-
-  // Tooltip
-  tooltip: {
-    position: 'absolute',
-    bottom: 100,
-    left: '50%',
-    transform: 'translateX(-50%)',
-    background: 'rgba(20, 20, 30, 0.95)',
-    borderRadius: 8,
-    padding: '12px 16px',
-    textAlign: 'center',
-    zIndex: 100,
-    backdropFilter: 'blur(8px)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    cursor: 'pointer',
-  },
-  tooltipName: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#F2F2F5',
-  },
-  tooltipDates: {
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.6)',
-    marginTop: 2,
-  },
-  tooltipSchool: {
-    fontSize: 11,
-    color: '#D6158C',
-    marginTop: 2,
   },
 };
 

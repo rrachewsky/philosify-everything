@@ -41,6 +41,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "jsdom": "^27.2.0",
     "prettier": "^3.7.4",
+    "sharp": "^0.34.5",
     "vite": "^7.2.6",
     "vitest": "^4.0.15"
   }

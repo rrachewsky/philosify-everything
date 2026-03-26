@@ -607,6 +607,12 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   const mouseRef = useRef(new THREE.Vector2());
   const isAnimatingRef = useRef(false);
   const targetCameraRef = useRef(null);
+  const hoveredNodeRef = useRef(null); // Track hovered node for mobile tap
+
+  // Keep hoveredNodeRef in sync with hoveredNode prop
+  useEffect(() => {
+    hoveredNodeRef.current = hoveredNode;
+  }, [hoveredNode]);
 
   // Initialize Three.js scene
   useEffect(() => {
@@ -702,6 +708,28 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     let previousMouse = { x: 0, y: 0 };
     let spherical = new THREE.Spherical();
     spherical.setFromVector3(camera.position);
+    let suppressClickUntil = 0;
+
+    const updatePointerFromClient = (clientX, clientY) => {
+      const rect = container.getBoundingClientRect();
+      mouseRef.current.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+    };
+
+    const getIntersectedNodeId = () => {
+      raycasterRef.current.setFromCamera(mouseRef.current, camera);
+      const satellites = Array.from(satellitesRef.current.values());
+      const intersects = raycasterRef.current.intersectObjects(satellites, true);
+
+      if (intersects.length === 0) return null;
+
+      let obj = intersects[0].object;
+      while (obj && !obj.userData.nodeId) {
+        obj = obj.parent;
+      }
+
+      return obj?.userData.nodeId || null;
+    };
 
     const handleMouseDown = (e) => {
       isDragging = true;
@@ -710,9 +738,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
 
     const handleMouseMove = (e) => {
       // Update mouse for raycasting
-      const rect = container.getBoundingClientRect();
-      mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      updatePointerFromClient(e.clientX, e.clientY);
 
       if (isDragging && !isAnimatingRef.current) {
         const deltaX = e.clientX - previousMouse.x;
@@ -742,19 +768,15 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     };
 
     const handleClick = (e) => {
-      // Raycast to find clicked satellite
-      raycasterRef.current.setFromCamera(mouseRef.current, camera);
-      const satellites = Array.from(satellitesRef.current.values());
-      const intersects = raycasterRef.current.intersectObjects(satellites, true);
+      if (Date.now() < suppressClickUntil) {
+        return;
+      }
 
-      if (intersects.length > 0) {
-        let obj = intersects[0].object;
-        while (obj && !obj.userData.nodeId) {
-          obj = obj.parent;
-        }
-        if (obj?.userData.nodeId) {
-          onNodeSelect(obj.userData.nodeId);
-        }
+      updatePointerFromClient(e.clientX, e.clientY);
+      const nodeId = getIntersectedNodeId();
+
+      if (nodeId) {
+        onNodeSelect(nodeId);
       } else {
         onNodeSelect(null);
       }
@@ -777,9 +799,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         touchStartPos = { x: touch.clientX, y: touch.clientY };
         touchStartTime = Date.now();
         // Update mouseRef for raycast
-        const rect = container.getBoundingClientRect();
-        mouseRef.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-        mouseRef.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+        updatePointerFromClient(touch.clientX, touch.clientY);
       } else if (e.touches.length === 2) {
         // Two touches - start pinch zoom
         isDragging = false;
@@ -811,9 +831,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         previousMouse = { x: touch.clientX, y: touch.clientY };
 
         // Update mouse for raycasting
-        const rect = container.getBoundingClientRect();
-        mouseRef.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-        mouseRef.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+        updatePointerFromClient(touch.clientX, touch.clientY);
       } else if (e.touches.length === 2) {
         // Pinch zoom
         const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -833,6 +851,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
 
     const handleTouchEnd = (e) => {
       if (e.touches.length === 0) {
+        e.preventDefault();
         // Check if this was a tap (short time, small movement)
         const touch = e.changedTouches[0];
         const dx = touch.clientX - touchStartPos.x;
@@ -841,26 +860,12 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         const duration = Date.now() - touchStartTime;
 
         if (distance < TAP_THRESHOLD && duration < TAP_TIME_THRESHOLD) {
-          // This is a TAP - select philosopher directly
-          const rect = container.getBoundingClientRect();
-          mouseRef.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-          mouseRef.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
-
-          raycasterRef.current.setFromCamera(mouseRef.current, camera);
-          const satellites = Array.from(satellitesRef.current.values());
-          const intersects = raycasterRef.current.intersectObjects(satellites, true);
-
-          if (intersects.length > 0) {
-            let obj = intersects[0].object;
-            // Traverse up to find the group with nodeId or node
-            while (obj && !obj.userData.nodeId && !obj.userData.node) {
-              obj = obj.parent;
-            }
-            if (obj?.userData.nodeId) {
-              onNodeSelect(obj.userData.nodeId);
-            } else if (obj?.userData.node?.id) {
-              onNodeSelect(obj.userData.node.id);
-            }
+          // Re-raycast the exact tap point so mobile selection does not depend on hover timing.
+          updatePointerFromClient(touch.clientX, touch.clientY);
+          const tappedNodeId = getIntersectedNodeId() || hoveredNodeRef.current?.id || null;
+          if (tappedNodeId) {
+            suppressClickUntil = Date.now() + 400;
+            onNodeSelect(tappedNodeId);
           }
         }
 
