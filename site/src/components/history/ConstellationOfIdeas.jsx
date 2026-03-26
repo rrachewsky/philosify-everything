@@ -287,9 +287,12 @@ export function ConstellationOfIdeas() {
         />
       )}
 
-      {/* Hover tooltip */}
+      {/* Hover tooltip - tap to open full info panel */}
       {hoveredNode && !selectedNode && (
-        <div style={styles.tooltip}>
+        <div 
+          style={styles.tooltip}
+          onClick={() => setSelectedNode(hoveredNode)}
+        >
           <div style={styles.tooltipName}>{hoveredNode.name}</div>
           <div style={styles.tooltipDates}>
             {formatYear(hoveredNode.birth_year)} – {formatYear(hoveredNode.death_year)}
@@ -469,7 +472,7 @@ const styles = {
     zIndex: 100,
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
-    pointerEvents: 'none',
+    cursor: 'pointer',
   },
   tooltipName: {
     fontSize: 14,
