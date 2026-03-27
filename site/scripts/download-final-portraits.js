@@ -19,18 +19,14 @@ const SEPIA_MATRIX = [
 
 // Direct image URLs for missing philosophers
 const PORTRAITS = {
-  // ARI website portraits
-  peter_schwartz: 'https://ari.aynrand.org/wp-content/uploads/2019/08/Schwartz_Peter260x260BW.jpg',
-  robert_mayhew: 'https://ari.aynrand.org/wp-content/uploads/2019/08/Mayhew_Robert260x260GS.jpg',
-  
-  // Others that need to be found - using placeholder searches
-  // andrew_bernstein: author of "The Capitalist Manifesto"
-  // craig_biddle: The Objective Standard editor
-  // darryl_wright: philosopher 
-  // don_watkins: author, ARI
-  // gregory_salmieri: co-editor of "A Companion to Ayn Rand"
-  // michael_berliner: former ARI executive
-  // robert_tracinski: writer, The Tracinski Letter
+  // Final 7 Objectivists - URLs provided by user
+  andrew_bernstein: 'https://andrewbernstein.net/wp-content/uploads/2011/09/ab_big.jpg',
+  craig_biddle: 'https://freemarket-rs.com/wp-content/uploads/2024/11/Biddle-Craig.jpg',
+  robert_tracinski: 'https://cdn.prod.website-files.com/5e94942247047e79b85db6b3/66181e815c73f288dbfaca54_654bd97a76bc6cb5bd9588a9_rob-2023-sq.webp',
+  don_watkins: 'https://pbs.twimg.com/profile_images/1714791249897553920/njZ1YBZw_400x400.jpg',
+  gregory_salmieri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK6LeVkKT3gp29P0XpoO4KKhjwPViJVuNadQ&s',
+  darryl_wright: 'https://www.hmc.edu/hsa/wp-content/uploads/sites/25/2022/09/faculty-wright.jpg',
+  michael_berliner: 'https://prabook.com/web/show-photo.jpg?id=1527152',
 };
 
 async function downloadAndProcess(id, url) {
