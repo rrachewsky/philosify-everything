@@ -379,6 +379,11 @@ export const PHILOSOPHER_PORTRAITS = {
   'shankara': '/portraits/shankara.jpg',
   'ramanuja': '/portraits/ramanuja.jpg',
   'gandhi': '/portraits/gandhi.jpg',
+  
+  // NEW ATHEISTS
+  'sam_harris': '/portraits/sam_harris.jpg',
+  'christopher_hitchens': '/portraits/christopher_hitchens.jpg',
+  'richard_dawkins': '/portraits/richard_dawkins.jpg',
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -4722,6 +4727,63 @@ export const SEED_NODES = [
     historical_weight: 0.55,
     battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
+  {
+    id: 'sam_harris',
+    name: 'Sam Harris',
+    birth_year: 1967,
+    death_year: null,
+    dates: '1967–',
+    birth_city: 'Los Angeles',
+    birth_country_modern: 'United States',
+    latitude: 34.0522,
+    longitude: -118.2437,
+    school_of_thought: 'New Atheism',
+    school: 'Naturalist (Contemporary)',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Moral landscape; science can determine values; critique of religion and faith'],
+    historical_weight: 0.7,
+    battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.2, beauty_chaos: 0.5, good_evil: 0.7 }
+  },
+  {
+    id: 'christopher_hitchens',
+    name: 'Christopher Hitchens',
+    birth_year: 1949,
+    death_year: 2011,
+    dates: '1949–2011',
+    birth_city: 'Portsmouth',
+    birth_country_modern: 'United Kingdom',
+    latitude: 50.8198,
+    longitude: -1.0880,
+    school_of_thought: 'New Atheism',
+    school: 'Naturalist (Contemporary)',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Antitheism; religion poisons everything; Enlightenment values; free expression'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.98, reality_mysticism: 0.95, individual_collective: 0.7, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.3, beauty_chaos: 0.6, good_evil: 0.7 }
+  },
+  {
+    id: 'richard_dawkins',
+    name: 'Richard Dawkins',
+    birth_year: 1941,
+    death_year: null,
+    dates: '1941–',
+    birth_city: 'Nairobi',
+    birth_country_modern: 'Kenya',
+    latitude: -1.2921,
+    longitude: 36.8219,
+    school_of_thought: 'New Atheism',
+    school: 'Naturalist (Contemporary)',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Selfish gene; memes; evolution as explanation; militant atheism; God delusion'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.98, reality_mysticism: 0.95, individual_collective: 0.5, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.3, beauty_chaos: 0.6, good_evil: 0.6 }
+  },
 
   // CRITICAL THEORY (1 in Contemporary)
   {
@@ -5152,6 +5214,29 @@ export const SEED_EDGES = [
   { source_id: 'immanuel_kant', target_id: 'karl_jaspers', relationship_type: 'influenced', weight: 2 },
   { source_id: 'kierkegaard', target_id: 'karl_jaspers', relationship_type: 'influenced', weight: 2 },
   { source_id: 'karl_jaspers', target_id: 'hannah_arendt', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // NEW ATHEISTS (Four Horsemen)
+  // ═══════════════════════════════════════════════════════════
+  // Darwin's influence on New Atheists
+  { source_id: 'darwin', target_id: 'richard_dawkins', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'darwin', target_id: 'daniel_dennett', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'darwin', target_id: 'sam_harris', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'darwin', target_id: 'christopher_hitchens', relationship_type: 'influenced', weight: 2 },
+  // Hume's influence (empiricism, skepticism of miracles)
+  { source_id: 'david_hume', target_id: 'richard_dawkins', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'david_hume', target_id: 'christopher_hitchens', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'david_hume', target_id: 'sam_harris', relationship_type: 'influenced', weight: 2 },
+  // Bertrand Russell's influence (public atheism)
+  { source_id: 'bertrand_russell', target_id: 'richard_dawkins', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'bertrand_russell', target_id: 'christopher_hitchens', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'bertrand_russell', target_id: 'sam_harris', relationship_type: 'influenced', weight: 2 },
+  // Four Horsemen mutual influences
+  { source_id: 'daniel_dennett', target_id: 'richard_dawkins', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'richard_dawkins', target_id: 'daniel_dennett', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'richard_dawkins', target_id: 'sam_harris', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'richard_dawkins', target_id: 'christopher_hitchens', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'christopher_hitchens', target_id: 'sam_harris', relationship_type: 'influenced', weight: 1 },
 ];
 
 export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES, PHILOSOPHER_PORTRAITS };
