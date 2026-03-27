@@ -3,21 +3,22 @@
 // ============================================================
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { BATTLE_COLORS, TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
-// Battle dimension labels with descriptions
-// Format: [positiveLabel, negativeLabel, description]
+// Battle dimension keys for translation lookup
+// Format: [positiveKey, negativeKey, descriptionKey]
 // Score +1 = positive (left), Score -1 = negative (right)
 // Labels always show positive first: "Individual vs Collective" (not swapped based on score)
-const BATTLE_LABELS = {
-  reason_faith: ['Reason', 'Faith', 'Source of knowledge'],
-  reality_mysticism: ['Reality', 'Mysticism', 'Nature of existence'],
-  individual_collective: ['Individual', 'Collective', 'Moral focus'],
-  freedom_coercion: ['Freedom', 'Coercion', 'Political stance'],
-  value_nihilism: ['Value', 'Nihilism', 'Meaning & purpose'],
-  market_planning: ['Market', 'Planning', 'Economic system'],
-  beauty_chaos: ['Beauty', 'Chaos', 'Aesthetic view'],
-  good_evil: ['Good', 'Evil', 'Moral realism'],
+const BATTLE_KEYS = {
+  reason_faith: ['reason', 'faith', 'reason_faith'],
+  reality_mysticism: ['reality', 'mysticism', 'reality_mysticism'],
+  individual_collective: ['individual', 'collective', 'individual_collective'],
+  freedom_coercion: ['freedom', 'coercion', 'freedom_coercion'],
+  value_nihilism: ['value', 'nihilism', 'value_nihilism'],
+  market_planning: ['market', 'planning', 'market_planning'],
+  beauty_chaos: ['beauty', 'chaos', 'beauty_chaos'],
+  good_evil: ['good', 'evil', 'good_evil'],
 };
 
 // Connection type labels and colors
@@ -37,8 +38,10 @@ const INFLUENCE_GIVEN_COLOR = '#3AAFCF';    // Cyan - philosophers this one infl
 // Helper to get edge type (handles both API format 'type' and seed data format 'relationship_type')
 const getEdgeType = (edge) => edge.type || edge.relationship_type || '';
 
-function BattleBar({ battle, score }) {
-  const [positiveLabel, negativeLabel, description] = BATTLE_LABELS[battle] || ['Left', 'Right', ''];
+function BattleBar({ battle, score, t }) {
+  const [positiveKey, negativeKey] = BATTLE_KEYS[battle] || ['left', 'right'];
+  const positiveLabel = t(`constellation.battles.${positiveKey}`);
+  const negativeLabel = t(`constellation.battles.${negativeKey}`);
   const color = BATTLE_COLORS[battle] || '#888';
   
   // Score: -1 to +1 (normalized from -10 to +10)
@@ -60,11 +63,11 @@ function BattleBar({ battle, score }) {
   
   // Intensity description
   const getIntensityWord = (val) => {
-    if (val >= 0.9) return 'Strongly';
-    if (val >= 0.7) return 'Clearly';
-    if (val >= 0.5) return 'Moderately';
-    if (val >= 0.3) return 'Somewhat';
-    return 'Slightly';
+    if (val >= 0.9) return t('constellation.intensity.strongly');
+    if (val >= 0.7) return t('constellation.intensity.clearly');
+    if (val >= 0.5) return t('constellation.intensity.moderately');
+    if (val >= 0.3) return t('constellation.intensity.somewhat');
+    return t('constellation.intensity.slightly');
   };
 
   return (
@@ -102,13 +105,13 @@ function BattleBar({ battle, score }) {
         />
       </div>
       <div style={styles.battleIntensity}>
-        {getIntensityWord(intensity)} {dominantLabel.toLowerCase()}-oriented
+        {getIntensityWord(intensity)} {dominantLabel.toLowerCase()}-{t('constellation.oriented')}
       </div>
     </div>
   );
 }
 
-function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear }) {
+function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear, t }) {
   const connections = getNodeConnections(node.id);
   const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
   const [imageError, setImageError] = React.useState(false);
@@ -166,7 +169,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
       {/* Key Ideas */}
       {node.key_ideas && node.key_ideas.length > 0 && (
         <div style={styles.section}>
-          <div style={styles.sectionLabel}>Key Ideas</div>
+          <div style={styles.sectionLabel}>{t('constellation.keyIdeas')}</div>
           <ul style={styles.ideasList}>
             {node.key_ideas.map((idea, i) => (
               <li key={i} style={styles.ideaItem}>{idea}</li>
@@ -178,10 +181,10 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
       {/* Battle Scores */}
       {node.battles && (
         <div style={styles.section}>
-          <div style={styles.sectionLabel}>Philosophical Positions</div>
+          <div style={styles.sectionLabel}>{t('constellation.positions')}</div>
           <div style={styles.battles}>
             {Object.entries(node.battles).map(([battle, score]) => (
-              <BattleBar key={battle} battle={battle} score={score} />
+              <BattleBar key={battle} battle={battle} score={score} t={t} />
             ))}
           </div>
         </div>
@@ -206,7 +209,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
             {influencedBy.length > 0 && (
               <div style={styles.section}>
                 <div style={{ ...styles.sectionLabel, color: INFLUENCE_RECEIVED_COLOR }}>
-                  Influenced By ({influencedBy.length})
+                  {t('constellation.influencedBy')} ({influencedBy.length})
                 </div>
                 <div style={styles.connectionsList}>
                   {influencedBy.map((edge, i) => {
@@ -231,7 +234,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
             {influenced.length > 0 && (
               <div style={styles.section}>
                 <div style={{ ...styles.sectionLabel, color: INFLUENCE_GIVEN_COLOR }}>
-                  Influenced ({influenced.length})
+                  {t('constellation.influenced')} ({influenced.length})
                 </div>
                 <div style={styles.connectionsList}>
                   {influenced.map((edge, i) => {
@@ -256,7 +259,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
             {otherConnections.length > 0 && (
               <div style={styles.section}>
                 <div style={styles.sectionLabel}>
-                  Other Connections ({otherConnections.length})
+                  {t('constellation.otherConnections')} ({otherConnections.length})
                 </div>
                 <div style={styles.connectionsList}>
                   {otherConnections.map((edge, i) => {
@@ -290,7 +293,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
   );
 }
 
-function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear }) {
+function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear, t }) {
   const source = findPhilosopher(edge.source_id);
   const target = findPhilosopher(edge.target_id);
   const edgeType = getEdgeType(edge);
@@ -344,7 +347,7 @@ function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear }) {
 
       {edge.description && (
         <div style={styles.section}>
-          <div style={styles.sectionLabel}>Relationship</div>
+          <div style={styles.sectionLabel}>{t('constellation.relationship')}</div>
           <p style={styles.edgeDescription}>{edge.description}</p>
         </div>
       )}
@@ -363,6 +366,8 @@ export function ConstellationInfoPanel({
   formatYear,
   isMobile = false,
 }) {
+  const { t } = useTranslation();
+  
   // Mobile: bottom sheet covering 80% of screen
   // Desktop: right sidebar
   const containerStyle = isMobile
@@ -379,7 +384,7 @@ export function ConstellationInfoPanel({
       {isMobile && <div style={styles.dragHandle} />}
       
       {/* Close button */}
-      <button style={closeButtonStyle} onClick={onClose} aria-label="Close">
+      <button style={closeButtonStyle} onClick={onClose} aria-label={t('constellation.close')}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M18 6L6 18M6 6l12 12" />
         </svg>
@@ -393,6 +398,7 @@ export function ConstellationInfoPanel({
           findPhilosopher={findPhilosopher}
           onNodeSelect={onNodeSelect}
           formatYear={formatYear}
+          t={t}
         />
       )}
 
@@ -402,6 +408,7 @@ export function ConstellationInfoPanel({
           findPhilosopher={findPhilosopher}
           onNodeSelect={onNodeSelect}
           formatYear={formatYear}
+          t={t}
         />
       )}
     </div>

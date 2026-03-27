@@ -4,6 +4,7 @@
 // ============================================================
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useConstellation, BATTLE_COLORS, ERAS } from '@hooks/useConstellation';
 import { ConstellationScene } from './ConstellationScene.jsx';
 import { TimelineControls } from './TimelineControls.jsx';
@@ -11,31 +12,32 @@ import { ConstellationInfoPanel } from './ConstellationInfoPanel.jsx';
 import { ConstellationSearch } from './ConstellationSearch.jsx';
 
 // Loading state component
-function LoadingState() {
+function LoadingState({ t }) {
   return (
     <div style={styles.loadingContainer}>
       <div style={styles.loadingSpinner} />
-      <div style={styles.loadingText}>Loading the Constellation...</div>
-      <div style={styles.loadingSubtext}>2,600 years of human thought</div>
+      <div style={styles.loadingText}>{t('constellation.loading')}</div>
+      <div style={styles.loadingSubtext}>{t('constellation.loadingSubtext')}</div>
     </div>
   );
 }
 
 // Error state component
-function ErrorState({ error, onRetry }) {
+function ErrorState({ error, onRetry, t }) {
   return (
     <div style={styles.errorContainer}>
       <div style={styles.errorIcon}>⚠</div>
-      <div style={styles.errorText}>Failed to load constellation data</div>
-      <div style={styles.errorSubtext}>{error?.message || 'Unknown error'}</div>
+      <div style={styles.errorText}>{t('constellation.loadError')}</div>
+      <div style={styles.errorSubtext}>{error?.message || t('constellation.unknownError')}</div>
       <button style={styles.retryButton} onClick={onRetry}>
-        Retry
+        {t('constellation.retry')}
       </button>
     </div>
   );
 }
 
 export function ConstellationOfIdeas() {
+  const { t } = useTranslation();
   const sceneRef = useRef(null);
   const [showSearch, setShowSearch] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -144,12 +146,12 @@ export function ConstellationOfIdeas() {
 
   // Render loading state
   if (loading) {
-    return <LoadingState />;
+    return <LoadingState t={t} />;
   }
 
   // Render error state
   if (error) {
-    return <ErrorState error={error} onRetry={handleRetry} />;
+    return <ErrorState error={error} onRetry={handleRetry} t={t} />;
   }
 
   const visibleNodes = getVisibleNodes();
@@ -207,8 +209,8 @@ export function ConstellationOfIdeas() {
         </span>
         <span style={styles.nodeCount}>
           {selectedEra || selectedSchool 
-            ? `${visibleNodes.length} philosophers · ${selectedEra ? ERAS.find(e => e.id === selectedEra)?.label : selectedSchool}`
-            : `${visibleNodes.length} philosophers`
+            ? `${visibleNodes.length} ${t('constellation.philosophers')} · ${selectedEra ? ERAS.find(e => e.id === selectedEra)?.label : selectedSchool}`
+            : `${visibleNodes.length} ${t('constellation.philosophers')}`
           }
         </span>
       </div>
@@ -217,7 +219,7 @@ export function ConstellationOfIdeas() {
       <button
         style={styles.searchButton}
         onClick={() => setShowSearch(true)}
-        aria-label="Search philosophers"
+        aria-label={t('constellation.searchPhilosophers')}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="11" cy="11" r="8" />

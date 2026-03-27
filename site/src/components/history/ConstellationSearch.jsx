@@ -3,6 +3,7 @@
 // ============================================================
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
 export function ConstellationSearch({
@@ -11,6 +12,7 @@ export function ConstellationSearch({
   onClose,
   formatYear,
 }) {
+  const { t } = useTranslation();
   const inputRef = useRef(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -71,7 +73,7 @@ export function ConstellationSearch({
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search philosophers..."
+            placeholder={t('constellation.searchPlaceholder')}
             style={styles.input}
           />
           <button style={styles.closeButton} onClick={onClose}>
@@ -128,14 +130,14 @@ export function ConstellationSearch({
         {/* No results */}
         {query.trim() && results.length === 0 && (
           <div style={styles.noResults}>
-            No philosophers found matching "{query}"
+            {t('constellation.noResults')} "{query}"
           </div>
         )}
 
         {/* Hint */}
         {!query.trim() && (
           <div style={styles.hint}>
-            Start typing to search 2,600 years of philosophical thought
+            {t('constellation.searchHint')}
           </div>
         )}
       </div>

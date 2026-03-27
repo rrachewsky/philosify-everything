@@ -3,6 +3,7 @@
 // ============================================================
 
 import React, { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ERAS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
 const SPEEDS = [0.5, 1, 2, 4, 8];
@@ -24,6 +25,7 @@ export function TimelineControls({
   toggleSchoolFilter,
   schools = [],
 }) {
+  const { t } = useTranslation();
   const sliderRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showEras, setShowEras] = useState(false);
@@ -82,7 +84,7 @@ export function TimelineControls({
         <button
           style={styles.eraToggle}
           onClick={() => setShowEras(!showEras)}
-          aria-label="Show eras"
+          aria-label={t('constellation.showEras')}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 12h18M3 6h18M3 18h18" />
@@ -113,7 +115,7 @@ export function TimelineControls({
                 }}
                 onClick={() => toggleEraFilter(selectedEra)}
               >
-                ✕ Clear
+                ✕ {t('constellation.clear')}
               </button>
             )}
           </div>
@@ -125,7 +127,7 @@ export function TimelineControls({
         <button
           style={styles.schoolToggle}
           onClick={() => setShowSchools(!showSchools)}
-          aria-label="Filter by school"
+          aria-label={t('constellation.filterBySchool')}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="3" />
@@ -164,7 +166,7 @@ export function TimelineControls({
                 }}
                 onClick={() => toggleSchoolFilter(selectedSchool)}
               >
-                ✕ Clear
+                ✕ {t('constellation.clear')}
               </button>
             )}
           </div>
@@ -177,7 +179,7 @@ export function TimelineControls({
         <button
           style={styles.playButton}
           onClick={togglePlay}
-          aria-label={isPlaying ? 'Pause' : 'Play'}
+          aria-label={isPlaying ? t('constellation.pause') : t('constellation.play')}
         >
           {isPlaying ? (
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
