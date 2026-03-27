@@ -2928,7 +2928,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Leap of faith; subjectivity is truth; against Hegel'],
     historical_weight: 0.75,
-    battles: { reason_faith: -0.7, reality_mysticism: -0.5, individual_collective: 0.8, freedom_coercion: 0.6, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: -0.3 }
+    // Kierkegaard: Father of existentialism; "leap of faith" over reason; "truth is subjectivity"; radical individualist; faith-based values
+    battles: { reason_faith: -0.8, reality_mysticism: -0.5, individual_collective: 0.8, freedom_coercion: 0.6, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: -0.4 }
   },
 
   // MARXIST (1)
@@ -2970,7 +2971,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Truth as long-run consensus of inquirers — replaces correspondence to reality with social agreement'],
     historical_weight: 1.0,
-    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.2 }
+    // Peirce: Founded pragmatism; rigorous logician but truth=consensus undermines correspondence; accepts external reality but social truth
+    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: 0.2, good_evil: -0.3 }
   },
   {
     id: 'william_james',
@@ -2989,7 +2991,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Truth is what works — explicitly rejects correspondence theory of truth; pragmatic cash-value'],
     historical_weight: 0.7,
-    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+    // James: "Will to Believe" defends faith; "Varieties of Religious Experience" sympathetic to mysticism; individualist, liberal
+    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: -0.4, market_planning: 0.2, beauty_chaos: 0.2, good_evil: -0.4 }
   },
   {
     id: 'john_dewey',
@@ -3008,7 +3011,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Instrumentalism; truth as tool for biological adaptation; no objective standards independent of use'],
     historical_weight: 0.7,
-    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: -0.4, freedom_coercion: -0.3, value_nihilism: -0.3, market_planning: -0.4, beauty_chaos: 0.2, good_evil: 0.2 }
+    // Dewey: Instrumentalism; progressive education (state control); democratic socialism; "growth" as only end; no fixed human nature
+    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: -0.5, freedom_coercion: -0.4, value_nihilism: -0.4, market_planning: -0.5, beauty_chaos: 0.1, good_evil: -0.4 }
   },
 
   // ANALYTIC (1)
@@ -3050,7 +3054,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Phenomenological reduction brackets objective reality; consciousness constitutes the world'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.4, reality_mysticism: -0.4, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
+    // Husserl: "Philosophy as rigorous science" - rigorous method seeking certainty; BUT brackets natural attitude, transcendental idealism; consciousness constitutes world
+    battles: { reason_faith: 0.5, reality_mysticism: -0.5, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
   },
 
   // VITALIST (1)
@@ -3071,7 +3076,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Élan vital; intuition over intellect and mechanism'],
     historical_weight: 1.0,
-    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
+    // Bergson: Explicitly "intuition over intellect"; élan vital is mystical life force; duration vs spatialized time; creative evolution; valued freedom & creativity
+    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.2 }
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -3410,7 +3416,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Existenz; transcendence; limits of reason; boundary situations'],
     historical_weight: 0.7,
-    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
+    // Jaspers: Existenz; transcendence beyond reason; "the Encompassing"; boundary situations reveal limits; anti-Nazi; individualist
+    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.1 }
   },
 
   // ANALYTIC (6)
@@ -3469,7 +3476,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Late: language games dissolve objective meaning; meaning is use, not correspondence to reality'],
     historical_weight: 0.85,
-    battles: { reason_faith: -0.3, reality_mysticism: -0.3, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.3, good_evil: -0.2 }
+    // Wittgenstein (late): Dissolves philosophy as language confusion; no correspondence to reality; language games are local/social; ethics is unsayable; family resemblances
+    battles: { reason_faith: -0.4, reality_mysticism: -0.4, individual_collective: 0.2, freedom_coercion: 0.2, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: -0.1, good_evil: -0.4 }
   },
   {
     id: 'gilbert_ryle',
@@ -3526,7 +3534,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Integrity and internal reasons dissolve objective moral standards — moral relativism with analytic credentials'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: 0.3, good_evil: -0.4 }
+    // Williams: Analytic rigor (pro-reason method); naturalist; internal reasons ONLY - no objective external standards; moral luck; critic of moral theory; liberal
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: -0.5, market_planning: 0.0, beauty_chaos: 0.2, good_evil: -0.5 }
   },
   {
     id: 'john_searle',
@@ -3625,7 +3634,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Being over cognition; Dasein; critique of Cartesian reason'],
     historical_weight: 1.0,
-    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: -0.3, freedom_coercion: -0.4, value_nihilism: -0.4, market_planning: -0.3, beauty_chaos: 0.3, good_evil: -0.4 }
+    // Heidegger: Attacks "calculative thinking"; Being is mysterious/poetic; Nazi rector; anti-modern/anti-technology; no ethics
+    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: -0.4, freedom_coercion: -0.5, value_nihilism: -0.4, market_planning: -0.4, beauty_chaos: 0.2, good_evil: -0.5 }
   },
   {
     id: 'jean_paul_sartre',
@@ -3644,7 +3654,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Existence precedes essence — denies human nature; radical freedom has no rational grounding in reality'],
     historical_weight: 0.85,
-    battles: { reason_faith: -0.3, reality_mysticism: -0.4, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: -0.3, market_planning: -0.5, beauty_chaos: 0.2, good_evil: -0.2 }
+    // Sartre: Uses argument (not mystical) but denies essence; early freedom talk but late Marxist; supported communist regimes; "condemned to be free"
+    battles: { reason_faith: -0.2, reality_mysticism: -0.4, individual_collective: 0.2, freedom_coercion: 0.0, value_nihilism: -0.5, market_planning: -0.6, beauty_chaos: 0.1, good_evil: -0.5 }
   },
   {
     id: 'simone_de_beauvoir',
@@ -3663,7 +3674,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Existentialist feminism; situation over nature; no objective human essence or sex-based identity'],
     historical_weight: 0.65,
-    battles: { reason_faith: -0.3, reality_mysticism: -0.4, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: -0.2, market_planning: -0.4, beauty_chaos: 0.2, good_evil: -0.1 }
+    // Beauvoir: Philosophical argument but denies essence; individual situation but collectivist politics; Maoist sympathies; "Ethics of Ambiguity"
+    battles: { reason_faith: -0.2, reality_mysticism: -0.4, individual_collective: 0.1, freedom_coercion: 0.0, value_nihilism: -0.4, market_planning: -0.5, beauty_chaos: 0.1, good_evil: -0.4 }
   },
   {
     id: 'albert_camus',
@@ -3682,7 +3694,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Absurdism: universe is irrational and indifferent; revolt without rational foundation'],
     historical_weight: 0.7,
-    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: -0.5, market_planning: 0.0, beauty_chaos: 0.3, good_evil: -0.3 }
+    // Camus: Uses reason to analyze absurdity; universe is indifferent; rejected communism (broke with Sartre); individual revolt; no objective moral order
+    battles: { reason_faith: -0.3, reality_mysticism: -0.4, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: -0.6, market_planning: 0.1, beauty_chaos: 0.3, good_evil: -0.4 }
   },
 
   // PHENOMENOLOGY (3)
@@ -4080,7 +4093,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Incredulity toward metanarratives; end of grand reason'],
     historical_weight: 0.6,
-    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: 0.2, freedom_coercion: 0.2, value_nihilism: -0.6, market_planning: -0.2, beauty_chaos: -0.4, good_evil: -0.5 }
+    // Lyotard: Rejects reason as universal metanarrative; no objective reality, just language games; no progress or meaning; leftist; sublime over beautiful
+    battles: { reason_faith: -0.8, reality_mysticism: -0.6, individual_collective: 0.1, freedom_coercion: 0.2, value_nihilism: -0.7, market_planning: -0.3, beauty_chaos: -0.4, good_evil: -0.6 }
   },
   {
     id: 'gilles_deleuze',
@@ -4099,7 +4113,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Difference and repetition; anti-dialectics; rhizome'],
     historical_weight: 0.65,
-    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: -0.4, market_planning: -0.3, beauty_chaos: -0.3, good_evil: -0.3 }
+    // Deleuze: Anti-dialectical, rejects systematic logic; flux/multiplicities; celebrates difference; nomadic, anti-authority; immanent values; anti-capitalist
+    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: -0.3, market_planning: -0.4, beauty_chaos: -0.2, good_evil: -0.4 }
   },
   {
     id: 'michel_foucault',
@@ -4118,7 +4133,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Power-knowledge regimes; genealogy of truth'],
     historical_weight: 1.0,
-    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: -0.4, freedom_coercion: -0.3, value_nihilism: -0.6, market_planning: -0.4, beauty_chaos: -0.4, good_evil: -0.5 }
+    // Foucault: Truth is power relations; reality constructed by discourse; subject is power-construct; late libertarian turn; morality is power
+    battles: { reason_faith: -0.7, reality_mysticism: -0.5, individual_collective: -0.3, freedom_coercion: -0.2, value_nihilism: -0.6, market_planning: -0.3, beauty_chaos: -0.3, good_evil: -0.6 }
   },
   {
     id: 'jean_baudrillard',
@@ -4137,7 +4153,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Hyperreality; simulation replaces the real'],
     historical_weight: 0.6,
-    battles: { reason_faith: -0.6, reality_mysticism: -0.8, individual_collective: 0.1, freedom_coercion: 0.1, value_nihilism: -0.7, market_planning: -0.2, beauty_chaos: -0.5, good_evil: -0.5 }
+    // Baudrillard: Reality is GONE, only simulation; reason can't penetrate hyperreality; freedom is illusory; no authentic values; morality is simulacrum
+    battles: { reason_faith: -0.5, reality_mysticism: -0.9, individual_collective: 0.0, freedom_coercion: -0.1, value_nihilism: -0.8, market_planning: -0.4, beauty_chaos: -0.5, good_evil: -0.6 }
   },
   {
     id: 'jacques_derrida',
@@ -4156,7 +4173,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Deconstruction; all texts endlessly defer meaning'],
     historical_weight: 0.85,
-    battles: { reason_faith: -0.8, reality_mysticism: -0.7, individual_collective: 0.1, freedom_coercion: 0.2, value_nihilism: -0.6, market_planning: -0.2, beauty_chaos: -0.4, good_evil: -0.5 }
+    // Derrida: Deconstruction attacks logos/reason itself; no presence, only traces; meaning endlessly deferred; anti-totalitarian; ethics without foundations
+    battles: { reason_faith: -0.8, reality_mysticism: -0.7, individual_collective: 0.0, freedom_coercion: 0.2, value_nihilism: -0.7, market_planning: -0.3, beauty_chaos: -0.4, good_evil: -0.6 }
   },
 
   // VIRTUE ETHICS (1)
@@ -4177,7 +4195,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Tradition-dependent rationality — no universal reason, only internal standards of practices'],
     historical_weight: 1.0,
-    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: -0.2, beauty_chaos: 0.3, good_evil: 0.3 }
+    // MacIntyre: Rejects universal reason, only tradition-internal; historicist; communitarian; critic of liberalism & capitalism; virtue but tradition-dependent
+    battles: { reason_faith: -0.4, reality_mysticism: -0.2, individual_collective: -0.4, freedom_coercion: -0.1, value_nihilism: 0.4, market_planning: -0.3, beauty_chaos: 0.2, good_evil: 0.3 }
   },
 
   // NEO-PRAGMATIST (1)
@@ -4198,7 +4217,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['No mirror of nature; truth is contingent and social'],
     historical_weight: 1.0,
-    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: -0.5, market_planning: -0.2, beauty_chaos: -0.3, good_evil: -0.4 }
+    // Rorty: Explicitly attacks reason's ability to know truth; no mirror of nature; values are contingent social constructs; liberal democrat; moral relativist
+    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: -0.6, market_planning: -0.3, beauty_chaos: -0.4, good_evil: -0.5 }
   },
 
   // ANARCHO-CAPITALIST (1 in 20th century)
