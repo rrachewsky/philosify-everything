@@ -6,6 +6,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
+// Helper to get translated philosopher name
+const getTranslatedName = (node, t) => {
+  if (!node?.id) return node?.name || '';
+  const translatedName = t(`constellation.names.${node.id}`, { defaultValue: '' });
+  return translatedName || node.name;
+};
+
 export function ConstellationSearch({
   searchPhilosopher,
   onSelect,
@@ -105,7 +112,7 @@ export function ConstellationSearch({
                     }}
                   />
                   <div style={styles.resultInfo}>
-                    <div style={styles.resultName}>{node.name}</div>
+                    <div style={styles.resultName}>{getTranslatedName(node, t)}</div>
                     <div style={styles.resultMeta}>
                       {formatYear(node.birth_year)} · {node.school_of_thought}
                     </div>

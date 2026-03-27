@@ -111,11 +111,19 @@ function BattleBar({ battle, score, t }) {
   );
 }
 
+// Helper to get translated philosopher name
+const getTranslatedName = (node, t) => {
+  if (!node?.id) return node?.name || '';
+  const translatedName = t(`constellation.names.${node.id}`, { defaultValue: '' });
+  return translatedName || node.name;
+};
+
 function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear, t }) {
   const connections = getNodeConnections(node.id);
   const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
   const [imageError, setImageError] = React.useState(false);
   const contentRef = React.useRef(null);
+  const translatedName = getTranslatedName(node, t);
 
   // Reset image error and scroll to top when node changes
   React.useEffect(() => {
@@ -143,14 +151,14 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
         ) : (
           <div style={{ ...styles.portraitPlaceholder, background: schoolColor }}>
             <span style={styles.portraitInitial}>
-              {node.name.charAt(0)}
+              {translatedName.charAt(0)}
             </span>
           </div>
         )}
         
         {/* Name, dates, birthplace, era, school - all compact */}
         <div style={styles.headerText}>
-          <h2 style={styles.name}>{node.name}</h2>
+          <h2 style={styles.name}>{translatedName}</h2>
           <div style={styles.dates}>
             {formatYear(node.birth_year)} – {formatYear(node.death_year)}
           </div>
@@ -222,7 +230,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
                         onClick={() => onNodeSelect(edge.source_id)}
                       >
                         <span style={{ ...styles.connectionDot, background: INFLUENCE_RECEIVED_COLOR }} />
-                        <span style={styles.connectionName}>{other.name}</span>
+                        <span style={styles.connectionName}>{getTranslatedName(other, t)}</span>
                       </button>
                     );
                   })}
@@ -247,7 +255,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
                         onClick={() => onNodeSelect(edge.target_id)}
                       >
                         <span style={{ ...styles.connectionDot, background: INFLUENCE_GIVEN_COLOR }} />
-                        <span style={styles.connectionName}>{other.name}</span>
+                        <span style={styles.connectionName}>{getTranslatedName(other, t)}</span>
                       </button>
                     );
                   })}
@@ -278,7 +286,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
                             background: CONNECTION_COLORS[getEdgeType(edge)] || '#888',
                           }}
                         />
-                        <span style={styles.connectionName}>{other.name}</span>
+                        <span style={styles.connectionName}>{getTranslatedName(other, t)}</span>
                         <span style={styles.connectionType}>{getEdgeType(edge)}</span>
                       </button>
                     );
@@ -328,7 +336,7 @@ function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear, t }) {
           style={styles.edgeNodeButton}
           onClick={() => onNodeSelect(source.id)}
         >
-          <span style={styles.edgeNodeName}>{source.name}</span>
+          <span style={styles.edgeNodeName}>{getTranslatedName(source, t)}</span>
           <span style={styles.edgeNodeDates}>{formatYear(source.birth_year)}</span>
         </button>
 
@@ -340,7 +348,7 @@ function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear, t }) {
           style={styles.edgeNodeButton}
           onClick={() => onNodeSelect(target.id)}
         >
-          <span style={styles.edgeNodeName}>{target.name}</span>
+          <span style={styles.edgeNodeName}>{getTranslatedName(target, t)}</span>
           <span style={styles.edgeNodeDates}>{formatYear(target.birth_year)}</span>
         </button>
       </div>
