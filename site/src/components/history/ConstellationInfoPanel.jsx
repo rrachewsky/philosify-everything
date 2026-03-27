@@ -66,7 +66,14 @@ function BattleBar({ battle, score }) {
         {/* Always show labels in consistent order: positive vs negative */}
         <span style={{ ...styles.battleDominant, color: isPositive ? color : '#888' }}>{positiveLabel}</span>
         <span style={styles.battleVs}>vs</span>
-        <span style={{ ...styles.battleOpposite, color: !isPositive ? color : undefined }}>{negativeLabel}</span>
+        <span
+          style={{
+            ...styles.battleOpposite,
+            color: !isPositive ? color : styles.battleOpposite.color,
+          }}
+        >
+          {negativeLabel}
+        </span>
       </div>
       <div style={styles.battleTrack}>
         <div
