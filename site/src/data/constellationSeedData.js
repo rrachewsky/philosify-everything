@@ -61,6 +61,7 @@ export const SCHOOL_COLORS = {
   'Anarcho-Capitalist': '#AA6600',
   // NEW SCHOOLS
   'Austrian Economics': '#D4952A',
+  'Chicago School': '#4A7BA7',
   'Voluntaryist': '#5BAD8F',
   'Abolitionist': '#4A90D9',
   'Anarcho-Communist': '#CC3333',
@@ -126,6 +127,7 @@ export const SCHOOL_STANCES = {
   'Anarcho-Capitalist': 'anti',  // Utopian mysticism; subjectivist ethics; competing agencies = no objective law = might makes right; anti-IP
   // NEW SCHOOLS
   'Austrian Economics': 'pro',
+  'Chicago School': 'pro',  // Monetarist, empiricist, free market - defends capitalism (even if with positivist methodology)
   'Voluntaryist': 'pro',
   'Abolitionist': 'pro',
   'Anarcho-Communist': 'anti',
@@ -3236,12 +3238,12 @@ export const SEED_NODES = [
     birth_country_modern: 'United States',
     latitude: 40.6782,
     longitude: -73.9442,
-    school_of_thought: 'Chicago Economics',
-    school: 'Austrian Economics',
+    school_of_thought: 'Monetarism',
+    school: 'Chicago School',
     tradition: 'western',
     stance: 'pro',
-    is_champion: false,
-    key_ideas: ['Capitalism and Freedom; monetarism; free markets; school choice'],
+    is_champion: true,
+    key_ideas: ['Capitalism and Freedom; monetarism; empiricist methodology; free markets; school choice'],
     historical_weight: 0.85,
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
   },
