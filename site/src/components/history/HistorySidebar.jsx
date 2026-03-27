@@ -4,6 +4,7 @@
 // ============================================================
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ConstellationOfIdeas } from './ConstellationOfIdeas.jsx';
 
 // Error boundary to catch 3D rendering crashes
@@ -140,6 +141,8 @@ const titleStyle = {
 };
 
 export function HistorySidebar({ isOpen, onClose }) {
+  const { t } = useTranslation();
+  
   if (!isOpen) return null;
 
   return (
@@ -147,14 +150,14 @@ export function HistorySidebar({ isOpen, onClose }) {
       <div style={panelStyle} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div style={headerStyle}>
-          <button style={backButtonStyle} onClick={onClose} aria-label="Close">
+          <button style={backButtonStyle} onClick={onClose} aria-label={t('common.close', 'Close')}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </button>
           <div style={titleStyle}>
             <span style={{ color: '#D6158C' }}>&#9678;</span>
-            History of Philosophy
+            {t('nav.history', 'History of Philosophy')}
           </div>
           <div style={{ width: 36 }} /> {/* Spacer for alignment */}
         </div>

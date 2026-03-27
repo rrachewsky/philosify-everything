@@ -409,13 +409,13 @@ export function ConstellationInfoPanel({
 }
 
 const styles = {
-  // Desktop: right sidebar
+  // Desktop: right sidebar - overlaps controls at bottom
   container: {
     position: 'absolute',
     top: 70,
     right: 16,
     width: 320,
-    maxHeight: 'calc(100vh - 200px)',
+    maxHeight: 'calc(100vh - 90px)',
     background: 'rgba(15, 15, 25, 0.95)',
     borderRadius: 12,
     border: '1px solid rgba(255, 255, 255, 0.1)',
