@@ -645,7 +645,7 @@ const styles = {
 
   battleOpposite: {
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.72)',
+    color: 'rgba(255, 255, 255, 0.96)',
   },
 
   battleTrack: {
