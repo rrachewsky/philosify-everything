@@ -34,29 +34,6 @@ function latLngToVector3(lat, lng, radius) {
   return new THREE.Vector3(x, y, z);
 }
 
-// Create glow sprite material
-function createGlowMaterial(color) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 64;
-  canvas.height = 64;
-  const ctx = canvas.getContext('2d');
-  
-  const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-  gradient.addColorStop(0, color);
-  gradient.addColorStop(0.4, color.replace(')', ', 0.5)').replace('rgb', 'rgba'));
-  gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-  
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, 64, 64);
-  
-  const texture = new THREE.CanvasTexture(canvas);
-  return new THREE.SpriteMaterial({
-    map: texture,
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-  });
-}
-
 // Calculate relative luminance of a hex color (for contrast calculation)
 // Returns value 0-1, where 0 is black and 1 is white
 function getRelativeLuminance(hexColor) {
@@ -234,21 +211,6 @@ function createTextSprite(text, color, isFoundational = false, isMostFoundationa
   return createTextCard(text, color, isFoundational, isMostFoundational);
 }
 
-// Create thin line connecting label to satellite
-function createLabelLine(startPos, endPos, color) {
-  const points = [startPos, endPos];
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  
-  const material = new THREE.LineBasicMaterial({
-    color: new THREE.Color(color),
-    transparent: true,
-    opacity: 0.3,
-    linewidth: 1,
-  });
-  
-  return new THREE.Line(geometry, material);
-}
-
 function getLayoutConfig() {
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
   const isMobile = viewportWidth < 768;
@@ -387,43 +349,6 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   
   // Get school color (primary) with tradition as fallback
   const schoolColorHex = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#FFFFFF';
-  const color = new THREE.Color(schoolColorHex);
-  
-  // Core sphere - larger for foundational philosophers
-  const mentionBonus = Math.min(0.5, (node.mention_count || 0) * 0.02);
-  const foundationalBonus = isMostFoundational ? 0.6 : (isFoundational ? 0.3 : 0);
-  const coreSize = 0.8 + mentionBonus + foundationalBonus;
-  const coreGeometry = new THREE.SphereGeometry(coreSize, 16, 16);
-  const coreMaterial = new THREE.MeshBasicMaterial({
-    color: color,
-    transparent: true,
-    opacity: isMostFoundational ? 1.0 : 0.9,
-  });
-  const core = new THREE.Mesh(coreGeometry, coreMaterial);
-  group.add(core);
-  
-  // Outer glow (larger for foundational philosophers)
-  const mentionWeight = Math.min(0.3, (node.mention_count || 0) * 0.01);
-  const glowScale = 3 + (weight + mentionWeight) * 4 + (isMostFoundational ? 3 : (isFoundational ? 1.5 : 0));
-  const glowMaterial = createGlowMaterial(`rgb(${Math.round(color.r * 255)}, ${Math.round(color.g * 255)}, ${Math.round(color.b * 255)})`);
-  const glow = new THREE.Sprite(glowMaterial);
-  glow.scale.set(glowScale, glowScale, 1);
-  group.add(glow);
-  
-  // Auto-enriched indicator: pulsing ring (for nodes referenced in Philosify analyses)
-  if (node.auto_enriched && node.mention_count > 0) {
-    const ringGeometry = new THREE.RingGeometry(coreSize + 0.3, coreSize + 0.5, 32);
-    const ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0xD6158C, // Philosify magenta
-      transparent: true,
-      opacity: 0.6,
-      side: THREE.DoubleSide,
-    });
-    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-    ring.userData.isPulseRing = true;
-    ring.userData.pulsePhase = Math.random() * Math.PI * 2; // Random phase for variety
-    group.add(ring);
-  }
   
   // Name label - bold and larger for foundational philosophers
   const labelOffset = layout.labelOffset + (isMostFoundational ? 1.2 : (isFoundational ? 0.6 : 0));
@@ -432,12 +357,9 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   labelSprite.userData.isLabel = true;
   group.add(labelSprite);
   
-  // Thin line connecting label to satellite sphere
-  const labelLineStart = new THREE.Vector3(0, coreSize + 0.2, 0);
-  const labelLineEnd = new THREE.Vector3(0, labelOffset - 1.5, 0);
-  const labelLine = createLabelLine(labelLineStart, labelLineEnd, schoolColorHex);
-  labelLine.userData.isLabelLine = true;
-  group.add(labelLine);
+  const cardHeight = labelSprite.userData.cardHeight || 0;
+  const tetherAnchorLocal = new THREE.Vector3(0, labelOffset - cardHeight / 2, 0);
+  group.userData.tetherAnchorLocal = tetherAnchorLocal.clone();
   
   // Position directly above city at calculated altitude
   // This position is in Earth-local coordinates (satellite is child of Earth)
@@ -562,7 +484,7 @@ function createSchoolConnection(sourcePos, targetPos, schoolName) {
 function createTetherLine(surfacePos, satellitePos, traditionColor) {
   const color = new THREE.Color(traditionColor);
   
-  // Straight line from satellite to surface
+  // Straight line from the card down to the birthplace on Earth.
   const points = [satellitePos.clone(), surfacePos.clone()];
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
   
@@ -1080,8 +1002,10 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         // Create tether line from satellite to city on Earth surface
         const surfacePos = satellite.userData.surfacePosition;
         const targetPos = satellite.userData.targetPosition;
+        const tetherAnchorLocal = satellite.userData.tetherAnchorLocal || new THREE.Vector3();
+        const tetherStart = targetPos.clone().add(tetherAnchorLocal);
         const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#FFFFFF';
-        const tetherLine = createTetherLine(surfacePos, targetPos, schoolColor);
+        const tetherLine = createTetherLine(surfacePos, tetherStart, schoolColor);
         earth.add(tetherLine);
         tetherLinesRef.current.set(node.id, tetherLine);
 

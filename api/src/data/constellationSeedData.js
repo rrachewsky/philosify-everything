@@ -135,7 +135,6 @@ export const SCHOOL_STANCES = {
   'Transcendentalist': 'anti',
   'Church Fathers': 'anti',
 };
-
 export const SEED_NODES = [
   // ═══════════════════════════════════════════════════════════
   // EASTERN PHILOSOPHY - 13 philosophers
@@ -2901,7 +2900,45 @@ export const SEED_NODES = [
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.75 }
   },
 
-  // AUSTRIAN ECONOMICS (4)
+  // AUSTRIAN ECONOMICS (6)
+  {
+    id: 'carl_menger',
+    name: 'Carl Menger',
+    birth_year: 1840,
+    death_year: 1921,
+    dates: '1840–1921',
+    birth_city: 'Neu-Sandez',
+    birth_country_modern: 'Poland',
+    latitude: 49.6250,
+    longitude: 20.6917,
+    school_of_thought: 'Austrian Economics',
+    school: 'Austrian Economics',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Founder of Austrian School; subjective theory of value; Principles of Economics (1871); methodological individualism'],
+    historical_weight: 1.0,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'eugen_bohm_bawerk',
+    name: 'Eugen von Böhm-Bawerk',
+    birth_year: 1851,
+    death_year: 1914,
+    dates: '1851–1914',
+    birth_city: 'Brno',
+    birth_country_modern: 'Czech Republic',
+    latitude: 49.1951,
+    longitude: 16.6068,
+    school_of_thought: 'Austrian Economics',
+    school: 'Austrian Economics',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Capital and Interest; critique of Marx exploitation theory; time preference; roundabout production'],
+    historical_weight: 0.85,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
   {
     id: 'ludwig_von_mises',
     name: 'Ludwig von Mises',
@@ -2977,6 +3014,63 @@ export const SEED_NODES = [
     key_ideas: ['Capitalism and Freedom; monetarism; empiricist methodology; free markets; school choice'],
     historical_weight: 0.85,
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'george_stigler',
+    name: 'George Stigler',
+    birth_year: 1911,
+    death_year: 1991,
+    dates: '1911–1991',
+    birth_city: 'Renton',
+    birth_country_modern: 'United States',
+    latitude: 47.4829,
+    longitude: -122.2171,
+    school_of_thought: 'Chicago Economics',
+    school: 'Chicago School',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Regulatory capture theory; economics of information; Nobel 1982; critique of government intervention'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'gary_becker',
+    name: 'Gary Becker',
+    birth_year: 1930,
+    death_year: 2014,
+    dates: '1930–2014',
+    birth_city: 'Pottsville',
+    birth_country_modern: 'United States',
+    latitude: 40.6856,
+    longitude: -76.1955,
+    school_of_thought: 'Chicago Economics',
+    school: 'Chicago School',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Human capital theory; economics of discrimination; Nobel 1992; rational choice applied to all behavior'],
+    historical_weight: 0.75,
+    battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
+  },
+  {
+    id: 'thomas_sowell',
+    name: 'Thomas Sowell',
+    birth_year: 1930,
+    death_year: null,
+    dates: '1930–',
+    birth_city: 'Gastonia',
+    birth_country_modern: 'United States',
+    latitude: 35.2621,
+    longitude: -81.1873,
+    school_of_thought: 'Chicago Economics',
+    school: 'Chicago School',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['Knowledge and Decisions; Basic Economics; critique of egalitarianism; constrained vs unconstrained visions'],
+    historical_weight: 0.8,
+    battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.85 }
   },
 
   // EXISTENTIALIST (1)
@@ -4937,7 +5031,11 @@ export const SEED_EDGES = [
   // ═══════════════════════════════════════════════════════════
   // AUSTRIAN ECONOMICS LINEAGE
   // ═══════════════════════════════════════════════════════════
-  { source_id: 'adam_smith', target_id: 'ludwig_von_mises', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'adam_smith', target_id: 'carl_menger', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'carl_menger', target_id: 'eugen_bohm_bawerk', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'carl_menger', target_id: 'ludwig_von_mises', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'eugen_bohm_bawerk', target_id: 'ludwig_von_mises', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'eugen_bohm_bawerk', target_id: 'karl_marx', relationship_type: 'reacted against', weight: 2 },
   { source_id: 'immanuel_kant', target_id: 'ludwig_von_mises', relationship_type: 'influenced', weight: 2 },
   { source_id: 'ludwig_von_mises', target_id: 'friedrich_hayek', relationship_type: 'influenced', weight: 3 },
   { source_id: 'ludwig_von_mises', target_id: 'henry_hazlitt', relationship_type: 'influenced', weight: 3 },
@@ -4945,6 +5043,17 @@ export const SEED_EDGES = [
   { source_id: 'ludwig_von_mises', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 2 },
   { source_id: 'friedrich_hayek', target_id: 'milton_friedman', relationship_type: 'influenced', weight: 2 },
   { source_id: 'henry_hazlitt', target_id: 'ayn_rand', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // CHICAGO SCHOOL LINEAGE
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'milton_friedman', target_id: 'george_stigler', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'george_stigler', target_id: 'milton_friedman', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'milton_friedman', target_id: 'gary_becker', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'george_stigler', target_id: 'gary_becker', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'milton_friedman', target_id: 'thomas_sowell', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'friedrich_hayek', target_id: 'thomas_sowell', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'thomas_sowell', target_id: 'ayn_rand', relationship_type: 'reacted against', weight: 1 },
 
   // ═══════════════════════════════════════════════════════════
   // ANALYTIC ADDITIONS
@@ -4985,5 +5094,6 @@ export const SEED_EDGES = [
   { source_id: 'richard_dawkins', target_id: 'christopher_hitchens', relationship_type: 'influenced', weight: 2 },
   { source_id: 'christopher_hitchens', target_id: 'sam_harris', relationship_type: 'influenced', weight: 1 },
 ];
+
 
 export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES };
