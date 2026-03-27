@@ -135,6 +135,281 @@ export const SCHOOL_STANCES = {
   'Transcendentalist': 'anti',
   'Church Fathers': 'anti',
 };
+
+// ═══════════════════════════════════════════════════════════
+// PHILOSOPHER PORTRAITS - Self-hosted in /portraits/{id}.jpg
+// Download from DOWNLOAD_LIST.txt in site/public/portraits/
+// ═══════════════════════════════════════════════════════════
+export const PHILOSOPHER_PORTRAITS = {
+  // PRE-SOCRATICS & ANCIENT GREEKS
+  'thales': '/portraits/thales.jpg',
+  'anaximander': '/portraits/anaximander.jpg',
+  'anaximenes': '/portraits/anaximenes.jpg',
+  'pythagoras': '/portraits/pythagoras.jpg',
+  'heraclitus': '/portraits/heraclitus.jpg',
+  'parmenides': '/portraits/parmenides.jpg',
+  'anaxagoras': '/portraits/anaxagoras.jpg',
+  'empedocles': '/portraits/empedocles.jpg',
+  'zeno_of_elea': '/portraits/zeno_of_elea.jpg',
+  'democritus': '/portraits/democritus.jpg',
+  'protagoras': '/portraits/protagoras.jpg',
+  'gorgias': '/portraits/gorgias.jpg',
+  'thrasymachus': '/portraits/thrasymachus.jpg',
+  'socrates': '/portraits/socrates.jpg',
+  'plato': '/portraits/plato.jpg',
+  'aristotle': '/portraits/aristotle.jpg',
+  'diogenes': '/portraits/diogenes.jpg',
+  'pyrrho': '/portraits/pyrrho.jpg',
+  'carneades': '/portraits/carneades.jpg',
+  'sextus_empiricus': '/portraits/sextus_empiricus.jpg',
+  'epicurus': '/portraits/epicurus.jpg',
+  'zeno_of_citium': '/portraits/zeno_of_citium.jpg',
+  'chrysippus': '/portraits/chrysippus.jpg',
+  'cicero': '/portraits/cicero.jpg',
+  'lucretius': '/portraits/lucretius.jpg',
+  'seneca': '/portraits/seneca.jpg',
+  'epictetus': '/portraits/epictetus.jpg',
+  'marcus_aurelius': '/portraits/marcus_aurelius.jpg',
+  'plotinus': '/portraits/plotinus.jpg',
+  'porphyry': '/portraits/porphyry.jpg',
+  'proclus': '/portraits/proclus.jpg',
+  'hypatia': '/portraits/hypatia.jpg',
+  
+  // MEDIEVAL - CHRISTIAN, ISLAMIC, JEWISH
+  'augustine': '/portraits/augustine.jpg',
+  'boethius': '/portraits/boethius.jpg',
+  'anselm': '/portraits/anselm.jpg',
+  'bernard_of_clairvaux': '/portraits/bernard_of_clairvaux.jpg',
+  'peter_abelard': '/portraits/peter_abelard.jpg',
+  'al_kindi': '/portraits/al_kindi.jpg',
+  'al_farabi': '/portraits/al_farabi.jpg',
+  'avicenna': '/portraits/avicenna.jpg',
+  'al_ghazali': '/portraits/al_ghazali.jpg',
+  'averroes': '/portraits/averroes.jpg',
+  'maimonides': '/portraits/maimonides.jpg',
+  'thomas_aquinas': '/portraits/thomas_aquinas.jpg',
+  'duns_scotus': '/portraits/duns_scotus.jpg',
+  'william_of_ockham': '/portraits/william_of_ockham.jpg',
+  'meister_eckhart': '/portraits/meister_eckhart.jpg',
+  'roger_bacon': '/portraits/roger_bacon.jpg',
+  
+  // RENAISSANCE & EARLY MODERN
+  'erasmus': '/portraits/erasmus.jpg',
+  'machiavelli': '/portraits/machiavelli.jpg',
+  'pico_della_mirandola': '/portraits/pico_della_mirandola.jpg',
+  'thomas_more': '/portraits/thomas_more.jpg',
+  'montaigne': '/portraits/montaigne.jpg',
+  'giordano_bruno': '/portraits/giordano_bruno.jpg',
+  'hugo_grotius': '/portraits/hugo_grotius.jpg',
+  'francis_bacon': '/portraits/francis_bacon.jpg',
+  'thomas_hobbes': '/portraits/thomas_hobbes.jpg',
+  'rene_descartes': '/portraits/rene_descartes.jpg',
+  'blaise_pascal': '/portraits/blaise_pascal.jpg',
+  'baruch_spinoza': '/portraits/baruch_spinoza.jpg',
+  'john_locke': '/portraits/john_locke.jpg',
+  'john_milton': '/portraits/john_milton.jpg',
+  'algernon_sidney': '/portraits/algernon_sidney.jpg',
+  'malebranche': '/portraits/malebranche.jpg',
+  'leibniz': '/portraits/leibniz.jpg',
+  'isaac_newton': '/portraits/isaac_newton.jpg',
+  'george_berkeley': '/portraits/george_berkeley.jpg',
+  'christian_wolff': '/portraits/christian_wolff.jpg',
+  'giambattista_vico': '/portraits/giambattista_vico.jpg',
+  
+  // ENLIGHTENMENT
+  'montesquieu': '/portraits/montesquieu.jpg',
+  'voltaire': '/portraits/voltaire.jpg',
+  'david_hume': '/portraits/david_hume.jpg',
+  'rousseau': '/portraits/rousseau.jpg',
+  'diderot': '/portraits/diderot.jpg',
+  'adam_smith': '/portraits/adam_smith.jpg',
+  'immanuel_kant': '/portraits/immanuel_kant.jpg',
+  'condorcet': '/portraits/condorcet.jpg',
+  'edmund_burke': '/portraits/edmund_burke.jpg',
+  'mary_wollstonecraft': '/portraits/mary_wollstonecraft.jpg',
+  'lessing': '/portraits/lessing.jpg',
+  'hamann': '/portraits/hamann.jpg',
+  'herder': '/portraits/herder.jpg',
+  'jacobi': '/portraits/jacobi.jpg',
+  
+  // GERMAN IDEALISM & 19TH CENTURY
+  'fichte': '/portraits/fichte.jpg',
+  'schelling': '/portraits/schelling.jpg',
+  'schiller': '/portraits/schiller.jpg',
+  'hegel': '/portraits/hegel.jpg',
+  'schopenhauer': '/portraits/schopenhauer.jpg',
+  'feuerbach': '/portraits/feuerbach.jpg',
+  'kierkegaard': '/portraits/kierkegaard.jpg',
+  'karl_marx': '/portraits/karl_marx.jpg',
+  'friedrich_engels': '/portraits/friedrich_engels.jpg',
+  'auguste_comte': '/portraits/auguste_comte.jpg',
+  'jeremy_bentham': '/portraits/jeremy_bentham.jpg',
+  'john_stuart_mill': '/portraits/john_stuart_mill.jpg',
+  'darwin': '/portraits/darwin.jpg',
+  'herbert_spencer': '/portraits/herbert_spencer.jpg',
+  'nietzsche': '/portraits/nietzsche.jpg',
+  'dilthey': '/portraits/dilthey.jpg',
+  'frederic_bastiat': '/portraits/frederic_bastiat.jpg',
+  'alexis_de_tocqueville': '/portraits/alexis_de_tocqueville.jpg',
+  'frederick_douglass': '/portraits/frederick_douglass.jpg',
+  'max_stirner': '/portraits/max_stirner.jpg',
+  'de_maistre': '/portraits/de_maistre.jpg',
+  'wilhelm_von_humboldt': '/portraits/wilhelm_von_humboldt.jpg',
+  'max_weber': '/portraits/max_weber.jpg',
+  
+  // 19TH CENTURY LIBERTARIANS & ANARCHISTS
+  'lysander_spooner': '/portraits/lysander_spooner.jpg',
+  'pierre_joseph_proudhon': '/portraits/pierre_joseph_proudhon.jpg',
+  'mikhail_bakunin': '/portraits/mikhail_bakunin.jpg',
+  'peter_kropotkin': '/portraits/peter_kropotkin.jpg',
+  'emma_goldman': '/portraits/emma_goldman.jpg',
+  'la_boetie': '/portraits/la_boetie.jpg',
+  'auberon_herbert': '/portraits/auberon_herbert.jpg',
+  'lord_acton': '/portraits/lord_acton.jpg',
+  
+  // 20TH CENTURY - EARLY
+  'gottlob_frege': '/portraits/gottlob_frege.jpg',
+  'edmund_husserl': '/portraits/edmund_husserl.jpg',
+  'henri_bergson': '/portraits/henri_bergson.jpg',
+  'alfred_whitehead': '/portraits/alfred_whitehead.jpg',
+  'bertrand_russell': '/portraits/bertrand_russell.jpg',
+  'g_e_moore': '/portraits/g_e_moore.jpg',
+  'ludwig_wittgenstein': '/portraits/ludwig_wittgenstein.jpg',
+  'rudolf_carnap': '/portraits/rudolf_carnap.jpg',
+  'martin_heidegger': '/portraits/martin_heidegger.jpg',
+  'karl_jaspers': '/portraits/karl_jaspers.jpg',
+  'ortega': '/portraits/ortega_y_gasset.jpg',
+  'cassirer': '/portraits/cassirer.jpg',
+  'ludwig_von_mises': '/portraits/ludwig_von_mises.jpg',
+  'carl_menger': '/portraits/carl_menger.jpg',
+  'eugen_bohm_bawerk': '/portraits/eugen_bohm_bawerk.jpg',
+  'george_stigler': '/portraits/george_stigler.jpg',
+  'gary_becker': '/portraits/gary_becker.jpg',
+  'thomas_sowell': '/portraits/thomas_sowell.jpg',
+  'scheler': '/portraits/scheler.jpg',
+  'a_j_ayer': '/portraits/a_j_ayer.jpg',
+  'gilbert_ryle': '/portraits/gilbert_ryle.jpg',
+  
+  // 20TH CENTURY - MID & LATE
+  'karl_popper': '/portraits/karl_popper.jpg',
+  'theodor_adorno': '/portraits/theodor_adorno.jpg',
+  'max_horkheimer': '/portraits/max_horkheimer.jpg',
+  'herbert_marcuse': '/portraits/herbert_marcuse.jpg',
+  'walter_benjamin': '/portraits/walter_benjamin.jpg',
+  'jean_paul_sartre': '/portraits/jean_paul_sartre.jpg',
+  'simone_de_beauvoir': '/portraits/simone_de_beauvoir.jpg',
+  'albert_camus': '/portraits/albert_camus.jpg',
+  'merleau_ponty': '/portraits/merleau_ponty.jpg',
+  'emmanuel_levinas': '/portraits/emmanuel_levinas.jpg',
+  'hannah_arendt': '/portraits/hannah_arendt.jpg',
+  'friedrich_hayek': '/portraits/friedrich_hayek.jpg',
+  'ayn_rand': '/portraits/ayn_rand.jpg',
+  'w_v_o_quine': '/portraits/w_v_o_quine.jpg',
+  'austin': '/portraits/austin.jpg',
+  'john_rawls': '/portraits/john_rawls.jpg',
+  'robert_nozick': '/portraits/robert_nozick.jpg',
+  'michel_foucault': '/portraits/michel_foucault.jpg',
+  'jacques_derrida': '/portraits/jacques_derrida.jpg',
+  'gilles_deleuze': '/portraits/gilles_deleuze.jpg',
+  'lyotard': '/portraits/lyotard.jpg',
+  'jean_baudrillard': '/portraits/jean_baudrillard.jpg',
+  'richard_rorty': '/portraits/richard_rorty.jpg',
+  'thomas_kuhn': '/portraits/thomas_kuhn.jpg',
+  'alasdair_macintyre': '/portraits/alasdair_macintyre.jpg',
+  'jurgen_habermas': '/portraits/jurgen_habermas.jpg',
+  'gadamer': '/portraits/gadamer.jpg',
+  'paul_ricoeur': '/portraits/paul_ricoeur.jpg',
+  'john_searle': '/portraits/john_searle.jpg',
+  'daniel_dennett': '/portraits/daniel_dennett.jpg',
+  'hilary_putnam': '/portraits/hilary_putnam.jpg',
+  'saul_kripke': '/portraits/saul_kripke.jpg',
+  'david_lewis': '/portraits/david_lewis.jpg',
+  'derek_parfit': '/portraits/derek_parfit.jpg',
+  'bernard_williams': '/portraits/bernard_williams.jpg',
+  'peter_singer': '/portraits/peter_singer.jpg',
+  'martha_nussbaum': '/portraits/martha_nussbaum.jpg',
+  'louis_althusser': '/portraits/louis_althusser.jpg',
+  'alvin_plantinga': '/portraits/alvin_plantinga.jpg',
+  'paul_feyerabend': '/portraits/paul_feyerabend.jpg',
+  'slavoj_zizek': '/portraits/slavoj_zizek.jpg',
+  'noam_chomsky': '/portraits/noam_chomsky.jpg',
+  'nick_bostrom': '/portraits/nick_bostrom.jpg',
+  'patricia_churchland': '/portraits/patricia_churchland.jpg',
+  'peter_railton': '/portraits/peter_railton.jpg',
+  
+  // AUSTRIAN & LIBERTARIAN
+  'murray_rothbard': '/portraits/murray_rothbard.jpg',
+  'milton_friedman': '/portraits/milton_friedman.jpg',
+  'henry_hazlitt': '/portraits/henry_hazlitt.jpg',
+  'h_l_mencken': '/portraits/h_l_mencken.jpg',
+  'albert_jay_nock': '/portraits/albert_jay_nock.jpg',
+  'isabel_paterson': '/portraits/isabel_paterson.jpg',
+  'rose_wilder_lane': '/portraits/rose_wilder_lane.jpg',
+  'hans_hermann_hoppe': '/portraits/hans_hermann_hoppe.jpg',
+  'walter_block': '/portraits/walter_block.jpg',
+  'david_friedman': '/portraits/david_friedman.jpg',
+  'tibor_machan': '/portraits/tibor_machan.jpg',
+  
+  // AMERICAN FOUNDERS & TRANSCENDENTALISTS
+  'thomas_jefferson': '/portraits/thomas_jefferson.jpg',
+  'james_madison': '/portraits/james_madison.jpg',
+  'thomas_paine': '/portraits/thomas_paine.jpg',
+  'john_adams': '/portraits/john_adams.jpg',
+  'ralph_waldo_emerson': '/portraits/ralph_waldo_emerson.jpg',
+  'henry_david_thoreau': '/portraits/henry_david_thoreau.jpg',
+  'charles_peirce': '/portraits/charles_peirce.jpg',
+  'william_james': '/portraits/william_james.jpg',
+  'john_dewey': '/portraits/john_dewey.jpg',
+  'santayana': '/portraits/santayana.jpg',
+  
+  // OBJECTIVISM & POST-RANDIAN REALISM
+  'nathaniel_branden': '/portraits/nathaniel_branden.jpg',
+  'barbara_branden': '/portraits/barbara_branden.jpg',
+  'leonard_peikoff': '/portraits/leonard_peikoff.jpg',
+  'harry_binswanger': '/portraits/harry_binswanger.jpg',
+  'yaron_brook': '/portraits/yaron_brook.jpg',
+  'tara_smith': '/portraits/tara_smith.jpg',
+  'david_kelley': '/portraits/david_kelley.jpg',
+  'stephen_hicks': '/portraits/stephen_hicks.jpg',
+  'edwin_locke': '/portraits/edwin_locke.jpg',
+  'allan_gotthelf': '/portraits/allan_gotthelf.jpg',
+  'michael_berliner': '/portraits/michael_berliner.jpg',
+  'andrew_bernstein': '/portraits/andrew_bernstein.jpg',
+  'peter_schwartz': '/portraits/peter_schwartz.jpg',
+  'robert_mayhew': '/portraits/robert_mayhew.jpg',
+  'darryl_wright': '/portraits/darryl_wright.jpg',
+  'craig_biddle': '/portraits/craig_biddle.jpg',
+  'onkar_ghate': '/portraits/onkar_ghate.jpg',
+  'gregory_salmieri': '/portraits/gregory_salmieri.jpg',
+  'elan_journo': '/portraits/elan_journo.jpg',
+  'ben_bayer': '/portraits/ben_bayer.jpg',
+  'don_watkins': '/portraits/don_watkins.jpg',
+  'robert_tracinski': '/portraits/robert_tracinski.jpg',
+  
+  // EASTERN PHILOSOPHY
+  'confucius': '/portraits/confucius.jpg',
+  'laozi': '/portraits/laozi.jpg',
+  'mozi': '/portraits/mozi.jpg',
+  'mencius': '/portraits/mencius.jpg',
+  'xunzi': '/portraits/xunzi.jpg',
+  'han_fei': '/portraits/han_fei.jpg',
+  'zhuangzi': '/portraits/zhuangzi.jpg',
+  'buddha': '/portraits/buddha.jpg',
+  'mahavira': '/portraits/mahavira.jpg',
+  'nagarjuna': '/portraits/nagarjuna.jpg',
+  'shankara': '/portraits/shankara.jpg',
+  'ramanuja': '/portraits/ramanuja.jpg',
+  'gandhi': '/portraits/gandhi.jpg',
+  
+  // NEW ATHEISTS
+  'sam_harris': '/portraits/sam_harris.jpg',
+  'christopher_hitchens': '/portraits/christopher_hitchens.jpg',
+  'richard_dawkins': '/portraits/richard_dawkins.jpg',
+};
+
+// ═══════════════════════════════════════════════════════════
+// SEED_NODES - 219 philosophers (206 Western + 13 Eastern)
+// ═══════════════════════════════════════════════════════════
 export const SEED_NODES = [
   // ═══════════════════════════════════════════════════════════
   // EASTERN PHILOSOPHY - 13 philosophers
@@ -158,7 +433,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Ahimsa (non-violence); anekantavada (many-sidedness of truth); liberation through asceticism'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.6, freedom_coercion: 0.8, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.9 }
+    // Mahavira: Jain asceticism, mystical liberation through self-denial, ahimsa as absolute duty
+    battles: { reason_faith: -0.6, reality_mysticism: -0.7, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.6 }
   },
   {
     id: 'buddha',
@@ -177,7 +453,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Four Noble Truths; Eightfold Path; impermanence and non-self (anatta)'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.5, reality_mysticism: 0.1, individual_collective: 0.5, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.8 }
+    // Buddha: Meditation > reason; reality is impermanent/illusory; self is illusion (anatta); desire is evil
+    battles: { reason_faith: -0.5, reality_mysticism: -0.8, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: -0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.4 }
   },
   {
     id: 'nagarjuna',
@@ -196,7 +473,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Emptiness (sunyata); two truths doctrine; middle way between eternalism and nihilism'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.5, reality_mysticism: -0.2, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.6 }
+    // Nagarjuna: Sunyata (emptiness) - ultimate reality is void; reason leads to contradictions; anti-conceptual
+    battles: { reason_faith: -0.7, reality_mysticism: -0.9, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.3 }
   },
   {
     id: 'shankara',
@@ -215,7 +493,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Brahman alone is real; world is illusion (maya); Atman is Brahman; liberation through knowledge'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.4, reality_mysticism: -0.3, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
+    // Shankara: World is maya (illusion); only Brahman is real; individual self dissolves into Brahman
+    battles: { reason_faith: -0.5, reality_mysticism: -0.9, individual_collective: -0.5, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
     id: 'ramanuja',
@@ -234,7 +513,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Qualified non-dualism; souls as real parts of Brahman; bhakti (devotion) path to liberation'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.8 }
+    // Ramanuja: Bhakti (devotion) over reason; liberation through surrender to God; less extreme than Shankara
+    battles: { reason_faith: -0.5, reality_mysticism: -0.5, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
     id: 'gandhi',
@@ -253,7 +533,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Satyagraha (truth-force); ahimsa (non-violence); swaraj (self-rule through self-discipline)'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.3, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 1.0 }
+    // Gandhi: Mystical truth-force; self-sacrifice as highest virtue; collective duty; anti-industrial
+    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: -0.5, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: -0.4, beauty_chaos: 0.4, good_evil: 0.6 }
   },
 
   // CHINESE TRADITION (7)
@@ -274,7 +555,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['The Tao that can be told is not the eternal Tao; wu wei (non-action); simplicity and naturalness'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.2, reality_mysticism: -0.2, individual_collective: 0.5, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+    // Laozi: Tao is ineffable/beyond reason; anti-conceptual; nature over civilization; wu wei = passivity
+    battles: { reason_faith: -0.8, reality_mysticism: -0.7, individual_collective: 0.3, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.3 }
   },
   {
     id: 'confucius',
@@ -293,7 +575,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Ren (benevolence); li (ritual propriety); the junzi (noble person) cultivates virtue'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.0, freedom_coercion: 0.3, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.9 }
+    // Confucius: Practical ethics based on tradition; collectivist (family/state duty); hierarchical
+    battles: { reason_faith: 0.4, reality_mysticism: 0.5, individual_collective: -0.4, freedom_coercion: 0.1, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
     id: 'mozi',
@@ -312,7 +595,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Universal love without partiality; consequentialist ethics; opposition to offensive warfare'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.3, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.8 }
+    // Mozi: Rational argumentation but altruist ethics (universal love = self-sacrifice); collectivist
+    battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: -0.6, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.5 }
   },
   {
     id: 'mencius',
@@ -350,7 +634,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Butterfly dream (what is reality?); embrace spontaneity; all perspectives are relative'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.3, reality_mysticism: -0.1, individual_collective: 0.7, freedom_coercion: 0.8, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+    // Zhuangzi: Radical relativist; reality is unknowable; anti-conceptual; rejects distinctions
+    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: 0.5, freedom_coercion: 0.6, value_nihilism: -0.2, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
   },
   {
     id: 'xunzi',
@@ -369,7 +654,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Human nature is evil; goodness is acquired; ritual and education transform nature'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.2, freedom_coercion: 0.2, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+    // Xunzi: More rationalist Confucian but still collectivist/hierarchical
+    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: -0.4, freedom_coercion: 0.0, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
     id: 'han_fei',
@@ -605,7 +891,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Man is the measure; cognitive relativism'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+    // Protagoras: "Man is the measure" = subjectivism/relativism; no objective truth
+    battles: { reason_faith: -0.5, reality_mysticism: -0.5, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: 0.1, good_evil: -0.3 }
   },
   {
     id: 'gorgias',
@@ -624,7 +911,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Nothing exists; radical rhetorical nihilism'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.0, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: -0.2, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+    // Gorgias: "Nothing exists, if it did we couldn't know it" = radical nihilism/anti-reason
+    battles: { reason_faith: -0.8, reality_mysticism: -0.8, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: -0.8, market_planning: 0.0, beauty_chaos: -0.3, good_evil: -0.5 }
   },
   {
     id: 'thrasymachus',
@@ -643,7 +931,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Justice is the advantage of the stronger'],
     historical_weight: 0.5,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.3, freedom_coercion: 0.2, value_nihilism: 0.1, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.0 }
+    // Thrasymachus: Might makes right = moral nihilism; cynical power politics
+    battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.2, freedom_coercion: -0.3, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: -0.2, good_evil: -0.5 }
   },
 
   // SOCRATIC (1)
@@ -887,7 +1176,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Radical skepticism; suspend all judgment'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.1, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+    // Pyrrho: Suspend ALL judgment; reason cannot reach truth; ataraxia through ignorance
+    battles: { reason_faith: -0.7, reality_mysticism: -0.5, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: -0.5, market_planning: 0.0, beauty_chaos: 0.0, good_evil: -0.3 }
   },
   {
     id: 'carneades',
@@ -906,7 +1196,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Academic skepticism; only probability'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.3 }
+    // Carneades: Attacked Stoic certainty; only probability, never truth
+    battles: { reason_faith: -0.5, reality_mysticism: -0.3, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.1, good_evil: -0.1 }
   },
   {
     id: 'sextus_empiricus',
@@ -925,7 +1216,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Pyrrhonism; no objective knowledge possible'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.1, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.0, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+    // Sextus Empiricus: Systematized attacks on reason; "Against the Dogmatists" = against all knowledge claims
+    battles: { reason_faith: -0.8, reality_mysticism: -0.6, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: -0.5, market_planning: 0.0, beauty_chaos: -0.1, good_evil: -0.3 }
   },
 
   // NEO-PLATONIC (3)
@@ -946,7 +1238,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['The One beyond reason; mystical emanation; reality is graded emanation from ineffable source'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
+    // Plotinus: The One is BEYOND reason (ineffable); material world is lowest emanation; mystical union is goal
+    battles: { reason_faith: -0.8, reality_mysticism: -0.9, individual_collective: -0.4, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
   },
   {
     id: 'porphyry',
@@ -965,7 +1258,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Neoplatonist mystic; reason as ladder to supra-rational unity'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
+    // Porphyry: Reason only a ladder to transcend; goal is supra-rational union
+    battles: { reason_faith: -0.6, reality_mysticism: -0.7, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
   },
 
   // CHURCH FATHERS (1)
@@ -986,7 +1280,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Faith over reason; original sin; City of God; divine illumination'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
+    // Augustine: "Believe that you may understand"; faith precedes reason; original sin; City of God > earthly
+    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: -0.3, freedom_coercion: -0.2, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
     id: 'proclus',
@@ -1005,7 +1300,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Systematic Neoplatonism; divine intellect above discursive reason'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
+    // Proclus: Divine intellect above reason; elaborate mystical hierarchy; reality emanates from The One
+    battles: { reason_faith: -0.7, reality_mysticism: -0.8, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -1087,7 +1383,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Incoherence of philosophers; faith over reason'],
     historical_weight: 0.75,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+    // Al-Ghazali: "Incoherence of Philosophers" attacked reason; faith/revelation primary; Sufi mystic
+    battles: { reason_faith: -0.8, reality_mysticism: -0.6, individual_collective: -0.2, freedom_coercion: 0.0, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
     id: 'averroes',
@@ -1127,7 +1424,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Faith precedes reason; ontological argument subordinates logic to theology — reason as servant of revelation'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
+    // Anselm: "Faith seeking understanding" = faith FIRST; reason serves theology; ontological argument is faith-based
+    battles: { reason_faith: -0.5, reality_mysticism: -0.3, individual_collective: -0.2, freedom_coercion: 0.1, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
     id: 'peter_abelard',
@@ -1203,7 +1501,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Reason and faith reconciled; natural law'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.85 }
+    // Aquinas: Tried to reconcile reason/faith but theology > philosophy; natural law is good; faith still trumps reason ultimately
+    battles: { reason_faith: -0.2, reality_mysticism: 0.4, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
     id: 'duns_scotus',
@@ -1222,7 +1521,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Will primacy over intellect; divine voluntarism — God's will not bound by reason"],
     historical_weight: 0.65,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+    // Duns Scotus: Divine voluntarism = God's arbitrary will over reason; will > intellect
+    battles: { reason_faith: -0.5, reality_mysticism: -0.3, individual_collective: 0.2, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
   },
   {
     id: 'william_of_ockham',
@@ -1241,7 +1541,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Nominalism; Occam's Razor; empirical logic"],
     historical_weight: 0.75,
-    battles: { reason_faith: 0.7, reality_mysticism: 0.75, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
+    // Ockham: Nominalism undermines universals; fideist (reason and faith separate); but empirical method positive
+    battles: { reason_faith: 0.3, reality_mysticism: 0.5, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.4 }
   },
 
   // MYSTICAL (2)
@@ -1262,7 +1563,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Love and faith over dialectical reason'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+    // Bernard: Attacked Abelard's rationalism; love/faith over reason; mystical contemplation
+    battles: { reason_faith: -0.8, reality_mysticism: -0.6, individual_collective: -0.3, freedom_coercion: 0.0, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
     id: 'meister_eckhart',
@@ -1281,7 +1583,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Mystical union with God beyond rational concepts'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.0, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.5 }
+    // Meister Eckhart: Radical mystic; God beyond all concepts; soul dissolves into Godhead; anti-rational
+    battles: { reason_faith: -0.9, reality_mysticism: -0.9, individual_collective: -0.6, freedom_coercion: 0.1, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -1512,7 +1815,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Esse est percipi — existence requires a perceiver; denies mind-independent reality'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.1, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+    // Berkeley: Idealist - no material world exists; reality is ideas in minds; God perceives all = theistic
+    battles: { reason_faith: -0.3, reality_mysticism: -0.8, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 
   // RATIONALIST (5)
@@ -1708,7 +2012,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Heart has reasons reason cannot know; the wager'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
+    // Pascal: "Heart has reasons reason cannot know" = anti-rationalist; faith over reason; wager is pragmatic not rational
+    battles: { reason_faith: -0.6, reality_mysticism: -0.3, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
 
   // COUNTER-ENLIGHTENMENT (1)
@@ -1729,7 +2034,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Verum factum: we know only what we make — denies objective reality independent of human construction'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
+    // Vico: Historicism/constructivism - we know only what we make; anti-Cartesian; proto-relativist
+    battles: { reason_faith: -0.4, reality_mysticism: -0.5, individual_collective: -0.2, freedom_coercion: 0.2, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -1988,7 +2294,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Causation is habit not necessity; induction unjustifiable — destroys the rational foundations of science'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.4, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.3 }
+    // Hume: Skeptic about causation, induction, self, morality; "reason is slave of passions"; undermined rational foundations
+    battles: { reason_faith: -0.6, reality_mysticism: -0.4, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: -0.3, market_planning: 0.4, beauty_chaos: 0.4, good_evil: -0.2 }
   },
 
   // COUNTER-ENLIGHTENMENT (5)
@@ -2009,7 +2316,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Nature and sentiment over civilization and reason'],
     historical_weight: 0.7,
-    battles: { reason_faith: -0.4, reality_mysticism: -0.5, individual_collective: -0.7, freedom_coercion: -0.5, value_nihilism: 0.3, market_planning: -0.5, beauty_chaos: 0.5, good_evil: 0.3 }
+    // Rousseau: Already correct - anti-reason, collectivist (general will), anti-civilization
+    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: -0.8, freedom_coercion: -0.6, value_nihilism: 0.2, market_planning: -0.6, beauty_chaos: 0.4, good_evil: 0.2 }
   },
   {
     id: 'edmund_burke',
@@ -2028,7 +2336,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Tradition and prejudice over abstract rationalism'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.5, beauty_chaos: 0.7, good_evil: 0.6 }
+    // Burke: Tradition/prejudice over reason; anti-rationalist; but defended property rights and some liberty
+    battles: { reason_faith: -0.4, reality_mysticism: -0.2, individual_collective: 0.1, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.4, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
     id: 'hamann',
@@ -2047,7 +2356,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Faith and language over Enlightenment reason'],
     historical_weight: 0.5,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
+    // Hamann: "Magus of the North"; faith and feeling over reason; attacked Enlightenment rationalism
+    battles: { reason_faith: -0.8, reality_mysticism: -0.5, individual_collective: 0.1, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
   },
   {
     id: 'jacobi',
@@ -2066,7 +2376,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Leap of faith; Glaubensphilosophie against Spinoza'],
     historical_weight: 0.5,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+    // Jacobi: Salto mortale (leap of faith); reason leads to nihilism, only faith saves
+    battles: { reason_faith: -0.7, reality_mysticism: -0.4, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
     id: 'herder',
@@ -2085,7 +2396,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Cultural particularity; Volksgeist over universal reason'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
+    // Herder: Volksgeist (folk spirit); cultural relativism; collective identity over individual/universal reason
+    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: -0.6, freedom_coercion: 0.1, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
   },
 
   // GERMAN IDEALISM (1)
@@ -2106,7 +2418,8 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Thing-in-itself unknowable; reason bounded; duty-ethics divorced from reality — arch-enemy of Objectivism'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.3, reality_mysticism: -0.7, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.6 }
+    // Kant: DESTROYED reason in CPR; noumenal reality unknowable; duty divorced from happiness; categorical imperative = self-sacrifice
+    battles: { reason_faith: -0.7, reality_mysticism: -0.8, individual_collective: -0.3, freedom_coercion: 0.1, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
   },
 
   // UTILITARIAN (1)
@@ -2152,7 +2465,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Theocratic authority and tradition over rationalism'],
     historical_weight: 0.55,
-    battles: { reason_faith: 0.0, reality_mysticism: 0.1, individual_collective: -0.4, freedom_coercion: -0.3, value_nihilism: 0.5, market_planning: -0.2, beauty_chaos: 0.5, good_evil: 0.5 }
+    // de Maistre: Theocracy; divine authority; anti-reason; anti-individual; praised executioner; counter-revolutionary
+    battles: { reason_faith: -0.7, reality_mysticism: -0.5, individual_collective: -0.6, freedom_coercion: -0.5, value_nihilism: 0.4, market_planning: -0.3, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 
   // GERMAN IDEALISM (4)
@@ -2173,7 +2487,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Aesthetic education; play-drive dissolves rational-natural divide; Kant's heir in aesthetics"],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.5 }
+    // Schiller: Kant's aesthetics developed; play-drive synthesis; less destructive than other idealists
+    battles: { reason_faith: 0.1, reality_mysticism: -0.2, individual_collective: 0.2, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.4 }
   },
   {
     id: 'fichte',
@@ -2192,7 +2507,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Absolute Ego as primary; collapses objective reality into subject'],
     historical_weight: 0.65,
-    battles: { reason_faith: 0.3, reality_mysticism: -0.5, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+    // Fichte: Subjective idealism; Ego creates Non-Ego; no objective reality; German nationalism
+    battles: { reason_faith: -0.4, reality_mysticism: -0.7, individual_collective: -0.5, freedom_coercion: 0.0, value_nihilism: 0.2, market_planning: -0.2, beauty_chaos: 0.3, good_evil: 0.2 }
   },
   {
     id: 'hegel',
@@ -2211,7 +2527,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Dialectical Spirit; individual dissolved into collective History; root of totalitarianism'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.1, reality_mysticism: -0.9, individual_collective: -0.9, freedom_coercion: -0.7, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.6, good_evil: 0.1 }
+    // Hegel: Dialectical "reason" is mysticism disguised; Absolute Spirit = mystical; individual = nothing; state worship
+    battles: { reason_faith: -0.6, reality_mysticism: -0.9, individual_collective: -0.9, freedom_coercion: -0.8, value_nihilism: 0.1, market_planning: -0.5, beauty_chaos: 0.4, good_evil: 0.0 }
   },
   {
     id: 'schelling',
@@ -2230,7 +2547,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Nature philosophy; subject-object identity; late mysticism'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.3, reality_mysticism: -0.4, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
+    // Schelling: Nature philosophy; subject-object identity = anti-realism; late period explicit mysticism
+    battles: { reason_faith: -0.4, reality_mysticism: -0.6, individual_collective: 0.0, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
   },
 
   // POSITIVIST (2)
@@ -2567,7 +2885,8 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Will to Power; death of God; perspectivism'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.9, freedom_coercion: 0.7, value_nihilism: 0.1, market_planning: 0.2, beauty_chaos: 0.6, good_evil: -0.3 }
+    // Nietzsche: Perspectivism = no objective truth; Will to Power is mystical/irrational; attacked slave morality but replaced with irrationalism
+    battles: { reason_faith: -0.3, reality_mysticism: -0.2, individual_collective: 0.8, freedom_coercion: 0.5, value_nihilism: -0.2, market_planning: 0.1, beauty_chaos: 0.5, good_evil: -0.4 }
   },
 
   // UTILITARIAN (1)
@@ -2609,7 +2928,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Leap of faith; subjectivity is truth; against Hegel'],
     historical_weight: 0.75,
-    battles: { reason_faith: -0.2, reality_mysticism: 0.3, individual_collective: 0.9, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
+    battles: { reason_faith: -0.7, reality_mysticism: -0.5, individual_collective: 0.8, freedom_coercion: 0.6, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: -0.3 }
   },
 
   // MARXIST (1)
@@ -2651,7 +2970,7 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Truth as long-run consensus of inquirers — replaces correspondence to reality with social agreement'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.2 }
   },
   {
     id: 'william_james',
@@ -2670,7 +2989,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Truth is what works — explicitly rejects correspondence theory of truth; pragmatic cash-value'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
   },
   {
     id: 'john_dewey',
@@ -2689,7 +3008,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Instrumentalism; truth as tool for biological adaptation; no objective standards independent of use'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: -0.4, freedom_coercion: -0.3, value_nihilism: -0.3, market_planning: -0.4, beauty_chaos: 0.2, good_evil: 0.2 }
   },
 
   // ANALYTIC (1)
@@ -2731,7 +3050,7 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Phenomenological reduction brackets objective reality; consciousness constitutes the world'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.6, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+    battles: { reason_faith: 0.4, reality_mysticism: -0.4, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
   },
 
   // VITALIST (1)
@@ -2752,7 +3071,7 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Élan vital; intuition over intellect and mechanism'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.4 }
+    battles: { reason_faith: -0.5, reality_mysticism: -0.4, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -3091,7 +3410,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Existenz; transcendence; limits of reason; boundary situations'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
   },
 
   // ANALYTIC (6)
@@ -3150,7 +3469,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Late: language games dissolve objective meaning; meaning is use, not correspondence to reality'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
+    battles: { reason_faith: -0.3, reality_mysticism: -0.3, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: -0.3, market_planning: 0.0, beauty_chaos: 0.3, good_evil: -0.2 }
   },
   {
     id: 'gilbert_ryle',
@@ -3207,7 +3526,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Integrity and internal reasons dissolve objective moral standards — moral relativism with analytic credentials'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
+    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: -0.4, market_planning: 0.0, beauty_chaos: 0.3, good_evil: -0.4 }
   },
   {
     id: 'john_searle',
@@ -3306,7 +3625,7 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Being over cognition; Dasein; critique of Cartesian reason'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.3 }
+    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: -0.3, freedom_coercion: -0.4, value_nihilism: -0.4, market_planning: -0.3, beauty_chaos: 0.3, good_evil: -0.4 }
   },
   {
     id: 'jean_paul_sartre',
@@ -3325,7 +3644,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Existence precedes essence — denies human nature; radical freedom has no rational grounding in reality'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: -0.3, beauty_chaos: 0.3, good_evil: 0.3 }
+    battles: { reason_faith: -0.3, reality_mysticism: -0.4, individual_collective: 0.4, freedom_coercion: 0.3, value_nihilism: -0.3, market_planning: -0.5, beauty_chaos: 0.2, good_evil: -0.2 }
   },
   {
     id: 'simone_de_beauvoir',
@@ -3344,7 +3663,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Existentialist feminism; situation over nature; no objective human essence or sex-based identity'],
     historical_weight: 0.65,
-    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: -0.2, beauty_chaos: 0.4, good_evil: 0.4 }
+    battles: { reason_faith: -0.3, reality_mysticism: -0.4, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: -0.2, market_planning: -0.4, beauty_chaos: 0.2, good_evil: -0.1 }
   },
   {
     id: 'albert_camus',
@@ -3363,7 +3682,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Absurdism: universe is irrational and indifferent; revolt without rational foundation'],
     historical_weight: 0.7,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.5, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: -0.5, market_planning: 0.0, beauty_chaos: 0.3, good_evil: -0.3 }
   },
 
   // PHENOMENOLOGY (3)
@@ -3761,7 +4080,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Incredulity toward metanarratives; end of grand reason'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.1, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: 0.2, freedom_coercion: 0.2, value_nihilism: -0.6, market_planning: -0.2, beauty_chaos: -0.4, good_evil: -0.5 }
   },
   {
     id: 'gilles_deleuze',
@@ -3780,7 +4099,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Difference and repetition; anti-dialectics; rhizome'],
     historical_weight: 0.65,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
+    battles: { reason_faith: -0.6, reality_mysticism: -0.5, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: -0.4, market_planning: -0.3, beauty_chaos: -0.3, good_evil: -0.3 }
   },
   {
     id: 'michel_foucault',
@@ -3799,7 +4118,7 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Power-knowledge regimes; genealogy of truth'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.0, freedom_coercion: 0.2, value_nihilism: -0.2, market_planning: -0.2, beauty_chaos: -0.2, good_evil: 0.0 }
+    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: -0.4, freedom_coercion: -0.3, value_nihilism: -0.6, market_planning: -0.4, beauty_chaos: -0.4, good_evil: -0.5 }
   },
   {
     id: 'jean_baudrillard',
@@ -3818,7 +4137,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Hyperreality; simulation replaces the real'],
     historical_weight: 0.6,
-    battles: { reason_faith: 0.1, reality_mysticism: 0.0, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: -0.1, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+    battles: { reason_faith: -0.6, reality_mysticism: -0.8, individual_collective: 0.1, freedom_coercion: 0.1, value_nihilism: -0.7, market_planning: -0.2, beauty_chaos: -0.5, good_evil: -0.5 }
   },
   {
     id: 'jacques_derrida',
@@ -3837,7 +4156,7 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Deconstruction; all texts endlessly defer meaning'],
     historical_weight: 0.85,
-    battles: { reason_faith: 0.2, reality_mysticism: 0.1, individual_collective: 0.4, freedom_coercion: 0.4, value_nihilism: 0.0, market_planning: 0.0, beauty_chaos: 0.2, good_evil: 0.1 }
+    battles: { reason_faith: -0.8, reality_mysticism: -0.7, individual_collective: 0.1, freedom_coercion: 0.2, value_nihilism: -0.6, market_planning: -0.2, beauty_chaos: -0.4, good_evil: -0.5 }
   },
 
   // VIRTUE ETHICS (1)
@@ -3858,7 +4177,7 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Tradition-dependent rationality — no universal reason, only internal standards of practices'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
+    battles: { reason_faith: -0.4, reality_mysticism: -0.3, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.3, market_planning: -0.2, beauty_chaos: 0.3, good_evil: 0.3 }
   },
 
   // NEO-PRAGMATIST (1)
@@ -3879,7 +4198,7 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['No mirror of nature; truth is contingent and social'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.3 }
+    battles: { reason_faith: -0.7, reality_mysticism: -0.6, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: -0.5, market_planning: -0.2, beauty_chaos: -0.3, good_evil: -0.4 }
   },
 
   // ANARCHO-CAPITALIST (1 in 20th century)
@@ -5094,6 +5413,5 @@ export const SEED_EDGES = [
   { source_id: 'richard_dawkins', target_id: 'christopher_hitchens', relationship_type: 'influenced', weight: 2 },
   { source_id: 'christopher_hitchens', target_id: 'sam_harris', relationship_type: 'influenced', weight: 1 },
 ];
-
 
 export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES };
