@@ -102,13 +102,16 @@ function getContrastTextColor(bgHexColor) {
 function createTextCard(text, schoolColor, isFoundational = false, isMostFoundational = false) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d', { alpha: true });
+  const layout = getLayoutConfig();
   
   // High resolution for crystal clear text (3x base, no cap)
   const pixelRatio = 3;
   
   // Font settings - Arial Narrow, NO bold, sharp rendering
-  const baseFontSize = 72;
-  const fontSize = isMostFoundational ? 96 : (isFoundational ? 84 : baseFontSize);
+  const baseFontSize = layout.textBaseFontSize;
+  const fontSize = isMostFoundational
+    ? layout.textMostFoundationalFontSize
+    : (isFoundational ? layout.textFoundationalFontSize : baseFontSize);
   const fontWeight = '400'; // Always normal weight - NO bold
   
   // Arial Narrow as primary, with condensed fallbacks
@@ -118,7 +121,7 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   const textWidth = ctx.measureText(text).width;
   
   // Size canvas to fit text with padding
-  const padding = 40;
+  const padding = layout.textPadding;
   const canvasWidth = (textWidth + padding * 2) * pixelRatio;
   const canvasHeight = (fontSize + padding) * pixelRatio;
   canvas.width = canvasWidth;
@@ -139,8 +142,8 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   const centerY = (canvasHeight / pixelRatio) / 2;
   
   // School-colored card background
-  const bgPadding = 14;
-  const radius = 6;
+  const bgPadding = layout.textCardPadding;
+  const radius = layout.textCardRadius;
   const bgWidth = textWidth + bgPadding * 2;
   const bgHeight = fontSize * 0.85;
   const bgX = centerX - bgWidth / 2;
@@ -179,8 +182,10 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
   texture.anisotropy = 16;                   // Keep anisotropic filtering
   
   // Calculate card dimensions in world units
-  const baseScale = 0.05 / pixelRatio;
-  const scale = isMostFoundational ? 0.065 / pixelRatio : (isFoundational ? 0.058 / pixelRatio : baseScale);
+  const baseScale = layout.textBaseScale / pixelRatio;
+  const scale = isMostFoundational
+    ? layout.textMostFoundationalScale / pixelRatio
+    : (isFoundational ? layout.textFoundationalScale / pixelRatio : baseScale);
   const cardWidth = canvasWidth * scale;
   const cardHeight = canvasHeight * scale;
   
@@ -244,21 +249,35 @@ function createLabelLine(startPos, endPos, color) {
   return new THREE.Line(geometry, material);
 }
 
-// Base altitude above Earth surface (in Earth-local units)
-const BASE_ALTITUDE = 25;
-const FOUNDATIONAL_ALTITUDE_BOOST = 10; // Extra altitude for foundational (weight >= 0.9)
-const MOST_FOUNDATIONAL_ALTITUDE_BOOST = 20; // Extra altitude for most foundational (weight === 1.0)
-const LABEL_OFFSET = 5; // Distance from satellite to label
+function getLayoutConfig() {
+  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  const isMobile = viewportWidth < 768;
 
-// Spacing configuration for overlapping philosophers
-const PROXIMITY_THRESHOLD = 2.0; // Degrees - wider threshold to catch more overlaps
-const BASE_SPREAD_RADIUS = 20; // Base units to spread philosophers apart tangentially
-const ALTITUDE_VARIATION = 15; // Vertical separation for tilting Earth to reveal lower cards
-const LABEL_STAGGER = 12; // Vertical gap between card layers for depth reading
+  return {
+    textBaseFontSize: isMobile ? 52 : 60,
+    textFoundationalFontSize: isMobile ? 62 : 70,
+    textMostFoundationalFontSize: isMobile ? 72 : 82,
+    textPadding: isMobile ? 28 : 32,
+    textCardPadding: isMobile ? 10 : 12,
+    textCardRadius: isMobile ? 5 : 6,
+    textBaseScale: isMobile ? 0.041 : 0.044,
+    textFoundationalScale: isMobile ? 0.047 : 0.051,
+    textMostFoundationalScale: isMobile ? 0.053 : 0.057,
+    baseAltitude: isMobile ? 14 : 18,
+    foundationalAltitudeBoost: isMobile ? 4 : 6,
+    mostFoundationalAltitudeBoost: isMobile ? 8 : 10,
+    labelOffset: isMobile ? 3.4 : 4.2,
+    proximityThreshold: isMobile ? 2.6 : 2.2,
+    spreadRadius: isMobile ? 14 : 16,
+    altitudeVariation: isMobile ? 6 : 8,
+    labelStagger: isMobile ? 4.5 : 6,
+  };
+}
 
 // Group nodes by proximity and calculate spread offsets
 // Returns a Map of nodeId -> { offsetX, offsetZ, altitudeOffset } in tangent space
 function calculateSpreadOffsets(nodes) {
+  const layout = getLayoutConfig();
   const offsets = new Map();
   const groups = [];
   const assigned = new Set();
@@ -274,7 +293,7 @@ function calculateSpreadOffsets(nodes) {
       if (assigned.has(other.id)) return;
       const latDiff = Math.abs(node.latitude - other.latitude);
       const lngDiff = Math.abs(node.longitude - other.longitude);
-      if (latDiff < PROXIMITY_THRESHOLD && lngDiff < PROXIMITY_THRESHOLD) {
+      if (latDiff < layout.proximityThreshold && lngDiff < layout.proximityThreshold) {
         group.push(other);
         assigned.add(other.id);
       }
@@ -305,7 +324,11 @@ function calculateSpreadOffsets(nodes) {
         offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: 0 });
       } else if (index === 0 && topStaysCentered) {
         // Most important philosopher stays at center and slightly elevated
-        offsets.set(node.id, { offsetX: 0, offsetZ: 0, altitudeOffset: ALTITUDE_VARIATION * 1.2 });
+        offsets.set(node.id, {
+          offsetX: 0,
+          offsetZ: 0,
+          altitudeOffset: layout.altitudeVariation * 1.2,
+        });
       } else {
         const circleIndex = topStaysCentered ? index - 1 : index;
         
@@ -318,21 +341,21 @@ function calculateSpreadOffsets(nodes) {
           const col = circleIndex % cols;
           // Offset rows to create staggered pattern (horizontal zigzag)
           const rowOffset = (row % 2) * 0.5;
-          const spacing = BASE_SPREAD_RADIUS * 1.2;
+          const spacing = layout.spreadRadius * 1.15;
           
           offsetX = (col - cols / 2 + rowOffset) * spacing;
           offsetZ = (row - Math.ceil(spreadCount / cols) / 2) * spacing * 0.5;
           // Progressive altitude: each card lower than previous for depth viewing
-          altitudeOffset = -circleIndex * LABEL_STAGGER;
+          altitudeOffset = -circleIndex * layout.labelStagger;
         } else {
           // Circle layout for small groups - spread horizontally with vertical stagger
           const angle = (circleIndex / spreadCount) * Math.PI * 2;
-          const radius = BASE_SPREAD_RADIUS * (1 + (spreadCount - 1) * 0.15);
+          const radius = layout.spreadRadius * (1 + (spreadCount - 1) * 0.12);
           
           offsetX = Math.cos(angle) * radius;
           offsetZ = Math.sin(angle) * radius * 0.3; // Flatten Z spread
           // Progressive altitude: each card at different height for tilted viewing
-          altitudeOffset = -circleIndex * LABEL_STAGGER;
+          altitudeOffset = -circleIndex * layout.labelStagger;
         }
         
         offsets.set(node.id, { offsetX, offsetZ, altitudeOffset });
@@ -347,6 +370,7 @@ function calculateSpreadOffsets(nodes) {
 function createSatellite(node, earthRadius, spreadOffset = null) {
   const group = new THREE.Group();
   group.userData = { nodeId: node.id, node, isAutoEnriched: node.auto_enriched || false };
+  const layout = getLayoutConfig();
   
   // Determine if philosopher is foundational based on historical_weight
   const weight = node.historical_weight || 0.5;
@@ -354,11 +378,11 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   const isFoundational = weight >= 0.9; // Major figures in philosophy
   
   // Calculate altitude - foundational philosophers orbit higher
-  let altitude = BASE_ALTITUDE;
+  let altitude = layout.baseAltitude;
   if (isMostFoundational) {
-    altitude += MOST_FOUNDATIONAL_ALTITUDE_BOOST;
+    altitude += layout.mostFoundationalAltitudeBoost;
   } else if (isFoundational) {
-    altitude += FOUNDATIONAL_ALTITUDE_BOOST;
+    altitude += layout.foundationalAltitudeBoost;
   }
   
   // Get school color (primary) with tradition as fallback
@@ -402,7 +426,7 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   }
   
   // Name label - bold and larger for foundational philosophers
-  const labelOffset = LABEL_OFFSET + (isMostFoundational ? 2 : (isFoundational ? 1 : 0));
+  const labelOffset = layout.labelOffset + (isMostFoundational ? 1.2 : (isFoundational ? 0.6 : 0));
   const labelSprite = createTextSprite(node.name, schoolColorHex, isFoundational, isMostFoundational);
   labelSprite.position.set(0, labelOffset, 0); // Offset above the satellite (local coords)
   labelSprite.userData.isLabel = true;
