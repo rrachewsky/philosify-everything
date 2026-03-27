@@ -699,6 +699,9 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['First philosopher; rational principles in nature'],
     historical_weight: 1.0,
+    // Thales: Father of Western philosophy; sought NATURAL explanations (water as arche) over mythological ones.
+    // High reason (+0.8): pioneered rational inquiry into nature. High reality (+0.8): studied THIS world, not supernatural.
+    // Neutral on politics/economics (no extant political writings). Moderate value/beauty: implicit naturalism.
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -718,6 +721,9 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Apeiron as first principle; rational cosmology'],
     historical_weight: 0.6,
+    // Anaximander: Proposed "apeiron" (boundless/infinite) as rational first principle; early cosmologist.
+    // High reason (+0.8): rational cosmology without gods. Reality (+0.7): apeiron is abstract but still naturalistic.
+    // No political/economic doctrine. Moderate aesthetics: cosmic order implies natural standards.
     battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.5 }
   },
   {
@@ -737,6 +743,9 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Air as rational first principle'],
     historical_weight: 0.5,
+    // Anaximenes: Air as arche; processes of condensation/rarefaction explain all change.
+    // Reason (+0.7): naturalistic but less rigorous than successors. Reality (+0.7): material first principle.
+    // No political/economic writings preserved. Neutral/moderate on other axes.
     battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
@@ -756,6 +765,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Mathematical structure underlies all reality'],
     historical_weight: 0.7,
+    // Pythagoras: "All is number" — math as rational key to reality. BUT: also ran mystic cult,
+    // believed in transmigration of souls, secretive brotherhood. High reason (+0.8) for math/logic
+    // but reality only (+0.6) due to mystical/religious elements. High beauty (+0.8): discovered
+    // mathematical harmony in music (ratios), believed cosmos has aesthetic order.
     battles: { reason_faith: 0.8, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
   },
   {
@@ -775,6 +788,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Flux over permanence; paradox over logic; logos invoked but reason never systematized — seeds of irrationalism'],
     historical_weight: 0.75,
+    // Heraclitus: "Everything flows"; reality is constant flux and contradiction. Invokes "logos" but
+    // never systematizes it — obscurantist writing style ("The Obscure"). Low reason (+0.3): embraces paradox,
+    // contradictions ("war is father of all"), anti-systematic. Low reality (+0.3): if everything changes,
+    // identity (A=A) becomes problematic. Hegel later exploited Heraclitus to justify dialectical "contradictions."
     battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
@@ -794,6 +811,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Being is one; logical monism over the senses'],
     historical_weight: 0.7,
+    // Parmenides: Father of logic; first to use deductive argument to reach metaphysical conclusions.
+    // "What is, IS" — pioneered principle of identity (A=A). Very high reason (+0.9): rigorous logical argument
+    // over sense-perception. High reality (+0.8): defended objective Being against flux. BUT: pure rationalism
+    // divorced from senses can become problematic (claimed motion is illusion). Aristotle later integrated
+    // Parmenidean logic WITH empirical observation — the proper synthesis.
     battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -813,6 +835,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Nous (mind) orders matter rationally'],
     historical_weight: 0.65,
+    // Anaxagoras: "Nous" (Mind/Intellect) as cosmic ordering principle; first to bring philosophy to Athens.
+    // Very high reason (+0.85): nous as rational organizer of matter. High reality (+0.8): studied nature
+    // scientifically (correctly explained eclipses, Nile flooding). Prosecuted for impiety — defended
+    // natural explanation of sun as burning stone against religious mythology.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -832,6 +858,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Four elements; natural causation without myth'],
     historical_weight: 0.6,
+    // Empedocles: Four classical elements (earth, water, air, fire) + Love/Strife as cosmic forces.
+    // Reason (+0.7): naturalistic explanation but less rigorous than atomists. Reality (+0.7): studied
+    // THIS world but Love/Strife have quasi-mythological character. Also claimed miraculous powers
+    // and allegedly leapt into Mount Etna for apotheosis — some mystical/religious tendencies.
     battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.5 }
   },
   {
@@ -851,6 +881,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Logical paradoxes defending rational monism'],
     historical_weight: 0.65,
+    // Zeno of Elea: Parmenides' defender; created famous paradoxes (Achilles & Tortoise, Arrow) to
+    // defend logical monism. Very high reason (+0.85): pioneered reductio ad absurdum, foundational
+    // for logic and mathematics. High reality (+0.8): defended objective Being against flux.
+    // His paradoxes were eventually resolved by calculus — but showed importance of rigorous argument.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
@@ -870,6 +904,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Atomism; materialist reason; void and atoms'],
     historical_weight: 0.7,
+    // Democritus: "Laughing Philosopher"; founder of atomism — only atoms and void exist.
+    // Very high reason (+0.9): systematic materialist explanation of ALL phenomena through rational
+    // principles. Very high reality (+0.9): defended objective external world, materialist metaphysics.
+    // Slightly higher individual (+0.6): advocated cheerfulness (euthymia) and self-sufficiency.
+    // Also wrote on ethics: "The brave man is not only he who overcomes the enemy, but he who overcomes
+    // his pleasures" — virtue through reason. Epicurus later built on Democritean atomism.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -953,6 +993,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Dialectic method; logos; the examined life'],
     historical_weight: 1.0,
+    // Socrates: Founder of Western ethics; "The unexamined life is not worth living."
+    // Near-perfect reason (+0.95): invented dialectic method, sought universal definitions through
+    // rigorous questioning. High reality (+0.85): sought objective truth, but relied on dialectic
+    // over empirical observation. High individual (+0.7): personal conscience over social pressure
+    // (refused to arrest Leon of Salamis). High value (+0.9): virtue is knowledge; objective ethics.
+    // High good_evil (+0.9): moral realism — evil is ignorance, no one does wrong willingly.
+    // Slight mystical element: his "daimonion" (divine sign) reduces reality score slightly.
     battles: { reason_faith: 0.95, reality_mysticism: 0.85, individual_collective: 0.7, freedom_coercion: 0.7, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.9 }
   },
 
@@ -974,6 +1021,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Eternal Forms; objective truth; reason over senses'],
     historical_weight: 1.0,
+    // Plato: Defended objective truth against sophist relativism; founded the Academy.
+    // High reason (+0.85): systematic philosophy, dialectical method. BUT: depreciated senses in favor
+    // of pure intellect — Forms exist in transcendent realm, not THIS world. Reality (+0.7): defended
+    // objective reality but located it in a separate realm accessible only to pure reason — proto-mystical.
+    // Neutral politics: Republic advocates philosopher-kings (benevolent authoritarianism) — neither
+    // individualist nor collectivist in modern sense. Very high value/beauty (+0.9): objective Forms of
+    // Good, Beautiful exist. High good_evil (+0.85): moral realism, virtue ethics.
+    // Aristotle later corrected Plato by bringing Forms down to earth (immanent universals).
     battles: { reason_faith: 0.85, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.9, good_evil: 0.85 }
   },
 
@@ -995,6 +1050,17 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Logic; empiricism; objective science and ethics'],
     historical_weight: 1.0,
+    // Aristotle: THE philosopher of reason and reality. Objectivism's closest ancient ally.
+    // PERFECT reason (+1.0): invented formal logic (syllogism), founded multiple sciences.
+    // PERFECT reality (+1.0): "A is A" (law of identity); universals exist IN particulars, not in
+    // separate realm. Rejected Platonic otherworldliness. Empirical observation grounds knowledge.
+    // High individual (+0.8): eudaimonia (flourishing) is personal achievement through virtue.
+    // "Man is a rational animal" — individual reason as defining characteristic.
+    // High freedom (+0.7): endorsed slavery (product of era) but defended private property, natural law.
+    // PERFECT value (+1.0): Nicomachean Ethics — objective virtues, rational self-interest as proper aim.
+    // Very high beauty (+0.9): Poetics — objective standards in art (unity, probability, catharsis).
+    // Very high good_evil (+0.95): moral realism; virtue as objective, rational, achievable.
+    // Moderate market (+0.3): defended private property but suspicious of trade/money-making (product of era).
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.8, freedom_coercion: 0.7, value_nihilism: 1.0, market_planning: 0.3, beauty_chaos: 0.9, good_evil: 0.95 }
   },
 
@@ -1020,6 +1086,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Reason guides pleasure; atomic ethics'],
     historical_weight: 1.0,
+    // Epicurus: Materialist atomism (building on Democritus); happiness through RATIONAL pleasure.
+    // Very high reason (+0.9): systematic philosophy, empiricism (senses as criterion of truth).
+    // Very high reality (+0.9): materialist — only atoms and void; no supernatural realm; gods exist
+    // but don't intervene. High individual (+0.8): "live unnoticed" — personal tranquility (ataraxia)
+    // as goal; friendship-based communities. High value (+0.8): rational hedonism — not sensual excess
+    // but absence of pain (aponia) and mental disturbance. Good_evil (+0.7): objective ethics based on
+    // nature, but focused on pleasure/pain rather than virtue per se. Key Objectivist parallel: this-worldly,
+    // pro-reason, pro-individual, anti-religious-fear. Differs: pleasure vs. achievement as standard.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.8, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
@@ -1039,6 +1113,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['De Rerum Natura; atomism; reason over religion'],
     historical_weight: 0.7,
+    // Lucretius: Roman poet-philosopher who wrote De Rerum Natura (On the Nature of Things).
+    // Very high reason (+0.9): systematic exposition of Epicurean physics/ethics; attacks superstition.
+    // Very high reality (+0.9): materialist atomism — explains ALL phenomena through natural causes.
+    // Explicitly attacked religion as source of fear and evil ("Tantum religio potuit suadere malorum").
+    // High value (+0.8): this-worldly ethics. Beauty (+0.7): combined philosophical rigor with poetry.
+    // Slightly lower good_evil (+0.6): ethics derivative from physics, less developed than Aristotle's.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.6 }
   },
 
@@ -1060,6 +1140,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Universal Logos; virtue through reason'],
     historical_weight: 1.0,
+    // Zeno of Citium: Founded Stoicism in Athens (taught at the Stoa Poikile = "Painted Porch").
+    // Very high reason (+0.9): logic as first pillar of Stoicism; virtue = living according to reason.
+    // Moderate reality (+0.7): Stoic physics posits rational Logos pervading universe — pantheistic
+    // tendency (God = Nature = Reason) is somewhat mystical compared to Aristotelian realism.
+    // High value (+0.9): virtue is the ONLY good; external goods are "indifferent" (wealth, health).
+    // Very high good_evil (+0.9): objective ethics based on nature/reason. Individual (+0.6): emphasis
+    // on personal virtue BUT also cosmopolitanism, duty to rational world-order.
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -1079,6 +1166,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Systematic Stoic logic; master of the syllogism'],
     historical_weight: 0.7,
+    // Chrysippus: "Second founder of Stoicism"; systematized Stoic logic (propositional logic).
+    // Very high reason (+0.9): prolific logician, developed sophisticated argument forms.
+    // Said "without Chrysippus, there would be no Stoa." Moderate reality (+0.7): shared Stoic
+    // pantheistic physics (Logos/Nature/God). High value (+0.85): rigorous defense of Stoic ethics.
+    // High good_evil (+0.85): developed Stoic moral psychology (impressions, assent, impulse).
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.85, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.85 }
   },
   {
@@ -1098,6 +1190,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Natural law; rational statecraft and rhetoric'],
     historical_weight: 0.85,
+    // Cicero: Roman statesman, orator, eclectic philosopher (primarily Stoic with Academic skeptic elements).
+    // High reason (+0.8): transmitted Greek philosophy to Rome; De Officiis, De Re Publica. Defended
+    // natural law accessible to reason. Moderate reality (+0.7): eclectic, not a systematic metaphysician.
+    // High value (+0.8): virtue ethics, duty, honesty. Market (+0.3): defended private property, moderate
+    // economic views. Beauty (+0.7): master of Latin prose, aesthetic standards in rhetoric.
+    // Good_evil (+0.8): natural law ethics — objective moral standards discoverable by reason.
+    // Individual (+0.6): mixed — defended Republic against tyranny but also emphasized duty to state.
     battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.8, market_planning: 0.3, beauty_chaos: 0.7, good_evil: 0.8 }
   },
   {
@@ -1117,6 +1216,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Reason and virtue; natural philosophy'],
     historical_weight: 0.7,
+    // Seneca: Roman Stoic philosopher, statesman, dramatist. Nero's tutor (problematic association).
+    // High reason (+0.85): Letters to Lucilius — practical Stoic philosophy through rational argument.
+    // Moderate reality (+0.7): standard Stoic physics. Very high value (+0.9): "It is not that we have
+    // a short time to live, but that we waste much of it." Individual (+0.6): personal virtue focus BUT
+    // also duty to others. Very high good_evil (+0.9): moral clarity — distinguished between virtue and
+    // externals. Tension: accumulated great wealth while preaching indifference to externals.
     battles: { reason_faith: 0.85, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -1136,6 +1241,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Logos; only what is in our rational control'],
     historical_weight: 0.7,
+    // Epictetus: Born a slave, became one of the most influential Stoic teachers.
+    // Very high reason (+0.9): Enchiridion/Discourses — rigorous analysis of what is/isn't in our control.
+    // "Some things are within our power, while others are not" — focus reason on what you can control.
+    // Moderate reality (+0.7): standard Stoic metaphysics. Higher individual (+0.7): personal moral
+    // autonomy — even as slave, inner freedom through reason. Higher freedom (+0.8): "No man is free
+    // who is not master of himself" — psychological freedom more important than political.
+    // Very high value/good_evil (+0.9): clear objective ethics; virtue is the only good.
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.7, freedom_coercion: 0.8, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -1155,6 +1267,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Rational self-governance; universal reason'],
     historical_weight: 0.85,
+    // Marcus Aurelius: "Philosopher-king"; Roman Emperor who wrote Meditations for private reflection.
+    // High reason (+0.85): Meditations demonstrate rigorous self-examination, logical argument.
+    // Lower reality (+0.6): more mystical/religious tone than earlier Stoics — "the universe is either
+    // atoms or providence" shows tension. Also pessimistic undertones: "all is vanity." Individual (+0.5):
+    // balanced between personal virtue and duty to empire/cosmic order. Freedom (+0.5): as emperor,
+    // pragmatic compromises; also Stoic acceptance of fate (amor fati) reduces activist freedom.
+    // Very high value/good_evil (+0.9): maintained Stoic moral clarity despite political pressures.
     battles: { reason_faith: 0.85, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
 
@@ -1326,6 +1445,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['First Arab philosopher; reason and revelation compatible'],
     historical_weight: 0.6,
+    // Al-Kindi: "Philosopher of the Arabs"; first major Islamic philosopher, translated Greek works.
+    // High reason (+0.7): defended philosophy's legitimacy, integrated Aristotelian/Neoplatonic thought.
+    // Moderate reality (+0.6): some Neoplatonic emanation metaphysics reduces realism. Argued reason
+    // and revelation are compatible but revelation ultimately authoritative for theological matters.
+    // Pioneered philosophical terminology in Arabic; made Greek philosophy accessible to Islamic world.
     battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
@@ -1345,6 +1469,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Aristotelian rationalism; philosopher-king ideal'],
     historical_weight: 0.7,
+    // Al-Farabi: "Second Teacher" (after Aristotle); greatest Islamic political philosopher.
+    // High reason (+0.8): systematic Aristotelian logic; wrote on syllogistics, demonstration, rhetoric.
+    // Moderate reality (+0.7): combined Aristotle with Neoplatonic emanation scheme (Active Intellect).
+    // Political philosophy: ideal state ruled by philosopher-prophet-king (synthesis of Plato's Republic
+    // with Islamic prophecy). High value (+0.7): objective ethics grounded in reason/nature.
+    // Major influence on Avicenna, Averroes, Maimonides.
     battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
@@ -1364,6 +1494,12 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Rationalist metaphysics; floating man argument'],
     historical_weight: 1.0,
+    // Avicenna (Ibn Sina): Most influential Islamic philosopher; polymath (medicine, physics, metaphysics).
+    // Very high reason (+0.85): "Book of Healing" — systematic rationalist metaphysics. Essence/existence
+    // distinction; "Flying Man" argument (precursor to cogito). High reality (+0.75): but emanation
+    // metaphysics (Necessary Being → Active Intellect → world) has mystical elements. High value (+0.8):
+    // rational ethics, virtues, happiness through contemplation. Canon of Medicine dominated for centuries.
+    // Targeted by Al-Ghazali's attack but defended by Averroes.
     battles: { reason_faith: 0.85, reality_mysticism: 0.75, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.75 }
   },
   {
@@ -1403,6 +1539,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Aristotle's great commentator; reason is autonomous"],
     historical_weight: 0.85,
+    // Averroes (Ibn Rushd): "The Commentator"; greatest Aristotelian of Islamic world, wrote
+    // definitive commentaries on Aristotle. Very high reason (+0.9): defended philosophy against
+    // Al-Ghazali's attacks in "Incoherence of the Incoherence." Argued reason is autonomous and
+    // philosophy can reach truth independently. High reality (+0.8): closer to Aristotelian realism
+    // than Avicenna's Neoplatonic emanation. Influenced Latin Scholastics (especially Aquinas).
+    // "Double truth" doctrine (possibly misattributed) — philosophy and religion address different
+    // domains. High value (+0.8): rational ethics. Banned in Islamic world but preserved in West.
     battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.7 }
   },
 
@@ -1444,6 +1587,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Dialectics; skepticism of scriptural authority'],
     historical_weight: 0.65,
+    // Peter Abelard: Most original medieval logician before Aquinas; challenged Bernard of Clairvaux.
+    // High reason (+0.7): Sic et Non method — questioned authorities by showing contradictions, requiring
+    // rational resolution. Moderate reality (+0.6): still within Christian framework. Applied dialectic
+    // to theology; condemned for rationalism by Bernard. Ethics of intention: moral value depends on
+    // inner intent, not just external act (proto-modern ethics).
     battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
@@ -1463,6 +1611,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Rationalist theology; reason compatible with Torah'],
     historical_weight: 0.85,
+    // Maimonides (Rambam): Greatest Jewish philosopher; "Guide for the Perplexed" reconciles Aristotle
+    // with Torah. High reason (+0.8): systematic Aristotelian; negative theology (we know what God
+    // ISN'T) shows epistemic humility. Moderate reality (+0.7): maintains transcendent God beyond
+    // full comprehension. High value (+0.75): rational ethics, virtues, purpose of commandments.
+    // Influenced Aquinas, Spinoza. "Give a man a fish and you feed him for a day; teach a man to
+    // fish and you feed him for a lifetime" — emphasis on rational self-sufficiency.
     battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.75, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.75 }
   },
   {
@@ -1482,6 +1636,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Empirical science; observation over authority'],
     historical_weight: 0.65,
+    // Roger Bacon: "Doctor Mirabilis"; Franciscan proto-scientist; championed experiential knowledge.
+    // High reason (+0.75): advocated scientia experimentalis — knowledge through observation and
+    // experiment, criticized reliance on authority. High reality (+0.8): studied optics, astronomy,
+    // mathematics empirically. Still within Christian framework but anticipated Scientific Revolution.
+    // "Argument concludes a question, but does not make us feel certain... unless the truth is also
+    // found by experience."
     battles: { reason_faith: 0.75, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
@@ -1609,6 +1769,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Human dignity; eclectic rational humanism'],
     historical_weight: 0.6,
+    // Pico della Mirandola: "Oration on the Dignity of Man" — Renaissance manifesto of human potential.
+    // High reason (+0.7): sought synthesis of all philosophies through rational concordance. Moderate
+    // reality (+0.6): mixed Greek, Christian, Kabbalistic, Hermetic traditions (some mystical elements).
+    // High individual (+0.7): humans have NO fixed nature — we CREATE ourselves through choice.
+    // Very high beauty (+0.8): aesthetic ideals of Renaissance. Died young (31), poisoned possibly
+    // by Medici enemies. Anticipated existentialist themes of self-creation.
     battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.7, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.6 }
   },
   {
@@ -1628,6 +1794,12 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Christian humanism; rational reform of the Church'],
     historical_weight: 1.0,
+    // Erasmus of Rotterdam: "Prince of Humanists"; championed classical scholarship and rational reform.
+    // High reason (+0.75): recovered/edited Greek New Testament; used philology/textual criticism.
+    // "Praise of Folly" satirized Church corruption through wit. Moderate reality (+0.65): still Christian
+    // framework but applied reason to reform. Individual (+0.6): emphasized free will against Luther's
+    // determinism. Opposed violence of Reformation wars — preferred gradual rational reform.
+    // "In the land of the blind, the one-eyed man is king."
     battles: { reason_faith: 0.75, reality_mysticism: 0.65, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
   },
   {
@@ -1647,6 +1819,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Utopian rationalism; social reform'],
     historical_weight: 0.65,
+    // Thomas More: Lawyer, statesman, author of "Utopia" — coined the term meaning "no place."
+    // High reason (+0.7): applied rationalist critique to social arrangements. Moderate reality (+0.6):
+    // Christian martyr (executed for refusing to accept Henry VIII as head of Church). Individual (+0.4):
+    // Utopia features common property, no private ownership — proto-communist elements. Freedom (+0.5):
+    // some religious toleration in Utopia but More himself persecuted Protestants. Ambiguous: was
+    // Utopia satire or blueprint? Canonized as saint; also executed heretics.
     battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.4, freedom_coercion: 0.5, value_nihilism: 0.65, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.65 }
   },
 
@@ -1668,6 +1846,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Political reason divorced from religious morality'],
     historical_weight: 1.0,
+    // Machiavelli: Father of modern political science; "The Prince" analyzed power as it IS, not should be.
+    // High reason (+0.8): empirical study of politics through historical examples, not theology.
+    // Very high reality (+0.85): ruthless realism about human nature and political power. Low freedom
+    // (+0.3): endorsed deception, force, cruelty when expedient for the ruler. Low value (+0.4): separated
+    // politics from morality ("the end justifies the means"). Low good_evil (+0.2): moral relativism
+    // in service of raison d'état. Also wrote "Discourses on Livy" praising republican virtue —
+    // more nuanced than "The Prince" alone suggests. Individual (+0.5): focused on state, not individuals.
     battles: { reason_faith: 0.8, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.2 }
   },
 
@@ -1689,6 +1874,12 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Infinite universe; reason and science over dogma'],
     historical_weight: 1.0,
+    // Giordano Bruno: Renaissance martyr for reason; burned at stake by Inquisition for cosmological heresies.
+    // Very high reason (+0.9): defended Copernican heliocentrism, proposed infinite universe with many worlds.
+    // Moderate reality (+0.7): combined science with Hermetic/mystical elements (pantheism, "world soul").
+    // Very high individual (+0.8): defied Church authority, wouldn't recant. Very high freedom (+0.9):
+    // died for intellectual freedom. High value (+0.8): knowledge and truth as supreme values.
+    // "Perhaps you who pronounce my sentence are in greater fear than I who receive it."
     battles: { reason_faith: 0.9, reality_mysticism: 0.7, individual_collective: 0.8, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
   },
 
@@ -1710,6 +1901,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Discourse on Voluntary Servitude; tyranny rests on consent; liberty through refusal'],
     historical_weight: 0.7,
+    // La Boétie: Proto-libertarian; "Discourse on Voluntary Servitude" (age 18!) analyzed how tyranny
+    // requires popular consent. Very high individual (+0.9): liberty is natural state, servitude is chosen.
+    // Near-perfect freedom (+0.95): withdrawal of consent delegitimizes tyranny — "Resolve to serve no
+    // more, and you are at once freed." Influenced anarchist/libertarian thought (Rothbard published it).
+    // High reason (+0.75): rational analysis of political psychology. Friend of Montaigne.
+    // Market (+0.5): didn't develop economic theory but anti-coercion implies property rights.
     battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.75 }
   },
 
@@ -1731,6 +1928,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Que sais-je? — radical self-doubt suspends all objective knowledge; skepticism as a way of life'],
     historical_weight: 0.7,
+    // Montaigne: Father of the essay form; revived Pyrrhonian skepticism. "Que sais-je?" (What do I know?)
+    // Low reason (+0.3): undermines certainty in human knowledge; "Apology for Raymond Sebond" attacks
+    // reason's pretensions. Low reality (+0.3): we can't be sure of anything beyond appearances.
+    // Moderate individual (+0.6): introspective, personal (the self as subject). Moderate freedom (+0.6):
+    // tolerant of diversity, opposed religious persecution. Low value (+0.3): suspends judgment on values.
+    // Low good_evil (+0.4): moral relativism follows from epistemological skepticism.
+    // Influenced Pascal, Descartes (who then tried to overcome skepticism).
     battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
   },
 
@@ -1752,6 +1956,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Inductive method; idols of the mind; new science'],
     historical_weight: 0.7,
+    // Francis Bacon: Father of empiricism and scientific method; "Novum Organum" (New Instrument).
+    // Very high reason (+0.85): systematic inductive method for science; identified "Idols of the Mind"
+    // (cognitive biases). Very high reality (+0.9): "Nature, to be commanded, must be obeyed" —
+    // knowledge comes from studying the world AS IT IS. Rejected Scholastic reliance on Aristotle's authority.
+    // High value (+0.8): "Knowledge is power" — science for human betterment. Individual (+0.6): science
+    // is collective enterprise but serves human flourishing. Lord Chancellor but fell to bribery charges.
     battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -1777,6 +1987,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Mechanistic materialism; rational social contract'],
     historical_weight: 0.7,
+    // Hobbes: Materialist; "Leviathan" — state of nature is "war of all against all."
+    // High reason (+0.8): geometric method, deductive political science. Very high reality (+0.9):
+    // strict materialism — even mind is matter in motion. Low individual (+0.3): individuals surrender
+    // rights to absolute sovereign. Very low freedom (+0.2): Leviathan has near-absolute power to prevent
+    // civil war. Low value (+0.5): ethics reduced to self-preservation, no objective good beyond peace.
+    // Low good_evil (+0.4): moral relativism — "good" is what we desire. Pro-peace but anti-liberty.
+    // Influenced social contract tradition but in authoritarian direction.
     battles: { reason_faith: 0.8, reality_mysticism: 0.9, individual_collective: 0.3, freedom_coercion: 0.2, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.4 }
   },
   {
@@ -1796,6 +2013,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Tabula rasa; experience as the ground of knowledge'],
     historical_weight: 1.0,
+    // John Locke: Father of classical liberalism; most important political philosopher for America.
+    // Very high reason (+0.85): Essay Concerning Human Understanding — systematic empiricism, tabula rasa.
+    // Very high reality (+0.85): knowledge from experience of objective world. Very high individual (+0.9):
+    // natural rights to life, liberty, property exist PRIOR to government. Very high freedom (+0.9):
+    // government exists only by consent; right to revolution if rights violated. High market (+0.7):
+    // labor theory of property, defended private property. High value (+0.75): objective natural law.
+    // Direct influence on Jefferson, Madison, American founding. Second Treatise is Objectivist-compatible
+    // in many respects. Epistemology weaker than Aristotle (nominalism, primary/secondary qualities).
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -1837,6 +2062,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Cogito; clear and distinct ideas; method of doubt'],
     historical_weight: 1.0,
+    // Descartes: Father of modern philosophy; "Cogito ergo sum" (I think therefore I am).
+    // Very high reason (+0.9): method of systematic doubt, geometric method for philosophy, founded
+    // analytic geometry. High reality (+0.8): aimed to establish certain knowledge but introduced
+    // problematic mind-body dualism. Individual (+0.7): the thinking self is foundational.
+    // Epistemically: clear and distinct ideas as criterion of truth (rationalist, not empiricist).
+    // Problems from Objectivist view: dualism separates mind from world; "evil demon" hypothesis
+    // introduced radical skepticism that plagued later philosophy. But pro-science, pro-reason overall.
     battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.7, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -1856,6 +2088,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Geometric ethics; reason as the highest freedom'],
     historical_weight: 0.85,
+    // Spinoza: Radical rationalist; Ethics demonstrated "in geometric order." Excommunicated for heresy.
+    // Very high reason (+0.9): deductive metaphysics from first principles; freedom = understanding necessity.
+    // Moderate reality (+0.6): pantheism (Deus sive Natura — God = Nature) is quasi-mystical; denies
+    // personal God but also denies individual free will (determinism). Very high value (+0.9): highest
+    // good is intellectual love of God (= rational understanding of universe). Moderate freedom (+0.6):
+    // psychological freedom through reason but metaphysical determinism. Individual (+0.5): finite modes
+    // of infinite substance, not truly independent beings. Influenced Einstein, Goethe.
     battles: { reason_faith: 0.9, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.6, value_nihilism: 0.9, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
   },
   {
@@ -1875,6 +2114,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Vision in God; occasionalism; Cartesian theology'],
     historical_weight: 0.6,
+    // Malebranche: Cartesian priest; "occasionalism" — God is the only true cause; we "see all things in God."
+    // High reason (+0.7): systematic, rigorous argument. Moderate reality (+0.5): occasionalism denies
+    // natural causation — all events are directly caused by God, reducing nature to mere occasion.
+    // This is quasi-mystical: finite minds don't truly know external world but only divine ideas.
+    // Influenced Berkeley's idealism. Less important than Descartes, Spinoza, Leibniz.
     battles: { reason_faith: 0.7, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -1894,6 +2138,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Principle of sufficient reason; monads; calculus'],
     historical_weight: 0.85,
+    // Leibniz: Universal genius; co-invented calculus (with Newton), pioneered symbolic logic, polymath.
+    // High reason (+0.8): principle of sufficient reason, principle of non-contradiction as foundations.
+    // Moderate reality (+0.6): monadology — reality consists of "windowless" soul-like substances, not
+    // material atoms. "Best of all possible worlds" theodicy (satirized by Voltaire's Candide). Pre-established
+    // harmony = quasi-mystical solution to mind-body problem. High value (+0.8): optimistic rationalism.
+    // High beauty (+0.8): aesthetic order in universe reflects divine reason. High good_evil (+0.8):
+    // rational ethics, natural law. Less this-worldly than Aristotle but highly pro-reason.
     battles: { reason_faith: 0.8, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.8, market_planning: 0.0, beauty_chaos: 0.8, good_evil: 0.8 }
   },
   {
@@ -1913,6 +2164,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Systematic Leibnizian rationalism'],
     historical_weight: 0.55,
+    // Christian Wolff: Systematized Leibniz; created German philosophical terminology (Enlightenment background).
+    // High reason (+0.75): rigorous deductive method, systematized metaphysics/ethics/psychology.
+    // Moderate reality (+0.6): inherited Leibnizian monadology's idealist tendencies. Accused of fatalism,
+    // expelled from Prussia, later restored. Important for creating academic philosophy in Germany.
+    // Kant's "dogmatic slumber" was in Wolffian rationalism. Moderate influence, less original than Leibniz.
     battles: { reason_faith: 0.75, reality_mysticism: 0.6, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.65, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -1934,6 +2190,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Natural law foundation; law of nations; rights independent of theology'],
     historical_weight: 0.7,
+    // Grotius: Father of international law; "De Jure Belli ac Pacis" (On the Law of War and Peace).
+    // High reason (+0.8): natural law would hold "even if God did not exist" (etsi Deus non daretur) —
+    // secularized natural law, made it independent of theology. High reality (+0.75): studied actual
+    // practices of nations to derive principles. High individual (+0.8): natural rights prior to state.
+    // High freedom (+0.8): limited just war theory, rights in wartime. Influenced Locke, Pufendorf.
+    // Market (+0.5): defended property, freedom of seas (Mare Liberum). Pioneer of liberal internationalism.
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.75 }
   },
   {
@@ -1953,6 +2215,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Areopagitica; freedom of thought and press as absolute; individual conscience'],
     historical_weight: 0.7,
+    // Milton: Poet and pamphleteer; "Areopagitica" is classic defense of freedom of the press.
+    // High reason (+0.7): truth will prevail in free marketplace of ideas; "Let her and Falsehood grapple."
+    // Moderate reality (+0.65): Protestant Christian, Paradise Lost; reason serves faith. Very high
+    // individual (+0.85): individual conscience supreme. Very high freedom (+0.9): opposed censorship,
+    // defended divorce, regicide (justified killing Charles I). Secretary to Cromwell's Commonwealth.
+    // Market (+0.5): marketplace of ideas precedes economic marketplace analogy. High value (+0.7):
+    // objective truth exists and will triumph. Influential on First Amendment tradition.
     battles: { reason_faith: 0.7, reality_mysticism: 0.65, individual_collective: 0.85, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
@@ -1972,6 +2241,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Discourses Concerning Government; republican liberty; pre-Locke rights theory'],
     historical_weight: 0.65,
+    // Algernon Sidney: Republican martyr; "Discourses Concerning Government" written against Filmer's
+    // divine right of kings. High reason (+0.75): rational arguments for natural rights, consent of governed.
+    // High reality (+0.7): historical examples. Very high individual (+0.85): liberty as natural condition.
+    // Very high freedom (+0.9): resisted Stuart tyranny, executed for treason (his unpublished manuscript
+    // used as evidence against him — "Every man is author of his own book"). Market (+0.5): property rights.
+    // Influenced American founders; Jefferson called him one of the "elementary books of public right."
     battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.85, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.75 }
   },
   {
@@ -1991,6 +2266,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Mathematical principles of natural philosophy; universal gravitation; scientific method'],
     historical_weight: 0.85,
+    // Newton: Greatest scientist; Principia Mathematica unified terrestrial and celestial mechanics.
+    // Very high reason (+0.85): rigorous mathematical physics, scientific method ("Hypotheses non fingo").
+    // Very high reality (+0.9): discovered actual laws governing the physical universe. High value (+0.85):
+    // knowledge of objective reality as supreme good. High beauty (+0.8): mathematical elegance reflects
+    // cosmic order. Moderate individual/freedom (+0.6): focused on science, not political philosophy.
+    // Also did alchemy, biblical chronology — but his scientific work is what matters. Newtonian physics
+    // as paradigm of rational knowledge. "If I have seen further, it is by standing on shoulders of giants."
     battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.85, market_planning: 0.5, beauty_chaos: 0.8, good_evil: 0.7 }
   },
 
@@ -2060,6 +2342,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Rational analysis of laws; separation of powers'],
     historical_weight: 0.85,
+    // Montesquieu: "The Spirit of the Laws" — comparative study of governments, separation of powers.
+    // High reason (+0.8): empirical study of political systems across cultures. High reality (+0.75):
+    // examined actual institutions. High freedom (+0.85): separation of powers prevents tyranny.
+    // Individual (+0.7): liberty requires limited government but not radically individualist.
+    // Major influence on American Constitution. Market (+0.5): commerce promotes peace (doux commerce).
+    // Some climate determinism (geography shapes political institutions) — proto-sociology.
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.7, freedom_coercion: 0.85, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -2079,6 +2367,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Reason vs. superstition, tyranny, and fanaticism'],
     historical_weight: 1.0,
+    // Voltaire: Champion of Enlightenment; "Écrasez l'infâme!" (Crush the infamous thing — superstition/fanaticism).
+    // Near-perfect reason (+0.95): relentless critic of religious intolerance, superstition, tyranny.
+    // High reality (+0.8): empiricist influenced by Newton, Locke. Very high individual (+0.8): defended
+    // religious tolerance, free speech. Very high freedom (+0.9): satirized censorship, absolutism.
+    // Market (+0.6): commerce civilizes, creates interdependence. Moderate value (+0.7): utilitarian
+    // tendencies. Moderate good_evil (+0.6): moral universalism but not systematic ethical theory.
+    // "I disapprove of what you say, but I will defend to the death your right to say it."
     battles: { reason_faith: 0.95, reality_mysticism: 0.8, individual_collective: 0.8, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.7, good_evil: 0.6 }
   },
   {
@@ -2098,6 +2393,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Encyclopédie; materialism; human knowledge catalogued'],
     historical_weight: 0.75,
+    // Diderot: Chief editor of the Encyclopédie — 28 volumes cataloging human knowledge for progress.
+    // Very high reason (+0.9): systematic organization of knowledge, attack on ignorance/superstition.
+    // Very high reality (+0.85): materialist, atheist ("Man will never be free until the last king is
+    // strangled with the entrails of the last priest"). Individual (+0.6): collective project for human
+    // improvement. Freedom (+0.7): censorship battles; published underground. Novel "Jacques the Fatalist"
+    // explores determinism. Art critic, playwright. Central figure of French Enlightenment.
     battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.7, market_planning: 0.5, beauty_chaos: 0.6, good_evil: 0.6 }
   },
   {
@@ -2117,6 +2418,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Rational self-interest; invisible hand; moral sentiments'],
     historical_weight: 0.85,
+    // Adam Smith: Father of economics; "Wealth of Nations" and "Theory of Moral Sentiments."
+    // High reason (+0.8): systematic analysis of economic behavior. High reality (+0.8): observed actual
+    // market processes. Very high market (+0.9): invisible hand, division of labor, free trade benefits all.
+    // "It is not from the benevolence of the butcher... that we expect our dinner, but from their regard
+    // to their own interest." High individual (+0.8): self-interest channeled by markets produces social good.
+    // High value (+0.8): rational self-interest is NOT greed; also wrote on sympathy, virtue.
+    // NOT laissez-faire absolutist: allowed some government roles (defense, justice, public works).
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -2136,6 +2444,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Rational theology; toleration; education of humanity'],
     historical_weight: 0.6,
+    // Lessing: German Enlightenment dramatist and critic; "Nathan the Wise" promoted religious tolerance.
+    // High reason (+0.8): applied rational criticism to religion, literature. Ring parable: truth of
+    // religions judged by moral fruits, not revelation. Moderate reality (+0.7): rational theology but
+    // still theistic. Freedom (+0.7): religious tolerance, free inquiry. High beauty (+0.7): aesthetic
+    // theory (Laocoon on painting vs. poetry). Education of the Human Race: progress through stages of
+    // religious development toward rational ethics. Friend of Moses Mendelssohn. German Voltaire.
     battles: { reason_faith: 0.8, reality_mysticism: 0.7, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.7, good_evil: 0.7 }
   },
   {
@@ -2155,6 +2469,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Indefinite human progress through reason and science'],
     historical_weight: 0.6,
+    // Condorcet: Mathematician, philosopher of progress; "Sketch for a Historical Picture of the Progress
+    // of the Human Mind." Very high reason (+0.9): science and reason will improve humanity indefinitely.
+    // Very high reality (+0.85): empirical optimism about human nature. High value (+0.8): progress is real
+    // and measurable. Supported American and French Revolutions; opposed slavery, death penalty, defended
+    // women's rights. Died during Terror (hiding while writing his optimistic masterwork). Influenced
+    // by Turgot, influenced Comte, Mill. Individual (+0.6): progress is collective but through rational
+    // individuals. Voting theory (Condorcet paradox) anticipates social choice theory.
     battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.5, beauty_chaos: 0.5, good_evil: 0.7 }
   },
 
@@ -2176,6 +2497,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Mixed government; balance of powers; republican virtue'],
     historical_weight: 0.7,
+    // John Adams: 2nd President; "Defence of the Constitutions of the United States."
+    // High reason (+0.75): studied political philosophy systematically; mixed constitution theory.
+    // High reality (+0.7): realistic about human nature (ambition must counteract ambition).
+    // High freedom (+0.85): independence leader, but also signed Alien and Sedition Acts (tension).
+    // Individual (+0.75): rights are real but virtue is necessary for republic. Market (+0.6): defended
+    // property rights but skeptical of pure commerce. Good_evil (+0.75): believed in moral order.
+    // More conservative than Jefferson; worried about democracy without checks.
     battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.75, freedom_coercion: 0.85, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.5, good_evil: 0.75 }
   },
   {
@@ -2195,6 +2523,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Natural rights; popular sovereignty; anti-monarchy; "Common Sense"'],
     historical_weight: 0.85,
+    // Thomas Paine: Revolutionary pamphleteer; "Common Sense" sparked American Revolution.
+    // Very high reason (+0.9): clear, forceful arguments accessible to common people. High reality (+0.8):
+    // practical focus on political arrangements. Very high individual (+0.85): "These are the times that
+    // try men's souls." Near-perfect freedom (+0.95): attacked hereditary monarchy, aristocracy, established
+    // religion. "Rights of Man" defended French Revolution. High market (+0.7): agrarian justice, progressive
+    // taxation but defended commerce. High good_evil (+0.8): moral clarity about tyranny.
+    // "The Age of Reason" attacked organized religion — deist. Died poor, marginalized for radicalism.
     battles: { reason_faith: 0.9, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.95, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -2214,6 +2549,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Natural rights; "life, liberty, pursuit of happiness"; separation of church and state'],
     historical_weight: 1.0,
+    // Thomas Jefferson: Principal author of Declaration of Independence; 3rd President.
+    // Very high reason (+0.85): enlightenment rationalist; Virginia Statute for Religious Freedom.
+    // High reality (+0.8): empiricist, scientist (Notes on Virginia). Very high individual (+0.9):
+    // "We hold these truths to be self-evident, that all men are created equal, that they are endowed
+    // by their Creator with certain unalienable Rights." Near-perfect freedom (+0.95): limited government,
+    // religious liberty, free press. High market (+0.75): agrarian republic but defended commerce.
+    // High value (+0.8): pursued happiness as rational self-fulfillment. Slavery contradiction haunts legacy.
+    // "I have sworn upon the altar of God eternal hostility against every form of tyranny over the mind of man."
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.75, beauty_chaos: 0.6, good_evil: 0.8 }
   },
   {
@@ -2233,6 +2576,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Federalism; checks and balances; faction theory; Bill of Rights'],
     historical_weight: 0.85,
+    // James Madison: "Father of the Constitution"; 4th President; Federalist Papers author.
+    // High reason (+0.8): systematic political science (Federalist #10 on faction, #51 on separation of powers).
+    // High reality (+0.75): realistic about human nature and interest-group politics. Very high individual
+    // (+0.85): Bill of Rights protects individuals from majority tyranny. Very high freedom (+0.9):
+    // designed institutions to limit government power. High market (+0.7): defended property, commerce.
+    // "If men were angels, no government would be necessary." Brilliant constitutional engineer.
+    // Tension: initially opposed Bill of Rights as unnecessary, then championed it.
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.85, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.75 }
   },
 
@@ -2254,6 +2604,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['A Vindication of the Rights of Woman; reason has no sex; equality through education'],
     historical_weight: 0.75,
+    // Mary Wollstonecraft: Pioneer feminist philosopher; "Vindication of the Rights of Woman."
+    // Very high reason (+0.85): argued women's apparent inferiority is due to lack of education, not nature.
+    // "I do not wish them to have power over men; but over themselves." High reality (+0.8): empirical
+    // observation of women's condition. Very high individual (+0.9): "Mind has no sex" — women deserve same
+    // rational education as men. Very high freedom (+0.9): opposed tyranny in marriage and politics.
+    // Applied Enlightenment principles consistently (unlike those who excluded women). Died in childbirth
+    // (daughter Mary Shelley wrote Frankenstein). Attacked by Burke, vindicated by history.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.6, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -2273,6 +2630,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The Limits of State Action; individual development as the highest end; minimal government'],
     historical_weight: 0.7,
+    // Wilhelm von Humboldt: Liberal political theorist; "The Limits of State Action" (influenced J.S. Mill).
+    // High reason (+0.8): systematic argument for limited government. High reality (+0.75): Prussian
+    // educational reformer (founded Berlin University). Very high individual (+0.9): "Bildung" — self-cultivation
+    // as highest human purpose; state must protect but not direct individual development. Very high freedom
+    // (+0.9): minimalist state; only legitimate function is protecting rights. High market (+0.7): freedom
+    // includes economic liberty. "The highest and most harmonious development of his powers to a complete
+    // and consistent whole." Proto-Objectivist emphasis on individual flourishing.
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.6, good_evil: 0.75 }
   },
 
@@ -2569,6 +2933,12 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Three stages; science replaces theology and metaphysics'],
     historical_weight: 1.0,
+    // Auguste Comte: Founder of positivism and sociology; "Law of Three Stages" (theological → metaphysical → positive/scientific).
+    // Very high reason (+0.9): science as supreme knowledge; rejected metaphysics. Very high reality (+0.9):
+    // empirical social science. BUT: collectivist individual (-0.3) — designed "Religion of Humanity" with
+    // scientists as priests; technocratic social engineering. Neutral freedom (0.0): not libertarian, envisioned
+    // expert management of society. Market (-0.2): suspicious of capitalism's disorder. Good_evil (+0.4):
+    // ethics from social science, somewhat relativistic. Pro-science but anti-individual-liberty.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: -0.3, freedom_coercion: 0.0, value_nihilism: 0.5, market_planning: -0.2, beauty_chaos: 0.3, good_evil: 0.4 }
   },
   {
@@ -2588,6 +2958,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Synthetic philosophy; social evolution; scientism'],
     historical_weight: 0.6,
+    // Herbert Spencer: Evolutionary philosopher; coined "survival of the fittest" (before Darwin applied it to biology).
+    // High reason (+0.8): systematic philosophy based on evolution. High reality (+0.8): naturalistic worldview.
+    // Moderate individual (+0.6): defended laissez-faire, but social evolution could justify hierarchy.
+    // Moderate freedom (+0.6): opposed state intervention but also militarism. Market (+0.6): pro-capitalism
+    // as natural evolutionary outcome. Low good_evil (+0.5): evolutionary ethics problematic — is ≠ ought.
+    // "Social Darwinism" (often misattributed) used to justify inequality. Progressive evolution assumed.
+    // Influenced libertarians but also criticized for biologizing politics.
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.6, market_planning: 0.6, beauty_chaos: 0.4, good_evil: 0.5 }
   },
 
@@ -2609,6 +2986,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['The Law; property rights; the state as legal plunder; broken window fallacy'],
     historical_weight: 1.0,
+    // Bastiat: French classical liberal economist; brilliant polemicist for free markets.
+    // Very high reason (+0.85): clear, witty arguments (broken window fallacy, petition of candlemakers).
+    // High reality (+0.8): observed actual economic effects. Near-perfect individual (+0.95): natural rights,
+    // self-ownership. Near-perfect freedom (+0.95): "The Law" — state exists only to protect life, liberty,
+    // property; everything else is "legal plunder." Near-perfect market (+0.95): free trade, laissez-faire.
+    // High good_evil (+0.85): moral clarity about coercion vs. voluntary exchange.
+    // "The state is that great fiction by which everyone tries to live at the expense of everyone else."
+    // Proto-Objectivist in many ways; died young (49) during his most productive period.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.85 }
   },
   {
@@ -2628,6 +3013,14 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Democracy in America; liberty over equality; tyranny of the majority; civic virtue'],
     historical_weight: 0.85,
+    // Tocqueville: French political theorist; "Democracy in America" analyzed American republic.
+    // High reason (+0.75): systematic observation and analysis. High reality (+0.7): empirical study of
+    // actual institutions and mores. Very high individual (+0.85): warned against "soft despotism" where
+    // people trade liberty for security. Very high freedom (+0.85): "tyranny of the majority" threatens
+    // individual rights. High market (+0.7): commerce supports liberty but materialism threatens virtue.
+    // Individual liberty more important than equality; voluntary associations essential.
+    // "The American Republic will endure until the day Congress discovers that it can bribe the public
+    // with the public's money." Prescient about democratic dangers.
     battles: { reason_faith: 0.75, reality_mysticism: 0.7, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.75, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.75 }
   },
   {
@@ -2647,6 +3040,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Natural rights to demolish slavery; reason as liberation; self-ownership'],
     historical_weight: 1.0,
+    // Frederick Douglass: Escaped slave, abolitionist leader, orator, writer; greatest American of 19th century.
+    // Very high reason (+0.9): used argument, evidence, eloquence to demolish slavery apologetics.
+    // Very high reality (+0.85): direct witness to slavery's evil. Near-perfect individual (+0.95):
+    // "I am a man, and entitled to all the rights of a man." Self-ownership is foundational.
+    // Near-perfect freedom (+0.95): abolition, equal rights, Constitution properly interpreted guarantees liberty.
+    // Very high good_evil (+0.9): moral clarity — slavery is simply evil, no compromise.
+    // "I would unite with anybody to do right and with nobody to do wrong." Applied Enlightenment
+    // principles consistently; refuted claims that blacks were less than human.
     battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.85, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.9 }
   },
   {
@@ -2666,6 +3067,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Power corrupts absolutely; liberty as the supreme political value; conscience over authority'],
     historical_weight: 1.0,
+    // Lord Acton: Catholic historian and liberal; "Power tends to corrupt, and absolute power corrupts absolutely."
+    // High reason (+0.8): historical analysis of power and liberty. High reality (+0.75): studied actual
+    // political history. Very high individual (+0.9): individual conscience over institutional authority.
+    // Near-perfect freedom (+0.95): liberty as the supreme political value throughout history.
+    // "The most certain test by which we judge whether a country is really free is the amount of security
+    // enjoyed by minorities." Catholic but applied natural law reasoning to politics. Influenced Hayek.
+    // Never completed his planned History of Liberty but left brilliant essays and letters.
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.7, beauty_chaos: 0.5, good_evil: 0.85 }
   },
 
@@ -2687,6 +3095,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Over-Soul; intuition over reason; nature mysticism; self-reliance'],
     historical_weight: 1.0,
+    // Emerson: Leader of American Transcendentalism; "Self-Reliance" celebrates individual, but...
+    // Low reason (+0.3): "intuition" and "Over-Soul" over discursive reason; anti-systematic.
+    // Low reality (+0.2): mystical — ultimate reality is spiritual, not material. Very high individual (+0.8):
+    // "Self-Reliance" — trust yourself, nonconformity, inner voice. High freedom (+0.7): opposed slavery,
+    // conformity. High beauty (+0.7): nature as source of truth and beauty. "Trust thyself" sounds
+    // individualist but grounded in mystical unity with Over-Soul, not rational self-interest.
+    // Influenced Thoreau, Whitman. American optimism combined with Eastern mysticism.
     battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.8, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.5, beauty_chaos: 0.7, good_evil: 0.6 }
   },
   {
@@ -2706,6 +3121,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Civil Disobedience; mystical individualism; simplicity; conscience over law'],
     historical_weight: 0.75,
+    // Thoreau: "Civil Disobedience" and "Walden"; passive resistance to unjust laws.
+    // Low reason (+0.4): mystical individualism, intuition over systematic thought. Low reality (+0.3):
+    // Transcendentalist nature mysticism. Very high individual (+0.9): "That government is best which
+    // governs least" — anarchist tendencies. Very high freedom (+0.85): refused to pay poll tax for
+    // Mexican War, went to jail. Market (+0.5): "simplify, simplify" — skeptical of commerce, consumerism.
+    // High beauty (+0.7): nature writing. Good_evil (+0.65): moral clarity about slavery but grounded
+    // in conscience/intuition rather than objective ethics. Influenced Gandhi, MLK.
     battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.6, market_planning: 0.5, beauty_chaos: 0.7, good_evil: 0.65 }
   },
 
@@ -2727,6 +3149,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['The Ego and Its Own; all abstractions are spooks; pure egoism; the unique one'],
     historical_weight: 1.0,
+    // Stirner: Radical egoist; "The Ego and Its Own" — all ideals (God, State, Humanity, Morality) are "spooks."
+    // Moderate reason (+0.5): uses argument but rejects all concepts as enslaving. Moderate reality (+0.5):
+    // nominalist — only individuals exist, abstractions are illusions. PERFECT individual (+1.0): the "Unique One"
+    // is beyond all categories, owes allegiance to nothing. High freedom (+0.8): anti-state, anti-authority.
+    // Low value (+0.2): rejects all values as spooks constraining the ego. Low good_evil (+0.3): moral nihilism —
+    // no objective right/wrong, only my will. Influenced Nietzsche (who denied it), anarchists.
+    // Critiqued by Marx in "German Ideology." NOT Objectivist: rejects objective morality, rational self-interest
+    // involves objective values. Stirner's ego is mere will, not rational agent.
     battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 1.0, freedom_coercion: 0.8, value_nihilism: 0.2, market_planning: 0.5, beauty_chaos: 0.4, good_evil: 0.3 }
   },
 
@@ -2748,6 +3178,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['No Treason; natural rights; Constitution has no authority; individual over state'],
     historical_weight: 0.7,
+    // Lysander Spooner: American anarchist, abolitionist, legal theorist; "No Treason: The Constitution of No Authority."
+    // High reason (+0.8): rigorous legal/philosophical arguments. High reality (+0.75): applied natural law to
+    // actual institutions. Near-perfect individual (+0.95): self-ownership, Constitution never consented to.
+    // Near-perfect freedom (+0.95): all taxation is theft, all government is illegitimate without individual consent.
+    // High market (+0.8): private postal service (competed with government), free banking. High good_evil (+0.8):
+    // slavery is simply wrong, contracts require actual consent. Influenced both left and right anarchists.
+    // "If the majority can impose their will on the minority, there is no such thing as individual rights."
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.75, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -2767,6 +3204,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Voluntary taxation; no coercion ever justified; individual sovereignty; the true liberty'],
     historical_weight: 1.0,
+    // Auberon Herbert: British "voluntaryist"; disciple of Spencer but more radical.
+    // Very high reason (+0.85): systematic case for voluntary society. High reality (+0.8): practical
+    // proposals for voluntary taxation, competing governments. Near-perfect individual (+0.95): individual
+    // sovereignty is absolute; no one may use force against another. PERFECT freedom (+1.0): no coercion ever
+    // justified, even by majority vote. Very high market (+0.85): voluntary exchange only. Very high
+    // good_evil (+0.85): coercion is always wrong regardless of consequences. "Voluntaryism" — coined the term.
+    // "If we use force to impose our will on others, we destroy that which we seek to protect."
+    // Closest to Objectivist politics but less developed epistemology/ethics.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.95, freedom_coercion: 1.0, value_nihilism: 0.8, market_planning: 0.85, beauty_chaos: 0.5, good_evil: 0.85 }
   },
 
@@ -2788,6 +3233,12 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Property is theft; mutualist anarchism; federalism; anti-state, anti-capitalist'],
     historical_weight: 1.0,
+    // Proudhon: First to call himself "anarchist"; "Property is theft" (but also "Property is freedom" — depends on type).
+    // Moderate reason (+0.6): systematic arguments but often contradictory. Moderate reality (+0.6): mutualism
+    // based on exchange without profit. Low individual (+0.3): against private capital accumulation.
+    // High freedom (+0.7): anti-state, decentralist. Low market (+0.2): exchange economy without capitalism.
+    // Influenced Marx (who broke with him), later anarchists. Anti-democratic, anti-communist, anti-capitalist.
+    // "To be governed is to be watched, inspected, spied upon..."
     battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.3, freedom_coercion: 0.7, value_nihilism: 0.4, market_planning: 0.2, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
@@ -2807,6 +3258,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Collectivist anarchism; destroy the state and God; revolutionary violence'],
     historical_weight: 0.8,
+    // Bakunin: Revolutionary anarchist; Marx's rival in First International.
+    // Moderate reason (+0.5): uses argument but embraces destructive passion. Moderate reality (+0.5):
+    // materialist but apocalyptic. Low individual (+0.2): collectivist — workers' associations, not
+    // individual rights. Moderate freedom (+0.6): anti-state but also anti-freedom-of-commerce.
+    // Very low market (+0.1): collective ownership. "The urge to destroy is also a creative urge."
+    // Advocated violent revolution, secret revolutionary societies. Antisemitic conspiracy theories.
+    // Warned (correctly) that Marxism would create "red bureaucracy" worse than capitalism.
     battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.2, freedom_coercion: 0.6, value_nihilism: 0.3, market_planning: 0.1, beauty_chaos: 0.3, good_evil: 0.3 }
   },
   {
@@ -2826,6 +3284,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Co-author of Communist Manifesto; historical materialism; dialectics of nature'],
     historical_weight: 0.8,
+    // Engels: Marx's collaborator; co-authored Communist Manifesto, edited Capital vols. 2-3.
+    // Moderate reason (+0.6): claims to be "scientific" socialism. High reality (+0.7): materialist.
+    // Near-negative individual (-0.9): class consciousness over individual identity. Negative freedom (-0.5):
+    // dictatorship of proletariat, revolution. Near-negative market (-0.9): abolish private property.
+    // "Anti-Dühring" and "Dialectics of Nature" — tried to extend Marxism to natural science (badly).
+    // Funded Marx from his factory-owning family's money. Systematized Marxism after Marx's death.
     battles: { reason_faith: 0.6, reality_mysticism: 0.7, individual_collective: -0.9, freedom_coercion: -0.5, value_nihilism: 0.4, market_planning: -0.9, beauty_chaos: 0.0, good_evil: 0.2 }
   },
   {
@@ -2845,6 +3309,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Mutual aid; communist anarchism; no individual property; scientific anarchism'],
     historical_weight: 0.75,
+    // Kropotkin: "Anarchist prince"; geographer who developed anarcho-communism based on "mutual aid."
+    // Moderate reason (+0.6): tried to ground anarchism in Darwinian science (cooperation, not competition).
+    // Moderate reality (+0.6): naturalist, observed animal cooperation. Very low individual (+0.1):
+    // no individual property, common ownership. Moderate freedom (+0.6): anti-state but also anti-market.
+    // Neutral market (0.0): "from each according to ability, to each according to need" — no exchange.
+    // "Mutual Aid: A Factor of Evolution" challenged social Darwinism. Kind-hearted, opposed Bolsheviks.
     battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: 0.1, freedom_coercion: 0.6, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 
@@ -3144,6 +3614,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Anarcho-communism; free love; anti-capitalism; individual freedom through collective liberation'],
     historical_weight: 0.7,
+    // Emma Goldman: "Red Emma"; anarcho-communist, feminist, advocate of free love.
+    // Moderate reason (+0.5): passionate arguments but often emotional over logical. Moderate reality (+0.5):
+    // concerned with actual working-class conditions. Low individual (+0.3): collective liberation, not individual
+    // rights in property. High freedom (+0.7): opposed all authority — state, capitalism, religion, patriarchy.
+    // Very low market (+0.1): anti-capitalist anarchism. Deported from US for radicalism; opposed Bolsheviks
+    // after visiting Russia. "If I can't dance, I don't want to be in your revolution" (apocryphal).
     battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.3, freedom_coercion: 0.7, value_nihilism: 0.4, market_planning: 0.1, beauty_chaos: 0.5, good_evil: 0.4 }
   },
 
@@ -3165,6 +3641,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Our Enemy the State; radical individualism; the remnant; anti-mass society'],
     historical_weight: 0.7,
+    // Albert Jay Nock: "Our Enemy, the State" — distinguished State (coercive) from government (necessary).
+    // High reason (+0.8): erudite classical liberal arguments. High reality (+0.75): historical analysis
+    // of state power. Very high individual (+0.9): "the Remnant" — the thoughtful few vs. mass conformity.
+    // Very high freedom (+0.9): state is organized exploitation by political class. High market (+0.8):
+    // laissez-faire but skeptical of corporate capitalism as state-allied. Influenced early libertarian movement.
+    // "The State claims and exercises the monopoly of crime."
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3184,6 +3666,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The iconoclast of individualism; enemy of mass conformity; critic of democracy'],
     historical_weight: 0.7,
+    // H.L. Mencken: "The Sage of Baltimore"; journalist, satirist, iconoclast.
+    // Very high reason (+0.85): ruthless logic applied to American culture/politics. High reality (+0.8):
+    // empirical observation of political life. Very high individual (+0.9): defended individual liberty against
+    // democracy's tyranny. Very high freedom (+0.85): "Democracy is the theory that the common people know
+    // what they want, and deserve to get it good and hard." High market (+0.75): anti-New Deal, anti-regulation.
+    // Moderate good_evil (+0.7): moral skeptic but not nihilist. Influenced early libertarian/conservative thought.
+    // Some problematic views on race; complex legacy.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.7, market_planning: 0.75, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
@@ -3203,6 +3692,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The God of the Machine; founding mother of American libertarianism; energy circuit of production'],
     historical_weight: 0.75,
+    // Isabel Paterson: "The God of the Machine" (1943) — one of three "founding mothers" of libertarianism.
+    // Very high reason (+0.85): systematic analysis of freedom and production. High reality (+0.8): historical
+    // examples of what enables civilization. Very high individual (+0.9): individual creativity as engine of
+    // progress. Near-perfect freedom (+0.95): "energy circuit" — liberty enables productive human energy to flow.
+    // Very high market (+0.85): capitalism as natural expression of human reason and freedom.
+    // Mentor to Ayn Rand (they later broke). "Do-gooders" who use force cause more harm than good.
+    // "The humanitarian wishes to be a prime mover in the lives of others."
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.95, value_nihilism: 0.8, market_planning: 0.85, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3222,6 +3718,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The Discovery of Freedom; individual sovereignty; founding mother of libertarianism'],
     historical_weight: 0.7,
+    // Rose Wilder Lane: "The Discovery of Freedom" (1943) — third "founding mother" of libertarianism.
+    // High reason (+0.8): historical analysis of freedom's role in human progress. High reality (+0.75):
+    // traced freedom's growth through history. Very high individual (+0.9): individual energy as source
+    // of all progress. Very high freedom (+0.9): opposed New Deal, all government expansion.
+    // High market (+0.8): free markets as natural order. Daughter of Laura Ingalls Wilder (Little House).
+    // Converted from communism to libertarianism after visiting Soviet Russia.
+    // "Freedom is self-control, no more, no less."
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.75, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.75 }
   },
 
@@ -3243,6 +3746,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Founder of Austrian School; subjective theory of value; Principles of Economics (1871); methodological individualism'],
     historical_weight: 1.0,
+    // Carl Menger: Founder of Austrian School of Economics; "Principles of Economics" (1871).
+    // Very high reason (+0.85): systematic deductive economics from first principles. Very high reality (+0.85):
+    // studied actual market processes, not mathematical models. Very high individual (+0.9): methodological
+    // individualism — all economic phenomena are actions of individuals. Very high freedom (+0.85): implied
+    // by subjective value theory. Near-perfect market (+0.95): marginal utility revolution destroyed labor
+    // theory of value. Subjective theory of value is NOT subjectivism — values are subjective but economic
+    // laws are objective. Founder alongside Walras, Jevons of marginalist revolution.
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3262,6 +3772,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Capital and Interest; critique of Marx exploitation theory; time preference; roundabout production'],
     historical_weight: 0.85,
+    // Böhm-Bawerk: Austrian economist; capital theory, time preference, devastating critique of Marx.
+    // Very high reason (+0.85): rigorous logic. Very high reality (+0.85): studied actual capital processes.
+    // Very high individual (+0.85): time preference is individual choice. Very high freedom (+0.85): interest
+    // is legitimate return, not exploitation. Near-perfect market (+0.95): capital formation requires savings,
+    // interest coordinates across time. Demolished Marx's exploitation theory by explaining interest without
+    // exploitation. Austrian Finance Minister three times. Mises was his student.
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3281,6 +3797,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Human Action; praxeology; rational economic calculation; critique of socialism'],
     historical_weight: 1.0,
+    // Ludwig von Mises: Greatest 20th-century economist; "Human Action" is magnum opus.
+    // Very high reason (+0.9): praxeology — deductive science of human action from axiom of purposeful behavior.
+    // Very high reality (+0.85): studied actual market processes, not equilibrium models. Near-perfect individual
+    // (+0.95): methodological individualism; society is individuals acting. Near-perfect freedom (+0.95): socialism
+    // is impossible (calculation problem); only market prices can coordinate production. PERFECT market (+1.0):
+    // capitalism is only rational system. Very high value (+0.85): rational action implies values; utilitarianism
+    // of ends. Economic calculation argument definitively proved socialism cannot work. Influenced Rand, Hayek,
+    // Rothbard. "The worst evils which mankind has ever had to endure were inflicted by bad governments."
     battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.85, market_planning: 1.0, beauty_chaos: 0.5, good_evil: 0.85 }
   },
   {
@@ -3300,6 +3824,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Economics in One Lesson; seen and unseen; close friend and ally of Ayn Rand'],
     historical_weight: 0.7,
+    // Henry Hazlitt: Journalist, economist; "Economics in One Lesson" (1946) — most accessible economics book.
+    // Very high reason (+0.85): clear, logical exposition. High reality (+0.8): traced actual effects of policies.
+    // Very high individual (+0.9): defended individual liberty against government intervention.
+    // Very high freedom (+0.9): exposed fallacies of interventionism. Near-perfect market (+0.95): free markets
+    // produce prosperity, intervention causes harm. "The art of economics consists in looking not merely at the
+    // immediate but at the longer effects of any act or policy." Close friend of Ayn Rand; reviewed Atlas Shrugged
+    // positively. Introduced her to Mises. Also wrote on ethics ("The Foundations of Morality").
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3319,6 +3850,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Spontaneous order; Road to Serfdom; knowledge problem; critique of central planning'],
     historical_weight: 0.85,
+    // F.A. Hayek: Austrian-British economist/philosopher; Nobel 1974; "The Road to Serfdom."
+    // Very high reason (+0.85): knowledge problem — dispersed knowledge can't be centralized. High reality (+0.8):
+    // empirical study of market processes. Very high individual (+0.9): spontaneous order emerges from individual
+    // actions. Very high freedom (+0.9): central planning leads to totalitarianism. Near-perfect market (+0.95):
+    // prices coordinate information no planner can possess. "The Constitution of Liberty" — comprehensive liberal
+    // political philosophy. Differs from Mises: evolution over design, less rationalist. "The curious task of
+    // economics is to demonstrate to men how little they really know about what they imagine they can design."
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.8, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3338,6 +3876,13 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Capitalism and Freedom; monetarism; empiricist methodology; free markets; school choice'],
     historical_weight: 0.85,
+    // Milton Friedman: Chicago School economist; Nobel 1976; "Free to Choose" (with Rose Friedman).
+    // Very high reason (+0.85): empirical methodology, statistical analysis. High reality (+0.8): data-driven.
+    // Very high individual (+0.85): school choice, drug legalization, volunteer military. Very high freedom (+0.85):
+    // "Capitalism and Freedom" — economic liberty and political liberty are inseparable. Very high market (+0.9):
+    // monetarism, floating exchange rates, deregulation. Influential advisor to Reagan, Thatcher.
+    // Differs from Austrians: empiricist vs. apriorist; accepts some government role (negative income tax).
+    // "There's no such thing as a free lunch." Effective public advocate for free markets.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3357,6 +3902,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Regulatory capture theory; economics of information; Nobel 1982; critique of government intervention'],
     historical_weight: 0.75,
+    // George Stigler: Chicago economist; Nobel 1982; regulatory capture theory.
+    // Very high reason (+0.85): rigorous analysis of how regulation actually works. High reality (+0.8):
+    // empirical study of regulatory agencies. Very high individual (+0.85): public choice perspective.
+    // Very high freedom (+0.85): regulation often serves regulated industries, not public.
+    // Very high market (+0.9): markets work; regulation usually makes things worse.
+    // "The Economics of Information" — search costs, asymmetric information. Friend of Friedman.
+    // Showed that government failure is systematic, not accidental.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3376,6 +3928,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Human capital theory; economics of discrimination; Nobel 1992; rational choice applied to all behavior'],
     historical_weight: 0.75,
+    // Gary Becker: Chicago economist; Nobel 1992; applied economic analysis to all human behavior.
+    // Very high reason (+0.85): rational choice framework applied universally. High reality (+0.8): empirical testing.
+    // Very high individual (+0.85): all behavior is individual rational choice. High freedom (+0.8): markets better
+    // than regulation in most areas. Very high market (+0.9): human capital theory — education/skills as investment.
+    // Economics of discrimination showed markets punish prejudice. Economics of crime, family, addiction.
+    // Expanded economics to "economic imperialism" — everything can be analyzed economically.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.85, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.8 }
   },
   {
@@ -3395,6 +3953,14 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Knowledge and Decisions; Basic Economics; critique of egalitarianism; constrained vs unconstrained visions'],
     historical_weight: 0.8,
+    // Thomas Sowell: Economist, social theorist; "Knowledge and Decisions," "Basic Economics."
+    // Very high reason (+0.9): rigorous analysis, clear prose, devastating critiques. Very high reality (+0.85):
+    // empirical, historical, comparative. Very high individual (+0.9): individual decisions and incentives.
+    // Very high freedom (+0.9): government programs usually harm their intended beneficiaries.
+    // Near-perfect market (+0.95): markets process information better than central planning.
+    // "Conflict of Visions" — constrained (tragic/conservative) vs. unconstrained (utopian/progressive).
+    // "There are no solutions, only trade-offs." Former Marxist, trained under Friedman and Stigler.
+    // One of most prolific, influential contemporary defenders of free markets and individual liberty.
     battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.95, beauty_chaos: 0.5, good_evil: 0.85 }
   },
 
@@ -3952,6 +4518,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ["Reason as man's absolute; Objectivism; rational self-interest"],
     historical_weight: 1.0,
+    // Ayn Rand: Founder of Objectivism; "Atlas Shrugged," "The Fountainhead." THE benchmark philosopher.
+    // PERFECT reason (+1.0): "reason is man's only means of perceiving reality, his only source of knowledge,
+    // his only guide to action, and his basic means of survival." PERFECT reality (+1.0): A is A; existence
+    // exists; consciousness is identification; objective metaphysics. PERFECT individual (+1.0): man is an
+    // end in himself, not a means to others' ends. PERFECT freedom (+1.0): laissez-faire capitalism is the
+    // only moral system. PERFECT value (+1.0): man's life is the standard of value; objective ethics.
+    // PERFECT market (+1.0): capitalism as the social system based on individual rights.
+    // All 8-axis scores are the reference point for the Objectivist framework.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.9, good_evil: 0.9 }
   },
   {
@@ -3971,6 +4545,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The Passion of Ayn Rand; early movement organizer'],
     historical_weight: 0.5,
+    // Barbara Branden: Early Objectivist, organized NBI (Nathaniel Branden Institute), biographer.
+    // Very high across all axes: committed Objectivist who later wrote "The Passion of Ayn Rand."
+    // Later estranged from Rand but remained broadly within Objectivist framework on fundamentals.
+    // Contributed to spreading Objectivism in early years. Beauty score reflects aesthetic contributions.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.85, beauty_chaos: 0.7, good_evil: 0.8 }
   },
   {
@@ -3990,6 +4568,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Psychology of self-esteem; chief popularizer of Objectivism'],
     historical_weight: 0.6,
+    // Nathaniel Branden: Rand's intellectual heir in psychology; "The Psychology of Self-Esteem."
+    // Developed Objectivist psychology; co-organized NBI lectures that spread Objectivism widely.
+    // Very high across all axes as committed Objectivist. Later break with Rand but continued work on
+    // self-esteem, which aligns with Objectivist emphasis on self-value. "Six Pillars of Self-Esteem."
+    // Pioneered psychological application of Objectivist principles to human flourishing.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.85, beauty_chaos: 0.7, good_evil: 0.85 }
   },
 
@@ -4380,6 +4963,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Rand's designated heir; OPAR (1991); founder of ARI"],
     historical_weight: 0.85,
+    // Leonard Peikoff: Rand's designated intellectual heir; "Objectivism: The Philosophy of Ayn Rand" (OPAR).
+    // PERFECT scores across epistemology, metaphysics, ethics, politics — faithful systematization of Rand.
+    // Founded Ayn Rand Institute (ARI). "The DIM Hypothesis" — integration-disintegration-misintegration.
+    // Lectures on history of philosophy, Objectivist methodology. PhD in philosophy (NYU under Sidney Hook).
+    // "The Ominous Parallels" — philosophy's role in Nazism. Most authoritative expositor of Objectivism.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.85, good_evil: 0.9 }
   },
   {
@@ -4399,6 +4987,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The Prime Movers (2000); goal-setting theory; Objectivist psychology of achievement'],
     historical_weight: 0.5,
+    // Edwin Locke: Industrial/organizational psychologist; integrated Objectivism with business research.
+    // "The Prime Movers" — profiles of productive businesspeople. Goal-setting theory widely influential.
+    // Applied Objectivist principles to management, motivation, achievement. Very high scores reflecting
+    // commitment to reason, reality, individualism in professional psychology.
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.85, market_planning: 0.8, beauty_chaos: 0.6, good_evil: 0.8 }
   },
   {
@@ -4418,6 +5010,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Gotthelf on Aristotle; philosophy of biology; Objectivist scholar'],
     historical_weight: 0.55,
+    // Allan Gotthelf: Aristotle scholar and Objectivist; bridged academic philosophy and Objectivism.
+    // Major works on Aristotle's biology and teleology. Co-editor "Ayn Rand: A Companion to Her Works."
+    // Very high reality score (+0.95) — specialized in Aristotelian naturalism, philosophy of biology.
+    // Demonstrated Objectivism's Aristotelian foundations in academic context. Brought rigor to Objectivist scholarship.
     battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.9, market_planning: 0.8, beauty_chaos: 0.7, good_evil: 0.85 }
   },
   {
@@ -4456,6 +5052,10 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['How We Know (2014); consciousness; ARI senior fellow'],
     historical_weight: 0.7,
+    // Harry Binswanger: Objectivist philosopher; "How We Know" — Objectivist epistemology for academics.
+    // Edited "The Ayn Rand Lexicon." ARI board member. Specialist in consciousness and theory of concepts.
+    // Perfect scores on reason and reality — focuses on epistemological foundations. "The Biological Basis
+    // of Teleological Concepts." Runs Harry Binswanger Letter (HBL) discussion forum. Rigorous thinker.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.95, beauty_chaos: 0.7, good_evil: 0.9 }
   },
   {
@@ -4513,6 +5113,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Viable Values (2000); Rand's Normative Ethics (2006)"],
     historical_weight: 0.6,
+    // Tara Smith: Academic philosopher at UT Austin; brings Objectivist ethics to mainstream philosophy.
+    // "Ayn Rand's Normative Ethics: The Virtuous Egoist" — most rigorous academic treatment of Rand's ethics.
+    // "Viable Values" — metaethical foundations. "Judicial Review in an Objective Legal System."
+    // Perfect scores on core axes — fully committed Objectivist engaging academic philosophy on its own terms.
+    // Demonstrates Objectivism can meet standards of academic rigor.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 0.95, beauty_chaos: 0.7, good_evil: 0.95 }
   },
   {
@@ -4532,6 +5137,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Equal Is Unfair; ARI executive chairman; Objectivist activism'],
     historical_weight: 0.7,
+    // Yaron Brook: ARI chairman; most prominent public voice for Objectivism today.
+    // "Equal Is Unfair" (with Don Watkins) — critique of egalitarianism. "Free Market Revolution."
+    // Israeli-American, finance PhD, businessman turned intellectual activist. Podcast host.
+    // Perfect scores across board — effective communicator of Objectivism to general public and media.
+    // Takes Objectivist positions on current events, foreign policy, economics.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
