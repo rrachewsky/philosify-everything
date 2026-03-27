@@ -328,8 +328,14 @@ function calculateSpreadOffsets(nodes) {
   return offsets;
 }
 
+// Helper to get translated philosopher name
+function getTranslatedName(node, t) {
+  const translated = t(`constellation.names.${node.id}`, { defaultValue: '' });
+  return translated || node.name;
+}
+
 // Create satellite mesh - positioned directly above city, attached to Earth
-function createSatellite(node, earthRadius, spreadOffset = null) {
+function createSatellite(node, earthRadius, spreadOffset = null, t = null) {
   const group = new THREE.Group();
   group.userData = { nodeId: node.id, node, isAutoEnriched: node.auto_enriched || false };
   const layout = getLayoutConfig();
@@ -350,9 +356,12 @@ function createSatellite(node, earthRadius, spreadOffset = null) {
   // Get school color (primary) with tradition as fallback
   const schoolColorHex = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#FFFFFF';
   
+  // Get translated name (falls back to node.name if no translation)
+  const displayName = t ? getTranslatedName(node, t) : node.name;
+  
   // Name label - bold and larger for foundational philosophers
   const labelOffset = layout.labelOffset + (isMostFoundational ? 1.2 : (isFoundational ? 0.6 : 0));
-  const labelSprite = createTextSprite(node.name, schoolColorHex, isFoundational, isMostFoundational);
+  const labelSprite = createTextSprite(displayName, schoolColorHex, isFoundational, isMostFoundational);
   labelSprite.position.set(0, labelOffset, 0); // Offset above the satellite (local coords)
   labelSprite.userData.isLabel = true;
   group.add(labelSprite);
@@ -538,7 +547,8 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   onEdgeSelect,
   currentYear,
 }, ref) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
@@ -966,27 +976,45 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     };
   }, [onNodeSelect, onNodeHover]);
 
-  // Update satellites when nodes change
+  // Track previous language to detect changes
+  const prevLanguageRef = useRef(currentLanguage);
+
+  // Update satellites when nodes or language changes
   useEffect(() => {
     if (!sceneRef.current || !earthRef.current) return;
 
     const earth = earthRef.current;
     const currentIds = new Set(nodes.map(n => n.id));
+    const languageChanged = prevLanguageRef.current !== currentLanguage;
+    prevLanguageRef.current = currentLanguage;
 
-    // Remove satellites and their tether lines that are no longer visible
-    satellitesRef.current.forEach((satellite, id) => {
-      if (!currentIds.has(id)) {
-        earth.remove(satellite); // Remove from Earth, not scene
-        satellitesRef.current.delete(id);
-        
-        // Remove associated tether line
+    // If language changed, clear ALL satellites to rebuild with new translations
+    if (languageChanged) {
+      satellitesRef.current.forEach((satellite, id) => {
+        earth.remove(satellite);
         const tetherLine = tetherLinesRef.current.get(id);
         if (tetherLine) {
           earth.remove(tetherLine);
-          tetherLinesRef.current.delete(id);
         }
-      }
-    });
+      });
+      satellitesRef.current.clear();
+      tetherLinesRef.current.clear();
+    } else {
+      // Remove satellites and their tether lines that are no longer visible
+      satellitesRef.current.forEach((satellite, id) => {
+        if (!currentIds.has(id)) {
+          earth.remove(satellite); // Remove from Earth, not scene
+          satellitesRef.current.delete(id);
+          
+          // Remove associated tether line
+          const tetherLine = tetherLinesRef.current.get(id);
+          if (tetherLine) {
+            earth.remove(tetherLine);
+            tetherLinesRef.current.delete(id);
+          }
+        }
+      });
+    }
 
     // Calculate spread offsets for overlapping philosophers
     const spreadOffsets = calculateSpreadOffsets(nodes);
@@ -995,7 +1023,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     nodes.forEach(node => {
       if (!satellitesRef.current.has(node.id)) {
         const spreadOffset = spreadOffsets.get(node.id) || null;
-        const satellite = createSatellite(node, 100, spreadOffset);
+        const satellite = createSatellite(node, 100, spreadOffset, t);
         earth.add(satellite); // Add to Earth so satellites rotate WITH Earth
         satellitesRef.current.set(node.id, satellite);
 
@@ -1010,29 +1038,35 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         tetherLinesRef.current.set(node.id, tetherLine);
 
         // Launch animation - start at surface, animate to altitude
-        satellite.position.copy(surfacePos); // Start at Earth surface
-        satellite.scale.set(0.1, 0.1, 0.1);
+        // Skip animation if language changed (instant rebuild)
+        if (languageChanged) {
+          satellite.position.copy(targetPos);
+          satellite.scale.set(1, 1, 1);
+        } else {
+          satellite.position.copy(surfacePos); // Start at Earth surface
+          satellite.scale.set(0.1, 0.1, 0.1);
 
-        // Animate to final position (Earth-local coordinates)
-        const startTime = performance.now();
-        const duration = 1500;
+          // Animate to final position (Earth-local coordinates)
+          const startTime = performance.now();
+          const duration = 1500;
 
-        const animateLaunch = (time) => {
-          const elapsed = time - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+          const animateLaunch = (time) => {
+            const elapsed = time - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3); // Ease out cubic
 
-          satellite.position.lerpVectors(surfacePos, targetPos, eased);
-          satellite.scale.setScalar(0.1 + eased * 0.9);
+            satellite.position.lerpVectors(surfacePos, targetPos, eased);
+            satellite.scale.setScalar(0.1 + eased * 0.9);
 
-          if (progress < 1) {
-            requestAnimationFrame(animateLaunch);
-          }
-        };
-        requestAnimationFrame(animateLaunch);
+            if (progress < 1) {
+              requestAnimationFrame(animateLaunch);
+            }
+          };
+          requestAnimationFrame(animateLaunch);
+        }
       }
     });
-  }, [nodes]);
+  }, [nodes, currentLanguage, t]);
 
   // Update connections when edges change (influence/opposition/student relationships)
   useEffect(() => {
