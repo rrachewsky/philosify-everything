@@ -606,7 +606,9 @@
       "somewhat": "Un po'",
       "slightly": "Leggermente"
     },
-    "oriented": "orientato"
+    "oriented": "orientato",
+    "bc": "a.C.",
+    "ad": "d.C."
   },
   "community": {
     "title": "Community",

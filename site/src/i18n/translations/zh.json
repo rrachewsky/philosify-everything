@@ -606,7 +606,9 @@
       "somewhat": "有些",
       "slightly": "轻微"
     },
-    "oriented": "导向"
+    "oriented": "导向",
+    "bc": "公元前",
+    "ad": "公元"
   },
   "community": {
     "title": "社区",

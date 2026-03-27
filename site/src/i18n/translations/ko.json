@@ -606,7 +606,9 @@
       "somewhat": "다소",
       "slightly": "약간"
     },
-    "oriented": "지향"
+    "oriented": "지향",
+    "bc": "기원전",
+    "ad": "기원후"
   },
   "community": {
     "title": "커뮤니티",

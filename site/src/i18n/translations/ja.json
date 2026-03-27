@@ -606,7 +606,9 @@
       "somewhat": "やや",
       "slightly": "わずかに"
     },
-    "oriented": "志向"
+    "oriented": "志向",
+    "bc": "紀元前",
+    "ad": "紀元"
   },
   "community": {
     "title": "コミュニティ",

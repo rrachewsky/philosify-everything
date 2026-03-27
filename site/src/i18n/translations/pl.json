@@ -606,7 +606,9 @@
       "somewhat": "Nieco",
       "slightly": "Lekko"
     },
-    "oriented": "zorientowany"
+    "oriented": "zorientowany",
+    "bc": "p.n.e.",
+    "ad": "n.e."
   },
   "community": {
     "title": "Społeczność",

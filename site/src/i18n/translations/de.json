@@ -606,7 +606,9 @@
       "somewhat": "Etwas",
       "slightly": "Leicht"
     },
-    "oriented": "orientiert"
+    "oriented": "orientiert",
+    "bc": "v. Chr.",
+    "ad": "n. Chr."
   },
   "community": {
     "title": "Community",

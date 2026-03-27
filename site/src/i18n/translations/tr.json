@@ -606,7 +606,9 @@
       "somewhat": "Biraz",
       "slightly": "Hafifçe"
     },
-    "oriented": "odaklı"
+    "oriented": "odaklı",
+    "bc": "M.Ö.",
+    "ad": "M.S."
   },
   "community": {
     "title": "Topluluk",

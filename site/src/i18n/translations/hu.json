@@ -606,7 +606,9 @@
       "somewhat": "Némileg",
       "slightly": "Enyhén"
     },
-    "oriented": "orientált"
+    "oriented": "orientált",
+    "bc": "i.e.",
+    "ad": "i.sz."
   },
   "community": {
     "title": "Közösség",

@@ -606,7 +606,9 @@
       "somewhat": "कुछ हद तक",
       "slightly": "थोड़ा"
     },
-    "oriented": "उन्मुख"
+    "oriented": "उन्मुख",
+    "bc": "ई.पू.",
+    "ad": "ई."
   },
   "community": {
     "title": "समुदाय",

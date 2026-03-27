@@ -606,7 +606,9 @@
       "somewhat": "Um pouco",
       "slightly": "Levemente"
     },
-    "oriented": "orientado"
+    "oriented": "orientado",
+    "bc": "a.C.",
+    "ad": "d.C."
   },
   "community": {
     "title": "Comunidade",

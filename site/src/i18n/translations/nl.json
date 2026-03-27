@@ -606,7 +606,9 @@
       "somewhat": "Enigszins",
       "slightly": "Licht"
     },
-    "oriented": "georiënteerd"
+    "oriented": "georiënteerd",
+    "bc": "v.Chr.",
+    "ad": "n.Chr."
   },
   "community": {
     "title": "Community",

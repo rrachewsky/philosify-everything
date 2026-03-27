@@ -606,7 +606,9 @@
       "somewhat": "إلى حد ما",
       "slightly": "قليلاً"
     },
-    "oriented": "التوجه"
+    "oriented": "التوجه",
+    "bc": "ق.م",
+    "ad": "م"
   },
   "community": {
     "title": "المجتمع",

@@ -3,6 +3,7 @@
 // ============================================================
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SCHOOL_COLORS, PHILOSOPHER_PORTRAITS } from '@/data/constellationSeedData.js';
 
 // Re-export for convenience
@@ -123,6 +124,7 @@ function hashString(str) {
 }
 
 export function useConstellation() {
+  const { t } = useTranslation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -372,9 +374,9 @@ export function useConstellation() {
 
   // Format year for display
   const formatYear = useCallback((year) => {
-    if (year < 0) return `${Math.abs(Math.round(year))} BC`;
-    return `${Math.round(year)} AD`;
-  }, []);
+    if (year < 0) return `${Math.abs(Math.round(year))} ${t('constellation.bc')}`;
+    return `${Math.round(year)} ${t('constellation.ad')}`;
+  }, [t]);
 
   return {
     // Data

@@ -606,7 +606,9 @@
       "somewhat": "Somewhat",
       "slightly": "Slightly"
     },
-    "oriented": "oriented"
+    "oriented": "oriented",
+    "bc": "BC",
+    "ad": "AD"
   },
   "community": {
     "title": "Community",

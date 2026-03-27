@@ -606,7 +606,9 @@
       "somewhat": "تا حدی",
       "slightly": "کمی"
     },
-    "oriented": "گرایش"
+    "oriented": "گرایش",
+    "bc": "ق.م",
+    "ad": "م"
   },
   "community": {
     "title": "انجمن",

@@ -606,7 +606,9 @@
       "somewhat": "במידה מסוימת",
       "slightly": "מעט"
     },
-    "oriented": "מכוון"
+    "oriented": "מכוון",
+    "bc": "לפנה\"ס",
+    "ad": "לספירה"
   },
   "community": {
     "title": "קהילה",
