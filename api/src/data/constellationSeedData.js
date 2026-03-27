@@ -4004,6 +4004,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Logical atomism; scientific philosophy; anti-mysticism'],
     historical_weight: 0.85,
+    // Bertrand Russell: Founder of analytic philosophy; logician, mathematician, public intellectual.
+    // PERFECT reason (+1.0): Principia Mathematica (with Whitehead), logical atomism, scientific philosophy.
+    // Very high reality (+0.9): defended external world against idealism; empiricist. Individual (+0.7):
+    // liberal individualist but also socialist sympathies late in life. Freedom (+0.7): pacifist, anti-war,
+    // imprisoned for activism. Moderate value (+0.6): ethical non-cognitivist tendencies undermine objective
+    // values. Market (+0.2): socialist economics despite individualist politics. "Why I Am Not a Christian."
+    // Nobel Prize in Literature 1950. Extremely influential in logic, epistemology, philosophy of language.
     battles: { reason_faith: 1.0, reality_mysticism: 0.9, individual_collective: 0.7, freedom_coercion: 0.7, value_nihilism: 0.6, market_planning: 0.2, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
@@ -4023,6 +4030,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Common sense realism; naturalistic fallacy in ethics'],
     historical_weight: 0.65,
+    // G.E. Moore: Common sense realist; "A Defence of Common Sense," "Principia Ethica."
+    // Very high reason (+0.85): rigorous analysis, refuted idealism with "here is one hand" argument.
+    // Very high reality (+0.85): defended common sense realism against skepticism and idealism.
+    // High value (+0.7): "naturalistic fallacy" argument — good is indefinable, known by intuition.
+    // High good_evil (+0.7): moral realism but via non-natural properties. Influenced Russell, Wittgenstein.
+    // Less influential than Russell but important for analytic method and metaethics.
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.6, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -4062,6 +4075,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Category mistakes; ordinary language analysis'],
     historical_weight: 0.55,
+    // Gilbert Ryle: "The Concept of Mind" — attacked Cartesian dualism as "ghost in the machine."
+    // High reason (+0.7): ordinary language analysis dissolves pseudo-problems. High reality (+0.7):
+    // behaviorist tendencies — mind is behavioral dispositions, not inner substance. Category mistakes
+    // explain philosophical confusions. Influenced by later Wittgenstein. Moderate across other axes —
+    // primarily focused on philosophy of mind methodology rather than ethics/politics.
     battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -4081,6 +4099,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Naturalized epistemology; no analytic/synthetic distinction'],
     historical_weight: 0.75,
+    // W.V.O. Quine: Most influential analytic philosopher mid-20th century; "Two Dogmas of Empiricism."
+    // High reason (+0.8): rigorous logician. High reality (+0.8): naturalism — philosophy continuous with
+    // science. BUT: rejected analytic/synthetic distinction (problematic for Objectivism which relies on it).
+    // Holism: beliefs face experience as a corporate body, not individually. "Web of belief."
+    // Ontological relativity: what exists is relative to theory. Moderate value (+0.6): naturalist ethics
+    // but less developed. Politically conservative but not activist. Very influential in logic, language.
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -4120,6 +4144,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Chinese Room argument; social construction of reality; intentionality'],
     historical_weight: 0.7,
+    // John Searle: Philosophy of mind and language; "Chinese Room" argument against strong AI.
+    // Moderate reason (+0.6): defends biological naturalism but social construction undermines objectivity.
+    // Moderate reality (+0.5): "The Construction of Social Reality" — institutional facts are human-made.
+    // Chinese Room: syntax isn't semantics; computers don't understand. Intentionality is biological.
+    // Moderate across other axes. Speech act theory influential in linguistics. Controversial personal life.
+    // "Stance: anti" because social construction elements undermine objective reality in social realm.
     battles: { reason_faith: 0.6, reality_mysticism: 0.5, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -4139,6 +4169,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Naming and Necessity; rigid designators; modal logic; necessity a posteriori'],
     historical_weight: 0.8,
+    // Saul Kripke: Logician and philosopher; "Naming and Necessity" revolutionized philosophy of language.
+    // Very high reason (+0.85): developed possible worlds semantics for modal logic as a teenager.
+    // Very high reality (+0.85): rigid designators — names pick out same object in all possible worlds.
+    // Essences are real: water IS H2O necessarily. "Kripkenstein" interpretation of Wittgenstein.
+    // High value (+0.75): necessary a posteriori truths support metaphysical realism. Defended essences
+    // against Quinean skepticism. Orthodox Jew. One of most important 20th century philosophers.
+    // Closest analytic philosopher to Aristotelian essentialism (compatible with Objectivism).
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.75, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -4160,6 +4197,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Logical syntax; Vienna Circle verificationism'],
     historical_weight: 0.7,
+    // Rudolf Carnap: Vienna Circle leader; logical positivism. "The Logical Structure of the World."
+    // Very high reason (+0.9): rigorous formal logic, scientific philosophy. Very high reality (+0.85):
+    // empiricism, verification principle. BUT: verification principle undermines itself (not verifiable).
+    // Metaphysics is "meaningless" — threw out objective ethics with mysticism. Moderate value (+0.6):
+    // ethical statements are non-cognitive (emotive). Fled Nazis to US. Influenced Quine (who refuted him).
+    // Important historically for clarifying scientific method, even if verification principle failed.
     battles: { reason_faith: 0.9, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -4179,6 +4222,14 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Language Truth and Logic; strict verificationism'],
     historical_weight: 0.6,
+    // A. J. Ayer: British logical positivist; "Language, Truth and Logic" (1936) — popularized Vienna Circle.
+    // Very high reason (+0.85): rigorous analytic argument; verification principle as methodological guide.
+    // Very high reality (+0.85): strict empiricism, scientific philosophy. BUT: same fatal flaw as Carnap —
+    // verification principle is self-refuting (not itself empirically verifiable). Ethics is "emotive" —
+    // moral statements are merely expressions of feeling, not cognitive propositions (emotivism).
+    // Moderate value (+0.5): his non-cognitivism undermines objective ethics even though he meant to
+    // clear away mysticism. Political views moderate liberal. "The Problem of Knowledge" later work.
+    // Important for analytic tradition but verification principle's failure opened door to Quine's critique.
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 
@@ -4282,6 +4333,15 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Ethics as first philosophy before metaphysics — inverts Rand's hierarchy; the Other commands absolutely"],
     historical_weight: 0.6,
+    // Levinas: Ethics precedes ontology; the "face of the Other" commands infinite responsibility.
+    // Low reason (+0.3): uses phenomenological description but rejects reason as ground of ethics.
+    // Low reality (+0.3): the Other is "transcendent," irreducible to knowledge or concepts.
+    // Low individual (+0.2): the self exists FOR the Other; radical heteronomy. "Totality and Infinity."
+    // Moderate value (+0.5): ethics is primary but demands self-sacrifice; anti-egoist to the core.
+    // Moderate good_evil (+0.5): moral realism (good is real) but foundation is the infinite demand
+    // of the Other, not individual life or flourishing. Holocaust survivor — trauma shaped philosophy.
+    // Inverts Rand completely: for Rand, ethics depends on metaphysics and epistemology; for Levinas,
+    // ethics is "first philosophy" before any knowledge of reality. Anti-Objectivist par excellence.
     battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: 0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -4301,6 +4361,16 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Embodied cognition dissolves subject-object distinction; no mind-independent reality accessible'],
     historical_weight: 0.6,
+    // Merleau-Ponty: French phenomenologist; "Phenomenology of Perception" — embodied cognition.
+    // Moderate reason (+0.4): careful phenomenological analysis but rejects Cartesian/conceptual reason.
+    // Low reality (+0.3): subject-object distinction dissolves; no "view from nowhere"; perception is
+    // constitutive not merely receptive. The "flesh of the world" — mutual embeddedness.
+    // Moderate individual (+0.5): the lived body grounds individuality but is always already social.
+    // Moderate freedom (+0.5): "condemned to meaning" through embodiment; no libertarian politics.
+    // Moderate value (+0.4): meaning is pre-reflective, lived; not objective in Randian sense.
+    // Politically: early Marxist sympathies, later moved away. Critique of objective thought as "high
+    // altitude thinking" — similar to Heidegger's attack on calculative reason. Dissolves boundaries
+    // Rand requires: subject/object, mind/body, self/world. Ambiguous on metaphysics and ethics.
     battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
   },
   {
@@ -4320,6 +4390,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Hermeneutics; all understanding is interpretation; no unmediated access to objective meaning'],
     historical_weight: 0.55,
+    // Ricoeur: French hermeneutic phenomenologist; Protestant existentialist. "Oneself as Another."
+    // Moderate reason (+0.4): careful interpretive philosophy but denies unmediated rational access
+    // to truth; understanding is always interpretation through symbols, narratives, traditions.
+    // Moderate reality (+0.4): reality is mediated by language and narrative; no direct access.
+    // Moderate individual (+0.5): selfhood is narratively constituted; identity through interpretation.
+    // Moderate freedom (+0.5): liberal democrat; no libertarian politics; welfarism acceptable.
+    // Moderate value (+0.4): values mediated by tradition and interpretation; not objective in
+    // Randian sense but not nihilistic either. "Time and Narrative" — temporal self-understanding.
+    // Christian faith shapes philosophy: "hermeneutics of suspicion" tempered by "hermeneutics of
+    // recollection." Less radical than Derrida but shares skepticism about direct rational access.
+    // Rejects correspondence theory of truth for interpretive pluralism. Against Rand's objectivity.
     battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.4 }
   },
 
@@ -4341,6 +4422,16 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Marxist aesthetics; dialectical image; history as catastrophe — no rational progress'],
     historical_weight: 0.6,
+    // Walter Benjamin: German-Jewish Marxist; "The Work of Art in the Age of Mechanical Reproduction."
+    // Low reason (+0.3): dialectical images, messianic interruption over linear rational progress.
+    // Low reality (+0.3): reality is constellation of fragments; truth flashes up momentarily.
+    // Collectivist (-0.2): revolutionary Marxism; art in service of collective liberation.
+    // Moderate freedom (+0.3): critic of fascism but sought revolutionary transformation.
+    // Low value (+0.2): "Angel of History" sees catastrophe; redemption is messianic, not rational.
+    // Moderate beauty (+0.5): rich aesthetics but aura destroyed by reproduction; ambiguous.
+    // Anti-capitalist (-0.3): Marxist critique of commodity culture. Influenced Frankfurt School.
+    // Fled Nazis; suicide at Spanish border 1940. "Theses on the Philosophy of History" — progress
+    // is catastrophe. Mystical Marxism: Kabbalah meets materialism. Against Enlightenment optimism.
     battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: 0.2, market_planning: -0.3, beauty_chaos: 0.5, good_evil: 0.3 }
   },
   {
@@ -4360,6 +4451,16 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Instrumental reason as domination; Enlightenment itself becomes myth — attacks reason at its root'],
     historical_weight: 1.0,
+    // Horkheimer: Co-founder Frankfurt School; director of Institute for Social Research.
+    // Low reason (+0.2): "Dialectic of Enlightenment" (with Adorno) — instrumental reason leads to
+    // domination; Enlightenment reverts to mythology. Critique of positivism.
+    // Low reality (+0.3): critical theory rejects objectivist metaphysics; social construction.
+    // Collectivist (-0.3): Marxist orientation; critique of bourgeois individualism; labor focus.
+    // Low freedom (+0.2): against capitalist "freedom" as ideology; but fled Nazis so anti-totalitarian.
+    // Low value (+0.2): value under capitalism is reified; authentic values impossible within system.
+    // Anti-capitalist (-0.4): instrumental reason serves capital accumulation; "administered world."
+    // "Eclipse of Reason" — subjective reason dominates over objective reason.
+    // Against Rand: attacks the very concept of rational self-interest as ideological.
     battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.3, good_evil: 0.2 }
   },
   {
@@ -4379,6 +4480,16 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['One-dimensional man; technological reason as repression'],
     historical_weight: 0.6,
+    // Marcuse: Frankfurt School; "One-Dimensional Man" (1964); father of New Left.
+    // Low reason (+0.3): technological reason creates "happy consciousness" that represses critique.
+    // Low reality (+0.3): reality under capitalism is systematically distorted; false needs.
+    // Very collectivist (-0.4): liberation through collective action; "Great Refusal"; revolutionary.
+    // Low freedom (+0.2): capitalist "freedom" is repressive tolerance; true freedom requires revolution.
+    // Low value (+0.2): authentic values impossible under "performance principle" of capitalism.
+    // Very anti-market (-0.5): capitalism creates false needs; planned liberation required.
+    // "Repressive desublimation" — apparent liberation (sexual, etc.) actually reinforces system.
+    // Influenced 1960s radicals, student movements. "Eros and Civilization" — Freudian Marxism.
+    // Against Rand: market freedom is ideology; individual happiness under capitalism is false.
     battles: { reason_faith: 0.3, reality_mysticism: 0.3, individual_collective: -0.4, freedom_coercion: 0.2, value_nihilism: 0.2, market_planning: -0.5, beauty_chaos: 0.3, good_evil: 0.2 }
   },
   {
@@ -4398,6 +4509,16 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Negative dialectics; no positive knowledge possible; Enlightenment inevitably turns into barbarism'],
     historical_weight: 0.85,
+    // Adorno: Frankfurt School; "Negative Dialectics"; "Dialectic of Enlightenment" (with Horkheimer).
+    // Very low reason (+0.2): thought cannot grasp its object; identity thinking is domination.
+    // Very low reality (+0.2): "The whole is the false"; reality is damaged; Auschwitz shatters reason.
+    // Collectivist (-0.3): Marxist critique but pessimistic about revolution; damaged life.
+    // Low freedom (+0.2): "There is no right life within the wrong one"; freedom impossible.
+    // Very low value (+0.1): "After Auschwitz, to write poetry is barbaric"; authentic values gone.
+    // Anti-capitalist (-0.4): culture industry produces conformity; art as last refuge.
+    // Moderate beauty (+0.4): "Aesthetic Theory" — art as negative truth, resistance to totality.
+    // "Minima Moralia" — reflections from damaged life. Most pessimistic Frankfurt thinker.
+    // Against Rand: reason itself leads to barbarism; Enlightenment = domination. No hope for individual.
     battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.2, value_nihilism: 0.1, market_planning: -0.4, beauty_chaos: 0.4, good_evil: 0.2 }
   },
   {
@@ -4417,6 +4538,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Communicative reason is intersubjective not objective — truth by consensus, not by correspondence to reality'],
     historical_weight: 0.85,
+    // Habermas: Second-generation Frankfurt School; "Theory of Communicative Action."
+    // Moderate reason (+0.5): defends reason but redefines it as intersubjective communication, NOT
+    // individual faculty of perceiving reality. Truth by "ideal speech situation," not correspondence.
+    // Moderate reality (+0.4): critical realism but social construction of knowledge central.
+    // Moderate individual (+0.3): respects individual rights but "discourse ethics" is procedural,
+    // consensus-based — values emerge from dialogue, not from individual rational reflection.
+    // Moderate freedom (+0.4): liberal democracy but welfare state required; market needs correction.
+    // Moderate value (+0.4): objective enough to reject relativism but not objective in Randian sense.
+    // Mild anti-market (-0.2): social democrat; lifeworld vs. system colonization by money/power.
+    // Against Rand: reason is social, not individual; truth is consensus, not correspondence to reality.
+    // Most optimistic Frankfurt thinker; believes in rational progress through discourse.
     battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: -0.2, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 
@@ -4438,6 +4570,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Innate grammar; generative rationalism; language universals'],
     historical_weight: 0.75,
+    // Chomsky: Linguist and political activist; "Syntactic Structures," "Aspects of the Theory of Syntax."
+    // Very high reason (+0.85): revolutionized linguistics with rigorous formal/mathematical methods.
+    // Innate universal grammar against Skinnerian behaviorism — rationalist against empiricist.
+    // Very high reality (+0.8): language faculty is biologically real; scientific realism in linguistics.
+    // Low individual (+0.3): political anarcho-syndicalism; anti-corporate, collective workers' control.
+    // Moderate freedom (+0.4): libertarian socialist — opposes state AND capital domination.
+    // Moderate value (+0.6): moral realism in practice; consistent antiwar, anti-imperialism positions.
+    // Anti-market (-0.3): capitalism is wage slavery; favors workers' councils, decentralization.
+    // IMPORTANT: His linguistics is highly rational but his politics are collectivist-anarchist.
+    // Contrast: excellent scientist, consistent in method; BUT political views oppose capitalism.
+    // For Rand, his linguistic rationalism is admirable but political conclusions are opposite.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.3, freedom_coercion: 0.4, value_nihilism: 0.6, market_planning: -0.3, beauty_chaos: 0.5, good_evil: 0.5 }
   },
 
@@ -4459,6 +4602,17 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Falsificationism; critical rationalism; open society'],
     historical_weight: 1.0,
+    // Popper: Austrian-British; "The Logic of Scientific Discovery," "The Open Society and Its Enemies."
+    // Very high reason (+0.9): critical rationalism; science advances by conjectures and refutations.
+    // Falsificationism as demarcation criterion — better than verification (doesn't self-refute).
+    // Very high reality (+0.9): objective truth exists even if we can't prove we've reached it.
+    // High individual (+0.8): "Open Society" defends liberalism against Plato, Hegel, Marx tribalism.
+    // High freedom (+0.8): liberal democracy; tolerance; peaceful criticism over violent revolution.
+    // High value (+0.7): objective values possible; against historicism and moral relativism.
+    // Pro-market (+0.6): market economy preferred but accepts some state intervention; social democrat.
+    // "Enemies of the Open Society": Plato's philosopher-kings, Hegel's historicism, Marx's determinism.
+    // Compatible with Objectivism on many points: reason, reality, individualism, anti-totalitarianism.
+    // Key difference: fallibilism vs. Rand's certainty; Popper denies inductive proof, Rand accepts it.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.7, market_planning: 0.6, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -4478,6 +4632,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Paradigm shifts; scientific revolutions incommensurable — no objective progress in science'],
     historical_weight: 0.7,
+    // Kuhn: American philosopher of science; "The Structure of Scientific Revolutions" (1962).
+    // Moderate reason (+0.4): scientists use reason but paradigms are incommensurable — no neutral
+    // rational standard to compare them. "Normal science" is puzzle-solving within paradigm.
+    // Moderate reality (+0.4): does objective truth exist if paradigms are incommensurable? Ambiguous.
+    // Moderate individual (+0.5): science is social enterprise; community decides paradigm shifts.
+    // Moderate freedom (+0.5): no political agenda; academic liberal.
+    // Low value (+0.3): if paradigms are incommensurable, is progress real? Relativist implications.
+    // "Paradigm" and "paradigm shift" entered popular vocabulary; very influential.
+    // Against Rand: undermines notion of objective scientific progress toward truth.
+    // Popper criticized Kuhn's "irrationalism." Later Kuhn softened — denied full relativism.
+    // Key problem: if Einstein isn't "truer" than Newton, only "different," what is science doing?
     battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.3, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
@@ -4497,6 +4662,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Against method; epistemological anarchism'],
     historical_weight: 0.55,
+    // Feyerabend: Austrian philosopher; "Against Method" (1975); epistemological anarchism.
+    // Very low reason (+0.2): "anything goes" — no universal method distinguishes science from myth.
+    // Galileo succeeded by propaganda, rhetoric, not superior evidence. Method is post-hoc myth.
+    // Low reality (+0.3): does he believe in objective reality? Ambiguous; pragmatic attitudes.
+    // High individual (+0.6): "free society" has no privileged cognitive authorities; democratic.
+    // High freedom (+0.6): anti-elitist; citizens should decide, not experts. Political anarchist.
+    // Very low value (+0.2): if science has no special access to truth, values are equally arbitrary.
+    // Provocateur: defended astrology, creationism to make philosophical point about method.
+    // "Science is much closer to myth than a scientific philosophy is prepared to admit."
+    // Against Rand: if "anything goes," reason has no privileged status. Complete opposite of Objectivism.
+    // Influenced postmodern science studies. Popper's friend turned critic.
     battles: { reason_faith: 0.2, reality_mysticism: 0.3, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.2, market_planning: 0.0, beauty_chaos: 0.3, good_evil: 0.3 }
   },
 
@@ -4594,6 +4770,17 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Political action over individual reason; vita activa over vita contemplativa — the collective precedes the individual'],
     historical_weight: 1.0,
+    // Arendt: German-American political theorist; "The Origins of Totalitarianism," "The Human Condition."
+    // Moderate reason (+0.5): values rational discourse but prioritizes action (praxis) over contemplation.
+    // "Banality of evil" — Eichmann; thinking prevents evil. But: thinking is not systematic philosophy.
+    // Moderate reality (+0.5): common world exists but revealed through plurality, not individual reason.
+    // Low individual (+0.3): the self appears in public space; "action in concert"; plurality fundamental.
+    // Moderate freedom (+0.6): republican freedom in public sphere; anti-totalitarian; but not libertarian.
+    // Moderate value (+0.5): meaning through political action; natality (beginning anew).
+    // Mild pro-market (+0.2): not socialist but subordinates economics to politics; critical of capitalism.
+    // "Vita activa" over "vita contemplativa" — against Platonic/Aristotelian hierarchy.
+    // Against Rand: individual exists through public appearance, not solitary reason. Collective precedes.
+    // Influential: public sphere, totalitarianism analysis. Neither left nor right exactly.
     battles: { reason_faith: 0.5, reality_mysticism: 0.5, individual_collective: 0.3, freedom_coercion: 0.6, value_nihilism: 0.5, market_planning: 0.2, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -4615,6 +4802,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Scientific Marxism; individuals are effects of ideology — no autonomous rational subject'],
     historical_weight: 0.55,
+    // Althusser: French Marxist; "For Marx," "Reading Capital"; structural Marxism.
+    // Moderate reason (+0.4): claims scientific status for Marxism; "epistemological break" in Marx.
+    // BUT: individuals don't think — they are "interpellated" (called into being) by ideology.
+    // Moderate reality (+0.4): structures are real; ideology has material existence in apparatuses.
+    // Very collectivist (-0.6): no autonomous subject; "man" is ideological fiction; structure over agent.
+    // Anti-freedom (-0.3): "Ideological State Apparatuses" shape consciousness; limited agency.
+    // Low value (+0.3): values are effects of ideology; no objective ethics outside class struggle.
+    // Very anti-market (-0.7): capitalism as structure of exploitation; communism required.
+    // Personal tragedy: murdered his wife in 1980; declared unfit to stand trial.
+    // Against Rand: eliminates the individual entirely; reason is ideological effect, not faculty.
+    // Influential in 1970s-80s Marxism; criticized for anti-humanism.
     battles: { reason_faith: 0.4, reality_mysticism: 0.4, individual_collective: -0.6, freedom_coercion: -0.3, value_nihilism: 0.3, market_planning: -0.7, beauty_chaos: 0.2, good_evil: 0.2 }
   },
 
@@ -4636,6 +4834,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Veil of ignorance erases individual identity; distributive justice violates rights; egalitarianism over merit'],
     historical_weight: 0.7,
+    // Rawls: American political philosopher; "A Theory of Justice" (1971); most influential 20th c. liberal.
+    // Moderate reason (+0.6): rational choice theory in original position; systematic argument.
+    // Moderate reality (+0.6): believes in objective principles but arrived at through idealized procedure.
+    // Mildly collectivist (-0.2): "difference principle" — inequalities only justified if benefit worst-off.
+    // Veil of ignorance: choose principles without knowing your place in society — erases individual identity.
+    // Moderate freedom (+0.3): values liberty but subordinates economic liberty to fair equality of opportunity.
+    // Moderate value (+0.5): objective justice but procedurally derived, not from human nature.
+    // Anti-market (-0.3): markets acceptable but require significant redistribution; welfare state.
+    // Against Rand: "natural assets" are "common asset" — no one deserves their talents.
+    // Nozick's "Anarchy, State, and Utopia" was direct response. Egalitarian vs. libertarian liberalism.
+    // Distributive justice violates individual rights for Rand; for Rawls, it's foundation of justice.
     battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: -0.3, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -4655,6 +4864,17 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Libertarian natural rights; self-ownership; Anarchy State and Utopia — closest liberal to Objectivism'],
     historical_weight: 1.0,
+    // Nozick: American philosopher; "Anarchy, State, and Utopia" (1974); libertarian response to Rawls.
+    // High reason (+0.8): rigorous analytic argument; thought experiments (experience machine, Wilt Chamberlain).
+    // High reality (+0.8): natural rights are real constraints; self-ownership is fact.
+    // Very high individual (+0.9): self-ownership; no one may use you without consent; entitlement theory.
+    // Very high freedom (+0.9): minimal state only; redistributive taxation is forced labor.
+    // High value (+0.7): values objective but focused on rights/constraints, not flourishing per se.
+    // Very pro-market (+0.8): any distribution arising from just transfers is just; anti-redistribution.
+    // Closest mainstream philosopher to Objectivism on politics. BUT differences exist:
+    // Nozick: deontological rights (side constraints). Rand: rights derive from human nature and flourishing.
+    // Nozick later moved away from libertarianism ("The Examined Life"). Early work most Randian.
+    // "Wilt Chamberlain argument": if people freely give, resulting inequality is just. Destroys Rawls.
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.8, beauty_chaos: 0.5, good_evil: 0.7 }
   },
 
@@ -4847,6 +5067,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['No view from nowhere; internal realism denies mind-independent objective reality — Kant recycled'],
     historical_weight: 0.6,
+    // Putnam: American philosopher; functionalism, semantic externalism, internal realism.
+    // Moderate reason (+0.5): rigorous analytic argument but rejects "view from nowhere."
+    // Moderate reality (+0.4): "internal realism" — truth is idealized rational acceptability, not
+    // correspondence to mind-independent reality. "No God's eye view." Kant recycled.
+    // Moderate individual (+0.5): no specific political agenda; academic liberal.
+    // Moderate freedom (+0.5): democratic socialist later in life; not libertarian.
+    // Moderate value (+0.4): later pragmatist turn; values real but not metaphysically grounded.
+    // "Twin Earth" thought experiment revolutionized philosophy of language/mind.
+    // Against Rand: no mind-independent reality accessible; idealism in disguise.
+    // Changed positions repeatedly: metaphysical realism → internal realism → pragmatism.
+    // Functionalism: mental states defined by causal role, not intrinsic properties.
     battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.4, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.4 }
   },
   {
@@ -4866,6 +5097,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Belief in God as properly basic — bypasses reason entirely; faith without rational justification is anti-reason'],
     historical_weight: 0.55,
+    // Plantinga: American philosopher; Reformed epistemology; modal ontological argument.
+    // Very low reason (+0.1): belief in God is "properly basic" — requires no rational justification.
+    // "Warrant" replaces classical justification; designed to validate faith without argument.
+    // Low reality (+0.3): theistic realism but metaphysics serves theology, not independent inquiry.
+    // Moderate individual (+0.5): traditional conservative values; individual soul matters.
+    // Moderate freedom (+0.5): political conservative; no specific economic philosophy.
+    // Moderate value (+0.5): objective values exist because God exists; divine command theory adjacent.
+    // "Evolutionary Argument Against Naturalism" — if naturalism true, can't trust reason. Ironic.
+    // Against Rand: faith is properly basic, needs no evidence. Exactly what Rand rejects.
+    // Sophisticated theologian-philosopher; rigorous within his framework but premises are faith.
+    // Most influential Christian philosopher in analytic tradition.
     battles: { reason_faith: 0.1, reality_mysticism: 0.3, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.5, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
@@ -4885,6 +5127,18 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Modal realism; possible worlds; logical rigor'],
     historical_weight: 0.65,
+    // David Lewis: American philosopher; modal realism; counterfactuals; philosophy of mind.
+    // Very high reason (+0.85): one of most rigorous systematic philosophers; formal logic mastery.
+    // High reality (+0.8): modal realism — possible worlds are as real as actual world. Controversial
+    // but argues for it with logical rigor. Realist about abstract objects too.
+    // Moderate individual (+0.5): no specific political agenda; focused on metaphysics/epistemology.
+    // Moderate freedom (+0.5): no political philosophy; academic.
+    // Moderate value (+0.6): Humean theory of motivation; values real but agent-relative.
+    // "On the Plurality of Worlds" — possible worlds literally exist, spatiotemporally isolated.
+    // Most ambitious systematic metaphysics since Leibniz. Quine's student who rejected his nominalism.
+    // Compatible with Objectivism on commitment to rigorous logic and metaphysical realism.
+    // Key difference: modal realism seems extravagant; Rand would say actual world is what exists.
+    // Hugely influential: counterfactual analysis of causation, laws, mind.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.5 }
   },
   {
@@ -4904,6 +5158,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Personal identity; objective reasons; reasons and persons'],
     historical_weight: 0.65,
+    // Parfit: British philosopher; "Reasons and Persons" (1984); personal identity; ethics.
+    // High reason (+0.8): rigorous argument; thought experiments on personal identity (teleportation).
+    // High reality (+0.75): moral realism; objective reasons exist independent of desires.
+    // Moderate individual (+0.5): reductionist view of personal identity — self is not what matters.
+    // "What matters in survival" is psychological continuity, not deep metaphysical self.
+    // Moderate freedom (+0.5): no political philosophy focus; academic ethics.
+    // High value (+0.7): strong moral realism; "On What Matters" defends objective ethics.
+    // Triple Theory: act-consequentialism, Kantian ethics, and contractualism converge.
+    // Against Rand on personal identity: no Roarkian integral self. Parfit's reductionism dissolves it.
+    // FOR Rand on ethics: moral realism, objective reasons. Parfit vs. Humean subjectivism.
+    // Most important moral philosopher since Sidgwick. Influenced effective altruism.
     battles: { reason_faith: 0.8, reality_mysticism: 0.75, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -4923,6 +5188,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Moral realism; naturalist metaethics'],
     historical_weight: 0.5,
+    // Railton: American philosopher; Cornell realism; naturalistic moral realism.
+    // High reason (+0.8): rigorous metaethics; responds to moral anti-realism with careful argument.
+    // High reality (+0.8): moral facts are natural facts about human flourishing. Reductive naturalism.
+    // Moderate individual (+0.5): agent-relative values but not egoistic; human good objective.
+    // Moderate freedom (+0.5): no specific political philosophy; academic liberal.
+    // High value (+0.7): strong moral realism; values are objective features of world.
+    // "Facts, Values, and Norms" — defends naturalism in ethics; moral properties are natural.
+    // Close to Objectivism: objective ethics grounded in human nature and flourishing.
+    // Key difference: Railton's consequentialism vs. Rand's virtue ethics; impartial vs. egoist.
+    // Cornell realism (with Boyd, Sturgeon) revived moral realism in analytic philosophy.
+    // Compatible with Objectivism on key point: ethics is objective, grounded in reality.
     battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -4942,6 +5218,18 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Simulation argument; existential risk; rational futurism'],
     historical_weight: 0.5,
+    // Bostrom: Swedish philosopher; Future of Humanity Institute; existential risk; AI safety.
+    // Very high reason (+0.85): rigorous probabilistic reasoning; simulation argument; decision theory.
+    // High reality (+0.8): simulation hypothesis asks if reality is substrate-independent but assumes
+    // objective truth about what's possible. Realist about superintelligence risks.
+    // Moderate individual (+0.6): concerned with humanity's future; transhumanist values individual enhancement.
+    // Moderate freedom (+0.6): techno-optimist but recognizes need for global coordination on X-risk.
+    // High value (+0.7): objective value in preserving and enhancing human potential.
+    // "Superintelligence" warns of AI alignment problem; existential risk as top priority.
+    // "Simulation Argument": Either we go extinct, or we don't run ancestor simulations, or we're simulated.
+    // Compatible with Objectivism on valuing human flourishing and reason; differs on collectivist X-risk framing.
+    // Influential: AI safety field largely exists because of his work. Effective altruism adjacent.
+    // Optimistic long-termism: human potential is vast if we avoid extinction.
     battles: { reason_faith: 0.85, reality_mysticism: 0.8, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.0, beauty_chaos: 0.5, good_evil: 0.6 }
   },
 
@@ -5033,6 +5321,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["ARI co-founder and former executive director; Rand's philosophy and education reform"],
     historical_weight: 0.45,
+    // Michael Berliner: ARI co-founder; former executive director and board chairman.
+    // Very high scores across axes as committed Objectivist. Historian of Objectivist movement.
+    // Edited "Letters of Ayn Rand." Work on Objectivist education and cultural outreach.
+    // Academic background: PhD in philosophy. Built institutional framework for Objectivism.
+    // Lower historical_weight reflects organizational vs. original philosophical contribution.
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.85, beauty_chaos: 0.6, good_evil: 0.8 }
   },
   {
@@ -5075,6 +5368,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The Capitalist Manifesto; Objectivism in history and culture'],
     historical_weight: 0.45,
+    // Andrew Bernstein: Objectivist philosopher and novelist; ARI contributor.
+    // "The Capitalist Manifesto" — economic case for capitalism. "Heroes, Legends, Champions."
+    // Very high scores: committed Objectivist applying philosophy to history and literature.
+    // "A Doll's House (Ibsen and His Discontents)" — literary criticism from Objectivist standpoint.
+    // Focuses on heroism, individualism, capitalism in history. Popular expositor of Objectivism.
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.85, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.8 }
   },
   {
@@ -5094,6 +5392,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['In Defense of Selfishness (2015); The Foreign Policy of Self-Interest; ARI senior fellow'],
     historical_weight: 0.7,
+    // Peter Schwartz: ARI distinguished fellow; "In Defense of Selfishness" — full case for rational egoism.
+    // "The Foreign Policy of Self-Interest" — Objectivist foreign policy. Edited "The Intellectuals and Capitalism."
+    // Very high individual (+0.95): specialist in defending selfishness against altruist attacks.
+    // Higher historical_weight: influential in presenting Objectivist ethics to broader audience.
+    // "Return of the Primitive" — contributed to Rand's edited volume. Sharp polemicist against collectivism.
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.95, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.85 }
   },
   {
@@ -5161,6 +5464,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["Editor of Rand's Q&A volumes; Essays on Ayn Rand's fiction; Objectivist scholarship"],
     historical_weight: 0.45,
+    // Robert Mayhew: Classics professor (Seton Hall); Objectivist scholar bridging academic and movement.
+    // Editor of "Ayn Rand Answers" (Q&A sessions), "Essays on Ayn Rand's We the Living/Anthem/Fountainhead/Atlas."
+    // Higher beauty score (+0.7): literary focus on Rand's fiction. Aristotle scholar too.
+    // Very high reason/reality: brings academic rigor to Objectivist scholarship.
+    // Quiet but substantial contributions to archiving and publishing Rand's work.
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.9, freedom_coercion: 0.85, value_nihilism: 0.85, market_planning: 0.8, beauty_chaos: 0.7, good_evil: 0.8 }
   },
   {
@@ -5180,6 +5488,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Objectivist ethics and metaethics; Harvey Mudd College; normative theory'],
     historical_weight: 0.45,
+    // Darryl Wright: Philosophy professor (Harvey Mudd); Objectivist metaethics specialist.
+    // Contributes to academic respectability of Objectivism through peer-reviewed work.
+    // Very high reality (+0.95): focuses on Objectivist metaphysics grounding ethics.
+    // Normative theory: how Rand's ethics works in practice; virtue ethics interpretation.
+    // Quieter academic contribution but important for establishing Objectivism in universities.
     battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.85, beauty_chaos: 0.6, good_evil: 0.85 }
   },
   {
@@ -5199,6 +5512,11 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Loving Life (2002); The Objective Standard; Objectivist ethics'],
     historical_weight: 0.45,
+    // Craig Biddle: Founder and editor of "The Objective Standard" — premier Objectivist journal.
+    // "Loving Life" — accessible introduction to Objectivist ethics for general reader.
+    // Perfect scores on core axes: uncompromising advocate of Objectivism in public discourse.
+    // TOS publishes rigorous essays applying Objectivism to current events, culture, philosophy.
+    // Important for maintaining intellectual standards in Objectivist commentary.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.6, good_evil: 0.9 }
   },
   {
@@ -5218,6 +5536,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["ARI chief philosophy officer; Rand's epistemology and ethics"],
     historical_weight: 0.7,
+    // Onkar Ghate: ARI Chief Philosophy Officer; leading Objectivist philosopher today.
+    // Specialist in Rand's epistemology (theory of concepts) and ethics. Indian-born.
+    // Higher historical_weight: major intellectual presence in contemporary Objectivism.
+    // Perfect scores: rigorous systematizer of Objectivist philosophy for new generation.
+    // Co-editor "A Companion to Ayn Rand" (with Salmieri). Lectures on free will, consciousness.
+    // Key figure in developing Objectivism beyond Rand's and Peikoff's formulations.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 1.0, market_planning: 1.0, beauty_chaos: 0.7, good_evil: 0.9 }
   },
   {
@@ -5237,6 +5561,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['A Companion to Ayn Rand (2016); Objectivist epistemology'],
     historical_weight: 0.55,
+    // Gregory Salmieri: Philosophy professor (Boston University); leading academic Objectivist.
+    // Co-editor "A Companion to Ayn Rand" (with Ghate) — landmark academic volume on Rand.
+    // Perfect reason/reality: specialist in Objectivist epistemology; theory of concepts; logic.
+    // Brings Objectivism into dialogue with contemporary analytic philosophy.
+    // Higher beauty score (+0.7): works on Rand's aesthetics too. Rigorous systematic thinker.
+    // Key figure: establishing Objectivism's academic credibility alongside Gotthelf legacy.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.9, beauty_chaos: 0.7, good_evil: 0.9 }
   },
   {
@@ -5256,6 +5586,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Winning the Unwinnable War (2009); ARI fellow; foreign policy and self-interest'],
     historical_weight: 0.45,
+    // Elan Journo: ARI director of policy research; foreign policy specialist.
+    // "Winning the Unwinnable War" — Objectivist analysis of War on Terror; self-interest in foreign policy.
+    // "What Justice Demands: America and the Israeli-Palestinian Conflict."
+    // Very high individual/freedom: applies Objectivist ethics to international relations.
+    // Focus on just war theory, American self-interest, against altruistic foreign policy.
+    // Podcast host ("New Ideal Live"); public voice for Objectivist political philosophy.
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.85 }
   },
   {
@@ -5275,6 +5611,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ["ARI fellow; epistemology; Rand's theory of concepts and perception"],
     historical_weight: 0.4,
+    // Ben Bayer: ARI fellow; specialist in Objectivist epistemology and theory of perception.
+    // Perfect reason/reality scores: focuses on foundational questions of knowledge.
+    // Works on Rand's theory of concepts, sensory perception, and their philosophical rivals.
+    // Younger generation carrying forward Objectivist epistemology after Peikoff.
+    // Engages with contemporary philosophy of mind and perception debates.
+    // "How We Know" course and writing extends Binswanger's and Peikoff's work.
     battles: { reason_faith: 1.0, reality_mysticism: 1.0, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.95, market_planning: 0.9, beauty_chaos: 0.6, good_evil: 0.85 }
   },
   {
@@ -5294,6 +5636,12 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Equal Is Unfair (2016); Free Market Revolution; ARI fellow; capitalism and rights'],
     historical_weight: 0.4,
+    // Don Watkins: ARI fellow; co-author with Yaron Brook on economic/political topics.
+    // "Equal Is Unfair" (with Brook) — against egalitarianism; "Free Market Revolution."
+    // "RooseveltCare" — critique of Social Security; "In Pursuit of Wealth" — capitalism defense.
+    // Perfect scores on individual/freedom/market: specialist in economic rights and anti-statism.
+    // Effective popular communicator of Objectivist political-economic positions.
+    // Co-host with Brook on podcasts; reaches broader audience than academic Objectivists.
     battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.9, market_planning: 1.0, beauty_chaos: 0.6, good_evil: 0.85 }
   },
 
@@ -5315,6 +5663,14 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['The Evidence of the Senses; open Objectivism; Atlas Society'],
     historical_weight: 1.0,
+    // David Kelley: Founder of Atlas Society (formerly IOS/TOC); "The Evidence of the Senses."
+    // Champion: major figure in Objectivism who split from ARI over "sanction" issues.
+    // Very high reason/reality (+0.95): "The Evidence of the Senses" — Objectivist epistemology, direct realism.
+    // "Open Objectivism" vs. "closed Objectivism" — Kelley argues philosophy develops, not frozen.
+    // High individual/freedom/market: fully Objectivist on core political-economic issues.
+    // Controversy: excommunicated by Peikoff 1989 for speaking at libertarian event and "Truth and Toleration."
+    // More tolerant toward libertarians, less toward moral judgment. Same philosophical core, different approach.
+    // "Unrugged Individualism" — benevolence as virtue. Against Rand's "moral absolutism" on certain issues.
     battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.9, freedom_coercion: 0.9, value_nihilism: 0.9, market_planning: 0.9, beauty_chaos: 0.7, good_evil: 0.85 }
   },
   {
@@ -5334,6 +5690,14 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Explaining Postmodernism (2004); Rand-influenced realism'],
     historical_weight: 0.5,
+    // Stephen Hicks: Philosophy professor (Rockford U); Atlas Society scholar.
+    // "Explaining Postmodernism" — influential critique tracing postmodernism to Kant and counter-Enlightenment.
+    // Argues postmodernism is collectivism's response to socialism's failure. Very popular book.
+    // Very high reason/reality (+0.95): defends Enlightenment against postmodern attack.
+    // "Nietzsche and the Nazis" — analyzes philosophical roots of National Socialism.
+    // Canadian-American; brings Objectivist critique to broader academic audience.
+    // Higher beauty score (+0.7): works on aesthetics and Romantic Realism too.
+    // YouTube presence extends reach beyond academic philosophy.
     battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.9, market_planning: 0.85, beauty_chaos: 0.7, good_evil: 0.8 }
   },
   {
@@ -5353,6 +5717,13 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['The Tracinski Letter; Rand-influenced cultural and political commentary'],
     historical_weight: 0.4,
+    // Robert Tracinski: "The Tracinski Letter" (now Symposium); Rand-influenced political commentary.
+    // Former editor of "The Intellectual Activist." Applies Objectivism to current events.
+    // High reason/reality (+0.9): Objectivist framework for analyzing politics and culture.
+    // More journalistic than academic; real-time commentary from Objectivist perspective.
+    // Some distance from ARI orthodoxy; independent voice within Objectivist-influenced sphere.
+    // Slightly lower scores reflect more pragmatic/journalistic vs. pure philosophical approach.
+    // "The Tracinski Letter" evolved into broader cultural and political newsletter.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.85, freedom_coercion: 0.85, value_nihilism: 0.85, market_planning: 0.85, beauty_chaos: 0.6, good_evil: 0.75 }
   },
 
@@ -5374,6 +5745,16 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Libertarian ethics; Rand-influenced natural rights'],
     historical_weight: 1.0,
+    // Tibor Machan: Hungarian-American libertarian philosopher; Rand-influenced but not Objectivist.
+    // Champion: prolific defender of libertarian natural rights; Hoover Institution senior fellow.
+    // High reason/reality (+0.85): Aristotelian naturalism; believes in objective ethics.
+    // Very high individual/freedom (+0.95): individual rights paramount; minimal or no state.
+    // High market (+0.9): free market capitalism; against all regulation.
+    // Lower value (+0.75): not fully Objectivist on metaethics; some eclecticism.
+    // "Individuals and Their Rights," "Human Rights and Human Liberties."
+    // Hungarian refugee from communism — personal experience shaped libertarianism.
+    // More academic mainstream than ARI Objectivists; broader philosophical engagements.
+    // Died 2016. Bridged Objectivism and academic libertarian philosophy.
     battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.75, market_planning: 0.9, beauty_chaos: 0.5, good_evil: 0.7 }
   },
 
@@ -5395,6 +5776,16 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Rothbardian anarcho-capitalism; utopian; anti-IP; NAP without objective law; subjectivist framework'],
     historical_weight: 0.5,
+    // Walter Block: Anarcho-capitalist economist; Mises Institute; "Defending the Undefendable."
+    // Moderate reason (+0.4): uses argument but Austrian subjectivism undermines objectivity.
+    // Low reality (+0.3): praxeology is aprioristic; anti-empiricist; Kantian method.
+    // Low individual (+0.3): NAP absolutism but no objective law; "freedom" without objective framework.
+    // Low freedom (+0.3): anarchism means no state AT ALL — but competing defense agencies are utopian.
+    // Very high market (+0.9): no restrictions whatsoever; even markets in organs, children.
+    // "Defending the Undefendable" — provocateur; defends pimps, blackmailers, etc. as non-aggressors.
+    // Anti-IP: intellectual property is aggression (opposite of Rand who created IP-intensive works).
+    // Against Rand: anarchism without objective law leads to gang warfare, not liberty.
+    // Rothbardian disciple; carries forward anarcho-capitalist program.
     battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.9, beauty_chaos: 0.4, good_evil: 0.3 }
   },
   {
@@ -5414,6 +5805,16 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Consequentialist anarcho-capitalism; utopian; competing private defense agencies; utilitarian ethics; anti-IP'],
     historical_weight: 0.55,
+    // David Friedman: Milton's son; economist; "The Machinery of Freedom"; consequentialist anarcho-capitalism.
+    // Low reason (+0.3): uses economic reasoning but consequentialist ethics lacks objective grounding.
+    // Very low reality (+0.2): economics doesn't need philosophical foundations; pragmatic.
+    // Low individual (+0.3): defends individual liberty but on utilitarian, not rights-based grounds.
+    // Low freedom (+0.3): anarchism is MORE freedom, but no objective law to define/protect it.
+    // Very high market (+0.9): private production of law and defense; competing courts.
+    // "Machinery of Freedom" — practical case for anarcho-capitalism; less ideological than Rothbard.
+    // Utilitarian: anarcho-capitalism works BETTER, not because it's moral.
+    // Against Rand: no moral foundation for rights; just efficiency. Also anti-IP.
+    // Medieval Icelandic legal system as model. Clever but utopian.
     battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.3, market_planning: 0.9, beauty_chaos: 0.4, good_evil: 0.2 }
   },
   {
@@ -5433,6 +5834,16 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Kantian argumentation ethics (transcendental deduction); utopian natural order; anti-democracy and anti-objective-law; praxeology; anti-IP'],
     historical_weight: 0.5,
+    // Hoppe: German-American; Rothbard's student; "Democracy: The God That Failed"; argumentation ethics.
+    // Very low reason (+0.2): Kantian transcendental deduction; praxeology's apriorism; anti-empirical.
+    // "Argumentation ethics" attempts to derive libertarianism from performative contradiction.
+    // Very low reality (+0.2): reality constructed through action categories; not Aristotelian at all.
+    // Low individual (+0.3): defends property but through Kantian, not Randian framework.
+    // Low freedom (+0.3): anarchism + "covenant communities" that can exclude; quasi-feudal.
+    // Very high market (+0.9): no state; private property absolute; anti-democracy.
+    // Against Rand: Kantian method is anti-reason at root; anarchism is utopian gang rule.
+    // "Physical removal" rhetoric attracted alt-right (Hoppe himself more traditional conservative).
+    // Anti-IP, anti-democracy, anti-state. Most extreme anarcho-capitalist position.
     battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.3, market_planning: 0.9, beauty_chaos: 0.3, good_evil: 0.2 }
   },
 
@@ -5454,6 +5865,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Impartial utilitarianism; rational but demands self-sacrifice; animal rights dissolve human exceptionalism'],
     historical_weight: 0.65,
+    // Peter Singer: Australian utilitarian; "Animal Liberation," "Practical Ethics"; effective altruism.
+    // High reason (+0.7): rigorous utilitarian argument; applies logic consistently (sometimes shockingly).
+    // High reality (+0.7): naturalistic ethics; suffering is objective fact.
+    // Collectivist (-0.3): impartiality demands you value strangers equally to yourself and family.
+    // "Drowning child" thought experiment: you're morally obligated to give until marginal utility equal.
+    // Moderate freedom (+0.3): permits voluntary action but moral demands are extreme.
+    // Moderate value (+0.5): values exist (suffering matters) but no human exceptionalism.
+    // Anti-speciesism: "A rat is a pig is a dog is a boy." Animal suffering = human suffering morally.
+    // Against Rand: demands self-sacrifice as moral imperative; dissolves individual human worth.
+    // Controversial: defended infanticide in some cases; consistent utilitarianism's dark side.
+    // Father of effective altruism movement. Most influential living utilitarian.
     battles: { reason_faith: 0.7, reality_mysticism: 0.7, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: -0.2, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 
@@ -5475,6 +5897,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Capabilities require redistribution overriding individual rights; cosmopolitan obligations deny national sovereignty'],
     historical_weight: 0.6,
+    // Martha Nussbaum: American philosopher; "Capabilities Approach" with Sen; emotions and ethics.
+    // Moderate reason (+0.6): neo-Aristotelian; human nature grounds ethics. Rigorous argument.
+    // Moderate reality (+0.6): human flourishing is objective; capabilities are real human needs.
+    // Mildly collectivist (-0.2): capabilities approach requires redistribution; state must ensure capabilities.
+    // Government must provide education, health, emotional well-being — extensive positive rights.
+    // Moderate freedom (+0.3): values liberty but subordinates to capability provision.
+    // Moderate value (+0.5): objective flourishing but list of capabilities seems arbitrary (who decides?).
+    // Anti-market (-0.3): markets insufficient; government must correct capabilities deficits.
+    // "Frontiers of Justice" — extends justice to disabled, animals, global poor; cosmopolitan.
+    // Against Rand: positive rights requiring redistribution; government as capability-provider.
+    // Neo-Aristotelian but conclusions opposite to Rand's Aristotelianism.
     battles: { reason_faith: 0.6, reality_mysticism: 0.6, individual_collective: -0.2, freedom_coercion: 0.3, value_nihilism: 0.5, market_planning: -0.3, beauty_chaos: 0.5, good_evil: 0.5 }
   },
 
@@ -5496,6 +5929,17 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Consciousness explained; Darwinian reason'],
     historical_weight: 1.0,
+    // Daniel Dennett: American philosopher; "Consciousness Explained," "Darwin's Dangerous Idea."
+    // Champion: naturalist; one of "Four Horsemen" of New Atheism (died 2024).
+    // Very high reason (+0.9): rigorous scientific naturalism; evolution explains everything.
+    // Very high reality (+0.9): physicalism; no supernatural; consciousness is real but not mysterious.
+    // Moderate individual (+0.6): liberal democrat; no strong political philosophy.
+    // Moderate freedom (+0.6): soft determinist (compatibilist); freedom is real, compatible with determinism.
+    // High value (+0.7): meaning emerges from evolution; purposes are real patterns.
+    // "Multiple drafts" theory of consciousness; heterophenomenology method.
+    // Compatible with Objectivism on naturalism and atheism; differs on free will (compatibilism vs. libertarian).
+    // "Breaking the Spell" — naturalistic explanation of religion. Tufts University.
+    // Key naturalist: mind is what brain does; no dualism, no mysterianism.
     battles: { reason_faith: 0.9, reality_mysticism: 0.9, individual_collective: 0.6, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.3, beauty_chaos: 0.5, good_evil: 0.6 }
   },
   {
@@ -5515,6 +5959,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Neurophilosophy; eliminative materialism'],
     historical_weight: 0.55,
+    // Patricia Churchland: Canadian-American; neurophilosophy; eliminative materialism.
+    // Very high reason (+0.85): scientific naturalism; neuroscience can answer philosophical questions.
+    // Very high reality (+0.9): brains are real; folk psychology will be replaced by neuroscience.
+    // Moderate individual (+0.5): no strong political philosophy; academic focus.
+    // Moderate freedom (+0.5): determinism softened by neuroscientific complexity.
+    // Moderate value (+0.6): "Braintrust" — morality is brain-based; evolution produced moral emotions.
+    // Eliminative materialism: beliefs, desires as folk concepts may not survive neuroscience.
+    // "Neurophilosophy" (1986) founded field bridging philosophy and neuroscience.
+    // Compatible with Objectivism on naturalism; differs on whether folk psychology survives.
+    // If eliminativism true, even "reason" might be folk concept — problematic for Rand.
+    // Important: brought philosophy closer to empirical science of brain.
     battles: { reason_faith: 0.85, reality_mysticism: 0.9, individual_collective: 0.5, freedom_coercion: 0.5, value_nihilism: 0.6, market_planning: 0.0, beauty_chaos: 0.4, good_evil: 0.5 }
   },
   {
@@ -5534,6 +5989,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Moral landscape; science can determine values; critique of religion and faith'],
     historical_weight: 0.7,
+    // Sam Harris: American neuroscientist and public intellectual; "The Moral Landscape."
+    // Very high reason (+0.95): science should determine values; religion is unreasonable.
+    // Very high reality (+0.95): moral facts exist; well-being is objective and measurable.
+    // Moderate individual (+0.6): defends reason and free speech; liberal on some issues.
+    // High freedom (+0.7): free speech absolutist; critic of religious coercion.
+    // High value (+0.8): "Moral Landscape" argues values are facts about conscious well-being.
+    // Mild pro-market (+0.2): capitalist-friendly but not libertarian; allows regulation.
+    // New Atheist; "The End of Faith," "Letter to a Christian Nation." Meditation teacher too.
+    // Compatible with Objectivism: reason, reality, objective values. BUT: utilitarian not egoist.
+    // Harris: maximize well-being of all conscious creatures. Rand: individual flourishing as standard.
+    // Waking Up app; podcast; public intellectual with wide reach. Critic of woke left and religious right.
     battles: { reason_faith: 0.95, reality_mysticism: 0.95, individual_collective: 0.6, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.2, beauty_chaos: 0.5, good_evil: 0.7 }
   },
   {
@@ -5553,6 +6019,17 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Antitheism; religion poisons everything; Enlightenment values; free expression'],
     historical_weight: 0.75,
+    // Christopher Hitchens: British-American polemicist; "God Is Not Great"; antitheism.
+    // Near-perfect reason (+0.98): fierce defender of Enlightenment reason against all superstition.
+    // "Antitheist": not just atheist but believes religion is actively harmful to humanity.
+    // Very high reality (+0.95): objective reality; no supernatural; evidence-based worldview.
+    // High individual (+0.7): defender of individual conscience against religious conformity.
+    // Very high freedom (+0.8): free speech absolutist; no sacred cows; critic of Islamic extremism.
+    // High value (+0.8): values are real; human flourishing matters; no moral relativism.
+    // Mild pro-market (+0.3): former Trotskyist became pro-war neoconservative; not libertarian.
+    // Higher beauty (+0.6): brilliant prose stylist; literary critic; Orwell devotee.
+    // "Letters to a Young Contrarian." Debater par excellence. Died 2011.
+    // Compatible with Rand on reason vs. faith; differs on politics (supported Iraq War, mixed economics).
     battles: { reason_faith: 0.98, reality_mysticism: 0.95, individual_collective: 0.7, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.3, beauty_chaos: 0.6, good_evil: 0.7 }
   },
   {
@@ -5572,6 +6049,17 @@ export const SEED_NODES = [
     is_champion: true,
     key_ideas: ['Selfish gene; memes; evolution as explanation; militant atheism; God delusion'],
     historical_weight: 0.85,
+    // Richard Dawkins: British evolutionary biologist; "The Selfish Gene," "The God Delusion."
+    // Champion: most famous living atheist scientist; coined "meme"; champion of reason vs. faith.
+    // Near-perfect reason (+0.98): evolution explains life; science is our best tool for truth.
+    // Very high reality (+0.95): nature is real; no supernatural; genes and memes explain culture.
+    // Moderate individual (+0.5): gene-centric view somewhat collectivist (genes "use" organisms).
+    // Moderate freedom (+0.6): liberal; academic; no strong political philosophy.
+    // High value (+0.7): values arise from evolution; meaning is constructed but real.
+    // "Selfish gene" — genes are replicators; organisms are vehicles. Revolutionary framing.
+    // "Meme" — cultural unit of selection; ideas replicate like genes. Influential concept.
+    // Compatible with Rand on reason vs. faith; differs on whether evolution grounds values.
+    // New Atheist; Oxford professor; Foundation for Reason and Science. Born in Kenya.
     battles: { reason_faith: 0.98, reality_mysticism: 0.95, individual_collective: 0.5, freedom_coercion: 0.6, value_nihilism: 0.7, market_planning: 0.3, beauty_chaos: 0.6, good_evil: 0.6 }
   },
 
@@ -5593,6 +6081,18 @@ export const SEED_NODES = [
     is_champion: false,
     key_ideas: ['Lacanian Marxism; the Real is inaccessible; ideology pervades all apparent rationality'],
     historical_weight: 0.6,
+    // Slavoj Žižek: Slovenian philosopher; Lacanian Marxism; cultural critic; prolific.
+    // Low reason (+0.3): uses argument but Lacan's "Real" is beyond rational access.
+    // Reason itself is ideological symptom for Žižek; can't escape ideology through reason.
+    // Very low reality (+0.2): the Real is traumatic kernel we can't access; reality is fantasy.
+    // Lacanian psychoanalysis: Symbolic, Imaginary, Real. We live in Symbolic; Real disrupts.
+    // Collectivist (-0.3): communist; capitalism must be overcome; collective liberation.
+    // Moderate freedom (+0.3): critic of liberal freedom as ideology; but anti-totalitarian.
+    // Very low value (+0.2): values are ideological; no ground outside ideology.
+    // Anti-capitalist (-0.4): "First as Tragedy, Then as Farce"; capitalism's contradictions.
+    // Provocateur: supports communism but mocks political correctness. Hard to pin down.
+    // Against Rand: reason can't access reality; values are ideology; capitalism is evil.
+    // Pop philosopher: movies, jokes, endless books. Entertaining but philosophically confused.
     battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.4, good_evil: 0.2 }
   },
 ];
