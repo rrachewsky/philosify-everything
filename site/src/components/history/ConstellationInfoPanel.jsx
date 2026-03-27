@@ -128,7 +128,9 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
             {formatYear(node.birth_year)} – {formatYear(node.death_year)}
           </div>
           <div style={styles.birthplace}>
-            {node.birth_city}, {node.birth_country_modern}
+            {node.birth_city && node.birth_city.toLowerCase() !== 'unknown' 
+              ? `${node.birth_city}, ${node.birth_country_modern}`
+              : node.birth_country_modern}
           </div>
           <div style={styles.era}>{node.school_of_thought}</div>
           <div style={{ ...styles.schoolBadge, background: schoolColor }}>
