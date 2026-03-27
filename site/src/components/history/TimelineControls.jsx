@@ -101,9 +101,9 @@ export function TimelineControls({
                   ...(selectedEra === era.id ? styles.eraButtonActive : {}),
                 }}
                 onClick={() => toggleEraFilter(era.id)}
-                title={`${era.startYear < 0 ? Math.abs(era.startYear) + ' BC' : era.startYear} - ${era.endYear < 0 ? Math.abs(era.endYear) + ' BC' : era.endYear}`}
+                title={`${era.startYear < 0 ? Math.abs(era.startYear) + ' ' + t('constellation.bc') : era.startYear} - ${era.endYear < 0 ? Math.abs(era.endYear) + ' ' + t('constellation.bc') : era.endYear}`}
               >
-                {era.label}
+                {t(`constellation.eras.${era.id}`, era.label)}
               </button>
             ))}
             {/* Show All button */}
@@ -150,10 +150,10 @@ export function TimelineControls({
                     color: isSelected ? '#F2F2F5' : 'rgba(255, 255, 255, 0.7)',
                   }}
                   onClick={() => toggleSchoolFilter(school)}
-                  title={school}
+                  title={t(`constellation.schools.${school}`, school)}
                 >
                   <span style={{ ...styles.schoolDot, background: color }} />
-                  {school}
+                  {t(`constellation.schools.${school}`, school)}
                 </button>
               );
             })}
@@ -217,12 +217,12 @@ export function TimelineControls({
             const percent = ((era.year - minYear) / (maxYear - minYear)) * 100;
             return (
               <div
-                key={era.label}
+                key={era.id}
                 style={{
                   ...styles.eraMarker,
                   left: `${percent}%`,
                 }}
-                title={era.label}
+                title={t(`constellation.eras.${era.id}`, era.label)}
               />
             );
           })}

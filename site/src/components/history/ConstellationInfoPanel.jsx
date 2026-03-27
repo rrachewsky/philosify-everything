@@ -167,9 +167,9 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
               ? `${node.birth_city}, ${node.birth_country_modern}`
               : node.birth_country_modern}
           </div>
-          <div style={styles.era}>{node.school_of_thought}</div>
+          <div style={styles.era}>{t(`constellation.schools.${node.school_of_thought}`, node.school_of_thought)}</div>
           <div style={{ ...styles.schoolBadge, background: schoolColor }}>
-            {node.school}
+            {t(`constellation.schools.${node.school}`, node.school)}
           </div>
         </div>
       </div>

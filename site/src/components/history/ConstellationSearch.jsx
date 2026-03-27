@@ -114,7 +114,7 @@ export function ConstellationSearch({
                   <div style={styles.resultInfo}>
                     <div style={styles.resultName}>{getTranslatedName(node, t)}</div>
                     <div style={styles.resultMeta}>
-                      {formatYear(node.birth_year)} · {node.school_of_thought}
+                      {formatYear(node.birth_year)} · {t(`constellation.schools.${node.school_of_thought}`, node.school_of_thought)}
                     </div>
                   </div>
                   <svg
