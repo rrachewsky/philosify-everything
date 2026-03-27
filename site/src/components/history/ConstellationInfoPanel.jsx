@@ -41,12 +41,19 @@ function BattleBar({ battle, score }) {
   const [positiveLabel, negativeLabel, description] = BATTLE_LABELS[battle] || ['Left', 'Right', ''];
   const color = BATTLE_COLORS[battle] || '#888';
   
-  // Score: -1 to +1
-  // +1 = fully positive (Reason, Reality, Individual, etc.)
-  // -1 = fully negative (Faith, Mysticism, Collective, etc.)
+  // Score: -1 to +1 (normalized from -10 to +10)
+  // +1 = fully positive (Reason, Reality, Individual, etc.) - extends RIGHT
+  // -1 = fully negative (Faith, Mysticism, Collective, etc.) - extends LEFT
   const isPositive = score >= 0;
   const intensity = Math.abs(score);
-  const intensityPercent = intensity * 100;
+  
+  // Convert to display score (-10 to +10)
+  const displayScore = Math.round(score * 10);
+  
+  // Calculate bar position: center is at 50%
+  // Positive scores: fill from 50% to (50% + intensity*50%)
+  // Negative scores: fill from (50% - intensity*50%) to 50%
+  const fillWidth = intensity * 50; // max 50% on each side
   
   // Determine which label is dominant (for description)
   const dominantLabel = isPositive ? positiveLabel : negativeLabel;
@@ -63,24 +70,34 @@ function BattleBar({ battle, score }) {
   return (
     <div style={styles.battleRow}>
       <div style={styles.battleHeader}>
-        {/* Always show labels in consistent order: positive vs negative */}
-        <span style={{ ...styles.battleDominant, color: isPositive ? color : '#888' }}>{positiveLabel}</span>
-        <span style={styles.battleVs}>vs</span>
-        <span
-          style={{
-            ...styles.battleOpposite,
-            color: !isPositive ? color : styles.battleOpposite.color,
-          }}
-        >
+        {/* Negative label on left, positive on right (matches bar direction) */}
+        <span style={{ ...styles.battleLabelLeft, color: !isPositive ? color : 'rgba(255, 255, 255, 0.5)' }}>
           {negativeLabel}
+        </span>
+        <span style={styles.battleScore}>
+          {displayScore > 0 ? '+' : ''}{displayScore}
+        </span>
+        <span style={{ ...styles.battleLabelRight, color: isPositive ? color : 'rgba(255, 255, 255, 0.5)' }}>
+          {positiveLabel}
         </span>
       </div>
       <div style={styles.battleTrack}>
+        {/* Center line marker */}
+        <div style={styles.battleCenterLine} />
+        {/* Fill bar - starts from center */}
         <div
           style={{
-            ...styles.battleFill,
-            width: `${intensityPercent}%`,
-            background: `linear-gradient(90deg, ${color}, ${color}88)`,
+            position: 'absolute',
+            top: 0,
+            height: '100%',
+            borderRadius: 3,
+            background: color,
+            // For positive: start at center (50%), extend right
+            // For negative: end at center (50%), extend left
+            ...(isPositive
+              ? { left: '50%', width: `${fillWidth}%` }
+              : { left: `${50 - fillWidth}%`, width: `${fillWidth}%` }
+            ),
           }}
         />
       </div>
@@ -636,46 +653,57 @@ const styles = {
   battleHeader: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 6,
   },
 
-  battleDominant: {
-    fontSize: 12,
+  battleLabelLeft: {
+    fontSize: 11,
     fontWeight: 600,
+    flex: 1,
+    textAlign: 'left',
   },
 
-  battleVs: {
-    fontSize: 9,
-    color: 'rgba(255, 255, 255, 0.3)',
-    fontStyle: 'italic',
+  battleScore: {
+    fontSize: 11,
+    fontWeight: 700,
+    color: 'rgba(255, 255, 255, 0.9)',
+    minWidth: 28,
+    textAlign: 'center',
   },
 
-  battleOpposite: {
-    fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.96)',
+  battleLabelRight: {
+    fontSize: 11,
+    fontWeight: 600,
+    flex: 1,
+    textAlign: 'right',
   },
 
   battleTrack: {
     width: '100%',
-    height: 6,
+    height: 8,
     background: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 3,
+    borderRadius: 4,
     position: 'relative',
     overflow: 'hidden',
   },
 
-  battleFill: {
+  battleCenterLine: {
     position: 'absolute',
-    left: 0,
+    left: '50%',
     top: 0,
+    width: 2,
     height: '100%',
-    borderRadius: 3,
+    background: 'rgba(255, 255, 255, 0.3)',
+    transform: 'translateX(-50%)',
+    zIndex: 1,
   },
 
   battleIntensity: {
     fontSize: 9,
     color: 'rgba(255, 255, 255, 0.5)',
     fontStyle: 'italic',
+    textAlign: 'center',
   },
 
   connectionsList: {
