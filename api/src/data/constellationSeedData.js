@@ -123,7 +123,7 @@ export const SCHOOL_STANCES = {
   'Political': 'anti',
   'Libertarian': 'pro',
   'Naturalist (Contemporary)': 'pro',
-  'Anarcho-Capitalist': 'pro',
+  'Anarcho-Capitalist': 'anti',  // Utopian mysticism; subjectivist ethics; competing agencies = no objective law = might makes right; anti-IP
   // NEW SCHOOLS
   'Austrian Economics': 'pro',
   'Voluntaryist': 'pro',
@@ -3800,11 +3800,11 @@ export const SEED_NODES = [
     school_of_thought: 'Anarcho-Capitalism',
     school: 'Anarcho-Capitalist',
     tradition: 'western',
-    stance: 'pro',
+    stance: 'anti',
     is_champion: true,
-    key_ideas: ['Man, Economy and State (1962); The Ethics of Liberty (1982); founder of anarcho-capitalism on natural rights'],
+    key_ideas: ['Anarcho-capitalism; utopian stateless society; competing defense agencies; anti-IP; subjectivist ethics; no objective law'],
     historical_weight: 1.0,
-    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.7, market_planning: 1.0, beauty_chaos: 0.4, good_evil: 0.7 }
+    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.9, beauty_chaos: 0.4, good_evil: 0.3 }
   },
 
   // ═══════════════════════════════════════════════════════════
@@ -4346,11 +4346,11 @@ export const SEED_NODES = [
     school_of_thought: 'Anarcho-Capitalism',
     school: 'Anarcho-Capitalist',
     tradition: 'western',
-    stance: 'pro',
+    stance: 'anti',
     is_champion: false,
-    key_ideas: ['Defending the Undefendable (1976); non-aggression principle to radical conclusions; Rothbardian'],
+    key_ideas: ['Rothbardian anarcho-capitalism; utopian; anti-IP; NAP without objective law; subjectivist framework'],
     historical_weight: 0.5,
-    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.6, market_planning: 1.0, beauty_chaos: 0.4, good_evil: 0.6 }
+    battles: { reason_faith: 0.4, reality_mysticism: 0.3, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.4, market_planning: 0.9, beauty_chaos: 0.4, good_evil: 0.3 }
   },
   {
     id: 'david_friedman',
@@ -4365,11 +4365,11 @@ export const SEED_NODES = [
     school_of_thought: 'Anarcho-Capitalism',
     school: 'Anarcho-Capitalist',
     tradition: 'western',
-    stance: 'pro',
+    stance: 'anti',
     is_champion: false,
-    key_ideas: ['The Machinery of Freedom (1973); consequentialist anarcho-capitalism; private defense agencies'],
+    key_ideas: ['Consequentialist anarcho-capitalism; utopian; competing private defense agencies; utilitarian ethics; anti-IP'],
     historical_weight: 0.55,
-    battles: { reason_faith: 0.85, reality_mysticism: 0.85, individual_collective: 0.95, freedom_coercion: 0.95, value_nihilism: 0.6, market_planning: 1.0, beauty_chaos: 0.4, good_evil: 0.6 }
+    battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.3, market_planning: 0.9, beauty_chaos: 0.4, good_evil: 0.2 }
   },
   {
     id: 'hans_hermann_hoppe',
@@ -4384,11 +4384,11 @@ export const SEED_NODES = [
     school_of_thought: 'Anarcho-Capitalism',
     school: 'Anarcho-Capitalist',
     tradition: 'western',
-    stance: 'pro',
+    stance: 'anti',
     is_champion: false,
-    key_ideas: ['Democracy: The God That Failed (2001); argumentation ethics; Misesian praxeology meets natural order'],
+    key_ideas: ['Kantian argumentation ethics (transcendental deduction); utopian natural order; anti-democracy and anti-objective-law; praxeology; anti-IP'],
     historical_weight: 0.5,
-    battles: { reason_faith: 0.8, reality_mysticism: 0.8, individual_collective: 1.0, freedom_coercion: 1.0, value_nihilism: 0.6, market_planning: 1.0, beauty_chaos: 0.3, good_evil: 0.5 }
+    battles: { reason_faith: 0.2, reality_mysticism: 0.2, individual_collective: 0.3, freedom_coercion: 0.3, value_nihilism: 0.3, market_planning: 0.9, beauty_chaos: 0.3, good_evil: 0.2 }
   },
 
   // UTILITARIAN (1)
