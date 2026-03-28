@@ -17,16 +17,16 @@ const MAX_YEAR = 2026;
 const YEARS_PER_SECOND_1X = 2.5; // At 1x speed, ~17 minutes for full timeline
 
 // Era definitions with year ranges
-// Counter-Enlightenment is a philosophical movement (filters by movement field, not time)
+// Note: Some eras overlap historically (Counter-Enlightenment was a reaction during Enlightenment)
 export const ERAS = [
   { id: 'presocratics', label: 'Pre-Socratics', startYear: -700, endYear: -450 },
   { id: 'classical', label: 'Classical', startYear: -450, endYear: -300 },
   { id: 'hellenistic', label: 'Hellenistic', startYear: -300, endYear: 200 },
   { id: 'medieval', label: 'Medieval', startYear: 200, endYear: 1400 },
-  { id: 'renaissance', label: 'Renaissance', filterByMovement: true },
-  { id: 'enlightenment', label: 'Enlightenment', filterByMovement: true },
-  { id: 'counter_enlightenment', label: 'Counter-Enlightenment', filterByMovement: true },
-  { id: 'modern', label: 'Modern', startYear: 1800, endYear: 1950 },
+  { id: 'renaissance', label: 'Renaissance', startYear: 1400, endYear: 1600 },
+  { id: 'enlightenment', label: 'Enlightenment', startYear: 1600, endYear: 1800 },
+  { id: 'counter_enlightenment', label: 'Counter-Enlightenment', startYear: 1750, endYear: 1900 },
+  { id: 'modern', label: 'Modern', startYear: 1850, endYear: 1950 },
   { id: 'contemporary', label: 'Contemporary', startYear: 1950, endYear: 2030 },
 ];
 
