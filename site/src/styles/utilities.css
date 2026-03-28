@@ -576,59 +576,6 @@
   background: #c90068;
 }
 
-/* ===== ADVERTISE PAGE ===== */
-.advertise-page__intro {
-  font-size: 1.25rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.advertise-page ul,
-.advertise-page ol {
-  margin: 1rem 0 2rem 1.5rem;
-}
-
-.advertise-page li {
-  margin-bottom: 0.75rem;
-}
-
-.advertise-page h2 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  color: #e2007a;
-  font-size: 1.25rem;
-}
-
-.advertise-page__cta {
-  text-align: center;
-  margin: 2.5rem 0;
-}
-
-.advertise-page__button {
-  display: inline-block;
-  background: #e2007a;
-  color: #ffffff;
-  text-decoration: none;
-  padding: 14px 40px;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.advertise-page__button:hover {
-  background: #c90068;
-}
-
-.advertise-page__disclaimer {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
-  text-align: center;
-  font-style: italic;
-  margin-top: 2rem;
-}
-
 /* ===== CONTENT CARDS ===== */
 .content-card {
   max-width: 600px;

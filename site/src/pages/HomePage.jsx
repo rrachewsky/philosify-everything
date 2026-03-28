@@ -361,7 +361,7 @@ export function HomePage({
           <br />
           {t('footer4')}
           <br />
-          <a href="/pp">{t('privacyLink')}</a> - <a href="/tos">{t('termsLink')}</a> - <a href="/advertise">Advertise</a>
+          <a href="/pp">{t('privacyLink')}</a> - <a href="/tos">{t('termsLink')}</a>
         </footer>
       </div>
     </>
