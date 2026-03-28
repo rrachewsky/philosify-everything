@@ -16,7 +16,7 @@ import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
 } from "../utils/supabase-user.js";
-import { sendPushNotification } from "../push/sender.js";
+import { sendPushNotification, isAllowedPushEndpoint } from "../push/sender.js";
 
 /**
  * GET /api/push/vapid-key
@@ -70,6 +70,17 @@ export async function handleSubscribe(request, env, origin) {
     return jsonResponse({ error: "Invalid endpoint URL" }, 400, origin, env);
   }
 
+  // SECURITY: SSRF protection - only allow trusted push service endpoints
+  if (!isAllowedPushEndpoint(endpoint)) {
+    console.warn(`[Push] Rejected untrusted endpoint: ${endpoint.substring(0, 100)}`);
+    return jsonResponse(
+      { error: "Endpoint must be from a trusted push service" },
+      400,
+      origin,
+      env,
+    );
+  }
+
   const supabaseUrl = await getSecret(env.SUPABASE_URL);
   const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
@@ -114,6 +125,35 @@ export async function handleSubscribe(request, env, origin) {
       origin,
       env,
     );
+  }
+
+  // Cleanup: Remove old subscriptions for this user from the same browser/UA
+  // This prevents orphaned subscriptions when VAPID keys are regenerated
+  // We keep max 3 subscriptions per user (different devices)
+  try {
+    const userAgent = body.userAgent || request.headers.get("user-agent") || "";
+    // Get all subscriptions for this user, ordered by updated_at desc
+    const listRes = await fetch(
+      `${supabaseUrl}/rest/v1/push_subscriptions?user_id=eq.${user.userId}&select=id,endpoint,user_agent,updated_at&order=updated_at.desc`,
+      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+    );
+    if (listRes.ok) {
+      const subs = await listRes.json();
+      // Keep only the 3 most recent subscriptions, delete the rest
+      if (subs.length > 3) {
+        const toDelete = subs.slice(3).map((s) => s.id);
+        if (toDelete.length > 0) {
+          await fetch(
+            `${supabaseUrl}/rest/v1/push_subscriptions?id=in.(${toDelete.join(",")})`,
+            { method: "DELETE", headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+          );
+          console.log(`[Push] Cleaned up ${toDelete.length} old subscriptions for user ${user.userId}`);
+        }
+      }
+    }
+  } catch (cleanupErr) {
+    // Non-fatal, just log it
+    console.warn(`[Push] Subscription cleanup failed: ${cleanupErr.message}`);
   }
 
   console.log(`[Push] Subscription saved for user ${user.userId}`);

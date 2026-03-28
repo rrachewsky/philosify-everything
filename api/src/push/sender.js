@@ -13,6 +13,45 @@
 import { getVapidHeaders } from "./vapid.js";
 import { getSecret } from "../utils/secrets.js";
 
+// ============================================================
+// SSRF PROTECTION - Allowed Push Service Domains
+// ============================================================
+// Only allow endpoints from trusted Web Push service providers.
+// This prevents SSRF attacks where attackers register malicious
+// endpoints to make our server send requests to internal services.
+const ALLOWED_PUSH_DOMAINS = [
+  // Firebase Cloud Messaging (Chrome, Android, etc.)
+  "fcm.googleapis.com",
+  // Mozilla Push Service (Firefox)
+  "updates.push.services.mozilla.com",
+  "push.services.mozilla.com",
+  // Microsoft Windows Push Notification Service
+  "notify.windows.com",
+  // Apple Push Notification service (Safari on macOS)
+  "web.push.apple.com",
+  // Samsung Push Service
+  "push.samsungosp.com",
+  // Opera Push Service
+  "push.opera.com",
+];
+
+/**
+ * Validate that a push endpoint is from a trusted service
+ * @param {string} endpoint - Push subscription endpoint URL
+ * @returns {boolean} - True if endpoint is from an allowed domain
+ */
+export function isAllowedPushEndpoint(endpoint) {
+  try {
+    const url = new URL(endpoint);
+    const hostname = url.hostname.toLowerCase();
+    return ALLOWED_PUSH_DOMAINS.some(
+      (domain) => hostname === domain || hostname.endsWith(`.${domain}`)
+    );
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Clean up old push notification queue entries.
  * Removes delivered entries older than 24h and undelivered entries older than 48h.
@@ -87,6 +126,12 @@ export async function cleanupPushQueue(env) {
  */
 async function sendEmptyPush(env, endpoint) {
   try {
+    // Defense-in-depth: validate endpoint even though it should be validated at subscribe time
+    if (!isAllowedPushEndpoint(endpoint)) {
+      console.warn(`[Push] Blocked send to untrusted endpoint: ${endpoint.substring(0, 50)}...`);
+      return { success: false, error: "Untrusted endpoint", blocked: true };
+    }
+
     // Get VAPID headers
     const vapidHeaders = await getVapidHeaders(env, endpoint);
 

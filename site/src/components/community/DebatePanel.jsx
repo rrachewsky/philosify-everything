@@ -1638,11 +1638,12 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                 {t('community.debate.invite')}
               </button>
             )}
-            {(isProposer || sessionStorage.getItem('adminSecret')) && (
+            {/* Delete button: proposers only. Admins can delete via asAdmin flow when prompted */}
+            {isProposer && (
               <button
                 className="debate-reply__delete"
                 onClick={() =>
-                  setConfirmDelete({ type: 'colloquium', id: ac.id, asAdmin: !isProposer })
+                  setConfirmDelete({ type: 'colloquium', id: ac.id, asAdmin: false })
                 }
                 title={t('community.colloquium.deleteColloquium')}
               >

@@ -10,7 +10,7 @@
 //   - Invite users (free access for invitee)
 //   - Philosopher roster (with pricing)
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, sanitizeErrorMessage } from "../utils/index.js";
 
 // SECURITY: Validates ISO 8601 timestamps for PostgREST filter parameters
 const ISO_TIMESTAMP_RE =
@@ -857,6 +857,18 @@ export async function handleAddPhilosopher(
 
     const { userId, setCookieHeader } = auth;
 
+    // Rate limit AI calls
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const rl = await checkRateLimit(env, `add-philosopher:${userId}:${ip}`);
+    if (!rl) {
+      return jsonResponse(
+        { error: "Too many requests. Please slow down." },
+        429,
+        origin,
+        env,
+      );
+    }
+
     const body = await request.json();
     const philosopherName = body.philosopher_name;
 
@@ -1013,8 +1025,9 @@ export async function handleAddPhilosopher(
     }
   } catch (err) {
     console.error("[Colloquium] Add philosopher error:", err.message);
+    // Sanitize error message to prevent leaking internal details
     return jsonResponse(
-      { error: `Failed to add philosopher: ${err.message}` },
+      { error: sanitizeErrorMessage(err.message, "Failed to add philosopher") },
       500,
       origin,
       env,
@@ -1769,6 +1782,18 @@ export async function handleColloquiumVerdict(
   threadId,
   ctx,
 ) {
+  // Rate limit AI calls
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const rl = await checkRateLimit(env, `colloquium-verdict:${ip}`);
+  if (!rl) {
+    return jsonResponse(
+      { error: "Too many requests. Please slow down." },
+      429,
+      origin,
+      env,
+    );
+  }
+
   // Check admin auth first
   const adminSecret = request.headers.get("X-Admin-Secret");
   const expectedSecret = await getSecret(env.ADMIN_SECRET);
@@ -1924,7 +1949,13 @@ export async function handleColloquiumVerdict(
     return response;
   } catch (err) {
     console.error("[Colloquium] Verdict error:", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    // Sanitize error message to prevent leaking internal details
+    return jsonResponse(
+      { error: sanitizeErrorMessage(err.message, "Verdict generation failed") },
+      500,
+      origin,
+      env,
+    );
   }
 }
 
@@ -2178,8 +2209,9 @@ export async function handleColloquiumVerdictAudio(
       err.message,
       err.stack,
     );
+    // Don't expose error details to client
     return jsonResponse(
-      { error: "Failed to generate audio", detail: err.message },
+      { error: "Failed to generate audio" },
       500,
       origin,
       env,

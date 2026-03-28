@@ -7,6 +7,7 @@
 
 import { getSecret } from "../utils/secrets.js";
 import { getCorsHeaders } from "../utils/cors.js";
+import { safeEq } from "../payments/crypto.js";
 
 // ============================================================
 // CONSTANTS
@@ -304,7 +305,7 @@ export async function handleCinemaDiagnose(request, env, origin) {
   // Require admin secret
   const adminSecret = request.headers.get("X-Admin-Secret");
   const expectedSecret = await getSecret(env.ADMIN_SECRET);
-  if (!adminSecret || adminSecret !== expectedSecret) {
+  if (!adminSecret || !safeEq(adminSecret, expectedSecret)) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { "Content-Type": "application/json", ...corsHeaders },

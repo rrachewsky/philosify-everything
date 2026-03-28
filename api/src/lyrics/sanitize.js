@@ -18,12 +18,18 @@ export function sanitizeLyrics(rawLyrics, maxLength = 10000) {
 
   let cleaned = rawLyrics;
 
+  // Remove script/style content first (before stripping tags)
+  // SECURITY: Use simple patterns to avoid ReDoS with nested quantifiers
+  // This iteratively removes script/style blocks to handle nested cases
+  let prevLen;
+  do {
+    prevLen = cleaned.length;
+    cleaned = cleaned.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+    cleaned = cleaned.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  } while (cleaned.length < prevLen && cleaned.length > 0);
+
   // Remove HTML tags (defense against XSS)
   cleaned = cleaned.replace(/<[^>]*>/g, '');
-
-  // Remove script/style content more aggressively
-  cleaned = cleaned.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-  cleaned = cleaned.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
 
   // Remove potential prompt injection patterns
   // These are common patterns used to manipulate AI responses

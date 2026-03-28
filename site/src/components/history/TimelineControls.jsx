@@ -214,7 +214,8 @@ export function TimelineControls({
           
           {/* Era markers on slider */}
           {ERAS.map(era => {
-            const percent = ((era.year - minYear) / (maxYear - minYear)) * 100;
+            // Use startYear for era marker position
+            const percent = ((era.startYear - minYear) / (maxYear - minYear)) * 100;
             return (
               <div
                 key={era.id}

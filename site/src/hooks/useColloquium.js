@@ -216,9 +216,9 @@ export function useColloquium() {
     try {
       let secret = null;
       if (asAdmin) {
-        secret = sessionStorage.getItem('adminSecret') || window.prompt('Admin secret:');
+        // Security: prompt each time, never persist admin secret in storage
+        secret = window.prompt('Admin secret:');
         if (!secret) return { success: false };
-        sessionStorage.setItem('adminSecret', secret);
       }
 
       await colloquiumService.deleteColloquium(threadId, secret);
@@ -231,9 +231,6 @@ export function useColloquium() {
       return { success: true };
     } catch (err) {
       logger.error('[Colloquium] Delete error:', err.message);
-      if (asAdmin && err.message?.includes('Forbidden')) {
-        sessionStorage.removeItem('adminSecret');
-      }
       setError(err.message);
       return { success: false, error: err.message };
     } finally {
@@ -566,9 +563,9 @@ export function useColloquium() {
   // ─── Admin: trigger verdict ─────────────────────────────────
   const triggerVerdict = useCallback(
     async (threadId) => {
-      const secret = sessionStorage.getItem('adminSecret') || window.prompt('Admin secret:');
+      // Security: prompt each time, never persist admin secret in storage
+      const secret = window.prompt('Admin secret:');
       if (!secret) return { success: false };
-      sessionStorage.setItem('adminSecret', secret);
 
       setActionLoading(true);
       setVerdictLoading(true);
@@ -581,9 +578,6 @@ export function useColloquium() {
         return data;
       } catch (err) {
         logger.error('[Colloquium] Verdict error:', err.message);
-        if (err.status === 403) {
-          sessionStorage.removeItem('adminSecret');
-        }
         setError(err.message);
         return { success: false, error: err.message };
       } finally {

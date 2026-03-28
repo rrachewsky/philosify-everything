@@ -40,6 +40,7 @@ const PaymentCancel = lazy(() => import('./pages/PaymentCancel'));
 const SharedAnalysis = lazy(() => import('./pages/SharedAnalysis'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const Advertise = lazy(() => import('./pages/Advertise'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 
@@ -371,6 +372,7 @@ export function Router() {
           {/* Legal pages */}
           <Route path="/tos" element={<TermsOfService />} />
           <Route path="/pp" element={<PrivacyPolicy />} />
+          <Route path="/advertise" element={<Advertise />} />
 
           {/* Reset password shows app behind the modal overlay */}
           <Route

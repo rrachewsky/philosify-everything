@@ -3494,7 +3494,7 @@ export default {
       if (url.pathname === "/api/history/constellation/cache-clear" && request.method === "POST") {
         const adminSecret = request.headers.get("X-Admin-Secret");
         const expected = await getSecret(env.ADMIN_SECRET);
-        if (!adminSecret || adminSecret !== expected) {
+        if (!adminSecret || !safeEq(adminSecret, expected)) {
           return jsonResponse({ error: "Forbidden" }, 403, origin, env);
         }
         const { handleConstellationCacheClear } = await import("./src/handlers/constellation.js");
@@ -3510,7 +3510,7 @@ export default {
       if (url.pathname === "/api/admin/diagnose-auth" && request.method === "GET") {
         const adminSecret = request.headers.get("X-Admin-Secret");
         const expected = await getSecret(env.ADMIN_SECRET);
-        if (!adminSecret || adminSecret !== expected) {
+        if (!adminSecret || !safeEq(adminSecret, expected)) {
           return jsonResponse({ error: "Forbidden" }, 403, origin, env);
         }
         try {

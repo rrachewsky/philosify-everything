@@ -5,6 +5,11 @@
 import { getSecret } from '../utils/secrets.js';
 import { getCorsHeaders } from '../utils/cors.js';
 
+// Supported TTS language codes for validation
+const SUPPORTED_LANGS = new Set([
+  'en', 'pt', 'es', 'fr', 'de', 'it', 'ru', 'ja', 'ko', 'zh', 'ar', 'he', 'hi', 'hu', 'fa'
+]);
+
 // Voice mapping by language
 const VOICE_BY_LANG = {
   en: 'alloy',
@@ -318,7 +323,10 @@ export async function handleTTS(request, env, origin) {
       return jsonResponse({ error: 'Invalid JSON in request body' }, 400);
     }
 
-    const { result, lang = 'en' } = body || {};
+    const { result, lang: rawLang = 'en' } = body || {};
+    
+    // Validate language code to prevent injection
+    const lang = SUPPORTED_LANGS.has(rawLang) ? rawLang : 'en';
 
     console.log('[TTS] Request received, lang:', lang, 'result keys:', result ? Object.keys(result) : 'null');
     console.log('[TTS] Result type:', typeof result);

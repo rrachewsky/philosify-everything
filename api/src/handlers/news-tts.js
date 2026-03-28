@@ -4,9 +4,14 @@
 // different voices per chunk, adds silence gaps, concatenates.
 // ============================================================
 
-import { jsonResponse, getCorsHeaders } from "../utils/index.js";
+import { jsonResponse, getCorsHeaders, sanitizeErrorMessage } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getSecret } from "../utils/secrets.js";
+
+// Supported TTS language codes for validation
+const SUPPORTED_LANGS = new Set([
+  'en', 'pt', 'es', 'fr', 'de', 'it', 'ru', 'ja', 'ko', 'zh', 'ar', 'he', 'hi', 'hu', 'fa', 'nl', 'pl', 'tr'
+]);
 
 const TTS_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent";
@@ -262,12 +267,15 @@ export async function handleNewsTTS(request, env, origin) {
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) return jsonResponse({ error: "Auth" }, 401, origin, env);
 
-    const { text, title, lang } = await request.json();
+    const { text, title, lang: rawLang } = await request.json();
     if (!text) return jsonResponse({ error: "No text" }, 400, origin, env);
 
+    // Validate language code to prevent injection
+    const lang = SUPPORTED_LANGS.has(rawLang) ? rawLang : 'en';
+
     // Check R2 cache first (deterministic key from text content + lang)
-    const textHash = await hashForCache(`${text}:${lang || "en"}`);
-    const r2Key = `news-tts/${lang || "en"}/${textHash}.wav`;
+    const textHash = await hashForCache(`${text}:${lang}`);
+    const r2Key = `news-tts/${lang}/${textHash}.wav`;
     const cached = await getFromR2(env, r2Key);
     if (cached) {
       return new Response(cached, {
@@ -289,7 +297,7 @@ export async function handleNewsTTS(request, env, origin) {
         .replace(/\bPeikoff\b/g, "Peekoff")
         .replace(/\bAyn\b/g, "Ine")
         .trim(),
-      lang || "en",
+      lang,
     );
 
     console.log(`[NewsTTS] ${clean.length} chars`);
@@ -344,6 +352,12 @@ export async function handleNewsTTS(request, env, origin) {
     });
   } catch (err) {
     console.error("[NewsTTS]", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    // Sanitize error message to prevent leaking internal details
+    return jsonResponse(
+      { error: sanitizeErrorMessage(err.message, "TTS generation failed") },
+      500,
+      origin,
+      env,
+    );
   }
 }

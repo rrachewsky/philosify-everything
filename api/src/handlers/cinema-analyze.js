@@ -4,8 +4,9 @@
 // Uses KV for fast caching + Supabase for history tracking
 // ============================================================
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, sanitizeErrorMessage } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
+import { checkRateLimit } from "../rate-limit/index.js";
 import { getDebateAestheticGuide } from "../guides/index.js";
 import { analyzeFilmPhilosophy } from "../ai/cinema-orchestrator.js";
 import { getFilmDetails } from "../films/search.js";
@@ -28,7 +29,19 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       return jsonResponse({ error: "Authentication required" }, 401, origin, env);
     }
 
-    const body = await request.json();
+    // Rate limit - FAIL CLOSED for expensive AI calls
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const rateLimitOk = await checkRateLimit(env, `cinema-analyze:${user.userId}:${ip}`, true);
+    if (!rateLimitOk) {
+      return jsonResponse({ error: "Too many requests. Please wait." }, 429, origin, env);
+    }
+
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
+    }
     const { title, director, tmdb_id, overview, genres, model = "claude", lang = "en" } = body;
 
     if (!title || title.length < 1 || title.length > 300) {
@@ -60,14 +73,16 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       result.philosophical_note = calculatePhilosophicalNote(finalScore);
       result.cached = true;
 
-      // Log user request for history tracking (even for cache hits)
+      // SECURITY: Check if user has accessed this analysis before
+      // If not, charge 1 credit (first-time view of cached content)
+      let isReview = false;
+      let analysisIdToLog = result.db_analysis_id;
+
       if (userId) {
         try {
           const sbUrl = await getSecret(env.SUPABASE_URL);
           const sbKey = await getSecret(env.SUPABASE_SERVICE_KEY);
           if (sbUrl && sbKey) {
-            let analysisIdToLog = result.db_analysis_id;
-
             // For old KV cache entries without db_analysis_id, check database
             if (!analysisIdToLog) {
               const dbCached = await getCachedFilmAnalysis(env, tmdb_id, title, director, lang, model);
@@ -79,6 +94,28 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
               }
             }
 
+            // Check if this is a re-view (user has accessed before)
+            if (analysisIdToLog) {
+              isReview = await checkUserFilmAccess(env, userId, analysisIdToLog);
+            }
+
+            // SECURITY: First-time view of cached content - charge 1 credit
+            if (!isReview) {
+              const { reserveCredit, confirmReservation, releaseReservation } = await import("../credits/index.js");
+              const reservation = await reserveCredit(env, userId);
+              if (!reservation.success) {
+                return jsonResponse({
+                  error: "Insufficient credits",
+                  needed: 1,
+                  balance: reservation.newTotal || 0,
+                }, 402, origin, env);
+              }
+              // Confirm immediately for cached content
+              await confirmReservation(env, reservation.reservationId, analysisIdToLog);
+              console.log(`[CinemaAnalyze] Charged 1 credit for first-time cached view: ${userId}`);
+            }
+
+            // Log user request for history tracking
             if (analysisIdToLog) {
               await logFilmAnalysisRequest(sbUrl, sbKey, userId, analysisIdToLog, title, director, {
                 lang,
@@ -88,10 +125,11 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
             }
           }
         } catch (err) {
-          console.warn("[CinemaAnalyze] Failed to log cache hit:", err.message);
+          console.warn("[CinemaAnalyze] Failed to process cache hit:", err.message);
         }
       }
 
+      result.isReview = isReview;
       return jsonResponse(result, 200, origin, env);
     }
 
@@ -103,6 +141,21 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
       // Check if this is a re-view
       const isReview = await checkUserFilmAccess(env, userId, analysis.id);
+
+      // SECURITY: First-time view of cached content - charge 1 credit
+      if (!isReview) {
+        const { reserveCredit, confirmReservation } = await import("../credits/index.js");
+        const reservation = await reserveCredit(env, userId);
+        if (!reservation.success) {
+          return jsonResponse({
+            error: "Insufficient credits",
+            needed: 1,
+            balance: reservation.newTotal || 0,
+          }, 402, origin, env);
+        }
+        await confirmReservation(env, reservation.reservationId, analysis.id);
+        console.log(`[CinemaAnalyze] Charged 1 credit for first-time DB cached view: ${userId}`);
+      }
 
       // Recalculate scores
       const scorecardForCalc = {
@@ -385,6 +438,12 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       return jsonResponse({ error: err.message, needed: 1 }, 402, origin, env);
     }
 
-    return jsonResponse({ error: err.message || "Analysis failed" }, 500, origin, env);
+    // Sanitize error message to prevent leaking internal details
+    return jsonResponse(
+      { error: sanitizeErrorMessage(err.message, "Analysis failed") },
+      500,
+      origin,
+      env,
+    );
   }
 }

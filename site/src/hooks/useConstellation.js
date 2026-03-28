@@ -374,6 +374,8 @@ export function useConstellation() {
 
   // Format year for display
   const formatYear = useCallback((year) => {
+    // Guard against NaN/undefined
+    if (year == null || Number.isNaN(year)) return '';
     if (year < 0) return `${Math.abs(Math.round(year))} ${t('constellation.bc')}`;
     return `${Math.round(year)} ${t('constellation.ad')}`;
   }, [t]);

@@ -6,8 +6,9 @@
 // Cost: 3 credits. Output: markdown text (not JSON scorecard).
 // ============================================================
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, sanitizeErrorMessage } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
+import { checkRateLimit } from "../rate-limit/index.js";
 import { getDebateAestheticGuide } from "../guides/index.js";
 import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
 import { buildPhilosopherPanelPrompt } from "../ai/prompts/philosopher-panel-template.js";
@@ -39,7 +40,12 @@ export async function handlePhilosopherPanel(
   ctx = null,
 ) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
+    }
     const {
       mediaType,
       title,
@@ -57,6 +63,13 @@ export async function handlePhilosopherPanel(
       return jsonResponse({ error: "Authentication required" }, 401, origin, env);
     }
     const userId = user.userId;
+
+    // ── Rate limit - FAIL CLOSED for expensive AI calls ──
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const rateLimitOk = await checkRateLimit(env, `philosopher-panel:${userId}:${ip}`, true);
+    if (!rateLimitOk) {
+      return jsonResponse({ error: "Too many requests. Please wait." }, 429, origin, env);
+    }
 
     // ── Validate inputs ──
     if (!title) {
@@ -301,8 +314,9 @@ export async function handlePhilosopherPanel(
           console.error(`[PhilosopherPanel] Release on failure failed: ${releaseErr.message}`);
         }
       }
+      // Sanitize error message to prevent leaking internal details
       return jsonResponse(
-        { error: `Panel analysis failed: ${err.message}` },
+        { error: sanitizeErrorMessage(err.message, "Panel analysis failed") },
         500,
         origin,
         env,
@@ -310,6 +324,12 @@ export async function handlePhilosopherPanel(
     }
   } catch (err) {
     console.error(`[PhilosopherPanel] Request error: ${err.message}`);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    // Sanitize error message to prevent leaking internal details
+    return jsonResponse(
+      { error: sanitizeErrorMessage(err.message, "Request failed") },
+      500,
+      origin,
+      env,
+    );
   }
 }

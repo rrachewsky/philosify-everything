@@ -6,8 +6,9 @@
 // No scorecard, no classification, no philosophical note.
 // ============================================================
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, sanitizeErrorMessage } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
+import { checkRateLimit } from "../rate-limit/index.js";
 import { getGuide, getWrapupSource } from "../guides/index.js";
 import { analyzeNewsPhilosophy } from "../ai/news-orchestrator.js";
 import { getSecret } from "../utils/secrets.js";
@@ -28,7 +29,19 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
       return jsonResponse({ error: "Authentication required" }, 401, origin, env);
     }
 
-    const body = await request.json();
+    // Rate limit - FAIL CLOSED for expensive AI calls
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const rateLimitOk = await checkRateLimit(env, `news-analyze:${user.userId}:${ip}`, true);
+    if (!rateLimitOk) {
+      return jsonResponse({ error: "Too many requests. Please wait." }, 429, origin, env);
+    }
+
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
+    }
     const { title, source, description, topic, publishedAt, model = "grok", lang = "en" } = body;
 
     if (!title || title.length < 1 || title.length > 500) {
@@ -45,12 +58,44 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
       const result = JSON.parse(cached);
       result.cached = true;
 
-      // Log user request for history (even on cache hit)
+      // SECURITY: Check if user has accessed this analysis before
+      // If not, charge 1 credit (first-time view of cached content)
       if (result.id && user.userId) {
         try {
           const sbUrl = await getSecret(env.SUPABASE_URL);
           const sbKey = await getSecret(env.SUPABASE_SERVICE_KEY);
           if (sbUrl && sbKey) {
+            // Check if this is a re-view (user has accessed before)
+            const checkRes = await fetch(
+              `${sbUrl}/rest/v1/user_analysis_requests?user_id=eq.${user.userId}&analysis_id=eq.${result.id}&select=id&limit=1`,
+              {
+                headers: {
+                  apikey: sbKey,
+                  Authorization: `Bearer ${sbKey}`,
+                },
+              }
+            );
+            const existingAccess = checkRes.ok ? await checkRes.json() : [];
+            const isReview = existingAccess && existingAccess.length > 0;
+
+            // First-time view - charge 1 credit
+            if (!isReview) {
+              const { reserveCredit, confirmReservation } = await import("../credits/index.js");
+              const reservation = await reserveCredit(env, user.userId);
+              if (!reservation.success) {
+                return jsonResponse({
+                  error: "Insufficient credits",
+                  needed: 1,
+                  balance: reservation.newTotal || 0,
+                }, 402, origin, env);
+              }
+              await confirmReservation(env, reservation.reservationId, result.id);
+              console.log(`[NewsAnalyze] Charged 1 credit for first-time cached view: ${user.userId}`);
+            }
+
+            result.isReview = isReview;
+
+            // Log user request for history
             await logUserAnalysisRequest(sbUrl, sbKey, user.userId, result.id, {
               lang: body.lang || "en",
               model: body.model || "grok",
@@ -59,7 +104,7 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
             });
           }
         } catch (logErr) {
-          console.warn(`[NewsAnalyze] Cache hit log failed (non-fatal): ${logErr.message}`);
+          console.warn(`[NewsAnalyze] Cache hit processing failed (non-fatal): ${logErr.message}`);
         }
       }
 
@@ -345,6 +390,12 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
       return jsonResponse({ error: err.message, needed: 1 }, 402, origin, env);
     }
 
-    return jsonResponse({ error: err.message || "Analysis failed" }, 500, origin, env);
+    // Sanitize error message to prevent leaking internal details
+    return jsonResponse(
+      { error: sanitizeErrorMessage(err.message, "Analysis failed") },
+      500,
+      origin,
+      env,
+    );
   }
 }

@@ -1851,66 +1851,82 @@ async function generateChunkTTS(
   systemInstruction,
 ) {
   const startTime = Date.now();
+  // Retry with exponential backoff: 1s, 2s, 4s delays (max 3 attempts)
+  const MAX_RETRIES = 3;
+  const RETRY_DELAYS = [1000, 2000, 4000];
 
-  try {
-    const requestBody = {
-      contents: [{ parts: [{ text: script }] }],
-      generationConfig: {
-        responseModalities: ["AUDIO"],
-        speechConfig: {
-          multiSpeakerVoiceConfig: {
-            speakerVoiceConfigs: voiceConfigs,
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const requestBody = {
+        contents: [{ parts: [{ text: script }] }],
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            multiSpeakerVoiceConfig: {
+              speakerVoiceConfigs: voiceConfigs,
+            },
           },
         },
-      },
-    };
-
-    // Add system instruction if provided (enforces voice role adherence)
-    if (systemInstruction) {
-      requestBody.systemInstruction = {
-        parts: [{ text: systemInstruction }],
       };
+
+      // Add system instruction if provided (enforces voice role adherence)
+      if (systemInstruction) {
+        requestBody.systemInstruction = {
+          parts: [{ text: systemInstruction }],
+        };
+      }
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        },
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[TTS] ${chunkName} error (attempt ${attempt}):`, response.status, errorText);
+        // Retry on 5xx errors or rate limiting (429)
+        if ((response.status >= 500 || response.status === 429) && attempt < MAX_RETRIES) {
+          console.log(`[TTS] Retrying ${chunkName} in ${RETRY_DELAYS[attempt - 1]}ms...`);
+          await new Promise((r) => setTimeout(r, RETRY_DELAYS[attempt - 1]));
+          continue;
+        }
+        throw new Error(`TTS ${chunkName} failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const b64Audio =
+        data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+
+      if (!b64Audio) {
+        throw new Error(`No audio data in ${chunkName} response`);
+      }
+
+      // Decode base64 to bytes
+      const binaryString = atob(b64Audio);
+      const audioBytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        audioBytes[i] = binaryString.charCodeAt(i);
+      }
+
+      const elapsed = Date.now() - startTime;
+      console.log(
+        `[TTS] ✓ ${chunkName}: ${audioBytes.length} bytes in ${elapsed}ms${attempt > 1 ? ` (attempt ${attempt})` : ''}`,
+      );
+
+      return audioBytes.buffer;
+    } catch (error) {
+      console.error(`[TTS] ${chunkName} generation error (attempt ${attempt}):`, error.message);
+      if (attempt < MAX_RETRIES) {
+        console.log(`[TTS] Retrying ${chunkName} in ${RETRY_DELAYS[attempt - 1]}ms...`);
+        await new Promise((r) => setTimeout(r, RETRY_DELAYS[attempt - 1]));
+        continue;
+      }
+      throw error;
     }
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody),
-      },
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[TTS] ${chunkName} error:`, response.status, errorText);
-      throw new Error(`TTS ${chunkName} failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const b64Audio =
-      data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-
-    if (!b64Audio) {
-      throw new Error(`No audio data in ${chunkName} response`);
-    }
-
-    // Decode base64 to bytes
-    const binaryString = atob(b64Audio);
-    const audioBytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      audioBytes[i] = binaryString.charCodeAt(i);
-    }
-
-    const elapsed = Date.now() - startTime;
-    console.log(
-      `[TTS] ✓ ${chunkName}: ${audioBytes.length} bytes in ${elapsed}ms`,
-    );
-
-    return audioBytes.buffer;
-  } catch (error) {
-    console.error(`[TTS] ${chunkName} generation error:`, error.message);
-    throw error;
   }
 }
 

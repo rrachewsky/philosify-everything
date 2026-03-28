@@ -230,16 +230,18 @@ async function handlePushEvent() {
     //    No auth cookie needed: endpoint proves device identity
     let notifications = await fetchPendingNotifications(endpoint);
 
-    // Retry once with backoff if no notifications (race condition: DB write may not have committed yet)
-    if (notifications.length === 0) {
-      log('[SW] No notifications yet, retrying in 500ms...');
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    // Retry with exponential backoff if no notifications (race condition: DB write may not have committed yet)
+    // Delays: 500ms, 1000ms, 2000ms (total ~3.5s max wait)
+    const RETRY_DELAYS = [500, 1000, 2000];
+    for (let i = 0; notifications.length === 0 && i < RETRY_DELAYS.length; i++) {
+      log(`[SW] No notifications yet, retrying in ${RETRY_DELAYS[i]}ms (attempt ${i + 2})...`);
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS[i]));
       notifications = await fetchPendingNotifications(endpoint);
     }
 
     // If still nothing, show a minimal notification (push must always show something)
     if (notifications.length === 0) {
-      log('[SW] No notifications after retry, showing minimal');
+      log('[SW] No notifications after retries, showing minimal');
       return self.registration.showNotification('Philosify', {
         body: 'You have new activity',
         icon: iconUrl,
