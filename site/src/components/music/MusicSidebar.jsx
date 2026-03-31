@@ -11,6 +11,7 @@ import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { ShareButton } from '../sharing/ShareButton';
 import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
+import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 import TopTenTicker from '../TopTenTicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
@@ -404,26 +405,46 @@ export function MusicSidebar({
                 </button>
               ) : null}
               {isAnalyzing && (
-                <div className="music-timer">
-                  <div className="music-timer__bar">
-                    <div className="music-timer__fill"></div>
+                <>
+                  <div className="music-timer">
+                    <div className="music-timer__bar">
+                      <div className="music-timer__fill"></div>
+                    </div>
+                    <div className="music-timer__time">
+                      <span>&#9201;</span> {formatTime(elapsedTime)}
+                    </div>
+                    <div className="music-timer__label">{t('landing.analyzingContent')}</div>
                   </div>
-                  <div className="music-timer__time">
-                    <span>&#9201;</span> {formatTime(elapsedTime)}
-                  </div>
-                  <div className="music-timer__label">{t('landing.analyzingContent')}</div>
-                </div>
+                  <InlineAdSlot
+                    key={`music-analysis-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`music-analysis-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    className="analysis-ad-slot"
+                  />
+                </>
               )}
               {panelLoading && (
-                <div className="music-timer">
-                  <div className="music-timer__bar">
-                    <div className="music-timer__fill"></div>
+                <>
+                  <div className="music-timer">
+                    <div className="music-timer__bar">
+                      <div className="music-timer__fill"></div>
+                    </div>
+                    <div className="music-timer__time">
+                      <span>&#9201;</span> {formatTime(panelElapsed)}
+                    </div>
+                    <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
                   </div>
-                  <div className="music-timer__time">
-                    <span>&#9201;</span> {formatTime(panelElapsed)}
-                  </div>
-                  <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
-                </div>
+                  <InlineAdSlot
+                    key={`music-panel-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`music-panel-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    className="analysis-ad-slot"
+                  />
+                </>
               )}
               {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
             </div>

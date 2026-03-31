@@ -26,7 +26,8 @@ DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
 
 # Localhost origins for local dev
 VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
-ALLOWED_ORIGINS = "https://philosify.org https://www.philosify.org http://localhost:8787 http://localhost:3000 http://localhost:3001 http://localhost:3002 http://localhost:3003 http://localhost:5173"
+ALLOWED_ORIGINS = "https://philosify.org https://www.philosify.org https://ads.philosify.org http://localhost:8787 http://127.0.0.1:8787 http://localhost:3000 http://127.0.0.1:3000 http://localhost:3001 http://127.0.0.1:3001 http://localhost:3002 http://127.0.0.1:3002 http://localhost:3003 http://127.0.0.1:3003 http://localhost:5173 http://127.0.0.1:5173 http://localhost:5174 http://127.0.0.1:5174"
+ADS_FRONTEND_URL = "http://127.0.0.1:5174"
 CHECKOUT_SUCCESS_URL = "http://localhost:3000/payment/success"
 CHECKOUT_CANCEL_URL = "http://localhost:3000/payment/cancel"
 R2_PUBLIC_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"
@@ -82,10 +83,11 @@ GEMINI_MODEL = "gemini-2.0-flash"  # Gemini 2.0 Flash
 GROK_MODEL = "grok-4-1-fast-reasoning"  # Grok 4.1 Fast (95% cheaper than Grok 3)
 DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
 VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
-ALLOWED_ORIGINS = "https://philosify.org https://www.philosify.org"
+ALLOWED_ORIGINS = "https://philosify.org https://www.philosify.org https://ads.philosify.org https://philosify-ads.pages.dev"
 CHECKOUT_SUCCESS_URL = "https://philosify.org/payment/success"
 CHECKOUT_CANCEL_URL = "https://philosify.org/payment/cancel"
 R2_PUBLIC_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"
+ADS_FRONTEND_URL = "https://ads.philosify.org"
 
 # KV Namespaces (must be explicitly defined per environment)
 [[env.production.kv_namespaces]]
@@ -245,3 +247,9 @@ secret_name = "NEWSAPI_AI_KEY"
 binding = "TMDB_API_KEY"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "TMDB_API_KEY"
+
+# STRIPE_ADS_WEBHOOK_SECRET - Webhook verification for ads billing
+[[env.production.secrets_store_secrets]]
+binding = "STRIPE_ADS_WEBHOOK_SECRET"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "STRIPE_ADS_WEBHOOK_SECRET"

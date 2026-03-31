@@ -6,6 +6,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useConstellation, BATTLE_COLORS, ERAS } from '@hooks/useConstellation';
+import { useAuth } from '../../hooks/useAuth.js';
 import { ConstellationScene } from './ConstellationScene.jsx';
 import { TimelineControls } from './TimelineControls.jsx';
 import { ConstellationInfoPanel } from './ConstellationInfoPanel.jsx';
@@ -38,6 +39,7 @@ function ErrorState({ error, onRetry, t }) {
 
 export function ConstellationOfIdeas() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const sceneRef = useRef(null);
   const [showSearch, setShowSearch] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -261,6 +263,7 @@ export function ConstellationOfIdeas() {
           onNodeSelect={handleNodeSelect}
           formatYear={formatYear}
           isMobile={isMobile}
+          userId={user?.id}
         />
       )}
 

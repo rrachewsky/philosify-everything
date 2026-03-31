@@ -72,6 +72,7 @@ export function getCorsHeaders(origin, env = {}) {
     "philosify-everything-frontend-preview.pages.dev",
     "philosify-frontend.pages.dev",
     "philosify-frontend-preview.pages.dev",
+    "philosify-ads.pages.dev",
   ];
   const isAllowedPreview =
     safeOrigin &&

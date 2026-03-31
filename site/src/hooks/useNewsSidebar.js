@@ -5,6 +5,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { logger } from '../utils';
 import { config } from '@/config';
+import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 import { fetchNewsHeadlines } from '../services/api/newsApi.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 
@@ -25,6 +26,7 @@ export function useNewsSidebar() {
   const [panelError, setPanelError] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef(null);
+  const activeAnalysisRunRef = useRef(0);
 
   // Fetch headlines when sidebar opens
   const loadHeadlines = useCallback(async () => {
@@ -50,6 +52,7 @@ export function useNewsSidebar() {
   }, [loadHeadlines]);
 
   const close = useCallback(() => {
+    activeAnalysisRunRef.current += 1;
     setIsOpen(false);
     setSelectedArticle(null);
     setAnalysisResult(null);
@@ -73,6 +76,7 @@ export function useNewsSidebar() {
   }, []);
 
   const clearArticle = useCallback(() => {
+    activeAnalysisRunRef.current += 1;
     setSelectedArticle(null);
     setAnalysisResult(null);
     setAnalysisError(null);
@@ -97,6 +101,8 @@ export function useNewsSidebar() {
   const analyzeArticle = useCallback(
     async (lang = 'en', model = 'grok') => {
       if (!selectedArticle) return;
+      const runId = activeAnalysisRunRef.current + 1;
+      activeAnalysisRunRef.current = runId;
 
       setIsAnalyzing(true);
       setAnalysisError(null);
@@ -134,16 +140,26 @@ export function useNewsSidebar() {
           throw new Error(data.error || `Analysis failed: ${response.status}`);
         }
 
+        await waitForMinimumAnalysisWindow(startTime);
+
+        if (activeAnalysisRunRef.current !== runId) {
+          return;
+        }
+
         setAnalysisResult(data);
         window.dispatchEvent(new CustomEvent('credits-changed'));
       } catch (err) {
-        setAnalysisError(err.message || 'Analysis failed');
+        if (activeAnalysisRunRef.current === runId) {
+          setAnalysisError(err.message || 'Analysis failed');
+        }
         throw err;
       } finally {
-        setIsAnalyzing(false);
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-          timerRef.current = null;
+        if (activeAnalysisRunRef.current === runId) {
+          setIsAnalyzing(false);
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
         }
       }
     },

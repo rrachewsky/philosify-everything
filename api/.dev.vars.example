@@ -93,7 +93,17 @@ GENIUS_ACCESS_TOKEN=your-genius-access-token-here
 ADMIN_SECRET=your-admin-secret-minimum-32-chars-here
 
 # ============================================================
+# ADS PLATFORM - Advertiser Authentication & Billing
+# ============================================================
+# JWT secret for advertiser tokens (generate: openssl rand -hex 32)
+ADS_JWT_SECRET=your-ads-jwt-secret-minimum-32-chars-here
+
+# Stripe webhook secret for ads billing (separate from main webhook)
+# Create a new webhook in Stripe Dashboard for /api/ads/billing/webhook
+STRIPE_ADS_WEBHOOK_SECRET=whsec_your-ads-webhook-secret-here
+
+# ============================================================
 # CORS - Allowed Origins (Development)
 # ============================================================
 # Add any additional localhost ports you use for development
-ALLOWED_ORIGINS=http://localhost:3000 http://localhost:3001 http://localhost:5173 http://localhost:8787 https://philosify.org https://www.philosify.org
+ALLOWED_ORIGINS=http://localhost:3000 http://localhost:3001 http://localhost:5173 http://localhost:5174 http://localhost:8787 https://philosify.org https://www.philosify.org https://ads.philosify.org

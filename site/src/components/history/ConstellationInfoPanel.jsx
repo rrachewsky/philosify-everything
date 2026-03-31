@@ -5,6 +5,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { BATTLE_COLORS, TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
+import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 
 // Battle dimension keys for translation lookup
 // Format: [positiveKey, negativeKey, descriptionKey]
@@ -179,9 +180,13 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
         <div style={styles.section}>
           <div style={styles.sectionLabel}>{t('constellation.keyIdeas')}</div>
           <ul style={styles.ideasList}>
-            {node.key_ideas.map((idea, i) => (
-              <li key={i} style={styles.ideaItem}>{idea}</li>
-            ))}
+            {node.key_ideas.map((idea, i) => {
+              // Try to get translated description, fall back to original English
+              const translatedIdea = t(`constellation.descriptions.${node.id}`, { defaultValue: '' });
+              return (
+                <li key={i} style={styles.ideaItem}>{translatedIdea || idea}</li>
+              );
+            })}
           </ul>
         </div>
       )}
@@ -373,6 +378,7 @@ export function ConstellationInfoPanel({
   onNodeSelect,
   formatYear,
   isMobile = false,
+  userId,
 }) {
   const { t } = useTranslation();
   
@@ -418,6 +424,19 @@ export function ConstellationInfoPanel({
           formatYear={formatYear}
           t={t}
         />
+      )}
+
+      {selectedNode && (
+        <div style={styles.footerAd}>
+          <InlineAdSlot
+            key={`constellation-panel-${selectedNode.id}`}
+            userId={userId}
+            placement="constellation"
+            layout="banner"
+            refreshKey={`constellation-panel-${selectedNode.id}`}
+            className="constellation-panel-ad"
+          />
+        </div>
       )}
     </div>
   );
@@ -514,6 +533,10 @@ const styles = {
     overflowY: 'auto',
     flex: 1,
     WebkitOverflowScrolling: 'touch',
+  },
+
+  footerAd: {
+    flexShrink: 0,
   },
 
   header: {

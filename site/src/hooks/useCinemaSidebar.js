@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useFilmSearch } from './useFilmSearch.js';
 import { useAuth } from './useAuth.js';
 import { config } from '@/config';
+import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 import { getPendingAction, clearPendingAction } from '../utils/pendingAction.js';
 
@@ -32,6 +33,7 @@ export function useCinemaSidebar() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef(null);
   const abortRef = useRef(null);
+  const activeAnalysisRunRef = useRef(0);
 
   const startTimer = useCallback(() => {
     setElapsedTime(0);
@@ -70,6 +72,7 @@ export function useCinemaSidebar() {
 
   // Close sidebar
   const close = useCallback(() => {
+    activeAnalysisRunRef.current += 1;
     if (abortRef.current) abortRef.current.abort();
     stopTimer();
     setIsOpen(false);
@@ -88,6 +91,7 @@ export function useCinemaSidebar() {
 
   // Clear selection
   const clearFilm = useCallback(() => {
+    activeAnalysisRunRef.current += 1;
     setSelectedFilm(null);
     setAnalysisResult(null);
     setAnalysisError(null);
@@ -126,6 +130,9 @@ export function useCinemaSidebar() {
   const analyze = useCallback(
     async (lang, model = 'grok') => {
       if (!selectedFilm) return;
+      const runId = activeAnalysisRunRef.current + 1;
+      activeAnalysisRunRef.current = runId;
+      const startedAt = Date.now();
 
       setIsAnalyzing(true);
       setAnalysisError(null);
@@ -166,15 +173,24 @@ export function useCinemaSidebar() {
         }
 
         if (controller.signal.aborted) return;
+
+        await waitForMinimumAnalysisWindow(startedAt);
+
+        if (controller.signal.aborted || activeAnalysisRunRef.current !== runId) {
+          return;
+        }
+
         setAnalysisResult(data);
       } catch (err) {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && activeAnalysisRunRef.current === runId) {
           setAnalysisError(err.message || 'Analysis failed');
           if (err.code === 'INSUFFICIENT_CREDITS') throw err;
         }
       } finally {
-        stopTimer();
-        setIsAnalyzing(false);
+        if (activeAnalysisRunRef.current === runId) {
+          stopTimer();
+          setIsAnalyzing(false);
+        }
       }
     },
     [selectedFilm, startTimer, stopTimer, i18n],

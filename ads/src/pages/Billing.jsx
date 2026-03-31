@@ -1,0 +1,227 @@
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useAuth } from '@contexts/AuthContext';
+import { api } from '@services/api';
+
+const FUNDING_OPTIONS = [
+  { amount: 50, label: '$50' },
+  { amount: 100, label: '$100' },
+  { amount: 250, label: '$250' },
+  { amount: 500, label: '$500' },
+  { amount: 1000, label: '$1,000' },
+];
+
+function Billing() {
+  const { advertiser } = useAuth();
+  const [searchParams] = useSearchParams();
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedAmount, setSelectedAmount] = useState(100);
+  const [customAmount, setCustomAmount] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    loadBillingData();
+  }, []);
+
+  const loadBillingData = async () => {
+    try {
+      const [balanceData, transactionsData] = await Promise.all([
+        api.get('/ads/billing/balance'),
+        api.get('/ads/billing/transactions'),
+      ]);
+      setBalance(balanceData.balance_cents || 0);
+      setTransactions(transactionsData.transactions || []);
+    } catch (err) {
+      console.error('Failed to load billing data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddFunds = async () => {
+    const amount = customAmount ? parseFloat(customAmount) : selectedAmount;
+    
+    if (!amount || amount < 10) {
+      setError('Minimum amount is $10');
+      return;
+    }
+    if (amount > 10000) {
+      setError('Maximum amount is $10,000');
+      return;
+    }
+
+    setError('');
+    setProcessing(true);
+
+    try {
+      // Create Stripe checkout session
+      const { checkout_url } = await api.post('/ads/billing/checkout', {
+        amount_cents: Math.round(amount * 100),
+      });
+
+      // Redirect to Stripe
+      window.location.href = checkout_url;
+    } catch (err) {
+      setError(err.message || 'Failed to process payment');
+      setProcessing(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const getTransactionTypeLabel = (type) => {
+    switch (type) {
+      case 'deposit':
+        return 'Funds Added';
+      case 'campaign_spend':
+        return 'Campaign Spend';
+      case 'refund':
+        return 'Refund';
+      default:
+        return type;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="status-shell">
+        <div className="spinner" />
+        <p>Loading billing...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page-stack">
+      <section className="section-heading">
+        <div>
+          <p className="eyebrow">Billing atelier</p>
+          <h2>Funding and transaction history</h2>
+        </div>
+      </section>
+
+      {searchParams.get('success') ? (
+        <div className="alert alert--success">Funding completed successfully.</div>
+      ) : null}
+      {searchParams.get('canceled') ? (
+        <div className="alert alert--warning">The Stripe checkout was cancelled.</div>
+      ) : null}
+      {error ? <div className="alert alert--error">{error}</div> : null}
+
+      <div className="editorial-grid editorial-grid--billing">
+        <section className="surface-card stack">
+          <div className="stat-panel stat-panel--hero">
+            <span className="stat-panel__label">Available balance</span>
+            <strong className="stat-panel__value">${(balance / 100).toFixed(2)}</strong>
+          </div>
+
+          <div className="choice-row choice-row--wrap">
+            {FUNDING_OPTIONS.map((option) => (
+              <button
+                key={option.amount}
+                type="button"
+                className={`choice-pill ${selectedAmount === option.amount && !customAmount ? 'choice-pill--active' : ''}`}
+                onClick={() => {
+                  setSelectedAmount(option.amount);
+                  setCustomAmount('');
+                }}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="field">
+            <label htmlFor="custom-amount">Custom amount in USD</label>
+            <input
+              id="custom-amount"
+              type="number"
+              min="10"
+              max="10000"
+              step="1"
+              value={customAmount}
+              onChange={(event) => {
+                setCustomAmount(event.target.value);
+                setSelectedAmount(0);
+              }}
+              placeholder="250"
+            />
+          </div>
+
+          <button type="button" className="btn btn--primary btn--large" onClick={handleAddFunds} disabled={processing}>
+            {processing ? 'Preparing Stripe checkout...' : `Add $${customAmount || selectedAmount}`}
+          </button>
+
+          <p className="helper-text">
+            Payments are processed by Stripe. We do not store card details.
+          </p>
+        </section>
+
+        <section className="surface-card stack">
+          <div>
+            <p className="eyebrow">Billing identity</p>
+            <h3>Account details</h3>
+          </div>
+          <div className="detail-list">
+            <div><span>Email</span><strong>{advertiser?.email}</strong></div>
+            <div><span>Company</span><strong>{advertiser?.company_name || 'Not set'}</strong></div>
+          </div>
+
+          <div>
+            <p className="eyebrow">FAQ</p>
+            <ul className="bullet-list">
+              <li>Funds are consumed as campaign delivery occurs.</li>
+              <li>If balance hits zero, new launches wait until funding returns.</li>
+              <li>Deposits are non-refundable unless required by support intervention.</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <section className="surface-card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Transactions</p>
+            <h3>Recent movement</h3>
+          </div>
+        </div>
+
+        {transactions.length === 0 ? (
+          <div className="empty-state">
+            <h4>No transactions yet</h4>
+            <p>Once you add funds or launch spend, the ledger will appear here.</p>
+          </div>
+        ) : (
+          <div className="collection-list">
+            {transactions.map((tx) => (
+              <div key={tx.id} className="collection-row collection-row--stacked">
+                <div className="collection-row__main">
+                  <strong>{getTransactionTypeLabel(tx.type)}</strong>
+                  <p>{formatDate(tx.created_at)} · {tx.description || 'Ledger entry'}</p>
+                </div>
+                <div className="collection-row__meta">
+                  <span className={tx.amount_cents >= 0 ? 'amount-positive' : 'amount-negative'}>
+                    {tx.amount_cents >= 0 ? '+' : ''}${(tx.amount_cents / 100).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+export default Billing;

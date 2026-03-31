@@ -12,6 +12,7 @@ import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { ShareButton } from '../sharing/ShareButton';
 import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
+import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import { config } from '@/config';
@@ -589,26 +590,46 @@ export function LiteratureSidebar({
                 </button>
               ) : null}
               {isAnalyzing && (
-                <div className="music-timer">
-                  <div className="music-timer__bar">
-                    <div className="music-timer__fill"></div>
+                <>
+                  <div className="music-timer">
+                    <div className="music-timer__bar">
+                      <div className="music-timer__fill"></div>
+                    </div>
+                    <div className="music-timer__time">
+                      <span>&#9201;</span> {formatTime(elapsedTime)}
+                    </div>
+                    <div className="music-timer__label">{t('landing.analyzingContent')}</div>
                   </div>
-                  <div className="music-timer__time">
-                    <span>&#9201;</span> {formatTime(elapsedTime)}
-                  </div>
-                  <div className="music-timer__label">{t('landing.analyzingContent')}</div>
-                </div>
+                  <InlineAdSlot
+                    key={`literature-analysis-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`literature-analysis-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    className="analysis-ad-slot"
+                  />
+                </>
               )}
               {panelLoading && (
-                <div className="music-timer">
-                  <div className="music-timer__bar">
-                    <div className="music-timer__fill"></div>
+                <>
+                  <div className="music-timer">
+                    <div className="music-timer__bar">
+                      <div className="music-timer__fill"></div>
+                    </div>
+                    <div className="music-timer__time">
+                      <span>&#9201;</span> {formatTime(panelElapsed)}
+                    </div>
+                    <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
                   </div>
-                  <div className="music-timer__time">
-                    <span>&#9201;</span> {formatTime(panelElapsed)}
-                  </div>
-                  <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
-                </div>
+                  <InlineAdSlot
+                    key={`literature-panel-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`literature-panel-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    className="analysis-ad-slot"
+                  />
+                </>
               )}
               {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
             </div>

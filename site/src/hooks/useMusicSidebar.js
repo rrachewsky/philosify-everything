@@ -9,6 +9,7 @@ import { useSpotifySearch, useAuth } from '@/hooks';
 import { useCreditsContext } from '@/contexts';
 import { config } from '@/config';
 import { getPendingAction, clearPendingAction } from '@/utils/pendingAction.js';
+import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 import { logger } from '@/utils';
 
 /**
@@ -31,6 +32,7 @@ export function useMusicSidebar() {
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
   const lastAnalysisParamsRef = useRef(null);
+  const activeAnalysisRunRef = useRef(0);
 
   // Open the sidebar (resets state to fresh)
   const open = useCallback(() => {
@@ -47,6 +49,7 @@ export function useMusicSidebar() {
   // Close the sidebar
   const close = useCallback(() => {
     logger.log('[MusicSidebar] close() called');
+    activeAnalysisRunRef.current += 1;
     // Cancel any ongoing analysis
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -159,6 +162,9 @@ export function useMusicSidebar() {
   const analyze = useCallback(
     async (lang = 'en', model = 'grok', track = null) => {
       const trackToUse = track || selectedTrack;
+      const runId = activeAnalysisRunRef.current + 1;
+      activeAnalysisRunRef.current = runId;
+      const startedAt = Date.now();
       
       if (!trackToUse || !user) {
         return { success: false, error: 'No track or user' };
@@ -212,6 +218,12 @@ export function useMusicSidebar() {
             throw new Error(data.error || 'Analysis failed');
           }
 
+          await waitForMinimumAnalysisWindow(startedAt);
+
+          if (activeAnalysisRunRef.current !== runId || abortControllerRef.current?.signal?.aborted) {
+            return { success: false, error: 'cancelled' };
+          }
+
           setAnalysisResult(data);
 
           // Update balance from response
@@ -236,9 +248,11 @@ export function useMusicSidebar() {
         setAnalysisError(error.message);
         return { success: false, error: error.message };
       } finally {
-        setIsAnalyzing(false);
-        stopTimer();
-        abortControllerRef.current = null;
+        if (activeAnalysisRunRef.current === runId) {
+          setIsAnalyzing(false);
+          stopTimer();
+          abortControllerRef.current = null;
+        }
       }
     },
     [selectedTrack, user, balance, setBalance, startTimer, stopTimer]
@@ -246,6 +260,7 @@ export function useMusicSidebar() {
 
   // Cancel ongoing analysis
   const cancelAnalysis = useCallback(() => {
+    activeAnalysisRunRef.current += 1;
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;

@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks';
 import { useCreditsContext } from '@/contexts';
 import { config } from '@/config';
 import { getPendingAction, clearPendingAction } from '@/utils/pendingAction.js';
+import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 import { logger } from '@/utils';
 
 /**
@@ -33,6 +34,7 @@ export function useLiteratureSidebar() {
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
   const lastAnalysisParamsRef = useRef(null);
+  const activeAnalysisRunRef = useRef(0);
 
   // Open the sidebar (resets state to fresh)
   const open = useCallback(() => {
@@ -48,6 +50,7 @@ export function useLiteratureSidebar() {
   // Close the sidebar
   const close = useCallback(() => {
     logger.log('[LiteratureSidebar] close() called');
+    activeAnalysisRunRef.current += 1;
     // Cancel any ongoing analysis
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -158,6 +161,10 @@ export function useLiteratureSidebar() {
   // Run analysis
   const analyze = useCallback(
     async (lang = 'en', model = 'grok') => {
+      const runId = activeAnalysisRunRef.current + 1;
+      activeAnalysisRunRef.current = runId;
+      const startedAt = Date.now();
+
       if (!selectedBook || !user) return { success: false, error: 'No book or user' };
 
       // Check credits
@@ -213,6 +220,12 @@ export function useLiteratureSidebar() {
             throw new Error(data.error || 'Analysis failed');
           }
 
+          await waitForMinimumAnalysisWindow(startedAt);
+
+          if (activeAnalysisRunRef.current !== runId || abortControllerRef.current?.signal?.aborted) {
+            return { success: false, error: 'cancelled' };
+          }
+
           setAnalysisResult(data);
 
           // Update balance from response
@@ -237,9 +250,11 @@ export function useLiteratureSidebar() {
         setAnalysisError(error.message);
         return { success: false, error: error.message };
       } finally {
-        setIsAnalyzing(false);
-        stopTimer();
-        abortControllerRef.current = null;
+        if (activeAnalysisRunRef.current === runId) {
+          setIsAnalyzing(false);
+          stopTimer();
+          abortControllerRef.current = null;
+        }
       }
     },
     [selectedBook, user, balance, setBalance, startTimer, stopTimer]
@@ -247,6 +262,7 @@ export function useLiteratureSidebar() {
 
   // Cancel ongoing analysis
   const cancelAnalysis = useCallback(() => {
+    activeAnalysisRunRef.current += 1;
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;

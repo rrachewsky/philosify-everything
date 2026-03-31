@@ -7,16 +7,67 @@
 
 import { getSecret } from "./secrets.js";
 
+function parseQualifiedName(name) {
+  if (!name.includes(".")) {
+    return { schema: null, localName: name };
+  }
+
+  const [schema, ...rest] = name.split(".");
+  return {
+    schema,
+    localName: rest.join("."),
+  };
+}
+
+function buildHeaders(key, schema, includeReturnRepresentation = true) {
+  const headers = {
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    "Content-Type": "application/json",
+  };
+
+  if (includeReturnRepresentation) {
+    headers.Prefer = "return=representation";
+  }
+
+  if (schema && schema !== "public") {
+    headers["Accept-Profile"] = schema;
+    headers["Content-Profile"] = schema;
+  }
+
+  return headers;
+}
+
+async function parseResponseBody(response) {
+  const text = await response.text();
+
+  if (!text) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
 /**
  * Get Supabase credentials (resolved fresh each call)
  * @param {object} env - Worker environment
  * @returns {Promise<{url: string, key: string}>}
  */
 export async function getSupabaseCredentials(env) {
-  return {
-    url: await getSecret(env.SUPABASE_URL),
-    key: await getSecret(env.SUPABASE_SERVICE_KEY),
-  };
+  const url = await getSecret(env.SUPABASE_URL);
+  const key = await getSecret(env.SUPABASE_SERVICE_KEY);
+
+  if (!url || !key) {
+    throw new Error(
+      "Supabase credentials are missing. Configure SUPABASE_URL and SUPABASE_SERVICE_KEY for local development.",
+    );
+  }
+
+  return { url, key };
 }
 
 /**
@@ -36,31 +87,28 @@ export async function getServiceSupabase(env) {
      * @param {string} table - Table name
      */
     from(table) {
-      const baseUrl = `${url}/rest/v1/${table}`;
-      const headers = {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-        "Content-Type": "application/json",
-        Prefer: "return=representation",
-      };
+      const { schema, localName: tableName } = parseQualifiedName(table);
+
+      const baseUrl = `${url}/rest/v1/${tableName}`;
+      const headers = buildHeaders(key, schema);
 
       return {
         async select(columns = "*", options = {}) {
           let queryUrl = `${baseUrl}?select=${encodeURIComponent(columns)}`;
           if (options.filter) queryUrl += `&${options.filter}`;
           if (options.order) queryUrl += `&order=${options.order}`;
-          if (options.limit) queryUrl += `&limit=${options.limit}`;
-          if (options.offset) queryUrl += `&offset=${options.offset}`;
+          if (options.limit !== undefined) queryUrl += `&limit=${options.limit}`;
+          if (options.offset !== undefined) queryUrl += `&offset=${options.offset}`;
 
           const res = await fetch(queryUrl, { headers });
           if (!res.ok) {
-            const error = await res.text();
+            const error = await parseResponseBody(res);
             return {
               data: null,
-              error: { message: error, status: res.status },
+              error: { message: typeof error === "string" ? error : JSON.stringify(error), status: res.status },
             };
           }
-          return { data: await res.json(), error: null };
+          return { data: (await parseResponseBody(res)) || [], error: null };
         },
 
         async insert(data) {
@@ -70,13 +118,13 @@ export async function getServiceSupabase(env) {
             body: JSON.stringify(data),
           });
           if (!res.ok) {
-            const error = await res.text();
+            const error = await parseResponseBody(res);
             return {
               data: null,
-              error: { message: error, status: res.status },
+              error: { message: typeof error === "string" ? error : JSON.stringify(error), status: res.status },
             };
           }
-          const result = await res.json();
+          const result = await parseResponseBody(res);
           return {
             data: Array.isArray(result) ? result[0] : result,
             error: null,
@@ -90,13 +138,13 @@ export async function getServiceSupabase(env) {
             body: JSON.stringify(data),
           });
           if (!res.ok) {
-            const error = await res.text();
+            const error = await parseResponseBody(res);
             return {
               data: null,
-              error: { message: error, status: res.status },
+              error: { message: typeof error === "string" ? error : JSON.stringify(error), status: res.status },
             };
           }
-          const result = await res.json();
+          const result = await parseResponseBody(res);
           return {
             data: Array.isArray(result) ? result[0] : result,
             error: null,
@@ -109,14 +157,37 @@ export async function getServiceSupabase(env) {
             headers,
           });
           if (!res.ok) {
-            const error = await res.text();
+            const error = await parseResponseBody(res);
             return {
               data: null,
-              error: { message: error, status: res.status },
+              error: { message: typeof error === "string" ? error : JSON.stringify(error), status: res.status },
             };
           }
           return { data: null, error: null };
         },
+      };
+    },
+
+    async rpc(functionName, params = {}) {
+      const { schema, localName } = parseQualifiedName(functionName);
+      const response = await fetch(`${url}/rest/v1/rpc/${localName}`, {
+        method: "POST",
+        headers: buildHeaders(key, schema, false),
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok) {
+        const error = await parseResponseBody(response);
+        return {
+          data: null,
+          error: { message: typeof error === "string" ? error : JSON.stringify(error), status: response.status },
+        };
+      }
+
+      const result = await parseResponseBody(response);
+      return {
+        data: Array.isArray(result) ? (result[0] ?? null) : result,
+        error: null,
       };
     },
   };
@@ -131,24 +202,23 @@ export async function getServiceSupabase(env) {
  */
 export async function callRpc(env, functionName, params = {}) {
   const { url, key } = await getSupabaseCredentials(env);
+  const { schema, localName } = parseQualifiedName(functionName);
 
-  const response = await fetch(`${url}/rest/v1/rpc/${functionName}`, {
+  const response = await fetch(`${url}/rest/v1/rpc/${localName}`, {
     method: "POST",
-    headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
+    headers: buildHeaders(key, schema, false),
     body: JSON.stringify(params),
   });
 
   if (!response.ok) {
-    const error = await response.text();
+    const error = await parseResponseBody(response);
     throw new Error(
-      `RPC ${functionName} failed: ${response.status} - ${error}`,
+      `RPC ${functionName} failed: ${response.status} - ${
+        typeof error === "string" ? error : JSON.stringify(error)
+      }`,
     );
   }
 
-  const result = await response.json();
-  return result?.[0] || result;
+  const result = await parseResponseBody(response);
+  return Array.isArray(result) ? (result[0] ?? null) : result;
 }

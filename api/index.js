@@ -193,6 +193,86 @@ import {
   sendNewAnalysisRequestEmail,
 } from "./src/utils/security-alerts.js";
 
+// Ads Platform
+import {
+  handleAdsSignup,
+  handleAdsLogin,
+  handleAdsLogout,
+  handleAdsMe,
+  handleAdsRefresh,
+  handleListCampaigns as handleAdsListCampaigns,
+  handleGetCampaign as handleAdsGetCampaign,
+  handleCreateCampaign as handleAdsCreateCampaign,
+  handleUpdateCampaign as handleAdsUpdateCampaign,
+  handleDeleteCampaign as handleAdsDeleteCampaign,
+  handleGetBalance as handleAdsGetBalance,
+  handleGetTransactions as handleAdsGetTransactions,
+  handleCreateCheckout as handleAdsCreateCheckout,
+  handleBillingWebhook as handleAdsBillingWebhook,
+  handleUpdateProfile as handleAdsUpdateProfile,
+  handleChangePassword as handleAdsChangePassword,
+  handleDeleteAccount as handleAdsDeleteAccount,
+  handleStatsOverview as handleAdsStatsOverview,
+  handleUploadCreative as handleAdsUploadCreative,
+  handleServeAd,
+  handleServeAdBatch,
+  handleRecordImpression,
+  handleRecordClick,
+  // Inventory
+  handleGetInventory,
+  handleCheckAvailability,
+  handleGetPricing,
+  handleGetQuote,
+  handleCalculateCart,
+  // Orders
+  handleListOrders,
+  handleGetOrder,
+  handleCreateOrder,
+  handleOrderCheckout,
+  handlePauseOrder,
+  handleResumeOrder,
+  handleCancelOrder,
+  handleOrderPaymentWebhook,
+  // Planner
+  handleGeneratePlan,
+  handleCreateFromPlan,
+  handleListPlans,
+  handleGetPlan,
+  handlePlanCheckout,
+  handlePlanPaymentWebhook,
+  handleApprovePlanCreative,
+  handleRequestPlanRevision,
+  // Targeting
+  handleGetTargetingOptions,
+  handleEstimateReach,
+  handleGetSuggestions as handleTargetingSuggestions,
+  handleValidateTargeting,
+  handleListPending as handleAdsListPending,
+  handleApproveAdvertiser,
+  handleRejectAdvertiser,
+  handleSuspendAdvertiser,
+  handleAdminStats as handleAdsAdminStats,
+  handleAdminOverview as handleAdsAdminOverview,
+  handleAdminListPlans as handleAdsAdminListPlans,
+  handleAdminListCreativeRequests as handleAdsAdminListCreativeRequests,
+  handleAdminSubmitCreativeDraft as handleAdsAdminSubmitCreativeDraft,
+  handleAdminApprovePlan as handleAdsAdminApprovePlan,
+  // Agency
+  handleAgencySignup,
+  handleAgencyLogin,
+  handleAgencyLogout,
+  handleAgencyMe,
+  handleListClients,
+  handleCreateClient,
+  handleUpdateClientCommission,
+  handleAgencyEarnings,
+  handleAgencyPayout,
+  handleAgencyListClientCampaigns,
+  handleAgencyCreateClientCampaign,
+  handleAgencyUpdateClientCampaign,
+  handleAgencyDeleteClientCampaign,
+} from "./src/handlers/ads/index.js";
+
 // Request body size limit (1 MB)
 const MAX_BODY_SIZE = 1024 * 1024;
 
@@ -3505,6 +3585,345 @@ export default {
         const { handleConstellationStats } = await import("./src/handlers/constellation.js");
         return handleConstellationStats(request, env, origin);
       }
+
+      // ============================================================
+      // ADS PLATFORM ROUTES
+      // ============================================================
+
+      // Ads Auth (public - RATE LIMITED to prevent brute force)
+      if (url.pathname === "/api/ads/auth/signup" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `ads-signup:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests. Please try again later." }, 429, corsHeaders);
+        }
+        return handleAdsSignup(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/auth/login" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `ads-login:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests. Please try again later." }, 429, corsHeaders);
+        }
+        return handleAdsLogin(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/auth/logout" && request.method === "POST") {
+        return handleAdsLogout(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/auth/refresh" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `ads-refresh:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests. Please try again later." }, 429, corsHeaders);
+        }
+        return handleAdsRefresh(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/auth/me" && request.method === "GET") {
+        return handleAdsMe(request, env, corsHeaders);
+      }
+
+      // Ads Campaigns (authenticated advertisers)
+      if (url.pathname === "/api/ads/campaigns" && request.method === "GET") {
+        return handleAdsListCampaigns(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/campaigns" && request.method === "POST") {
+        return handleAdsCreateCampaign(request, env, corsHeaders);
+      }
+      const campaignMatch = url.pathname.match(/^\/api\/ads\/campaigns\/([0-9a-f-]+)$/i);
+      if (campaignMatch) {
+        const campaignId = campaignMatch[1];
+        if (request.method === "GET") {
+          return handleAdsGetCampaign(request, env, corsHeaders, campaignId);
+        }
+        if (request.method === "PUT") {
+          return handleAdsUpdateCampaign(request, env, corsHeaders, campaignId);
+        }
+        if (request.method === "DELETE") {
+          return handleAdsDeleteCampaign(request, env, corsHeaders, campaignId);
+        }
+      }
+
+      // Ads Billing (authenticated advertisers)
+      if (url.pathname === "/api/ads/billing/balance" && request.method === "GET") {
+        return handleAdsGetBalance(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/billing/transactions" && request.method === "GET") {
+        return handleAdsGetTransactions(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/billing/checkout" && request.method === "POST") {
+        return handleAdsCreateCheckout(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/billing/webhook" && request.method === "POST") {
+        return handleAdsBillingWebhook(request, env, corsHeaders);
+      }
+
+      // Ads Account (authenticated advertisers)
+      if (url.pathname === "/api/ads/account/profile" && request.method === "PUT") {
+        return handleAdsUpdateProfile(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/account/password" && request.method === "PUT") {
+        return handleAdsChangePassword(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/account" && request.method === "DELETE") {
+        return handleAdsDeleteAccount(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/stats/overview" && request.method === "GET") {
+        return handleAdsStatsOverview(request, env, corsHeaders);
+      }
+
+      // Ads Creative Upload (authenticated advertisers)
+      if (url.pathname === "/api/ads/creatives/upload" && request.method === "POST") {
+        return handleAdsUploadCreative(request, env, corsHeaders);
+      }
+
+      // Inventory Management (public for browsing, auth for quotes)
+      if (url.pathname === "/api/ads/inventory" && request.method === "GET") {
+        return handleGetInventory(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/inventory/check" && request.method === "POST") {
+        return handleCheckAvailability(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/pricing" && request.method === "GET") {
+        return handleGetPricing(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/inventory/quote" && request.method === "POST") {
+        return handleGetQuote(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/inventory/calculate" && request.method === "POST") {
+        return handleCalculateCart(request, env, corsHeaders);
+      }
+
+      // Orders (authenticated advertisers)
+      if (url.pathname === "/api/ads/orders" && request.method === "GET") {
+        return handleListOrders(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/orders" && request.method === "POST") {
+        return handleCreateOrder(request, env, corsHeaders);
+      }
+      const orderIdMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)$/i);
+      if (orderIdMatch && request.method === "GET") {
+        return handleGetOrder(request, env, corsHeaders, orderIdMatch[1]);
+      }
+      const orderCheckoutMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/checkout$/i);
+      if (orderCheckoutMatch && request.method === "POST") {
+        return handleOrderCheckout(request, env, corsHeaders, orderCheckoutMatch[1]);
+      }
+      const orderPauseMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/pause$/i);
+      if (orderPauseMatch && request.method === "POST") {
+        return handlePauseOrder(request, env, corsHeaders, orderPauseMatch[1]);
+      }
+      const orderResumeMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/resume$/i);
+      if (orderResumeMatch && request.method === "POST") {
+        return handleResumeOrder(request, env, corsHeaders, orderResumeMatch[1]);
+      }
+      const orderCancelMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/cancel$/i);
+      if (orderCancelMatch && request.method === "POST") {
+        return handleCancelOrder(request, env, corsHeaders, orderCancelMatch[1]);
+      }
+
+      // Budget Planner (authenticated advertisers)
+      if (url.pathname === "/api/ads/planner/generate" && request.method === "POST") {
+        return handleGeneratePlan(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/planner/create" && request.method === "POST") {
+        return handleCreateFromPlan(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/plans" && request.method === "GET") {
+        return handleListPlans(request, env, corsHeaders);
+      }
+      const planIdMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)$/i);
+      if (planIdMatch && request.method === "GET") {
+        return handleGetPlan(request, env, corsHeaders, planIdMatch[1]);
+      }
+      const planCheckoutMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)\/checkout$/i);
+      if (planCheckoutMatch && request.method === "POST") {
+        return handlePlanCheckout(request, env, corsHeaders, planCheckoutMatch[1]);
+      }
+      const planCreativeApproveMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)\/creative\/approve$/i);
+      if (planCreativeApproveMatch && request.method === "POST") {
+        return handleApprovePlanCreative(request, env, corsHeaders, planCreativeApproveMatch[1]);
+      }
+      const planCreativeRevisionMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)\/creative\/revision$/i);
+      if (planCreativeRevisionMatch && request.method === "POST") {
+        return handleRequestPlanRevision(request, env, corsHeaders, planCreativeRevisionMatch[1]);
+      }
+
+      // Audience Targeting (public browsing, auth for detailed estimates)
+      if (url.pathname === "/api/ads/targeting/options" && request.method === "GET") {
+        return handleGetTargetingOptions(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/targeting/estimate" && request.method === "POST") {
+        return handleEstimateReach(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/targeting/suggestions" && request.method === "GET") {
+        return handleTargetingSuggestions(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/targeting/validate" && request.method === "POST") {
+        return handleValidateTargeting(request, env, corsHeaders);
+      }
+
+      // Ad Serving (called by Philosify frontend)
+      // These endpoints are public but rate-limited
+      if (url.pathname === "/api/ads/serve" && request.method === "GET") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `ads-serve:${ip}`);
+        if (!rateLimitOk) {
+          return jsonResponse({ ad: null, reason: "rate_limited" }, 200, corsHeaders);
+        }
+        return handleServeAd(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/serve/batch" && request.method === "GET") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `ads-serve-batch:${ip}`);
+        if (!rateLimitOk) {
+          return jsonResponse({ ads: [], reason: "rate_limited" }, 200, corsHeaders);
+        }
+        return handleServeAdBatch(request, env, corsHeaders);
+      }
+      // CRITICAL: Impression/click recording requires origin validation and strict rate limiting
+      // Only accept from philosify.org to prevent fraud
+      if (url.pathname === "/api/ads/impression" && request.method === "POST") {
+        // Validate origin - only allow from Philosify frontend
+        const requestOrigin = request.headers.get("origin") || "";
+        const isValidOrigin = requestOrigin === "https://philosify.org" || 
+                              requestOrigin === "https://www.philosify.org" ||
+                              (env.ENVIRONMENT !== "production" && requestOrigin.includes("localhost"));
+        if (!isValidOrigin) {
+          return jsonResponse({ error: "Invalid origin" }, 403, corsHeaders);
+        }
+        // Strict rate limiting per IP
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `ads-impression:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Rate limit exceeded" }, 429, corsHeaders);
+        }
+        return handleRecordImpression(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/click" && request.method === "POST") {
+        // Validate origin - only allow from Philosify frontend
+        const requestOrigin = request.headers.get("origin") || "";
+        const isValidOrigin = requestOrigin === "https://philosify.org" || 
+                              requestOrigin === "https://www.philosify.org" ||
+                              (env.ENVIRONMENT !== "production" && requestOrigin.includes("localhost"));
+        if (!isValidOrigin) {
+          return jsonResponse({ error: "Invalid origin" }, 403, corsHeaders);
+        }
+        // Strict rate limiting per IP
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `ads-click:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Rate limit exceeded" }, 429, corsHeaders);
+        }
+        return handleRecordClick(request, env, corsHeaders);
+      }
+
+      // Ads Admin (owner only, requires X-Admin-Secret)
+      if (url.pathname === "/api/ads/admin/pending" && request.method === "GET") {
+        return handleAdsListPending(request, env, corsHeaders);
+      }
+      const adsApproveMatch = url.pathname.match(/^\/api\/ads\/admin\/approve\/([0-9a-f-]+)$/i);
+      if (adsApproveMatch && request.method === "POST") {
+        return handleApproveAdvertiser(request, env, corsHeaders, adsApproveMatch[1]);
+      }
+      const adsRejectMatch = url.pathname.match(/^\/api\/ads\/admin\/reject\/([0-9a-f-]+)$/i);
+      if (adsRejectMatch && request.method === "POST") {
+        return handleRejectAdvertiser(request, env, corsHeaders, adsRejectMatch[1]);
+      }
+      const adsSuspendMatch = url.pathname.match(/^\/api\/ads\/admin\/suspend\/([0-9a-f-]+)$/i);
+      if (adsSuspendMatch && request.method === "POST") {
+        return handleSuspendAdvertiser(request, env, corsHeaders, adsSuspendMatch[1]);
+      }
+      if (url.pathname === "/api/ads/admin/stats" && request.method === "GET") {
+        return handleAdsAdminStats(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/overview" && request.method === "GET") {
+        return handleAdsAdminOverview(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/plans" && request.method === "GET") {
+        return handleAdsAdminListPlans(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/creative-requests" && request.method === "GET") {
+        return handleAdsAdminListCreativeRequests(request, env, corsHeaders);
+      }
+      const adsAdminPlanApproveMatch = url.pathname.match(/^\/api\/ads\/admin\/plans\/([0-9a-f-]+)\/approve$/i);
+      if (adsAdminPlanApproveMatch && request.method === "POST") {
+        return handleAdsAdminApprovePlan(request, env, corsHeaders, adsAdminPlanApproveMatch[1]);
+      }
+      const adsAdminCreativeDraftMatch = url.pathname.match(/^\/api\/ads\/admin\/creative-requests\/([0-9a-f-]+)\/draft$/i);
+      if (adsAdminCreativeDraftMatch && request.method === "POST") {
+        return handleAdsAdminSubmitCreativeDraft(request, env, corsHeaders, adsAdminCreativeDraftMatch[1]);
+      }
+
+      // Agency Auth (RATE LIMITED to prevent brute force)
+      if (url.pathname === "/api/ads/agency/auth/signup" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `agency-signup:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests. Please try again later." }, 429, corsHeaders);
+        }
+        return handleAgencySignup(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/agency/auth/login" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `agency-login:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests. Please try again later." }, 429, corsHeaders);
+        }
+        return handleAgencyLogin(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/agency/auth/logout" && request.method === "POST") {
+        return handleAgencyLogout(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/agency/auth/me" && request.method === "GET") {
+        return handleAgencyMe(request, env, corsHeaders);
+      }
+
+      // Agency Client Management
+      if (url.pathname === "/api/ads/agency/clients" && request.method === "GET") {
+        return handleListClients(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/agency/clients" && request.method === "POST") {
+        return handleCreateClient(request, env, corsHeaders);
+      }
+      const agencyClientCommissionMatch = url.pathname.match(/^\/api\/ads\/agency\/clients\/([0-9a-f-]+)\/commission$/i);
+      if (agencyClientCommissionMatch && request.method === "PUT") {
+        return handleUpdateClientCommission(request, env, corsHeaders, agencyClientCommissionMatch[1]);
+      }
+
+      // Agency Earnings & Payouts
+      if (url.pathname === "/api/ads/agency/earnings" && request.method === "GET") {
+        return handleAgencyEarnings(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/agency/payout" && request.method === "POST") {
+        return handleAgencyPayout(request, env, corsHeaders);
+      }
+
+      // Agency Client Campaigns
+      const agencyClientCampaignsMatch = url.pathname.match(/^\/api\/ads\/agency\/clients\/([0-9a-f-]+)\/campaigns$/i);
+      if (agencyClientCampaignsMatch) {
+        const clientId = agencyClientCampaignsMatch[1];
+        if (request.method === "GET") {
+          return handleAgencyListClientCampaigns(request, env, corsHeaders, clientId);
+        }
+        if (request.method === "POST") {
+          return handleAgencyCreateClientCampaign(request, env, corsHeaders, clientId);
+        }
+      }
+      const agencyClientCampaignMatch = url.pathname.match(/^\/api\/ads\/agency\/clients\/([0-9a-f-]+)\/campaigns\/([0-9a-f-]+)$/i);
+      if (agencyClientCampaignMatch) {
+        const clientId = agencyClientCampaignMatch[1];
+        const campaignId = agencyClientCampaignMatch[2];
+        if (request.method === "PUT") {
+          return handleAgencyUpdateClientCampaign(request, env, corsHeaders, clientId, campaignId);
+        }
+        if (request.method === "DELETE") {
+          return handleAgencyDeleteClientCampaign(request, env, corsHeaders, clientId, campaignId);
+        }
+      }
+
+      // ============================================================
+      // END ADS PLATFORM ROUTES
+      // ============================================================
 
       // Temporary diagnostic: check profiles table and auth trigger
       if (url.pathname === "/api/admin/diagnose-auth" && request.method === "GET") {
