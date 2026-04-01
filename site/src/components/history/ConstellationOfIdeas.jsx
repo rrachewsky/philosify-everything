@@ -11,6 +11,8 @@ import { ConstellationScene } from './ConstellationScene.jsx';
 import { TimelineControls } from './TimelineControls.jsx';
 import { ConstellationInfoPanel } from './ConstellationInfoPanel.jsx';
 import { ConstellationSearch } from './ConstellationSearch.jsx';
+import { HistoricalEventTicker } from './HistoricalEventTicker.jsx';
+import { HistoricalEventInfoPanel } from './HistoricalEventInfoPanel.jsx';
 
 // Loading state component
 function LoadingState({ t }) {
@@ -42,6 +44,7 @@ export function ConstellationOfIdeas() {
   const { user } = useAuth();
   const sceneRef = useRef(null);
   const [showSearch, setShowSearch] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Detect mobile/tablet on resize
@@ -257,18 +260,23 @@ export function ConstellationOfIdeas() {
         </button>
       </div>
 
-      {/* Year Display */}
-      <div style={styles.yearDisplay}>
-        <span style={{ ...styles.yearText, fontSize: isMobile ? 24 : 32 }}>
-          {filterDateRange || formatYear(currentYear)}
-        </span>
-        <span style={styles.nodeCount}>
-          {selectedEra || selectedSchool 
-            ? `${visibleNodes.length} ${t('constellation.philosophers')} · ${selectedEra ? ERAS.find(e => e.id === selectedEra)?.label : selectedSchool}`
-            : `${visibleNodes.length} ${t('constellation.philosophers')}`
-          }
-        </span>
-      </div>
+      {/* Historical Event Ticker */}
+      <HistoricalEventTicker
+        currentYear={currentYear}
+        formatYear={formatYear}
+        onEventClick={setSelectedEvent}
+        isPlaying={isPlaying}
+      />
+
+      {/* Historical Event Info Panel */}
+      {selectedEvent && (
+        <HistoricalEventInfoPanel
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          formatYear={formatYear}
+          isMobile={isMobile}
+        />
+      )}
 
       {/* Timeline Controls */}
       <TimelineControls
@@ -424,31 +432,6 @@ const styles = {
     fontSize: 14,
     fontWeight: 600,
     cursor: 'pointer',
-  },
-
-  // Year display - positioned to avoid legend on mobile
-  yearDisplay: {
-    position: 'absolute',
-    top: 16,
-    left: '50%',
-    transform: 'translateX(-50%)',
-    textAlign: 'center',
-    zIndex: 101, // Above legend
-    pointerEvents: 'none',
-  },
-  yearText: {
-    display: 'block',
-    fontFamily: "'Orbitron', monospace",
-    fontSize: 32, // Overridden inline for mobile
-    fontWeight: 700,
-    color: '#F2F2F5',
-    textShadow: '0 2px 20px rgba(214, 21, 140, 0.5), 0 0 10px rgba(0, 0, 0, 0.8)',
-  },
-  nodeCount: {
-    display: 'block',
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.5)',
-    marginTop: 4,
   },
 
   // Legend - position overridden inline for mobile

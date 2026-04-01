@@ -6,3 +6,5 @@ export { ConstellationInfoPanel } from './ConstellationInfoPanel.jsx';
 export { ConstellationSearch } from './ConstellationSearch.jsx';
 export { TimelineControls } from './TimelineControls.jsx';
 export { HistorySidebar } from './HistorySidebar.jsx';
+export { HistoricalEventTicker } from './HistoricalEventTicker.jsx';
+export { HistoricalEventInfoPanel } from './HistoricalEventInfoPanel.jsx';
