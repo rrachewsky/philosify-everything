@@ -131,7 +131,7 @@ export function useConstellation() {
   
   // Timeline state - start at MIN_YEAR (600 BC) to begin at the dawn of philosophy
   const [currentYear, setCurrentYear] = useState(MIN_YEAR);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // Autoplay on render
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   
   // Selection state

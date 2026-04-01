@@ -93,6 +93,10 @@ export function buildCinemaAnalysisPrompt(
   // Build film metadata section
   const filmInfoLines = [];
   filmInfoLines.push(`Title: "${title}"`);
+  // CRITICAL: Include original title to prevent AI hallucination of regional titles
+  if (metadata?.original_title && metadata.original_title !== title) {
+    filmInfoLines.push(`Original Title: "${metadata.original_title}"`);
+  }
   filmInfoLines.push(`Director: ${director}`);
   if (metadata?.cast?.length > 0) {
     filmInfoLines.push(`Cast: ${metadata.cast.join(', ')}`);
@@ -159,12 +163,14 @@ ALLOWED EXCEPTIONS (VERY LIMITED):
 - Director name MUST remain exactly as provided (proper noun; do NOT translate).
 - Do NOT leave standalone words/phrases in any other language in your prose.
 
-CRITICAL - FILM TITLE LOCALIZATION:
-- Do NOT literally translate the film title yourself.
-- You MUST use the OFFICIAL REGIONAL TITLE chosen by the film's distributors/producers for the ${targetLanguage}-speaking market.
-- Example: "The Woman in Red" (1984) -> Brazilian Portuguese title is "A Dama de Vermelho" (NOT "Mulher de Vermelho").
-- Example: "Die Hard" -> Brazilian Portuguese title is "Duro de Matar" (NOT "Morrer Difícil").
-- Use your knowledge of official film titles in each region. If you don't know the official regional title, keep the original title.
+CRITICAL - FILM IDENTIFICATION AND TITLE:
+- FIRST: Identify the film using the ORIGINAL TITLE provided (if available). This is the canonical identifier.
+- The ORIGINAL TITLE tells you EXACTLY which film to analyze. Do NOT confuse it with any other film.
+- Example: Original Title "Dead Poets Society" = Brazilian Portuguese "Sociedade dos Poetas Mortos" (NOT "Clube dos Poetas Mortos").
+- Example: Original Title "Die Hard" = Brazilian Portuguese "Duro de Matar" (NOT "Morrer Difícil").
+- If the user provided a localized title that matches an official regional title, USE THAT EXACT TITLE.
+- Do NOT invent or guess regional titles. If unsure, use the original title.
+- NEVER treat the same film as two different films due to title variations.
 - The official regional title is what appears on posters, DVDs, and streaming services in that region.
 
 If you write even ONE WORD in English (or any other language besides ${targetLanguage}),

@@ -17,10 +17,65 @@ const CONNECTION_COLORS = {
   contemporary: 0xFF9800,
 };
 
-// Earth texture URLs (NASA Blue Marble)
+// Earth texture URLs (NASA Blue Marble + Real Topography)
 const EARTH_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-blue-marble.jpg';
 const EARTH_BUMP = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-topology.png';
+const EARTH_DISPLACEMENT = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-topology.png'; // Elevation map for real 3D topography
+const EARTH_SPECULAR = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-water.png'; // Ocean specular map
 const STAR_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/night-sky.png';
+
+// ============================================================
+// EARTH ROTATION BY ERA - Geographic center of philosophy
+// ============================================================
+// Maps timeline year to Earth Y-rotation (radians) to show the 
+// geographic center of philosophical activity for that era.
+// Longitude is converted to rotation: rotation = -longitude * PI / 180
+// (negative because Three.js Y-axis rotation is clockwise from above)
+// ============================================================
+
+function getEarthRotationForYear(year) {
+  // Define eras and their approximate geographic centers (longitude)
+  const eras = [
+    { year: -600, longitude: 24 },   // Ancient Greece (Athens ~24°E)
+    { year: -300, longitude: 26 },   // Hellenistic (Alexandria ~30°E, Athens ~24°E - blend)
+    { year: 200, longitude: 30 },    // Late Antiquity (Alexandria, Constantinople)
+    { year: 500, longitude: 35 },    // Early Medieval (Byzantine, early Islamic)
+    { year: 900, longitude: 40 },    // Islamic Golden Age (Baghdad ~44°E, Cordoba ~-5°E - eastern emphasis)
+    { year: 1200, longitude: 12 },   // High Medieval Europe (Paris, Oxford, Bologna)
+    { year: 1500, longitude: 10 },   // Renaissance (Italy, Northern Europe)
+    { year: 1700, longitude: 5 },    // Enlightenment (France, Germany, Britain)
+    { year: 1850, longitude: 10 },   // 19th Century (Germany dominant - Kant, Hegel, Marx, Nietzsche)
+    { year: 1950, longitude: -40 },  // 20th Century (expanding to Americas - pragmatism, Vienna Circle emigrants)
+    { year: 2026, longitude: -20 },  // Contemporary (global, slight Western bias)
+  ];
+
+  // Find the two eras that bracket the current year
+  let prevEra = eras[0];
+  let nextEra = eras[eras.length - 1];
+
+  for (let i = 0; i < eras.length - 1; i++) {
+    if (year >= eras[i].year && year < eras[i + 1].year) {
+      prevEra = eras[i];
+      nextEra = eras[i + 1];
+      break;
+    }
+  }
+
+  // Handle edge cases
+  if (year <= eras[0].year) {
+    return -eras[0].longitude * Math.PI / 180;
+  }
+  if (year >= eras[eras.length - 1].year) {
+    return -eras[eras.length - 1].longitude * Math.PI / 180;
+  }
+
+  // Linear interpolation between eras
+  const t = (year - prevEra.year) / (nextEra.year - prevEra.year);
+  const longitude = prevEra.longitude + t * (nextEra.longitude - prevEra.longitude);
+
+  // Convert longitude to Y-rotation (negative because of Three.js coordinate system)
+  return -longitude * Math.PI / 180;
+}
 
 // Convert lat/lng to 3D position on sphere
 function latLngToVector3(lat, lng, radius) {
@@ -564,11 +619,19 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   const isAnimatingRef = useRef(false);
   const targetCameraRef = useRef(null);
   const hoveredNodeRef = useRef(null); // Track hovered node for mobile tap
+  const targetEarthRotationRef = useRef(getEarthRotationForYear(-600)); // Target Y-rotation based on timeline year
 
   // Keep hoveredNodeRef in sync with hoveredNode prop
   useEffect(() => {
     hoveredNodeRef.current = hoveredNode;
   }, [hoveredNode]);
+
+  // Update Earth rotation target when timeline year changes
+  useEffect(() => {
+    if (currentYear !== undefined && currentYear !== null) {
+      targetEarthRotationRef.current = getEarthRotationForYear(currentYear);
+    }
+  }, [currentYear]);
 
   // Initialize Three.js scene
   useEffect(() => {
@@ -608,15 +671,33 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     scene.add(directionalLight);
 
     const textureLoader = new THREE.TextureLoader();
-    const earthGeometry = new THREE.SphereGeometry(100, 64, 64);
-    const earthMaterial = new THREE.MeshPhongMaterial({
-      map: textureLoader.load(EARTH_TEXTURE),
-      bumpMap: textureLoader.load(EARTH_BUMP),
-      bumpScale: 1,
-      specular: new THREE.Color(0x333333),
-      shininess: 5,
+    
+    // Higher subdivision for smooth displacement topography (256 segments)
+    const earthGeometry = new THREE.SphereGeometry(100, 256, 256);
+    
+    // Load textures
+    const earthTexture = textureLoader.load(EARTH_TEXTURE);
+    const bumpTexture = textureLoader.load(EARTH_BUMP);
+    const displacementTexture = textureLoader.load(EARTH_DISPLACEMENT);
+    const specularTexture = textureLoader.load(EARTH_SPECULAR);
+    
+    // MeshStandardMaterial for realistic PBR rendering with real topography
+    const earthMaterial = new THREE.MeshStandardMaterial({
+      map: earthTexture,
+      bumpMap: bumpTexture,
+      bumpScale: 0.8,
+      displacementMap: displacementTexture,
+      displacementScale: 2.5, // Real 3D elevation - mountains/valleys visible
+      roughnessMap: specularTexture,
+      roughness: 0.8,
+      metalness: 0.1,
+      // Oceans are smoother (specular map makes them shinier)
+      metalnessMap: specularTexture,
     });
+    
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    // Initial rotation: Based on timeline starting year (-600 = Ancient Greece ~24°E)
+    earth.rotation.y = getEarthRotationForYear(-600);
     scene.add(earth);
     earthRef.current = earth;
 
@@ -648,15 +729,110 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
     scene.add(atmosphere);
 
-    // Starfield
+    // Starfield - Enhanced with point-based stars for better appearance
+    const createStarfield = () => {
+      const starCount = 8000;
+      const positions = new Float32Array(starCount * 3);
+      const colors = new Float32Array(starCount * 3);
+      const sizes = new Float32Array(starCount);
+      
+      for (let i = 0; i < starCount; i++) {
+        // Distribute stars on a sphere
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const radius = 800 + Math.random() * 200; // Vary distance slightly
+        
+        positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[i * 3 + 2] = radius * Math.cos(phi);
+        
+        // Vary star colors slightly (white to blue-white to warm)
+        const colorVariation = Math.random();
+        if (colorVariation < 0.7) {
+          // White stars (majority)
+          colors[i * 3] = 0.9 + Math.random() * 0.1;
+          colors[i * 3 + 1] = 0.9 + Math.random() * 0.1;
+          colors[i * 3 + 2] = 1.0;
+        } else if (colorVariation < 0.85) {
+          // Blue-white stars
+          colors[i * 3] = 0.7 + Math.random() * 0.2;
+          colors[i * 3 + 1] = 0.8 + Math.random() * 0.2;
+          colors[i * 3 + 2] = 1.0;
+        } else {
+          // Warm stars (yellow/orange)
+          colors[i * 3] = 1.0;
+          colors[i * 3 + 1] = 0.8 + Math.random() * 0.2;
+          colors[i * 3 + 2] = 0.6 + Math.random() * 0.3;
+        }
+        
+        // Vary star sizes - mostly small, few bright ones
+        const sizeRandom = Math.random();
+        if (sizeRandom < 0.8) {
+          sizes[i] = 1.0 + Math.random() * 1.5; // Small stars
+        } else if (sizeRandom < 0.95) {
+          sizes[i] = 2.5 + Math.random() * 2.0; // Medium stars
+        } else {
+          sizes[i] = 4.5 + Math.random() * 3.0; // Bright stars
+        }
+      }
+      
+      const starGeometry = new THREE.BufferGeometry();
+      starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      starGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      starGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+      
+      const starMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+        },
+        vertexShader: `
+          attribute float size;
+          attribute vec3 color;
+          varying vec3 vColor;
+          varying float vSize;
+          void main() {
+            vColor = color;
+            vSize = size;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = size * (300.0 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vColor;
+          varying float vSize;
+          void main() {
+            float dist = length(gl_PointCoord - vec2(0.5));
+            if (dist > 0.5) discard;
+            // Soft glow effect
+            float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
+            alpha *= 0.8 + 0.2 * vSize / 7.0; // Brighter for larger stars
+            gl_FragColor = vec4(vColor, alpha);
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+      
+      const stars = new THREE.Points(starGeometry, starMaterial);
+      scene.add(stars);
+      return stars;
+    };
+    
+    const starfield = createStarfield();
+    
+    // Also add background texture for nebula/milky way effect
     textureLoader.load(STAR_TEXTURE, (texture) => {
-      const starGeometry = new THREE.SphereGeometry(900, 32, 32);
-      const starMaterial = new THREE.MeshBasicMaterial({
+      const bgGeometry = new THREE.SphereGeometry(950, 32, 32);
+      const bgMaterial = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.BackSide,
+        opacity: 0.4,
+        transparent: true,
       });
-      const stars = new THREE.Mesh(starGeometry, starMaterial);
-      scene.add(stars);
+      const background = new THREE.Mesh(bgGeometry, bgMaterial);
+      scene.add(background);
     });
 
     // Camera controls (simple orbit)
@@ -855,8 +1031,23 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
+      // Smoothly interpolate Earth rotation to target (based on timeline year)
       if (earthRef.current) {
-        earthRef.current.rotation.y += 0.0005;
+        const earth = earthRef.current;
+        const target = targetEarthRotationRef.current;
+        const current = earth.rotation.y;
+        
+        // Calculate shortest path rotation (handle wrap-around at ±PI)
+        let delta = target - current;
+        
+        // Normalize delta to -PI to PI range for shortest path
+        while (delta > Math.PI) delta -= 2 * Math.PI;
+        while (delta < -Math.PI) delta += 2 * Math.PI;
+        
+        // Smooth interpolation (lerp factor 0.02 for gentle rotation)
+        if (Math.abs(delta) > 0.001) {
+          earth.rotation.y += delta * 0.02;
+        }
       }
 
       // Camera fly-to animation

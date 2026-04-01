@@ -42,7 +42,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
     } catch {
       return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
     }
-    const { title, director, tmdb_id, overview, genres, model = "claude", lang = "en" } = body;
+    const { title, director, tmdb_id, overview, genres, original_title, model = "claude", lang = "en" } = body;
 
     if (!title || title.length < 1 || title.length > 300) {
       return jsonResponse({ error: "Title required (1-300 chars)" }, 400, origin, env);
@@ -265,6 +265,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
         countries: body.countries || [],
         overview: overview || "",
         poster_url: body.poster_url || null,
+        original_title: original_title || null, // Fallback from request body
       };
       if (tmdb_id) {
         try {
@@ -272,6 +273,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
           if (details) {
             filmMetadata = {
               ...filmMetadata,
+              original_title: details.original_title, // CRITICAL: Include original title to prevent AI hallucination
               cast: details.cast || [],
               runtime: details.runtime,
               tagline: details.tagline,

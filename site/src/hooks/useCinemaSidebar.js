@@ -148,6 +148,7 @@ export function useCinemaSidebar() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             title: selectedFilm.title,
+            original_title: selectedFilm.original_title || null, // Prevent AI title hallucination
             director: selectedFilm.director || '',
             tmdb_id: selectedFilm.tmdb_id,
             overview: selectedFilm.overview || '',
