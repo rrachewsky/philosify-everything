@@ -1,11 +1,12 @@
 // ============================================================
 // HISTORICAL EVENT TICKER - Breaking News style ticker
-// Shows historical events as the timeline progresses
+// Uses same design as NEWS category ticker (TopTenTicker.css)
 // ============================================================
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HISTORICAL_EVENTS, EVENT_CATEGORIES } from '@/data/historicalEvents.js';
+import '../TopTenTicker.css';
 
 export function HistoricalEventTicker({
   currentYear,
@@ -15,11 +16,16 @@ export function HistoricalEventTicker({
 }) {
   const { t } = useTranslation();
   const [activeEvent, setActiveEvent] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
   const [eventQueue, setEventQueue] = useState([]);
   const shownEventsRef = useRef(new Set());
   const lastYearRef = useRef(currentYear);
   const timeoutRef = useRef(null);
+  const trackRef = useRef(null);
+  
+  // Drag state for manual scrolling
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
 
   // Check for new events when year changes
   useEffect(() => {
@@ -55,15 +61,13 @@ export function HistoricalEventTicker({
     if (eventQueue.length > 0 && !activeEvent) {
       const nextEvent = eventQueue[0];
       setActiveEvent(nextEvent);
-      setIsVisible(true);
       setEventQueue(prev => prev.slice(1));
 
-      // Auto-hide after 6 seconds
+      // Auto-dismiss after 8 seconds
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
-        setIsVisible(false);
-        setTimeout(() => setActiveEvent(null), 500); // Wait for fade out
-      }, 6000);
+        setActiveEvent(null);
+      }, 8000);
     }
   }, [eventQueue, activeEvent]);
 
@@ -87,183 +91,174 @@ export function HistoricalEventTicker({
     }
   };
 
-  const handleDismiss = (e) => {
-    e.stopPropagation();
-    setIsVisible(false);
-    setTimeout(() => setActiveEvent(null), 300);
+  // Drag handlers for manual scrolling
+  const handleMouseDown = (e) => {
+    if (!trackRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - trackRef.current.offsetLeft);
+    setScrollLeftState(trackRef.current.scrollLeft);
+  };
+  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseMove = (e) => {
+    if (!isDragging || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.offsetLeft;
+    trackRef.current.scrollLeft = scrollLeftState - (x - startX) * 2;
   };
 
-  if (!activeEvent) return null;
-
-  const category = EVENT_CATEGORIES[activeEvent.category] || EVENT_CATEGORIES.political;
+  const category = activeEvent 
+    ? (EVENT_CATEGORIES[activeEvent.category] || EVENT_CATEGORIES.political)
+    : null;
 
   return (
-    <div
-      style={{
-        ...styles.container,
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+    <div 
+      className="top-ten-ticker" 
+      style={{ 
+        direction: 'ltr', 
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        borderRadius: 0,
+        // Red theme for historical events (like CNN breaking news)
+        background: 'linear-gradient(90deg, rgba(139, 0, 0, 0.95) 0%, rgba(185, 28, 28, 0.95) 50%, rgba(139, 0, 0, 0.95) 100%)',
+        borderBottom: '1px solid rgba(220, 38, 38, 0.5)',
+        boxShadow: '0 2px 15px rgba(185, 28, 28, 0.3)',
       }}
-      onClick={handleClick}
     >
-      {/* Breaking News Label */}
-      <div style={styles.breakingLabel}>
-        <span style={styles.breakingDot} />
-        <span style={styles.breakingText}>BREAKING</span>
+      {/* Year Display Label */}
+      <div 
+        className="ticker-label" 
+        style={{ 
+          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+          minWidth: 90,
+          justifyContent: 'center',
+        }}
+      >
+        <span className="ticker-icon" style={{ fontSize: 12 }}>&#128337;</span>
+        <span style={{ fontFamily: "'Orbitron', monospace", letterSpacing: 1 }}>
+          {formatYear(currentYear)}
+        </span>
       </div>
 
-      {/* Event Content */}
-      <div style={styles.content}>
-        <span style={styles.categoryIcon}>{category.icon}</span>
-        <span style={styles.year}>{formatYear(activeEvent.year)}</span>
-        <span style={styles.divider}>|</span>
-        <span style={styles.title}>{activeEvent.title}</span>
-        <span style={styles.description}>— {activeEvent.description}</span>
+      {/* Breaking News Label (when event active) */}
+      {activeEvent && (
+        <div 
+          className="ticker-label" 
+          style={{ 
+            background: '#fff',
+            marginLeft: 0,
+          }}
+        >
+          <span 
+            style={{ 
+              width: 8, 
+              height: 8, 
+              borderRadius: '50%', 
+              background: '#DC2626',
+              animation: 'pulse 1s infinite',
+            }} 
+          />
+          <span style={{ color: '#DC2626', fontWeight: 800 }}>BREAKING</span>
+        </div>
+      )}
+
+      {/* Scrolling Track */}
+      <div
+        className="ticker-track"
+        ref={trackRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
+        <div
+          className={`ticker-content ${isDragging ? 'paused' : ''}`}
+          style={{ 
+            animationDuration: activeEvent ? '30s' : '0s',
+            animation: activeEvent ? undefined : 'none',
+          }}
+        >
+          {activeEvent ? (
+            <button
+              className="ticker-item"
+              onClick={handleClick}
+              style={{ 
+                direction: 'ltr',
+                borderRight: 'none',
+              }}
+            >
+              <span className="ticker-rank" style={{ color: '#FCA5A5' }}>
+                {category?.icon} {formatYear(activeEvent.year)}
+              </span>
+              <span className="ticker-separator">|</span>
+              <span className="ticker-song" style={{ maxWidth: 'none', fontWeight: 700 }}>
+                {activeEvent.title}
+              </span>
+              <span className="ticker-separator">—</span>
+              <span className="ticker-artist" style={{ maxWidth: 'none', color: 'rgba(255,255,255,0.85)' }}>
+                {activeEvent.description}
+              </span>
+              <span 
+                style={{ 
+                  marginLeft: 12,
+                  color: 'rgba(255,255,255,0.6)',
+                  fontSize: 11,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {t('constellation.clickForAnalysis', 'Click for analysis')} &rarr;
+              </span>
+            </button>
+          ) : (
+            <div 
+              style={{ 
+                padding: '0 16px',
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: 12,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <span>&#128205;</span>
+              <span>{t('constellation.timelineHint', 'Play timeline to see historical events')}</span>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Click hint */}
-      <div style={styles.clickHint}>
-        {t('constellation.clickForAnalysis', 'Click for analysis')} →
-      </div>
-
-      {/* Dismiss button */}
-      <button style={styles.dismissButton} onClick={handleDismiss}>
-        ✕
-      </button>
-
-      {/* Progress bar */}
-      <div style={styles.progressBar}>
-        <div style={styles.progressFill} />
-      </div>
+      {/* Dismiss button when event active */}
+      {activeEvent && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setActiveEvent(null);
+          }}
+          style={{
+            background: 'rgba(0,0,0,0.3)',
+            border: 'none',
+            borderRadius: 4,
+            color: 'rgba(255,255,255,0.8)',
+            width: 24,
+            height: 24,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            marginRight: 8,
+            flexShrink: 0,
+            fontSize: 12,
+          }}
+        >
+          &#10005;
+        </button>
+      )}
     </div>
   );
 }
 
-const styles = {
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    background: 'linear-gradient(90deg, #B91C1C 0%, #DC2626 50%, #B91C1C 100%)',
-    padding: '10px 16px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-    zIndex: 150,
-    cursor: 'pointer',
-    transition: 'all 0.4s ease',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
-    borderBottom: '2px solid #991B1B',
-  },
-
-  breakingLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    background: '#fff',
-    padding: '4px 10px',
-    borderRadius: 4,
-    flexShrink: 0,
-  },
-
-  breakingDot: {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    background: '#DC2626',
-    animation: 'pulse 1s infinite',
-  },
-
-  breakingText: {
-    color: '#DC2626',
-    fontSize: 11,
-    fontWeight: 800,
-    letterSpacing: 1,
-  },
-
-  content: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-    minWidth: 0,
-    overflow: 'hidden',
-  },
-
-  categoryIcon: {
-    fontSize: 16,
-    flexShrink: 0,
-  },
-
-  year: {
-    color: '#FEE2E2',
-    fontSize: 13,
-    fontWeight: 700,
-    fontFamily: "'Orbitron', monospace",
-    flexShrink: 0,
-  },
-
-  divider: {
-    color: 'rgba(255, 255, 255, 0.4)',
-    flexShrink: 0,
-  },
-
-  title: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 700,
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-  },
-
-  description: {
-    color: 'rgba(255, 255, 255, 0.85)',
-    fontSize: 13,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-
-  clickHint: {
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 11,
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-  },
-
-  dismissButton: {
-    width: 24,
-    height: 24,
-    background: 'rgba(0, 0, 0, 0.2)',
-    border: 'none',
-    borderRadius: 4,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 12,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-
-  progressBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-    background: 'rgba(0, 0, 0, 0.2)',
-  },
-
-  progressFill: {
-    height: '100%',
-    background: '#FEE2E2',
-    animation: 'shrink 6s linear forwards',
-  },
-};
-
-// Add keyframes for animations
+// Add keyframes for pulse animation
 if (typeof document !== 'undefined') {
   const styleId = 'historical-ticker-styles';
   if (!document.getElementById(styleId)) {
@@ -273,10 +268,6 @@ if (typeof document !== 'undefined') {
       @keyframes pulse {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.4; }
-      }
-      @keyframes shrink {
-        from { width: 100%; }
-        to { width: 0%; }
       }
     `;
     document.head.appendChild(styleSheet);
