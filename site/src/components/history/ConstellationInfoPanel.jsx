@@ -443,13 +443,13 @@ export function ConstellationInfoPanel({
 }
 
 const styles = {
-  // Desktop: right sidebar - overlaps controls at bottom
+  // Desktop: right sidebar - positioned at top right
   container: {
     position: 'absolute',
-    top: 70,
+    top: 16,
     right: 16,
     width: 320,
-    maxHeight: 'calc(100vh - 90px)',
+    maxHeight: 'calc(100vh - 180px)',
     background: 'rgba(15, 15, 25, 0.95)',
     borderRadius: 12,
     border: '1px solid rgba(255, 255, 255, 0.1)',

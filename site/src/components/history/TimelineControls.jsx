@@ -24,6 +24,7 @@ export function TimelineControls({
   selectedSchool,
   toggleSchoolFilter,
   schools = [],
+  onSearchClick,
 }) {
   const { t } = useTranslation();
   const sliderRef = useRef(null);
@@ -79,53 +80,42 @@ export function TimelineControls({
 
   return (
     <div style={styles.container}>
-      {/* Era buttons */}
-      <div style={styles.eraRow}>
+      {/* Search and filter row */}
+      <div style={styles.topRow}>
+        {/* Search Button */}
         <button
-          style={styles.eraToggle}
+          style={styles.searchButton}
+          onClick={onSearchClick}
+          aria-label={t('constellation.searchPhilosophers')}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+          <span style={styles.searchLabel}>{t('constellation.search')}</span>
+        </button>
+
+        {/* Era toggle */}
+        <button
+          style={{
+            ...styles.filterToggle,
+            ...(showEras ? styles.filterToggleActive : {}),
+          }}
           onClick={() => setShowEras(!showEras)}
           aria-label={t('constellation.showEras')}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 12h18M3 6h18M3 18h18" />
           </svg>
+          <span>{t('constellation.eras.label', 'Eras')}</span>
         </button>
-        
-        {showEras && (
-          <div style={styles.eraButtons}>
-            {ERAS.map(era => (
-              <button
-                key={era.id}
-                style={{
-                  ...styles.eraButton,
-                  ...(selectedEra === era.id ? styles.eraButtonActive : {}),
-                }}
-                onClick={() => toggleEraFilter(era.id)}
-                title={`${era.startYear < 0 ? Math.abs(era.startYear) + ' ' + t('constellation.bc') : era.startYear} - ${era.endYear < 0 ? Math.abs(era.endYear) + ' ' + t('constellation.bc') : era.endYear}`}
-              >
-                {t(`constellation.eras.${era.id}`, era.label)}
-              </button>
-            ))}
-            {/* Show All button */}
-            {selectedEra && (
-              <button
-                style={{
-                  ...styles.eraButton,
-                  ...styles.eraButtonClear,
-                }}
-                onClick={() => toggleEraFilter(selectedEra)}
-              >
-                ✕ {t('constellation.clear')}
-              </button>
-            )}
-          </div>
-        )}
-      </div>
 
-      {/* School filter buttons */}
-      <div style={styles.schoolRow}>
+        {/* School toggle */}
         <button
-          style={styles.schoolToggle}
+          style={{
+            ...styles.filterToggle,
+            ...(showSchools ? styles.filterToggleActive : {}),
+          }}
           onClick={() => setShowSchools(!showSchools)}
           aria-label={t('constellation.filterBySchool')}
         >
@@ -133,45 +123,69 @@ export function TimelineControls({
             <circle cx="12" cy="12" r="3" />
             <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24" />
           </svg>
+          <span>{t('constellation.schools.label', 'Schools')}</span>
         </button>
-        
-        {showSchools && (
-          <div style={styles.schoolButtons}>
-            {schools.map(school => {
-              const color = SCHOOL_COLORS[school] || '#888';
-              const isSelected = selectedSchool === school;
-              return (
-                <button
-                  key={school}
-                  style={{
-                    ...styles.schoolButton,
-                    borderColor: isSelected ? color : 'rgba(255, 255, 255, 0.1)',
-                    background: isSelected ? `${color}33` : 'rgba(255, 255, 255, 0.08)',
-                    color: isSelected ? '#F2F2F5' : 'rgba(255, 255, 255, 0.7)',
-                  }}
-                  onClick={() => toggleSchoolFilter(school)}
-                  title={t(`constellation.schools.${school}`, school)}
-                >
-                  <span style={{ ...styles.schoolDot, background: color }} />
-                  {t(`constellation.schools.${school}`, school)}
-                </button>
-              );
-            })}
-            {/* Clear school filter */}
-            {selectedSchool && (
-              <button
-                style={{
-                  ...styles.schoolButton,
-                  ...styles.eraButtonClear,
-                }}
-                onClick={() => toggleSchoolFilter(selectedSchool)}
-              >
-                ✕ {t('constellation.clear')}
-              </button>
-            )}
-          </div>
-        )}
       </div>
+
+      {/* Era filter pills - show when expanded */}
+      {showEras && (
+        <div style={styles.filterRow}>
+          {ERAS.map(era => (
+            <button
+              key={era.id}
+              style={{
+                ...styles.filterPill,
+                ...(selectedEra === era.id ? styles.filterPillActive : {}),
+              }}
+              onClick={() => toggleEraFilter(era.id)}
+              title={`${era.startYear < 0 ? Math.abs(era.startYear) + ' ' + t('constellation.bc') : era.startYear} - ${era.endYear < 0 ? Math.abs(era.endYear) + ' ' + t('constellation.bc') : era.endYear}`}
+            >
+              {t(`constellation.eras.${era.id}`, era.label)}
+            </button>
+          ))}
+          {selectedEra && (
+            <button
+              style={{ ...styles.filterPill, ...styles.filterPillClear }}
+              onClick={() => toggleEraFilter(selectedEra)}
+            >
+              ✕ {t('constellation.clear')}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* School filter pills - show when expanded */}
+      {showSchools && (
+        <div style={styles.filterRow}>
+          {schools.map(school => {
+            const color = SCHOOL_COLORS[school] || '#888';
+            const isSelected = selectedSchool === school;
+            return (
+              <button
+                key={school}
+                style={{
+                  ...styles.filterPill,
+                  borderColor: isSelected ? color : 'rgba(255, 255, 255, 0.15)',
+                  background: isSelected ? `${color}33` : 'rgba(255, 255, 255, 0.08)',
+                }}
+                onClick={() => toggleSchoolFilter(school)}
+                title={t(`constellation.schools.${school}`, school)}
+              >
+                <span style={{ ...styles.schoolDot, background: color }} />
+                {t(`constellation.schools.${school}`, school)}
+              </button>
+            );
+          })}
+          {selectedSchool && (
+            <button
+              style={{ ...styles.filterPill, ...styles.filterPillClear }}
+              onClick={() => toggleSchoolFilter(selectedSchool)}
+            >
+              ✕ {t('constellation.clear')}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Main controls row */}
       <div style={styles.controlsRow}>
@@ -259,98 +273,88 @@ const styles = {
     zIndex: 100,
   },
 
-  eraRow: {
+  // Top row with search and filter toggles
+  topRow: {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 16,
+    marginBottom: 12,
   },
 
-  eraToggle: {
-    width: 32,
-    height: 32,
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
-    borderRadius: 6,
-    color: '#F2F2F5',
-    cursor: 'pointer',
+  searchButton: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  eraButtons: {
-    display: 'flex',
-    gap: 6,
-    flexWrap: 'wrap',
-  },
-
-  eraButton: {
-    padding: '6px 12px',
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: 16,
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 11,
+    gap: 8,
+    padding: '8px 14px',
+    background: 'linear-gradient(135deg, rgba(214, 21, 140, 0.2), rgba(137, 207, 240, 0.15))',
+    border: '1px solid rgba(214, 21, 140, 0.4)',
+    borderRadius: 20,
+    color: '#F2F2F5',
+    fontSize: 13,
+    fontWeight: 500,
     cursor: 'pointer',
     transition: 'all 0.2s',
   },
 
-  eraButtonActive: {
-    background: 'rgba(214, 21, 140, 0.3)',
-    borderColor: '#D6158C',
-    color: '#F2F2F5',
+  searchLabel: {
+    fontSize: 13,
   },
 
-  eraButtonClear: {
-    background: 'rgba(255, 100, 100, 0.15)',
-    borderColor: 'rgba(255, 100, 100, 0.4)',
-    color: 'rgba(255, 150, 150, 0.9)',
-  },
-
-  schoolRow: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: 8,
-    marginBottom: 16,
-  },
-
-  schoolToggle: {
-    width: 32,
-    height: 32,
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
-    borderRadius: 6,
-    color: '#F2F2F5',
-    cursor: 'pointer',
+  filterToggle: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
+    gap: 6,
+    padding: '6px 12px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: 16,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 12,
+    cursor: 'pointer',
+    transition: 'all 0.2s',
   },
 
-  schoolButtons: {
+  filterToggleActive: {
+    background: 'rgba(214, 21, 140, 0.2)',
+    borderColor: 'rgba(214, 21, 140, 0.5)',
+    color: '#F2F2F5',
+  },
+
+  // Filter pills row (eras or schools)
+  filterRow: {
     display: 'flex',
     gap: 6,
     flexWrap: 'wrap',
-    maxHeight: 120,
+    marginBottom: 12,
+    maxHeight: 100,
     overflowY: 'auto',
-    paddingRight: 8,
   },
 
-  schoolButton: {
-    padding: '4px 10px',
+  filterPill: {
+    padding: '5px 12px',
     background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: 12,
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: 14,
     color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 10,
+    fontSize: 11,
     cursor: 'pointer',
     transition: 'all 0.2s',
     display: 'flex',
     alignItems: 'center',
     gap: 5,
     whiteSpace: 'nowrap',
+  },
+
+  filterPillActive: {
+    background: 'rgba(214, 21, 140, 0.3)',
+    borderColor: '#D6158C',
+    color: '#F2F2F5',
+  },
+
+  filterPillClear: {
+    background: 'rgba(255, 100, 100, 0.15)',
+    borderColor: 'rgba(255, 100, 100, 0.4)',
+    color: 'rgba(255, 150, 150, 0.9)',
   },
 
   schoolDot: {

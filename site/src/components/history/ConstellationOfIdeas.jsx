@@ -220,18 +220,6 @@ export function ConstellationOfIdeas() {
         </span>
       </div>
 
-      {/* Search Button */}
-      <button
-        style={styles.searchButton}
-        onClick={() => setShowSearch(true)}
-        aria-label={t('constellation.searchPhilosophers')}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
-      </button>
-
       {/* Timeline Controls */}
       <TimelineControls
         currentYear={currentYear}
@@ -249,6 +237,7 @@ export function ConstellationOfIdeas() {
         selectedSchool={selectedSchool}
         toggleSchoolFilter={toggleSchoolFilter}
         schools={getSchools()}
+        onSearchClick={() => setShowSearch(true)}
       />
 
       {/* Info Panel (selected node/edge) */}
@@ -384,25 +373,6 @@ const styles = {
     fontSize: 12,
     color: 'rgba(255, 255, 255, 0.5)',
     marginTop: 4,
-  },
-
-  // Search button
-  searchButton: {
-    position: 'absolute',
-    top: 16,
-    right: 16,
-    width: 44,
-    height: 44,
-    background: 'rgba(30, 30, 40, 0.8)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    color: '#F2F2F5',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 100,
-    backdropFilter: 'blur(8px)',
   },
 
   // Legend - position overridden inline for mobile
