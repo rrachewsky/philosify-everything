@@ -545,37 +545,25 @@ function createSchoolConnection(sourcePos, targetPos, schoolName) {
 }
 
 // Create tether line from satellite down to city location on Earth surface
-// Uses cylinder geometry since WebGL linewidth doesn't work on most systems
 function createTetherLine(surfacePos, satellitePos, traditionColor) {
   const color = new THREE.Color(traditionColor);
   
-  // Calculate line direction and length
-  const direction = new THREE.Vector3().subVectors(satellitePos, surfacePos);
-  const length = direction.length();
-  const midPoint = new THREE.Vector3().addVectors(surfacePos, satellitePos).multiplyScalar(0.5);
+  // Straight line from the card down to the birthplace on Earth
+  const points = [satellitePos.clone(), surfacePos.clone()];
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
   
-  // Create thin cylinder as tether (radius 0.3 for visibility)
-  const geometry = new THREE.CylinderGeometry(0.3, 0.3, length, 4);
-  const material = new THREE.MeshBasicMaterial({
+  // Higher opacity for visibility (linewidth doesn't work in WebGL but opacity does)
+  const material = new THREE.LineBasicMaterial({
     color: color,
     transparent: true,
-    opacity: 0.5,
+    opacity: 0.6,
+    linewidth: 2,
   });
   
-  const cylinder = new THREE.Mesh(geometry, material);
+  const line = new THREE.Line(geometry, material);
+  line.userData = { isTetherLine: true };
   
-  // Position at midpoint
-  cylinder.position.copy(midPoint);
-  
-  // Orient cylinder to point from surface to satellite
-  cylinder.quaternion.setFromUnitVectors(
-    new THREE.Vector3(0, 1, 0),
-    direction.clone().normalize()
-  );
-  
-  cylinder.userData = { isTetherLine: true };
-  
-  return cylinder;
+  return line;
 }
 
 // Create influence chain line (philosopher to follower)
