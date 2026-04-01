@@ -1031,7 +1031,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Smoothly interpolate Earth rotation to target (based on timeline year)
+      // Earth rotation: follows timeline year + slow ambient rotation
       if (earthRef.current) {
         const earth = earthRef.current;
         const target = targetEarthRotationRef.current;
@@ -1044,9 +1044,17 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         while (delta > Math.PI) delta -= 2 * Math.PI;
         while (delta < -Math.PI) delta += 2 * Math.PI;
         
-        // Smooth interpolation (lerp factor 0.02 for gentle rotation)
-        if (Math.abs(delta) > 0.001) {
-          earth.rotation.y += delta * 0.02;
+        // When timeline is changing, interpolate toward target era
+        // When idle (close to target), add slow ambient rotation
+        if (Math.abs(delta) > 0.01) {
+          // Actively moving to target era - faster interpolation
+          earth.rotation.y += delta * 0.03;
+          targetEarthRotationRef.current = target; // Keep target fixed during transition
+        } else {
+          // Near target - slow ambient rotation (keeps globe alive)
+          earth.rotation.y += 0.0003;
+          // Update target to follow the ambient rotation (so it doesn't snap back)
+          targetEarthRotationRef.current = earth.rotation.y;
         }
       }
 
