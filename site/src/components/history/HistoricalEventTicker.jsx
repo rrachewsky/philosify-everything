@@ -1,6 +1,6 @@
 // ============================================================
-// HISTORICAL EVENT TICKER - EXACT same design as NEWS ticker
-// Uses TopTenTicker.css classes, same colors, same speed
+// HISTORICAL EVENT TICKER - Continuous chronological flow
+// Events scroll from oldest to newest, no looping/restart
 // ============================================================
 
 import { useState, useRef, useEffect } from 'react';
@@ -18,16 +18,26 @@ export function HistoricalEventTicker({
   const [startX, setStartX] = useState(0);
   const [scrollLeftState, setScrollLeftState] = useState(0);
   const trackRef = useRef(null);
+  const contentRef = useRef(null);
+  const lastScrollRef = useRef(0);
 
-  // Get events up to current year
+  // Get events up to current year (chronological order - oldest first)
   const visibleEvents = HISTORICAL_EVENTS.filter(event => event.year <= currentYear);
 
-  if (visibleEvents.length === 0) return null;
+  // Auto-scroll to keep newest events visible
+  useEffect(() => {
+    if (contentRef.current && trackRef.current && !isDragging) {
+      // Scroll to show the end (most recent events)
+      const scrollWidth = contentRef.current.scrollWidth;
+      const clientWidth = trackRef.current.clientWidth;
+      if (scrollWidth > clientWidth) {
+        // Smooth scroll to end
+        trackRef.current.scrollLeft = scrollWidth - clientWidth;
+      }
+    }
+  }, [visibleEvents.length, isDragging]);
 
-  // Duplicate for seamless loop (same as NEWS ticker)
-  const duplicated = [...visibleEvents, ...visibleEvents, ...visibleEvents];
-  const count = visibleEvents.length;
-  const animationDuration = count * 12; // 12 seconds per item
+  if (visibleEvents.length === 0) return null;
 
   const handleMouseDown = (e) => {
     if (!trackRef.current) return;
@@ -56,16 +66,21 @@ export function HistoricalEventTicker({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onMouseMove={handleMouseMove}
+        style={{ overflowX: 'auto' }}
       >
         <div
-          className={`ticker-content ${isDragging ? 'paused' : ''}`}
-          style={{ animationDuration: `${animationDuration}s` }}
+          ref={contentRef}
+          className="ticker-content"
+          style={{ 
+            animation: 'none',
+            width: 'max-content',
+          }}
         >
-          {duplicated.map((event, i) => {
+          {visibleEvents.map((event, i) => {
             const category = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
             return (
               <button
-                key={`${event.year}-${event.title}-${i}`}
+                key={`${event.year}-${event.title}`}
                 className="ticker-item"
                 onClick={() => onEventClick(event)}
                 style={{ direction: 'ltr' }}

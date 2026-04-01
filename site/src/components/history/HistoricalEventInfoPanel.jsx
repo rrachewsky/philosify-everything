@@ -1,5 +1,5 @@
 // ============================================================
-// HISTORICAL EVENT INFO PANEL - Detailed view with Objectivist analysis
+// HISTORICAL EVENT INFO PANEL - Detailed view with Philosify's analysis
 // ============================================================
 
 import React from 'react';
@@ -53,27 +53,16 @@ export function HistoricalEventInfoPanel({
         {/* Divider */}
         <div style={styles.divider} />
 
-        {/* Objectivist Analysis Section */}
+        {/* Philosify's Analysis Section */}
         <div style={styles.analysisSection}>
           <div style={styles.analysisBadge}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 6v6l4 2" />
             </svg>
-            <span>{t('constellation.objectivistAnalysis', 'Objectivist Analysis')}</span>
+            <span>{t('constellation.philosifyAnalysis', "Philosify's Analysis")}</span>
           </div>
           <p style={styles.analysisText}>{event.analysis}</p>
-        </div>
-
-        {/* Context note */}
-        <div style={styles.contextNote}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 16v-4M12 8h.01" />
-          </svg>
-          <span>
-            {t('constellation.analysisNote', 'Analysis based on principles of reason, individual rights, and capitalism.')}
-          </span>
         </div>
       </div>
     </div>
