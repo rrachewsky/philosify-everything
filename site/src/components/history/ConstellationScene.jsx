@@ -1031,31 +1031,9 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Earth rotation: follows timeline year + slow ambient rotation
+      // Continuous Earth rotation
       if (earthRef.current) {
-        const earth = earthRef.current;
-        const target = targetEarthRotationRef.current;
-        const current = earth.rotation.y;
-        
-        // Calculate shortest path rotation (handle wrap-around at ±PI)
-        let delta = target - current;
-        
-        // Normalize delta to -PI to PI range for shortest path
-        while (delta > Math.PI) delta -= 2 * Math.PI;
-        while (delta < -Math.PI) delta += 2 * Math.PI;
-        
-        // When timeline is changing, interpolate toward target era
-        // When idle (close to target), add slow ambient rotation
-        if (Math.abs(delta) > 0.01) {
-          // Actively moving to target era - faster interpolation
-          earth.rotation.y += delta * 0.03;
-          targetEarthRotationRef.current = target; // Keep target fixed during transition
-        } else {
-          // Near target - slow ambient rotation (keeps globe alive)
-          earth.rotation.y += 0.0003;
-          // Update target to follow the ambient rotation (so it doesn't snap back)
-          targetEarthRotationRef.current = earth.rotation.y;
-        }
+        earthRef.current.rotation.y += 0.002;
       }
 
       // Camera fly-to animation
