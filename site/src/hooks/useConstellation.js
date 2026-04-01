@@ -139,6 +139,9 @@ export function useConstellation() {
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [hoveredNode, setHoveredNode] = useState(null);
   
+  // Solo mode: when set, show only this philosopher on the globe (from search)
+  const [soloNode, setSoloNode] = useState(null);
+  
   // Era filter state (null = show all based on timeline, string = filter by era)
   const [selectedEra, setSelectedEra] = useState(null);
   
@@ -242,9 +245,15 @@ export function useConstellation() {
     };
   }, [isPlaying, playbackSpeed]);
 
-  // Get visible nodes based on current year OR selected era/school filter
+  // Get visible nodes based on current year OR selected era/school filter OR solo mode
   const getVisibleNodes = useCallback(() => {
     if (!data?.nodes) return [];
+    
+    // Solo mode: show only the selected philosopher (from search)
+    if (soloNode) {
+      const node = data.nodes.find(n => n.id === soloNode.id);
+      return node ? [node] : [];
+    }
     
     let filteredNodes = data.nodes;
     
@@ -278,7 +287,7 @@ export function useConstellation() {
     
     // Otherwise, filter by timeline (show all philosophers born before currentYear)
     return filteredNodes.filter(node => node.birth_year <= currentYear);
-  }, [data, currentYear, selectedEra, selectedSchool]);
+  }, [data, currentYear, selectedEra, selectedSchool, soloNode]);
 
   // Get visible edges (both nodes must be visible, with 1.8s delay)
   const getVisibleEdges = useCallback(() => {
@@ -421,6 +430,10 @@ export function useConstellation() {
     setSelectedEdge,
     hoveredNode,
     setHoveredNode,
+    
+    // Solo mode (search result isolation)
+    soloNode,
+    setSoloNode,
     
     // Search
     searchPhilosopher,

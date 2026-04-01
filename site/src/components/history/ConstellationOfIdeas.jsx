@@ -78,6 +78,8 @@ export function ConstellationOfIdeas() {
     setSelectedEdge,
     hoveredNode,
     setHoveredNode,
+    soloNode,
+    setSoloNode,
     searchPhilosopher,
     findPhilosopher,
     getNodeConnections,
@@ -105,6 +107,7 @@ export function ConstellationOfIdeas() {
   // Handle search result selection
   const handleSearchSelect = useCallback((node) => {
     setSelectedNode(node);
+    setSoloNode(node); // Show only this philosopher on the globe
     setShowSearch(false);
     // Jump timeline to show this philosopher
     if (node.birth_year > currentYear) {
@@ -114,7 +117,7 @@ export function ConstellationOfIdeas() {
     if (sceneRef.current?.flyToNode) {
       sceneRef.current.flyToNode(node);
     }
-  }, [currentYear, setCurrentYear, setSelectedNode]);
+  }, [currentYear, setCurrentYear, setSelectedNode, setSoloNode]);
 
   // Handle retry
   const handleRetry = useCallback(() => {
@@ -259,6 +262,7 @@ export function ConstellationOfIdeas() {
           onClose={() => {
             setSelectedNode(null);
             setSelectedEdge(null);
+            setSoloNode(null); // Exit solo mode, return to normal view
           }}
           onNodeSelect={handleNodeSelect}
           formatYear={formatYear}
