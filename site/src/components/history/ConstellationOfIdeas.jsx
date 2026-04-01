@@ -207,6 +207,56 @@ export function ConstellationOfIdeas() {
         currentYear={currentYear}
       />
 
+      {/* Left Control Bar */}
+      <div style={styles.controlBar}>
+        {/* Search */}
+        <button
+          style={styles.controlButton}
+          onClick={() => setShowSearch(true)}
+          title={t('constellation.search')}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+        </button>
+        {/* Zoom In */}
+        <button
+          style={styles.controlButton}
+          onClick={() => sceneRef.current?.zoomIn?.()}
+          title={t('constellation.zoomIn')}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+            <path d="M11 8v6M8 11h6" />
+          </svg>
+        </button>
+        {/* Zoom Out */}
+        <button
+          style={styles.controlButton}
+          onClick={() => sceneRef.current?.zoomOut?.()}
+          title={t('constellation.zoomOut')}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+            <path d="M8 11h6" />
+          </svg>
+        </button>
+        {/* Reset View */}
+        <button
+          style={styles.controlButton}
+          onClick={() => sceneRef.current?.resetView?.()}
+          title={t('constellation.resetView')}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+        </button>
+      </div>
+
       {/* Year Display */}
       <div style={styles.yearDisplay}>
         <span style={{ ...styles.yearText, fontSize: isMobile ? 24 : 32 }}>
@@ -237,7 +287,6 @@ export function ConstellationOfIdeas() {
         selectedSchool={selectedSchool}
         toggleSchoolFilter={toggleSchoolFilter}
         schools={getSchools()}
-        onSearchClick={() => setShowSearch(true)}
       />
 
       {/* Info Panel (selected node/edge) */}
@@ -282,6 +331,33 @@ const styles = {
     height: '100%',
     background: '#0a0a0f',
     overflow: 'hidden',
+  },
+
+  // Left control bar
+  controlBar: {
+    position: 'absolute',
+    left: 16,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    zIndex: 100,
+  },
+
+  controlButton: {
+    width: 40,
+    height: 40,
+    background: 'rgba(20, 20, 30, 0.85)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: 8,
+    color: '#F2F2F5',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s',
+    backdropFilter: 'blur(8px)',
   },
   
   // Loading

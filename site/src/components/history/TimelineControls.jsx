@@ -24,7 +24,6 @@ export function TimelineControls({
   selectedSchool,
   toggleSchoolFilter,
   schools = [],
-  onSearchClick,
 }) {
   const { t } = useTranslation();
   const sliderRef = useRef(null);
@@ -80,21 +79,8 @@ export function TimelineControls({
 
   return (
     <div style={styles.container}>
-      {/* Search and filter row */}
+      {/* Filter toggles row */}
       <div style={styles.topRow}>
-        {/* Search Button */}
-        <button
-          style={styles.searchButton}
-          onClick={onSearchClick}
-          aria-label={t('constellation.searchPhilosophers')}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8" />
-            <path d="M21 21l-4.35-4.35" />
-          </svg>
-          <span style={styles.searchLabel}>{t('constellation.search')}</span>
-        </button>
-
         {/* Era toggle */}
         <button
           style={{
@@ -273,31 +259,12 @@ const styles = {
     zIndex: 100,
   },
 
-  // Top row with search and filter toggles
+  // Top row with filter toggles
   topRow: {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
     marginBottom: 12,
-  },
-
-  searchButton: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    padding: '8px 14px',
-    background: 'linear-gradient(135deg, rgba(214, 21, 140, 0.2), rgba(137, 207, 240, 0.15))',
-    border: '1px solid rgba(214, 21, 140, 0.4)',
-    borderRadius: 20,
-    color: '#F2F2F5',
-    fontSize: 13,
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
-
-  searchLabel: {
-    fontSize: 13,
   },
 
   filterToggle: {
