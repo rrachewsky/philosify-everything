@@ -284,10 +284,10 @@ function getLayoutConfig() {
     foundationalAltitudeBoost: isMobile ? 4 : 6,
     mostFoundationalAltitudeBoost: isMobile ? 8 : 10,
     labelOffset: isMobile ? 3.4 : 4.2,
-    proximityThreshold: isMobile ? 2.6 : 2.2,
-    spreadRadius: isMobile ? 14 : 16,
-    altitudeVariation: isMobile ? 6 : 8,
-    labelStagger: isMobile ? 4.5 : 6,
+    proximityThreshold: isMobile ? 3.5 : 3.0,  // Wider detection for overlaps
+    spreadRadius: isMobile ? 20 : 24,          // More spread between cards
+    altitudeVariation: isMobile ? 8 : 10,
+    labelStagger: isMobile ? 6 : 8,            // More altitude separation
   };
 }
 
@@ -358,19 +358,19 @@ function calculateSpreadOffsets(nodes) {
           const col = circleIndex % cols;
           // Offset rows to create staggered pattern (horizontal zigzag)
           const rowOffset = (row % 2) * 0.5;
-          const spacing = layout.spreadRadius * 1.15;
+          const spacing = layout.spreadRadius * 1.4; // Wider spacing
           
           offsetX = (col - cols / 2 + rowOffset) * spacing;
-          offsetZ = (row - Math.ceil(spreadCount / cols) / 2) * spacing * 0.5;
+          offsetZ = (row - Math.ceil(spreadCount / cols) / 2) * spacing * 0.6;
           // Progressive altitude: each card lower than previous for depth viewing
           altitudeOffset = -circleIndex * layout.labelStagger;
         } else {
           // Circle layout for small groups - spread horizontally with vertical stagger
           const angle = (circleIndex / spreadCount) * Math.PI * 2;
-          const radius = layout.spreadRadius * (1 + (spreadCount - 1) * 0.12);
+          const radius = layout.spreadRadius * (1 + (spreadCount - 1) * 0.2); // Larger radius
           
           offsetX = Math.cos(angle) * radius;
-          offsetZ = Math.sin(angle) * radius * 0.3; // Flatten Z spread
+          offsetZ = Math.sin(angle) * radius * 0.4; // More Z spread
           // Progressive altitude: each card at different height for tilted viewing
           altitudeOffset = -circleIndex * layout.labelStagger;
         }
