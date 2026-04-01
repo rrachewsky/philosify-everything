@@ -1299,7 +1299,17 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         const worldPos = new THREE.Vector3();
         satellite.getWorldPosition(worldPos);
         const direction = worldPos.clone().normalize();
-        targetCameraRef.current = direction.multiplyScalar(250);
+        
+        // Position camera further back and lower to center the card in viewport
+        // This prevents cards at high latitudes from being hidden by the header
+        const cameraPos = direction.multiplyScalar(280);
+        
+        // For high-latitude positions (card near top/bottom of globe), 
+        // adjust camera Y to bring the card toward center of viewport
+        const latitudeOffset = worldPos.y * 0.4; // Shift camera opposite to card's Y
+        cameraPos.y -= latitudeOffset;
+        
+        targetCameraRef.current = cameraPos;
         isAnimatingRef.current = true;
       }
     },
