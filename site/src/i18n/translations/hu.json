@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "Vissza a főoldalra",
-    "history": "A Filozófia Története"
+    "history": "A Filozófia Története",
+    "historyShort": "TÖRTÉNELEM"
   },
   "constellation": {
     "loading": "Csillagkép betöltése...",

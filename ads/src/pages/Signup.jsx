@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 
-const LOGO = import.meta.env.VITE_CDN_URL
-  ? `${import.meta.env.VITE_CDN_URL}/logo.png`
-  : 'https://pub-2485a0b8727445bbb7148e85adb44812.r2.dev/logo.png';
+const LOGO = '/logo.png';
 
 function Signup() {
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -107,30 +107,50 @@ function Signup() {
           </div>
 
           <div className="field-grid">
-            <div className="field">
+            <div className="field field--password">
               <label htmlFor="signup-password">Password</label>
-              <input
-                id="signup-password"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="At least 8 characters"
-                required
-              />
+              <div className="field__password-row">
+                <input
+                  id="signup-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="At least 8 characters"
+                  required
+                />
+                <button
+                  type="button"
+                  className="field__toggle"
+                  onClick={() => setShowPassword((previous) => !previous)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
 
-            <div className="field">
+            <div className="field field--password">
               <label htmlFor="signup-confirm">Confirm password</label>
-              <input
-                id="signup-confirm"
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Repeat your password"
-                required
-              />
+              <div className="field__password-row">
+                <input
+                  id="signup-confirm"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Repeat your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="field__toggle"
+                  onClick={() => setShowConfirmPassword((previous) => !previous)}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showConfirmPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
           </div>
 

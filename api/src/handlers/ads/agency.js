@@ -152,6 +152,10 @@ async function supabaseAdminSignUp(env, email, password) {
   return response.json();
 }
 
+function getCreatedUserId(supabaseUser) {
+  return supabaseUser?.user?.id || supabaseUser?.id || null;
+}
+
 async function supabaseSignIn(env, email, password) {
   const { url, key } = await getSupabaseCredentials(env);
 
@@ -264,6 +268,11 @@ export async function handleAgencySignup(request, env, corsHeaders) {
       throw err;
     }
 
+    const createdUserId = getCreatedUserId(supabaseUser);
+    if (!createdUserId) {
+      throw new Error('Failed to create agency auth user');
+    }
+
     // AI vetting
     const vetting = await vetAdvertiser(env, { email, company_name: agency_name, website });
 
@@ -271,7 +280,7 @@ export async function handleAgencySignup(request, env, corsHeaders) {
     const { data: agency, error } = await supabase
       .from('ads.agencies')
       .insert({
-        user_id: supabaseUser.id,
+        user_id: createdUserId,
         email: email.toLowerCase(),
         password_hash: null,
         agency_name,

@@ -74,6 +74,10 @@ function isProduction(env) {
   return !origins.includes('localhost');
 }
 
+function getCreatedUserId(supabaseUser) {
+  return supabaseUser?.user?.id || supabaseUser?.id || null;
+}
+
 /**
  * Sign up a new user via Supabase Admin API
  */
@@ -180,6 +184,11 @@ export async function handleAdsSignup(request, env, corsHeaders) {
       throw err;
     }
 
+    const createdUserId = getCreatedUserId(supabaseUser);
+    if (!createdUserId) {
+      throw new Error('Failed to create advertiser auth user');
+    }
+
     // AI vetting
     const vetting = await vetAdvertiser(env, { email, company_name, website });
 
@@ -187,7 +196,7 @@ export async function handleAdsSignup(request, env, corsHeaders) {
     const { data: advertiser, error } = await supabase
       .from('ads.advertisers')
       .insert({
-        user_id: supabaseUser.id,
+        user_id: createdUserId,
         email: email.toLowerCase(),
         password_hash: null, // Not used with Supabase Auth
         company_name,

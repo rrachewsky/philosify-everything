@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "Volver al Inicio",
-    "history": "Historia de la Filosofía"
+    "history": "Historia de la Filosofía",
+    "historyShort": "HISTORIA"
   },
   "constellation": {
     "loading": "Cargando la Constelación...",

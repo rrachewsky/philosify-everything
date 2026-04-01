@@ -3,9 +3,7 @@ import { useAuth } from '@contexts/AuthContext';
 import { useAdmin } from '@contexts/AdminContext';
 
 const BRAND = 'Philosify Ads Atelier';
-const LOGO = import.meta.env.VITE_CDN_URL
-  ? `${import.meta.env.VITE_CDN_URL}/logo.png`
-  : 'https://pub-2485a0b8727445bbb7148e85adb44812.r2.dev/logo.png';
+const LOGO = '/logo.png';
 
 const advertiserNav = [
   { to: '/app', label: 'Overview', end: true },

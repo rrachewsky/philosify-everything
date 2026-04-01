@@ -106,10 +106,10 @@ export function HistorySidebar({ isOpen, onClose }) {
         aria-modal="true"
       >
         {/* Header - same pattern as Music/Cinema */}
-        <div className="music-sidebar__header" style={{ background: '#0a0a0f', borderBottom: '1px solid rgba(214, 21, 140, 0.2)' }}>
-          <span className="music-sidebar__title" style={{ color: '#D6158C' }}>
+        <div className="music-sidebar__header" style={{ background: '#0a0a0f', borderBottom: '1px solid rgba(120, 100, 180, 0.12)' }}>
+          <span className="music-sidebar__title">
             <span className="music-sidebar__icon">&#127760;</span>
-            {t('nav.history', 'History of Philosophy')}
+            {t('nav.historyShort', 'HISTORY')}
           </span>
           <button className="music-sidebar__close" onClick={onClose}>
             &times;

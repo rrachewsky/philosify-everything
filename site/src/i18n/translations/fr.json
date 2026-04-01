@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "Retour à l'Accueil",
-    "history": "Histoire de la Philosophie"
+    "history": "Histoire de la Philosophie",
+    "historyShort": "HISTOIRE"
   },
   "constellation": {
     "loading": "Chargement de la Constellation...",

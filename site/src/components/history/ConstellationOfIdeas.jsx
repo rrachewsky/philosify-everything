@@ -210,6 +210,11 @@ export function ConstellationOfIdeas() {
         currentYear={currentYear}
       />
 
+      {/* Year Display - Centered above globe */}
+      <div style={styles.yearDisplay}>
+        <span style={styles.yearText}>{formatYear(currentYear)}</span>
+      </div>
+
       {/* Left Control Bar */}
       <div style={styles.controlBar}>
         {/* Search */}
@@ -366,6 +371,25 @@ const styles = {
     justifyContent: 'center',
     transition: 'all 0.2s',
     backdropFilter: 'blur(8px)',
+  },
+
+  // Year display - centered above globe
+  yearDisplay: {
+    position: 'absolute',
+    top: 50,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 100,
+    pointerEvents: 'none',
+  },
+
+  yearText: {
+    fontFamily: "'Orbitron', monospace",
+    fontSize: 32,
+    fontWeight: 700,
+    color: '#D6158C',
+    textShadow: '0 0 20px rgba(214, 21, 140, 0.5), 0 2px 10px rgba(0, 0, 0, 0.8)',
+    letterSpacing: 2,
   },
   
   // Loading

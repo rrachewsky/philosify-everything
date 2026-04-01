@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "العودة للرئيسية",
-    "history": "تاريخ الفلسفة"
+    "history": "تاريخ الفلسفة",
+    "historyShort": "التاريخ"
   },
   "constellation": {
     "loading": "جارٍ تحميل الكوكبة...",

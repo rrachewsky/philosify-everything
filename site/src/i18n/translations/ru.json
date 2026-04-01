@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "На Главную",
-    "history": "История Философии"
+    "history": "История Философии",
+    "historyShort": "ИСТОРИЯ"
   },
   "constellation": {
     "loading": "Загрузка Созвездия...",

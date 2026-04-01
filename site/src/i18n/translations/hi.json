@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "होम पर वापस जाएं",
-    "history": "दर्शन का इतिहास"
+    "history": "दर्शन का इतिहास",
+    "historyShort": "इतिहास"
   },
   "constellation": {
     "loading": "तारामंडल लोड हो रहा है...",

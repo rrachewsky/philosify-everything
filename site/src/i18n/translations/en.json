@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "Back to Home",
-    "history": "History of Philosophy"
+    "history": "History of Philosophy",
+    "historyShort": "HISTORY"
   },
   "constellation": {
     "loading": "Loading the Constellation...",

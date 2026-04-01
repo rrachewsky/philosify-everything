@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "بازگشت به خانه",
-    "history": "تاریخ فلسفه"
+    "history": "تاریخ فلسفه",
+    "historyShort": "تاریخ"
   },
   "constellation": {
     "loading": "در حال بارگذاری صورت فلکی...",

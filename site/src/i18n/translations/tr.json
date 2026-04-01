@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "Ana Sayfaya Dön",
-    "history": "Felsefe Tarihi"
+    "history": "Felsefe Tarihi",
+    "historyShort": "TARİH"
   },
   "constellation": {
     "loading": "Takımyıldızı Yükleniyor...",

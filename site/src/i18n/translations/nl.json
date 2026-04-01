@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "Terug naar Home",
-    "history": "Geschiedenis van de Filosofie"
+    "history": "Geschiedenis van de Filosofie",
+    "historyShort": "GESCHIEDENIS"
   },
   "constellation": {
     "loading": "Constellatie laden...",

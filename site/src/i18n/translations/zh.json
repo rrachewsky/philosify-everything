@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "返回首页",
-    "history": "哲学史"
+    "history": "哲学史",
+    "historyShort": "历史"
   },
   "constellation": {
     "loading": "正在加载星座图...",

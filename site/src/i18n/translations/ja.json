@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "ホームに戻る",
-    "history": "哲学の歴史"
+    "history": "哲学の歴史",
+    "historyShort": "歴史"
   },
   "constellation": {
     "loading": "星座を読み込み中...",

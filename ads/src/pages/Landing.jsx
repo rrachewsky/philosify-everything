@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 
-const LOGO = import.meta.env.VITE_CDN_URL
-  ? `${import.meta.env.VITE_CDN_URL}/logo.png`
-  : 'https://pub-2485a0b8727445bbb7148e85adb44812.r2.dev/logo.png';
+const LOGO = '/logo.png';
 
 function Landing() {
   const { isAuthenticated } = useAuth();
@@ -37,8 +35,8 @@ function Landing() {
             <p className="eyebrow">Curated advertising for a cultivated audience</p>
             <h1>Launch campaigns with the pace of a studio and the taste of an atelier.</h1>
             <p className="lead">
-              Philosify Ads is a human-reviewed, premium placement program for brands that want to
-              appear beside reflective music analysis, discovery, and cultural exploration.
+              Philosify Ads is a premium placement program for brands that want to appear beside
+              reflective music analysis, discovery, and cultural exploration.
             </p>
             <div className="hero-panel__cta">
               <Link to={isAuthenticated ? '/app/new' : '/signup'} className="btn btn--primary btn--large">
@@ -51,15 +49,15 @@ function Landing() {
             <div className="hero-metrics">
               <div className="metric-card">
                 <span className="metric-card__value">2</span>
-                <span className="metric-card__label">Premium placements in v1</span>
+                <span className="metric-card__label">Placement formats in v1</span>
               </div>
               <div className="metric-card">
-                <span className="metric-card__value">1</span>
-                <span className="metric-card__label">Atelier revision included</span>
+                <span className="metric-card__value">Self-serve</span>
+                <span className="metric-card__label">Creative upload and campaign setup</span>
               </div>
               <div className="metric-card">
-                <span className="metric-card__value">100%</span>
-                <span className="metric-card__label">Human-reviewed launch path</span>
+                <span className="metric-card__value">Automated</span>
+                <span className="metric-card__label">Approval and launch workflow</span>
               </div>
             </div>
           </div>

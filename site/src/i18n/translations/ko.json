@@ -544,7 +544,8 @@
   },
   "nav": {
     "backToHome": "홈으로 돌아가기",
-    "history": "철학의 역사"
+    "history": "철학의 역사",
+    "historyShort": "역사"
   },
   "constellation": {
     "loading": "별자리 로딩 중...",

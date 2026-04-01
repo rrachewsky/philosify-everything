@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #131010;
-  --bg-panel: rgba(27, 19, 19, 0.78);
-  --surface: rgba(255, 248, 241, 0.06);
-  --text: #f8efe7;
-  --muted: #cdbcb1;
-  --line: rgba(255, 233, 217, 0.12);
-  --line-strong: rgba(255, 233, 217, 0.2);
-  --accent: #e8b08e;
-  --accent-strong: #f3ccb1;
-  --success: #95cbad;
-  --warning: #f0c66f;
-  --danger: #ef9a8f;
+  --bg: #07111f;
+  --bg-panel: rgba(10, 18, 34, 0.82);
+  --surface: rgba(133, 182, 255, 0.08);
+  --text: #edf4ff;
+  --muted: #93a9c8;
+  --line: rgba(125, 168, 255, 0.16);
+  --line-strong: rgba(125, 168, 255, 0.3);
+  --accent: #67e8f9;
+  --accent-strong: #8b5cf6;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
   --shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
   --radius-lg: 28px;
 }
@@ -31,9 +31,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(232, 176, 142, 0.18), transparent 28%),
-    radial-gradient(circle at top right, rgba(141, 101, 87, 0.2), transparent 30%),
-    linear-gradient(180deg, #211615 0%, #151010 45%, #100d0d 100%);
+    radial-gradient(circle at top left, rgba(103, 232, 249, 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgba(139, 92, 246, 0.2), transparent 30%),
+    linear-gradient(180deg, #0b1426 0%, #09111f 45%, #060c16 100%);
   color: var(--text);
   font-family: 'Manrope', sans-serif;
   line-height: 1.6;
@@ -232,7 +232,7 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 10px 14px;
-  background: rgba(255, 248, 241, 0.03);
+  background: rgba(133, 182, 255, 0.04);
   color: var(--muted);
   font-size: 0.92rem;
   transition: 180ms ease;
@@ -244,7 +244,7 @@ textarea {
 .choice-pill--static,
 .status-chip {
   border-color: var(--line-strong);
-  background: rgba(255, 248, 241, 0.09);
+  background: rgba(133, 182, 255, 0.1);
   color: var(--text);
 }
 
@@ -267,7 +267,7 @@ textarea {
   padding: 0 18px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(255, 248, 241, 0.04);
+  background: rgba(133, 182, 255, 0.05);
   color: var(--text);
   transition: 180ms ease;
 }
@@ -275,17 +275,25 @@ textarea {
 .btn:hover {
   transform: translateY(-1px);
   border-color: var(--line-strong);
-  background: rgba(255, 248, 241, 0.09);
+  background: rgba(133, 182, 255, 0.12);
 }
 
 .btn--primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  color: #231715;
-  border-color: transparent;
+  background: rgba(103, 232, 249, 0.14);
+  color: var(--accent);
+  border-color: rgba(103, 232, 249, 0.42);
+  box-shadow: 0 12px 28px rgba(103, 232, 249, 0.12);
+}
+
+.btn--primary:hover {
+  background: rgba(103, 232, 249, 0.2);
+  border-color: rgba(103, 232, 249, 0.6);
+  color: #dffbff;
+  box-shadow: 0 16px 32px rgba(103, 232, 249, 0.16);
 }
 
 .btn--secondary {
-  background: rgba(255, 248, 241, 0.08);
+  background: rgba(133, 182, 255, 0.08);
 }
 
 .btn--ghost {
@@ -385,6 +393,10 @@ textarea {
   color: var(--muted);
 }
 
+.field__password-row {
+  position: relative;
+}
+
 input,
 select,
 textarea {
@@ -392,8 +404,12 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 14px 16px;
-  background: rgba(255, 248, 241, 0.04);
+  background: rgba(133, 182, 255, 0.05);
   color: var(--text);
+}
+
+.field__password-row input {
+  padding-right: 82px;
 }
 
 input:focus,
@@ -401,12 +417,32 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(232, 176, 142, 0.12);
+  box-shadow: 0 0 0 4px rgba(103, 232, 249, 0.14);
 }
 
 textarea {
   min-height: 130px;
   resize: vertical;
+}
+
+.field__toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(133, 182, 255, 0.08);
+  color: var(--accent);
+  min-height: 34px;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: 180ms ease;
+}
+
+.field__toggle:hover {
+  border-color: var(--line-strong);
+  background: rgba(133, 182, 255, 0.14);
 }
 
 .alert {
@@ -467,7 +503,7 @@ textarea {
   gap: 16px;
   padding: 18px 20px;
   border-radius: 18px;
-  background: rgba(255, 248, 241, 0.03);
+  background: rgba(133, 182, 255, 0.04);
   border: 1px solid var(--line);
 }
 
@@ -557,8 +593,8 @@ textarea {
 
 .mockup {
   border-radius: 20px;
-  background: #fff7f1;
-  color: #211715;
+  background: #dce9ff;
+  color: #0f172a;
   overflow: hidden;
 }
 
@@ -567,7 +603,7 @@ textarea {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  background: #f2e2d7;
+  background: #bfd2ff;
 }
 
 .mockup__browser-dots {
@@ -579,12 +615,12 @@ textarea {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #caa792;
+  background: #6b8bd6;
 }
 
 .mockup__browser-url {
   font-size: 0.78rem;
-  color: #7d6457;
+  color: #47618f;
 }
 
 .mockup__page {
@@ -615,7 +651,7 @@ textarea {
 .mockup__skeleton-line {
   display: block;
   border-radius: 999px;
-  background: #e6d3c6;
+  background: #bdd0f6;
 }
 
 .mockup__nav span {
@@ -642,7 +678,7 @@ textarea {
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #1a1222, #cf6a96);
+  background: linear-gradient(135deg, #0f172a, #8b5cf6);
 }
 
 .mockup__song-title {
@@ -659,20 +695,20 @@ textarea {
 .mockup__progress-bar {
   height: 10px;
   border-radius: 999px;
-  background: #eadbcf;
+  background: #cddcff;
   overflow: hidden;
 }
 
 .mockup__progress-fill {
   width: 55%;
   height: 100%;
-  background: linear-gradient(90deg, #d36b97, #87c6eb);
+  background: linear-gradient(90deg, #67e8f9, #8b5cf6);
 }
 
 .mockup__progress-text {
   margin: 8px 0 14px;
   font-size: 0.76rem;
-  color: #7d6457;
+  color: #47618f;
 }
 
 .mockup__skeleton-line {
@@ -690,8 +726,8 @@ textarea {
   display: grid;
   place-items: center;
   text-align: center;
-  background: linear-gradient(135deg, #1b1224, #c65787);
-  color: #fff5ef;
+  background: linear-gradient(135deg, #0f172a, #7c3aed);
+  color: #eff6ff;
 }
 
 .mockup__ad-slot--square {
@@ -712,7 +748,7 @@ textarea {
   min-height: 220px;
   flex: 1;
   border-radius: 22px;
-  background: radial-gradient(circle at center, #3b2c53, #120d17);
+  background: radial-gradient(circle at center, #1e3a8a, #0b1020);
 }
 
 .mockup__star {
@@ -720,7 +756,7 @@ textarea {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #f7ede2;
+  background: #e0f2fe;
 }
 
 .mockup__star--1 { top: 18%; left: 25%; }
