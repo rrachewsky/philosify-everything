@@ -515,6 +515,13 @@ export const HISTORICAL_EVENTS = [
     analysis: 'Pearl Harbor ended American isolationism and made the U.S. the "arsenal of democracy." America\'s industrial capacity—the product of capitalism and free enterprise—proved decisive. The war showed that free economies outproduce command economies, even in wartime.',
   },
   {
+    year: 1942,
+    category: 'war',
+    title: 'Holocaust: Systematic Genocide Begins',
+    description: 'Nazi Germany implements the "Final Solution," systematically murdering six million Jews and millions of others.',
+    analysis: 'The Holocaust represents the ultimate consequence of collectivism: the extermination of individuals based on group identity. Nazi ideology rejected reason for racial mysticism, individual rights for tribal identity, and voluntary trade for totalitarian control. When human beings are classified as members of groups rather than as individuals with inherent rights, genocide becomes possible. The Holocaust is the definitive proof that collectivism—whether racial, national, or class-based—leads to mass murder.',
+  },
+  {
     year: 1944,
     category: 'war',
     title: 'D-Day Invasion',
@@ -550,6 +557,13 @@ export const HISTORICAL_EVENTS = [
     analysis: 'Israel\'s founding created a refuge for Jews after the Holocaust and the only liberal democracy in the Middle East. Israel\'s success in a hostile region demonstrates that free societies, even small ones, can outperform authoritarian neighbors through innovation and determination.',
   },
   {
+    year: 1950,
+    category: 'war',
+    title: 'Korean War Begins',
+    description: 'North Korea invades South Korea; UN forces led by U.S. intervene to defend the South.',
+    analysis: 'The Korean War was the first military confrontation of the Cold War, demonstrating that communist expansion would be met with force. The contrast between North and South Korea today—one a totalitarian prison, the other a prosperous democracy—is the most vivid proof that freedom works and collectivism fails. The same people, same culture, same resources, different systems: capitalism produces prosperity, communism produces poverty and oppression.',
+  },
+  {
     year: 1949,
     category: 'political',
     title: 'Communist China Established',
@@ -583,6 +597,34 @@ export const HISTORICAL_EVENTS = [
     title: 'Civil Rights Act',
     description: 'Landmark legislation outlaws discrimination based on race, color, religion, sex, or national origin.',
     analysis: 'The Civil Rights Act extended the principle of equal rights under law to all Americans. It corrected the injustice of legal discrimination, though subsequent legislation and court decisions have sometimes replaced individual rights with group preferences—a betrayal of the original principle.',
+  },
+  {
+    year: 1965,
+    category: 'war',
+    title: 'Vietnam War Escalates',
+    description: 'U.S. commits combat troops to Vietnam; war will claim over 58,000 American and millions of Vietnamese lives.',
+    analysis: 'Vietnam demonstrated the limits of military intervention without clear objectives or the will to win. The war was fought under self-imposed restrictions that guaranteed prolonged conflict. If a nation commits to war, it must commit to victory; half-measures produce only prolonged suffering. The post-war communist victory led to mass executions, re-education camps, and boat people fleeing collectivism—validating the original anti-communist cause while exposing the failure of execution.',
+  },
+  {
+    year: 1966,
+    category: 'political',
+    title: 'Cultural Revolution Begins',
+    description: 'Mao Zedong launches the Cultural Revolution in China, unleashing Red Guards to purge "counter-revolutionary" elements.',
+    analysis: 'The Cultural Revolution exposed communism\'s essential nature: totalitarian control over not just economics but thought itself. Intellectuals were murdered, books burned, tradition destroyed—all in the name of ideological purity. The Red Guards, fanatical youth weaponized against their own parents and teachers, demonstrated how collectivism corrupts the young by teaching them that loyalty to ideology supersedes all human bonds. Millions died; Chinese civilization was nearly destroyed by its own government.',
+  },
+  {
+    year: 1975,
+    category: 'war',
+    title: 'Cambodian Genocide Begins',
+    description: 'Khmer Rouge under Pol Pot seizes power, beginning genocide that kills 1.5-2 million Cambodians.',
+    analysis: 'The Cambodian genocide was communism\'s most concentrated horror—killing roughly 25% of the population in four years. Pol Pot sought to create a pure agrarian communist society by murdering everyone with education, glasses, or soft hands. The Khmer Rouge proved that Marxist ideology, taken to its logical conclusion, demands the extermination of anyone who might think independently. Year Zero meant the erasure of all human achievement; the killing fields were socialism\'s inevitable harvest.',
+  },
+  {
+    year: 1979,
+    category: 'revolution',
+    title: 'Iranian Revolution',
+    description: 'Islamic Revolution overthrows the Shah; Ayatollah Khomeini establishes theocratic rule in Iran.',
+    analysis: 'The Iranian Revolution replaced secular authoritarianism with religious totalitarianism—a regression from imperfect modernity to medieval theocracy. Khomeini\'s Islamic Republic demonstrates that religious government is incompatible with freedom: when faith claims political authority, dissent becomes heresy and heresy becomes a capital crime. The Revolution also birthed state-sponsored terrorism, exporting jihad throughout the Middle East. Iran proves that not all change is progress.',
   },
   {
     year: 1969,
@@ -627,6 +669,20 @@ export const HISTORICAL_EVENTS = [
     title: 'COVID-19 Pandemic',
     description: 'Global pandemic leads to unprecedented lockdowns and economic disruption.',
     analysis: 'The pandemic response revealed the tension between public health and individual liberty. Lockdowns destroyed businesses and livelihoods while their benefits remain disputed. The crisis demonstrated how easily people surrender freedom for promised security—and how reluctantly governments return power once seized.',
+  },
+  {
+    year: 2023,
+    category: 'war',
+    title: 'October 7: Hamas Attack on Israel',
+    description: 'Hamas terrorists from Gaza massacre 1,200 Israelis, take 250 hostages, in deadliest attack on Jews since the Holocaust.',
+    analysis: 'October 7 was not a military operation but a pogrom—the deliberate torture, rape, and murder of civilians, including babies and the elderly, for the "crime" of being Jewish. Hamas represents the fusion of Islamic fundamentalism with genocidal antisemitism: their charter calls explicitly for the destruction of Israel and the murder of Jews worldwide. Those who blamed Israel or called for "context" revealed their moral bankruptcy. There is no context that justifies the deliberate murder of civilians; there is no grievance that excuses burning families alive. Israel\'s response is not "disproportionate"—a nation has the right and duty to destroy those who seek its annihilation.',
+  },
+  {
+    year: 2024,
+    category: 'war',
+    title: 'Iran-Israel Shadow War Escalates',
+    description: 'Iran launches direct missile attack on Israel; regional conflict intensifies through proxies Hamas, Hezbollah, and Houthis.',
+    analysis: 'Iran\'s theocratic regime—the world\'s leading state sponsor of terrorism—orchestrates a multi-front war against Israel through its proxy network. The Islamic Republic seeks Israel\'s destruction not for land or resources but for ideological reasons: the existence of a successful Jewish state refutes Islamist supremacism. Iran\'s pursuit of nuclear weapons represents an existential threat not just to Israel but to civilization itself. A regime that celebrates martyrdom and promises apocalyptic redemption cannot be trusted with nuclear weapons. The West\'s policy of appeasement and nuclear "deals" has only emboldened Tehran.',
   },
 ];
 
