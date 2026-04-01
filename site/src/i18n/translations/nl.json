@@ -1260,6 +1260,22 @@
       "wang_yangming": "Eenheid van kennis en handelen; aangeboren morele kennis; hart-geest als bron van waarheid",
       "winston_churchill": "Democratie als slechtste systeem behalve alle andere; verzet tegen tirannie; individuele vrijheid; westerse beschaving",
       "zhu_xi": "Li (principe) en qi (levenskracht); onderzoek der dingen; morele cultivatie"
+    },
+    "breakingNews": "BREAKING",
+    "clickForAnalysis": "Klik voor analyse",
+    "timelineHint": "Speel de tijdlijn af om historische gebeurtenissen te zien",
+    "objectivistAnalysis": "Objectivistische Analyse",
+    "analysisNote": "Analyse gebaseerd op principes van rede, individuele rechten en kapitalisme.",
+    "eventCategories": {
+      "war": "Oorlog en Conflict",
+      "revolution": "Revolutie",
+      "science": "Wetenschap en Ontdekking",
+      "religion": "Religie",
+      "philosophy": "Filosofie",
+      "political": "Politiek",
+      "culture": "Cultuur en Kunst",
+      "economy": "Economie",
+      "technology": "Technologie"
     }
   },
   "community": {

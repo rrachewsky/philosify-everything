@@ -1159,6 +1159,22 @@
       "wang_yangming": "知行合一；生得的な道徳的知識；真理の源としての心",
       "winston_churchill": "他のすべてを除いて最悪のシステムとしての民主主義；専制への抵抗；個人の自由；西洋文明",
       "zhu_xi": "理（原理）と気（生命力）；格物；道徳的修養"
+    },
+    "breakingNews": "速報",
+    "clickForAnalysis": "分析を見るにはクリック",
+    "timelineHint": "タイムラインを再生して歴史的出来事を見る",
+    "objectivistAnalysis": "客観主義的分析",
+    "analysisNote": "理性、個人の権利、資本主義の原則に基づく分析。",
+    "eventCategories": {
+      "war": "戦争と紛争",
+      "revolution": "革命",
+      "science": "科学と発見",
+      "religion": "宗教",
+      "philosophy": "哲学",
+      "political": "政治",
+      "culture": "文化と芸術",
+      "economy": "経済",
+      "technology": "技術"
     }
   },
   "community": {

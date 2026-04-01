@@ -1175,6 +1175,22 @@
       "wang_yangming": "Unidade de conhecimento e ação; conhecimento moral inato; mente-coração como fonte da verdade",
       "winston_churchill": "Democracia como pior sistema exceto todos os outros; resistência à tirania; liberdade individual; civilização ocidental",
       "zhu_xi": "Li (princípio) e qi (força vital); investigação das coisas; cultivo moral"
+    },
+    "breakingNews": "URGENTE",
+    "clickForAnalysis": "Clique para análise",
+    "timelineHint": "Reproduza a linha do tempo para ver eventos históricos",
+    "objectivistAnalysis": "Análise Objetivista",
+    "analysisNote": "Análise baseada em princípios de razão, direitos individuais e capitalismo.",
+    "eventCategories": {
+      "war": "Guerra e Conflito",
+      "revolution": "Revolução",
+      "science": "Ciência e Descoberta",
+      "religion": "Religião",
+      "philosophy": "Filosofia",
+      "political": "Político",
+      "culture": "Cultura e Artes",
+      "economy": "Economia",
+      "technology": "Tecnologia"
     }
   },
   "community": {

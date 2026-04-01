@@ -1260,6 +1260,22 @@
       "wang_yangming": "Bilgi ve eylemin birliği; doğuştan ahlaki bilgi; hakikatin kaynağı olarak kalp-zihin",
       "winston_churchill": "Diğerleri hariç en kötü sistem olarak demokrasi; tiranlığa direniş; bireysel özgürlük; Batı medeniyeti",
       "zhu_xi": "Li (ilke) ve qi (yaşam gücü); şeylerin araştırılması; ahlaki gelişim"
+    },
+    "breakingNews": "SON DAKİKA",
+    "clickForAnalysis": "Analiz için tıklayın",
+    "timelineHint": "Tarihi olayları görmek için zaman çizelgesini oynatın",
+    "objectivistAnalysis": "Objektivist Analiz",
+    "analysisNote": "Akıl, bireysel haklar ve kapitalizm ilkelerine dayanan analiz.",
+    "eventCategories": {
+      "war": "Savaş ve Çatışma",
+      "revolution": "Devrim",
+      "science": "Bilim ve Keşif",
+      "religion": "Din",
+      "philosophy": "Felsefe",
+      "political": "Siyaset",
+      "culture": "Kültür ve Sanat",
+      "economy": "Ekonomi",
+      "technology": "Teknoloji"
     }
   },
   "community": {

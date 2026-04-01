@@ -1260,6 +1260,22 @@
       "wang_yangming": "知行合一；良知；心即理",
       "winston_churchill": "除了所有其他制度外最糟糕的制度——民主；抵抗暴政；个人自由；西方文明",
       "zhu_xi": "理与气；格物致知；道德修养"
+    },
+    "breakingNews": "突发新闻",
+    "clickForAnalysis": "点击查看分析",
+    "timelineHint": "播放时间线以查看历史事件",
+    "objectivistAnalysis": "客观主义分析",
+    "analysisNote": "基于理性、个人权利和资本主义原则的分析。",
+    "eventCategories": {
+      "war": "战争与冲突",
+      "revolution": "革命",
+      "science": "科学与发现",
+      "religion": "宗教",
+      "philosophy": "哲学",
+      "political": "政治",
+      "culture": "文化与艺术",
+      "economy": "经济",
+      "technology": "技术"
     }
   },
   "community": {

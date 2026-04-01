@@ -1193,6 +1193,22 @@
       "wang_yangming": "Einheit von Wissen und Handeln; angeborenes moralisches Wissen; Herz-Geist als Quelle der Wahrheit",
       "winston_churchill": "Demokratie als schlechtestes System außer allen anderen; Widerstand gegen Tyrannei; individuelle Freiheit; westliche Zivilisation",
       "zhu_xi": "Li (Prinzip) und Qi (Lebenskraft); Untersuchung der Dinge; moralische Kultivierung"
+    },
+    "breakingNews": "EILMELDUNG",
+    "clickForAnalysis": "Klicken für Analyse",
+    "timelineHint": "Zeitleiste abspielen, um historische Ereignisse zu sehen",
+    "objectivistAnalysis": "Objektivistische Analyse",
+    "analysisNote": "Analyse basierend auf Prinzipien der Vernunft, individueller Rechte und Kapitalismus.",
+    "eventCategories": {
+      "war": "Krieg und Konflikt",
+      "revolution": "Revolution",
+      "science": "Wissenschaft und Entdeckung",
+      "religion": "Religion",
+      "philosophy": "Philosophie",
+      "political": "Politik",
+      "culture": "Kultur und Kunst",
+      "economy": "Wirtschaft",
+      "technology": "Technologie"
     }
   },
   "community": {

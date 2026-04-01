@@ -1260,6 +1260,22 @@
       "wang_yangming": "Jedność wiedzy i działania; wrodzona wiedza moralna; serce-umysł jako źródło prawdy",
       "winston_churchill": "Demokracja jako najgorszy system z wyjątkiem wszystkich innych; opór wobec tyranii; wolność jednostki; cywilizacja zachodnia",
       "zhu_xi": "Li (zasada) i qi (siła życiowa); badanie rzeczy; kultywacja moralna"
+    },
+    "breakingNews": "PILNE",
+    "clickForAnalysis": "Kliknij, aby zobaczyć analizę",
+    "timelineHint": "Odtwórz oś czasu, aby zobaczyć wydarzenia historyczne",
+    "objectivistAnalysis": "Analiza Obiektywistyczna",
+    "analysisNote": "Analiza oparta na zasadach rozumu, praw jednostki i kapitalizmu.",
+    "eventCategories": {
+      "war": "Wojna i Konflikt",
+      "revolution": "Rewolucja",
+      "science": "Nauka i Odkrycia",
+      "religion": "Religia",
+      "philosophy": "Filozofia",
+      "political": "Polityka",
+      "culture": "Kultura i Sztuka",
+      "economy": "Gospodarka",
+      "technology": "Technologia"
     }
   },
   "community": {

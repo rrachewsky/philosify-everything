@@ -1154,6 +1154,22 @@
       "wang_yangming": "지행합일; 선천적 도덕 지식; 진리의 원천으로서의 심",
       "winston_churchill": "다른 모든 것을 제외하면 최악의 체제로서의 민주주의; 폭정에 대한 저항; 개인의 자유; 서양 문명",
       "zhu_xi": "이(理)와 기(氣); 격물; 도덕적 수양"
+    },
+    "breakingNews": "속보",
+    "clickForAnalysis": "분석을 보려면 클릭",
+    "timelineHint": "타임라인을 재생하여 역사적 사건 보기",
+    "objectivistAnalysis": "객관주의적 분석",
+    "analysisNote": "이성, 개인의 권리, 자본주의 원칙에 기반한 분석.",
+    "eventCategories": {
+      "war": "전쟁과 분쟁",
+      "revolution": "혁명",
+      "science": "과학과 발견",
+      "religion": "종교",
+      "philosophy": "철학",
+      "political": "정치",
+      "culture": "문화와 예술",
+      "economy": "경제",
+      "technology": "기술"
     }
   },
   "community": {

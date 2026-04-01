@@ -1260,6 +1260,22 @@
       "wang_yangming": "Tudás és cselekvés egysége; veleszületett erkölcsi tudás; szív-elme mint az igazság forrása",
       "winston_churchill": "Demokrácia mint legrosszabb rendszer az összes többi kivételével; zsarnokság elleni ellenállás; egyéni szabadság; nyugati civilizáció",
       "zhu_xi": "Li (elv) és qi (életerő); dolgok vizsgálata; erkölcsi művelés"
+    },
+    "breakingNews": "RENDKÍVÜLI",
+    "clickForAnalysis": "Kattintson az elemzéshez",
+    "timelineHint": "Játssza le az idővonalat a történelmi események megtekintéséhez",
+    "objectivistAnalysis": "Objektivista elemzés",
+    "analysisNote": "Az ész, az egyéni jogok és a kapitalizmus elvein alapuló elemzés.",
+    "eventCategories": {
+      "war": "Háború és konfliktus",
+      "revolution": "Forradalom",
+      "science": "Tudomány és felfedezés",
+      "religion": "Vallás",
+      "philosophy": "Filozófia",
+      "political": "Politika",
+      "culture": "Kultúra és művészet",
+      "economy": "Gazdaság",
+      "technology": "Technológia"
     }
   },
   "community": {
