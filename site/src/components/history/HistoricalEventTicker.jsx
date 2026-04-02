@@ -10,7 +10,7 @@
 
 import { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { HISTORICAL_EVENTS, EVENT_CATEGORIES } from '@/data/historicalEvents.js';
+import { HISTORICAL_EVENTS, EVENT_CATEGORIES, EVENT_HEADLINES } from '@/data/historicalEvents.js';
 import '../TopTenTicker.css';
 
 // Pre-sort events once (chronological, earliest first).
@@ -190,7 +190,7 @@ export function HistoricalEventTicker({
         >
           {SORTED_EVENTS.map((event) => {
             const cat = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
-            const title = t(`historicalEvents.${event.id}.title`, { defaultValue: event.title });
+            const headline = EVENT_HEADLINES[event.id] || event.title;
 
             return (
               <button
@@ -209,7 +209,7 @@ export function HistoricalEventTicker({
                     textTransform: 'uppercase',
                   }}
                 >
-                  {title} ({formatYear(event.year)})
+                  {headline} ({formatYear(event.year)})
                 </span>
               </button>
             );
