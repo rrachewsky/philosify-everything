@@ -604,8 +604,8 @@ export const HISTORICAL_EVENTS = [
     year: 1945,
     category: 'war',
     title: 'Atomic Bombs End WWII',
-    description: 'U.S. drops atomic bombs on Hiroshima and Nagasaki; Japan surrenders.',
-    analysis: 'POSITIVE: Ended war quickly, avoiding invasion casualties; demonstrated nuclear weapons\' horror. NEGATIVE: Over 100,000 civilians killed instantly; radiation effects continued. Long-term: Nuclear age began; Cold War deterrence prevented major power war; proliferation remains threat.',
+    description: 'U.S. drops atomic bombs on Hiroshima and Nagasaki; Japan unconditionally surrenders.',
+    analysis: 'Consequences: The atomic bombs ended World War II with Japan\'s unconditional surrender—the only acceptable outcome against an aggressor nation. Japan started the war with Pearl Harbor and committed horrific atrocities across Asia (Rape of Nanking, POW torture, Unit 731). The bombs saved hundreds of thousands of American soldiers\' lives and likely millions of Japanese lives—Japan was arming civilians to fight to the death. Philosophical significance: America had every right to use overwhelming force against an enemy that attacked first and refused to surrender. Our soldiers\' lives take priority over enemy civilians. The decision was rational, moral, and life-affirming. Victory, not prolonged bloodshed, is the goal of a just war.',
   },
   {
     id: "1945ad_2",
