@@ -243,14 +243,21 @@ export function QuizSidebar({
       try {
         const data = await resumeQuiz(i18n.language);
         if (data.hasSession && data.session) {
+          const q = data.question;
+          // Validate question has all required fields before resuming
+          const isValidQuestion = q && q.question && q.options && q.options.length > 0 && q.category;
           setSession(data.session);
-          if (data.session.status === 'active' && data.question) {
-            setCurrentQuestion(data.question);
+          if (data.session.status === 'active' && isValidQuestion) {
+            setCurrentQuestion(q);
             setGameState('playing');
             setError(null);
           } else if (data.session.status === 'failed') {
-            // Session failed (wrong answer) - show payment prompt
             setGameState('paused');
+          } else if (data.session.status === 'active' && !isValidQuestion) {
+            // Session exists but question data is invalid — end it silently
+            try { await endQuiz(data.session.id); } catch (_) {}
+            setSession(null);
+            setGameState('idle');
           }
         }
       } catch (e) {
@@ -545,8 +552,8 @@ export function QuizSidebar({
                   <span>⭐ {session?.score || 0}</span>
                 </div>
                 <div className="quiz-progress__difficulty">
-                  {getCategoryEmoji(currentQuestion.category)} {t(`quiz.categories.${currentQuestion.category}`, currentQuestion.category)}
-                  <span className="quiz-progress__stars">{getDifficultyStars(currentQuestion.difficulty)}</span>
+                  {getCategoryEmoji(currentQuestion.category)} {t(`quiz.categories.${currentQuestion.category || 'general'}`, currentQuestion.category || 'General')}
+                  <span className="quiz-progress__stars">{getDifficultyStars(currentQuestion.difficulty || 1)}</span>
                 </div>
               </div>
 
