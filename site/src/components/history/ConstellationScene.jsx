@@ -703,8 +703,11 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     });
     
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-    // Initial rotation: Based on timeline starting year (-600 = Ancient Greece ~24°E)
-    earth.rotation.y = getEarthRotationForYear(-600);
+    // Initial rotation: face Greece/Eastern Mediterranean when History opens
+    // getEarthRotationForYear gives ~-0.42 rad for 24°E, but the texture
+    // needs an additional offset to actually show that region on the visible face.
+    // Camera looks at the globe from z+ axis, so we rotate to put Greece front-center.
+    earth.rotation.y = -Math.PI * 0.85; // ~153° — puts Eastern Mediterranean facing camera
     scene.add(earth);
     earthRef.current = earth;
 
@@ -1038,14 +1041,9 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Earth rotation: smoothly lerp toward target rotation for current era
-      // When paused, globe stays still. When playing, it tracks the geographic
-      // center of philosophical activity for the current timeline year.
-      if (earthRef.current) {
-        const target = targetEarthRotationRef.current;
-        const current = earthRef.current.rotation.y;
-        // Smooth lerp toward target (0.02 = gentle tracking)
-        earthRef.current.rotation.y += (target - current) * 0.02;
+      // Continuous Earth rotation (pauses when timeline is paused)
+      if (earthRef.current && isPlayingRef.current) {
+        earthRef.current.rotation.y += 0.002;
       }
 
       // Camera fly-to animation
