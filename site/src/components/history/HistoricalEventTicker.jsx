@@ -191,6 +191,7 @@ export function HistoricalEventTicker({
           {SORTED_EVENTS.map((event) => {
             const cat = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
             const title = t(`historicalEvents.${event.id}.title`, { defaultValue: event.title });
+            const desc = t(`historicalEvents.${event.id}.description`, { defaultValue: event.description });
 
             return (
               <button
@@ -199,13 +200,12 @@ export function HistoricalEventTicker({
                 onClick={() => handleEventClick(event)}
                 style={{ direction: 'ltr' }}
               >
-                <span className="ticker-rank">{cat.icon} {formatYear(event.year)}</span>
-                <span className="ticker-separator">&mdash;</span>
+                <span className="ticker-rank">{cat.icon}</span>
                 <span
                   className="ticker-song"
                   style={{ maxWidth: 'none', overflow: 'visible', textOverflow: 'unset' }}
                 >
-                  {title}
+                  {title} &mdash; {desc} ({formatYear(event.year)})
                 </span>
               </button>
             );
