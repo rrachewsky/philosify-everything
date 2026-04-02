@@ -18,6 +18,11 @@ export function HistoricalEventInfoPanel({
 
   const category = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
 
+  // Get translated content with fallbacks to English data
+  const translatedTitle = t(`historicalEvents.${event.id}.title`, { defaultValue: event.title });
+  const translatedDescription = t(`historicalEvents.${event.id}.description`, { defaultValue: event.description });
+  const translatedAnalysis = t(`historicalEvents.${event.id}.analysis`, { defaultValue: event.analysis });
+
   return (
     <div style={isMobile ? styles.containerMobile : styles.container}>
       {/* Mobile drag handle */}
@@ -35,20 +40,24 @@ export function HistoricalEventInfoPanel({
 
       {/* Scrollable content */}
       <div style={styles.scrollContainer}>
-        {/* Header */}
+        {/* Year - positioned at top left, away from close button */}
+        <div style={styles.yearContainer}>
+          <div style={styles.year}>{formatYear(event.year)}</div>
+        </div>
+
+        {/* Header - category badge below year */}
         <div style={styles.header}>
           <div style={{ ...styles.categoryBadge, background: `${category.color}22`, borderColor: category.color }}>
             <span style={styles.categoryIcon}>{category.icon}</span>
             <span style={{ ...styles.categoryLabel, color: category.color }}>{category.label}</span>
           </div>
-          <div style={styles.year}>{formatYear(event.year)}</div>
         </div>
 
         {/* Title */}
-        <h2 style={styles.title}>{event.title}</h2>
+        <h2 style={styles.title}>{translatedTitle}</h2>
 
         {/* Description */}
-        <p style={styles.description}>{event.description}</p>
+        <p style={styles.description}>{translatedDescription}</p>
 
         {/* Divider */}
         <div style={styles.divider} />
@@ -62,7 +71,20 @@ export function HistoricalEventInfoPanel({
             </svg>
             <span>{t('constellation.philosifyAnalysis', "Philosify's Analysis")}</span>
           </div>
-          <p style={styles.analysisText}>{event.analysis}</p>
+          <p style={styles.analysisText}>
+            {(() => {
+              // Match "Philosify's view:", "Philosify:", "Visão do Philosify:", etc.
+              const match = translatedAnalysis.match(/(.*?)((?:[^.]*?)?Philosify(?:'s view|'s View)?[^:]*:)(.*)/s);
+              if (!match) return translatedAnalysis;
+              return (
+                <>
+                  {match[1]}
+                  <span style={{ color: '#00e5ff', fontWeight: 700 }}>{match[2]}</span>
+                  {match[3]}
+                </>
+              );
+            })()}
+          </p>
         </div>
       </div>
     </div>
@@ -158,10 +180,14 @@ const styles = {
     padding: '16px 20px 24px',
   },
 
+  yearContainer: {
+    marginBottom: 8,
+  },
+
   header: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginBottom: 12,
   },
 
@@ -186,10 +212,11 @@ const styles = {
   },
 
   year: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 700,
     fontFamily: "'Orbitron', monospace",
     color: '#D6158C',
+    letterSpacing: 1,
   },
 
   title: {
