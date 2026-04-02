@@ -405,6 +405,13 @@ export const PHILOSOPHER_PORTRAITS = {
   'sam_harris': '/portraits/sam_harris.jpg',
   'christopher_hitchens': '/portraits/christopher_hitchens.jpg',
   'richard_dawkins': '/portraits/richard_dawkins.jpg',
+  
+  // POLITICAL & CIVIL RIGHTS
+  'winston_churchill': '/portraits/winston_churchill.jpg',
+  'martin_luther_king_jr': '/portraits/martin_luther_king_jr.jpg',
+  
+  // COGNITIVE SCIENCE
+  'steve_pinker': '/portraits/steve_pinker.jpg',
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -6095,6 +6102,110 @@ export const SEED_NODES = [
     // Pop philosopher: movies, jokes, endless books. Entertaining but philosophically confused.
     battles: { reason_faith: 0.3, reality_mysticism: 0.2, individual_collective: -0.3, freedom_coercion: 0.3, value_nihilism: 0.2, market_planning: -0.4, beauty_chaos: 0.4, good_evil: 0.2 }
   },
+
+  // ═══════════════════════════════════════════════════════════
+  // POLITICAL STATESMANSHIP & CIVIL RIGHTS
+  // ═══════════════════════════════════════════════════════════
+  {
+    id: 'winston_churchill',
+    name: 'Winston Churchill',
+    birth_year: 1874,
+    death_year: 1965,
+    dates: '1874–1965',
+    birth_city: 'Woodstock',
+    birth_country_modern: 'United Kingdom',
+    latitude: 51.8486,
+    longitude: -1.3540,
+    school_of_thought: 'Political Statesmanship',
+    school: 'Liberal',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Defense of Western civilization; anti-totalitarianism; individual courage; democracy; "Never surrender"'],
+    historical_weight: 1.0,
+    // Winston Churchill: British Prime Minister; wartime leader; defender of Western civilization.
+    // High reason (+0.8): practical wisdom applied to politics; clear-eyed assessment of threats.
+    // Churchill saw evil clearly (Hitler, Stalin) when others practiced appeasement.
+    // High reality (+0.85): faced facts unflinchingly; "The truth is incontrovertible."
+    // High individual (+0.8): celebrated individual heroism, achievement, and responsibility.
+    // "We shall never surrender" — individual will against collective tyranny.
+    // High freedom (+0.8): defended democracy and liberty against fascism and communism.
+    // Anti-totalitarian: recognized Nazi and Soviet threats before most contemporaries.
+    // Moderate market (+0.5): supported free enterprise but accepted welfare state pragmatically.
+    // High value (+0.8): believed in objective values, Western civilization's moral worth.
+    // High good_evil (+0.9): moral clarity — evil must be named and fought, not appeased.
+    // Nobel Prize in Literature. Historian, painter, bricklayer. Man of action AND thought.
+    // "History will be kind to me, for I intend to write it."
+    battles: { reason_faith: 0.8, reality_mysticism: 0.85, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.5, beauty_chaos: 0.7, good_evil: 0.9 }
+  },
+  {
+    id: 'martin_luther_king_jr',
+    name: 'Martin Luther King Jr.',
+    birth_year: 1929,
+    death_year: 1968,
+    dates: '1929–1968',
+    birth_city: 'Atlanta',
+    birth_country_modern: 'United States',
+    latitude: 33.7490,
+    longitude: -84.3880,
+    school_of_thought: 'Civil Rights / Nonviolence',
+    school: 'Liberal',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Nonviolent resistance; civil disobedience; beloved community; judged by character not color; individual dignity'],
+    historical_weight: 1.0,
+    // Martin Luther King Jr.: American civil rights leader; Baptist minister; Nobel Peace Prize.
+    // High reason (+0.7): used moral argument and persuasion; "Letter from Birmingham Jail" is
+    // masterpiece of reasoned argument for justice. BUT: grounded in religious faith.
+    // Moderate reality (+0.6): believed in objective moral truth but rooted in Christian theology.
+    // High individual (+0.8): "I have a dream that my four little children will one day live in
+    // a nation where they will not be judged by the color of their skin but by the content of
+    // their character." Individual dignity and merit over group identity.
+    // High freedom (+0.8): fought for equal rights under law; nonviolent civil disobedience
+    // against unjust laws. "Injustice anywhere is a threat to justice everywhere."
+    // High value (+0.8): believed in objective justice and human dignity.
+    // Moderate market (+0.3): later years showed democratic socialist leanings; Poor People's Campaign.
+    // High good_evil (+0.85): moral clarity about segregation as evil; redemptive love over hatred.
+    // Influenced by: Gandhi (nonviolence), Thoreau (civil disobedience), Christianity.
+    // "Darkness cannot drive out darkness; only light can do that."
+    battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.3, beauty_chaos: 0.6, good_evil: 0.85 }
+  },
+
+  // COGNITIVE SCIENCE / EVOLUTIONARY PSYCHOLOGY
+  {
+    id: 'steve_pinker',
+    name: 'Steven Pinker',
+    birth_year: 1954,
+    death_year: null,
+    dates: '1954–',
+    birth_city: 'Montreal',
+    birth_country_modern: 'Canada',
+    latitude: 45.5017,
+    longitude: -73.5673,
+    school_of_thought: 'Cognitive Psychology / Evolutionary Psychology',
+    school: 'Naturalist (Contemporary)',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: false,
+    key_ideas: ['The Blank Slate; Better Angels; Enlightenment Now; language instinct; defense of reason and progress'],
+    historical_weight: 0.75,
+    // Steven Pinker: Canadian-American cognitive psychologist; Harvard professor; public intellectual.
+    // Very high reason (+0.95): fierce defender of Enlightenment rationalism against postmodernism.
+    // "Enlightenment Now" argues reason, science, and humanism have made the world better.
+    // Very high reality (+0.9): scientific realism; human nature is real; "The Blank Slate" attacks
+    // social constructionism and the denial of innate human nature.
+    // High individual (+0.7): liberal in classical sense; values individual rights and merit.
+    // BUT accepts some state intervention; not libertarian.
+    // High freedom (+0.7): free speech defender; critic of campus illiberalism.
+    // High value (+0.8): objective progress is real; violence has declined; life has improved.
+    // Moderate market (+0.5): capitalist but not laissez-faire; accepts welfare state.
+    // High good_evil (+0.75): believes in moral progress; Enlightenment values are objectively better.
+    // "Better Angels of Our Nature" — violence has declined due to reason and commerce.
+    // Against postmodernism, blank-slatism, and pessimism about human progress.
+    // Chomsky's student who rejected his politics; evolutionary psychology vs. linguistics politics.
+    battles: { reason_faith: 0.95, reality_mysticism: 0.9, individual_collective: 0.7, freedom_coercion: 0.7, value_nihilism: 0.8, market_planning: 0.5, beauty_chaos: 0.6, good_evil: 0.75 }
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -6542,6 +6653,31 @@ export const SEED_EDGES = [
   { source_id: 'richard_dawkins', target_id: 'sam_harris', relationship_type: 'influenced', weight: 2 },
   { source_id: 'richard_dawkins', target_id: 'christopher_hitchens', relationship_type: 'influenced', weight: 2 },
   { source_id: 'christopher_hitchens', target_id: 'sam_harris', relationship_type: 'influenced', weight: 1 },
+
+  // ═══════════════════════════════════════════════════════════
+  // POLITICAL STATESMANSHIP - CHURCHILL
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'edmund_burke', target_id: 'winston_churchill', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_locke', target_id: 'winston_churchill', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_stuart_mill', target_id: 'winston_churchill', relationship_type: 'influenced', weight: 1 },
+
+  // ═══════════════════════════════════════════════════════════
+  // CIVIL RIGHTS - MARTIN LUTHER KING JR.
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'gandhi', target_id: 'martin_luther_king_jr', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'henry_david_thoreau', target_id: 'martin_luther_king_jr', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'frederick_douglass', target_id: 'martin_luther_king_jr', relationship_type: 'influenced', weight: 2 },
+
+  // ═══════════════════════════════════════════════════════════
+  // COGNITIVE SCIENCE - STEVE PINKER
+  // ═══════════════════════════════════════════════════════════
+  { source_id: 'noam_chomsky', target_id: 'steve_pinker', relationship_type: 'influenced', weight: 3 },
+  { source_id: 'darwin', target_id: 'steve_pinker', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'john_locke', target_id: 'steve_pinker', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'david_hume', target_id: 'steve_pinker', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'steve_pinker', target_id: 'richard_dawkins', relationship_type: 'influenced', weight: 1 },
+  { source_id: 'richard_dawkins', target_id: 'steve_pinker', relationship_type: 'influenced', weight: 2 },
+  { source_id: 'daniel_dennett', target_id: 'steve_pinker', relationship_type: 'influenced', weight: 2 },
 ];
 
 export default { SEED_NODES, SEED_EDGES, SCHOOL_COLORS, SCHOOL_STANCES };
