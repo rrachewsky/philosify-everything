@@ -532,6 +532,10 @@
       "history": {
         "title": "Történelem",
         "description": "Fedezd fel 2600 év filozófiai gondolkodását"
+      },
+      "quiz": {
+        "title": "Kvíz",
+        "description": "Teszteld filozófiai tudásodat"
       }
     },
     "comingSoonDesc": {
@@ -1609,99 +1613,617 @@
     }
   },
   "historicalEvents": {
-    "594bc": "Solon\\'s Reforms in Athens",
-    "509bc": "Roman Republic Founded",
-    "490bc": "Battle of Marathon",
-    "480bc": "Battle of Thermopylae & Salamis",
-    "399bc": "Trial and Death of Socrates",
-    "336bc": "Alexander the Great Begins Conquest",
-    "323bc": "Death of Alexander the Great",
-    "264bc": "First Punic War Begins",
-    "146bc": "Destruction of Carthage",
-    "49bc": "Caesar Crosses the Rubicon",
-    "44bc": "Assassination of Julius Caesar",
-    "31bc": "Battle of Actium",
-    "30ad": "Crucifixion of Jesus",
-    "79ad": "Eruption of Vesuvius",
-    "180ad": "Death of Marcus Aurelius",
-    "313ad": "Edict of Milan",
-    "380ad": "Christianity Becomes State Religion",
-    "410ad": "Visigoths Sack Rome",
-    "476ad": "Fall of Western Roman Empire",
-    "529ad": "Closing of Platonic Academy",
-    "622ad": "Hegira - Birth of Islam",
-    "732ad": "Battle of Tours",
-    "800ad": "Charlemagne Crowned Emperor",
-    "1054ad": "Great Schism",
-    "1066ad": "Norman Conquest of England",
-    "1095ad": "First Crusade Called",
-    "1215ad": "Magna Carta Signed",
-    "1265ad": "First English Parliament",
-    "1347ad": "Black Death Reaches Europe",
-    "1439ad": "Gutenberg\\'s Printing Press",
-    "1453ad": "Fall of Constantinople",
-    "1492ad": "Columbus Reaches Americas",
-    "1517ad": "Protestant Reformation Begins",
-    "1543ad": "Copernican Revolution",
-    "1588ad": "Defeat of Spanish Armada",
-    "1607ad": "Jamestown Founded",
-    "1620ad": "Mayflower Compact",
-    "1642ad": "English Civil War Begins",
-    "1648ad": "Peace of Westphalia",
-    "1687ad": "Newton\\'s Principia Published",
-    "1688ad": "Glorious Revolution",
-    "1689ad": "Locke\\'s Two Treatises Published",
-    "1776ad": "American Declaration of Independence",
-    "1787ad": "U.S. Constitution Written",
-    "1789ad": "French Revolution Begins",
-    "1791ad": "Bill of Rights Ratified",
-    "1804ad": "Napoleon Crowned Emperor",
-    "1815ad": "Battle of Waterloo",
-    "1833ad": "British Slavery Abolition Act",
-    "1848ad": "Revolutions of 1848",
-    "1848ad_2": "Communist Manifesto Published",
-    "1859ad": "Origin of Species Published",
-    "1861ad": "American Civil War Begins",
-    "1863ad": "Emancipation Proclamation",
-    "1865ad": "13th Amendment Ratified",
-    "1869ad": "Transcontinental Railroad Completed",
-    "1876ad": "Telephone Invented",
-    "1879ad": "Edison\\'s Light Bulb",
-    "1886ad": "Statue of Liberty Dedicated",
-    "1903ad": "Wright Brothers\\' Flight",
-    "1905ad": "Einstein\\'s Miracle Year",
-    "1914ad": "World War I Begins",
-    "1917ad": "Russian Revolution",
-    "1918ad": "World War I Ends",
-    "1920ad": "19th Amendment Ratified",
-    "1929ad": "Stock Market Crash",
-    "1933ad": "Hitler Becomes Chancellor",
-    "1939ad": "World War II Begins",
-    "1941ad": "Pearl Harbor Attack",
-    "1942ad": "Holocaust: Systematic Genocide",
-    "1944ad": "D-Day Invasion",
-    "1945ad": "Atomic Bombs End WWII",
-    "1945ad_2": "United Nations Founded",
-    "1947ad": "Ayn Rand\\'s The Fountainhead Success",
-    "1948ad": "Israel Founded",
-    "1950ad": "Korean War Begins",
-    "1949ad": "Communist China Established",
-    "1957ad": "Atlas Shrugged Published",
-    "1961ad": "First Human in Space",
-    "1963ad": "Kennedy Assassination",
-    "1964ad": "Civil Rights Act",
-    "1965ad": "Vietnam War Escalates",
-    "1966ad": "Cultural Revolution Begins",
-    "1975ad": "Cambodian Genocide Begins",
-    "1979ad": "Iranian Revolution",
-    "1969ad": "Moon Landing",
-    "1989ad": "Fall of Berlin Wall",
-    "1991ad": "Soviet Union Dissolves",
-    "2001ad": "September 11 Attacks",
-    "2008ad": "Global Financial Crisis",
-    "2020ad": "COVID-19 Pandemic",
-    "2023ad": "October 7: Hamas Attack on Israel",
-    "2024ad": "Iran-Israel Tensions Escalate",
-    "2022ad": "Russia Invades Ukraine"
+    "594bc": {
+      "title": "Szolón Reformjai Athénban",
+      "description": "Szolón alkotmányos reformokat vezet be Athénban, megteremtve a demokrácia alapjait.",
+      "analysis": "Következmények: Szolón eltörölte az adósrabszolgaságot, vagyoni alapú állampolgárságot hozott létre, amely a gazdasági érdekeltséget politikai részvételhez kötötte, és megteremtette a jogállamiság alapjait, amelyből az athéni demokrácia kifejlődött. Ezek a reformok a Földközi-tenger egész térségében elterjesztették a görög politikai eszméket. Philosify nézete: Döntő lépés volt az egyéni jogok társadalmi elismerése felé. A részvétel tulajdonhoz kötésével Szolón ösztönzőket teremtett a produktív állampolgárság számára. Az az elv, hogy még az uralkodók is a törvény – és nem önkényes szeszély – alá tartoznak, a szabadság alapja.",
+      "headline": "Szolón eltörli az adósrabszolgaságot, átírja az athéni törvényeket"
+    },
+    "509bc": {
+      "title": "Római Köztársaság Megalapítása",
+      "description": "Róma megdönti a monarchiát és megalapítja a Köztársaságot választott consulokkal.",
+      "analysis": "Következmények: Róma olyan intézményeket hozott létre, amelyek megosztották a hatalmat a consulok, a Szenátus és a népgyűlések között. A társadalmukban érdekelt polgár-katonák 500 éven át fennálló birodalmat építettek. A római jog, mérnöki tudás és kormányzás minden későbbi nyugati civilizációra hatást gyakorolt. Philosify nézete: A Köztársaság megmutatta, hogy a megosztott hatalom és a jogállamiság lehetővé teszi az emberi boldogulást. Amikor az egyéni jogokat intézmények védik az uralkodó szeszélye helyett, jólét következik. Róma későbbi bukása a császárságba figyelmeztet a hatalom koncentrálásának veszélyére.",
+      "headline": "Róma megdönti a monarchiát, köztársaságot kiált ki"
+    },
+    "490bc": {
+      "title": "Marathóni Csata",
+      "description": "A görögök legyőzik a perzsa inváziót, megőrizve a görög függetlenséget és kultúrát.",
+      "analysis": "Következmények: Megőrizte a görög függetlenséget, lehetővé téve a filozófia, demokrácia, tudomány és művészetek további fejlődését. Bebizonyította, hogy a saját szabadságukért harcoló polgári hadseregek legyőzhetik a távoli császárért küzdő nagyobb erőket. Philosify nézete: Marathon megmutatja, hogy a saját értékeikért harcoló szabad emberek hatékonyabbak, mint a gazdájukért harcoló rabszolgák. A görög győzelem lehetővé tette azt a filozófiai hagyományt, amely felfedezte az észt mint az emberiség túlélési eszközét. A nyugati civilizáció létét ennek a csatának köszönheti.",
+      "headline": "A görögök szétzúzzák a perzsa inváziót Marathónnál"
+    },
+    "480bc": {
+      "title": "Thermopülai és Szalamiszi Csaták",
+      "description": "A görögök ellenállnak a perzsa inváziónak; 300 spártai legendás küzdelmet vív.",
+      "analysis": "Következmények: A spártaiak áldozata időt nyert a görög egységnek; a szalamiszi tengeri győzelem döntőnek bizonyult. A perzsa terjeszkedés végleg megállt. A görög civilizáció túlélte, hogy Szókratészt, Platónt, Arisztotelészt és a nyugati gondolkodás alapjait létrehozza. Philosify nézete: Thermopülai a hősiességet jelképezi – nem a mártíromságot. A spártaiak legfőbb értékükért harcoltak: a szabadságért. Nem semmiért áldozták fel magukat; győzelmet vásároltak Görögországnak. A hős az értékeiért kockáztatja életét; a mártír a halálért hal meg.",
+      "headline": "300 spártai tartja a vonalat Thermopülainál"
+    },
+    "399bc": {
+      "title": "Szókratész Pere és Halála",
+      "description": "Az athéni demokrácia halálra ítéli Szókratészt \"az ifjúság megrontása\" vádjával.",
+      "analysis": "Következmények: Szókratész menekülés-megtagadása az intellektuális integritás mártírjává tette. Platón megőrizte tanításait és megalapította az Akadémiát. A per alapvető kérdéseket vetett fel az egyéni lelkiismeret és az államhatalom viszonyáról, amelyek ma is aktuálisak. Philosify nézete: A demokrácia kivégezte legnagyobb filozófusát – bizonyítva, hogy a többségi uralom alkotmányos korlátok nélkül zsarnokság. Az egyéni jogokat a többségtől kell védeni. Szókratész megmutatta, hogy a gondolkodó embernek az észt kell követnie, nem a közvéleményt, akár a halálig is.",
+      "headline": "Athén halálra ítéli Szókratészt"
+    },
+    "336bc": {
+      "title": "Nagy Sándor Elkezdi Hódításait",
+      "description": "Alexandrosz király lesz és hadjáratot indít, amely elterjeszti a görög kultúrát.",
+      "analysis": "Következmények: A görög nyelv, filozófia, tudomány és kereskedelem hatalmas területeken terjedt el Egyiptomtól Indiáig. Sándor városokat alapított, amelyek a tanulás központjaivá váltak. A hellenisztikus világ évszázadokig lehetővé tette az eszmék cseréjét Kelet és Nyugat között. Philosify nézete: Sándor hódításainak vegyes eredményei voltak – a görög racionalizmus terjedése értékes volt, de a hódító birodalomépítés sérti az egyéni jogokat. A tartós örökség kulturális, nem politikai: a kereskedelem és tanulás által terjedő eszmék túlélik a kard által terjesztetteket.",
+      "headline": "Sándor hadjáratot indít az ismert világ meghódítására"
+    },
+    "323bc": {
+      "title": "Nagy Sándor Halála",
+      "description": "Alexandrosz 32 évesen meghal; birodalma utódkirályságokra hullik szét.",
+      "analysis": "Következmények: A birodalom háborúzó utódállamokra szakadt szét. A görög kultúra és kereskedelem azonban fennmaradt ezekben a királyságokban. Könyvtárak, iskolák és kereskedelmi hálózatok működtek tovább. Az államok közötti verseny néha elősegítette az innovációt. Philosify nézete: Az egyetlen ember karizmájára épülő birodalmak ritkán élik túl alapítójukat. A tartós intézményekhez elvek kellenek, nem személyiségek. A hellenisztikus világ fennmaradása a politikai széttagoltság ellenére megmutatja, hogy a kultúra és kereskedelem – az önkéntes csere – fontosabb a politikai egységnél.",
+      "headline": "Nagy Sándor 32 évesen meghalt, birodalma szétesik"
+    },
+    "264bc": {
+      "title": "Első Pun Háború Kezdete",
+      "description": "Róma és Karthágó egy évszázados háborúba kezd a Földközi-tenger feletti uralomért.",
+      "analysis": "Következmények: Róma tengeri képességeket fejlesztett ki és Itálián túlra terjeszkedett. Szicília hosszú hadviselés során elpusztult. Elindította Rómát a Földközi-tenger uralma felé, amely példátlan békét és kereskedelmet hozott. Philosify nézete: A hódító háborúk az élet és vagyon hatalmas pusztulásával járnak. Róma végső győzelme azonban a Pax Romanát hozta – bizonyítva, hogy az egységes jogállamiság, még ha tökéletlenül alkalmazták is, több jólétet tesz lehetővé, mint a rivális hatalmak közötti állandó hadviselés.",
+      "headline": "Róma és Karthágó összecsap a Földközi-tenger feletti uralomért"
+    },
+    "146bc": {
+      "title": "Karthágó Lerombolása",
+      "description": "Róma teljesen elpusztítja Karthágót és a Földközi-tenger legfőbb hatalma lesz.",
+      "analysis": "Következmények: A karthágói civilizáció teljes megsemmisítése; 50 000 túlélőt rabszolgává tettek. Róma Földközi-tengeri monopóliuma példátlan kereskedelmet, kulturális cserét és az évszázadokig tartó Pax Romanát tette lehetővé. Philosify nézete: A teljes háború egy legyőzött ellenség ellen túlzás – Karthágó nem jelentett további fenyegetést. Az eredményül kapott római béke azonban három kontinensen tette lehetővé a jólétet. A tanulság: a jogállamiság alatti stabil rend, még ha brutálisan is létesült, jobb az örökös konfliktusnál.",
+      "headline": "Róma porig égeti Karthágót"
+    },
+    "49bc": {
+      "title": "Caesar Átkel a Rubiconon",
+      "description": "Julius Caesar polgárháborút indít, amely véget vet a Római Köztársaságnak.",
+      "analysis": "Következmények: 460 év köztársasági kormányzás elpusztult. Caesar reformjai valós problémákat kezeltek – adósság, földosztás, állampolgárság – de precedenst teremtettek a hatalom katonai megragadására. A Birodalomhoz vezetett, amely stabilitást hozott, de véget vetett a római politikai szabadságnak. Philosify nézete: Bármennyire is jogosak voltak Caesar sérelmei, a hatalom erőszakos megragadása lerombolta az alkotmányos rendet. A Köztársaság fékjei és ellensúlyai, bár tökéletlenek, jobban védték a szabadságot, mint a 'jóindulatú' diktátorok uralma. A jó szándékok nem igazolják az intézmények lerombolását.",
+      "headline": "Caesar átkel a Rubiconon, Róma ellen vonul"
+    },
+    "44bc": {
+      "title": "Julius Caesar Meggyilkolása",
+      "description": "Római szenátorok meggyilkolják Caesart március idusán.",
+      "analysis": "Következmények: Újabb, az elsőnél pusztítóbb polgárháborút robbantott ki. A Köztársaságot nem lehetett helyreállítani; Octavianus Augustus-ként az első császár lett. A merénylők ügye elveszett; módszereik lejáratták a republikanizmust. Philosify nézete: A politikai problémákat nem lehet egyének kiiktatásával megoldani, ha az alapvető körülmények fennmaradnak. A merénylők helyesen azonosították a zsarnokságot, de nem kínáltak működőképes alternatívát. Az elvek és intézmények fontosabbak a személyiségeknél – Caesar eltávolítása nem állította helyre a Köztársaságot.",
+      "headline": "Szenátorok meggyilkolják Julius Caesart március idusán"
+    },
+    "31bc": {
+      "title": "Actiumi Csata",
+      "description": "Octavianus legyőzi Antoniust és Kleopátrát, Róma egyeduralkodója lesz.",
+      "analysis": "Következmények: Évtizedes polgárháború véget ért. Augustus békét, jólétet és a két évszázadig tartó Pax Romanát hozta. A kereskedelem virágzott, városok nőttek, a művészetek és irodalom virultak. De a Köztársaság halott volt; a hatalom egy személyben koncentrálódott. Philosify nézete: Az augustusi béke megmutatja, hogy a rend lehetővé teszi a jólétet – de a politikai szabadság árán. A biztonság és szabadság közötti kompromisszum valós. Róma a biztonságot választotta; végül a koncentrált hatalom korrumpálódott és a Birodalom elbukott. A hatalom alkotmányos korlátozása továbbra is alapvető.",
+      "headline": "Octavianus legyőzi Antoniust és Kleopátrát Actiumnál"
+    },
+    "30ad": {
+      "title": "Jézus Keresztre Feszítése",
+      "description": "A názáreti Jézust keresztre feszítik Jeruzsálemben; a kereszténység alapító eseménye.",
+      "analysis": "Következmények: A kereszténység ebből az eseményből sarjadt ki, végül átalakítva a nyugati civilizáció értékeit, művészetét, filozófiáját, jogát és intézményeit. Az egyetemes erkölcsi egyenlőség, az egyéni lelkiismeret és a peremre szorultakról való gondoskodás koncepciói bekerültek a nyugati kultúrába. Philosify nézete: A kereszténység értékes koncepciókat vezetett be – egyéni erkölcsi érték, lelkiismeret, jótékonyság – de hitalapú ismeretelméletet is, amely ellentmond az észnek. A vegyes örökség humanitárius haladást és vallási üldözést egyaránt magában foglal. Az eszméket tartalmuk és következményeik alapján kell megítélni, nem eredetük szerint.",
+      "headline": "A názáreti Jézust Jeruzsálemben keresztre feszítik"
+    },
+    "79ad": {
+      "title": "Vezúv Kitörése",
+      "description": "Vulkánkitörés elpusztítja Pompejit és Herculaneumot.",
+      "analysis": "Következmények: Ezrek haltak meg; virágzó városok órák alatt pusztultak el. A vulkáni hamu alatti megőrzés azonban páratlan tudást adott a római mindennapi életről, művészetről, építészetről és kultúráról, ami egyébként elveszett volna. Philosify nézete: A természeti katasztrófák emlékeztetnek a valóság közömbösségére az emberi vágyak iránt. A természet okság szerint működik, nem szándék szerint. A megfelelő válasz a természeti erők megértése tudományon keresztül és védőintézkedések kiépítése – nem ima vagy fatalizmus. Pompeji megőrzése az emberi tudást szolgálja.",
+      "headline": "A Vezúv kitör, hamuba temeti Pompejit"
+    },
+    "180ad": {
+      "title": "Marcus Aurelius Halála",
+      "description": "Az \"Öt Jó Császár\" utolsója meghal; Róma hosszú hanyatlásnak indul.",
+      "analysis": "Következmények: Marcus Aurelius alkalmatlan fiát, Commodust választotta utódjának, véget vetve a tehetséges örökösök adoptálása gyakorlatának. Róma instabilitás, polgárháborúk és évszázadokon át gyengülő hanyatlás időszakába lépett. Philosify nézete: Még a filozófus-királyok is rossz döntéseket hoznak. Marcus Aurelius uralma bizonyította, hogy a filozófia vezérelheti a kormányzást – de utódlási választása bizonyította, hogy a koncentrált hatalom a születés és jellem véletleneitől függ. Az intézményi fékek fontosabbak a bölcs uralkodóknál.",
+      "headline": "Marcus Aurelius meghalt, Róma aranykorának vége"
+    },
+    "313ad": {
+      "title": "Milánói Ediktum",
+      "description": "Constantinus legalizálja a kereszténységet az egész Római Birodalomban.",
+      "analysis": "Következmények: Véget vetett a keresztények üldözésének; megalapozta a vallási tolerancia elvét. A kereszténység gyorsan növekedett állami támogatással, kórházakat, iskolákat és jótékonysági intézményeket építve. Ugyanakkor megkezdődött az egyház és állam összefonódása. Philosify nézete: A vallási tolerancia alapvető a szabadsághoz – az állam nem üldözheti és nem is támogathatja a vallást. Az Ediktum helyesen vetett véget az üldözésnek, de Constantinus későbbi kereszténység-pártolása precedenst teremtett a jövőbeli vallási kényszerítésre.",
+      "headline": "Constantinus legalizálja a kereszténységet a Római Birodalomban"
+    },
+    "380ad": {
+      "title": "Kereszténység Államvallássá Válik",
+      "description": "Theodosius császár a kereszténységet Róma hivatalos vallásává teszi.",
+      "analysis": "Következmények: A kereszténység erőforrásokat kapott, hogy kórházakat, iskolákat és szociális szolgáltatásokat építsen a birodalom-szerte. A pogányok és keresztény 'eretnekek' azonban most már üldözéssel szembesültek. A vallási kényszerítés felváltotta a vallási toleranciát. Philosify nézete: Az államvallás sérti a lelkiismereti szabadságot. A hit kikényszerítése erkölcstelen és hatástalan is – valódi meggyőződést nem lehet kikényszeríteni. Az egyház-állam unió középkori modellje évszázadokig vallásháborúkat és üldözést eredményezett. Az egyház és állam szétválasztása mindkettőt védi.",
+      "headline": "A császár a kereszténységet Róma egyetlen vallásának nyilvánítja"
+    },
+    "410ad": {
+      "title": "Vizigótok Kifosztják Rómát",
+      "description": "Alarik vizigótjai kifosztják Rómát; az \"Örök Város\" 800 év után először esik el.",
+      "analysis": "Következmények: Pszichológiai sokk a birodalom-szerte; felfedte Róma katonai gyengeségét. A vizigótok azonban integrációra törekedtek, nem pusztításra – Róma tovább működött. Ágoston 'Isten Városát' ihlette, amely évszázadokra formálta a keresztény politikai gondolkodást. Philosify nézete: A civilizációk elbuknak, amikor elhagyják az őket építő elveket. Róma hanyatlása belső romlásból eredt – adózás, szabályozás, pénzrontás – inkább, mint külső nyomásból. A vizigótok a gyengeséget aknázták ki; nem ők teremtették.",
+      "headline": "Barbárok fosztják ki Rómát első alkalommal 800 év óta"
+    },
+    "476ad": {
+      "title": "Nyugatrómai Birodalom Bukása",
+      "description": "Az utolsó nyugatrómai császárt megfosztják trónjától; az ókor végének hagyományos dátuma.",
+      "analysis": "Következmények: A kereskedelem összeomlott, a városok zsugorodtak, az írástudás csökkent, a technikai tudás elveszett. A germán királyságok megőriztek néhány római intézményt, de nem tudták fenntartani a komplex civilizációt. A fragmentáció és helyi hatalom középkori korszaka kezdődött. Philosify nézete: A civilizáció nem automatikus – folyamatos erőfeszítést igényel a fenntartása. Róma elbukott, mert a rómaiak abbahagyták azt, ami Rómát naggyá tette: a termelést, kereskedelmet, jogállamiságot, katonai fegyelmet. A Sötét Középkor megmutatja, mi történik, ha a civilizáció alapjai erodálódnak.",
+      "headline": "Az utolsó római császárt megfosztják trónjától, a Nyugatrómai Birodalom elbukik"
+    },
+    "529ad": {
+      "title": "Platóni Akadémia Bezárása",
+      "description": "Justinianus császár bezárja az Akadémiát Athénban, véget vetve az ókori filozófiai iskoláknak.",
+      "analysis": "Következmények: 900 év filozófiai oktatás ért véget Athénban. A filozófusok Perzsiába menekültek, megőrizve azokat a görög szövegeket, amelyek később iszlám tudósokon keresztül tértek vissza Európába. A keresztény ortodoxia elnyomta a pogány tanulást a birodalomban. Philosify nézete: Az eszmék erőszakos elnyomása erkölcstelen és hiábavaló is. Az igazságot nem lehet elpusztítani iskolák bezárásával – az eszmék túléltek és végül a Reneszánszt robbantották ki. Az intellektuális szabadság alapvető; a cenzúra késlelteti, de nem akadályozhatja meg a tudás terjedését.",
+      "headline": "Justinianus bezárja Platón Akadémiáját 900 év után"
+    },
+    "622ad": {
+      "title": "Hidzsra - Az Iszlám Születése",
+      "description": "Mohamed Medinába való kivándorlása jelöli az iszlám naptár kezdetét.",
+      "analysis": "Következmények: Az iszlám egyesítette az arab törzseket, kifinomult civilizációt hozott létre három kontinensen, megőrizte és továbbadta a görög tanulást, fejlesztette a matematikát, csillagászatot és orvostudományt. Katonai hódítással is terjedt, vallási törvényt szabva a meghódított népekre. Philosify nézete: Az iszlám civilizáció tudományos és filozófiai eredményei a vallási tanítás ellenére történtek, nem miatta – olyan egyéni gondolkodóknak köszönhetően, akik értékelték az észt. Maga a vallás, mint minden hitalapú rendszer, végül ellentmond annak a racionális vizsgálódásnak, amely azokat az eredményeket létrehozta.",
+      "headline": "Mohamed Medinába menekül, megszületik az iszlám"
+    },
+    "732ad": {
+      "title": "Tours-i Csata",
+      "description": "Martell Károly megállítja a muszlim előrenyomulást Nyugat-Európában.",
+      "analysis": "Következmények: Megőrizte a frank függetlenséget és a keresztény Nyugat-Európát. Nyugat-Európa elkülönülten fejlődött az iszlám világtól, eltérő politikai, vallási és intellektuális pályákon. Megalapozta a Karoling-dinasztia katonai hírnevét. Philosify nézete: A csata jelentősége az európai függetlenség megőrzésében rejlik – lehetővé téve a későbbi Reneszánszt, Reformációt, Felvilágosodást és az egyéni jogok fejlődését. Bármilyen is az álláspontunk az érintett vallásokról, Európa elkülönült fejlődése hozta létre azokat a szabadság-eszméket, amelyek az egész emberiség javát szolgálják.",
+      "headline": "Martell Károly megállítja a muszlim előrenyomulást Európában"
+    },
+    "800ad": {
+      "title": "Nagy Károly Császárrá Koronázása",
+      "description": "III. Leó pápa császárrá koronázza Nagy Károlyt, felélesztve a Nyugatrómai Birodalom eszméjét.",
+      "analysis": "Következmények: A Karoling-reneszánsz megőrizte a klasszikus tanulást; iskolákat alapítottak a birodalom-szerte. Évszázadokig tartó pápa-császár konfliktus-mintát hozott létre. A birodalom Nagy Károly halála után széthullott, de az európai egység eszméje fennmaradt. Philosify nézete: Nagy Károly eredményei megmutatják, hogy az egyéni vezetés számít – de birodalmának összeomlása megmutatja, hogy a tartós intézmények többet igényelnek egyetlen vezető akaratánál. A legtartósabb örökség kulturális volt: a tanulás megőrzése, amely lehetővé tette a jövőbeli haladást.",
+      "headline": "A pápa császárrá koronázza Nagy Károlyt a Nyugat felett"
+    },
+    "1054ad": {
+      "title": "Nagy Egyházszakadás",
+      "description": "A kereszténység római katolikus és keleti ortodox egyházra szakad.",
+      "analysis": "Következmények: A kereszténységet versengő szférákra osztotta, amelyek eltérő teológiai és kulturális fejlődésen mentek keresztül. A kölcsönös kiátkozások tartós ellenségeskedést szültek. Az egyházak közötti verseny azonban tereket teremtett a másként gondolkodásnak, és végül hozzájárult a vallási pluralizmushoz. Philosify nézete: A vallási monopóliumok elnyomják a vizsgálódást és a szabadságot. A Skizma, bár konfliktusból született, véletlenül olyan versenyt teremtett, amely végül meggyengítette a vallási tekintély gondolkodásra gyakorolt fojtogató szorítását. A pluralizmus – még véletlenül is – a szabadságot szolgálja.",
+      "headline": "A kereszténység kettészakad: Róma kontra Konstantinápoly"
+    },
+    "1066ad": {
+      "title": "Normann Hódítás Angliában",
+      "description": "Hódító Vilmos legyőzi Haroldot Hastingsnél, átalakítva az angol történelmet.",
+      "analysis": "Következmények: Az angolszász elitet kisemmizte; a normann francia hatott az angol nyelvre és kultúrára. Kontinentális adminisztratív gyakorlatokat vezetett be, amelyek végül hozzájárultak a common law és a Parlament fejlődéséhez. Létrehozta azt az angol nemzetet, amely nyelvét és intézményeit világszerte elterjesztette. Philosify nézete: A hódítás sérti a meghódítottak jogait – de a történelem a hosszú távú következmények alapján ítél. A normann adminisztrációból részben kifejlődő angol common law világszerte az egyéni jogok alapjává vált. A nem szándékolt következmények néha meghaladják a szándékokat.",
+      "headline": "Vilmos meghódítja Angliát a hastingsi csatában"
+    },
+    "1095ad": {
+      "title": "Első Keresztes Hadjárat Meghirdetése",
+      "description": "II. Orbán pápa keresztes hadjáratot hirdet a Szentföld visszafoglalására a muszlimoktól.",
+      "analysis": "Következmények: Kereskedelmi utakat nyitott és tudást hozott az iszlám világból. Hatalmas veszteségek minden oldalon; zsidók és muzulmánok mészárlása. Tartós vallási gyűlölködés a civilizációk között. A fejlettebb iszlám civilizációval való európai kapcsolat azonban felgyorsította a kulturális és technológiai fejlődést. Philosify nézete: A vallásháborúk a legrosszabb fajtájú háborúk – hit és nem racionális érdekek miatt vívják őket, és nem engednek kompromisszumot. Mégis a nem szándékolt következmény – a megőrzött görög tanulással való kapcsolat – segített beindítani Európa intellektuális ébredését. Az eszmék a szándékok ellenére terjednek.",
+      "headline": "A pápa meghirdeti az Első Keresztes Hadjáratot a Szentföldért"
+    },
+    "1215ad": {
+      "title": "Magna Carta Aláírása",
+      "description": "Angol bárók kényszerítik János királyt a királyi hatalmat korlátozó okirat aláírására.",
+      "analysis": "Következmények: Megalapozta azt az elvet, hogy az uralkodók a törvény alatt állnak; garantálta a tisztességes eljárás védelmét; az alkotmányos kormányzat alapja. Bár kezdetben csak a bárói kiváltságokat védte és gyakran megsértették, elvei fokozatosan kiterjesztettek minden polgár védelmére és világszerte hatottak az alkotmányokra. Philosify nézete: A Magna Carta mérföldkő az emberi szabadságban – az az elv, hogy még a királyok is a törvény alá tartoznak. Ebből a magból nőtt ki az alkotmányos kormányzat, az egyéni jogok és a korlátozott kormányzat. Az egyszer megalapozott eszmék hajlamosak logikusan kiterjeszkedni teljes implikációikig.",
+      "headline": "Angol bárók arra kényszerítik a királyt, hogy aláírja a Magna Cartát"
+    },
+    "1265ad": {
+      "title": "Első Angol Parlament",
+      "description": "Simon de Montfort összehívja az első választott Parlamentet Angliában.",
+      "analysis": "Következmények: Precedenst teremtett a képviseleti kormányzatnak; a közrendűeknek hangot adott a nemesek mellett a kormányzásban. Bár kezdetben korlátozott hatalmú volt és csak a vagyonos osztályokat képviselte, sok nemzet által átvett parlamenti demokrácia modelljévé fejlődött. Philosify nézete: A képviseleti kormányzat a hatalom döntő féke. Amikor azoknak, akik adót fizetnek, beleszólásuk van abba, hogyan költik el, a kormányzat korlátozott. A Parlament a szabadság védelmezőjévé fejlődött – tökéletlen, de messze felette az abszolút monarchiának.",
+      "headline": "Az első választott Parlament összeül Angliában"
+    },
+    "1347ad": {
+      "title": "Fekete Halál Eléri Európát",
+      "description": "A bubópestis néhány év alatt megöli az európai lakosság 30-60%-át.",
+      "analysis": "Következmények: Elképzelhetetlen szenvedés; társadalmi összeomlás; a járványért felelőssé tett kisebbségek üldözése. A túlélők azonban magasabb béreket kaptak a munkaerőhiány miatt; a feudalizmus gyengült, ahogy a parasztok alkupozíciója javult; a technológiai innováció felgyorsult az elveszett munkaerő pótlására. Philosify nézete: A katasztrófák feltárják, mi számít: amikor a munkaerő szűkössé válik, a munkások értéke nő. A pestis véletlenül előmozdította az egyéni szabadságot azzal, hogy erősítette a munkásokat a földesurakkal szemben. A természet közömbös az emberi vágyak iránt – de az emberek alkalmazkodhatnak és még hasznot is húzhatnak a katasztrófákból racionális válaszon keresztül.",
+      "headline": "A Fekete Halál végigsöpör Európán, milliók halnak meg"
+    },
+    "1439ad": {
+      "title": "Gutenberg Nyomdája",
+      "description": "Johannes Gutenberg kifejleszti a mozgatható betűs nyomtatást Európában.",
+      "analysis": "Következmények: Demokratizálta a tudást; lehetővé tette az eszmék gyors terjedését; drasztikusan csökkentette a könyvek költségét; növelte az írástudást. Lehetővé tette a Reformációt, a Tudományos Forradalmat és a Felvilágosodást azáltal, hogy az eszméket az intézményi ellenőrzésen túl terjesztette. Hatékonyabban terjesztette a propagandát is. Philosify nézete: A nyomdagép a történelem egyik legnagyobb találmánya – megtörte az elitek által birtokolt tudásmonopóliumot. Amikor az eszmék szabadon terjedhetnek, az igazságnak esélye van a megalapozott tévedéssel szemben. Az egyéneket az intézmények ellenében felhatalmazó technológia a szabadságot szolgálja.",
+      "headline": "Gutenberg feltalálja a nyomdagépet, forradalmasítva a tudást"
+    },
+    "1453ad": {
+      "title": "Konstantinápoly Eleste",
+      "description": "Az oszmán törökök elfoglalják Konstantinápolyt, véget vetve a Bizánci Birodalomnak.",
+      "analysis": "Következmények: Az Itáliába menekülő görög tudósok kéziratokat hoztak, amelyek táplálták a Reneszánszt. Az Oszmán Birodalom Konstantinápolyt jelentős kulturális és kereskedelmi központként tartotta fenn. A kereskedelmi utak nyugatra tolódtak, ösztönözve az atlanti felfedezéseket. 1000 év után véget ért a Keletrómai Birodalom. Philosify nézete: Az eleste szétszórta a görög tanulást Európában, felgyorsítva a Reneszánszt. Az eszméket nem lehet hódítással visszatartani – emberekkel és könyvekkel vándorolnak. Az oszmánok meghódítottak egy várost; a görögök megőriztek egy civilizációt a tudáson keresztül.",
+      "headline": "Konstantinápoly elesik az oszmán törökök előtt"
+    },
+    "1492ad": {
+      "title": "Kolumbusz Eléri Amerikát",
+      "description": "Kolumbusz Kristóf útja megnyitja az Újvilágot az európai felfedezések előtt.",
+      "analysis": "Következmények: Megkezdődött a növények, állatok, eszmék cseréje a félgömbök között – átalakítva a mezőgazdaságot, étkezést és gazdaságokat világszerte. Az őslakos népességet betegség és hódítás pusztította; a rabszolgaság megjelent Amerikában. Végül Felvilágosodás-elvein alapuló nemzetekhez vezetett. Philosify nézete: Kolumbusz útja katasztrofális következményekkel járt az őslakos népekre – a hódítás és betegség megsértette élethez és tulajdonhoz való jogaikat. A hosszú távú eredmény azonban magában foglalta az amerikai alapítást, amely az egyéni jogokat tette a kormányzat alapjává. A történelem erkölcsi komplexitása nem enged egyszerű ítéleteket.",
+      "headline": "Kolumbusz eléri az Újvilágot"
+    },
+    "1517ad": {
+      "title": "Protestáns Reformáció Kezdete",
+      "description": "Luther Márton közzéteszi 95 tételét, kihívást intézve a Katolikus Egyház tekintélye ellen.",
+      "analysis": "Következmények: Kihívást jelentett a vallási monopóliumnak; hangsúlyozta az egyéni hitet és Biblia-olvasást; vallási pluralizmushoz vezetett. Évszázados vallásháborúkat és üldözést váltott ki minden oldalon. Végül megalapozta, hogy az egyének maguk értelmezhessék a hitet, hozzájárulva az individualizmus felemelkedéséhez. Philosify nézete: A Reformáció tartós hozzájárulása a vallási monopólium megtörése volt. Bármilyen is volt Luther szándéka, az az elv, hogy az egyének maguk olvashatják és értelmezhetik, logikusan kiterjed minden területre. A vallási pluralizmus lépés volt az intellektuális szabadság felé.",
+      "headline": "Luther kiszögezi 95 tételét, kihívva az Egyház tekintélyét"
+    },
+    "1543ad": {
+      "title": "Kopernikuszi Forradalom",
+      "description": "Kopernikusz publikálja a heliocentrikus elméletet, elmozdítva a Földet az univerzum középpontjából.",
+      "analysis": "Következmények: Demonstrálta a megfigyelés és matematika erejét az elfogadott hiedelmek megdöntésében. Kezdetben katolikus és protestáns hatóságok egyaránt ellenálltak. Megnyitotta az utat a modern csillagászat és tudományos módszer felé. Megváltoztatta az emberiség felfogását az univerzumbeli helyéről. Philosify nézete: Kopernikusz megmutatta, hogy a valóság az, ami, függetlenül a hagyománytól, tekintélytől vagy vágyaktól. A heliocentrikus modell igaz volt, akár elfogadta az Egyház, akár nem. A tudomány úgy halad, hogy követi a bizonyítékokat, bárhová is vezetnek – ez a természetre alkalmazott ész lényege.",
+      "headline": "Kopernikusz bebizonyítja, hogy a Föld a Nap körül kering"
+    },
+    "1588ad": {
+      "title": "Spanyol Armada Veresége",
+      "description": "Anglia legyőzi a spanyol inváziós flottát, megőrizve a protestáns függetlenséget.",
+      "analysis": "Következmények: Megőrizte Anglia függetlenségét a katolikus Spanyolországtól; a tengeri hatalom északra tolódott; lehetővé tette Anglia Amerika-kolonizációját. Anglia jelentős tengeri hatalomként emelkedett fel, megalapozva a globális befolyást és az angol nyelv és jog elterjedését. Philosify nézete: Anglia függetlensége megőrzött egy nemzetet, amely kifejlesztette a common law-t, a parlamenti kormányzást, és végül inspirálta az amerikai alapítást. Az Armada veresége lehetővé tette a szabadság azon hagyományát, amely a Függetlenségi Nyilatkozatot szülte.",
+      "headline": "Anglia megsemmisíti a Spanyol Armadát"
+    },
+    "1607ad": {
+      "title": "Jamestown Megalapítása",
+      "description": "Az első állandó angol település megalapítása Amerikában.",
+      "analysis": "Következmények: Megkezdte az angol gyarmatosítást, amely önkormányzati hagyományokat, common law-t és végül forradalmi eszméket hozott. Az őslakos amerikaiakkal való kapcsolatok romlottak; a rabszolgaság évtizedeken belül megjelent. Az angol jogi és politikai hagyományokat hozó telepesek elvetették az amerikai köztársaság magvait. Philosify nézete: Jamestown jót és rosszat egyaránt hozott – önkormányzatot és rabszolgaságot. Azok a telepesek, akik hittek angol jogaikban, végül ezeket az elveket logikus végkövetkeztetésükig terjesztették ki: a jogok minden egyénhez tartoznak, nem csak az angolokhoz.",
+      "headline": "Az első angol gyarmat megalapítása Amerikában"
+    },
+    "1620ad": {
+      "title": "Mayflower Egyezmény",
+      "description": "A zarándokok önkormányzó gyarmatot alapítanak Plymouthban.",
+      "analysis": "Következmények: Az önkormányzat első írott keretrendszere Amerikában; a társadalmi szerződés elméletét a gyakorlatban mutatta be. Az írásos alkotmány és a beleegyezésen alapuló kormányzat modellje hatott az amerikai alapításra. Kezdetben csak egyháztagokra korlátozódott a részvétel. Philosify nézete: Az Egyezmény beleegyezésen alapuló kormányzatot hozott létre – azt a radikális eszmét, hogy a legitim kormányzat a kormányzottak megegyezéséből származik, nem isteni jogból vagy hódításból. Ez az elv, egyszer megalapozva, logikusan kiterjed minden emberre, nem csak az eredeti aláírókra.",
+      "headline": "A zarándokok aláírják a Mayflower Egyezményt, önkormányzó gyarmatot alapítva"
+    },
+    "1642ad": {
+      "title": "Angol Polgárháború Kezdete",
+      "description": "A Parlament és I. Károly király háborúba keveredik alkotmányos elvek miatt.",
+      "analysis": "Következmények: Megalapozta a parlamenti szupremáciát; előmozdította az alkotmányos kormányzást; lehetővé tette a vallási toleranciát. Tízezrek haltak meg; átmeneti katonai diktatúra Cromwell alatt. Eldöntötte, hogy az angol monarcháknak a Parlamenttel kell uralkodniuk, nem ellene. Philosify nézete: A Polgárháború megalapozta, hogy egyetlen uralkodó sem áll a törvény vagy a nép képviselői felett. Még az átmeneti diktatúra sem tudta visszacsinálni ezt az elvet. A háború költséges volt, de az alternatíva – az abszolút monarchia – rosszabb lett volna a szabadságnak.",
+      "headline": "Angol Polgárháború tör ki: Parlament kontra Király"
+    },
+    "1648ad": {
+      "title": "Vesztfáliai Béke",
+      "description": "Szerződések véget vetnek a harmincéves háborúnak és megalapítják a modern államrendszert.",
+      "analysis": "Következmények: Véget vetett a milliók halálát okozó pusztító vallásháborúknak. Megalapozta az állami szuverenitás és be nem avatkozás elveit, amelyek a modern nemzetközi rendszert teremtették meg. Európa vallási megosztottsága befagyott, de a vallásháborúk véget értek. Philosify nézete: Vesztfália úgy vetett véget a vallásháborúknak, hogy megalapozta: az államok nem avatkoznak be egymás vallási ügyeibe. A szuverenitás elvének vannak korlátai – nem szabad védenie a zsarnokságot – de a vallásháborúk befejezése eredmény volt. A pragmatikus béke felülmúlja az örökös szent háborút.",
+      "headline": "A Vesztfáliai Béke véget vet a Harmincéves Háborúnak"
+    },
+    "1687ad": {
+      "title": "Newton Principiája Megjelenik",
+      "description": "Isaac Newton publikálja a mozgás és az egyetemes gravitáció törvényeit.",
+      "analysis": "Következmények: Demonstrálta, hogy az univerzum felfedezhető törvények szerint működik; lehetővé tette a modern fizikát és mérnöki tudományt. Inspirálta a Felvilágosodás bizalmát abban, hogy az ész megértheti a természetet és javíthatja a társadalmat. Filozófiai kérdéseket vetett fel a determinizmusról és célról. Philosify nézete: Newton megmutatta, hogy az univerzum rendezett, törvényszerű és az emberi ész számára felfogható. Ez a tudomány és technológia alapja – és a bizalomé, hogy a valóság megérthető és javítható. Az ész működik; ez az életünk eszköze.",
+      "headline": "Newton feltárja az univerzumot irányító törvényeket"
+    },
+    "1688ad": {
+      "title": "Dicsőséges Forradalom",
+      "description": "Orániai Vilmos leváltja II. Jakabot; a Parlament megerősíti felsőbbrendűségét.",
+      "analysis": "Következmények: Alkotmányos monarchiát, parlamenti szupremáciát és vallási toleranciát alapított nagyobb vérontás nélkül. A Jognyilatkozat védte az egyéni szabadságokat. A békés alkotmányos reform modellje. A katolikusokat kizárták az örökösödésből. Philosify nézete: A Dicsőséges Forradalom minimális erőszakkal ért el rezsimváltást – bizonyítva, hogy az alapvető változáshoz nem kell terror. Az itt megalapozott alkotmányos korlátozások váltak azzá az angol hagyománnyá, amelyet Amerika örökölt és továbbfejlesztett.",
+      "headline": "Orániai Vilmos vértelen puccsal megszerzi az angol trónt"
+    },
+    "1689ad": {
+      "title": "Locke Két Értekezése Megjelenik",
+      "description": "John Locke publikálja a természetes jogok és a korlátozott kormányzat elméletét.",
+      "analysis": "Következmények: Megfogalmazta az egyéni jogok, a beleegyezésen alapuló kormányzat és a forradalom jogának filozófiai alapjait. Közvetlenül befolyásolta az amerikai alapítókat. A legbefolyásosabb politikai filozófia az angolszász világban; a klasszikus liberalizmus alapja. Philosify nézete: Locke megalapozta, hogy az egyéneknek vannak természetes jogaik, amelyek megelőzik a kormányzatot – a kormányzat azért létezik, hogy védje ezeket a jogokat, nem hogy megadja őket. Ez Amerika és a világszintű szabadság filozófiai alapja. Locke nem volt tökéletes, de az iránya helyes volt.",
+      "headline": "Locke publikálja a természetes jogok és korlátozott kormányzat elméletét"
+    },
+    "1776ad": {
+      "title": "Amerikai Függetlenségi Nyilatkozat",
+      "description": "Az amerikai gyarmatok kinyilvánítják függetlenségüket, megerősítve a természetes jogokat.",
+      "analysis": "Következmények: Az első nemzet, amelyet kifejezetten a természetes jogok, a kormányzottak beleegyezése és a korlátozott kormányzat elvein alapítottak. Világszerte inspirálta a szabadságmozgalmakat. A jogokat kezdetben nem terjesztették ki a rabszolgákra vagy nőkre – de az elvek végül mindenkire kiterjedtek. Philosify nézete: A Nyilatkozat az emberiség legnagyobb politikai dokumentuma. 'Minden ember egyenlőnek teremtetett' 'elidegeníthetetlen jogokkal' – ez a megfelelő kormányzat alapja. Az Alapítók tudták, hogy gyakorlatuk elmarad elveiktől – de olyan elveket alapítottak, amelyek saját beteljesedésüket követelték.",
+      "headline": "Az amerikai gyarmatok kikiáltják függetlenségüket Nagy-Britanniától"
+    },
+    "1787ad": {
+      "title": "USA Alkotmány Megírása",
+      "description": "Az Alkotmányozó Konvenció megalkotja a korlátozott szövetségi kormányzat keretrendszerét.",
+      "analysis": "Következmények: Tartós fékek és ellensúlyok rendszerét hozta létre; a szövetségi struktúra egyensúlyba hozta a nemzeti és helyi érdekeket. Kompromisszumok a rabszolgaság ügyében; kezdetben nem volt Jognyilatkozat. A legrégebbi írott alkotmány, amely még használatban van; világszerte hatott az alkotmányokra. Philosify nézete: Az Alkotmány a Felvilágosodás elveinek gyakorlati alkalmazása – korlátozott kormányzat, hatalommegosztás, föderalizmus. Tökéletlen, de módosítással javíthatónak tervezték. A keretrendszer több mint két évszázada teszi lehetővé az amerikai jólétet és védi a szabadságot.",
+      "headline": "Az Alapítók megírják az Egyesült Államok Alkotmányát Philadelphiában"
+    },
+    "1789ad": {
+      "title": "Francia Forradalom Kezdete",
+      "description": "A Bastille ostroma elindít egy forradalmat, amely megrendíti Európát.",
+      "analysis": "Következmények: Véget vetett a feudális kiváltságoknak; terjesztette az állampolgárság és egyenlőség eszméit. Terrorba, diktatúrába és évtizedekig tartó háborúba torkollott; ezreket végeztek ki a guillotine-nal. Nacionalizmust terjesztett Európában; a forradalmi változás lehetőségeit és veszélyeit egyaránt demonstrálta. Philosify nézete: A Francia Forradalom az amerikai és francia megközelítés közötti különbséget illusztrálja. Amerika: az egyéni jogokat a kormányzattól védeni. Franciaország: 'általános akarat', amely az egyéneket a kollektívának áldozta. A Terror nem baleset volt, hanem a kollektivista filozófia következménye.",
+      "headline": "Párizsi tömeg megrohamozza a Bastille-t, forradalom tör ki"
+    },
+    "1791ad": {
+      "title": "Jognyilatkozat Ratifikálása",
+      "description": "Az Egyesült Államok Alkotmányának első tíz kiegészítése védi az egyéni szabadságjogokat.",
+      "analysis": "Következmények: Kifejezetten védte a szólás-, vallás-, sajtó-, gyülekezési és tisztességes eljárási jogokat. Korlátozta a szövetségi hatalmat; a hatalmakat az államoknak és a népnek tartotta fenn. Az értelmezésen keresztül a jogok bővítésének alapja. Kezdetben csak a szövetségi kormányzatra vonatkozott. Philosify nézete: A Jognyilatkozat nem adományoz jogokat – megtiltja a kormányzatnak, hogy megsértse a már létező természetes jogokat. 'A Kongresszus nem alkothat törvényt...' A módosítások elismerik, hogy a jogok az emberi természetben rejlenek, nem a kormányzat ajándékai. Ez a megértés alapvető a szabadsághoz.",
+      "headline": "A Jognyilatkozat ratifikálva, az egyéni szabadságjogok biztosítva"
+    },
+    "1804ad": {
+      "title": "Napóleon Császárrá Koronázása",
+      "description": "Napóleon Bonaparte a franciák császárává koronázza magát.",
+      "analysis": "Következmények: A forradalmi köztársaság diktatúrává lett. Napóleon törvénykönyve modernizálta a polgári jogot Európa-szerte. Milliók haltak meg a napóleoni háborúkban. Felvilágosodás-reformokat terjesztett miközben elnyomta a szabadságot. Nacionalizmust ébresztett Európa-szerte. Philosify nézete: Napóleon demonstrálja, hogy a jó reformok nem igazolják a diktatúrát. A Napóleoni Kódex progresszív volt, de egy zsarnok erőltette rá. Az eszközök ugyanannyira számítanak, mint a célok – a szabadságot nem lehet hódítással terjeszteni. Napóleon legnagyobb öröksége nem szándékolt volt: a nemzeti ellenállási mozgalmak inspirálása.",
+      "headline": "Napóleon császárrá koronázza magát Franciaországban"
+    },
+    "1815ad": {
+      "title": "Waterlooi Csata",
+      "description": "Napóleon vereséget szenved; a Bécsi Kongresszus helyreállítja az európai rendet.",
+      "analysis": "Következmények: Évtizedekig tartó háborúk véget értek; viszonylagos európai béke évszázada lehetővé tette a gazdasági fejlődést. A Bécsi Kongresszus megteremtette a hatalmi egyensúly rendszerét. A reakciós rendezés kezdetben elnyomta a liberális mozgalmakat, de ezek később felszínre törtek. Philosify nézete: A Bécsi Kongresszus reakciós volt, de békét hozott. A hatalmi egyensúly rendszere, bár tökéletlen, egy évszázadig megakadályozta a nagyobb európai háborút. A stabilitás lehetővé teszi a jólétet – de a liberális mozgalmak elnyomása csak késleltette végső győzelmüket.",
+      "headline": "Napóleon vereséget szenved Waterloonál, végleg száműzve"
+    },
+    "1833ad": {
+      "title": "Brit Rabszolgaság Eltörlési Törvény",
+      "description": "Nagy-Britannia eltörli a rabszolgaságot az egész birodalomban.",
+      "analysis": "Következmények: Véget vetett a rabszolgaságnak a Brit Birodalomban; a Királyi Haditengerészet globálisan elnyomta a rabszolgakereskedelmet. Jelentős lépés a világméretű abolíciós mozgalomban. A rabszolgatartókat kompenzálták, míg a rabszolgák semmit sem kaptak; a kizsákmányolás más formákban folytatódott. Erkölcsi vezetés inspirált más nemzeteket. Philosify nézete: Az abolíció elismerte, hogy minden embernek vannak jogai – a rabszolgaság egy személy életének és munkájának ellopása. Anglia abolíciója megmutatta, hogy erkölcsi haladás lehetséges. Az a tény, hogy békés törvényhozáson keresztül történt, nem forradalommal, demonstrálja, hogy az ész győzhet a megrögzött érdekek felett.",
+      "headline": "Nagy-Britannia eltörli a rabszolgaságot az egész birodalomban"
+    },
+    "1848ad": {
+      "title": "1848-as Forradalmak",
+      "description": "Forradalmi hullám söpör végig Európán, alkotmányos kormányzatot követelve.",
+      "analysis": "Következmények: A legtöbb forradalmat elnyomták; a reakciós kormányok visszatértek. Ugyanakkor széles körben terjesztették a liberális és nacionalista eszméket; véget vetettek a jobbágyságnak az Osztrák Birodalomban; megmutatták a reformok iránti népi vágyat. A reformok végül evolúción keresztül jöttek el, nem forradalom útján. Philosify nézete: 1848 megmutatta, hogy a szabadság eszméi az eliteken túl a tömegekhez is eljutottak. Bár azonnal sikertelen volt, a forradalmak demonstrálták, hogy a régi rend intellektuálisan csődbe ment. Az elnyomás nem öli meg az eszméket – késlelteti megvalósításukat.",
+      "headline": "Forradalmak söpörnek végig Európán"
+    },
+    "1848ad_2": {
+      "title": "Kommunista Kiáltvány Megjelenése",
+      "description": "Marx és Engels közzéteszi a kiáltványt, amely erőszakos forradalomra és a magántulajdon eltörlésére szólít fel.",
+      "analysis": "Következmények: Ez a dokumentum vált a 20. században több mint 100 millió embert meggyilkoló rezsimek ideológiai alapjává – a Szovjetunióban, Kínában, Kambodzsában, Kubában, Észak-Koreában és máshol. Bárhol is vezették be a kommunizmust, az eredmény zsarnokság, szegénység és tömeges halál volt. Philosify nézete: A Kiáltvány elutasítja az egyéni jogokat, a magántulajdont és a szabad piacokat – az emberi jólét és szabadság alapjait. Az osztályharc és a kollektív tulajdon iránti felhívása alapvetően összeegyeztethetetlen az emberi természettel. Marx tévedett a történelemről, a közgazdaságról és az emberi természetről. Az áldozatok száma bizonyítja.",
+      "headline": "Marx és Engels közzéteszi a Kommunista Kiáltványt"
+    },
+    "1859ad": {
+      "title": "A Fajok Eredete Megjelenik",
+      "description": "Darwin publikálja a természetes kiválasztódás általi evolúció elméletét.",
+      "analysis": "Következmények: Egységesítette a biológiát; megmagyarázta az élet sokféleségét természetes folyamatokon keresztül. A modern orvostudomány, genetika és biotechnológia alapja. Visszaéltek vele a szociáldarwinizmus és eugenika igazolására. Átalakította az élet és az emberiség természetbeli helyének megértését. Philosify nézete: Az evolúció igaz – a bizonyítékok elsöprőek. Ez nem csökkenti az emberi méltóságot; megmagyarázza eredetünket anélkül, hogy meghatározná sorsunkat. Kifejlesztettük az ész képességét, amely felülmúlja az ösztönt. A biológia leírja, ami van; az etika határozza meg, aminek lennie kellene.",
+      "headline": "Darwin publikálja A Fajok Eredetét, megingatva a biológia alapjait"
+    },
+    "1861ad": {
+      "title": "Amerikai Polgárháború Kezdete",
+      "description": "Háború kezdődik a rabszolgaság és az államjogok kérdésében; Amerika legvéresebb konfliktusa.",
+      "analysis": "Következmények: 620 000 halott – több amerikai, mint az összes többi háborúban együttvéve. Véget vetett a rabszolgaságnak; megőrizte az Uniót. A Rekonstrukció idő előtt véget ért; a faji egyenlőtlenség még egy évszázadig fennmaradt. Eldöntötte, hogy a nemzet egységes marad és a rabszolgaság összeegyeztethetetlen az amerikai elvekkel. Philosify nézete: A Polgárháború a szabadság háborúja volt a rabszolgaság ellen – az egyéni jogok legfőbb megsértése ellen. Lincoln helyesen értette, hogy egy 'félig rabszolga és félig szabad' nemzet önmagának mond ellent. Az Unió ügye igazságos volt; a költség tragikus, de szükséges volt.",
+      "headline": "Az Amerikai Polgárháború kezdődik, a Dél kiválik"
+    },
+    "1863ad": {
+      "title": "Emancipációs Proklamáció",
+      "description": "Lincoln a lázadó államok rabszolgáit \"örökre szabadnak\" nyilvánítja.",
+      "analysis": "Következmények: A Polgárháborút a szabadságért folytatott harccá változtatta, nem csak az Unióért. Lehetővé tette, hogy fekete katonák harcolhassanak saját felszabadításukért. Gyengítette a Konföderációt erkölcsileg és anyagilag. Nem szabadította fel a rabszolgákat a határmenti államokban; teljes egyenlőség egy évszázadig nem következett. Philosify nézete: Az Emancipáció Amerika alapító elveinek megélése volt. 'Minden ember egyenlőnek teremtetett' azt jelentette, amit kimondott – a Proklamáció megkezdte az ígéret beváltásának folyamatát. Lincoln megértette, hogy a rabszolgaság elvi alapon rossz, nem csak politikailag.",
+      "headline": "Lincoln a lázadó államok összes rabszolgáját örökre szabadnak nyilvánítja"
+    },
+    "1865ad": {
+      "title": "13. Alkotmánymódosítás Ratifikálása",
+      "description": "A rabszolgaság és az akaratlan szolgaság eltörlése az Egyesült Államok egész területén.",
+      "analysis": "Következmények: Alkotmányosan eltörölte a rabszolgaságot; befejezte, amit a Függetlenségi Nyilatkozat ígért. A volt rabszolgákat megfosztották a földtől és a teljes állampolgári jogoktól; részes művelés és Jim Crow-törvények következtek. De a rabszolgaságot alkotmánymódosítás örökre eltörölte. Philosify nézete: A 13. Módosítás az Alkotmányba írta, aminek kezdettől ott kellett volna lennie – hogy senki sem birtokolhat másik személyt. A teljes egyenlőségért folytatott küzdelem folytatódott, de az alapelv megalapozódott: az egyéni jogok minden egyénhez tartoznak.",
+      "headline": "A 13. Alkotmánymódosítás eltörli a rabszolgaságot Amerikában"
+    },
+    "1869ad": {
+      "title": "Transzkontinentális Vasút Elkészül",
+      "description": "Az Atlanti- és Csendes-óceáni partot összekötő vasút elkészül a Promontory Summitnél.",
+      "analysis": "Következmények: Gazdaságilag egyesítette a kontinenst; lehetővé tette a letelepedést, kereskedelmet és kommunikációt hatalmas távolságokon át. Az utazási időt hónapokról napokra csökkentette. Kizsákmányolt bevándorló munkaerővel építették; megzavarta az őslakos amerikai földeket. Átalakította az amerikai gazdaságot és települési mintázatokat. Philosify nézete: A vasút megmutatta, mit érhet el a szabad vállalkozás és a mérnöki tudás. A kormányzati részvétel és munkaerő-kizsákmányolás ellenére a projekt hatalmas értéket teremtett. A kereskedelmet és mozgást lehetővé tevő infrastruktúra az emberi boldogulást szolgálja – ha önkéntes cserével épül, nem kényszermunkával.",
+      "headline": "Transzkontinentális vasút elkészült, a partok összekötve"
+    },
+    "1876ad": {
+      "title": "Telefon Feltalálása",
+      "description": "Alexander Graham Bell szabadalmaztatja a telefont.",
+      "analysis": "Következmények: Lehetővé tette az azonnali kommunikációt távolságokon át; átalakította az üzletet, a kormányzatot és a személyes kapcsolatokat. Új iparágakat és gazdasági lehetőségeket teremtett. A társadalmat továbbra is átalakító távközlési forradalom kezdete. Philosify nézete: A telefon példázza, hogyan szolgálnak mindenkit azok a feltalálók, akik saját érdekeiket követik. Bell profitra törekedett és úgy érte el, hogy értéket teremtett másoknak. Ez a kapitalizmus a legjava – önkéntes csere, amely gazdagságot teremt minden félnek.",
+      "headline": "Bell feltalálja a telefont"
+    },
+    "1879ad": {
+      "title": "Edison Villanykörtéje",
+      "description": "Thomas Edison kifejleszti a gyakorlatban használható izzólámpát.",
+      "analysis": "Következmények: Kiterjesztette a produktív órákat a nappali fényen túl; javította a biztonságot otthonokban és munkahelyeken; új iparágakat tett lehetővé; átalakította a mindennapi életet. A villamosítás megváltoztatta a modern civilizáció minden aspektusát. Edison szisztematikus feltalálási módszere modell lett az ipari kutatásnak. Philosify nézete: Edison nem csak a villanykörtét találta fel – megteremtette azt az elektromos termelési és elosztási rendszert, amely hasznossá tette. Megtestesíti a produktív zsenialitást, amelyet a kapitalizmus jutalmaz: azonosítani a problémákat, megoldásokat teremteni, és profitálni mások szolgálatával.",
+      "headline": "Edison villanykörtéjével világítja meg a világot"
+    },
+    "1886ad": {
+      "title": "Szabadság-szobor Felavatása",
+      "description": "Franciaország ajándéka Amerikának a világot megvilágító szabadságot ünnepli.",
+      "analysis": "Következmények: Az amerikai eszmék tartós szimbólumává vált; milliók bevándorlóit üdvözölte, akik szabadságot és lehetőséget kerestek. Az eszményeket nem mindig felelte meg a diszkrimináció és korlátozás valósága. A szabadság és az elnyomottak menedéke erőteljes szimbóluma marad. Philosify nézete: A szobor Amerika alapító eszményét képviseli: a szabadságot mint az emberiség természetes állapotát. 'Add nekem fáradt, szegény, szabadon lélegezni vágyó összezsúfolt tömegeidet' – Amerika a legjobbja szerint üdvözli azokat, akik szabadságot keresnek. Az eszmény továbbra is megéri a törekvést.",
+      "headline": "A Szabadság-szobrot felavatják a New York-i kikötőben"
+    },
+    "1903ad": {
+      "title": "Wright Fivérek Repülése",
+      "description": "Az első irányított, motoros repülőgép-felszállás Kitty Hawknál.",
+      "analysis": "Következmények: Megnyitotta a repülés korát; átalakította a közlekedést, kereskedelmet, kommunikációt és hadviselést. A világot kisebbé tette – bármely pont órák alatt elérhető. Lehetővé tette a légibombázást, de a humanitárius segélyt és a globális kereskedelmet is. Philosify nézete: Két Ohio-i kerékpárszerelő elérte, amit az akadémikusok lehetetlennek mondtak. A Wright fivérek megtestesítik az amerikai gyakorlati zsenialitást – kézzelfogható kísérletezés, kitartás, racionális problémamegoldás. Az egyéni kezdeményezés, nem kormányzati programok nyitották meg az eget.",
+      "headline": "A Wright fivérek végrehajtják az első motoros repülést"
+    },
+    "1905ad": {
+      "title": "Einstein Csodálatos Éve",
+      "description": "Einstein publikálja a speciális relativitásról, a fotoelektromos hatásról és a Brown-mozgásról szóló tanulmányait.",
+      "analysis": "Következmények: Forradalmasította a fizikát; megmutatta, hogy a tér és idő relatív, a tömeg és energia ekvivalens. Lehetővé tette a nukleáris energiát, GPS-t és számtalan technológiát. A nukleáris fegyvereket is lehetővé tette. Átalakította az univerzum megértését. Philosify nézete: Einstein, egy szabadalmi hivatalnok, évszázadok fizikáját döntötte meg tiszta gondolkodással. Munkája demonstrálja, hogy a valóság objektív és megismerhető – de tudásunkat folyamatosan a bizonyítékok alapján kell felülvizsgálni. Az igazság létezik; a mi dolgunk, hogy ésszel felfedezzük.",
+      "headline": "Einstein átírja a fizika törvényeit"
+    },
+    "1914ad": {
+      "title": "Első Világháború Kezdete",
+      "description": "Ferenc Ferdinánd főherceg meggyilkolása világméretű konfliktust robbant ki.",
+      "analysis": "Következmények: 17 millió halott; birodalmak megsemmisültek; Európa térképe átrajzolódott. Lehetővé tette a kommunizmus és fasizmus felemelkedését. Az instabil békekötés elvetette a Második Világháború magvait. Lerombolta a 19. század optimista hitét a haladásban. Philosify nézete: Az Első Világháború a nacionalizmus, militarizmus és az egymásba fonódó szövetségek eredménye volt – mind az eszmék kudarcai. A katasztrófa lejáratta a régi rendet anélkül, hogy jobbat hozott volna létre. A rossz eszméknek milliós életekben mért következményei vannak.",
+      "headline": "Meggyilkolják a trónörököst, Európa háborúba zuhan"
+    },
+    "1917ad": {
+      "title": "Orosz Forradalom",
+      "description": "A bolsevikok megragadják a hatalmat Oroszországban és kommunista totalitárius államot hoznak létre.",
+      "analysis": "Következmények: Megalapította az első jelentős kommunista államot. Egy autokráciát valamivel sokkal rosszabbal váltott fel – egy rezsimmel, amely tisztogatásokon, mesterséges éhínségeken és gulágokon keresztül 20+ millió saját polgárát gyilkolta meg. Világszerte exportálta a kommunista ideológiát, hasonló atrocitásokhoz vezetve Kínában, Kambodzsában, Kubában és máshol. Philosify nézete: Az Orosz Forradalom bizonyítja, hogy a kollektivizmus tömeggyilkossághoz vezet. Amikor az egyéni jogokat alárendelik 'a kollektívának', 'a munkásoknak' vagy 'a népnek', az eredmény mindig zsarnokság. A 20. század 100 millió kommunizmus-áldozata Marx végső cáfolata.",
+      "headline": "A bolsevikok megragadják a hatalmat Oroszországban"
+    },
+    "1918ad": {
+      "title": "Első Világháború Vége",
+      "description": "Fegyverszünet aláírása; a háború 17 millió ember halálát okozza és átalakítja a világrendet.",
+      "analysis": "Következmények: Létrehozta a Népszövetséget; véget vetett az Oszmán, Osztrák-Magyar, Német és Orosz Birodalmaknak. A bosszúálló békefeltételek megalázták Németországot; az új határok etnikai konfliktusokat teremtettek. Az instabil rendezés és megoldatlan sérelmek közvetlenül a Második Világháborúhoz vezettek. Philosify nézete: A Versailles-i Szerződés megmutatja, hogy az igazságosság nélküli béke instabil. Németország büntetése olyan sérelmeket teremtett, amelyeket Hitler kihasznált. A béke, amely sem ki nem békít, sem döntően le nem győzi az ellenséget, mindkét megközelítés legrosszabbját hagyja hátra.",
+      "headline": "Fegyverszünet aláírva, a Nagy Háborúnak vége"
+    },
+    "1920ad": {
+      "title": "19. Alkotmánymódosítás Ratifikálása",
+      "description": "A nők szavazati jogot kapnak az Egyesült Államokban.",
+      "analysis": "Következmények: Kiterjesztette a politikai egyenlőséget a nőkre; évtizedek békés érdekérvényesítését igazolta. Megduplázta a választókat. A nők a szavazók többségévé váltak. Kiterjesztette a 'minden ember egyenlőnek teremtetett' meghatározását logikus következtetéséig. Philosify nézete: A női választójog az alapító elvek logikus kiterjesztése volt. A jogok egyéneket illetnek meg egyénekként – nem csoportok tagjaiként. A Módosítás kijavított egy ellentmondást az amerikai gyakorlatban; az elv mindig is ott volt, várt az alkalmazásra.",
+      "headline": "A nők szavazati jogot nyernek Amerikában"
+    },
+    "1929ad": {
+      "title": "Tőzsdei Összeomlás",
+      "description": "A Fekete Kedd kiváltja a Nagy Gazdasági Válságot.",
+      "analysis": "Következmények: Példátlan gazdasági összeomlás; tömeges munkanélküliség világszerte. Hozzájárult az európai szélsőségesség felemelkedéséhez. New Deal-szerű kormányzati bővüléshez vezetett Amerikában. Átalakította a kormányzat gazdasági szerepét; az okokról és orvoslásokról vita folyik ma is. Philosify nézete: A Depresszió okait vitatják, de a kormányzati beavatkozások – Smoot-Hawley vámtarifa, monetáris kontrakció, adóemelések – rontottak a helyzeten. A tanulság: a válságok alatti kormányzati beavatkozás gyakran fokozza a kárt. A piacok gyorsabban korrigálnak, ha hagyják őket működni.",
+      "headline": "Wall Street összeomlik, kezdődik a Nagy Gazdasági Válság"
+    },
+    "1933ad": {
+      "title": "Hitler Kancellár Lesz",
+      "description": "Adolf Hitlert Németország kancellárjává nevezik ki.",
+      "analysis": "POSITIVE: None. NEGATIVE: Ended Weimar democracy; began persecution of Jews and others; led to World War II and Holocaust. Long-term: Demonstrated how democracies can vote themselves out of existence; cautionary tale about demagogues and economic crisis.",
+      "headline": "Hitlert Németország kancellárjává nevezik ki"
+    },
+    "1939ad": {
+      "title": "Második Világháború Kezdete",
+      "description": "Németország megtámadja Lengyelországot; Nagy-Britannia és Franciaország hadat üzen.",
+      "analysis": "POSITIVE: Allied victory eventually liberated occupied countries; led to human rights declarations. NEGATIVE: 70-85 million dead; Holocaust murdered 6 million Jews; cities destroyed. Long-term: Discredited fascism; created international institutions; began decolonization.",
+      "headline": "Németország megtámadja Lengyelországot, kitör a Második Világháború"
+    },
+    "1941ad": {
+      "title": "Pearl Harbor-i Támadás",
+      "description": "Japán megtámadja az amerikai csendes-óceáni flottát; Amerika belép a Második Világháborúba.",
+      "analysis": "POSITIVE: American entry turned tide of war; brought resources that ensured Allied victory. NEGATIVE: Thousands killed; led to internment of Japanese Americans. Long-term: America emerged as global superpower; ended isolationism.",
+      "headline": "Japán bombázza Pearl Harbort, Amerika belép a háborúba"
+    },
+    "1942ad": {
+      "title": "Holokauszt: Szisztematikus Népirtás",
+      "description": "A náci Németország végrehajtja a \"Végső Megoldást\", meggyilkolva hatmillió zsidót és még milliókat.",
+      "analysis": "POSITIVE: None. NEGATIVE: Industrial-scale murder of civilians; six million Jews and millions of others killed; immeasurable human loss and suffering. Long-term: Led to human rights declarations, genocide conventions, and establishment of Israel; permanent reminder of where hatred leads.",
+      "headline": "A nácik elindítják a Végső Megoldást, a zsidók szisztematikus kiirtását"
+    },
+    "1944ad": {
+      "title": "D-napi Invázió",
+      "description": "A szövetséges erők partra szállnak Normandiában, megkezdve Nyugat-Európa felszabadítását.",
+      "analysis": "POSITIVE: Began liberation of Western Europe; demonstrated Allied commitment; hastened war's end. NEGATIVE: Heavy casualties on beaches; difficult fighting ahead. Long-term: Western Europe liberated; contrasted with Soviet control of Eastern Europe.",
+      "headline": "Szövetséges erők rohamozzák a normandiai partokat a D-napon"
+    },
+    "1945ad": {
+      "title": "Atombombák Véget Vetnek a II. Világháborúnak",
+      "description": "Az Egyesült Államok atombombákat dob Hirosimára és Nagaszakira; Japán feltétel nélkül megadja magát.",
+      "analysis": "Consequences: The atomic bombs ended World War II with Japan's unconditional surrender—the only acceptable outcome against an aggressor nation. Japan started the war with Pearl Harbor and committed horrific atrocities across Asia (Rape of Nanking, POW torture, Unit 731). The bombs saved hundreds of thousands of American soldiers' lives and likely millions of Japanese lives—Japan was arming civilians to fight to the death. Philosophical significance: America had every right to use overwhelming force against an enemy that attacked first and refused to surrender. Our soldiers' lives take priority over enemy civilians. The decision was rational, moral, and life-affirming. Victory, not prolonged bloodshed, is the goal of a just war.",
+      "headline": "Atombombákat dobnak Japánra, a háború véget ér"
+    },
+    "1945ad_2": {
+      "title": "ENSZ Megalapítása",
+      "description": "Nemzetközi szervezet jön létre a béke és biztonság fenntartására.",
+      "analysis": "POSITIVE: Created forum for diplomacy; agencies address humanitarian needs; human rights declarations. NEGATIVE: Security Council veto limits effectiveness; cannot override sovereignty. Long-term: Imperfect but useful forum for international cooperation.",
+      "headline": "ENSZ alapítva a világbéke fenntartására"
+    },
+    "1947ad": {
+      "title": "Ayn Rand Az Ősforrás Sikere",
+      "description": "Az Ősforrás bestsellerré válik, bemutatva az individualista filozófiát.",
+      "analysis": "POSITIVE: Celebrated individual creativity and integrity; challenged collectivist thinking; inspired entrepreneurs and artists. NEGATIVE: Critics argued it dismissed community and social bonds. Long-term: Influenced libertarian movement; remains widely read and debated.",
+      "headline": "Rand Az Ősforrása bestseller lesz, az individualizmus emelkedik"
+    },
+    "1948ad": {
+      "title": "Izrael Megalapítása",
+      "description": "Kikiáltják Izrael Államot, hazát biztosítva a zsidó nép számára.",
+      "analysis": "POSITIVE: Provided refuge for Jews after Holocaust; built successful democracy; technological innovation. NEGATIVE: Displacement of Palestinians; ongoing regional conflict. Long-term: Complex legacy of refuge, conflict, and competing national aspirations.",
+      "headline": "Kikiáltják Izrael Államot, megszületik a zsidó haza"
+    },
+    "1950ad": {
+      "title": "Koreai Háború Kezdete",
+      "description": "Észak-Korea megtámadja Dél-Koreát; ENSZ-erők avatkoznak be.",
+      "analysis": "POSITIVE: South Korea preserved; became prosperous democracy. NEGATIVE: Millions killed; peninsula remains divided; North Korea became totalitarian state. Long-term: Stark contrast between North and South demonstrates different systems' outcomes.",
+      "headline": "Észak-Korea megtámadja Dél-Koreát, háború tör ki"
+    },
+    "1949ad": {
+      "title": "Kommunista Kína Megalapítása",
+      "description": "Mao Ce-tung kommunista totalitárius diktatúrát hoz létre Kínában.",
+      "analysis": "Consequences: Mao's regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, and family structures. Philosophical significance: Communism is the deadliest ideology in human history. China's economic success only came AFTER the CCP abolished communist economics and opened markets, allowing people to trade freely domestically and internationally. The political system remains authoritarian, but prosperity required abandoning Marx. The regime still commits genocide against Uyghurs and threatens Taiwan.",
+      "headline": "Mao kikiáltja a Kommunista Kínát, a világ legnagyobb országa vörössé válik"
+    },
+    "1957ad": {
+      "title": "A Lázadó Atlasz Megjelenik",
+      "description": "Ayn Rand publikálja filozófiai regényét.",
+      "analysis": "POSITIVE: Defended productive achievement; critiqued excessive regulation; inspired entrepreneurs. NEGATIVE: Critics argued it lacked compassion for the less fortunate. Long-term: One of most influential American novels; continues to spark debate about capitalism and individualism.",
+      "headline": "Ayn Rand publikálja A Lázadó Atlaszt"
+    },
+    "1961ad": {
+      "title": "Első Ember az Űrben",
+      "description": "Jurij Gagarin az első ember, aki Föld körüli pályára áll.",
+      "analysis": "POSITIVE: Opened space age; demonstrated human capacity to transcend earthly limits; inspired generations. NEGATIVE: Space race diverted resources; Cold War competition. Long-term: Space exploration continues to advance science and inspire humanity.",
+      "headline": "Gagarin Föld körüli pályán, az első ember az űrben"
+    },
+    "1963ad": {
+      "title": "Kennedy Meggyilkolása",
+      "description": "John F. Kennedy elnököt meggyilkolják Dallasban.",
+      "analysis": "POSITIVE: Peaceful transfer of power demonstrated constitutional resilience. NEGATIVE: National trauma; loss of popular leader; conspiracy theories persist. Long-term: Showed institutions survive loss of any individual; changed American political culture.",
+      "headline": "Kennedy elnököt meggyilkolják Dallasban"
+    },
+    "1964ad": {
+      "title": "Polgárjogi Törvény",
+      "description": "Mérföldkő jelentőségű jogszabály tiltja a faj, szín, vallás, nem vagy nemzeti származás alapján történő megkülönböztetést.",
+      "analysis": "POSITIVE: Ended legal segregation; protected voting rights; opened opportunities. NEGATIVE: Did not eliminate discrimination; implementation faced resistance. Long-term: Transformed American society; extended founding principles to all citizens.",
+      "headline": "A Polgárjogi Törvény megtiltja a faji megkülönböztetést"
+    },
+    "1965ad": {
+      "title": "Vietnami Háború Eszkalálódik",
+      "description": "Az Egyesült Államok harci csapatokat küld Vietnamba; a háború milliók életét fogja követelni.",
+      "analysis": "POSITIVE: Attempted to prevent communist expansion. NEGATIVE: Over 58,000 Americans and millions of Vietnamese killed; divided American society; ultimately unsuccessful. Long-term: Changed American attitudes toward military intervention; lessons still debated.",
+      "headline": "Az USA harci csapatokat küld Vietnamba"
+    },
+    "1966ad": {
+      "title": "Kulturális Forradalom Kezdete",
+      "description": "Mao elindítja a Kulturális Forradalmat, az \"ellenforradalmi\" elemeket célozva.",
+      "analysis": "POSITIVE: None. NEGATIVE: Millions killed or persecuted; cultural heritage destroyed; education disrupted for generation. Long-term: Traumatized Chinese society; later repudiated by Chinese Communist Party itself.",
+      "headline": "Mao elindítja a Kulturális Forradalmat, Kína káoszba süllyed"
+    },
+    "1975ad": {
+      "title": "Kambodzsai Népirtás Kezdete",
+      "description": "A Vörös Khmerek megragadják a hatalmat; a népirtás 1,5-2 millió kambodzsai életét oltja ki.",
+      "analysis": "POSITIVE: None. NEGATIVE: Quarter of population killed; society devastated; educated class targeted for elimination. Long-term: Cambodia slowly recovered; tribunals eventually held perpetrators accountable.",
+      "headline": "A Vörös Khmerek elfoglalják Kambodzsát, népirtás kezdődik"
+    },
+    "1979ad": {
+      "title": "Iráni Forradalom",
+      "description": "Az iszlám forradalom megdönti a sahot; Homeini ajatollah teokratikus diktatúrát hoz létre.",
+      "analysis": "Consequences: Replaced a modernizing authoritarian monarchy with a barbaric theocratic dictatorship. Iran became the world's leading state sponsor of terrorism. Women lost fundamental rights. Religious police enforce medieval laws. The regime has pursued nuclear weapons while calling for the destruction of Israel and America. Philosophical significance: Not all \"revolutions\" are progress. Theocracy is incompatible with human freedom. The West's failure to support the Shah and decades of appeasement emboldened this regime. Only regime change or unconditional surrender can end this threat to civilization.",
+      "headline": "Az iszlám forradalom megdönti a sahot, Irán teokráciává válik"
+    },
+    "1969ad": {
+      "title": "Holdraszállás",
+      "description": "Az Apollo 11 űrhajósai a Holdra lépnek.",
+      "analysis": "POSITIVE: Greatest technological achievement in history; united humanity in wonder; advanced technology. NEGATIVE: Enormous cost; program later abandoned. Long-term: Proved nothing is impossible; inspired generations; space exploration continues.",
+      "headline": "Armstrong a Holdon sétál"
+    },
+    "1989ad": {
+      "title": "Berlini Fal Leomlása",
+      "description": "Leomlik a Berlini Fal; a Hidegháború kezd véget érni.",
+      "analysis": "POSITIVE: Reunified Germany; freed Eastern Europe; ended Cold War division; peaceful revolution. NEGATIVE: Economic difficulties for former communist states; not all transitions smooth. Long-term: Demonstrated that even seemingly permanent systems can collapse; expanded freedom to millions.",
+      "headline": "Leomlik a Berlini Fal, a szabadság végigsöpör Kelet-Európán"
+    },
+    "1991ad": {
+      "title": "Szovjetunió Felbomlása",
+      "description": "A Szovjetunió hivatalosan felbomlik; véget ér a Hidegháború.",
+      "analysis": "POSITIVE: Ended communist superpower; freed 15 nations; ended nuclear standoff. NEGATIVE: Economic collapse in former Soviet states; some regions remain authoritarian. Long-term: Transformed international order; debate continues about post-Soviet development.",
+      "headline": "A Szovjetunió összeomlik, véget ér a Hidegháború"
+    },
+    "2001ad": {
+      "title": "Szeptember 11-i Támadások",
+      "description": "Al-Kaida terroristák megtámadják a World Trade Centert és a Pentagont, közel 3000 embert megölve.",
+      "analysis": "Consequences: Nearly 3,000 innocent people murdered by Islamic terrorists. America responded with war in Afghanistan to destroy Al-Qaeda and the Taliban regime that harbored them. Triggered two decades of military operations against terrorist networks. Philosophical significance: Evil exists and must be destroyed. The proper response to terrorism is overwhelming force, not negotiation. The failure to achieve complete victory in Afghanistan demonstrated the cost of nation-building over decisive military defeat of enemies.",
+      "headline": "Terroristák csapnak le a World Trade Centerre és a Pentagonra"
+    },
+    "2008ad": {
+      "title": "Globális Pénzügyi Válság",
+      "description": "A Lehman Brothers összeomlása világméretű pénzügyi válságot vált ki.",
+      "analysis": "POSITIVE: Led to financial reforms; exposed weaknesses in system. NEGATIVE: Millions lost jobs and homes; recession spread globally. Long-term: Changed banking regulation; debates about causes and responses continue.",
+      "headline": "A Lehman Brothers összeomlik, globális pénzügyi válság"
+    },
+    "2020ad": {
+      "title": "COVID-19 Világjárvány",
+      "description": "Világjárvány vezet példátlan lezárásokhoz és gazdasági megrázkódtatáshoz.",
+      "analysis": "POSITIVE: Accelerated medical research and vaccine development; remote work became viable. NEGATIVE: Millions died; economic disruption; mental health impacts; educational setbacks. Long-term: Transformed work, medicine, and public health; full effects still emerging.",
+      "headline": "A COVID-19 világjárvány leállítja a világot"
+    },
+    "2023ad": {
+      "title": "Október 7: Hamász Támadás Izrael Ellen",
+      "description": "Hamász terroristák 1200 izraeli civilt mészárolnak le és 250 túszt ejtenek.",
+      "analysis": "Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities against civilians including rape, torture, and murder of children. Revealed the true nature of Hamas as a genocidal terrorist organization. Much of the Western intelligentsia shamefully sided with the terrorists, exposing moral bankruptcy in academia and media. Philosophical significance: Evil must be defeated, not negotiated with. Israel's right to self-defense is absolute. Victory means dismantling Hamas's capability to harm civilians. There is no moral equivalence between terrorists and their victims.",
+      "headline": "A Hamász 1200 izraelit mészárol le meglepetés-támadásban"
+    },
+    "2022ad": {
+      "title": "Oroszország Megtámadja Ukrajnát",
+      "description": "Oroszország teljes körű inváziót indít Ukrajna ellen; a legnagyobb háború Európában a II. Világháború óta.",
+      "analysis": "Consequences: Russia, an American enemy, launched unprovoked aggression against Ukraine, revealing imperial ambitions and military weakness. The West responded with sanctions and military aid. Ukraine's fierce resistance has degraded Russian military capability significantly. Philosophical significance: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with negotiated concessions.",
+      "headline": "Oroszország teljes körű inváziót indít Ukrajna ellen"
+    },
+    "2024ad": {
+      "title": "Irán-Izrael Feszültségek Eszkalálódnak",
+      "description": "Irán rakétákat lő Izraelre; Izrael precíziós csapásokkal válaszol.",
+      "analysis": "Consequences: Iran's theocratic regime openly attacks Israel, dropping pretense of proxy warfare. Israel demonstrates superior defensive and offensive capabilities. Regional conflict intensifies with Hezbollah and Houthis. Philosophical significance: Appeasement of the Iranian regime over decades enabled this aggression. The only path to peace is through strength and the defeat of those who seek destruction. Terrorist-sponsoring regimes cannot be trusted with negotiations—only unconditional surrender or regime change ends the threat.",
+      "headline": "Irán rakétákat lő Izraelre, a régió a szakadék szélén"
+    }
+  },
+  "quiz": {
+    "title": "Kvíz",
+    "leaderboard": "LEGJOBB EREDMÉNYEK",
+    "welcome": "Teszteld Filozófiai Tudásodat",
+    "description": "Válaszolj metafizikával, episztemológiával, etikával, politikával és esztétikával kapcsolatos kérdésekre.",
+    "rule1": "10 kérdés kreditenként",
+    "rule2": "A kérdések minden helyes válasszal nehezebbé válnak",
+    "rule3": "Hibáztál? Fizess 1 kreditet a folytatáshoz",
+    "rule4": "10 helyes válasz egymás után = 1 kredit vissza!",
+    "starting": "Indítás...",
+    "start": "Kvíz Indítása",
+    "checking": "Ellenőrzés...",
+    "submit": "Válasz Küldése",
+    "correct": "Helyes!",
+    "wrong": "Helytelen!",
+    "correctWas": "Helyes válasz:",
+    "explanation": "Magyarázat",
+    "streak": "Sorozat",
+    "score": "Pontszám",
+    "next": "Következő Kérdés",
+    "continue": "Folytatás",
+    "wrongAnswer": "Rossz Válasz!",
+    "payToContinueWrong": "Fizess 1 kreditet a munkamenet folytatásához.",
+    "completed10": "Szép munka!",
+    "payToContinue10": "10 kérdést teljesítettél! Fizess 1 kreditet további 10-ért.",
+    "bestStreak": "Legjobb Sorozat",
+    "continuing": "Folytatás...",
+    "payToContinue": "Kvíz Folytatása",
+    "endQuiz": "Kvíz Befejezése",
+    "quizComplete": "Kvíz Kész!",
+    "finalScore": "Végső Pontszám",
+    "totalCorrect": "Helyes Válaszok",
+    "creditsEarned": "Szerzett Kreditek",
+    "playAgain": "Újrajátszás",
+    "categories": {
+      "metaphysics": "Metafizika",
+      "epistemology": "Episztemológia",
+      "ethics": "Etika",
+      "politics": "Politika",
+      "aesthetics": "Esztétika",
+      "applied": "Alkalmazott Filozófia",
+      "history": "Filozófiatörténet",
+      "american_exceptionalism": "Amerikai Kivételesség",
+      "virtues": "Erények",
+      "economics": "Közgazdaságtan",
+      "law": "Objektív Jog"
+    }
   }
 }

@@ -532,6 +532,10 @@
       "history": {
         "title": "Historia",
         "description": "Odkryj 2600 lat myśli filozoficznej"
+      },
+      "quiz": {
+        "title": "Quiz",
+        "description": "Sprawdź swoją wiedzę z filozofii"
       }
     },
     "comingSoonDesc": {
@@ -1609,99 +1613,617 @@
     }
   },
   "historicalEvents": {
-    "594bc": "Solon\\'s Reforms in Athens",
-    "509bc": "Roman Republic Founded",
-    "490bc": "Battle of Marathon",
-    "480bc": "Battle of Thermopylae & Salamis",
-    "399bc": "Trial and Death of Socrates",
-    "336bc": "Alexander the Great Begins Conquest",
-    "323bc": "Death of Alexander the Great",
-    "264bc": "First Punic War Begins",
-    "146bc": "Destruction of Carthage",
-    "49bc": "Caesar Crosses the Rubicon",
-    "44bc": "Assassination of Julius Caesar",
-    "31bc": "Battle of Actium",
-    "30ad": "Crucifixion of Jesus",
-    "79ad": "Eruption of Vesuvius",
-    "180ad": "Death of Marcus Aurelius",
-    "313ad": "Edict of Milan",
-    "380ad": "Christianity Becomes State Religion",
-    "410ad": "Visigoths Sack Rome",
-    "476ad": "Fall of Western Roman Empire",
-    "529ad": "Closing of Platonic Academy",
-    "622ad": "Hegira - Birth of Islam",
-    "732ad": "Battle of Tours",
-    "800ad": "Charlemagne Crowned Emperor",
-    "1054ad": "Great Schism",
-    "1066ad": "Norman Conquest of England",
-    "1095ad": "First Crusade Called",
-    "1215ad": "Magna Carta Signed",
-    "1265ad": "First English Parliament",
-    "1347ad": "Black Death Reaches Europe",
-    "1439ad": "Gutenberg\\'s Printing Press",
-    "1453ad": "Fall of Constantinople",
-    "1492ad": "Columbus Reaches Americas",
-    "1517ad": "Protestant Reformation Begins",
-    "1543ad": "Copernican Revolution",
-    "1588ad": "Defeat of Spanish Armada",
-    "1607ad": "Jamestown Founded",
-    "1620ad": "Mayflower Compact",
-    "1642ad": "English Civil War Begins",
-    "1648ad": "Peace of Westphalia",
-    "1687ad": "Newton\\'s Principia Published",
-    "1688ad": "Glorious Revolution",
-    "1689ad": "Locke\\'s Two Treatises Published",
-    "1776ad": "American Declaration of Independence",
-    "1787ad": "U.S. Constitution Written",
-    "1789ad": "French Revolution Begins",
-    "1791ad": "Bill of Rights Ratified",
-    "1804ad": "Napoleon Crowned Emperor",
-    "1815ad": "Battle of Waterloo",
-    "1833ad": "British Slavery Abolition Act",
-    "1848ad": "Revolutions of 1848",
-    "1848ad_2": "Communist Manifesto Published",
-    "1859ad": "Origin of Species Published",
-    "1861ad": "American Civil War Begins",
-    "1863ad": "Emancipation Proclamation",
-    "1865ad": "13th Amendment Ratified",
-    "1869ad": "Transcontinental Railroad Completed",
-    "1876ad": "Telephone Invented",
-    "1879ad": "Edison\\'s Light Bulb",
-    "1886ad": "Statue of Liberty Dedicated",
-    "1903ad": "Wright Brothers\\' Flight",
-    "1905ad": "Einstein\\'s Miracle Year",
-    "1914ad": "World War I Begins",
-    "1917ad": "Russian Revolution",
-    "1918ad": "World War I Ends",
-    "1920ad": "19th Amendment Ratified",
-    "1929ad": "Stock Market Crash",
-    "1933ad": "Hitler Becomes Chancellor",
-    "1939ad": "World War II Begins",
-    "1941ad": "Pearl Harbor Attack",
-    "1942ad": "Holocaust: Systematic Genocide",
-    "1944ad": "D-Day Invasion",
-    "1945ad": "Atomic Bombs End WWII",
-    "1945ad_2": "United Nations Founded",
-    "1947ad": "Ayn Rand\\'s The Fountainhead Success",
-    "1948ad": "Israel Founded",
-    "1950ad": "Korean War Begins",
-    "1949ad": "Communist China Established",
-    "1957ad": "Atlas Shrugged Published",
-    "1961ad": "First Human in Space",
-    "1963ad": "Kennedy Assassination",
-    "1964ad": "Civil Rights Act",
-    "1965ad": "Vietnam War Escalates",
-    "1966ad": "Cultural Revolution Begins",
-    "1975ad": "Cambodian Genocide Begins",
-    "1979ad": "Iranian Revolution",
-    "1969ad": "Moon Landing",
-    "1989ad": "Fall of Berlin Wall",
-    "1991ad": "Soviet Union Dissolves",
-    "2001ad": "September 11 Attacks",
-    "2008ad": "Global Financial Crisis",
-    "2020ad": "COVID-19 Pandemic",
-    "2023ad": "October 7: Hamas Attack on Israel",
-    "2024ad": "Iran-Israel Tensions Escalate",
-    "2022ad": "Russia Invades Ukraine"
+    "594bc": {
+      "title": "Reformy Solona w Atenach",
+      "description": "Solon ustanawia reformy konstytucyjne w Atenach, tworząc podwaliny demokracji.",
+      "analysis": "Konsekwencje: Solon zniósł niewolnictwo za długi, stworzył obywatelstwo oparte na majątku, wiążące udział ekonomiczny z uczestnictwem politycznym, oraz ustanowił rządy prawa, które przekształciły się w ateńską demokrację. Reformy te rozprzestrzeniły greckie idee polityczne w całym basenie Morza Śródziemnego. Pogląd Philosify: Kluczowy krok w kierunku uznania praw jednostki w społeczeństwie. Powiązanie uczestnictwa z własnością stworzyło bodźce do produktywnego obywatelstwa. Zasada, że nawet władcy podlegają prawu — a nie arbitralnej woli — jest fundamentem wolności.",
+      "headline": "Solon znosi niewolnictwo za długi i przepisuje ateńskie prawo"
+    },
+    "509bc": {
+      "title": "Republika Rzymska Założona",
+      "description": "Rzym obala monarchię i ustanawia Republikę z wybieranymi konsulami.",
+      "analysis": "Konsekwencje: Rzym stworzył instytucje rozdzielające władzę między konsulów, Senat i zgromadzenia. Obywatele-żołnierze, mający udział w swoim społeczeństwie, zbudowali imperium trwające 500 lat. Prawo rzymskie, inżynieria i rządy wpłynęły na całą późniejszą cywilizację zachodnią. Pogląd Philosify: Republika pokazała, że rozproszona władza i rządy prawa umożliwiają rozkwit człowieka. Gdy prawa jednostek są chronione przez instytucje, a nie zależą od kaprysu władcy, następuje dobrobyt. Późniejszy upadek Rzymu w cesarstwo pokazuje niebezpieczeństwo koncentracji władzy.",
+      "headline": "Rzym obala monarchię i ogłasza republikę"
+    },
+    "490bc": {
+      "title": "Bitwa pod Maratonem",
+      "description": "Grecy pokonują perską inwazję, zachowując grecką niepodległość i kulturę.",
+      "analysis": "Konsekwencje: Zachowanie greckiej niepodległości pozwoliło na dalszy rozwój filozofii, demokracji, nauki i sztuki. Pokazano, że armie obywatelskie walczące o własną wolność mogą pokonać większe siły walczące za odległego cesarza. Pogląd Philosify: Maraton pokazuje, że wolni ludzie walczący o swoje wartości są skuteczniejsi niż niewolnicy walczący dla panów. Greckie zwycięstwo umożliwiło tradycję filozoficzną, która odkryła rozum jako narzędzie przetrwania ludzkości. Cywilizacja zachodnia zawdzięcza swoje istnienie tej bitwie.",
+      "headline": "Grecy miażdżą perską inwazję pod Maratonem"
+    },
+    "480bc": {
+      "title": "Bitwy pod Termopilami i Salaminą",
+      "description": "Grecy opierają się perskiej inwazji; 300 Spartan dokonuje legendarnego oporu.",
+      "analysis": "Konsekwencje: Poświęcenie Spartan dało czas na zjednoczenie Greków; zwycięstwo morskie pod Salaminą okazało się decydujące. Ekspansja perska została trwale zatrzymana. Grecka cywilizacja przetrwała, by wydać Sokratesa, Platona, Arystotelesa i fundamenty zachodniej myśli. Pogląd Philosify: Termopile reprezentują bohaterstwo — nie męczeństwo. Spartanie walczyli o swoją najwyższą wartość: wolność. Nie poświęcili się dla niczego; kupili zwycięstwo dla Grecji. Bohater ryzykuje życie dla swoich wartości; męczennik umiera dla samej śmierci.",
+      "headline": "300 Spartan broni przesmyku pod Termopilami"
+    },
+    "399bc": {
+      "title": "Proces i Śmierć Sokratesa",
+      "description": "Sokrates skazany na śmierć przez ateńską demokrację za \"deprawowanie młodzieży\".",
+      "analysis": "Konsekwencje: Odmowa ucieczki Sokratesa uczyniła go męczennikiem integralności intelektualnej. Platon zachował jego nauki i założył Akademię. Proces postawił fundamentalne pytania o sumienie jednostki kontra autorytet państwa, które pozostają aktualne do dziś. Pogląd Philosify: Demokracja straciła swojego największego filozofa — dowodząc, że rządy większości bez konstytucyjnych ograniczeń władzy państwowej są tyranią. Prawa jednostki muszą być chronione PRZED większością. Sokrates pokazał, że myślący człowiek musi kierować się rozumem, nie opinią publiczną, nawet do śmierci.",
+      "headline": "Ateny skazują Sokratesa na śmierć"
+    },
+    "336bc": {
+      "title": "Aleksander Wielki Rozpoczyna Podboje",
+      "description": "Aleksander zostaje królem i rozpoczyna kampanię, która rozszerzy kulturę grecką.",
+      "analysis": "Konsekwencje: Język grecki, filozofia, nauka i handel rozprzestrzeniły się na ogromne terytoria od Egiptu po Indie. Aleksander założył miasta, które stały się ośrodkami nauki. Świat hellenistyczny umożliwił wymianę idei między Wschodem a Zachodem przez wieki. Pogląd Philosify: Podboje Aleksandra miały mieszane skutki — rozprzestrzenianie greckiego racjonalizmu było wartościowe, ale budowanie imperium przez podbój narusza prawa jednostki. Trwałe dziedzictwo jest kulturalne, nie polityczne: idee szerzące się przez handel i naukę przetrwały dłużej niż te szerzone mieczem.",
+      "headline": "Aleksander rusza na podbój znanego świata"
+    },
+    "323bc": {
+      "title": "Śmierć Aleksandra Wielkiego",
+      "description": "Aleksander umiera w wieku 32 lat, a jego imperium rozpada się na państwa sukcesorów.",
+      "analysis": "Konsekwencje: Imperium rozpadło się na walczące państwa sukcesorów. Jednak kultura i handel grecki przetrwały w tych królestwach. Biblioteki, szkoły i sieci handlowe funkcjonowały nadal. Rywalizacja między państwami czasem sprzyjała innowacjom. Pogląd Philosify: Imperia zbudowane na charyzmie jednej osoby rzadko przeżywają swoich założycieli. Trwałe instytucje wymagają zasad, nie osobowości. Przetrwanie świata hellenistycznego mimo fragmentacji politycznej pokazuje, że kultura i handel — dobrowolna wymiana — znaczą więcej niż jedność polityczna.",
+      "headline": "Aleksander Wielki umiera w wieku 32 lat, imperium się rozpada"
+    },
+    "264bc": {
+      "title": "Pierwsza Wojna Punicka Rozpoczyna się",
+      "description": "Rzym i Kartagina rozpoczynają stulecie wojen o dominację na Morzu Śródziemnym.",
+      "analysis": "Konsekwencje: Rzym rozwinął zdolności morskie i ekspandował poza Italię. Sycylia została zdewastowana przez przedłużające się działania wojenne. Postawiło to Rzym na ścieżce do dominacji śródziemnomorskiej, która przyniosła bezprecedensowy pokój i handel. Pogląd Philosify: Wojny podboju wiążą się z masową destrukcją życia i mienia. Jednak ostateczne zwycięstwo Rzymu przyniosło Pax Romana — pokazując, że jednolite rządy prawa, nawet niedoskonale stosowane, umożliwiają większy dobrobyt niż ciągłe wojny między rywalizującymi mocarstwami.",
+      "headline": "Rzym i Kartagina starły się o panowanie nad Morzem Śródziemnym"
+    },
+    "146bc": {
+      "title": "Zniszczenie Kartaginy",
+      "description": "Rzym całkowicie niszczy Kartaginę, stając się najwyższą potęgą śródziemnomorską.",
+      "analysis": "Konsekwencje: Całkowite zniszczenie cywilizacji kartagińskiej; 50 000 ocalałych zniewolono. Monopol Rzymu na Morzu Śródziemnym umożliwił bezprecedensowy handel, wymianę kulturową i ostateczny Pax Romana trwający wieki. Pogląd Philosify: Totalna wojna przeciwko pokonanemu wrogowi jest nadmierna — Kartagina nie stanowiła już zagrożenia. Jednak wynikający z tego pokój rzymski umożliwił dobrobyt na trzech kontynentach. Lekcja: stabilny porządek pod rządami prawa, nawet ustanowiony brutalnie, jest lepszy niż wieczny konflikt.",
+      "headline": "Rzym obraca Kartaginę w zgliszcza"
+    },
+    "49bc": {
+      "title": "Cezar Przekracza Rubikon",
+      "description": "Juliusz Cezar rozpoczyna wojnę domową, która zakończy Republikę Rzymską.",
+      "analysis": "Konsekwencje: Zniszczono 460 lat rządów republikańskich. Reformy Cezara rozwiązywały realne problemy — długi, podział ziemi, obywatelstwo — ale ustanowiły precedens dla militarnego przejęcia władzy. Doprowadziło to do Cesarstwa, które przyniosło stabilność, ale zakończyło rzymską wolność polityczną. Pogląd Philosify: Jakkolwiek uzasadnione były skargi Cezara, przejęcie władzy siłą zniszczyło porządek konstytucyjny. Republikańskie mechanizmy kontroli i równowagi, choć niedoskonałe, chroniły wolność lepiej niż rządy \"życzliwych\" dyktatorów. Dobre intencje nie usprawiedliwiają niszczenia instytucji.",
+      "headline": "Cezar przekracza Rubikon i maszeruje na Rzym"
+    },
+    "44bc": {
+      "title": "Zamordowanie Juliusza Cezara",
+      "description": "Rzymscy senatorowie mordują Cezara w Idy Marcowe.",
+      "analysis": "Konsekwencje: Wywołano kolejną wojnę domową, bardziej destrukcyjną niż pierwsza. Republika nie mogła zostać przywrócona; Oktawian wyłonił się jako August, pierwszy cesarz. Sprawa zamachowców przepadła; ich metody zdyskredytowały republikanizm. Pogląd Philosify: Problemów politycznych nie można rozwiązać przez eliminację jednostek, gdy podstawowe warunki pozostają niezmienione. Zamachowcy słusznie zidentyfikowali tyranię, ale nie oferowali realnej alternatywy. Zasady i instytucje znaczą więcej niż osobowości — usunięcie Cezara nie przywróciło Republiki.",
+      "headline": "Senatorowie mordują Juliusza Cezara w Idy Marcowe"
+    },
+    "31bc": {
+      "title": "Bitwa pod Akcjum",
+      "description": "Oktawian pokonuje Antoniusza i Kleopatrę, stając się jedynym władcą Rzymu.",
+      "analysis": "Konsekwencje: Zakończono dekady wojen domowych. August przyniósł pokój, dobrobyt i Pax Romana trwający dwa stulecia. Handel kwitł, miasta rosły, sztuka i literatura rozkwitały. Ale Republika umarła; władza skupiła się w jednej osobie. Pogląd Philosify: Augustiański pokój pokazuje, że porządek umożliwia dobrobyt — ale kosztem wolności politycznej. Kompromis między bezpieczeństwem a wolnością jest realny. Rzym wybrał bezpieczeństwo; ostatecznie skoncentrowana władza skorumpowała i Cesarstwo upadło. Konstytucyjne ograniczenia władzy pozostają niezbędne.",
+      "headline": "Oktawian pokonuje Antoniusza i Kleopatrę pod Akcjum"
+    },
+    "30ad": {
+      "title": "Ukrzyżowanie Jezusa",
+      "description": "Jezus z Nazaretu ukrzyżowany w Jerozolimie, wydarzenie założycielskie chrześcijaństwa.",
+      "analysis": "Konsekwencje: Chrześcijaństwo wyłoniło się z tego wydarzenia, ostatecznie przekształcając wartości, sztukę, filozofię, prawo i instytucje cywilizacji zachodniej. Koncepcje powszechnej równości moralnej, indywidualnego sumienia i troski o marginalizowanych weszły do kultury zachodniej. Pogląd Philosify: Chrześcijaństwo wprowadziło wartościowe koncepcje — indywidualną wartość moralną, sumienie, miłosierdzie — ale także epistemologię opartą na wierze, która koliduje z rozumem. Mieszane dziedzictwo obejmuje zarówno postęp humanitarny, jak i prześladowania religijne. Idee muszą być oceniane przez ich treść i konsekwencje, nie źródło.",
+      "headline": "Jezus z Nazaretu ukrzyżowany w Jerozolimie"
+    },
+    "79ad": {
+      "title": "Erupcja Wezuwiusza",
+      "description": "Erupcja wulkanu niszczy Pompeje i Herkulanum.",
+      "analysis": "Konsekwencje: Tysiące zginęło; kwitnące miasta zniszczone w kilka godzin. Jednak zachowanie pod wulkanicznym popiołem dało nam niezrównaną wiedzę o rzymskim życiu codziennym, sztuce, architekturze i kulturze, która inaczej byłaby stracona. Pogląd Philosify: Katastrofy naturalne przypominają nam o obojętności rzeczywistości wobec ludzkich życzeń. Natura działa przez przyczynowość, nie intencję. Właściwą odpowiedzią jest zrozumienie sił natury przez naukę i inżynieryjne środki ochronne — nie modlitwa czy fatalizm. Zachowanie Pompejów służy ludzkiej wiedzy.",
+      "headline": "Wezuwiusz wybucha, Pompeje pogrzebane w popiele"
+    },
+    "180ad": {
+      "title": "Śmierć Marka Aureliusza",
+      "description": "Ostatni z \"Pięciu Dobrych Cesarzy\" umiera; Rzym rozpoczyna długi upadek.",
+      "analysis": "Konsekwencje: Marek Aureliusz wybrał swojego nienadającego się syna Kommodusa jako następcę, kończąc praktykę adopcji zdolnych dziedziców. Rzym wszedł w okres niestabilności, wojen domowych i upadku, który osłabiał cesarstwo przez wieki. Pogląd Philosify: Nawet królowie-filozofowie podejmują złe decyzje. Panowanie Marka Aureliusza dowiodło, że filozofia może kierować rządzeniem — ale jego wybór sukcesora dowiódł, że skoncentrowana władza zależy od przypadków urodzenia i charakteru. Instytucjonalne mechanizmy kontroli znaczą więcej niż mądrzy władcy.",
+      "headline": "Marek Aureliusz nie żyje, złoty wiek Rzymu dobiega końca"
+    },
+    "313ad": {
+      "title": "Edykt Mediolański",
+      "description": "Konstantyn legalizuje chrześcijaństwo w całym Cesarstwie Rzymskim.",
+      "analysis": "Konsekwencje: Zakończono prześladowania chrześcijan; ustanowiono zasadę tolerancji religijnej. Chrześcijaństwo szybko rosło ze wsparciem państwa, budując szpitale, szkoły i instytucje charytatywne. Jednak rozpoczął się proces splątania Kościoła i państwa. Pogląd Philosify: Tolerancja religijna jest niezbędna dla wolności — państwo nie powinno prześladować ani promować religii. Edykt słusznie zakończył prześladowania, ale późniejszy faworytyzm Konstantyna wobec chrześcijaństwa ustanowił precedensy dla przyszłego przymusu religijnego.",
+      "headline": "Konstantyn legalizuje chrześcijaństwo w Cesarstwie Rzymskim"
+    },
+    "380ad": {
+      "title": "Chrześcijaństwo Staje się Religią Państwową",
+      "description": "Cesarz Teodozjusz czyni chrześcijaństwo oficjalną religią Rzymu.",
+      "analysis": "Konsekwencje: Chrześcijaństwo zyskało środki na budowę szpitali, szkół i usług socjalnych w całym cesarstwie. Jednak poganie i chrześcijańscy \"heretycy\" teraz stawali w obliczu prześladowań. Przymus religijny zastąpił tolerancję religijną. Pogląd Philosify: Religia państwowa narusza wolność sumienia. Wymuszanie wiary jest zarówno niemoralne, jak i nieskuteczne — nie można wymusić prawdziwego przekonania. Średniowieczny model unii Kościoła i państwa przyniósł wieki wojen i prześladowań religijnych. Rozdział Kościoła i państwa chroni oba.",
+      "headline": "Cesarz ogłasza chrześcijaństwo jedyną religią Rzymu"
+    },
+    "410ad": {
+      "title": "Wizygoci Plądrują Rzym",
+      "description": "Wizygoci Alaryka plądrują Rzym; \"Wieczne Miasto\" upada po raz pierwszy od 800 lat.",
+      "analysis": "Konsekwencje: Psychologiczny szok w całym cesarstwie; ujawniono słabość militarną Rzymu. Jednak Wizygoci szukali integracji, nie zniszczenia — Rzym nadal funkcjonował. Wydarzenie skłoniło Augustyna do napisania \"Państwa Bożego\", kształtując chrześcijańską myśl polityczną przez wieki. Pogląd Philosify: Cywilizacje upadają, gdy porzucają zasady, które je zbudowały. Upadek Rzymu wynikał z wewnętrznego rozkładu — opodatkowania, regulacji, dewaluacji waluty — bardziej niż z presji zewnętrznej. Wizygoci wykorzystali słabość; nie stworzyli jej.",
+      "headline": "Barbarzyńcy plądrują Rzym po raz pierwszy od 800 lat"
+    },
+    "476ad": {
+      "title": "Upadek Cesarstwa Zachodniorzymskiego",
+      "description": "Ostatni zachodniorzymski cesarz zdetronizowany; tradycyjna data końca świata starożytnego.",
+      "analysis": "Konsekwencje: Handel załamał się, miasta skurczyły się, piśmienność zmalała, wiedza techniczna została utracona. Germańskie królestwa zachowały niektóre rzymskie instytucje, ale nie mogły utrzymać złożonej cywilizacji. Rozpoczął się średniowieczny okres fragmentacji i lokalnej władzy. Pogląd Philosify: Cywilizacja nie jest automatyczna — wymaga ciągłego wysiłku, by ją utrzymać. Rzym upadł, ponieważ Rzymianie przestali robić to, co uczyniło Rzym wielkim: produkcję, handel, rządy prawa, dyscyplinę wojskową. Ciemne Wieki pokazują, co się dzieje, gdy fundamenty cywilizacji erodują.",
+      "headline": "Ostatni cesarz rzymski obalony, Cesarstwo Zachodnie upada"
+    },
+    "529ad": {
+      "title": "Zamknięcie Akademii Platońskiej",
+      "description": "Cesarz Justynian zamyka Akademię w Atenach, kończąc starożytne szkoły filozoficzne.",
+      "analysis": "Konsekwencje: Zakończono 900 lat edukacji filozoficznej w Atenach. Filozofowie uciekli do Persji, zachowując greckie teksty, które później powróciły do Europy przez uczonych islamskich. Chrześcijańska ortodoksja stłumiła pogańską naukę w cesarstwie. Pogląd Philosify: Tłumienie idei siłą jest zarówno niemoralne, jak i daremne. Prawdy nie można zniszczyć przez zamykanie szkół — idee przetrwały i ostatecznie zapoczątkowały Renesans. Wolność intelektualna jest niezbędna; cenzura opóźnia, ale nie może zapobiec rozprzestrzenianiu się wiedzy.",
+      "headline": "Justynian zamyka Akademię Platona po 900 latach"
+    },
+    "622ad": {
+      "title": "Hidżra - Narodziny Islamu",
+      "description": "Migracja Mahometa do Medyny oznacza początek kalendarza islamskiego.",
+      "analysis": "Konsekwencje: Islam zjednoczył plemiona arabskie, stworzył wyrafinowaną cywilizację rozciągającą się na trzech kontynentach, zachował i przekazał naukę grecką, rozwinął matematykę, astronomię i medycynę. Rozprzestrzenił się także przez podbój militarny, narzucając prawo religijne podbitym ludom. Pogląd Philosify: Osiągnięcia cywilizacji islamskiej w nauce i filozofii nastąpiły pomimo, nie dzięki, doktrynie religijnej — przez indywidualnych myślicieli, którzy cenili rozum. Sama religia, jak wszystkie systemy oparte na wierze, ostatecznie koliduje z racjonalnym badaniem, które wytworzyło te osiągnięcia.",
+      "headline": "Mahomet ucieka do Medyny, rodzi się islam"
+    },
+    "732ad": {
+      "title": "Bitwa pod Tours",
+      "description": "Karol Młot zatrzymuje muzułmański marsz na Europę Zachodnią.",
+      "analysis": "Konsekwencje: Zachowano niepodległość Franków i chrześcijańską Europę Zachodnią. Europa Zachodnia rozwijała się oddzielnie od świata islamskiego, z różnymi trajektoriami politycznymi, religijnymi i intelektualnymi. Ugruntowano reputację militarną dynastii Karolingów. Pogląd Philosify: Znaczenie bitwy polega na zachowaniu europejskiej niepodległości — umożliwiając ostateczny Renesans, Reformację, Oświecenie i rozwój praw jednostki. Niezależnie od poglądów na zaangażowane religie, odrębny rozwój Europy przyniósł idee wolności, które przynoszą korzyści całej ludzkości.",
+      "headline": "Karol Młot zatrzymuje muzułmański marsz na Europę"
+    },
+    "800ad": {
+      "title": "Karol Wielki Koronowany na Cesarza",
+      "description": "Papież Leon III koronuje Karola Wielkiego, odradzając koncepcję Zachodniego Cesarstwa Rzymskiego.",
+      "analysis": "Konsekwencje: Renesans Karoliński zachował klasyczną wiedzę; szkoły założono w całym cesarstwie. Stworzono wzorzec konfliktu papież-cesarz trwający wieki. Cesarstwo rozpadło się po śmierci Karola Wielkiego, ale idea jedności europejskiej przetrwała. Pogląd Philosify: Osiągnięcia Karola Wielkiego pokazują, że indywidualne przywództwo ma znaczenie — ale upadek jego cesarstwa pokazuje, że trwałe instytucje wymagają więcej niż woli jednego przywódcy. Najtrwalszym dziedzictwem było kulturalne: zachowanie wiedzy, które umożliwiło przyszły postęp.",
+      "headline": "Papież koronuje Karola Wielkiego cesarzem Zachodu"
+    },
+    "1054ad": {
+      "title": "Wielka Schizma",
+      "description": "Chrześcijaństwo dzieli się na Kościół Rzymskokatolicki i Prawosławny.",
+      "analysis": "Konsekwencje: Podzielono chrześcijaństwo na konkurujące sfery z odrębnymi rozwojem teologicznym i kulturowym. Wzajemne ekskomuniki zrodziły trwałą wrogość. Jednak konkurencja między kościołami stworzyła przestrzenie dla sprzeciwu i ostatecznie przyczyniła się do pluralizmu religijnego. Pogląd Philosify: Monopole religijne tłumią badania i wolność. Schizma, choć zrodzona z konfliktu, nieumyślnie stworzyła konkurencję, która ostatecznie osłabiła duszący uścisk autorytetu religijnego nad myślą. Pluralizm — nawet przypadkowy — służy wolności.",
+      "headline": "Chrześcijaństwo pęka na dwoje: Rzym kontra Konstantynopol"
+    },
+    "1066ad": {
+      "title": "Podbój Normański Anglii",
+      "description": "Wilhelm Zdobywca pokonuje Harolda pod Hastings, przekształcając historię Anglii.",
+      "analysis": "Konsekwencje: Anglosaska elita została wywłaszczona; normański wpływ francuski na język i kulturę angielską. Wprowadzono kontynentalne praktyki administracyjne, które ostatecznie przyczyniły się do rozwoju prawa zwyczajowego i Parlamentu. Stworzono naród angielski, który rozprzestrzenił swój język i instytucje na całym świecie. Pogląd Philosify: Podbój narusza prawa podbitych — ale historia ocenia przez długoterminowe konsekwencje. Angielskie prawo zwyczajowe, wyłaniające się częściowo z administracji normańskiej, stało się fundamentem praw jednostki na całym świecie. Niezamierzone konsekwencje czasem przewyższają intencje.",
+      "headline": "Wilhelm podbija Anglię w Bitwie pod Hastings"
+    },
+    "1095ad": {
+      "title": "Pierwsza Krucjata Ogłoszona",
+      "description": "Papież Urban II wzywa do krucjaty, by odzyskać Ziemię Świętą od muzułmanów.",
+      "analysis": "Konsekwencje: Otwarto szlaki handlowe i przyniesiono wiedzę ze świata islamskiego. Ogromne straty po wszystkich stronach; masakry Żydów i muzułmanów. Trwała nienawiść religijna między cywilizacjami. Jednak europejski kontakt z bardziej zaawansowaną cywilizacją islamską przyspieszył rozwój kulturalny i technologiczny. Pogląd Philosify: Wojny religijne są najgorsze — toczone o wiarę zamiast racjonalnych interesów, nie dopuszczają kompromisu. Jednak niezamierzona konsekwencja — kontakt z zachowaną wiedzą grecką — pomogła rozbudzić intelektualne przebudzenie Europy. Idee rozprzestrzeniają się wbrew intencjom.",
+      "headline": "Papież ogłasza Pierwszą Krucjatę o odzyskanie Ziemi Świętej"
+    },
+    "1215ad": {
+      "title": "Magna Carta Podpisana",
+      "description": "Angielscy baronowie zmuszają króla Jana do podpisania karty ograniczającej władzę królewską.",
+      "analysis": "Konsekwencje: Ustanowiono zasadę, że władcy podlegają prawu; zagwarantowano ochronę należytego procesu; fundament rządu konstytucyjnego. Choć początkowo chroniono tylko przywileje baronów i często ją łamano, jej zasady stopniowo rozszerzono, by chronić wszystkich obywateli i wpłynęła na konstytucje na całym świecie. Pogląd Philosify: Magna Carta jest kamieniem milowym ludzkiej wolności — zasada, że nawet królowie podlegają prawu. Z tego ziarna wyrosły rządy konstytucyjne, prawa jednostki i ograniczony rząd. Idee, raz ustanowione, mają tendencję do logicznego rozszerzania się do pełnych implikacji.",
+      "headline": "Angielscy baronowie zmuszają króla do podpisania Magna Carta"
+    },
+    "1265ad": {
+      "title": "Pierwszy Parlament Angielski",
+      "description": "Szymon z Montfort zwołuje pierwszy wybieralny Parlament w Anglii.",
+      "analysis": "Konsekwencje: Stworzono precedens dla rządu przedstawicielskiego; dano mieszczanom głos w rządzeniu obok szlachty. Choć początkowo miał ograniczoną władzę i reprezentował tylko klasy posiadające, ewoluował w model demokracji parlamentarnej przyjęty przez wiele narodów. Pogląd Philosify: Rząd przedstawicielski jest kluczową kontrolą władzy. Gdy ci, którzy płacą podatki, mają głos w ich wydawaniu, rząd jest ograniczony. Parlament ewoluował w obrońcę wolności — niedoskonały, ale daleko lepszy niż absolutna monarchia.",
+      "headline": "Pierwszy wybieralny Parlament zbiera się w Anglii"
+    },
+    "1347ad": {
+      "title": "Czarna Śmierć Dociera do Europy",
+      "description": "Dżuma zabija 30-60% europejskiej populacji na przestrzeni kilku lat.",
+      "analysis": "Konsekwencje: Niewyobrażalne cierpienie; załamanie społeczne; prześladowania mniejszości obwinianych za zarazę. Jednak ocaleni widzieli wyższe płace z powodu niedoboru pracy; feudalizm osłabł, gdy chłopi zyskali siłę przetargową; innowacje technologiczne przyspieszyły, by zastąpić utraconą pracę. Pogląd Philosify: Katastrofy ujawniają, co ma znaczenie: gdy praca staje się rzadka, wartość pracowników rośnie. Zaraza przypadkowo przyspieszyła wolność jednostki, wzmacniając pracowników przeciw panom. Natura jest obojętna na ludzkie życzenia — ale ludzie mogą się adaptować i nawet korzystać z katastrof przez racjonalną odpowiedź.",
+      "headline": "Czarna Śmierć pustoszy Europę, giną miliony"
+    },
+    "1439ad": {
+      "title": "Prasa Drukarska Gutenberga",
+      "description": "Johannes Gutenberg rozwija druk ruchomą czcionką w Europie.",
+      "analysis": "Konsekwencje: Zdemokratyzowano wiedzę; umożliwiono szybkie rozprzestrzenianie idei; drastycznie obniżono koszt książek; zwiększono piśmienność. Umożliwiono Reformację, Rewolucję Naukową i Oświecenie, rozprzestrzeniając idee poza kontrolę instytucji. Także sprawniej rozprzestrzeniła propagandę. Pogląd Philosify: Prasa drukarska jest jednym z największych wynalazków historii — przełamała monopol na wiedzę elit. Gdy idee mogą się swobodnie rozprzestrzeniać, prawda ma szansę przeciwko utrwalonemu błędowi. Technologia, która wzmacnia jednostki przeciw instytucjom, służy wolności.",
+      "headline": "Gutenberg wynajduje prasę drukarską i rewolucjonizuje wiedzę"
+    },
+    "1453ad": {
+      "title": "Upadek Konstantynopola",
+      "description": "Turcy osmańscy zdobywają Konstantynopol, kończąc Cesarstwo Bizantyjskie.",
+      "analysis": "Konsekwencje: Greccy uczeni uciekający do Włoch przynieśli rękopisy, które napędziły Renesans. Imperium Osmańskie utrzymało Konstantynopol jako główne centrum kulturalne i handlowe. Szlaki handlowe przesunęły się na zachód, pobudzając eksplorację atlantycką. Koniec Wschodniego Cesarstwa Rzymskiego po 1000 lat. Pogląd Philosify: Upadek rozproszył grecką wiedzę po Europie, przyspieszając Renesans. Idee nie mogą być powstrzymane przez podbój — migrują z ludźmi i książkami. Osmanowie zdobyli miasto; Grecy zachowali cywilizację przez wiedzę.",
+      "headline": "Konstantynopol upada pod naporem Turków osmańskich"
+    },
+    "1492ad": {
+      "title": "Kolumb Dociera do Ameryki",
+      "description": "Podróż Krzysztofa Kolumba otwiera Nowy Świat na europejską eksplorację.",
+      "analysis": "Konsekwencje: Rozpoczęto wymianę upraw, zwierząt, idei między półkulami — przekształcając rolnictwo, dietę i gospodarki na całym świecie. Rdzenni mieszkańcy zdewastowani przez choroby i podbój; niewolnictwo wprowadzone do Ameryk. Ostatecznie doprowadziło do narodów założonych na zasadach Oświecenia. Pogląd Philosify: Podróż Kolumba miała katastrofalne konsekwencje dla rdzennych ludów — podbój i choroby naruszyły ich prawa do życia i własności. Jednak długoterminowym skutkiem było założenie Ameryki, które ustanowiło prawa jednostki jako podstawę rządu. Moralna złożoność historii nie pozwala na proste osądy.",
+      "headline": "Kolumb dociera do Nowego Świata"
+    },
+    "1517ad": {
+      "title": "Reformacja Protestancka Rozpoczyna się",
+      "description": "Marcin Luter przybija 95 tez, kwestionując autorytet Kościoła katolickiego.",
+      "analysis": "Konsekwencje: Zakwestionowano religijny monopol; podkreślono indywidualną wiarę i czytanie Biblii; doprowadzono do pluralizmu religijnego. Wywołano stulecie wojen religijnych i prześladowań po obu stronach. Ostatecznie ustanowiono, że jednostki mogą same interpretować wiarę, przyczyniając się do wzrostu indywidualizmu. Pogląd Philosify: Trwałym wkładem Reformacji było przełamanie religijnego monopolu. Niezależnie od intencji Lutra, zasada, że jednostki mogą czytać i interpretować same, logicznie rozciąga się na wszystkie dziedziny. Pluralizm religijny był krokiem w kierunku wolności intelektualnej.",
+      "headline": "Luter przybija 95 tez i kwestionuje autorytet Kościoła"
+    },
+    "1543ad": {
+      "title": "Rewolucja Kopernikańska",
+      "description": "Kopernik publikuje teorię heliocentryczną, przesuwając Ziemię z centrum wszechświata.",
+      "analysis": "Konsekwencje: Wykazano moc obserwacji i matematyki do obalania przyjętych przekonań. Początkowo sprzeciwiali się zarówno katolicy, jak i protestanci. Otwarto drogę do nowoczesnej astronomii i metody naukowej. Zmieniono rozumienie przez ludzkość jej miejsca we wszechświecie. Pogląd Philosify: Kopernik pokazał, że rzeczywistość jest taka, jaka jest, niezależnie od tradycji, autorytetu czy życzeń. Model heliocentryczny był prawdziwy, niezależnie od tego, czy Kościół go akceptował. Nauka postępuje, podążając za dowodami, dokądkolwiek prowadzą — istota rozumu zastosowanego do natury.",
+      "headline": "Kopernik dowodzi, że Ziemia krąży wokół Słońca"
+    },
+    "1588ad": {
+      "title": "Klęska Hiszpańskiej Armady",
+      "description": "Anglia pokonuje hiszpańską flotę inwazyjną, zachowując protestancką niepodległość.",
+      "analysis": "Konsekwencje: Zachowano angielską niepodległość od katolickiej Hiszpanii; władza morska przesunęła się na północ; umożliwiono angielską kolonizację Ameryk. Anglia wyłoniła się jako główna potęga morska, kładąc fundamenty globalnego wpływu i rozprzestrzeniania języka i prawa angielskiego. Pogląd Philosify: Angielska niepodległość zachowała naród, który rozwinąłby prawo zwyczajowe, rząd parlamentarny i ostatecznie zainspirował założenie Ameryki. Klęska Armady umożliwiła tradycję wolności, która wydała Deklarację Niepodległości.",
+      "headline": "Anglia niszczy hiszpańską Armadę"
+    },
+    "1607ad": {
+      "title": "Jamestown Założone",
+      "description": "Pierwsza trwała angielska osada w Ameryce założona.",
+      "analysis": "Konsekwencje: Rozpoczęto angielską kolonizację, która przyniosła tradycje samorządności, prawo zwyczajowe i ostatecznie rewolucyjne idee. Relacje z rdzennymi Amerykanami pogorszyły się; niewolnictwo wprowadzono w ciągu dziesięcioleci. Zasiano ziarna amerykańskiej republiki przez kolonistów przynoszących angielskie tradycje prawne i polityczne. Pogląd Philosify: Jamestown przyniosło zarówno dobro, jak i zło — samorząd i niewolnictwo. Koloniści, którzy wierzyli w swoje prawa jako Anglicy, ostatecznie rozszerzyli te zasady do ich logicznego wniosku: prawa należą do wszystkich jednostek, nie tylko Anglików.",
+      "headline": "Pierwsza angielska kolonia założona w Ameryce"
+    },
+    "1620ad": {
+      "title": "Pakt Mayflower",
+      "description": "Pielgrzymi zakładają samorządną kolonię w Plymouth.",
+      "analysis": "Konsekwencje: Pierwsza pisemna struktura samorządu w Amerykach; zademonstrowano teorię umowy społecznej w praktyce. Model pisanej konstytucji i rządu za zgodą wpłynął na założenie Ameryki. Początkowo ograniczono uczestnictwo do członków kościoła. Pogląd Philosify: Pakt ustanowił rząd za zgodą — radykalną ideę, że legitymacja rządu wywodzi się z porozumienia rządzonych, nie z boskiego prawa czy podboju. Ta zasada, raz ustanowiona, logicznie rozciąga się na wszystkich ludzi, nie tylko na pierwotnych sygnatariuszy.",
+      "headline": "Pielgrzymi podpisują Pakt Mayflower, tworząc samorządną kolonię"
+    },
+    "1642ad": {
+      "title": "Angielska Wojna Domowa Rozpoczyna się",
+      "description": "Parlament i król Karol I idą na wojnę o zasady konstytucyjne.",
+      "analysis": "Konsekwencje: Ustanowiono supremację Parlamentu; zaawansowano rządy konstytucyjne; umożliwiono tolerancję religijną. Dziesiątki tysięcy zginęło; tymczasowa dyktatura wojskowa pod Cromwellem. Rozstrzygnięto, że angielscy monarchowie muszą rządzić z Parlamentem, nie przeciwko niemu. Pogląd Philosify: Wojna domowa ustanowiła, że żaden władca nie stoi ponad prawem ani przedstawicielami ludu. Nawet tymczasowa dyktatura nie mogła odwrócić tej zasady. Wojna była kosztowna, ale alternatywa — absolutna monarchia — byłaby gorsza dla wolności.",
+      "headline": "Angielska wojna domowa wybucha: Parlament kontra Król"
+    },
+    "1648ad": {
+      "title": "Pokój Westfalski",
+      "description": "Traktaty kończą wojnę trzydziestoletnią i ustanawiają nowoczesny system państwowy.",
+      "analysis": "Konsekwencje: Zakończono niszczycielskie wojny religijne, które zabiły miliony. Ustanowiono suwerenność państw i zasady nieingerencji, które stworzyły nowoczesny system międzynarodowy. Religijny podział Europy zamrożono w miejscu, ale wojny religijne zakończono. Pogląd Philosify: Westfalia zakończyła wojny religijne, ustanawiając, że państwa nie będą ingerować w sprawy religijne innych. Zasada suwerenności ma ograniczenia — nie powinna chronić tyranii — ale zakończenie wojen religijnych było osiągnięciem. Pragmatyczny pokój bije wieczną świętą wojnę.",
+      "headline": "Pokój westfalski kończy wojnę trzydziestoletnią"
+    },
+    "1687ad": {
+      "title": "Principia Newtona Opublikowane",
+      "description": "Izaak Newton publikuje prawa ruchu i grawitacji powszechnej.",
+      "analysis": "Konsekwencje: Wykazano, że wszechświat działa według odkrywalnych praw; umożliwiono nowoczesną fizykę i inżynierię. Zainspirowano oświeceniową pewność, że rozum może zrozumieć naturę i poprawić społeczeństwo. Postawiono pytania filozoficzne o determinizm i cel. Pogląd Philosify: Newton pokazał, że wszechświat jest uporządkowany, prawidłowy i zrozumiały dla ludzkiego rozumu. To fundament nauki i technologii — i pewności, że rzeczywistość może być zrozumiana i poprawiona. Rozum działa; jest naszym narzędziem do życia.",
+      "headline": "Newton ujawnia prawa rządzące wszechświatem"
+    },
+    "1688ad": {
+      "title": "Chwalebna Rewolucja",
+      "description": "Wilhelm Orański zastępuje Jakuba II; Parlament potwierdza supremację.",
+      "analysis": "Konsekwencje: Ustanowiono monarchię konstytucyjną, supremację parlamentarną i tolerancję religijną bez większego rozlewu krwi. Karta Praw chroniła wolności jednostki. Model pokojowej reformy konstytucyjnej. Katolicy wykluczeni z sukcesji. Pogląd Philosify: Chwalebna Rewolucja osiągnęła zmianę reżimu przy minimalnej przemocy — dowodząc, że fundamentalna zmiana nie wymaga terroru. Konstytucyjne ograniczenia władzy, ustanowione tutaj, stały się angielską tradycją, którą Ameryka odziedziczyła i udoskonaliła.",
+      "headline": "Wilhelm Orański przejmuje angielski tron w bezkrwawym zamachu"
+    },
+    "1689ad": {
+      "title": "Dwa Traktaty Locke'a Opublikowane",
+      "description": "John Locke publikuje teorię praw naturalnych i ograniczonego rządu.",
+      "analysis": "Konsekwencje: Sformułowano filozoficzny fundament praw jednostki, rządu opartego na zgodzie i prawa do rewolucji. Bezpośrednio wpłynięto na amerykańskich założycieli. Najbardziej wpływowa filozofia polityczna w świecie anglojęzycznym; podstawa klasycznego liberalizmu. Pogląd Philosify: Locke ustanowił, że jednostki mają prawa naturalne, które poprzedzają rząd — rząd istnieje, by te prawa chronić, nie by je nadawać. To filozoficzny fundament Ameryki i wolności na całym świecie. Locke był niedoskonały, ale kierunkowo poprawny.",
+      "headline": "Locke publikuje teorię praw naturalnych i ograniczonego rządu"
+    },
+    "1776ad": {
+      "title": "Amerykańska Deklaracja Niepodległości",
+      "description": "Amerykańskie kolonie ogłaszają niepodległość, głosząc prawa naturalne.",
+      "analysis": "Konsekwencje: Pierwszy naród założony wyraźnie na zasadach praw naturalnych, zgody rządzonych i ograniczonego rządu. Zainspirowano ruchy na rzecz wolności na całym świecie. Praw nie rozszerzono początkowo na zniewolonych ani kobiety — ale zasady ostatecznie rozszerzono, by objąć wszystkich. Pogląd Philosify: Deklaracja jest największym dokumentem politycznym ludzkości. \"Wszyscy ludzie zostali stworzeni równymi\" z \"niezbywalnymi prawami\" jest fundamentem właściwego rządu. Założyciele wiedzieli, że ich praktyka nie dorównuje zasadom — ale ustanowili zasady, które domagały się własnego spełnienia.",
+      "headline": "Amerykańskie kolonie ogłaszają niepodległość od Wielkiej Brytanii"
+    },
+    "1787ad": {
+      "title": "Konstytucja USA Napisana",
+      "description": "Konwencja Konstytucyjna tworzy ramy dla ograniczonego rządu federalnego.",
+      "analysis": "Konsekwencje: Stworzono trwały system kontroli i równowagi; struktura federalna zrównoważyła interesy krajowe i lokalne. Kompromisy w sprawie niewolnictwa; początkowo bez Karty Praw. Najstarsza pisana konstytucja wciąż obowiązująca; wpłynęła na konstytucje na całym świecie. Pogląd Philosify: Konstytucja jest praktycznym zastosowaniem zasad Oświecenia — ograniczony rząd, rozdzielona władza, federalizm. Jest niedoskonała, ale zaprojektowana do ulepszania przez poprawki. Ramy te umożliwiły amerykański dobrobyt i chroniły wolność przez ponad dwa wieki.",
+      "headline": "Twórcy piszą Konstytucję USA w Filadelfii"
+    },
+    "1789ad": {
+      "title": "Rewolucja Francuska Rozpoczyna się",
+      "description": "Szturm na Bastylię rozpoczyna rewolucję, która wstrząśnie Europą.",
+      "analysis": "Konsekwencje: Zakończono przywileje feudalne; rozprzestrzeniły się idee obywatelstwa i równości. Przerodziło się w Terror, dyktaturę i dekady wojen; tysiące stracono gilotyną. Rozprzestrzeniła nacjonalizm po Europie; pokazała zarówno potencjał, jak i zagrożenia rewolucyjnej zmiany. Pogląd Philosify: Rewolucja Francuska ilustruje różnicę między podejściem amerykańskim a francuskim. Ameryka: prawa jednostki chronione przed rządem. Francja: \"wola powszechna\", która poświęcała jednostki kolektywowi. Terror nie był wypadkiem, ale konsekwencją kolektywistycznej filozofii.",
+      "headline": "Paryski tłum szturmuje Bastylię, rewolucja wybucha"
+    },
+    "1791ad": {
+      "title": "Karta Praw Ratyfikowana",
+      "description": "Pierwszych dziesięć poprawek do Konstytucji USA chroni wolności jednostki.",
+      "analysis": "Konsekwencje: Wyraźnie chroniono wolność słowa, religii, prasy, zgromadzeń i prawa do rzetelnego procesu. Ograniczono władzę federalną; zastrzeżono uprawnienia stanom i ludowi. Fundament rozszerzania praw przez interpretację. Początkowo stosowano tylko do rządu federalnego. Pogląd Philosify: Karta Praw nie nadaje praw — zabrania rządowi naruszania wcześniej istniejących praw naturalnych. \"Kongres nie ustanowi prawa...\" Poprawki uznają, że prawa są nieodłączne w ludzkiej naturze, nie są darami od rządu. To rozumienie jest niezbędne dla wolności.",
+      "headline": "Karta Praw ratyfikowana, wolności jednostki chronione"
+    },
+    "1804ad": {
+      "title": "Napoleon Koronowany na Cesarza",
+      "description": "Napoleon Bonaparte koronuje się na Cesarza Francuzów.",
+      "analysis": "Konsekwencje: Rewolucyjna republika stała się dyktaturą. Kodeks prawny Napoleona zmodernizował prawo cywilne w całej Europie. Miliony zginęły w wojnach napoleońskich. Rozprzestrzeniał reformy oświeceniowe, jednocześnie miażdżąc wolność. Obudził nacjonalizm w całej Europie. Pogląd Philosify: Napoleon pokazuje, że dobre reformy nie usprawiedliwiają dyktatury. Kodeks Napoleona był postępowy, ale narzucony przez tyrana. Środki mają takie samo znaczenie jak cele — wolność nie może być rozprzestrzeniania przez podbój. Największym dziedzictwem Napoleona było niezamierzone: inspirowanie ruchów oporu narodowego.",
+      "headline": "Napoleon koronuje się na cesarza Francji"
+    },
+    "1815ad": {
+      "title": "Bitwa pod Waterloo",
+      "description": "Napoleon pokonany; Kongres Wiedeński przywraca europejski porządek.",
+      "analysis": "Konsekwencje: Zakończono dekady wojen; umożliwiono stulecie względnego pokoju europejskiego. Kongres Wiedeński stworzył system równowagi sił. Reakcyjne osadnictwo stłumiło ruchy liberalne początkowo, ale wyłoniły się one później. Rozwój gospodarczy kwitł w spokojnym środowisku. Pogląd Philosify: Kongres Wiedeński był reakcyjny, ale przyniósł pokój. System równowagi sił, choć niedoskonały, zapobiegł dużej wojnie europejskiej przez stulecie. Stabilność umożliwia dobrobyt — ale tłumienie ruchów liberalnych tylko opóźniło ich triumf.",
+      "headline": "Napoleon pokonany pod Waterloo, zesłany na dobre"
+    },
+    "1833ad": {
+      "title": "Brytyjska Ustawa o Zniesieniu Niewolnictwa",
+      "description": "Wielka Brytania znosi niewolnictwo w całym swoim imperium.",
+      "analysis": "Konsekwencje: Zakończono niewolnictwo w Imperium Brytyjskim; Królewska Marynarka tłumiła handel niewolnikami globalnie. Główny krok w światowym ruchu abolicyjnym. Właściciele niewolników otrzymali odszkodowanie, podczas gdy zniewoleni nie otrzymali nic; wyzysk kontynuowano w innych formach. Moralne przywództwo zainspirowało inne narody. Pogląd Philosify: Abolicja uznała, że wszyscy ludzie mają prawa — niewolnictwo jest kradzieżą życia i pracy osoby. Brytyjska abolicja pokazała, że postęp moralny jest możliwy. Fakt, że nastąpiła przez pokojowe ustawodawstwo, nie rewolucję, pokazuje, że rozum może triumfować nad zakorzenionym interesami.",
+      "headline": "Wielka Brytania znosi niewolnictwo w całym imperium"
+    },
+    "1848ad": {
+      "title": "Rewolucje 1848 Roku",
+      "description": "Fala rewolucji w całej Europie domaga się rządu konstytucyjnego.",
+      "analysis": "Konsekwencje: Większość rewolucji stłumiona; reakcyjne rządy powróciły. Jednak rozprzestrzeniły idee liberalne i nacjonalistyczne szeroko; zakończyły poddaństwo w Cesarstwie Austriackim; pokazały ludowe pragnienie reform. Reformy ostatecznie przyszły przez ewolucję, nie rewolucję. Pogląd Philosify: 1848 pokazał, że idee wolności rozprzestrzeniły się poza elity do mas. Choć natychmiast nieudane, rewolucje pokazały, że stary porządek był intelektualnie bankrutem. Tłumienie nie zabija idei — opóźnia ich wdrożenie.",
+      "headline": "Fala rewolucji ogarnia Europę"
+    },
+    "1848ad_2": {
+      "title": "Manifest Komunistyczny Opublikowany",
+      "description": "Marks i Engels publikują manifest wzywający do gwałtownej rewolucji i zniesienia własności prywatnej.",
+      "analysis": "Konsekwencje: Ten dokument stał się ideologiczną podstawą reżimów, które zamordowały ponad 100 milionów ludzi w XX wieku — w Związku Radzieckim, Chinach, Kambodży, Kubie, Korei Północnej i gdzie indziej. Gdziekolwiek komunizm był wdrażany, rezultatem była tyrania, bieda i masowa śmierć. Pogląd Philosify: Manifest odrzuca prawa jednostki, własność prywatną i wolne rynki — fundamenty ludzkiego dobrobytu i wolności. Jego wezwanie do walki klas i własności kolektywnej jest fundamentalnie niezgodne z ludzką naturą. Marks mylił się co do historii, ekonomii i ludzkiej natury. Liczba ofiar to udowadnia.",
+      "headline": "Marks i Engels publikują Manifest Komunistyczny"
+    },
+    "1859ad": {
+      "title": "O Pochodzeniu Gatunków Opublikowane",
+      "description": "Darwin publikuje teorię ewolucji przez dobór naturalny.",
+      "analysis": "Konsekwencje: Zjednoczono biologię; wyjaśniono różnorodność życia przez naturalne procesy. Fundament nowoczesnej medycyny, genetyki i biotechnologii. Nadużywano do usprawiedliwienia darwinizmu społecznego i eugeniki. Przekształcono rozumienie życia i miejsca ludzkości w naturze. Pogląd Philosify: Ewolucja jest prawdą — dowody są przytłaczające. To nie umniejsza ludzkiej godności; wyjaśnia nasze pochodzenie bez determinowania naszego przeznaczenia. Wyewoluowaliśmy zdolność do rozumu, który transcenduje instynkt. Biologia opisuje, co jest; etyka określa, co powinno być.",
+      "headline": "Darwin publikuje O Pochodzeniu Gatunków, wstrząsając podstawami biologii"
+    },
+    "1861ad": {
+      "title": "Amerykańska Wojna Secesyjna Rozpoczyna się",
+      "description": "Wojna rozpoczyna się z powodu niewolnictwa i praw stanów; najbardziej krwawy konflikt amerykański.",
+      "analysis": "Konsekwencje: 620 000 zabitych — więcej Amerykanów niż we wszystkich innych wojnach łącznie. Zakończono niewolnictwo; zachowano Unię. Era Rekonstrukcji zakończyła się przedwcześnie; nierówność rasowa utrzymywała się przez kolejne stulecie. Rozstrzygnięto, że naród pozostanie zjednoczony, a niewolnictwo jest niezgodne z amerykańskimi zasadami. Pogląd Philosify: Wojna secesyjna była wojną o wolność przeciw niewolnictwu — ostatecznemu naruszeniu praw jednostki. Lincoln słusznie rozumiał, że naród \"w połowie niewolniczy i w połowie wolny\" zaprzeczał sam sobie. Sprawa Unii była słuszna; koszt tragiczny, ale konieczny.",
+      "headline": "Amerykańska wojna secesyjna — Południe się oddziela"
+    },
+    "1863ad": {
+      "title": "Proklamacja Emancypacji",
+      "description": "Lincoln ogłasza niewolników w stanach zbuntowanych \"wolnymi na zawsze\".",
+      "analysis": "Konsekwencje: Przekształcono wojnę secesyjną w walkę o wolność, nie tylko o unię. Umożliwiono czarnym żołnierzom walkę o własne wyzwolenie. Osłabiono Konfederację moralnie i materialnie. Nie uwolniła niewolników w stanach granicznych; pełna równość nie nastąpiła przez stulecie. Pogląd Philosify: Emancypacja była Ameryką spełniającą swoje zasady założycielskie. \"Wszyscy ludzie zostali stworzeni równymi\" znaczyło, co mówiło — Proklamacja rozpoczęła proces spełnienia tej obietnicy. Lincoln rozumiał, że niewolnictwo było złe z zasady, nie tylko polityki.",
+      "headline": "Lincoln ogłasza wszystkich niewolników w zbuntowanych stanach wolnymi na zawsze"
+    },
+    "1865ad": {
+      "title": "13. Poprawka Ratyfikowana",
+      "description": "Niewolnictwo i przymusowa służba zniesione w całych Stanach Zjednoczonych.",
+      "analysis": "Konsekwencje: Konstytucyjnie zniesiono niewolnictwo; ukończono to, co obiecała Deklaracja Niepodległości. Byli niewolnicy pozbawieni ziemi i pełnych praw obywatelskich początkowo; nastąpiły dzierżawa i prawa Jima Crowa. Ale niewolnictwo zostało trwale zakończone poprawką konstytucyjną. Pogląd Philosify: 13. Poprawka wpisała do Konstytucji to, co powinno tam być od początku — że żadna osoba nie może posiadać innej. Walka o pełną równość trwała, ale fundamentalna zasada została ustanowiona: prawa jednostki należą do wszystkich jednostek.",
+      "headline": "13. Poprawka znosi niewolnictwo w Ameryce"
+    },
+    "1869ad": {
+      "title": "Kolej Transkontynentalna Ukończona",
+      "description": "Kolej łącząca wybrzeża Atlantyku i Pacyfiku ukończona w Promontory Summit.",
+      "analysis": "Konsekwencje: Zjednoczono kontynent ekonomicznie; umożliwiono osadnictwo, handel i komunikację na ogromnych odległościach. Skrócono czas podróży z miesięcy do dni. Zbudowano z wyzyskiwaną pracą imigrantów; zakłócono ziemie rdzennych Amerykanów. Przekształcono amerykańską gospodarkę i wzorce osadnictwa. Pogląd Philosify: Kolej pokazała, co mogą osiągnąć wolna przedsiębiorczość i inżynieria. Pomimo zaangażowania rządu i wyzysku pracy, projekt stworzył ogromną wartość. Infrastruktura umożliwiająca handel i przemieszczanie się służy ludzkiemu rozkwitowi — gdy zbudowana przez dobrowolną wymianę, nie pracę przymusową.",
+      "headline": "Kolej transkontynentalna ukończona, wybrzeża połączone"
+    },
+    "1876ad": {
+      "title": "Telefon Wynaleziony",
+      "description": "Alexander Graham Bell patentuje telefon.",
+      "analysis": "Konsekwencje: Umożliwiono natychmiastową komunikację na odległość; przekształcono biznes, rząd i relacje osobiste. Stworzono nowe branże i możliwości ekonomiczne. Początek rewolucji telekomunikacyjnej, która nadal przekształca społeczeństwo. Pogląd Philosify: Telefon ilustruje, jak wynalazcy służący własnym interesom służą wszystkim. Bell szukał zysku i osiągnął go, tworząc wartość dla innych. To jest kapitalizm w najlepszej formie — dobrowolna wymiana tworząca bogactwo dla wszystkich stron.",
+      "headline": "Bell wynajduje telefon"
+    },
+    "1879ad": {
+      "title": "Żarówka Edisona",
+      "description": "Thomas Edison rozwija praktyczną żarówkę.",
+      "analysis": "Konsekwencje: Wydłużono produktywne godziny poza światło dzienne; poprawiono bezpieczeństwo w domach i miejscach pracy; umożliwiono nowe branże; przekształcono codzienne życie. Elektryfikacja zmieniła każdy aspekt nowoczesnej cywilizacji. Metoda Edisona systematycznego wynalazczości stała się modelem dla badań przemysłowych. Pogląd Philosify: Edison nie tylko wynalazł żarówkę — stworzył system wytwarzania i dystrybucji energii elektrycznej, który uczynił ją użyteczną. Jest przykładem produktywnego geniuszu, który kapitalizm nagradza: identyfikuj problemy, twórz rozwiązania, zarabiaj służąc innym.",
+      "headline": "Edison oświetla świat żarówką elektryczną"
+    },
+    "1886ad": {
+      "title": "Statua Wolności Odsłonięta",
+      "description": "Dar Francji dla Ameryki celebruje wolność oświecającą świat.",
+      "analysis": "Konsekwencje: Stała się trwałym symbolem amerykańskich ideałów; powitała miliony imigrantów szukających wolności i możliwości. Ideały nie zawsze odpowiadały rzeczywistości dyskryminacji i ograniczeń. Pozostaje potężnym symbolem wolności i schronienia dla prześladowanych. Pogląd Philosify: Statua reprezentuje ideał założycielski Ameryki: wolność jako naturalny stan ludzkości. \"Dajcie mi zmęczonych, biednych, stłoczone masy tęskniące za wolnością\" — Ameryka w najlepszej formie wita tych, którzy szukają wolności. Ideał pozostaje wart dążenia.",
+      "headline": "Statua Wolności odsłonięta w porcie Nowego Jorku"
+    },
+    "1903ad": {
+      "title": "Lot Braci Wright",
+      "description": "Pierwszy kontrolowany, napędzany lot samolotem w Kitty Hawk.",
+      "analysis": "Konsekwencje: Otwarto erę lotnictwa; przekształcono transport, handel, komunikację i wojnę. Uczyniono świat mniejszym — każdy punkt osiągalny w godzinach. Umożliwiono bombardowania lotnicze, ale także pomoc humanitarną i globalny handel. Pogląd Philosify: Dwóch mechaników rowerowych z Ohio osiągnęło to, co akademicy twierdzili, że jest niemożliwe. Wrightowie są przykładem amerykańskiego praktycznego geniuszu — eksperymentowanie, wytrwałość, racjonalne rozwiązywanie problemów. Indywidualna inicjatywa, nie programy rządowe, otworzyła niebo.",
+      "headline": "Bracia Wright dokonują pierwszego lotu napędzanego silnikiem"
+    },
+    "1905ad": {
+      "title": "Cudowny Rok Einsteina",
+      "description": "Einstein publikuje prace o szczególnej teorii względności, efekcie fotoelektrycznym i ruchach Browna.",
+      "analysis": "Konsekwencje: Zrewolucjonizowano fizykę; pokazano, że przestrzeń i czas są względne, masa i energia równoważne. Umożliwiono energię jądrową, GPS i niezliczone technologie. Także umożliwiono broń jądrową. Przekształcono rozumienie wszechświata. Pogląd Philosify: Einstein, urzędnik patentowy, obalił wieki fizyki przez czystą myśl. Jego praca pokazuje, że rzeczywistość jest obiektywna i poznawalna — ale nasza wiedza musi być stale rewidowana przez dowody. Prawda istnieje; naszym zadaniem jest odkrywać ją przez rozum.",
+      "headline": "Einstein przepisuje prawa fizyki"
+    },
+    "1914ad": {
+      "title": "I Wojna Światowa Rozpoczyna się",
+      "description": "Zamach na arcyksięcia Franciszka Ferdynanda wywołuje globalny konflikt.",
+      "analysis": "Konsekwencje: 17 milionów zabitych; imperia zniszczone; mapa Europy przerysowana. Umożliwiono wzrost komunizmu i faszyzmu. Niestabilne osadnictwo pokojowe zasiało ziarna II wojny światowej. Zniszczono XIX-wieczną optymistyczną wiarę w postęp. Pogląd Philosify: I wojna światowa wynikła z nacjonalizmu, militaryzmu i uwikłanych sojuszy — wszystkie porażki idei. Katastrofa zdyskredytowała stary porządek bez ustanowienia lepszego. Złe idee mają konsekwencje mierzone w milionach istnień.",
+      "headline": "Arcyksiążę zamordowany, Europa pogrąża się w wojnie"
+    },
+    "1917ad": {
+      "title": "Rewolucja Rosyjska",
+      "description": "Bolszewicy przejmują władzę w Rosji, ustanawiając komunistyczne państwo totalitarne.",
+      "analysis": "Konsekwencje: Ustanowiono pierwsze duże komunistyczne państwo totalitarne. Zastąpiono jedną autokrację czymś o wiele gorszym — reżimem, który zamordował ponad 20 milionów własnych obywateli przez czystki, inżynierowane głody i gułagi. Eksportowano ideologię komunistyczną na cały świat, prowadząc do podobnych okrucieństw w Chinach, Kambodży, Kubie i gdzie indziej. Pogląd Philosify: Rewolucja rosyjska dowodzi, że kolektywizm prowadzi do masowych mordów. Gdy prawa jednostki są podporządkowane \"kolektywowi\", \"robotnikom\" lub \"ludowi\", wynikiem jest zawsze tyrania. 100 milionów ofiar komunizmu w XX wieku jest ostatecznym obaleniem Marksa.",
+      "headline": "Bolszewicy przejmują władzę w Rosji"
+    },
+    "1918ad": {
+      "title": "I Wojna Światowa Kończy się",
+      "description": "Podpisano rozejm; wojna zabija 17 milionów i przekształca globalny porządek.",
+      "analysis": "Konsekwencje: Stworzono Ligę Narodów; zakończono Imperium Osmańskie, Austro-Węgierskie, Niemieckie i Rosyjskie. Mściwe warunki pokojowe upokorzyły Niemcy; nowe granice stworzyły konflikty etniczne. Niestabilne osadnictwo i nierozwiązane urazy doprowadziły bezpośrednio do II wojny światowej. Pogląd Philosify: Traktat wersalski pokazuje, że pokój bez sprawiedliwości jest niestabilny. Karanie Niemiec stworzyło urazę, którą Hitler wykorzystał. Pokój, który ani nie pojednał, ani decydująco nie pokonał wroga, pozostawił najgorsze z obu podejść.",
+      "headline": "Podpisano rozejm, Wielka Wojna dobiegła końca"
+    },
+    "1920ad": {
+      "title": "19. Poprawka Ratyfikowana",
+      "description": "Kobiety zyskują prawo głosu w Stanach Zjednoczonych.",
+      "analysis": "Konsekwencje: Rozszerzono równość polityczną na kobiety; potwierdzono dekady pokojowej agitacji. Podwojono elektorat. Kobiety stały się większością głosujących. Rozszerzono definicję \"wszyscy ludzie zostali stworzeni równymi\" do jej logicznego wniosku. Pogląd Philosify: Prawo wyborcze kobiet było logicznym rozszerzeniem zasad założycielskich. Prawa należą do jednostek jako jednostek — nie jako członków grup. Poprawka skorygowała niespójność w praktyce amerykańskiej; zasada była tam zawsze, czekając na zastosowanie.",
+      "headline": "Kobiety zdobywają prawo głosu w Ameryce"
+    },
+    "1929ad": {
+      "title": "Krach na Giełdzie",
+      "description": "Czarny Wtorek wywołuje Wielki Kryzys.",
+      "analysis": "Konsekwencje: Bezprecedensowe załamanie gospodarcze; masowe bezrobocie na całym świecie. Przyczyniło się do wzrostu ekstremizmu w Europie. Doprowadziło do rozszerzenia rządu w ramach New Deal w Ameryce. Przekształciło rolę rządu w gospodarce; debata trwa o przyczynach i środkach zaradczych. Pogląd Philosify: Przyczyny Kryzysu są dyskutowane, ale reakcje rządu — taryfy Smoot-Hawley, kurczenie się podaży pieniądza, podwyżki podatków — pogorszyły sytuację. Lekcja: interwencja rządu podczas kryzysów często pogłębia szkody. Rynki korygują się szybciej, gdy pozwoli im się funkcjonować.",
+      "headline": "Wall Street upada, zaczyna się Wielki Kryzys"
+    },
+    "1933ad": {
+      "title": "Hitler Zostaje Kanclerzem",
+      "description": "Adolf Hitler appointed Chancellor of Germany.",
+      "analysis": "POSITIVE: None. NEGATIVE: Ended Weimar democracy; began persecution of Jews and others; led to World War II and Holocaust. Long-term: Demonstrated how democracies can vote themselves out of existence; cautionary tale about demagogues and economic crisis.",
+      "headline": "Hitler mianowany kanclerzem Niemiec"
+    },
+    "1939ad": {
+      "title": "II Wojna Światowa Rozpoczyna się",
+      "description": "Germany invades Poland; Britain and France declare war.",
+      "analysis": "POSITIVE: Allied victory eventually liberated occupied countries; led to human rights declarations. NEGATIVE: 70-85 million dead; Holocaust murdered 6 million Jews; cities destroyed. Long-term: Discredited fascism; created international institutions; began decolonization.",
+      "headline": "Niemcy najeżdżają Polskę, wybucha II wojna światowa"
+    },
+    "1941ad": {
+      "title": "Atak na Pearl Harbor",
+      "description": "Japan attacks U.S. Pacific Fleet; America enters World War II.",
+      "analysis": "POSITIVE: American entry turned tide of war; brought resources that ensured Allied victory. NEGATIVE: Thousands killed; led to internment of Japanese Americans. Long-term: America emerged as global superpower; ended isolationism.",
+      "headline": "Japonia bombarduje Pearl Harbor, Ameryka przystępuje do wojny"
+    },
+    "1942ad": {
+      "title": "Holokaust: Systematyczny Ludobójstwo",
+      "description": "Nazi Germany implements the \"Final Solution,\" murdering six million Jews and millions of others.",
+      "analysis": "POSITIVE: None. NEGATIVE: Industrial-scale murder of civilians; six million Jews and millions of others killed; immeasurable human loss and suffering. Long-term: Led to human rights declarations, genocide conventions, and establishment of Israel; permanent reminder of where hatred leads.",
+      "headline": "Naziści uruchamiają Ostateczne Rozwiązanie — systematyczną zagładę Żydów"
+    },
+    "1944ad": {
+      "title": "Inwazja D-Day",
+      "description": "Allied forces land at Normandy, beginning liberation of Western Europe.",
+      "analysis": "POSITIVE: Began liberation of Western Europe; demonstrated Allied commitment; hastened war's end. NEGATIVE: Heavy casualties on beaches; difficult fighting ahead. Long-term: Western Europe liberated; contrasted with Soviet control of Eastern Europe.",
+      "headline": "Siły alianckie szturmują plaże Normandii w Dniu D"
+    },
+    "1945ad": {
+      "title": "Bomby Atomowe Kończą II Wojnę Światową",
+      "description": "U.S. drops atomic bombs on Hiroshima and Nagasaki; Japan unconditionally surrenders.",
+      "analysis": "Consequences: The atomic bombs ended World War II with Japan's unconditional surrender—the only acceptable outcome against an aggressor nation. Japan started the war with Pearl Harbor and committed horrific atrocities across Asia (Rape of Nanking, POW torture, Unit 731). The bombs saved hundreds of thousands of American soldiers' lives and likely millions of Japanese lives—Japan was arming civilians to fight to the death. Philosophical significance: America had every right to use overwhelming force against an enemy that attacked first and refused to surrender. Our soldiers' lives take priority over enemy civilians. The decision was rational, moral, and life-affirming. Victory, not prolonged bloodshed, is the goal of a just war.",
+      "headline": "Bomby atomowe zrzucone na Japonię, wojna się kończy"
+    },
+    "1945ad_2": {
+      "title": "Organizacja Narodów Zjednoczonych Założona",
+      "description": "International organization established to maintain peace and security.",
+      "analysis": "POSITIVE: Created forum for diplomacy; agencies address humanitarian needs; human rights declarations. NEGATIVE: Security Council veto limits effectiveness; cannot override sovereignty. Long-term: Imperfect but useful forum for international cooperation.",
+      "headline": "Powstaje Organizacja Narodów Zjednoczonych dla utrzymania pokoju"
+    },
+    "1947ad": {
+      "title": "Sukces Źródła Ayn Rand",
+      "description": "The Fountainhead becomes bestseller, presenting individualist philosophy.",
+      "analysis": "POSITIVE: Celebrated individual creativity and integrity; challenged collectivist thinking; inspired entrepreneurs and artists. NEGATIVE: Critics argued it dismissed community and social bonds. Long-term: Influenced libertarian movement; remains widely read and debated.",
+      "headline": "Źródło Rand zostaje bestsellerem, indywidualizm rośnie w siłę"
+    },
+    "1948ad": {
+      "title": "Izrael Założony",
+      "description": "State of Israel declared, providing homeland for Jewish people.",
+      "analysis": "POSITIVE: Provided refuge for Jews after Holocaust; built successful democracy; technological innovation. NEGATIVE: Displacement of Palestinians; ongoing regional conflict. Long-term: Complex legacy of refuge, conflict, and competing national aspirations.",
+      "headline": "Proklamacja Państwa Izrael, ojczyzna narodu żydowskiego"
+    },
+    "1950ad": {
+      "title": "Wojna Koreańska Rozpoczyna się",
+      "description": "North Korea invades South Korea; UN forces intervene.",
+      "analysis": "POSITIVE: South Korea preserved; became prosperous democracy. NEGATIVE: Millions killed; peninsula remains divided; North Korea became totalitarian state. Long-term: Stark contrast between North and South demonstrates different systems' outcomes.",
+      "headline": "Korea Północna atakuje Południe, wybucha wojna"
+    },
+    "1949ad": {
+      "title": "Komunistyczne Chiny Ustanowione",
+      "description": "Mao Zedong establishes communist totalitarian dictatorship in China.",
+      "analysis": "Consequences: Mao's regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, and family structures. Philosophical significance: Communism is the deadliest ideology in human history. China's economic success only came AFTER the CCP abolished communist economics and opened markets, allowing people to trade freely domestically and internationally. The political system remains authoritarian, but prosperity required abandoning Marx. The regime still commits genocide against Uyghurs and threatens Taiwan.",
+      "headline": "Mao proklamuje komunistyczne Chiny, największy kraj świata staje się czerwony"
+    },
+    "1957ad": {
+      "title": "Atlas Zbuntowany Opublikowany",
+      "description": "Ayn Rand publishes her philosophical novel.",
+      "analysis": "POSITIVE: Defended productive achievement; critiqued excessive regulation; inspired entrepreneurs. NEGATIVE: Critics argued it lacked compassion for the less fortunate. Long-term: One of most influential American novels; continues to spark debate about capitalism and individualism.",
+      "headline": "Ayn Rand publikuje Atlas Zbuntowany"
+    },
+    "1961ad": {
+      "title": "Pierwszy Człowiek w Kosmosie",
+      "description": "Yuri Gagarin becomes first human to orbit Earth.",
+      "analysis": "POSITIVE: Opened space age; demonstrated human capacity to transcend earthly limits; inspired generations. NEGATIVE: Space race diverted resources; Cold War competition. Long-term: Space exploration continues to advance science and inspire humanity.",
+      "headline": "Gagarin okrąża Ziemię, pierwszy człowiek w kosmosie"
+    },
+    "1963ad": {
+      "title": "Zamach na Kennedy\\'ego",
+      "description": "President John F. Kennedy assassinated in Dallas.",
+      "analysis": "POSITIVE: Peaceful transfer of power demonstrated constitutional resilience. NEGATIVE: National trauma; loss of popular leader; conspiracy theories persist. Long-term: Showed institutions survive loss of any individual; changed American political culture.",
+      "headline": "Prezydent Kennedy zamordowany w Dallas"
+    },
+    "1964ad": {
+      "title": "Ustawa o Prawach Obywatelskich",
+      "description": "Landmark legislation outlaws discrimination based on race, color, religion, sex, or national origin.",
+      "analysis": "POSITIVE: Ended legal segregation; protected voting rights; opened opportunities. NEGATIVE: Did not eliminate discrimination; implementation faced resistance. Long-term: Transformed American society; extended founding principles to all citizens.",
+      "headline": "Ustawa o prawach obywatelskich zakazuje dyskryminacji rasowej"
+    },
+    "1965ad": {
+      "title": "Wojna Wietnamska Eskaluje",
+      "description": "U.S. commits combat troops to Vietnam; war will claim millions of lives.",
+      "analysis": "POSITIVE: Attempted to prevent communist expansion. NEGATIVE: Over 58,000 Americans and millions of Vietnamese killed; divided American society; ultimately unsuccessful. Long-term: Changed American attitudes toward military intervention; lessons still debated.",
+      "headline": "USA wysyłają wojska bojowe do Wietnamu"
+    },
+    "1966ad": {
+      "title": "Rewolucja Kulturalna Rozpoczyna się",
+      "description": "Mao launches Cultural Revolution, targeting \"counter-revolutionary\" elements.",
+      "analysis": "POSITIVE: None. NEGATIVE: Millions killed or persecuted; cultural heritage destroyed; education disrupted for generation. Long-term: Traumatized Chinese society; later repudiated by Chinese Communist Party itself.",
+      "headline": "Mao rozpoczyna Rewolucję Kulturalną, Chiny pogrążają się w chaosie"
+    },
+    "1975ad": {
+      "title": "Ludobójstwo Kambodżańskie Rozpoczyna się",
+      "description": "Khmer Rouge seizes power; genocide kills 1.5-2 million Cambodians.",
+      "analysis": "POSITIVE: None. NEGATIVE: Quarter of population killed; society devastated; educated class targeted for elimination. Long-term: Cambodia slowly recovered; tribunals eventually held perpetrators accountable.",
+      "headline": "Czerwoni Khmerzy przejmują Kambodżę, zaczyna się ludobójstwo"
+    },
+    "1979ad": {
+      "title": "Rewolucja Irańska",
+      "description": "Islamic Revolution overthrows Shah; Ayatollah Khomeini establishes theocratic dictatorship.",
+      "analysis": "Consequences: Replaced a modernizing authoritarian monarchy with a barbaric theocratic dictatorship. Iran became the world's leading state sponsor of terrorism. Women lost fundamental rights. Religious police enforce medieval laws. The regime has pursued nuclear weapons while calling for the destruction of Israel and America. Philosophical significance: Not all \"revolutions\" are progress. Theocracy is incompatible with human freedom. The West's failure to support the Shah and decades of appeasement emboldened this regime. Only regime change or unconditional surrender can end this threat to civilization.",
+      "headline": "Rewolucja islamska obala szacha, Iran staje się teokracją"
+    },
+    "1969ad": {
+      "title": "Lądowanie na Księżycu",
+      "description": "Apollo 11 astronauts walk on the Moon.",
+      "analysis": "POSITIVE: Greatest technological achievement in history; united humanity in wonder; advanced technology. NEGATIVE: Enormous cost; program later abandoned. Long-term: Proved nothing is impossible; inspired generations; space exploration continues.",
+      "headline": "Armstrong stąpa po Księżycu"
+    },
+    "1989ad": {
+      "title": "Upadek Muru Berlińskiego",
+      "description": "Berlin Wall falls; Cold War begins to end.",
+      "analysis": "POSITIVE: Reunified Germany; freed Eastern Europe; ended Cold War division; peaceful revolution. NEGATIVE: Economic difficulties for former communist states; not all transitions smooth. Long-term: Demonstrated that even seemingly permanent systems can collapse; expanded freedom to millions.",
+      "headline": "Mur Berliński upada, wolność ogarnia Europę Wschodnią"
+    },
+    "1991ad": {
+      "title": "Związek Radziecki Rozpada się",
+      "description": "USSR officially dissolves; Cold War ends.",
+      "analysis": "POSITIVE: Ended communist superpower; freed 15 nations; ended nuclear standoff. NEGATIVE: Economic collapse in former Soviet states; some regions remain authoritarian. Long-term: Transformed international order; debate continues about post-Soviet development.",
+      "headline": "Związek Radziecki rozpada się, Zimna Wojna dobiega końca"
+    },
+    "2001ad": {
+      "title": "Zamachy z 11 Września",
+      "description": "Al-Qaeda terrorists attack World Trade Center and Pentagon, killing nearly 3,000.",
+      "analysis": "Consequences: Nearly 3,000 innocent people murdered by Islamic terrorists. America responded with war in Afghanistan to destroy Al-Qaeda and the Taliban regime that harbored them. Triggered two decades of military operations against terrorist networks. Philosophical significance: Evil exists and must be destroyed. The proper response to terrorism is overwhelming force, not negotiation. The failure to achieve complete victory in Afghanistan demonstrated the cost of nation-building over decisive military defeat of enemies.",
+      "headline": "Terroryści atakują World Trade Center i Pentagon"
+    },
+    "2008ad": {
+      "title": "Globalny Kryzys Finansowy",
+      "description": "Lehman Brothers collapse triggers worldwide financial crisis.",
+      "analysis": "POSITIVE: Led to financial reforms; exposed weaknesses in system. NEGATIVE: Millions lost jobs and homes; recession spread globally. Long-term: Changed banking regulation; debates about causes and responses continue.",
+      "headline": "Lehman Brothers upada, globalny krach finansowy"
+    },
+    "2020ad": {
+      "title": "Pandemia COVID-19",
+      "description": "Global pandemic leads to unprecedented lockdowns and economic disruption.",
+      "analysis": "POSITIVE: Accelerated medical research and vaccine development; remote work became viable. NEGATIVE: Millions died; economic disruption; mental health impacts; educational setbacks. Long-term: Transformed work, medicine, and public health; full effects still emerging.",
+      "headline": "Pandemia COVID-19 zamyka świat"
+    },
+    "2023ad": {
+      "title": "7 Października: Atak Hamasu na Izrael",
+      "description": "Hamas terrorists massacre 1,200 Israeli civilians and take 250 hostages.",
+      "analysis": "Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities against civilians including rape, torture, and murder of children. Revealed the true nature of Hamas as a genocidal terrorist organization. Much of the Western intelligentsia shamefully sided with the terrorists, exposing moral bankruptcy in academia and media. Philosophical significance: Evil must be defeated, not negotiated with. Israel's right to self-defense is absolute. Victory means dismantling Hamas's capability to harm civilians. There is no moral equivalence between terrorists and their victims.",
+      "headline": "Hamas dokonuje masakry 1200 Izraelczyków w niespodziewanym ataku"
+    },
+    "2022ad": {
+      "title": "Rosja Najeżdża Ukrainę",
+      "description": "Russia launches full-scale invasion of Ukraine; largest war in Europe since WWII.",
+      "analysis": "Consequences: Russia, an American enemy, launched unprovoked aggression against Ukraine, revealing imperial ambitions and military weakness. The West responded with sanctions and military aid. Ukraine's fierce resistance has degraded Russian military capability significantly. Philosophical significance: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with negotiated concessions.",
+      "headline": "Rosja rozpoczyna pełnoskalową inwazję na Ukrainę"
+    },
+    "2024ad": {
+      "title": "Napięcia Iran-Izrael Eskalują",
+      "description": "Iran launches missiles at Israel; Israel responds with precision strikes.",
+      "analysis": "Consequences: Iran's theocratic regime openly attacks Israel, dropping pretense of proxy warfare. Israel demonstrates superior defensive and offensive capabilities. Regional conflict intensifies with Hezbollah and Houthis. Philosophical significance: Appeasement of the Iranian regime over decades enabled this aggression. The only path to peace is through strength and the defeat of those who seek destruction. Terrorist-sponsoring regimes cannot be trusted with negotiations—only unconditional surrender or regime change ends the threat.",
+      "headline": "Iran wystrzeliwuje rakiety w stronę Izraela, region na krawędzi"
+    }
+  },
+  "quiz": {
+    "title": "Quiz",
+    "leaderboard": "NAJLEPSZE WYNIKI",
+    "welcome": "Sprawdź swoją Wiedzę Filozoficzną",
+    "description": "Odpowiadaj na pytania z metafizyki, epistemologii, etyki, polityki i estetyki.",
+    "rule1": "10 pytań za kredyt",
+    "rule2": "Pytania stają się trudniejsze z każdą poprawną odpowiedzią",
+    "rule3": "Błąd? Zapłać 1 kredyt, aby kontynuować",
+    "rule4": "10 poprawnych odpowiedzi z rzędu = 1 kredyt zwrotu!",
+    "starting": "Uruchamianie...",
+    "start": "Rozpocznij Quiz",
+    "checking": "Sprawdzanie...",
+    "submit": "Wyślij Odpowiedź",
+    "correct": "Poprawnie!",
+    "wrong": "Źle!",
+    "correctWas": "Poprawna odpowiedź:",
+    "explanation": "Wyjaśnienie",
+    "streak": "Seria",
+    "score": "Wynik",
+    "next": "Następne Pytanie",
+    "continue": "Kontynuuj",
+    "wrongAnswer": "Błędna Odpowiedź!",
+    "payToContinueWrong": "Zapłać 1 kredyt, aby kontynuować sesję.",
+    "completed10": "Świetnie!",
+    "payToContinue10": "Ukończyłeś 10 pytań! Zapłać 1 kredyt za kolejne 10.",
+    "bestStreak": "Najlepsza Seria",
+    "continuing": "Kontynuowanie...",
+    "payToContinue": "Kontynuuj Quiz",
+    "endQuiz": "Zakończ Quiz",
+    "quizComplete": "Quiz Ukończony!",
+    "finalScore": "Wynik Końcowy",
+    "totalCorrect": "Poprawne Odpowiedzi",
+    "creditsEarned": "Zdobyte Kredyty",
+    "playAgain": "Zagraj Ponownie",
+    "categories": {
+      "metaphysics": "Metafizyka",
+      "epistemology": "Epistemologia",
+      "ethics": "Etyka",
+      "politics": "Polityka",
+      "aesthetics": "Estetyka",
+      "applied": "Filozofia Stosowana",
+      "history": "Historia Filozofii",
+      "american_exceptionalism": "Amerykański Ekscepcjonalizm",
+      "virtues": "Cnoty",
+      "economics": "Ekonomia",
+      "law": "Prawo Obiektywne"
+    }
   }
 }

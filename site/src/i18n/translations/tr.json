@@ -532,6 +532,10 @@
       "history": {
         "title": "Tarih",
         "description": "2600 yıllık felsefi düşünceyi keşfedin"
+      },
+      "quiz": {
+        "title": "Quiz",
+        "description": "Felsefe bilginizi test edin"
       }
     },
     "comingSoonDesc": {
@@ -1609,99 +1613,617 @@
     }
   },
   "historicalEvents": {
-    "594bc": "Solon\\'s Reforms in Athens",
-    "509bc": "Roman Republic Founded",
-    "490bc": "Battle of Marathon",
-    "480bc": "Battle of Thermopylae & Salamis",
-    "399bc": "Trial and Death of Socrates",
-    "336bc": "Alexander the Great Begins Conquest",
-    "323bc": "Death of Alexander the Great",
-    "264bc": "First Punic War Begins",
-    "146bc": "Destruction of Carthage",
-    "49bc": "Caesar Crosses the Rubicon",
-    "44bc": "Assassination of Julius Caesar",
-    "31bc": "Battle of Actium",
-    "30ad": "Crucifixion of Jesus",
-    "79ad": "Eruption of Vesuvius",
-    "180ad": "Death of Marcus Aurelius",
-    "313ad": "Edict of Milan",
-    "380ad": "Christianity Becomes State Religion",
-    "410ad": "Visigoths Sack Rome",
-    "476ad": "Fall of Western Roman Empire",
-    "529ad": "Closing of Platonic Academy",
-    "622ad": "Hegira - Birth of Islam",
-    "732ad": "Battle of Tours",
-    "800ad": "Charlemagne Crowned Emperor",
-    "1054ad": "Great Schism",
-    "1066ad": "Norman Conquest of England",
-    "1095ad": "First Crusade Called",
-    "1215ad": "Magna Carta Signed",
-    "1265ad": "First English Parliament",
-    "1347ad": "Black Death Reaches Europe",
-    "1439ad": "Gutenberg\\'s Printing Press",
-    "1453ad": "Fall of Constantinople",
-    "1492ad": "Columbus Reaches Americas",
-    "1517ad": "Protestant Reformation Begins",
-    "1543ad": "Copernican Revolution",
-    "1588ad": "Defeat of Spanish Armada",
-    "1607ad": "Jamestown Founded",
-    "1620ad": "Mayflower Compact",
-    "1642ad": "English Civil War Begins",
-    "1648ad": "Peace of Westphalia",
-    "1687ad": "Newton\\'s Principia Published",
-    "1688ad": "Glorious Revolution",
-    "1689ad": "Locke\\'s Two Treatises Published",
-    "1776ad": "American Declaration of Independence",
-    "1787ad": "U.S. Constitution Written",
-    "1789ad": "French Revolution Begins",
-    "1791ad": "Bill of Rights Ratified",
-    "1804ad": "Napoleon Crowned Emperor",
-    "1815ad": "Battle of Waterloo",
-    "1833ad": "British Slavery Abolition Act",
-    "1848ad": "Revolutions of 1848",
-    "1848ad_2": "Communist Manifesto Published",
-    "1859ad": "Origin of Species Published",
-    "1861ad": "American Civil War Begins",
-    "1863ad": "Emancipation Proclamation",
-    "1865ad": "13th Amendment Ratified",
-    "1869ad": "Transcontinental Railroad Completed",
-    "1876ad": "Telephone Invented",
-    "1879ad": "Edison\\'s Light Bulb",
-    "1886ad": "Statue of Liberty Dedicated",
-    "1903ad": "Wright Brothers\\' Flight",
-    "1905ad": "Einstein\\'s Miracle Year",
-    "1914ad": "World War I Begins",
-    "1917ad": "Russian Revolution",
-    "1918ad": "World War I Ends",
-    "1920ad": "19th Amendment Ratified",
-    "1929ad": "Stock Market Crash",
-    "1933ad": "Hitler Becomes Chancellor",
-    "1939ad": "World War II Begins",
-    "1941ad": "Pearl Harbor Attack",
-    "1942ad": "Holocaust: Systematic Genocide",
-    "1944ad": "D-Day Invasion",
-    "1945ad": "Atomic Bombs End WWII",
-    "1945ad_2": "United Nations Founded",
-    "1947ad": "Ayn Rand\\'s The Fountainhead Success",
-    "1948ad": "Israel Founded",
-    "1950ad": "Korean War Begins",
-    "1949ad": "Communist China Established",
-    "1957ad": "Atlas Shrugged Published",
-    "1961ad": "First Human in Space",
-    "1963ad": "Kennedy Assassination",
-    "1964ad": "Civil Rights Act",
-    "1965ad": "Vietnam War Escalates",
-    "1966ad": "Cultural Revolution Begins",
-    "1975ad": "Cambodian Genocide Begins",
-    "1979ad": "Iranian Revolution",
-    "1969ad": "Moon Landing",
-    "1989ad": "Fall of Berlin Wall",
-    "1991ad": "Soviet Union Dissolves",
-    "2001ad": "September 11 Attacks",
-    "2008ad": "Global Financial Crisis",
-    "2020ad": "COVID-19 Pandemic",
-    "2023ad": "October 7: Hamas Attack on Israel",
-    "2024ad": "Iran-Israel Tensions Escalate",
-    "2022ad": "Russia Invades Ukraine"
+    "594bc": {
+      "title": "Atina\\'da Solon Reformları",
+      "description": "Solon, Atina'da anayasal reformlar gerçekleştirerek demokrasinin temelini attı.",
+      "analysis": "Sonuçlar: Solon borç köleliğini kaldırdı, mülkiyete dayalı vatandaşlık oluşturarak ekonomik çıkarı siyasi katılıma bağladı ve sonunda Atina demokrasisine evrilecek hukukun üstünlüğünü tesis etti. Bu reformlar Yunan siyasi fikirlerini Akdeniz'e yaydı. Philosify'ın görüşü: Toplum içinde bireysel hakların tanınmasına yönelik kritik bir adım. Solon, katılımı mülkiyete bağlayarak üretken vatandaşlık için teşvikler yarattı. Yöneticilerin bile keyfi iradeye değil yasalara bağlı olduğu ilkesi, özgürlüğün temelini oluşturur.",
+      "headline": "Solon borç köleliğini kaldırıyor, Atina hukukunu yeniden yazıyor"
+    },
+    "509bc": {
+      "title": "Roma Cumhuriyeti Kuruldu",
+      "description": "Roma monarşiyi devirip seçilmiş konsüllerle Cumhuriyeti kurdu.",
+      "analysis": "Sonuçlar: Roma, gücü konsüller, Senato ve meclisler arasında dağıtan kurumlar oluşturdu. Toplumlarında çıkarı olan vatandaş-askerler, 500 yıl sürecek bir imparatorluk inşa etti. Roma hukuku, mühendisliği ve yönetimi sonraki tüm Batı medeniyetini etkiledi. Philosify'ın görüşü: Cumhuriyet, dağıtılmış gücün ve hukukun üstünlüğünün insan refahını mümkün kıldığını gösterdi. Bireyler hakları bir yöneticinin keyfine değil kurumlara bağlı olduğunda refah gelir. Roma'nın daha sonra imparatorluğa düşmesi, gücün merkezileştirilmesinin tehlikesini gösterir.",
+      "headline": "Roma monarşiyi deviriyor, cumhuriyet ilan ediyor"
+    },
+    "490bc": {
+      "title": "Maraton Savaşı",
+      "description": "Yunanlılar Pers istilasını yenerek Yunan bağımsızlığını ve kültürünü korudu.",
+      "analysis": "Sonuçlar: Yunan bağımsızlığı korunarak felsefe, demokrasi, bilim ve sanatların gelişiminin sürmesine imkân tanındı. Kendi özgürlükleri için savaşan vatandaş ordularının, uzak bir imparator için savaşan daha büyük kuvvetleri yenebileceğini gösterdi. Philosify'ın görüşü: Maraton, değerleri için savaşan özgür insanların efendileri için savaşan kölelerden daha etkili olduğunu gösterir. Yunan zaferi, aklı insanlığın hayatta kalma aracı olarak keşfeden felsefi geleneği mümkün kıldı. Batı medeniyeti varlığını bu savaşa borçludur.",
+      "headline": "Yunanlılar Maraton'da Pers istilasını ezdi"
+    },
+    "480bc": {
+      "title": "Termopylae ve Salamis Savaşları",
+      "description": "Yunanlılar Pers istilasına direndi; 300 Spartalı efsanevi direnişi gerçekleştirdi.",
+      "analysis": "Sonuçlar: Spartalıların fedakârlığı Yunan birliği için zaman kazandırdı; Salamis'teki deniz zaferi belirleyici oldu. Pers genişlemesi kalıcı olarak durduruldu. Yunan medeniyeti hayatta kalarak Sokrates, Platon, Aristoteles ve Batı düşüncesinin temellerini üretmesine imkân tanındı. Philosify'ın görüşü: Termopylae kahramanlığı—şehitliği değil—temsil eder. Spartalılar en yüce değerleri için savaştı: özgürlük. Kendilerini boşuna feda etmediler; Yunanistan için zafer satın aldılar. Kahraman hayatını değerleri için riske atar; şehit ölüm uğruna ölür.",
+      "headline": "300 Spartalı Termopylae'de cepheyi tutuyor"
+    },
+    "399bc": {
+      "title": "Sokrates\\'in Yargılanması ve Ölümü",
+      "description": "Sokrates, Atina demokrasisi tarafından \"gençliği yozlaştırmak\"tan ölüme mahkûm edildi.",
+      "analysis": "Sonuçlar: Sokrates'in kaçmayı reddetmesi onu entelektüel dürüstlüğün simgesi yaptı. Platon öğretilerini koruyarak Akademi'yi kurdu. Yargılama, bugün hâlâ geçerli olan bireysel vicdan ile devlet otoritesi arasındaki temel soruları gündeme getirdi. Philosify'ın görüşü: Demokrasi en büyük filozofunu idam etti—devlet gücü üzerinde anayasal sınırlar olmadan çoğunluk yönetiminin tiranlık olduğunu kanıtladı. Bireysel haklar çoğunluklardan korunmalı, onlara bırakılmamalıdır. Sokrates, düşünen bir insanın ölüm pahasına bile popüler görüşü değil aklı takip etmesi gerektiğini gösterdi.",
+      "headline": "Atina Sokrates'i ölüme mahkûm ediyor"
+    },
+    "336bc": {
+      "title": "Büyük İskender Fetihlerine Başlıyor",
+      "description": "İskender kral oldu ve Yunan kültürünü yayacak seferini başlattı.",
+      "analysis": "Sonuçlar: Yunan dili, felsefesi, bilimi ve ticareti Mısır'dan Hindistan'a kadar geniş topraklara yayıldı. İskender öğrenim merkezleri haline gelen şehirler kurdu. Helenistik dünya, yüzyıllar boyunca Doğu ile Batı arasında fikir alışverişini mümkün kıldı. Philosify'ın görüşü: İskender'in fetihleri karma sonuçlar doğurdu—Yunan rasyonalizminin yayılması değerliydi, ancak fetih yoluyla imparatorluk kurma bireysel hakları ihlal eder. Kalıcı miras siyasi değil kültüreldir: ticaret ve öğrenme yoluyla yayılan fikirler, kılıçla yayılanlardan daha uzun ömürlüdür.",
+      "headline": "İskender bilinen dünyayı fethetmek için sefere çıkıyor"
+    },
+    "323bc": {
+      "title": "Büyük İskender\\'in Ölümü",
+      "description": "İskender 32 yaşında öldü, imparatorluğu ardıl krallıklara bölündü.",
+      "analysis": "Sonuçlar: İmparatorluk savaşan ardıl devletlere bölündü. Ancak bu krallıklarda Yunan kültürü ve ticareti sürdü. Kütüphaneler, okullar ve ticaret ağları devam etti. Devletler arası rekabet bazen yeniliği teşvik etti. Philosify'ın görüşü: Bir kişinin karizması üzerine kurulu imparatorluklar nadiren kurucularının ötesinde hayatta kalır. Kalıcı kurumlar kişilikler değil ilkeler gerektirir. Helenistik dünyanın siyasi parçalanmaya rağmen ayakta kalması, kültür ve ticaretin—gönüllü alışverişin—siyasi birlikten daha önemli olduğunu gösterir.",
+      "headline": "Büyük İskender 32 yaşında öldü, imparatorluk paramparça"
+    },
+    "264bc": {
+      "title": "Birinci Pön Savaşı Başlıyor",
+      "description": "Roma ve Kartaca, Akdeniz egemenliği için yüzyıllık savaşlarına başladı.",
+      "analysis": "Sonuçlar: Roma denizcilik yeteneklerini geliştirdi ve İtalya'nın ötesine genişledi. Sicilya uzun savaşla harap oldu. Roma'yı benzeri görülmemiş barış ve ticaret getirecek Akdeniz egemenliğine giden yola koydu. Philosify'ın görüşü: Fetih savaşları yaşam ve mülkün büyük ölçüde yıkımını içerir. Ancak Roma'nın nihai zaferi Pax Romana'yı getirdi—kusurlu da olsa birleşik hukuk düzeninin, rakip güçler arasındaki sürekli savaştan daha fazla refah sağladığını gösterdi.",
+      "headline": "Roma ve Kartaca Akdeniz egemenliği için çarpışıyor"
+    },
+    "146bc": {
+      "title": "Kartaca\\'nın Yıkılması",
+      "description": "Roma Kartaca'yı tamamen yıkarak üstün Akdeniz gücü haline geldi.",
+      "analysis": "Sonuçlar: Kartaca medeniyetinin tamamen yok edilmesi; 50.000 hayatta kalan köleleştirildi. Roma'nın Akdeniz tekeli, yüzyıllar sürecek benzeri görülmemiş ticaret, kültürel alışveriş ve sonunda Pax Romana'yı mümkün kıldı. Philosify'ın görüşü: Yenilmiş bir düşmana karşı topyekûn savaş aşırıdır—Kartaca artık tehdit oluşturmuyordu. Ancak ortaya çıkan Roma barışı üç kıtada refaha imkân tanıdı. Ders: acımasızca kurulmuş olsa bile hukuk düzeni altında istikrarlı düzen, sürekli çatışmadan iyidir.",
+      "headline": "Roma Kartaca'yı yerle bir ediyor"
+    },
+    "49bc": {
+      "title": "Sezar Rubikon\\'u Geçiyor",
+      "description": "Julius Sezar Roma Cumhuriyeti'ni sona erdirecek iç savaşı başlattı.",
+      "analysis": "Sonuçlar: 460 yıllık cumhuriyet yönetimini yıktı. Sezar'ın reformları gerçek sorunları—borç, toprak dağılımı, vatandaşlık—ele aldı ancak askeri güç ele geçirme için emsal oluşturdu. İstikrar getiren ama Roma siyasi özgürlüğünü sona erdiren İmparatorluğa yol açtı. Philosify'ın görüşü: Sezar'ın şikâyetleri ne kadar haklı olursa olsun, zorla iktidarı ele geçirmek anayasal düzeni yıktı. Cumhuriyet'in denge ve denetim sistemi, kusurlu da olsa, özgürlüğü 'hayırsever' diktatörlerin yönetiminden daha iyi korudu. İyi niyetler kurumları yıkmayı haklı kılmaz.",
+      "headline": "Sezar Rubikon'u geçiyor, Roma'ya yürüyor"
+    },
+    "44bc": {
+      "title": "Julius Sezar\\'ın Suikaste Kurban Gitmesi",
+      "description": "Roma senatörleri Mart'ın İdleri'nde Sezar'a suikast düzenledi.",
+      "analysis": "Sonuçlar: İlkinden daha yıkıcı başka bir iç savaşı tetikledi. Cumhuriyet restore edilemedi; Octavian ilk İmparator Augustus olarak ortaya çıktı. Suikastçıların davası kaybedildi; yöntemleri cumhuriyetçiliği itibarsızlaştırdı. Philosify'ın görüşü: Altta yatan koşullar aynı kaldığında siyasi sorunlar bireyleri ortadan kaldırarak çözülemez. Suikastçılar tiranlığı doğru tespit etti ama uygulanabilir bir alternatif sunmadı. İlkeler ve kurumlar kişiliklerden daha önemlidir—Sezar'ı ortadan kaldırmak Cumhuriyet'i restore etmedi.",
+      "headline": "Senatörler Mart İdleri'nde Julius Sezar'a suikast düzenliyor"
+    },
+    "31bc": {
+      "title": "Aktium Savaşı",
+      "description": "Octavian, Antonius ve Kleopatra'yı yenerek Roma'nın tek hükümdarı oldu.",
+      "analysis": "Sonuçlar: Onlarca yıllık iç savaşı sona erdirdi. Augustus barış, refah ve iki yüzyıl sürecek Pax Romana'yı getirdi. Ticaret gelişti, şehirler büyüdü, sanat ve edebiyat serpildi. Ama Cumhuriyet ölmüştü; güç tek kişide toplandı. Philosify'ın görüşü: Augustus barışı, düzenin refahı mümkün kıldığını gösterir—ama siyasi özgürlük pahasına. Güvenlik ve özgürlük arasındaki değiş tokuş gerçektir. Roma güvenliği seçti; sonunda yoğunlaşmış güç yozlaştı ve İmparatorluk çöktü. Güç üzerinde anayasal sınırlar hâlâ elzemdir.",
+      "headline": "Octavian Aktium'da Antonius ve Kleopatra'yı yeniyor"
+    },
+    "30ad": {
+      "title": "İsa\\'nın Çarmıha Gerilmesi",
+      "description": "Nasıralı İsa Kudüs'te çarmıha gerildi, Hristiyanlığın kuruluş olayı.",
+      "analysis": "Sonuçlar: Bu olaydan Hristiyanlık ortaya çıktı ve sonunda Batı medeniyetinin değerlerini, sanatını, felsefesini, hukukunu ve kurumlarını dönüştürdü. Evrensel ahlaki eşitlik, bireysel vicdan ve muhtaçlara yardım kavramları Batı kültürüne girdi. Philosify'ın görüşü: Hristiyanlık değerli kavramlar getirdi—bireysel ahlaki değer, vicdan, hayırseverlik—ama aynı zamanda akılla çelişen imana dayalı epistemoloji. Karışık miras hem insani ilerlemeyi hem dini zulmü içerir. Fikirler kaynaklarına göre değil içeriklerine ve sonuçlarına göre değerlendirilmelidir.",
+      "headline": "Nasıralı İsa Kudüs'te çarmıha geriliyor"
+    },
+    "79ad": {
+      "title": "Vezüv Patlaması",
+      "description": "Volkanik patlama Pompeii ve Herculaneum'u yok etti.",
+      "analysis": "Sonuçlar: Binlerce kişi öldü; gelişen şehirler saatler içinde yıkıldı. Ancak volkanik kül altında korunma, aksi halde kaybolacak Roma günlük yaşamı, sanatı, mimarisi ve kültürü hakkında benzersiz bilgi sağladı. Philosify'ın görüşü: Doğal afetler gerçekliğin insan dileklerine kayıtsızlığını hatırlatır. Doğa niyetle değil nedensellikle işler. Doğru yanıt, bilim yoluyla doğal güçleri anlamak ve koruyucu önlemler mühendislik etmektir—dua veya kadercilik değil. Pompeii'nin korunması insan bilgisine hizmet ediyor.",
+      "headline": "Vezüv patlıyor, Pompeii kül altında kalıyor"
+    },
+    "180ad": {
+      "title": "Marcus Aurelius\\'un Ölümü",
+      "description": "\"Beş İyi İmparator\"un sonuncusu öldü; Roma uzun düşüşüne başladı.",
+      "analysis": "Sonuçlar: Marcus Aurelius yetersiz oğlu Commodus'u halef seçerek, yetenekli varisler evlat edinme uygulamasını sona erdirdi. Roma, yüzyıllar boyunca imparatorluğu zayıflatacak istikrarsızlık, iç savaşlar ve gerileme dönemine girdi. Philosify'ın görüşü: Filozof-krallar bile kötü kararlar verir. Marcus Aurelius'un saltanatı felsefenin yönetimi yönlendirebileceğini kanıtladı—ama halef seçimi yoğunlaşmış gücün doğum ve karakter tesadüflerine bağlı olduğunu kanıtladı. Kurumsal denetimler bilge yöneticilerden daha önemlidir.",
+      "headline": "Marcus Aurelius öldü, Roma'nın altın çağı sona erdi"
+    },
+    "313ad": {
+      "title": "Milano Fermanı",
+      "description": "Konstantin, Hristiyanlığı Roma İmparatorluğu genelinde yasallaştırdı.",
+      "analysis": "Sonuçlar: Hristiyanlara yönelik zulme son verdi; dini hoşgörü ilkesini tesis etti. Hristiyanlık devlet desteğiyle hızla büyüdü, hastaneler, okullar ve hayır kurumları inşa etti. Ancak kilise-devlet iç içe geçmesi süreci başladı. Philosify'ın görüşü: Dini hoşgörü özgürlük için elzemdir—devlet ne dine zulmetmeli ne de dini teşvik etmelidir. Ferman zulmü haklı olarak sona erdirdi, ancak Konstantin'in daha sonra Hristiyanlığı kayırması gelecekteki dini zorlamalar için emsal oluşturdu.",
+      "headline": "Konstantin Hristiyanlığı Roma İmparatorluğu genelinde yasallaştırıyor"
+    },
+    "380ad": {
+      "title": "Hristiyanlık Devlet Dini Oluyor",
+      "description": "İmparator Theodosius, Hristiyanlığı Roma'nın resmi dini yaptı.",
+      "analysis": "Sonuçlar: Hristiyanlık imparatorluk genelinde hastaneler, okullar ve sosyal hizmetler inşa etmek için kaynak kazandı. Ancak paganlara ve Hristiyan 'sapkınlarına' artık zulmediliyordu. Dini zorlama dini hoşgörünün yerini aldı. Philosify'ın görüşü: Devlet dini vicdan özgürlüğünü ihlal eder. İnancı zorlamak hem ahlaksız hem de etkisizdir—gerçek kanaati zorlayamazsınız. Ortaçağ kilise-devlet birliği modeli yüzyıllarca dini savaş ve zulüm üretti. Kilise ve devletin ayrılması her ikisini de korur.",
+      "headline": "İmparator Hristiyanlığı Roma'nın tek dini ilan ediyor"
+    },
+    "410ad": {
+      "title": "Vizigotlar Roma\\'yı Yağmalıyor",
+      "description": "Alaric'in Vizigotları Roma'yı yağmaladı; \"Ebedi Şehir\" 800 yıl içinde ilk kez düştü.",
+      "analysis": "Sonuçlar: İmparatorluk genelinde psikolojik şok; Roma'nın askeri zayıflığını ortaya koydu. Ancak Vizigotlar yıkımı değil entegrasyonu aradı—Roma işlemeye devam etti. Augustinus'un yüzyıllar boyunca Hristiyan siyasi düşüncesini şekillendiren 'Tanrı'nın Şehri'ni yazmasına yol açtı. Philosify'ın görüşü: Medeniyetler kendilerini inşa eden ilkeleri terk ettiklerinde çöker. Roma'nın gerilemesi dış baskıdan çok iç çürümeden—vergilendirme, düzenleme, para değerini düşürme—kaynaklanıyordu. Vizigotlar zayıflığı istismar etti; onu yaratmadı.",
+      "headline": "Barbarlar 800 yıl içinde ilk kez Roma'yı yağmalıyor"
+    },
+    "476ad": {
+      "title": "Batı Roma İmparatorluğu\\'nun Çöküşü",
+      "description": "Son Batı Roma İmparatoru tahttan indirildi; antik dünyanın sonu için geleneksel tarih.",
+      "analysis": "Sonuçlar: Ticaret çöktü, şehirler küçüldü, okuryazarlık azaldı, teknik bilgi kayboldu. Germen krallıkları bazı Roma kurumlarını korudu ama karmaşık medeniyeti sürdüremediler. Parçalanma ve yerelleşmiş güç dönemini başlattı. Philosify'ın görüşü: Medeniyet otomatik değildir—sürdürmek için sürekli çaba gerektirir. Roma çöktü çünkü Romalılar Roma'yı büyük yapan şeyleri yapmayı bıraktı: üretim, ticaret, hukuk düzeni, askeri disiplin. Karanlık Çağlar medeniyetin temelleri aşındığında ne olduğunu gösterir.",
+      "headline": "Son Roma İmparatoru tahttan indirildi, Batı İmparatorluğu çöktü"
+    },
+    "529ad": {
+      "title": "Platon Akademisi\\'nin Kapatılması",
+      "description": "İmparator Justinian Atina'daki Akademi'yi kapatarak antik felsefe okullarını sona erdirdi.",
+      "analysis": "Sonuçlar: Atina'da 900 yıllık felsefi eğitime son verildi. Filozoflar Pers'e kaçarak daha sonra İslam âlimleri aracılığıyla Avrupa'ya dönen Yunan metinlerini korudu. Hristiyan ortodoksisi imparatorlukta pagan öğrenimini bastırdı. Philosify'ın görüşü: Fikirleri zorla bastırmak hem ahlaksız hem de boşunadır. Gerçek okulları kapatarak yok edilemez—fikirler hayatta kaldı ve sonunda Rönesans'ı ateşledi. Entelektüel özgürlük elzemdir; sansür bilginin yayılmasını geciktirebilir ama engelleyemez.",
+      "headline": "Justinian 900 yıl sonra Platon Akademisi'ni kapatıyor"
+    },
+    "622ad": {
+      "title": "Hicret - İslam\\'ın Doğuşu",
+      "description": "Muhammed'in Medine'ye hicreti İslami takvimin başlangıcını işaret eder.",
+      "analysis": "Sonuçlar: İslam Arap kabilelerini birleştirdi, üç kıtaya yayılan sofistike bir medeniyet yarattı, Yunan öğrenimini korudu ve aktardı, matematik, astronomi ve tıpta ilerleme kaydetti. Ayrıca askeri fetihle yayıldı ve fethedilen halklara dini hukuk dayattı. Philosify'ın görüşü: İslam medeniyetinin bilim ve felsefedeki başarıları dini doktrine rağmen gerçekleşti, sayesinde değil—aklı değerli gören bireysel düşünürler aracılığıyla. Dinin kendisi, tüm inanca dayalı sistemler gibi, sonuçta bu başarıları üreten rasyonel sorgulamayla çelişir.",
+      "headline": "Muhammed Medine'ye hicret ediyor, İslam doğuyor"
+    },
+    "732ad": {
+      "title": "Tours Savaşı",
+      "description": "Charles Martel, Müslüman ilerleyişini Batı Avrupa'da durdurdu.",
+      "analysis": "Sonuçlar: Frank bağımsızlığı ve Hristiyan Batı Avrupa korundu. Batı Avrupa, farklı siyasi, dini ve entelektüel yörüngelerle İslam dünyasından ayrı gelişti. Karolenj hanedanının askeri itibarını tesis etti. Philosify'ın görüşü: Savaşın önemi Avrupa bağımsızlığını korumaktır—sonunda Rönesans, Reform, Aydınlanma ve bireysel hakların gelişimini mümkün kılmaktır. İlgili dinler hakkında ne düşünülürse düşünülsün, Avrupa'nın ayrı gelişimi tüm insanlığa fayda sağlayan özgürlük fikirlerini üretti.",
+      "headline": "Charles Martel Müslüman ilerleyişini Avrupa'da durduruyor"
+    },
+    "800ad": {
+      "title": "Charlemagne İmparator Olarak Taç Giyiyor",
+      "description": "Papa III. Leo, Charlemagne'ı taçlandırarak Batı Roma İmparatorluğu kavramını yeniden canlandırdı.",
+      "analysis": "Sonuçlar: Karolenj Rönesansı klasik öğrenimi korudu; imparatorluk genelinde okullar kuruldu. Yüzyıllar sürecek papa-imparator çatışması kalıbını yarattı. İmparatorluk Charlemagne'ın ölümünden sonra parçalandı, ama Avrupa birliği fikri sürdü. Philosify'ın görüşü: Charlemagne'ın başarıları bireysel liderliğin önemli olduğunu gösterir—ama imparatorluğunun çöküşü kalıcı kurumların tek bir liderin iradesinden fazlasını gerektirdiğini gösterir. En kalıcı miras kültüreldi: gelecekteki ilerlemeyi mümkün kılan öğrenimin korunması.",
+      "headline": "Papa Charlemagne'ı Batı İmparatoru olarak taçlandırıyor"
+    },
+    "1054ad": {
+      "title": "Büyük Bölünme",
+      "description": "Hristiyanlık Roma Katolik ve Doğu Ortodoks kiliselerine bölündü.",
+      "analysis": "Sonuçlar: Hristiyanlık farklı teolojik ve kültürel gelişmelerle rekabet eden alanlara bölündü. Karşılıklı aforozlar kalıcı düşmanlık üretti. Ancak kiliseler arası rekabet muhalefet için alanlar yarattı ve sonunda dini çoğulculuğa katkıda bulundu. Philosify'ın görüşü: Dini tekeller sorgulamayı ve özgürlüğü bastırır. Bölünme, çatışmadan doğmuş olsa da, istemeden dini otoritenin düşünce üzerindeki kıskacını zayıflatan rekabet yarattı. Çoğulculuk—tesadüfi bile olsa—özgürlüğe hizmet eder.",
+      "headline": "Hristiyanlık ikiye bölünüyor: Roma'ya karşı Konstantinopolis"
+    },
+    "1066ad": {
+      "title": "İngiltere\\'nin Norman Fethi",
+      "description": "Fatih William, Hastings'te Harold'u yenerek İngiliz tarihini yeniden şekillendirdi.",
+      "analysis": "Sonuçlar: Anglo-Sakson seçkinler mülksüzleştirildi; Norman Fransızcası İngiliz dili ve kültürünü etkiledi. Sonunda ortak hukuk ve Parlamento'nun gelişimine katkıda bulunan kıtasal idari uygulamalar getirildi. Dilini ve kurumlarını dünyaya yayacak İngiliz ulusunu yarattı. Philosify'ın görüşü: Fetih fethedenin haklarını ihlal eder—ama tarih uzun vadeli sonuçlara göre yargılar. Norman yönetiminden kısmen ortaya çıkan İngiliz ortak hukuku, dünya genelinde bireysel hakların temeli oldu. İstenmeyen sonuçlar bazen niyetleri aşar.",
+      "headline": "William Hastings Savaşı'nda İngiltere'yi fethediyor"
+    },
+    "1095ad": {
+      "title": "Birinci Haçlı Seferi İlan Edildi",
+      "description": "Papa II. Urban, Kutsal Toprakları Müslümanlardan geri almak için haçlı seferi çağrısı yaptı.",
+      "analysis": "Sonuçlar: Ticaret yolları açıldı ve İslam dünyasından bilgi getirildi. Tüm taraflarda muazzam kayıplar; Yahudi ve Müslüman katliamları. Medeniyetler arası kalıcı dini nefret. Ancak daha gelişmiş İslam medeniyetiyle Avrupa teması kültürel ve teknolojik gelişimi hızlandırdı. Philosify'ın görüşü: Dini savaşlar en kötü türdür—rasyonel çıkarlar yerine inanç uğruna savaşıldığından uzlaşmaya yer vermezler. Yine de istenmeyen sonuç—korunan Yunan öğrenimine maruz kalma—Avrupa'nın entelektüel uyanışını ateşlemeye yardımcı oldu. Fikirler niyetlere rağmen yayılır.",
+      "headline": "Papa Kutsal Topraklar için Birinci Haçlı Seferi'ni ilan ediyor"
+    },
+    "1215ad": {
+      "title": "Magna Carta İmzalandı",
+      "description": "İngiliz baronları Kral John'u kraliyet gücünü sınırlayan şartı imzalamaya zorladı.",
+      "analysis": "Sonuçlar: Yöneticilerin hukuka tabi olduğu ilkesini tesis etti; hukuki süreç güvenceleri sağladı; anayasal hükümetin temelini attı. Başlangıçta yalnızca baron ayrıcalıklarını koruyan ve sıklıkla ihlal edilen ilkeleri kademeli olarak tüm vatandaşları koruyacak şekilde genişledi ve dünya çapında anayasaları etkiledi. Philosify'ın görüşü: Magna Carta insan özgürlüğünde bir dönüm noktasıdır—kralların bile hukuka bağlı olduğu ilkesi. Bu tohumdan anayasal hükümet, bireysel haklar ve sınırlı hükümet doğdu. Fikirler, bir kez kurulduğunda, mantıksal olarak tam çıkarımlarına doğru genişleme eğilimindedir.",
+      "headline": "İngiliz baronları Kralı Magna Carta'yı imzalamaya zorluyor"
+    },
+    "1265ad": {
+      "title": "İlk İngiliz Parlamentosu",
+      "description": "Simon de Montfort İngiltere'de ilk seçilmiş Parlamentoyu topladı.",
+      "analysis": "Sonuçlar: Temsili hükümet için emsal oluşturdu; halk kesimlerine soylular yanında yönetimde söz hakkı verdi. Başlangıçta yetkileri sınırlı ve yalnızca mülk sahibi sınıfları temsil etse de, birçok ulusun benimsediği parlamenter demokrasi modeline evrildi. Philosify'ın görüşü: Temsili hükümet güç üzerinde kritik bir denetimdir. Vergi ödeyenler vergilerin nasıl harcandığı konusunda söz sahibi olduğunda hükümet kısıtlanır. Parlamento özgürlüğün savunucusuna evrildi—kusurlu ama mutlak monarşiden çok daha üstün.",
+      "headline": "İlk seçilmiş Parlamento İngiltere'de toplanıyor"
+    },
+    "1347ad": {
+      "title": "Kara Veba Avrupa\\'ya Ulaşıyor",
+      "description": "Hıyarcıklı veba birkaç yıl içinde Avrupa nüfusunun %30-60'ını öldürdü.",
+      "analysis": "Sonuçlar: Tahayyül edilemez acı; toplumsal çöküş; vebadan sorumlu tutulan azınlıkların zulme uğraması. Ancak hayatta kalanlar işgücü kıtlığı nedeniyle daha yüksek ücretler gördü; köylüler lordlara karşı pazarlık gücü kazandığında feodalizm zayıfladı; kaybedilen işgücünü telafi etmek için teknolojik yenilik hızlandı. Philosify'ın görüşü: Felaketler neyin önemli olduğunu ortaya koyar: işgücü kıtlaştığında işçilerin değeri artar. Veba, işçileri lordlara karşı güçlendirerek tesadüfen bireysel özgürlüğü ilerletti. Doğa insan dileklerine kayıtsızdır—ama insanlar rasyonel tepkiyle uyum sağlayabilir ve felaketlerden bile fayda sağlayabilir.",
+      "headline": "Kara Veba Avrupa'yı kasıp kavuruyor, milyonlar ölüyor"
+    },
+    "1439ad": {
+      "title": "Gutenberg\\'in Matbaası",
+      "description": "Johannes Gutenberg Avrupa'da hareketli harf baskısını geliştirdi.",
+      "analysis": "Sonuçlar: Bilgiyi demokratikleştirdi; fikirlerin hızlı yayılmasını sağladı; kitap maliyetini dramatik olarak düşürdü; okuryazarlığı artırdı. Fikirleri kurumsal kontrolün ötesine yayarak Reform, Bilimsel Devrim ve Aydınlanma'yı mümkün kıldı. Propagandayı da daha verimli yaydı. Philosify'ın görüşü: Matbaa tarihin en büyük icatlarından biridir—seçkinlerin elindeki bilgi tekelini kırdı. Fikirler özgürce yayılabildiğinde, gerçeğin yerleşik hataya karşı şansı olur. Bireyleri kurumlara karşı güçlendiren teknoloji özgürlüğe hizmet eder.",
+      "headline": "Gutenberg matbaayı icat ediyor, bilgide devrim yaratıyor"
+    },
+    "1453ad": {
+      "title": "Konstantinopolis\\'in Fethi",
+      "description": "Osmanlı Türkleri Konstantinopolis'i fethederek Bizans İmparatorluğu'na son verdi.",
+      "analysis": "Sonuçlar: İtalya'ya kaçan Yunan âlimleri Rönesans'ı besleyen el yazmaları getirdi. Osmanlı İmparatorluğu Konstantinopolis'i büyük bir kültürel ve ticari merkez olarak sürdürdü. Ticaret yolları batıya kaydı ve Atlas Okyanusu keşiflerini teşvik etti. 1.000 yıl sonra Doğu Roma İmparatorluğu'nun sonu. Philosify'ın görüşü: Düşüş Yunan öğrenimini Avrupa'ya yaydı ve Rönesans'ı hızlandırdı. Fikirler fetihle sınırlanamaz—insanlar ve kitaplarla göç eder. Osmanlılar bir şehri fethetti; Yunanlılar bilgi yoluyla bir medeniyeti korudu.",
+      "headline": "Konstantinopolis Osmanlı Türkleri'nin eline düşüyor"
+    },
+    "1492ad": {
+      "title": "Kolomb Amerika\\'ya Ulaşıyor",
+      "description": "Kristof Kolomb'un seyahati Yeni Dünya'yı Avrupa keşfine açtı.",
+      "analysis": "Sonuçlar: Yarımküreler arasında ürün, hayvan, fikir alışverişini başlattı—dünya çapında tarımı, beslenmeyi ve ekonomileri dönüştürdü. Yerli nüfuslar hastalık ve fetihle tahrip edildi; Amerika'ya kölelik getirildi. Sonunda Aydınlanma ilkelerine dayanan ulusların kurulmasına yol açtı. Philosify'ın görüşü: Kolomb'un seyahati yerli halklar için felaketle sonuçlandı—fetih ve hastalık yaşam ve mülkiyet haklarını ihlal etti. Ancak uzun vadeli sonuç, bireysel hakları hükümetin temeli olarak kuran Amerikan kuruluşunu içeriyordu. Tarihin ahlaki karmaşıklığı basit yargılara izin vermez.",
+      "headline": "Kolomb Yeni Dünya'ya ulaşıyor"
+    },
+    "1517ad": {
+      "title": "Protestan Reformu Başlıyor",
+      "description": "Martin Luther 95 Tez'i yayınlayarak Katolik Kilisesi otoritesine meydan okudu.",
+      "analysis": "Sonuçlar: Dini tekele meydan okudu; bireysel inanç ve Kutsal Kitap okumasını vurguladı; dini çoğulculuğa yol açtı. Yüzyıllık dini savaşları ve her iki taraftan zulümleri tetikledi. Sonunda bireylerin inancı kendileri için yorumlayabileceklerini tesis ederek bireyciliğin yükselişine katkıda bulundu. Philosify'ın görüşü: Reform'un kalıcı katkısı dini tekeli kırmaktı. Luther'in niyetleri ne olursa olsun, bireylerin kendileri için okuyup yorumlayabilecekleri ilkesi mantıksal olarak tüm alanlara uzanır. Dini çoğulculuk entelektüel özgürlüğe doğru bir adımdı.",
+      "headline": "Luther 95 Tez'i çakıyor, Kilise otoritesine meydan okuyor"
+    },
+    "1543ad": {
+      "title": "Kopernik Devrimi",
+      "description": "Kopernik güneş merkezli teoriyi yayınlayarak Dünya'yı evrenin merkezinden çıkardı.",
+      "analysis": "Sonuçlar: Gözlem ve matematiğin kabul görmüş inançları devirebilme gücünü gösterdi. Başlangıçta hem Katolik hem de Protestan otoriteleri tarafından reddedildi. Modern astronomiye ve bilimsel yönteme giden yolu açtı. İnsanlığın evrendeki yerini anlayışını değiştirdi. Philosify'ın görüşü: Kopernik gerçekliğin gelenek, otorite veya dileklerden bağımsız olarak kendi halinde olduğunu gösterdi. Güneş merkezli model, Kilise kabul etsin ya da etmesin doğruydu. Bilim kanıtı nereye götürürse götürsün takip ederek ilerler—aklın doğaya uygulanmasının özü.",
+      "headline": "Kopernik Dünya'nın Güneş etrafında döndüğünü kanıtlıyor"
+    },
+    "1588ad": {
+      "title": "İspanyol Armadası\\'nın Yenilgisi",
+      "description": "İngiltere İspanyol işgal filosunu yenerek Protestan bağımsızlığını korudu.",
+      "analysis": "Sonuçlar: Katolik İspanya'dan İngiliz bağımsızlığı korundu; deniz gücü kuzeye kaydı; Amerika'nın İngiliz kolonizasyonunu mümkün kıldı. İngiltere büyük bir deniz gücü olarak ortaya çıkarak küresel etki ve İngiliz dili ile hukukunun yayılması için temel attı. Philosify'ın görüşü: İngiliz bağımsızlığı ortak hukuk, parlamenter hükümet geliştirecek ve sonunda Amerikan kuruluşuna ilham verecek bir ulusu korudu. Armada'nın yenilgisi Bağımsızlık Bildirgesi'ni üreten özgürlük geleneğini mümkün kıldı.",
+      "headline": "İngiltere İspanyol Armadası'nı yok ediyor"
+    },
+    "1607ad": {
+      "title": "Jamestown Kuruldu",
+      "description": "Amerika'da ilk kalıcı İngiliz yerleşimi kuruldu.",
+      "analysis": "Sonuçlar: Öz-yönetim geleneklerini, ortak hukuku ve sonunda devrimci fikirleri getiren İngiliz kolonizasyonunu başlattı. Yerli Amerikalılarla ilişkiler bozuldu; on yıl içinde kölelik getirildi. İngiliz hukuki ve siyasi geleneklerini getiren koloniciler tarafından Amerikan cumhuriyetinin tohumları ekildi. Philosify'ın görüşü: Jamestown hem iyiyi hem kötüyü getirdi—öz-yönetim ve kölelik. İngilizler olarak haklarına inanan koloniciler sonunda bu ilkeleri mantıksal sonuçlarına taşıyacaktı: haklar yalnızca İngilizlere değil tüm bireylere aittir.",
+      "headline": "Amerika'da ilk İngiliz kolonisi kuruldu"
+    },
+    "1620ad": {
+      "title": "Mayflower Sözleşmesi",
+      "description": "Hacılar Plymouth'da öz-yönetim kolonisi kurdular.",
+      "analysis": "Sonuçlar: Amerika'larda ilk yazılı öz-yönetim çerçevesi; toplum sözleşmesi teorisini pratikte gösterdi. Yazılı anayasa ve rızaya dayalı hükümet modeli Amerikan kuruluşunu etkiledi. Başlangıçta katılımı kilise üyeleriyle sınırladı. Philosify'ın görüşü: Sözleşme rızaya dayalı hükümeti tesis etti—meşru hükümetin ilahi haktan veya fetihten değil yönetilenlerin anlaşmasından kaynaklandığı radikal fikir. Bu ilke, bir kez kurulduğunda, mantıksal olarak yalnızca orijinal imzacılara değil tüm insanlara uzanır.",
+      "headline": "Hacılar Mayflower Sözleşmesi'ni imzalayıp öz-yönetim kolonisi kuruyor"
+    },
+    "1642ad": {
+      "title": "İngiliz İç Savaşı Başlıyor",
+      "description": "Parlamento ve Kral I. Charles anayasal ilkeler üzerine savaşa girdi.",
+      "analysis": "Sonuçlar: Parlamento üstünlüğünü tesis etti; anayasal hükümeti ilerletti; dini hoşgörüyü mümkün kıldı. On binler öldü; Cromwell altında geçici askeri diktatörlük. İngiliz hükümdarlarının Parlamento'yla birlikte değil ona karşı değil yönetmesi gerektiğini karara bağladı. Philosify'ın görüşü: İç Savaş hiçbir yöneticinin yasanın veya halkın temsilcilerinin üstünde olmadığını tesis etti. Geçici diktatörlük bile bu ilkeyi bozamadı. Savaş maliyetliydi, ama alternatif—mutlak monarşi—özgürlük için daha kötü olurdu.",
+      "headline": "İngiliz İç Savaşı patlak veriyor: Parlamento'ya karşı Kral"
+    },
+    "1648ad": {
+      "title": "Vestfalya Barışı",
+      "description": "Antlaşmalar Otuz Yıl Savaşları'nı sona erdirdi ve modern devlet sistemini kurdu.",
+      "analysis": "Sonuçlar: Milyonları öldüren yıkıcı dini savaşları sona erdirdi. Modern uluslararası sistemi yaratan devlet egemenliği ve iç işlerine karışmama ilkelerini tesis etti. Avrupa'nın dini bölünmesi yerinde donduruldu, ama dini savaşlar sona erdi. Philosify'ın görüşü: Vestfalya, devletlerin birbirlerinin dini işlerine karışmayacağını tesis ederek dini savaşları sona erdirdi. Egemenlik ilkesinin sınırları vardır—tiranlığı korumamalıdır—ama dini savaşları sona erdirmek bir başarıydı. Pragmatik barış sürekli kutsal savaşı yener.",
+      "headline": "Vestfalya Barışı Otuz Yıl Savaşları'nı sona erdiriyor"
+    },
+    "1687ad": {
+      "title": "Newton\\'un Principia\\'sı Yayımlandı",
+      "description": "Isaac Newton hareket yasalarını ve evrensel çekim yasasını yayınladı.",
+      "analysis": "Sonuçlar: Evrenin keşfedilebilir yasalarla işlediğini gösterdi; modern fizik ve mühendisliği mümkün kıldı. Aklın doğayı anlayıp toplumu iyileştirebileceğine dair Aydınlanma güvenini ilham etti. Determinizm ve amaç hakkında felsefi sorular gündeme getirdi. Philosify'ın görüşü: Newton evrenin düzenli, kurallı ve insan aklı tarafından kavranabilir olduğunu gösterdi. Bu bilim ve teknolojinin—ve gerçekliğin anlaşılıp iyileştirilebileceğine olan güvenin—temelidir. Akıl işler; yaşamak için aracımızdır.",
+      "headline": "Newton evreni yöneten yasaları ortaya koyuyor"
+    },
+    "1688ad": {
+      "title": "Şanlı Devrim",
+      "description": "Orange'lı William II. James'in yerini aldı; Parlamento üstünlüğünü ileri sürdü.",
+      "analysis": "Sonuçlar: Büyük kan dökülmeden anayasal monarşi, parlamento üstünlüğü ve dini hoşgörüyü tesis etti. Haklar Bildirgesi bireysel özgürlükleri korudu. Barışçıl anayasal reform modeli. Katolikler haleflikten dışlandı. Philosify'ın görüşü: Şanlı Devrim rejim değişikliğini minimum şiddetle gerçekleştirdi—köklü değişikliğin terör gerektirmediğini kanıtladı. Burada kurulan güç üzerinde anayasal sınırlar, Amerika'nın miras aldığı ve iyileştirdiği İngiliz geleneği oldu.",
+      "headline": "Orange'lı William kansız darbeyle İngiliz tahtını ele geçiriyor"
+    },
+    "1689ad": {
+      "title": "Locke\\'un İki İncelemesi Yayımlandı",
+      "description": "John Locke doğal haklar ve sınırlı hükümet teorisini yayınladı.",
+      "analysis": "Sonuçlar: Bireysel haklar, rızaya dayalı hükümet ve devrim hakkı için felsefi temeli dile getirdi. Amerikan kurucularını doğrudan etkiledi. İngilizce konuşulan dünyada en etkili siyaset felsefesi; klasik liberalizmin temeli. Philosify'ın görüşü: Locke bireylerin hükümetten önce gelen doğal haklara sahip olduğunu tesis etti—hükümet bu hakları vermek için değil korumak için vardır. Bu Amerika'nın ve dünya çapında özgürlüğün felsefi temelidir. Locke kusurlu ama yön olarak doğruydu.",
+      "headline": "Locke doğal haklar ve sınırlı hükümet teorisini yayımlıyor"
+    },
+    "1776ad": {
+      "title": "Amerikan Bağımsızlık Bildirisi",
+      "description": "Amerikan kolonileri doğal hakları ileri sürerek bağımsızlık ilan etti.",
+      "analysis": "Sonuçlar: Açıkça doğal haklar, yönetilenlerin rızası ve sınırlı hükümet ilkelerine dayanan ilk ulus. Dünya çapında özgürlük hareketlerine ilham verdi. Haklar başlangıçta köleleştirilmiş insanlara veya kadınlara tanınmadı—ama ilkeler sonunda herkesi kapsayacak şekilde genişledi. Philosify'ın görüşü: Bildiri insanlığın en büyük siyasi belgesidir. 'Tüm insanlar eşit yaratılmıştır' ve 'vazgeçilmez haklara' sahiptir, uygun hükümetin temelidir. Kurucular uygulamalarının ilkelerinin gerisinde kaldığını biliyordu—ama kendi gerçekleşmelerini talep eden ilkeler koydular.",
+      "headline": "Amerikan kolonileri İngiltere'den bağımsızlıklarını ilan ediyor"
+    },
+    "1787ad": {
+      "title": "ABD Anayasası Yazıldı",
+      "description": "Anayasa Konvansiyonu sınırlı federal hükümet için çerçeve oluşturdu.",
+      "analysis": "Sonuçlar: Denge ve denetim sistemi oluşturdu; federal yapı ulusal ve yerel çıkarları dengeledi. Kölelik üzerine uzlaşmalar; başlangıçta Haklar Bildirgesi yoktu. Hâlâ kullanımda olan en eski yazılı anayasa; dünya çapında anayasaları etkiledi. Philosify'ın görüşü: Anayasa Aydınlanma ilkelerinin pratik uygulamasıdır—sınırlı hükümet, ayrılmış güçler, federalizm. Kusurlu ama değişiklikle iyileştirilmek üzere tasarlanmıştır. Çerçeve iki yüzyılı aşkın süredir Amerikan refahını mümkün kıldı ve özgürlüğü korudu.",
+      "headline": "Kurucular Philadelphia'da ABD Anayasası'nı hazırlıyor"
+    },
+    "1789ad": {
+      "title": "Fransız Devrimi Başlıyor",
+      "description": "Bastille'in basılması Avrupa'yı sarsacak devrimi başlattı.",
+      "analysis": "Sonuçlar: Feodal ayrıcalıkları sona erdirdi; vatandaşlık ve eşitlik fikirlerini yaydı. Terör, diktatörlük ve onlarca yıllık savaşa dönüştü; binler giyotinle idam edildi. Avrupa'ya milliyetçiliği yaydı; devrimci değişimin hem potansiyelini hem tehlikelerini gösterdi. Philosify'ın görüşü: Fransız Devrimi Amerikan ve Fransız yaklaşımları arasındaki farkı gösterir. Amerika: bireysel haklar hükümetten korunur. Fransa: bireyleri kolektife feda eden 'genel irade'. Terör bir kaza değil kolektivist felsefenin sonucuydu.",
+      "headline": "Paris kalabalığı Bastille'i basıyor, devrim patlak veriyor"
+    },
+    "1791ad": {
+      "title": "Haklar Bildirgesi Onaylandı",
+      "description": "ABD Anayasası'na ilk on değişiklik bireysel özgürlükleri korudu.",
+      "analysis": "Sonuçlar: Konuşma, din, basın, toplanma, silah ve hukuki süreç haklarını açıkça korudu. Federal gücü sınırladı; yetkileri eyaletlere ve halka saklı tuttu. Yorum yoluyla hakların genişletilmesi için temel oluşturdu. Başlangıçta sadece federal hükümete uygulandı. Philosify'ın görüşü: Haklar Bildirgesi haklar vermez—hükümetin önceden var olan doğal hakları ihlal etmesini yasaklar. 'Kongre hiçbir yasa çıkarmayacaktır...' Değişiklikler hakların hükümetin hediyeleri değil insan doğasına içkin olduğunu tanır. Bu anlayış özgürlük için elzemdir.",
+      "headline": "Haklar Bildirgesi onaylandı, bireysel özgürlükler güvence altında"
+    },
+    "1804ad": {
+      "title": "Napolyon İmparator Olarak Taç Giyiyor",
+      "description": "Napoleon Bonaparte kendini Fransızların İmparatoru ilan etti.",
+      "analysis": "Sonuçlar: Devrimci cumhuriyet diktatörlüğe dönüştü. Napolyon'un hukuk kodu Avrupa genelinde medeni hukuku modernize etti. Napolyon Savaşlarında milyonlar öldü. Özgürlüğü ezerken Aydınlanma reformlarını yaydı. Avrupa genelinde milliyetçiliği uyandırdı. Philosify'ın görüşü: Napolyon iyi reformların diktatörlüğü haklı kılmadığını gösterir. Napolyon Kanunu ilerlemeciydi, ama bir tiran tarafından dayatıldı. Araçlar amaçlar kadar önemlidir—özgürlük fetihle yayılamaz. Napolyon'un en büyük mirası istenmeyendi: ulusal direniş hareketlerine ilham vermesi.",
+      "headline": "Napolyon kendini Fransa İmparatoru ilan ediyor"
+    },
+    "1815ad": {
+      "title": "Waterloo Savaşı",
+      "description": "Napolyon yenildi; Viyana Kongresi Avrupa düzenini yeniden kurdu.",
+      "analysis": "Sonuçlar: Onlarca yıllık savaşı sona erdirdi; görece Avrupa barışının bir yüzyılını mümkün kıldı. Viyana Kongresi güç dengesi sistemi kurdu. Gerici uzlaşma başlangıçta liberal hareketleri bastırdı, ama daha sonra ortaya çıktılar. Barışçıl ortamda ekonomik gelişme serpildi. Philosify'ın görüşü: Viyana Kongresi gerici ama barış üretti. Güç dengesi sistemi, kusurlu da olsa, bir yüzyıl boyunca büyük Avrupa savaşını önledi. İstikrar refahı mümkün kılar—ama liberal hareketleri bastırmak sadece zaferlerini erteledi.",
+      "headline": "Napolyon Waterloo'da yenildi, sürgüne gönderildi"
+    },
+    "1833ad": {
+      "title": "İngiliz Köleliğin Kaldırılması Yasası",
+      "description": "İngiltere imparatorluğu genelinde köleliği kaldırdı.",
+      "analysis": "Sonuçlar: İngiliz İmparatorluğu'nda kölelik sona erdi; Kraliyet Donanması dünya çapında köle ticaretini bastırdı. Dünya çapında köleliğin kaldırılması hareketinde büyük adım. Köle sahipleri tazminat aldı, köleleştirilenler hiçbir şey almadı; sömürü başka biçimlerde sürdü. Ahlaki liderlik diğer ulusları ilham etti. Philosify'ın görüşü: Köleliğin kaldırılması tüm insanların haklara sahip olduğunu tanıdı—kölelik bir kişinin hayatı ve emeğinin çalınmasıdır. İngiltere'nin köleliği kaldırması ahlaki ilerlemenin mümkün olduğunu gösterdi. Bunun devrimle değil barışçıl yasama yoluyla gerçekleşmesi, aklın yerleşik çıkarlara karşı zafer kazanabileceğini gösterir.",
+      "headline": "İngiltere imparatorluk genelinde köleliği kaldırıyor"
+    },
+    "1848ad": {
+      "title": "1848 Devrimleri",
+      "description": "Avrupa genelinde devrim dalgası anayasal hükümet talep etti.",
+      "analysis": "Sonuçlar: Devrimlerin çoğu bastırıldı; gerici hükümetler geri döndü. Ancak liberal ve milliyetçi fikirleri geniş çapta yaydı; Avusturya İmparatorluğu'nda serfliği sona erdirdi; halk reform arzusunu gösterdi. Reformlar sonunda devrimden çok evrim yoluyla geldi. Philosify'ın görüşü: 1848 özgürlük fikirlerinin seçkinlerin ötesinde kitlelere yayıldığını gösterdi. Hemen başarısız olsalar da, devrimler eski düzenin entelektüel olarak iflas ettiğini gösterdi. Bastırma fikirleri öldürmez—uygulamalarını erteler.",
+      "headline": "Devrim dalgası Avrupa'yı sarıyor"
+    },
+    "1848ad_2": {
+      "title": "Komünist Manifesto Yayımlandı",
+      "description": "Marx ve Engels şiddetli devrim ve özel mülkiyetin kaldırılması çağrısı yapan manifestoyu yayımladı.",
+      "analysis": "Sonuçlar: Bu belge 20. yüzyılda 100 milyondan fazla insanı katleden rejimlerin ideolojik temeli oldu—Sovyetler Birliği, Çin, Kamboçya, Küba, Kuzey Kore ve başka yerlerde. Komünizm nerede uygulandıysa sonuç tiranlık, yoksulluk ve kitlesel ölüm oldu. Philosify'ın görüşü: Manifesto bireysel hakları, özel mülkiyeti ve serbest piyasaları—insan refahı ve özgürlüğünün temellerini—reddeder. Sınıf savaşı ve kolektif mülkiyet çağrısı insan doğasıyla temelden bağdaşmaz. Marx tarih, ekonomi ve insan doğası konusunda yanılıyordu. Ceset sayısı bunu kanıtlıyor.",
+      "headline": "Marx ve Engels Komünist Manifesto'yu yayımlıyor"
+    },
+    "1859ad": {
+      "title": "Türlerin Kökeni Yayımlandı",
+      "description": "Darwin doğal seçilim yoluyla evrim teorisini yayınladı.",
+      "analysis": "Sonuçlar: Biyolojiyi birleştirdi; yaşamın çeşitliliğini doğal süreçlerle açıkladı. Modern tıp, genetik ve biyoteknoloji için temel. Sosyal Darwinizm ve öjeniği haklı çıkarmak için kötüye kullanıldı. Yaşam anlayışını ve insanlığın doğadaki yerini dönüştürdü. Philosify'ın görüşü: Evrim doğrudur—kanıtlar ezici. Bu insan onurunu azaltmaz; kökenlerimizi kaderimizi belirlemeden açıklar. İçgüdüyü aşan akıl kapasitesini evrimleştirdik. Biyoloji olanı tanımlar; etik olması gerekeni belirler.",
+      "headline": "Darwin Türlerin Kökeni'ni yayımlıyor, biyolojinin temellerini sarsıyor"
+    },
+    "1861ad": {
+      "title": "Amerikan İç Savaşı Başlıyor",
+      "description": "Kölelik ve eyalet hakları üzerine savaş başladı; en ölümcül Amerikan çatışması.",
+      "analysis": "Sonuçlar: 620.000 ölü—tüm diğer savaşların toplamından daha fazla Amerikalı. Köleliğe son verdi; Birliği korudu. Yeniden Yapılanma dönemi erken sona erdi; ırk eşitsizliği bir yüzyıl daha sürdü. Ulusun birleşik kalacağını ve köleliğin Amerikan ilkeleriyle bağdaşmadığını karara bağladı. Philosify'ın görüşü: İç Savaş köleliğe—bireysel hakların en büyük ihlaline—karşı özgürlük için bir savaştı. Lincoln 'yarısı köle yarısı özgür' bir ulusun kendisiyle çeliştiğini doğru anladı. Birlik davası haklıydı; bedeli trajik ama gerekliydi.",
+      "headline": "Amerikan İç Savaşı başlıyor, Güney ayrılıyor"
+    },
+    "1863ad": {
+      "title": "Özgürleştirme Bildirisi",
+      "description": "Lincoln isyancı eyaletlerdeki köleleri \"sonsuza dek özgür\" ilan etti.",
+      "analysis": "Sonuçlar: İç Savaşı sadece birlik değil özgürlük için bir savaşa dönüştürdü. Siyah askerlerin kendi kurtuluşları için savaşmasını mümkün kıldı. Konfederasyonu ahlaki ve maddi olarak zayıflattı. Sınır eyaletlerindeki köleleri özgürleştirmedi; tam eşitlik bir yüzyıl boyunca gelmedi. Philosify'ın görüşü: Özgürleşme Amerika'nın kuruluş ilkelerini yaşamasıydı. 'Tüm insanlar eşit yaratılmıştır' söylediği anlamı taşıyordu—Bildiri bu vaadi yerine getirme sürecini başlattı. Lincoln köleliğin sadece politika değil ilke olarak yanlış olduğunu anladı.",
+      "headline": "Lincoln isyancı eyaletlerdeki tüm köleleri sonsuza dek özgür ilan ediyor"
+    },
+    "1865ad": {
+      "title": "13. Değişiklik Onaylandı",
+      "description": "Kölelik ve gönülsüz hizmetkârlık Amerika Birleşik Devletleri genelinde kaldırıldı.",
+      "analysis": "Sonuçlar: Köleliği anayasal olarak kaldırdı; Bağımsızlık Bildirgesi'nin vaat ettiğini tamamladı. Eski kölelere başlangıçta toprak ve tam vatandaşlık hakları reddedildi; ortakçılık ve Jim Crow takip etti. Ama kölelik anayasa değişikliğiyle kalıcı olarak sona erdi. Philosify'ın görüşü: 13. Değişiklik başından beri Anayasa'da olması gerekeni—hiç kimsenin bir başkasına sahip olamayacağını—Anayasa'ya yazdı. Tam eşitlik mücadelesi sürdü, ama temel ilke kuruldu: bireysel haklar tüm bireylere aittir.",
+      "headline": "13. Değişiklik Amerika'da köleliği kaldırıyor"
+    },
+    "1869ad": {
+      "title": "Kıtalararası Demiryolu Tamamlandı",
+      "description": "Atlantik ve Pasifik kıyılarını bağlayan demiryolu Promontory Summit'te tamamlandı.",
+      "analysis": "Sonuçlar: Kıtayı ekonomik olarak birleştirdi; geniş mesafelerde yerleşim, ticaret ve iletişimi mümkün kıldı. Seyahat süresini aylardan günlere düşürdü. Sömürülen göçmen işgücüyle inşa edildi; Yerli Amerikalı topraklarını bozdu. Amerikan ekonomisini ve yerleşim kalıplarını dönüştürdü. Philosify'ın görüşü: Demiryolu özgür girişimin ve mühendisliğin neler başarabileceğini gösterdi. Hükümet müdahalesine ve işgücü sömürüsüne rağmen proje muazzam değer yarattı. Ticaret ve hareketi mümkün kılan altyapı insan refahına hizmet eder—zorla çalıştırmayla değil gönüllü değişimle inşa edildiğinde.",
+      "headline": "Kıtalararası demiryolu tamamlandı, kıyılar birleştirildi"
+    },
+    "1876ad": {
+      "title": "Telefon İcat Edildi",
+      "description": "Alexander Graham Bell telefonu patentledi.",
+      "analysis": "Sonuçlar: Mesafeler arasında anlık iletişimi mümkün kıldı; iş dünyasını, hükümeti ve kişisel ilişkileri dönüştürdü. Yeni endüstriler ve ekonomik fırsatlar yarattı. Toplumu dönüştürmeye devam eden telekomünikasyon devriminin başlangıcı. Philosify'ın görüşü: Telefon mucitlerin kendi çıkarlarına hizmet ederek herkese nasıl hizmet ettiğini örnekler. Bell kâr aradı ve başkaları için değer yaratarak elde etti. Bu en iyi haliyle kapitalizmdir—tüm taraflar için zenginlik yaratan gönüllü değişim.",
+      "headline": "Bell telefonu icat ediyor"
+    },
+    "1879ad": {
+      "title": "Edison\\'un Ampulü",
+      "description": "Thomas Edison pratik akkor ampulü geliştirdi.",
+      "analysis": "Sonuçlar: Üretken saatleri gün ışığının ötesine uzattı; evlerde ve işyerlerinde güvenliği artırdı; yeni endüstriler mümkün kıldı; günlük yaşamı dönüştürdü. Elektrifikasyon modern medeniyetin her yönünü değiştirdi. Edison'un sistematik icat yöntemi endüstriyel araştırma için model oldu. Philosify'ın görüşü: Edison sadece ampulü icat etmedi—onu kullanışlı kılan elektrik üretim ve dağıtım sistemini yarattı. Kapitalizmin ödüllendirdiği üretken dehanın örneğidir: sorunları tespit et, çözümler yarat, başkalarına hizmet ederek kâr et.",
+      "headline": "Edison elektrik ampulüyle dünyayı aydınlatıyor"
+    },
+    "1886ad": {
+      "title": "Özgürlük Heykeli Açıldı",
+      "description": "Fransa'nın Amerika'ya hediyesi dünyayı aydınlatan özgürlüğü kutlar.",
+      "analysis": "Sonuçlar: Amerikan ideallerinin kalıcı simgesi oldu; özgürlük ve fırsat arayan milyonlarca göçmeni karşıladı. İdealler her zaman ayrımcılık ve kısıtlama gerçekliğiyle örtüşmedi. Özgürlüğün ve mazlumlar için sığınağın güçlü simgesi olarak kaldı. Philosify'ın görüşü: Heykel Amerika'nın kuruluş idealini temsil ediyor: özgürlük insanlığın doğal durumudur. 'Bana yorgun olanlarını, yoksullarını, özgürce nefes almayı özleyen yığınlarını ver'—Amerika en iyi haliyle özgürlük arayanları karşılar. İdeal uğruna çabalamaya değer.",
+      "headline": "Özgürlük Heykeli New York Limanı'nda açılıyor"
+    },
+    "1903ad": {
+      "title": "Wright Kardeşler\\'in Uçuşu",
+      "description": "Kitty Hawk'ta ilk kontrollü, motorlu uçak uçuşu.",
+      "analysis": "Sonuçlar: Havacılık çağını açtı; ulaşım, ticaret, iletişim ve savaşı dönüştürdü. Dünyayı küçülttü—her nokta saatler içinde ulaşılabilir hale geldi. Hava bombardımanını mümkün kıldı ama aynı zamanda insani yardım ve küresel ticareti de. Philosify'ın görüşü: Ohio'dan iki bisiklet tamircisi akademisyenlerin imkânsız dediğini başardı. Wright'lar Amerikan pratik dehasını örnekler—uygulamalı deneycilik, sebat, rasyonel problem çözme. Gökleri hükümet programları değil bireysel girişim açtı.",
+      "headline": "Wright Kardeşler ilk motorlu uçuşu gerçekleştiriyor"
+    },
+    "1905ad": {
+      "title": "Einstein\\'ın Mucize Yılı",
+      "description": "Einstein özel görelilik, fotoelektrik etki ve Brown hareketi üzerine makaleler yayınladı.",
+      "analysis": "Sonuçlar: Fizikte devrim yaptı; uzay ve zamanın göreli, kütle ve enerjinin eşdeğer olduğunu gösterdi. Nükleer enerji, GPS ve sayısız teknolojiyi mümkün kıldı. Nükleer silahları da mümkün kıldı. Evren anlayışımızı dönüştürdü. Philosify'ın görüşü: Bir patent memuru olan Einstein, saf düşünceyle yüzyıllık fiziği devirdi. Çalışması gerçekliğin nesnel ve bilinebilir olduğunu—ama bilgimizin sürekli kanıtlarla revize edilmesi gerektiğini—gösterir. Gerçek vardır; görevimiz onu akıl yoluyla keşfetmektir.",
+      "headline": "Einstein fizik yasalarını yeniden yazıyor"
+    },
+    "1914ad": {
+      "title": "Birinci Dünya Savaşı Başlıyor",
+      "description": "Assassination of Archduke Franz Ferdinand triggers global conflict.",
+      "analysis": "POSITIVE: Ended empires that denied self-determination; eventually led to international institutions. NEGATIVE: 17 million dead; destabilized Europe; enabled rise of fascism and communism. Long-term: Destroyed old order without creating stable new one; set stage for World War II.",
+      "headline": "Arşidük suikaste kurban gidiyor, Avrupa savaşa dalıyor"
+    },
+    "1917ad": {
+      "title": "Rus Devrimi",
+      "description": "Bolsheviks seize power in Russia, establishing communist totalitarian state.",
+      "analysis": "Consequences: Established the first major communist totalitarian state. Replaced one autocracy with something far worse—a regime that murdered 20+ million of its own people through purges, engineered famines, and gulags. Exported communist ideology worldwide, leading to similar atrocities in China, Cambodia, Cuba, and elsewhere. Philosophical significance: Collectivism leads to mass murder. When individual rights are subordinated to \"the collective\" or \"the workers,\" the result is always tyranny. The 20th century proved that socialism and communism are incompatible with human life and flourishing.",
+      "headline": "Bolşevikler Rusya'da iktidarı ele geçiriyor"
+    },
+    "1918ad": {
+      "title": "Birinci Dünya Savaşı Bitiyor",
+      "description": "Armistice signed; war kills 17 million and reshapes global order.",
+      "analysis": "POSITIVE: Created League of Nations attempt at collective security; ended Ottoman, Austro-Hungarian, German, and Russian empires. NEGATIVE: Vindictive peace terms humiliated Germany; new borders created ethnic conflicts. Long-term: Unstable settlement planted seeds for World War II.",
+      "headline": "Ateşkes imzalandı, Büyük Savaş sona erdi"
+    },
+    "1920ad": {
+      "title": "19. Değişiklik Onaylandı",
+      "description": "Women gain right to vote in United States.",
+      "analysis": "POSITIVE: Extended political equality to women; vindicated decades of peaceful advocacy; doubled electorate. NEGATIVE: Many women of color still faced voting barriers. Long-term: Transformed American politics; women became majority of voters.",
+      "headline": "Kadınlar Amerika'da oy hakkı kazanıyor"
+    },
+    "1929ad": {
+      "title": "Borsa Çöküşü",
+      "description": "Black Tuesday triggers Great Depression.",
+      "analysis": "POSITIVE: Eventually led to financial reforms and social safety nets. NEGATIVE: Unprecedented economic collapse; mass unemployment; contributed to rise of extremism. Long-term: Transformed role of government in economy; still debated by economists.",
+      "headline": "Wall Street çöküyor, Büyük Buhran başlıyor"
+    },
+    "1933ad": {
+      "title": "Hitler Şansölye Oluyor",
+      "description": "Adolf Hitler appointed Chancellor of Germany.",
+      "analysis": "POSITIVE: None. NEGATIVE: Ended Weimar democracy; began persecution of Jews and others; led to World War II and Holocaust. Long-term: Demonstrated how democracies can vote themselves out of existence; cautionary tale about demagogues and economic crisis.",
+      "headline": "Hitler Almanya Şansölyesi olarak atandı"
+    },
+    "1939ad": {
+      "title": "İkinci Dünya Savaşı Başlıyor",
+      "description": "Germany invades Poland; Britain and France declare war.",
+      "analysis": "POSITIVE: Allied victory eventually liberated occupied countries; led to human rights declarations. NEGATIVE: 70-85 million dead; Holocaust murdered 6 million Jews; cities destroyed. Long-term: Discredited fascism; created international institutions; began decolonization.",
+      "headline": "Almanya Polonya'yı işgal ediyor, İkinci Dünya Savaşı başlıyor"
+    },
+    "1941ad": {
+      "title": "Pearl Harbor Saldırısı",
+      "description": "Japan attacks U.S. Pacific Fleet; America enters World War II.",
+      "analysis": "POSITIVE: American entry turned tide of war; brought resources that ensured Allied victory. NEGATIVE: Thousands killed; led to internment of Japanese Americans. Long-term: America emerged as global superpower; ended isolationism.",
+      "headline": "Japonya Pearl Harbor'ı bombalıyor, Amerika savaşa giriyor"
+    },
+    "1942ad": {
+      "title": "Holokost: Sistematik Soykırım",
+      "description": "Nazi Germany implements the \"Final Solution,\" murdering six million Jews and millions of others.",
+      "analysis": "POSITIVE: None. NEGATIVE: Industrial-scale murder of civilians; six million Jews and millions of others killed; immeasurable human loss and suffering. Long-term: Led to human rights declarations, genocide conventions, and establishment of Israel; permanent reminder of where hatred leads.",
+      "headline": "Naziler Nihai Çözüm'ü başlatıyor, Yahudilerin sistematik katliamı"
+    },
+    "1944ad": {
+      "title": "D-Day İstilası",
+      "description": "Allied forces land at Normandy, beginning liberation of Western Europe.",
+      "analysis": "POSITIVE: Began liberation of Western Europe; demonstrated Allied commitment; hastened war's end. NEGATIVE: Heavy casualties on beaches; difficult fighting ahead. Long-term: Western Europe liberated; contrasted with Soviet control of Eastern Europe.",
+      "headline": "Müttefik kuvvetler D-Day'de Normandiya sahillerine çıkıyor"
+    },
+    "1945ad": {
+      "title": "Atom Bombaları İkinci Dünya Savaşını Bitiriyor",
+      "description": "U.S. drops atomic bombs on Hiroshima and Nagasaki; Japan unconditionally surrenders.",
+      "analysis": "Consequences: The atomic bombs ended World War II with Japan's unconditional surrender—the only acceptable outcome against an aggressor nation. Japan started the war with Pearl Harbor and committed horrific atrocities across Asia (Rape of Nanking, POW torture, Unit 731). The bombs saved hundreds of thousands of American soldiers' lives and likely millions of Japanese lives—Japan was arming civilians to fight to the death. Philosophical significance: America had every right to use overwhelming force against an enemy that attacked first and refused to surrender. Our soldiers' lives take priority over enemy civilians. The decision was rational, moral, and life-affirming. Victory, not prolonged bloodshed, is the goal of a just war.",
+      "headline": "Japonya'ya atom bombaları atıldı, savaş sona erdi"
+    },
+    "1945ad_2": {
+      "title": "Birleşmiş Milletler Kuruldu",
+      "description": "International organization established to maintain peace and security.",
+      "analysis": "POSITIVE: Created forum for diplomacy; agencies address humanitarian needs; human rights declarations. NEGATIVE: Security Council veto limits effectiveness; cannot override sovereignty. Long-term: Imperfect but useful forum for international cooperation.",
+      "headline": "Dünya barışını korumak için Birleşmiş Milletler kuruldu"
+    },
+    "1947ad": {
+      "title": "Ayn Rand\\'ın Kaynak Başarısı",
+      "description": "The Fountainhead becomes bestseller, presenting individualist philosophy.",
+      "analysis": "POSITIVE: Celebrated individual creativity and integrity; challenged collectivist thinking; inspired entrepreneurs and artists. NEGATIVE: Critics argued it dismissed community and social bonds. Long-term: Influenced libertarian movement; remains widely read and debated.",
+      "headline": "Rand'ın Kaynak'ı bestseller oluyor, bireycilik yükseliyor"
+    },
+    "1948ad": {
+      "title": "İsrail Kuruldu",
+      "description": "State of Israel declared, providing homeland for Jewish people.",
+      "analysis": "POSITIVE: Provided refuge for Jews after Holocaust; built successful democracy; technological innovation. NEGATIVE: Displacement of Palestinians; ongoing regional conflict. Long-term: Complex legacy of refuge, conflict, and competing national aspirations.",
+      "headline": "İsrail Devleti ilan edildi, Yahudi yurdu doğdu"
+    },
+    "1950ad": {
+      "title": "Kore Savaşı Başlıyor",
+      "description": "North Korea invades South Korea; UN forces intervene.",
+      "analysis": "POSITIVE: South Korea preserved; became prosperous democracy. NEGATIVE: Millions killed; peninsula remains divided; North Korea became totalitarian state. Long-term: Stark contrast between North and South demonstrates different systems' outcomes.",
+      "headline": "Kuzey Kore Güney'i işgal ediyor, savaş patlak veriyor"
+    },
+    "1949ad": {
+      "title": "Komünist Çin Kuruldu",
+      "description": "Mao Zedong establishes communist totalitarian dictatorship in China.",
+      "analysis": "Consequences: Mao's regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, and family structures. Philosophical significance: Communism is the deadliest ideology in human history. China's economic success only came AFTER the CCP abolished communist economics and opened markets, allowing people to trade freely domestically and internationally. The political system remains authoritarian, but prosperity required abandoning Marx. The regime still commits genocide against Uyghurs and threatens Taiwan.",
+      "headline": "Mao Komünist Çin'i ilan ediyor, dünyanın en büyük ülkesi kızıla dönüyor"
+    },
+    "1957ad": {
+      "title": "Atlas Silkindi Yayımlandı",
+      "description": "Ayn Rand publishes her philosophical novel.",
+      "analysis": "POSITIVE: Defended productive achievement; critiqued excessive regulation; inspired entrepreneurs. NEGATIVE: Critics argued it lacked compassion for the less fortunate. Long-term: One of most influential American novels; continues to spark debate about capitalism and individualism.",
+      "headline": "Ayn Rand Atlas Silkindi'yi yayımlıyor"
+    },
+    "1961ad": {
+      "title": "Uzaydaki İlk İnsan",
+      "description": "Yuri Gagarin becomes first human to orbit Earth.",
+      "analysis": "POSITIVE: Opened space age; demonstrated human capacity to transcend earthly limits; inspired generations. NEGATIVE: Space race diverted resources; Cold War competition. Long-term: Space exploration continues to advance science and inspire humanity.",
+      "headline": "Gagarin Dünya yörüngesinde, uzaydaki ilk insan"
+    },
+    "1963ad": {
+      "title": "Kennedy Suikasti",
+      "description": "President John F. Kennedy assassinated in Dallas.",
+      "analysis": "POSITIVE: Peaceful transfer of power demonstrated constitutional resilience. NEGATIVE: National trauma; loss of popular leader; conspiracy theories persist. Long-term: Showed institutions survive loss of any individual; changed American political culture.",
+      "headline": "Başkan Kennedy Dallas'ta suikaste uğradı"
+    },
+    "1964ad": {
+      "title": "Sivil Haklar Yasası",
+      "description": "Landmark legislation outlaws discrimination based on race, color, religion, sex, or national origin.",
+      "analysis": "POSITIVE: Ended legal segregation; protected voting rights; opened opportunities. NEGATIVE: Did not eliminate discrimination; implementation faced resistance. Long-term: Transformed American society; extended founding principles to all citizens.",
+      "headline": "Sivil Haklar Yasası ırk ayrımcılığını yasaklıyor"
+    },
+    "1965ad": {
+      "title": "Vietnam Savaşı Tırmanıyor",
+      "description": "U.S. commits combat troops to Vietnam; war will claim millions of lives.",
+      "analysis": "POSITIVE: Attempted to prevent communist expansion. NEGATIVE: Over 58,000 Americans and millions of Vietnamese killed; divided American society; ultimately unsuccessful. Long-term: Changed American attitudes toward military intervention; lessons still debated.",
+      "headline": "ABD Vietnam'a savaş birlikleri gönderiyor"
+    },
+    "1966ad": {
+      "title": "Kültür Devrimi Başlıyor",
+      "description": "Mao launches Cultural Revolution, targeting \"counter-revolutionary\" elements.",
+      "analysis": "POSITIVE: None. NEGATIVE: Millions killed or persecuted; cultural heritage destroyed; education disrupted for generation. Long-term: Traumatized Chinese society; later repudiated by Chinese Communist Party itself.",
+      "headline": "Mao Kültür Devrimi'ni başlatıyor, Çin kaosa sürükleniyor"
+    },
+    "1975ad": {
+      "title": "Kamboçya Soykırımı Başlıyor",
+      "description": "Khmer Rouge seizes power; genocide kills 1.5-2 million Cambodians.",
+      "analysis": "POSITIVE: None. NEGATIVE: Quarter of population killed; society devastated; educated class targeted for elimination. Long-term: Cambodia slowly recovered; tribunals eventually held perpetrators accountable.",
+      "headline": "Kızıl Khmerler Kamboçya'yı ele geçiriyor, soykırım başlıyor"
+    },
+    "1979ad": {
+      "title": "İran Devrimi",
+      "description": "Islamic Revolution overthrows Shah; Ayatollah Khomeini establishes theocratic dictatorship.",
+      "analysis": "Consequences: Replaced a modernizing authoritarian monarchy with a barbaric theocratic dictatorship. Iran became the world's leading state sponsor of terrorism. Women lost fundamental rights. Religious police enforce medieval laws. The regime has pursued nuclear weapons while calling for the destruction of Israel and America. Philosophical significance: Not all \"revolutions\" are progress. Theocracy is incompatible with human freedom. The West's failure to support the Shah and decades of appeasement emboldened this regime. Only regime change or unconditional surrender can end this threat to civilization.",
+      "headline": "İslam Devrimi Şah'ı deviriyor, İran teokrasiye dönüşüyor"
+    },
+    "1969ad": {
+      "title": "Ay\\'a İniş",
+      "description": "Apollo 11 astronauts walk on the Moon.",
+      "analysis": "POSITIVE: Greatest technological achievement in history; united humanity in wonder; advanced technology. NEGATIVE: Enormous cost; program later abandoned. Long-term: Proved nothing is impossible; inspired generations; space exploration continues.",
+      "headline": "Armstrong Ay'da yürüyor"
+    },
+    "1989ad": {
+      "title": "Berlin Duvarı\\'nın Yıkılması",
+      "description": "Berlin Wall falls; Cold War begins to end.",
+      "analysis": "POSITIVE: Reunified Germany; freed Eastern Europe; ended Cold War division; peaceful revolution. NEGATIVE: Economic difficulties for former communist states; not all transitions smooth. Long-term: Demonstrated that even seemingly permanent systems can collapse; expanded freedom to millions.",
+      "headline": "Berlin Duvarı yıkılıyor, özgürlük Doğu Avrupa'yı sarıyor"
+    },
+    "1991ad": {
+      "title": "Sovyetler Birliği Dağılıyor",
+      "description": "USSR officially dissolves; Cold War ends.",
+      "analysis": "POSITIVE: Ended communist superpower; freed 15 nations; ended nuclear standoff. NEGATIVE: Economic collapse in former Soviet states; some regions remain authoritarian. Long-term: Transformed international order; debate continues about post-Soviet development.",
+      "headline": "Sovyetler Birliği çöküyor, Soğuk Savaş sona eriyor"
+    },
+    "2001ad": {
+      "title": "11 Eylül Saldırıları",
+      "description": "Al-Qaeda terrorists attack World Trade Center and Pentagon, killing nearly 3,000.",
+      "analysis": "Consequences: Nearly 3,000 innocent people murdered by Islamic terrorists. America responded with war in Afghanistan to destroy Al-Qaeda and the Taliban regime that harbored them. Triggered two decades of military operations against terrorist networks. Philosophical significance: Evil exists and must be destroyed. The proper response to terrorism is overwhelming force, not negotiation. The failure to achieve complete victory in Afghanistan demonstrated the cost of nation-building over decisive military defeat of enemies.",
+      "headline": "Teröristler Dünya Ticaret Merkezi'ne ve Pentagon'a saldırıyor"
+    },
+    "2008ad": {
+      "title": "Küresel Finansal Kriz",
+      "description": "Lehman Brothers collapse triggers worldwide financial crisis.",
+      "analysis": "POSITIVE: Led to financial reforms; exposed weaknesses in system. NEGATIVE: Millions lost jobs and homes; recession spread globally. Long-term: Changed banking regulation; debates about causes and responses continue.",
+      "headline": "Lehman Brothers çöküyor, küresel finansal kriz"
+    },
+    "2020ad": {
+      "title": "COVID-19 Pandemisi",
+      "description": "Global pandemic leads to unprecedented lockdowns and economic disruption.",
+      "analysis": "POSITIVE: Accelerated medical research and vaccine development; remote work became viable. NEGATIVE: Millions died; economic disruption; mental health impacts; educational setbacks. Long-term: Transformed work, medicine, and public health; full effects still emerging.",
+      "headline": "COVID-19 pandemisi dünyayı kilitledi"
+    },
+    "2023ad": {
+      "title": "7 Ekim: Hamas\\'ın İsrail\\'e Saldırısı",
+      "description": "Hamas terrorists massacre 1,200 Israeli civilians and take 250 hostages.",
+      "analysis": "Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities against civilians including rape, torture, and murder of children. Revealed the true nature of Hamas as a genocidal terrorist organization. Much of the Western intelligentsia shamefully sided with the terrorists, exposing moral bankruptcy in academia and media. Philosophical significance: Evil must be defeated, not negotiated with. Israel's right to self-defense is absolute. Victory means dismantling Hamas's capability to harm civilians. There is no moral equivalence between terrorists and their victims.",
+      "headline": "Hamas ani saldırıda 1.200 İsrailli'yi katlediyor"
+    },
+    "2022ad": {
+      "title": "Rusya Ukrayna\\'yı İşgal Ediyor",
+      "description": "Russia launches full-scale invasion of Ukraine; largest war in Europe since WWII.",
+      "analysis": "Consequences: Russia, an American enemy, launched unprovoked aggression against Ukraine, revealing imperial ambitions and military weakness. The West responded with sanctions and military aid. Ukraine's fierce resistance has degraded Russian military capability significantly. Philosophical significance: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with negotiated concessions.",
+      "headline": "Rusya Ukrayna'ya tam ölçekli işgal başlatıyor"
+    },
+    "2024ad": {
+      "title": "İran-İsrail Gerginlikleri Tırmanıyor",
+      "description": "Iran launches missiles at Israel; Israel responds with precision strikes.",
+      "analysis": "Consequences: Iran's theocratic regime openly attacks Israel, dropping pretense of proxy warfare. Israel demonstrates superior defensive and offensive capabilities. Regional conflict intensifies with Hezbollah and Houthis. Philosophical significance: Appeasement of the Iranian regime over decades enabled this aggression. The only path to peace is through strength and the defeat of those who seek destruction. Terrorist-sponsoring regimes cannot be trusted with negotiations—only unconditional surrender or regime change ends the threat.",
+      "headline": "İran İsrail'e füze fırlatıyor, bölge uçurumun eşiğinde"
+    }
+  },
+  "quiz": {
+    "title": "Quiz",
+    "leaderboard": "EN İYİ SKORLAR",
+    "welcome": "Felsefe Bilgini Test Et",
+    "description": "Metafizik, epistemoloji, etik, politika ve estetik hakkında sorulara cevap verin.",
+    "rule1": "Kredi başına 10 soru",
+    "rule2": "Her doğru cevapta sorular zorlaşır",
+    "rule3": "Yanlış mı? Devam etmek için 1 kredi ödeyin",
+    "rule4": "Arka arkaya 10 doğru = 1 kredi geri!",
+    "starting": "Başlatılıyor...",
+    "start": "Quiz'i Başlat",
+    "checking": "Kontrol ediliyor...",
+    "submit": "Cevabı Gönder",
+    "correct": "Doğru!",
+    "wrong": "Yanlış!",
+    "correctWas": "Doğru cevap:",
+    "explanation": "Açıklama",
+    "streak": "Seri",
+    "score": "Puan",
+    "next": "Sonraki Soru",
+    "continue": "Devam",
+    "wrongAnswer": "Yanlış Cevap!",
+    "payToContinueWrong": "Oturumunuza devam etmek için 1 kredi ödeyin.",
+    "completed10": "Aferin!",
+    "payToContinue10": "10 soruyu tamamladınız! 10 tane daha için 1 kredi ödeyin.",
+    "bestStreak": "En İyi Seri",
+    "continuing": "Devam ediliyor...",
+    "payToContinue": "Quiz'e Devam Et",
+    "endQuiz": "Quiz'i Bitir",
+    "quizComplete": "Quiz Tamamlandı!",
+    "finalScore": "Final Skoru",
+    "totalCorrect": "Doğru Cevaplar",
+    "creditsEarned": "Kazanılan Krediler",
+    "playAgain": "Tekrar Oyna",
+    "categories": {
+      "metaphysics": "Metafizik",
+      "epistemology": "Epistemoloji",
+      "ethics": "Etik",
+      "politics": "Politika",
+      "aesthetics": "Estetik",
+      "applied": "Uygulamalı Felsefe",
+      "history": "Felsefe Tarihi",
+      "american_exceptionalism": "Amerikan İstisnacılığı",
+      "virtues": "Erdemler",
+      "economics": "Ekonomi",
+      "law": "Objektif Hukuk"
+    }
   }
 }

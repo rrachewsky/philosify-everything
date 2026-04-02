@@ -532,6 +532,10 @@
       "history": {
         "title": "Geschiedenis",
         "description": "Ontdek 2.600 jaar filosofisch denken"
+      },
+      "quiz": {
+        "title": "Quiz",
+        "description": "Test je kennis van filosofie"
       }
     },
     "comingSoonDesc": {
@@ -1609,99 +1613,617 @@
     }
   },
   "historicalEvents": {
-    "594bc": "Solon\\'s Reforms in Athens",
-    "509bc": "Roman Republic Founded",
-    "490bc": "Battle of Marathon",
-    "480bc": "Battle of Thermopylae & Salamis",
-    "399bc": "Trial and Death of Socrates",
-    "336bc": "Alexander the Great Begins Conquest",
-    "323bc": "Death of Alexander the Great",
-    "264bc": "First Punic War Begins",
-    "146bc": "Destruction of Carthage",
-    "49bc": "Caesar Crosses the Rubicon",
-    "44bc": "Assassination of Julius Caesar",
-    "31bc": "Battle of Actium",
-    "30ad": "Crucifixion of Jesus",
-    "79ad": "Eruption of Vesuvius",
-    "180ad": "Death of Marcus Aurelius",
-    "313ad": "Edict of Milan",
-    "380ad": "Christianity Becomes State Religion",
-    "410ad": "Visigoths Sack Rome",
-    "476ad": "Fall of Western Roman Empire",
-    "529ad": "Closing of Platonic Academy",
-    "622ad": "Hegira - Birth of Islam",
-    "732ad": "Battle of Tours",
-    "800ad": "Charlemagne Crowned Emperor",
-    "1054ad": "Great Schism",
-    "1066ad": "Norman Conquest of England",
-    "1095ad": "First Crusade Called",
-    "1215ad": "Magna Carta Signed",
-    "1265ad": "First English Parliament",
-    "1347ad": "Black Death Reaches Europe",
-    "1439ad": "Gutenberg\\'s Printing Press",
-    "1453ad": "Fall of Constantinople",
-    "1492ad": "Columbus Reaches Americas",
-    "1517ad": "Protestant Reformation Begins",
-    "1543ad": "Copernican Revolution",
-    "1588ad": "Defeat of Spanish Armada",
-    "1607ad": "Jamestown Founded",
-    "1620ad": "Mayflower Compact",
-    "1642ad": "English Civil War Begins",
-    "1648ad": "Peace of Westphalia",
-    "1687ad": "Newton\\'s Principia Published",
-    "1688ad": "Glorious Revolution",
-    "1689ad": "Locke\\'s Two Treatises Published",
-    "1776ad": "American Declaration of Independence",
-    "1787ad": "U.S. Constitution Written",
-    "1789ad": "French Revolution Begins",
-    "1791ad": "Bill of Rights Ratified",
-    "1804ad": "Napoleon Crowned Emperor",
-    "1815ad": "Battle of Waterloo",
-    "1833ad": "British Slavery Abolition Act",
-    "1848ad": "Revolutions of 1848",
-    "1848ad_2": "Communist Manifesto Published",
-    "1859ad": "Origin of Species Published",
-    "1861ad": "American Civil War Begins",
-    "1863ad": "Emancipation Proclamation",
-    "1865ad": "13th Amendment Ratified",
-    "1869ad": "Transcontinental Railroad Completed",
-    "1876ad": "Telephone Invented",
-    "1879ad": "Edison\\'s Light Bulb",
-    "1886ad": "Statue of Liberty Dedicated",
-    "1903ad": "Wright Brothers\\' Flight",
-    "1905ad": "Einstein\\'s Miracle Year",
-    "1914ad": "World War I Begins",
-    "1917ad": "Russian Revolution",
-    "1918ad": "World War I Ends",
-    "1920ad": "19th Amendment Ratified",
-    "1929ad": "Stock Market Crash",
-    "1933ad": "Hitler Becomes Chancellor",
-    "1939ad": "World War II Begins",
-    "1941ad": "Pearl Harbor Attack",
-    "1942ad": "Holocaust: Systematic Genocide",
-    "1944ad": "D-Day Invasion",
-    "1945ad": "Atomic Bombs End WWII",
-    "1945ad_2": "United Nations Founded",
-    "1947ad": "Ayn Rand\\'s The Fountainhead Success",
-    "1948ad": "Israel Founded",
-    "1950ad": "Korean War Begins",
-    "1949ad": "Communist China Established",
-    "1957ad": "Atlas Shrugged Published",
-    "1961ad": "First Human in Space",
-    "1963ad": "Kennedy Assassination",
-    "1964ad": "Civil Rights Act",
-    "1965ad": "Vietnam War Escalates",
-    "1966ad": "Cultural Revolution Begins",
-    "1975ad": "Cambodian Genocide Begins",
-    "1979ad": "Iranian Revolution",
-    "1969ad": "Moon Landing",
-    "1989ad": "Fall of Berlin Wall",
-    "1991ad": "Soviet Union Dissolves",
-    "2001ad": "September 11 Attacks",
-    "2008ad": "Global Financial Crisis",
-    "2020ad": "COVID-19 Pandemic",
-    "2023ad": "October 7: Hamas Attack on Israel",
-    "2024ad": "Iran-Israel Tensions Escalate",
-    "2022ad": "Russia Invades Ukraine"
+    "594bc": {
+      "title": "Hervormingen van Solon in Athene",
+      "description": "Solon stelt constitutionele hervormingen in Athene in, die de basis leggen voor democratie.",
+      "analysis": "Gevolgen: Solon schafte schuldslavernij af, creëerde een op eigendom gebaseerd burgerschap dat economische belangen koppelde aan politieke deelname, en vestigde de rechtsstaat die zou uitgroeien tot de Atheense democratie. Deze hervormingen verspreidden Griekse politieke ideeën door het hele Middellandse Zeegebied. Philosify's visie: Een cruciale stap naar erkenning van individuele rechten binnen de samenleving. Door deelname te koppelen aan eigendom schiep Solon prikkels voor productief burgerschap. Het principe dat zelfs heersers gebonden zijn aan de wet—niet aan willekeur—is fundamenteel voor vrijheid.",
+      "headline": "Solon schaft schuldslavernij af, herschrijft Atheense wet"
+    },
+    "509bc": {
+      "title": "Romeinse Republiek Gesticht",
+      "description": "Rome werpt de monarchie omver en sticht de Republiek met gekozen consuls.",
+      "analysis": "Gevolgen: Rome creëerde instituties die de macht verdeelden over consuls, Senaat en volksvergaderingen. Burgersoldaten met een belang in hun samenleving bouwden een rijk dat 500 jaar zou bestaan. Romeins recht, techniek en bestuur beïnvloedden de hele westerse beschaving. Philosify's visie: De Republiek toonde aan dat gespreide macht en rechtsstaat menselijke bloei mogelijk maken. Wanneer individuen rechten hebben die beschermd worden door instituties in plaats van afhankelijk te zijn van de grillen van een heerser, volgt welvaart. De latere val van Rome in een keizerrijk toont het gevaar van machtsconcentratie.",
+      "headline": "Rome werpt monarchie omver, roept republiek uit"
+    },
+    "490bc": {
+      "title": "Slag bij Marathon",
+      "description": "Grieken verslaan de Perzische invasie en behouden de Griekse onafhankelijkheid en cultuur.",
+      "analysis": "Gevolgen: De Griekse onafhankelijkheid werd behouden, waardoor filosofie, democratie, wetenschap en kunst zich konden blijven ontwikkelen. Het bewees dat burgerlegers die voor hun eigen vrijheid vochten grotere legers konden verslaan. Philosify's visie: Marathon toont dat vrije mannen die vechten voor hun waarden effectiever zijn dan slaven die vechten voor meesters. De Griekse overwinning maakte de filosofische traditie mogelijk die de rede ontdekte als instrument voor menselijk overleven. De westerse beschaving dankt haar bestaan aan deze slag.",
+      "headline": "Grieken verpletteren Perzische invasie bij Marathon"
+    },
+    "480bc": {
+      "title": "Slagen bij Thermopylae en Salamis",
+      "description": "Grieken verzetten zich tegen de Perzische invasie; 300 Spartanen leveren een legendarische strijd.",
+      "analysis": "Gevolgen: Het offer van de Spartanen kocht tijd voor Griekse eenheid; de zeeslag bij Salamis was beslissend. De Perzische expansie werd permanent gestopt. De Griekse beschaving overleefde om Socrates, Plato, Aristoteles en de fundamenten van het westerse denken voort te brengen. Philosify's visie: Thermopylae vertegenwoordigt heldendom—geen martelaarschap. De Spartanen vochten voor hun hoogste waarde: vrijheid. Ze offerden zichzelf niet voor niets; ze kochten de overwinning voor Griekenland. Een held riskeert zijn leven voor zijn waarden; een martelaar sterft om het sterven zelf.",
+      "headline": "300 Spartanen houden stand bij Thermopylae"
+    },
+    "399bc": {
+      "title": "Proces en Dood van Socrates",
+      "description": "Socrates wordt door de Atheense democratie ter dood veroordeeld wegens \"het bederven van de jeugd.\"",
+      "analysis": "Gevolgen: Socrates' weigering te vluchten maakte hem een martelaar voor intellectuele integriteit. Plato bewaarde zijn leringen en stichtte de Academie. Het proces wierp fundamentele vragen op over individueel geweten versus staatsautoriteit die tot op heden relevant blijven. Philosify's visie: De democratie executeerde haar grootste filosoof—bewijs dat meerderheidsregel zonder constitutionele beperkingen op overheidsmacht tirannie is. Individuele rechten moeten beschermd worden TEGEN meerderheden. Socrates toonde aan dat een denkend mens de rede moet volgen, niet de populaire opinie, zelfs tot de dood.",
+      "headline": "Athene veroordeelt Socrates ter dood"
+    },
+    "336bc": {
+      "title": "Alexander de Grote Begint Veroveringen",
+      "description": "Alexander wordt koning en begint een veldtocht die de Griekse cultuur zal verspreiden.",
+      "analysis": "Gevolgen: De Griekse taal, filosofie, wetenschap en handel verspreidden zich over uitgestrekte gebieden van Egypte tot India. Alexander stichtte steden die eeuwenlang centra van geleerdheid werden. De hellenistische wereld maakte uitwisseling van ideeën tussen Oost en West mogelijk. Philosify's visie: Alexanders veroveringen hadden gemengde resultaten—de verspreiding van Grieks rationalisme was waardevol, maar imperiumvorming door verovering schendt individuele rechten. De blijvende erfenis is cultureel, niet politiek: ideeën verspreid door handel en leren overleven die welke door het zwaard verspreid worden.",
+      "headline": "Alexander start veldtocht om de bekende wereld te veroveren"
+    },
+    "323bc": {
+      "title": "Dood van Alexander de Grote",
+      "description": "Alexander sterft op 32-jarige leeftijd; zijn rijk valt uiteen in opvolgerkoninkrijken.",
+      "analysis": "Gevolgen: Het rijk splitste in rivaliserende opvolgerstaten. Toch bleven Griekse cultuur en handel bestaan in deze koninkrijken. Bibliotheken, scholen en handelsnetwerken gingen door. Competitie tussen staten bevorderde soms innovatie. Philosify's visie: Rijken gebouwd op het charisma van één persoon overleven zelden hun stichters. Blijvende instituties vereisen principes, geen persoonlijkheden. Het overleven van de hellenistische wereld ondanks politieke fragmentatie toont dat cultuur en handel—vrijwillige uitwisseling—belangrijker zijn dan politieke eenheid.",
+      "headline": "Alexander de Grote dood op 32-jarige leeftijd, rijk valt uiteen"
+    },
+    "264bc": {
+      "title": "Eerste Punische Oorlog Begint",
+      "description": "Rome en Carthago beginnen een eeuw van oorlogen om de hegemonie over de Middellandse Zee.",
+      "analysis": "Gevolgen: Rome ontwikkelde maritieme capaciteiten en breidde uit buiten Italië. Sicilië werd verwoest door langdurige oorlogvoering. Het zette Rome op het pad naar Middellandse Zee-dominantie die ongekende vrede en handel zou brengen. Philosify's visie: Veroveringsoorlogen brengen massale vernietiging van leven en eigendom met zich mee. Toch bracht Rome's uiteindelijke overwinning de Pax Romana—bewijs dat uniforme rechtsstaat, zelfs onvolmaakt toegepast, meer welvaart mogelijk maakt dan constante oorlogvoering tussen rivaliserende machten.",
+      "headline": "Rome en Carthago strijden om heerschappij over de Middellandse Zee"
+    },
+    "146bc": {
+      "title": "Verwoesting van Carthago",
+      "description": "Rome vernietigt Carthago volledig en wordt de opperste Middellandse Zeemacht.",
+      "analysis": "Gevolgen: Volledige vernietiging van de Carthaagse beschaving; 50.000 overlevenden tot slaaf gemaakt. Rome's Middellandse Zee-monopolie maakte ongekende handel, culturele uitwisseling en de eeuwenlange Pax Romana mogelijk. Philosify's visie: Totale oorlog tegen een verslagen vijand is excessief—Carthago vormde geen verdere bedreiging. Toch maakte de resulterende Romeinse vrede welvaart mogelijk over drie continenten. De les: stabiele orde onder rechtsstaat, zelfs bruut gevestigd, is beter dan eeuwigdurend conflict.",
+      "headline": "Rome brandt Carthago tot de grond toe af"
+    },
+    "49bc": {
+      "title": "Caesar Steekt de Rubicon Over",
+      "description": "Julius Caesar begint een burgeroorlog die de Romeinse Republiek zal beëindigen.",
+      "analysis": "Gevolgen: 460 jaar republikeins bestuur vernietigd. Caesars hervormingen pakten echte problemen aan—schulden, landverdeling, burgerschap—maar vestigden een precedent voor militaire machtsgreep. Leidde tot het Keizerrijk, dat stabiliteit bracht maar de Romeinse politieke vrijheid beëindigde. Philosify's visie: Hoe gerechtvaardigd Caesars grieven ook waren, machtsgreep door geweld vernietigde de constitutionele orde. De checks and balances van de Republiek, hoewel onvolmaakt, beschermden de vrijheid beter dan heerschappij door 'welwillende' dictators. Goede bedoelingen rechtvaardigen geen vernietiging van instituties.",
+      "headline": "Caesar steekt de Rubicon over, marcheert op Rome"
+    },
+    "44bc": {
+      "title": "Moord op Julius Caesar",
+      "description": "Romeinse senatoren vermoorden Caesar op de Iden van maart.",
+      "analysis": "Gevolgen: Ontketende een nieuwe burgeroorlog, destructiever dan de eerste. De Republiek kon niet hersteld worden; Octavianus kwam naar voren als Augustus, de eerste Keizer. De zaak van de moordenaars was verloren; hun methoden diskrediteerden het republicanisme. Philosify's visie: Politieke problemen kunnen niet worden opgelost door individuen te elimineren wanneer onderliggende omstandigheden blijven bestaan. De moordenaars identificeerden tirannie correct maar boden geen levensvatbaar alternatief. Principes en instituties zijn belangrijker dan persoonlijkheden—het verwijderen van Caesar herstelde de Republiek niet.",
+      "headline": "Senatoren vermoorden Julius Caesar op de Iden van maart"
+    },
+    "31bc": {
+      "title": "Slag bij Actium",
+      "description": "Octavianus verslaat Antonius en Cleopatra en wordt alleenheerser van Rome.",
+      "analysis": "Gevolgen: Decennia van burgeroorlog beëindigd. Augustus bracht vrede, welvaart en de Pax Romana die twee eeuwen zou duren. Handel bloeide, steden groeiden, kunst en literatuur floreerden. Maar de Republiek was dood; de macht geconcentreerd in één persoon. Philosify's visie: De Augustijnse vrede toont dat orde welvaart mogelijk maakt—maar ten koste van politieke vrijheid. De afweging tussen veiligheid en vrijheid is reëel. Rome koos voor veiligheid; uiteindelijk corrumpeerde geconcentreerde macht en viel het Rijk. Constitutionele beperkingen op macht blijven essentieel.",
+      "headline": "Octavianus verslaat Antonius en Cleopatra bij Actium"
+    },
+    "30ad": {
+      "title": "Kruisiging van Jezus",
+      "description": "Jezus van Nazareth wordt gekruisigd in Jeruzalem, de stichtingsgebeurtenis van het christendom.",
+      "analysis": "Gevolgen: Het christendom ontstond uit deze gebeurtenis en transformeerde uiteindelijk de waarden, kunst, filosofie, recht en instituties van de westerse beschaving. Concepten van universele morele gelijkheid, individueel geweten en zorg voor gemarginaliseerden werden deel van de westerse cultuur. Philosify's visie: Het christendom introduceerde waardevolle concepten—individuele morele waarde, geweten, naastenliefde—maar ook een op geloof gebaseerde epistemologie die in conflict komt met de rede. De gemengde erfenis omvat zowel humanitaire vooruitgang als religieuze vervolging. Ideeën moeten beoordeeld worden op hun inhoud en gevolgen, niet op hun bron.",
+      "headline": "Jezus van Nazareth gekruisigd in Jeruzalem"
+    },
+    "79ad": {
+      "title": "Uitbarsting van de Vesuvius",
+      "description": "Vulkaanuitbarsting vernietigt Pompeji en Herculaneum.",
+      "analysis": "Gevolgen: Duizenden doden; bloeiende steden in uren verwoest. Echter, de bewaring onder vulkanische as gaf ons ongeëvenaarde kennis van het Romeinse dagelijks leven, kunst, architectuur en cultuur die anders verloren zou zijn gegaan. Philosify's visie: Natuurrampen herinneren ons aan de onverschilligheid van de werkelijkheid voor menselijke wensen. De natuur werkt door causaliteit, niet door intentie. De juiste respons is het begrijpen van natuurkrachten door wetenschap en het bouwen van beschermende maatregelen—geen gebed of fatalisme. Pompeii's bewaring dient menselijke kennis.",
+      "headline": "Vesuvius barst uit, begraaft Pompeji onder as"
+    },
+    "180ad": {
+      "title": "Dood van Marcus Aurelius",
+      "description": "De laatste der \"Vijf Goede Keizers\" sterft; Rome begint een lang verval.",
+      "analysis": "Gevolgen: Marcus Aurelius koos zijn ongeschikte zoon Commodus als opvolger, waarmee de praktijk van het adopteren van capabele erfgenamen eindigde. Rome betrad een periode van instabiliteit, burgeroorlogen en verval die het rijk eeuwenlang zou verzwakken. Philosify's visie: Zelfs filosoof-koningen nemen slechte beslissingen. Het bewind van Marcus Aurelius bewees dat filosofie bestuur kan leiden—maar zijn opvolgingskeuze bewees dat geconcentreerde macht afhankelijk is van toevalligheden van geboorte en karakter. Institutionele checks zijn belangrijker dan wijze heersers.",
+      "headline": "Marcus Aurelius dood, gouden tijdperk van Rome eindigt"
+    },
+    "313ad": {
+      "title": "Edict van Milaan",
+      "description": "Constantijn legaliseert het christendom in het gehele Romeinse Rijk.",
+      "analysis": "Gevolgen: Beëindigde de vervolging van christenen; vestigde het principe van religieuze tolerantie. Het christendom groeide snel met staatssteun, bouwde ziekenhuizen, scholen en liefdadigheidsinstellingen. Echter, het begon een proces van kerk-staat-verstrengeling. Philosify's visie: Religieuze tolerantie is essentieel voor vrijheid—de staat mag religie niet vervolgen noch promoten. Het Edict beëindigde terecht de vervolging, maar Constantijns latere voorkeur voor het christendom schiep precedenten voor toekomstige religieuze dwang.",
+      "headline": "Constantijn legaliseert christendom in gehele Romeinse Rijk"
+    },
+    "380ad": {
+      "title": "Christendom Wordt Staatsgodsdienst",
+      "description": "Keizer Theodosius maakt het christendom de officiële godsdienst van Rome.",
+      "analysis": "Gevolgen: Het christendom kreeg middelen om ziekenhuizen, scholen en sociale voorzieningen te bouwen in het hele rijk. Echter, heidenen en christelijke 'ketters' werden nu vervolgd. Religieuze dwang verving religieuze tolerantie. Philosify's visie: Staatsgodsdienst schendt gewetensvrijheid. Geloof afdwingen is zowel immoreel als ineffectief—je kunt geen oprechte overtuiging forceren. Het middeleeuwse model van kerk-staat-eenheid produceerde eeuwen van religieuze oorlogvoering en vervolging. Scheiding van kerk en staat beschermt beide.",
+      "headline": "Keizer verklaart christendom tot enige godsdienst van Rome"
+    },
+    "410ad": {
+      "title": "Visigoten Plunderen Rome",
+      "description": "Alariks Visigoten plunderen Rome; de \"Eeuwige Stad\" valt voor het eerst in 800 jaar.",
+      "analysis": "Gevolgen: Psychologische schok door het hele rijk; onthulde Rome's militaire zwakte. Echter, de Visigoten zochten integratie, niet vernietiging—Rome bleef functioneren. Inspireerde Augustinus' 'De Stad Gods', dat het christelijke politieke denken eeuwenlang vormgaf. Philosify's visie: Beschavingen vallen wanneer ze de principes verlaten die hen bouwden. Rome's verval resulteerde meer uit intern verval—belastingen, regulering, muntontwaarding—dan uit externe druk. De Visigoten exploiteerden zwakte; ze creëerden die niet.",
+      "headline": "Barbaren plunderen Rome voor het eerst in 800 jaar"
+    },
+    "476ad": {
+      "title": "Val van het West-Romeinse Rijk",
+      "description": "De laatste West-Romeinse Keizer wordt afgezet; traditionele datum voor het einde van de oudheid.",
+      "analysis": "Gevolgen: Handel stortte in, steden krompen, geletterdheid daalde, technische kennis ging verloren. Germaanse koninkrijken bewaarden sommige Romeinse instituties maar konden de complexe beschaving niet handhaven. Begin van de middeleeuwse periode van fragmentatie en gelokaliseerde macht. Philosify's visie: Beschaving is niet automatisch—het vereist voortdurende inspanning om te handhaven. Rome viel omdat Romeinen stopten met doen wat Rome groot maakte: productie, handel, rechtsstaat, militaire discipline. De Donkere Eeuwen tonen wat gebeurt wanneer de fundamenten van de beschaving eroderen.",
+      "headline": "Laatste Romeinse Keizer afgezet, West-Romeinse Rijk valt"
+    },
+    "529ad": {
+      "title": "Sluiting van de Platonische Academie",
+      "description": "Keizer Justinianus sluit de Academie in Athene en beëindigt de antieke filosofiescholen.",
+      "analysis": "Gevolgen: Beëindigde 900 jaar filosofisch onderwijs in Athene. Filosofen vluchtten naar Perzië en bewaarden Griekse teksten die later via islamitische geleerden naar Europa terugkeerden. Christelijke orthodoxie onderdrukte heidense geleerdheid in het rijk. Philosify's visie: Het onderdrukken van ideeën met geweld is zowel immoreel als nutteloos. Waarheid kan niet vernietigd worden door scholen te sluiten—de ideeën overleefden en ontketenden uiteindelijk de Renaissance. Intellectuele vrijheid is essentieel; censuur vertraagt maar kan de verspreiding van kennis niet voorkomen.",
+      "headline": "Justinianus sluit Plato's Academie na 900 jaar"
+    },
+    "622ad": {
+      "title": "Hidzjra - Geboorte van de Islam",
+      "description": "De migratie van Mohammed naar Medina markeert het begin van de islamitische kalender.",
+      "analysis": "Gevolgen: De islam verenigde Arabische stammen, creëerde een verfijnde beschaving over drie continenten, bewaarde en droeg Griekse geleerdheid over, en bevorderde wiskunde, astronomie en geneeskunde. Verspreidde zich ook door militaire verovering en legde religieuze wet op aan veroverde volkeren. Philosify's visie: De prestaties van de islamitische beschaving in wetenschap en filosofie kwamen ondanks, niet dankzij, religieuze doctrine—door individuele denkers die de rede waardeerden. De religie zelf, zoals alle op geloof gebaseerde systemen, conflicteert uiteindelijk met het rationele onderzoek dat die prestaties produceerde.",
+      "headline": "Mohammed vlucht naar Medina, de islam wordt geboren"
+    },
+    "732ad": {
+      "title": "Slag bij Tours",
+      "description": "Karel Martel stopt de islamitische opmars in West-Europa.",
+      "analysis": "Gevolgen: Bewaarde Frankische onafhankelijkheid en christelijk West-Europa. West-Europa ontwikkelde zich apart van de islamitische wereld, met verschillende politieke, religieuze en intellectuele trajecten. Vestigde de militaire reputatie van de Karolingische dynastie. Philosify's visie: Het belang van de slag ligt in het bewaren van Europese onafhankelijkheid—wat de uiteindelijke Renaissance, Reformatie, Verlichting en ontwikkeling van individuele rechten mogelijk maakte. Wat men ook vindt van de betrokken religies, Europa's aparte ontwikkeling produceerde de ideeën van vrijheid die de hele mensheid ten goede komen.",
+      "headline": "Karel Martel stopt islamitische opmars naar Europa"
+    },
+    "800ad": {
+      "title": "Karel de Grote Gekroond tot Keizer",
+      "description": "Paus Leo III kroont Karel de Grote en doet het concept van het West-Romeinse Rijk herleven.",
+      "analysis": "Gevolgen: De Karolingische Renaissance bewaarde klassieke geleerdheid; scholen werden in het hele rijk gesticht. Creëerde een patroon van paus-keizer-conflict dat eeuwen zou duren. Het rijk fragmenteerde na Karel de Grotes dood, maar het idee van Europese eenheid bleef bestaan. Philosify's visie: Karel de Grotes prestaties tonen dat individueel leiderschap ertoe doet—maar de ineenstorting van zijn rijk toont dat blijvende instituties meer vereisen dan de wil van één leider. De meest duurzame erfenis was cultureel: het bewaren van geleerdheid die toekomstige vooruitgang mogelijk maakte.",
+      "headline": "Paus kroont Karel de Grote tot Keizer van het Westen"
+    },
+    "1054ad": {
+      "title": "Grote Schisma",
+      "description": "Het christendom splitst zich in de Rooms-Katholieke en de Oosters-Orthodoxe Kerk.",
+      "analysis": "Gevolgen: Verdeelde de christenheid in concurrerende sferen met onderscheiden theologische en culturele ontwikkelingen. Wederzijdse excommunicaties kweekten blijvende vijandigheid. Echter, competitie tussen kerken creëerde ruimte voor dissidentie en droeg uiteindelijk bij aan religieus pluralisme. Philosify's visie: Religieuze monopolies onderdrukken onderzoek en vrijheid. Het Schisma, hoewel geboren uit conflict, creëerde onbedoeld competitie die uiteindelijk de wurggreep van religieuze autoriteit op het denken verzwakte. Pluralisme—zelfs toevallig—dient vrijheid.",
+      "headline": "Christendom splitst in tweeën: Rome tegen Constantinopel"
+    },
+    "1066ad": {
+      "title": "Normandische Verovering van Engeland",
+      "description": "Willem de Veroveraar verslaat Harold bij Hastings en verandert de Engelse geschiedenis.",
+      "analysis": "Gevolgen: De Angelsaksische elite werd onteigend; Normandisch-Franse invloed op Engelse taal en cultuur. Introduceerde continentale administratieve praktijken die uiteindelijk bijdroegen aan de ontwikkeling van common law en Parlement. Creëerde de Engelse natie die haar taal en instituties wereldwijd zou verspreiden. Philosify's visie: Verovering schendt de rechten van de veroverde—maar de geschiedenis oordeelt op lange termijn. Engels common law, gedeeltelijk voortkomend uit Normandisch bestuur, werd een fundament voor individuele rechten wereldwijd. Onbedoelde gevolgen overtreffen soms intenties.",
+      "headline": "Willem verovert Engeland in de Slag bij Hastings"
+    },
+    "1095ad": {
+      "title": "Eerste Kruistocht Uitgeroepen",
+      "description": "Paus Urbanus II roept op tot een kruistocht om het Heilige Land te heroveren op de moslims.",
+      "analysis": "Gevolgen: Opende handelsroutes en bracht kennis uit de islamitische wereld. Enorme slachtoffers aan alle kanten; massamoorden op Joden en moslims. Blijvende religieuze haat tussen beschavingen. Echter, Europees contact met de meer geavanceerde islamitische beschaving versnelde culturele en technologische ontwikkeling. Philosify's visie: Religieuze oorlogen zijn de ergste—gevoerd over geloof in plaats van rationele belangen, laten ze geen compromis toe. Toch hielp het onbedoelde gevolg—blootstelling aan bewaarde Griekse geleerdheid—Europa's intellectuele ontwaking aan te wakkeren. Ideeën verspreiden zich ondanks intenties.",
+      "headline": "Paus roept Eerste Kruistocht uit om Heilig Land te heroveren"
+    },
+    "1215ad": {
+      "title": "Magna Carta Ondertekend",
+      "description": "Engelse baronnen dwingen koning Jan de Magna Carta te ondertekenen die de koninklijke macht beperkt.",
+      "analysis": "Gevolgen: Vestigde het principe dat heersers onderworpen zijn aan de wet; garandeerde bescherming van eerlijk proces; fundament voor constitutioneel bestuur. Hoewel het aanvankelijk alleen baronale privileges beschermde en vaak geschonden werd, breidden de principes zich geleidelijk uit om alle burgers te beschermen en beïnvloedden grondwetten wereldwijd. Philosify's visie: De Magna Carta is een mijlpaal in menselijke vrijheid—het principe dat zelfs koningen gebonden zijn door de wet. Uit dit zaad groeiden constitutioneel bestuur, individuele rechten en beperkte overheid. Ideeën, eenmaal gevestigd, neigen ertoe logisch uit te breiden naar hun volle implicaties.",
+      "headline": "Engelse baronnen dwingen Koning de Magna Carta te tekenen"
+    },
+    "1265ad": {
+      "title": "Eerste Engelse Parlement",
+      "description": "Simon de Montfort roept het eerste gekozen Parlement in Engeland bijeen.",
+      "analysis": "Gevolgen: Creëerde een precedent voor representatief bestuur; gaf gewone burgers naast edelen een stem in het bestuur. Hoewel aanvankelijk beperkt in macht en alleen de bezittende klassen vertegenwoordigend, evolueerde het naar een model van parlementaire democratie dat door vele naties werd overgenomen. Philosify's visie: Representatief bestuur is een cruciale controle op macht. Wanneer degenen die belastingen betalen een stem hebben in hoe ze besteed worden, wordt de overheid ingeperkt. Het Parlement evolueerde tot een verdediger van vrijheid—onvolmaakt, maar ver superieur aan absolute monarchie.",
+      "headline": "Eerste gekozen Parlement komt bijeen in Engeland"
+    },
+    "1347ad": {
+      "title": "Zwarte Dood Bereikt Europa",
+      "description": "De builenpest doodt 30-60% van de Europese bevolking in enkele jaren.",
+      "analysis": "Gevolgen: Onvoorstelbaar lijden; sociale instorting; vervolging van minderheden die voor de pest verantwoordelijk werden gehouden. Echter, overlevenden zagen hogere lonen door arbeidstekort; feodalisme verzwakte doordat boeren onderhandelingsmacht kregen; technologische innovatie versnelde om verloren arbeid te vervangen. Philosify's visie: Catastrofes onthullen wat ertoe doet: wanneer arbeid schaars wordt, stijgt de waarde van arbeiders. De pest bevorderde per ongeluk individuele vrijheid door arbeiders macht te geven tegenover heren. De natuur is onverschillig voor menselijke wensen—maar mensen kunnen zich aanpassen en zelfs profiteren van rampen door rationele respons.",
+      "headline": "Zwarte Dood raast door Europa, miljoenen sterven"
+    },
+    "1439ad": {
+      "title": "Gutenbergs Drukpers",
+      "description": "Johannes Gutenberg ontwikkelt de boekdrukkunst met losse letters in Europa.",
+      "analysis": "Gevolgen: Democratiseerde kennis; maakte snelle verspreiding van ideeën mogelijk; verlaagde de kosten van boeken dramatisch; verhoogde geletterdheid. Maakte Reformatie, Wetenschappelijke Revolutie en Verlichting mogelijk door ideeën te verspreiden buiten institutionele controle. Verspreidde ook propaganda efficiënter. Philosify's visie: De drukpers is een van de grootste uitvindingen uit de geschiedenis—het doorbrak het kennismonopolie van elites. Wanneer ideeën vrij kunnen verspreiden, heeft waarheid een kans tegen gevestigde dwaling. Technologie die individuen machtiger maakt tegenover instituties dient vrijheid.",
+      "headline": "Gutenberg vindt drukpers uit, revolutioneert de kennis"
+    },
+    "1453ad": {
+      "title": "Val van Constantinopel",
+      "description": "De Ottomaanse Turken veroveren Constantinopel en beëindigen het Byzantijnse Rijk.",
+      "analysis": "Gevolgen: Griekse geleerden die naar Italië vluchtten brachten manuscripten die de Renaissance voedden. Het Ottomaanse Rijk handhaafde Constantinopel als belangrijk cultureel en commercieel centrum. Handelsroutes verschoven westwaarts, wat Atlantische exploratie stimuleerde. Einde van het Oost-Romeinse Rijk na 1.000 jaar. Philosify's visie: De val verspreidde Griekse geleerdheid door heel Europa en versnelde de Renaissance. Ideeën kunnen niet worden ingedamd door verovering—ze migreren met mensen en boeken. De Ottomanen veroverden een stad; de Grieken bewaarden een beschaving door kennis.",
+      "headline": "Constantinopel valt in handen van de Ottomaanse Turken"
+    },
+    "1492ad": {
+      "title": "Columbus Bereikt Amerika",
+      "description": "De reis van Christoffel Columbus opent de Nieuwe Wereld voor Europese verkenning.",
+      "analysis": "Gevolgen: Begon uitwisseling van gewassen, dieren, ideeën tussen halfronden—landbouw, voeding en economieën wereldwijd transformerend. Inheemse bevolkingen verwoest door ziekte en verovering; slavernij geïntroduceerd in Amerika. Leidde uiteindelijk tot naties gesticht op Verlichtingsprincipes. Philosify's visie: Columbus' reis had catastrofale gevolgen voor inheemse volkeren—verovering en ziekte schonden hun rechten op leven en eigendom. Echter, het lange-termijn resultaat omvatte de Amerikaanse stichting, die individuele rechten vestigde als basis voor bestuur. De morele complexiteit van de geschiedenis laat geen simpele oordelen toe.",
+      "headline": "Columbus bereikt de Nieuwe Wereld"
+    },
+    "1517ad": {
+      "title": "Protestantse Reformatie Begint",
+      "description": "Maarten Luther slaat zijn 95 stellingen aan en daagt het gezag van de Katholieke Kerk uit.",
+      "analysis": "Gevolgen: Daagde religieus monopolie uit; benadrukte individueel geloof en Bijbellezen; leidde tot religieus pluralisme. Ontketende een eeuw van religieuze oorlogen en vervolging aan alle kanten. Vestigde uiteindelijk dat individuen geloof voor zichzelf konden interpreteren, bijdragend aan de opkomst van individualisme. Philosify's visie: De blijvende bijdrage van de Reformatie was het doorbreken van religieus monopolie. Wat Luthers intenties ook waren, het principe dat individuen voor zichzelf kunnen lezen en interpreteren breidt logisch uit naar alle domeinen. Religieus pluralisme was een stap naar intellectuele vrijheid.",
+      "headline": "Luther slaat 95 stellingen aan, daagt gezag van de Kerk uit"
+    },
+    "1543ad": {
+      "title": "Copernicaanse Revolutie",
+      "description": "Copernicus publiceert de heliocentrische theorie en verdringt de Aarde uit het centrum van het universum.",
+      "analysis": "Gevolgen: Demonstreerde de kracht van observatie en wiskunde om geaccepteerde overtuigingen omver te werpen. Aanvankelijk weerstaan door zowel katholieke als protestantse autoriteiten. Opende het pad naar moderne astronomie en wetenschappelijke methode. Veranderde het begrip van de mensheid over haar plaats in het universum. Philosify's visie: Copernicus toonde dat de werkelijkheid is wat zij is, ongeacht traditie, autoriteit of wensen. Het heliocentrische model was waar of de Kerk het accepteerde of niet. Wetenschap gaat vooruit door bewijs te volgen waarheen het ook leidt—de essentie van rede toegepast op de natuur.",
+      "headline": "Copernicus bewijst dat de Aarde rond de Zon draait"
+    },
+    "1588ad": {
+      "title": "Nederlaag van de Spaanse Armada",
+      "description": "Engeland verslaat de Spaanse invasievloot en bewaart de protestantse onafhankelijkheid.",
+      "analysis": "Gevolgen: Bewaarde Engelse onafhankelijkheid van katholiek Spanje; verschoof zeemacht naar het noorden; maakte Engelse kolonisatie van Amerika mogelijk. Engeland kwam op als grote zeemacht, waarmee de basis werd gelegd voor wereldwijde invloed en verspreiding van Engelse taal en recht. Philosify's visie: Engelse onafhankelijkheid bewaarde een natie die common law, parlementair bestuur zou ontwikkelen en uiteindelijk de Amerikaanse stichting zou inspireren. De nederlaag van de Armada maakte de traditie van vrijheid mogelijk die de Onafhankelijkheidsverklaring produceerde.",
+      "headline": "Engeland vernietigt de Spaanse Armada"
+    },
+    "1607ad": {
+      "title": "Jamestown Gesticht",
+      "description": "De eerste permanente Engelse nederzetting in Amerika wordt gesticht.",
+      "analysis": "Gevolgen: Begon Engelse kolonisatie die zelfbestuurlijke tradities, common law en uiteindelijk revolutionaire ideeën bracht. Relaties met inheemse Amerikanen verslechterden; slavernij werd binnen decennia geïntroduceerd. Zaden van de Amerikaanse republiek werden geplant door kolonisten die Engelse juridische en politieke tradities brachten. Philosify's visie: Jamestown bracht zowel goed als kwaad—zelfbestuur en slavernij. De kolonisten die geloofden in hun rechten als Engelsen zouden uiteindelijk die principes uitbreiden naar hun logische conclusie: rechten behoren toe aan alle individuen, niet alleen Engelsen.",
+      "headline": "Eerste Engelse kolonie in Amerika gesticht"
+    },
+    "1620ad": {
+      "title": "Mayflower Compact",
+      "description": "Pelgrims stichten een zelfbesturende kolonie in Plymouth.",
+      "analysis": "Gevolgen: Eerste geschreven raamwerk van zelfbestuur in Amerika; demonstreerde sociaal contract-theorie in de praktijk. Model van geschreven grondwet en bestuur bij instemming beïnvloedde de Amerikaanse stichting. Beperkte deelname aanvankelijk tot kerkleden. Philosify's visie: Het Compact vestigde bestuur bij instemming—het radicale idee dat legitiem bestuur voortkomt uit overeenkomst van de geregeerden, niet uit goddelijk recht of verovering. Dit principe, eenmaal gevestigd, breidt logisch uit naar alle mensen, niet alleen de oorspronkelijke ondertekenaars.",
+      "headline": "Pelgrims tekenen Mayflower Compact, stichten zelfbesturende kolonie"
+    },
+    "1642ad": {
+      "title": "Engelse Burgeroorlog Begint",
+      "description": "Parlement en koning Karel I gaan in oorlog over constitutionele principes.",
+      "analysis": "Gevolgen: Vestigde parlementaire suprematie; bevorderde constitutioneel bestuur; maakte religieuze tolerantie mogelijk. Tienduizenden gedood; tijdelijke militaire dictatuur onder Cromwell. Besliste dat Engelse monarchen moeten regeren met het Parlement, niet ertegen. Philosify's visie: De Burgeroorlog vestigde dat geen heerser boven de wet of de volksvertegenwoordigers staat. Zelfs tijdelijke dictatuur kon dit principe niet ongedaan maken. De oorlog was kostbaar, maar het alternatief—absolute monarchie—zou slechter zijn geweest voor vrijheid.",
+      "headline": "Engelse Burgeroorlog breekt uit: Parlement tegen Koning"
+    },
+    "1648ad": {
+      "title": "Vrede van Westfalen",
+      "description": "Verdragen beëindigen de Dertigjarige Oorlog en vestigen het moderne statensysteem.",
+      "analysis": "Gevolgen: Beëindigde verwoestende religieuze oorlogen die miljoenen doodden. Vestigde staatssoevereiniteit en niet-inmenging principes die het moderne internationale systeem creëerden. Religieuze verdeling van Europa werd bevroren, maar religieuze oorlogen eindigden. Philosify's visie: Westfalen beëindigde religieuze oorlogen door te vestigen dat staten niet zouden ingrijpen in elkaars religieuze zaken. Het principe van soevereiniteit heeft grenzen—het mag tirannie niet beschermen—maar het beëindigen van religieuze oorlogen was een prestatie. Pragmatische vrede wint van eeuwigdurende heilige oorlog.",
+      "headline": "Vrede van Westfalen beëindigt Dertigjarige Oorlog"
+    },
+    "1687ad": {
+      "title": "Newtons Principia Gepubliceerd",
+      "description": "Isaac Newton publiceert de wetten van beweging en universele zwaartekracht.",
+      "analysis": "Gevolgen: Demonstreerde dat het universum werkt volgens ontdekbare wetten; maakte moderne natuurkunde en techniek mogelijk. Inspireerde Verlichtingsvertrouwen dat de rede de natuur kon begrijpen en de samenleving kon verbeteren. Riep filosofische vragen op over determinisme en doel. Philosify's visie: Newton toonde dat het universum ordelijk, wetmatig en begrijpelijk is voor de menselijke rede. Dit is de basis van wetenschap en technologie—en van vertrouwen dat de werkelijkheid begrepen en verbeterd kan worden. De rede werkt; het is ons instrument voor leven.",
+      "headline": "Newton onthult de wetten die het universum beheersen"
+    },
+    "1688ad": {
+      "title": "Glorieuze Revolutie",
+      "description": "Willem van Oranje vervangt Jacobus II; het Parlement bevestigt zijn suprematie.",
+      "analysis": "Gevolgen: Vestigde constitutionele monarchie, parlementaire suprematie en religieuze tolerantie zonder groot bloedvergieten. Bill of Rights beschermde individuele vrijheden. Model van vreedzame constitutionele hervorming. Katholieken uitgesloten van opvolging. Philosify's visie: De Glorieuze Revolutie bewerkstelligde regimeverandering met minimaal geweld—bewijs dat fundamentele verandering geen terreur vereist. Constitutionele beperkingen op macht, hier gevestigd, werden de Engelse traditie die Amerika erfde en verbeterde.",
+      "headline": "Willem van Oranje grijpt Engelse troon in onbloedige coup"
+    },
+    "1689ad": {
+      "title": "Lockes Twee Verhandelingen Gepubliceerd",
+      "description": "John Locke publiceert zijn theorie over natuurlijke rechten en beperkte overheid.",
+      "analysis": "Gevolgen: Formuleerde de filosofische basis voor individuele rechten, op instemming gebaseerd bestuur en het recht op revolutie. Beïnvloedde de Amerikaanse stichters direct. Meest invloedrijke politieke filosofie in de Engelstalige wereld; basis voor klassiek liberalisme. Philosify's visie: Locke vestigde dat individuen natuurlijke rechten hebben die voorafgaan aan de overheid—de overheid bestaat om deze rechten te beschermen, niet om ze te verlenen. Dit is de filosofische basis van Amerika en van vrijheid wereldwijd. Locke was onvolmaakt maar qua richting correct.",
+      "headline": "Locke publiceert theorie van natuurlijke rechten en beperkte overheid"
+    },
+    "1776ad": {
+      "title": "Amerikaanse Onafhankelijkheidsverklaring",
+      "description": "De Amerikaanse koloniën verklaren hun onafhankelijkheid en bevestigen hun natuurlijke rechten.",
+      "analysis": "Gevolgen: Eerste natie expliciet gesticht op principes van natuurlijke rechten, instemming van de geregeerden en beperkte overheid. Inspireerde bewegingen voor vrijheid wereldwijd. Rechten aanvankelijk niet uitgebreid naar tot slaaf gemaakte mensen of vrouwen—maar principes breidden uiteindelijk uit om allen te omvatten. Philosify's visie: De Verklaring is het grootste politieke document van de mensheid. 'Alle mensen zijn gelijk geschapen' met 'onvervreemdbare rechten' is de basis van goed bestuur. De Stichters wisten dat hun praktijk tekortschoot ten opzichte van hun principes—maar ze vestigden principes die hun eigen vervulling eisten.",
+      "headline": "Amerikaanse koloniën verklaren onafhankelijkheid van Groot-Brittannië"
+    },
+    "1787ad": {
+      "title": "Amerikaanse Grondwet Geschreven",
+      "description": "De Grondwetgevende Vergadering schept een kader voor een beperkte federale overheid.",
+      "analysis": "Gevolgen: Creëerde duurzaam systeem van checks and balances; federale structuur balanceerde nationale en lokale belangen. Compromissen over slavernij; aanvankelijk geen Bill of Rights. Oudste geschreven grondwet nog steeds in gebruik; beïnvloedde grondwetten wereldwijd. Philosify's visie: De Grondwet is een praktische toepassing van Verlichtingsprincipes—beperkte overheid, gescheiden machten, federalisme. Het is onvolmaakt maar ontworpen om verbeterd te worden via amendementen. Het raamwerk heeft Amerikaanse welvaart mogelijk gemaakt en vrijheid beschermd gedurende meer dan twee eeuwen.",
+      "headline": "Grondleggers stellen Amerikaanse Grondwet op in Philadelphia"
+    },
+    "1789ad": {
+      "title": "Franse Revolutie Begint",
+      "description": "De bestorming van de Bastille luidt een revolutie in die Europa zal doen schudden.",
+      "analysis": "Gevolgen: Beëindigde feodale privileges; verspreidde ideeën van burgerschap en gelijkheid. Verviel tot Terreur, dictatuur en decennia van oorlog; duizenden geëxecuteerd door de guillotine. Verspreidde nationalisme door Europa; toonde zowel potentieel als gevaren van revolutionaire verandering. Philosify's visie: De Franse Revolutie illustreert het verschil tussen Amerikaanse en Franse benaderingen. Amerika: individuele rechten beschermd tegen de overheid. Frankrijk: 'algemene wil' die individuen opofferde aan het collectief. De Terreur was geen ongeluk maar een gevolg van collectivistische filosofie.",
+      "headline": "Parijse menigte bestormt de Bastille, revolutie breekt uit"
+    },
+    "1791ad": {
+      "title": "Bill of Rights Geratificeerd",
+      "description": "De eerste tien amendementen op de Amerikaanse Grondwet beschermen individuele vrijheden.",
+      "analysis": "Gevolgen: Beschermde expliciet vrijheid van meningsuiting, religie, pers, vergadering en rechten op een eerlijk proces. Beperkte federale macht; reserveerde bevoegdheden voor staten en volk. Basis voor uitbreiding van rechten door interpretatie. Aanvankelijk alleen toegepast op federale overheid. Philosify's visie: De Bill of Rights verleent geen rechten—het verbiedt de overheid om reeds bestaande natuurlijke rechten te schenden. 'Het Congres zal geen wet maken...' De amendementen erkennen dat rechten inherent zijn aan de menselijke natuur, geen geschenken van de overheid. Dit begrip is essentieel voor vrijheid.",
+      "headline": "Bill of Rights geratificeerd, individuele vrijheden beschermd"
+    },
+    "1804ad": {
+      "title": "Napoleon Gekroond tot Keizer",
+      "description": "Napoleon Bonaparte kroont zichzelf tot Keizer der Fransen.",
+      "analysis": "Gevolgen: Revolutionaire republiek werd dictatuur. Napoleons wetboek moderniseerde burgerlijk recht door heel Europa. Miljoenen doden in de Napoleontische Oorlogen. Verspreidde Verlichtingshervormingen terwijl hij vrijheid vernietigde. Wekte nationalisme door heel Europa. Philosify's visie: Napoleon demonstreert dat goede hervormingen geen dictatuur rechtvaardigen. De Napoleontische Code was progressief, maar opgelegd door een tiran. Middelen zijn even belangrijk als doelen—vrijheid kan niet door verovering worden verspreid. Napoleons grootste erfenis was onbedoeld: het inspireren van nationale verzetsbewegingen.",
+      "headline": "Napoleon kroont zichzelf tot Keizer van Frankrijk"
+    },
+    "1815ad": {
+      "title": "Slag bij Waterloo",
+      "description": "Napoleon wordt verslagen; het Congres van Wenen herstelt de Europese orde.",
+      "analysis": "Gevolgen: Beëindigde decennia van oorlog; maakte een eeuw van relatieve Europese vrede mogelijk. Het Congres van Wenen creëerde een machtsevenwichtsysteem. Reactionaire afwikkeling onderdrukte liberale bewegingen aanvankelijk, maar die kwamen later op. Economische ontwikkeling bloeide in een vreedzame omgeving. Philosify's visie: Het Congres van Wenen was reactionair maar produceerde vrede. Het machtsevenwichtsysteem, hoewel onvolmaakt, voorkwam een grote Europese oorlog gedurende een eeuw. Stabiliteit maakt welvaart mogelijk—maar het onderdrukken van liberale bewegingen stelde alleen hun triomf uit.",
+      "headline": "Napoleon verslagen bij Waterloo, voorgoed verbannen"
+    },
+    "1833ad": {
+      "title": "Britse Wet tot Afschaffing van de Slavernij",
+      "description": "Groot-Brittannië schaft de slavernij af in het gehele rijk.",
+      "analysis": "Gevolgen: Beëindigde slavernij in het Britse Rijk; de Royal Navy onderdrukte de slavenhandel wereldwijd. Grote stap in de wereldwijde afschaffingsbeweging. Slavenhouders werden gecompenseerd terwijl tot slaaf gemaakten niets ontvingen; uitbuiting ging door in andere vormen. Moreel leiderschap inspireerde andere naties. Philosify's visie: Afschaffing erkende dat alle mensen rechten hebben—slavernij is diefstal van iemands leven en arbeid. Britse afschaffing toonde dat morele vooruitgang mogelijk is. Het feit dat het gebeurde via vreedzame wetgeving, niet revolutie, toont aan dat de rede kan zegevieren over gevestigde belangen.",
+      "headline": "Groot-Brittannië schaft slavernij af in het gehele rijk"
+    },
+    "1848ad": {
+      "title": "Revoluties van 1848",
+      "description": "Een golf van revoluties door heel Europa eist constitutioneel bestuur.",
+      "analysis": "Gevolgen: De meeste revoluties werden onderdrukt; reactionaire regeringen keerden terug. Echter, liberale en nationalistische ideeën verspreidden zich wijdverbreid; lijfeigenschap eindigde in het Oostenrijkse Rijk; toonde de populaire wens tot hervorming. Hervormingen kwamen uiteindelijk via evolutie in plaats van revolutie. Philosify's visie: 1848 toonde dat ideeën van vrijheid zich hadden verspreid van elites naar massa's. Hoewel direct onsuccesvol, demonstreerden de revoluties dat de oude orde intellectueel bankroet was. Onderdrukking doodt geen ideeën—het vertraagt hun implementatie.",
+      "headline": "Revoluties vegen over Europa"
+    },
+    "1848ad_2": {
+      "title": "Communistisch Manifest Gepubliceerd",
+      "description": "Marx en Engels publiceren een manifest dat oproept tot gewelddadige revolutie en afschaffing van privé-eigendom.",
+      "analysis": "Gevolgen: Dit document werd de ideologische basis voor regimes die meer dan 100 miljoen mensen vermoordden in de 20e eeuw—in de Sovjet-Unie, China, Cambodja, Cuba, Noord-Korea en elders. Overal waar communisme werd geïmplementeerd, was het resultaat tirannie, armoede en massale dood. Philosify's visie: Het Manifest verwerpt individuele rechten, privé-eigendom en vrije markten—de fundamenten van menselijke welvaart en vrijheid. De oproep tot klassenstrijd en collectief eigendom is fundamenteel onverenigbaar met de menselijke natuur. Marx had ongelijk over geschiedenis, economie en menselijke natuur. Het dodenaantal bewijst het.",
+      "headline": "Marx en Engels publiceren het Communistisch Manifest"
+    },
+    "1859ad": {
+      "title": "Over het Ontstaan der Soorten Gepubliceerd",
+      "description": "Darwin publiceert de theorie van evolutie door natuurlijke selectie.",
+      "analysis": "Gevolgen: Unificeerde de biologie; verklaarde de diversiteit van leven via natuurlijke processen. Basis voor moderne geneeskunde, genetica en biotechnologie. Misbruikt om sociaal darwinisme en eugenetica te rechtvaardigen. Transformeerde het begrip van leven en de plaats van de mensheid in de natuur. Philosify's visie: Evolutie is waar—het bewijs is overweldigend. Dit vermindert de menselijke waardigheid niet; het verklaart onze oorsprong zonder onze bestemming te bepalen. We evolueerden het vermogen tot rede, dat instinct overstijgt. Biologie beschrijft wat is; ethiek bepaalt wat zou moeten zijn.",
+      "headline": "Darwin publiceert Het Ontstaan der Soorten, schudt fundamenten van biologie"
+    },
+    "1861ad": {
+      "title": "Amerikaanse Burgeroorlog Begint",
+      "description": "De oorlog begint over slavernij en staatsrechten; het dodelijkste Amerikaanse conflict.",
+      "analysis": "Gevolgen: 620.000 doden—meer Amerikanen dan alle andere oorlogen samen. Beëindigde slavernij; bewaarde de Unie. Reconstructie-tijdperk eindigde voortijdig; raciale ongelijkheid bleef nog een eeuw bestaan. Besliste dat de natie verenigd zou blijven en slavernij onverenigbaar was met Amerikaanse principes. Philosify's visie: De Burgeroorlog was een oorlog voor vrijheid tegen slavernij—de ultieme schending van individuele rechten. Lincoln begreep terecht dat een natie 'half slaaf en half vrij' zichzelf tegensprak. De Unie-zaak was rechtvaardig; de kosten waren tragisch maar noodzakelijk.",
+      "headline": "Amerikaanse Burgeroorlog begint met afscheiding van het Zuiden"
+    },
+    "1863ad": {
+      "title": "Emancipatieproclamatie",
+      "description": "Lincoln verklaart slaven in opstandige staten \"voor altijd vrij.\"",
+      "analysis": "Gevolgen: Transformeerde de Burgeroorlog in een strijd voor vrijheid, niet alleen eenheid. Maakte het mogelijk dat zwarte soldaten vochten voor hun eigen bevrijding. Verzwakte de Confederatie moreel en materieel. Bevrijdde geen tot slaaf gemaakten in grensstaaten; volledige gelijkheid zou nog een eeuw op zich laten wachten. Philosify's visie: Emancipatie was Amerika dat zijn stichtingsprincipes waarmaakt. 'Alle mensen zijn gelijk geschapen' betekende wat het zei—de Proclamatie begon het proces om die belofte te vervullen. Lincoln begreep dat slavernij principieel verkeerd was, niet alleen beleidsmatig.",
+      "headline": "Lincoln verklaart alle slaven in rebellenstaten voor altijd vrij"
+    },
+    "1865ad": {
+      "title": "13e Amendement Geratificeerd",
+      "description": "Slavernij en onvrijwillige dienstbaarheid worden afgeschaft in de gehele Verenigde Staten.",
+      "analysis": "Gevolgen: Schafte slavernij constitutioneel af; voltooide wat de Onafhankelijkheidsverklaring beloofde. Voormalige tot slaaf gemaakten werd aanvankelijk land en volledige burgerrechten ontzegd; deelpacht en Jim Crow volgden. Maar slavernij was permanent beëindigd door een grondwetswijziging. Philosify's visie: Het 13e Amendement schreef in de Grondwet wat er vanaf het begin had moeten staan—dat geen persoon een ander kan bezitten. De strijd voor volledige gelijkheid ging door, maar het fundamentele principe was gevestigd: individuele rechten behoren toe aan alle individuen.",
+      "headline": "13e Amendement schaft slavernij af in Amerika"
+    },
+    "1869ad": {
+      "title": "Transcontinentale Spoorweg Voltooid",
+      "description": "De spoorweg die de Atlantische en Pacifische kust verbindt, wordt voltooid bij Promontory Summit.",
+      "analysis": "Gevolgen: Vereenigde het continent economisch; maakte vestiging, handel en communicatie over grote afstanden mogelijk. Verminderde reistijd van maanden naar dagen. Gebouwd met uitgebuite immigrantenarbeid; verstoorde inheems-Amerikaanse landen. Transformeerde de Amerikaanse economie en vestigingspatronen. Philosify's visie: De spoorweg demonstreerde wat vrij ondernemerschap en techniek konden bereiken. Ondanks overheidsbetrokkenheid en arbeidsuitbuiting creëerde het project enorme waarde. Infrastructuur die handel en beweging mogelijk maakt dient menselijke bloei—wanneer gebouwd door vrijwillige uitwisseling, niet door dwangarbeid.",
+      "headline": "Transcontinentale spoorweg voltooid, kusten verbonden"
+    },
+    "1876ad": {
+      "title": "Telefoon Uitgevonden",
+      "description": "Alexander Graham Bell patenteert de telefoon.",
+      "analysis": "Gevolgen: Maakte directe communicatie over afstanden mogelijk; transformeerde zakelijke, overheids- en persoonlijke relaties. Creëerde nieuwe industrieën en economische kansen. Begin van de telecommunicatierevolutie die de samenleving blijft transformeren. Philosify's visie: De telefoon illustreert hoe uitvinders die hun eigen belangen dienen iedereen dienen. Bell zocht winst en behaalde die door waarde te creëren voor anderen. Dit is kapitalisme op zijn best—vrijwillige uitwisseling die welvaart creëert voor alle partijen.",
+      "headline": "Bell vindt de telefoon uit"
+    },
+    "1879ad": {
+      "title": "Edisons Gloeilamp",
+      "description": "Thomas Edison ontwikkelt de praktische gloeilamp.",
+      "analysis": "Gevolgen: Verlengde productieve uren voorbij daglicht; verbeterde veiligheid in huizen en werkplekken; maakte nieuwe industrieën mogelijk; transformeerde het dagelijks leven. Elektrificatie veranderde elk aspect van de moderne beschaving. Edisons methode van systematisch uitvinden werd model voor industrieel onderzoek. Philosify's visie: Edison vond niet alleen de gloeilamp uit—hij creëerde het systeem van elektrische opwekking en distributie dat hem nuttig maakte. Hij belichaamt het productieve genie dat kapitalisme beloont: identificeer problemen, creëer oplossingen, maak winst door anderen te dienen.",
+      "headline": "Edison verlicht de wereld met de gloeilamp"
+    },
+    "1886ad": {
+      "title": "Vrijheidsbeeld Ingewijd",
+      "description": "Het geschenk van Frankrijk aan Amerika viert de vrijheid die de wereld verlicht.",
+      "analysis": "Gevolgen: Werd een blijvend symbool van Amerikaanse idealen; verwelkomde miljoenen immigranten die vrijheid en kansen zochten. Idealen niet altijd geëvenaard door de realiteit van discriminatie en restrictie. Blijft een krachtig symbool van vrijheid en toevlucht voor de onderdrukten. Philosify's visie: Het beeld vertegenwoordigt Amerika's stichtingsideaal: vrijheid als de natuurlijke toestand van de mensheid. 'Geef mij uw vermoeiden, uw armen, uw opeengepakte massa's verlangend vrij te ademen'—Amerika op zijn best verwelkomt degenen die vrijheid zoeken. Het ideaal blijft het nastreven waard.",
+      "headline": "Vrijheidsbeeld onthuld in de haven van New York"
+    },
+    "1903ad": {
+      "title": "Vlucht van de Gebroeders Wright",
+      "description": "De eerste bestuurde, gemotoriseerde vliegtuigvlucht bij Kitty Hawk.",
+      "analysis": "Gevolgen: Opende het tijdperk van de luchtvaart; transformeerde transport, handel, communicatie en oorlogvoering. Maakte de wereld kleiner—elk punt bereikbaar binnen uren. Maakte zowel luchtbombardementen als humanitaire hulp en wereldwijde handel mogelijk. Philosify's visie: Twee fietsenmakers uit Ohio bereikten wat academici zeiden dat onmogelijk was. De gebroeders Wright belichamen Amerikaans praktisch genie—hands-on experimenteren, doorzettingsvermogen, rationeel probleemoplossen. Individueel initiatief, geen overheidsprogramma's, opende de lucht.",
+      "headline": "Gebroeders Wright realiseren eerste gemotoriseerde vlucht"
+    },
+    "1905ad": {
+      "title": "Einsteins Wonderjaar",
+      "description": "Einstein publiceert artikelen over speciale relativiteit, het foto-elektrisch effect en de Brownse beweging.",
+      "analysis": "Gevolgen: Revolutioneerde de natuurkunde; toonde dat ruimte en tijd relatief zijn, massa en energie equivalent. Maakte kernenergie, GPS en talloze technologieën mogelijk. Maakte ook kernwapens mogelijk. Transformeerde het begrip van het universum. Philosify's visie: Einstein, een octrooiklerk, wierp eeuwen natuurkunde omver door puur denken. Zijn werk demonstreert dat de werkelijkheid objectief en kenbaar is—maar onze kennis moet constant herzien worden door bewijs. Waarheid bestaat; onze taak is om die te ontdekken via de rede.",
+      "headline": "Einstein herschrijft de wetten van de natuurkunde"
+    },
+    "1914ad": {
+      "title": "Eerste Wereldoorlog Begint",
+      "description": "De moord op aartshertog Franz Ferdinand ontketent een wereldwijd conflict.",
+      "analysis": "Gevolgen: 17 miljoen doden; rijken vernietigd; kaart van Europa hertekend. Maakte de opkomst van communisme en fascisme mogelijk. Instabiele vredesafwikkeling plantte zaden voor de Tweede Wereldoorlog. Vernietigde het optimistische 19e-eeuwse geloof in vooruitgang. Philosify's visie: WO I resulteerde uit nationalisme, militarisme en verstikkende allianties—allen falen van ideeën. De catastrofe diskrediteerde de oude orde zonder een betere te vestigen. Slechte ideeën hebben gevolgen gemeten in miljoenen levens.",
+      "headline": "Aartshertog vermoord, Europa stort in oorlog"
+    },
+    "1917ad": {
+      "title": "Russische Revolutie",
+      "description": "De bolsjewieken grijpen de macht in Rusland en vestigen een communistische totalitaire staat.",
+      "analysis": "Gevolgen: Vestigde de eerste grote communistische staat. Verving één autocratie door iets veel ergers—een regime dat 20+ miljoen mensen vermoordde via zuiveringen, geënsceneerde hongersnoden en goelags. Exporteerde communistische ideologie wereldwijd, leidend tot vergelijkbare gruweldaden in China, Cambodja, Cuba en elders. Philosify's visie: De Russische Revolutie bewijst dat collectivisme leidt tot massamoord. Wanneer individuele rechten worden ondergeschikt gemaakt aan 'het collectief', 'de arbeiders' of 'het volk', is het resultaat altijd tirannie. De 100 miljoen slachtoffers van het communisme in de 20e eeuw zijn de ultieme weerlegging van Marx.",
+      "headline": "Bolsjewieken grijpen de macht in Rusland"
+    },
+    "1918ad": {
+      "title": "Eerste Wereldoorlog Eindigt",
+      "description": "De wapenstilstand wordt getekend; de oorlog doodt 17 miljoen mensen en hervormt de wereldorde.",
+      "analysis": "Gevolgen: Creëerde de Volkenbond; beëindigde Ottomaanse, Oostenrijks-Hongaarse, Duitse en Russische rijken. Wraakzuchtige vredesvoorwaarden vernederden Duitsland; nieuwe grenzen creëerden etnische conflicten. Instabiele afwikkeling en onopgeloste grieven leidden rechtstreeks naar de Tweede Wereldoorlog. Philosify's visie: Het Verdrag van Versailles toont dat vrede zonder gerechtigheid instabiel is. Duitsland straffen creëerde wrok die Hitler uitbuitte. Een vrede die de vijand noch verzoent noch beslissend verslaat, liet het slechtste van beide benaderingen over.",
+      "headline": "Wapenstilstand getekend, de Grote Oorlog is voorbij"
+    },
+    "1920ad": {
+      "title": "19e Amendement Geratificeerd",
+      "description": "Vrouwen krijgen stemrecht in de Verenigde Staten.",
+      "analysis": "Gevolgen: Breidde politieke gelijkheid uit naar vrouwen; rechtvaardigde decennia van vreedzame advocacy. Verdubbelde het electoraat. Vrouwen werden de meerderheid van de kiezers. Breidde de definitie van 'alle mensen zijn gelijk geschapen' uit naar de logische conclusie. Philosify's visie: Vrouwenkiesrecht was de logische uitbreiding van stichtingsprincipes. Rechten behoren toe aan individuen als individuen—niet als leden van groepen. Het amendement corrigeerde een inconsistentie in Amerikaanse praktijk; het principe was altijd aanwezig, wachtend om toegepast te worden.",
+      "headline": "Vrouwen verwerven stemrecht in Amerika"
+    },
+    "1929ad": {
+      "title": "Beurscrash",
+      "description": "Zwarte Dinsdag veroorzaakt de Grote Depressie.",
+      "analysis": "Gevolgen: Ongekende economische ineenstorting; massale werkloosheid wereldwijd. Droeg bij aan opkomst van extremisme in Europa. Leidde tot New Deal-uitbreiding van de overheid in Amerika. Transformeerde de rol van de overheid in de economie; debat gaat door over oorzaken en remedies. Philosify's visie: De oorzaken van de Depressie worden bediscussieerd, maar overheidsreacties—Smoot-Hawley-tarieven, monetaire krimp, belastingverhogingen—maakten het erger. De les: overheidsingrijpen tijdens crises verergert vaak de schade. Markten corrigeren zichzelf sneller wanneer ze mogen functioneren.",
+      "headline": "Wall Street crasht, Grote Depressie begint"
+    },
+    "1933ad": {
+      "title": "Hitler Wordt Rijkskanselier",
+      "description": "Adolf Hitler wordt benoemd tot Rijkskanselier van Duitsland.",
+      "analysis": "Gevolgen: Beëindigde de Weimar-democratie; begon vervolging van Joden; leidde tot de Tweede Wereldoorlog en de Holocaust. 70-85 miljoen doden; 6 miljoen Joden vermoord. Demonstreerde hoe democratieën zichzelf kunnen wegstemmen wanneer constitutionele beschermingen falen. Philosify's visie: Hitler kwam legaal aan de macht binnen een democratisch systeem—bewijs dat democratie zonder constitutionele grenzen aan overheidsmacht geen vrijheid is. De nazi's wonnen verkiezingen. Individuele rechten moeten beschermd worden TEGEN meerderheden, niet door hen. Weimars falen was institutioneel, niet alleen persoonlijk.",
+      "headline": "Hitler benoemd tot Rijkskanselier van Duitsland"
+    },
+    "1939ad": {
+      "title": "Tweede Wereldoorlog Begint",
+      "description": "Duitsland valt Polen binnen; Groot-Brittannië en Frankrijk verklaren de oorlog.",
+      "analysis": "Gevolgen: Dodelijkste conflict in de geschiedenis: 70-85 miljoen doden. Holocaust vermoordde 6 miljoen Joden. Nazi- en Japanse rijken vernietigd. Leidde tot Verenigde Naties, dekolonisatie en Koude Oorlog. Diskrediteerde fascisme permanent. Philosify's visie: WO II was een oorlog van goed tegen kwaad—er is geen morele gelijkwaardigheid tussen de Geallieerden en de As. Verzoening faalde; alleen geweld stopte Hitler. De les: kwaad moet vroeg en beslist worden geconfronteerd. Zwakte nodigt agressie uit; kracht schrikt af.",
+      "headline": "Duitsland valt Polen binnen, Tweede Wereldoorlog begint"
+    },
+    "1941ad": {
+      "title": "Aanval op Pearl Harbor",
+      "description": "Japan valt de Amerikaanse Pacifische Vloot aan; Amerika treedt toe tot de Tweede Wereldoorlog.",
+      "analysis": "Gevolgen: 2.403 Amerikanen gedood; bracht Amerika in de oorlog. Amerikaanse industriële en militaire macht keerde het tij tegen zowel Duitsland als Japan. Amerika kwam op als mondiale supermacht. Beëindigde Amerikaans isolationisme permanent. Philosify's visie: Pearl Harbor bewees dat oceanen niet beschermen tegen vastberaden vijanden. Amerika's deelname redde de wereld van nazi- en Japanse tirannie. De aanval was kwaad; de respons—totale oorlog tot onvoorwaardelijke overgave—was rechtvaardig. Amerika's zaak was rechtschapen.",
+      "headline": "Japan bombardeert Pearl Harbor, Amerika treedt in de oorlog"
+    },
+    "1942ad": {
+      "title": "Holocaust: Systematische Genocide",
+      "description": "Nazi-Duitsland voert de \"Endlösung\" uit en vermoordt zes miljoen Joden en miljoenen anderen.",
+      "analysis": "Gevolgen: Industriële moord: 6 miljoen Joden, plus miljoenen Roma, gehandicapten, homoseksuelen en politieke gevangenen. Onmetelijk menselijk verlies—wetenschappers, kunstenaars, geleerden, families. Leidde tot mensenrechtenverklaringen en genocideconventies. Vestigde Israël als toevlucht. Philosify's visie: De Holocaust is het ultieme gevolg van collectivisme—individuen behandelen als leden van groepen om te elimineren. Het begon met ideeën: dat sommige groepen inferieur zijn, dat individuen geen inherente rechten hebben, dat het collectief boven de persoon gaat. Ideeën hebben gevolgen.",
+      "headline": "Nazi's lanceren Endlösung, systematische moord op Joden"
+    },
+    "1944ad": {
+      "title": "D-Day Invasie",
+      "description": "Geallieerde troepen landen in Normandië en beginnen de bevrijding van West-Europa.",
+      "analysis": "Gevolgen: Begon de bevrijding van West-Europa van nazi-bezetting. Zware slachtoffers maar succesvolle bruggenhoofd gevestigd. West-Europa bevrijd door democratieën; Oost-Europa bezet door Sovjets. Het contrast tussen de twee zones zou de Koude Oorlog definiëren. Philosify's visie: D-Day vertegenwoordigt de toewijding van de vrije wereld om het kwaad te verslaan. Amerikaanse, Britse, Canadese en andere Geallieerde soldaten stierven om mensen te bevrijden die ze nooit hadden ontmoet. Dit was geen offer maar heldendom—vechten voor waarden waarvoor het waard is te sterven.",
+      "headline": "Geallieerde troepen bestormen stranden van Normandië op D-Day"
+    },
+    "1945ad": {
+      "title": "Atoombommen Beëindigen de Tweede Wereldoorlog",
+      "description": "De VS werpen atoombommen op Hiroshima en Nagasaki; Japan capituleert onvoorwaardelijk.",
+      "analysis": "Gevolgen: Japan capituleerde onvoorwaardelijk—het enige aanvaardbare resultaat tegen een agressor die Pearl Harbor aanviel, de Verkrachting van Nanking beging, krijgsgevangenen martelde, en zwoer tot het einde te vechten. De bommen doodden ongeveer 200.000. Het alternatief—Operatie Downfall invasie—zou naar verwachting 500.000-1.000.000 Amerikaanse slachtoffers kosten en miljoenen Japanners. Japan bewapende burgers met bamboesperen. Philosify's visie: Amerika had het absolute morele recht om overweldigende kracht te gebruiken tegen een vijand die de oorlog begon en weigerde te capituleren. Levens van Amerikaanse soldaten gaan voor op vijandelijke burgers. De beslissing was rationeel, moreel en levensbevestigend. Overwinning, niet langdurig bloedvergieten, is het doel van een rechtvaardige oorlog.",
+      "headline": "Atoombommen op Japan geworpen, oorlog eindigt"
+    },
+    "1945ad_2": {
+      "title": "Verenigde Naties Opgericht",
+      "description": "Internationale organisatie opgericht om vrede en veiligheid te handhaven.",
+      "analysis": "Gevolgen: Creëerde forum voor diplomatie en internationale samenwerking. Agentschappen pakken humanitaire behoeften wereldwijd aan. Mensenrechtenverklaringen vestigden wereldwijde standaarden. Veto in Veiligheidsraad beperkt effectiviteit; kan soevereiniteit van grote machten niet overrulen. Philosify's visie: De VN is onvolmaakt—ze behandelt vaak democratische naties en tirannieën als moreel gelijk. Maar het biedt een forum voor diplomatie en humanitaire coördinatie. Internationale instituties moeten vrijheid dienen, niet tirannie legitimeren.",
+      "headline": "Verenigde Naties opgericht om wereldvrede te handhaven"
+    },
+    "1947ad": {
+      "title": "Succes van Ayn Rands De Eeuwige Bron",
+      "description": "The Fountainhead wordt een bestseller en presenteert de individualistische filosofie.",
+      "analysis": "Gevolgen: Vierde individuele creativiteit, integriteit en rationeel eigenbelang. Daagde collectivistisch denken dominant in academie en cultuur uit. Inspireerde ondernemers, kunstenaars, architecten en voorvechters van vrijheid. Blijft wijdverspreid gelezen en bediscussieerd. Philosify's visie: The Fountainhead dramatiseert het conflict tussen de schepper en het collectief—Howard Roark belichaamt integriteit, onafhankelijkheid en productieve prestatie. De roman demonstreert dat filosofie via kunst gepresenteerd kan worden, publieken bereikend die academische filosofie niet kan bereiken.",
+      "headline": "Rands De Eeuwige Bron wordt bestseller, individualisme groeit"
+    },
+    "1948ad": {
+      "title": "Israël Opgericht",
+      "description": "De Staat Israël wordt uitgeroepen en biedt een vaderland voor het Joodse volk.",
+      "analysis": "Gevolgen: Bood toevlucht voor Joden na de Holocaust en uit vervolging wereldwijd. Bouwde succesvolle democratie en technologische innovator in vijandige regio. Voortdurend conflict met Palestijnen en buurlanden. Doelwit van terrorisme en internationale vijandigheid. Philosify's visie: Israël is de enige vrije natie in het Midden-Oosten—een democratie met rechtsstaat, eigendomsrechten en individuele vrijheid. Het heeft het absolute recht om te bestaan en zichzelf te verdedigen. Degenen die Israël uitzonderlijk veroordelen terwijl ze tirannieën negeren, onthullen hun werkelijke motieven.",
+      "headline": "Staat Israël uitgeroepen, Joods vaderland geboren"
+    },
+    "1950ad": {
+      "title": "Koreaanse Oorlog Begint",
+      "description": "Noord-Korea valt Zuid-Korea binnen; VN-troepen grijpen in.",
+      "analysis": "Gevolgen: Miljoenen doden; schiereiland tot op heden verdeeld. Zuid-Korea werd welvarende democratie; Noord-Korea werd totalitaire nachtmerrie. Schril contrast demonstreert uitkomsten van verschillende systemen op dezelfde bevolking. Wapenstilstand maar geen vredesverdrag; dreiging duurt voort. Philosify's visie: Korea is het definitieve experiment in politieke economie—zelfde volk, zelfde cultuur, verdeeld door ideologie. Zuid: kapitalisme, welvaart, vrijheid. Noord: communisme, armoede, tirannie. De vergelijking weerlegt elk excuus voor socialisme.",
+      "headline": "Noord-Korea valt het Zuiden binnen, oorlog breekt uit"
+    },
+    "1949ad": {
+      "title": "Communistisch China Gesticht",
+      "description": "Mao Zedong vestigt een communistische totalitaire dictatuur in China.",
+      "analysis": "Gevolgen: Mao's regime vermoordde 45-65 miljoen mensen via de Grote Sprong Voorwaarts-hongersnood, Culturele Revolutie en politieke zuiveringen—de grootste massamoord in de menselijke geschiedenis. Vernietigde traditionele Chinese cultuur, religie, familiestructuren. China's economisch succes kwam pas NADAT communistische economie werd afgeschaft en markten werden geopend. Philosify's visie: Communistisch China bewijst dat socialisme doodt. Het regime pleegt nog steeds genocide op Oeigoeren, bedreigt Taiwan en onderdrukt vrijheid. China's welvaart kwam van het toestaan van binnenlandse markten terwijl politieke tirannie werd gehandhaafd. Economische vrijheid zonder politieke vrijheid is instabiel.",
+      "headline": "Mao roept Communistisch China uit, grootste natie ter wereld wordt rood"
+    },
+    "1957ad": {
+      "title": "Atlas in Staking Gepubliceerd",
+      "description": "Ayn Rand publiceert haar filosofische roman.",
+      "analysis": "Gevolgen: Verdedigde productieve prestatie tegen parasitisme; dramatiseerde wat er gebeurt wanneer scheppers zich terugtrekken. Inspireerde ondernemers, innovators en voorvechters van kapitalisme. Een van de meest invloedrijke Amerikaanse romans; wakkert nog steeds debat aan over kapitalisme, individualisme en moraliteit. Philosify's visie: Atlas Shrugged beantwoordt de vraag: wat is de morele basis van kapitalisme? De roman demonstreert dat productie een deugd is, dat scheppers recht hebben op hun werk, en dat collectivisme parasitisme is. Het biedt de morele verdediging die kapitalisme nodig heeft.",
+      "headline": "Ayn Rand publiceert Atlas in Staking"
+    },
+    "1961ad": {
+      "title": "Eerste Mens in de Ruimte",
+      "description": "Joeri Gagarin wordt de eerste mens die rond de Aarde draait.",
+      "analysis": "Gevolgen: Opende het ruimtetijdperk; demonstreerde menselijk vermogen om aardse grenzen te overstijgen. Ruimtewedloop bevorderde technologie met civiele toepassingen. Inspireerde generaties om wetenschap en techniek na te streven. Ruimteverkenning blijft menselijke kennis en capaciteiten bevorderen. Philosify's visie: Ruimteverkenning toont de kracht van menselijke rede om natuurlijke grenzen te overstijgen. Of bereikt door overheden of particulier ondernemerschap, het uitbreiden van menselijke aanwezigheid voorbij de Aarde dient menselijke bloei en overleving. De kosmos wacht op rationele wezens die in staat zijn hem te verkennen.",
+      "headline": "Gagarin draait rond de Aarde, eerste mens in de ruimte"
+    },
+    "1963ad": {
+      "title": "Moord op Kennedy",
+      "description": "President John F. Kennedy wordt vermoord in Dallas.",
+      "analysis": "Gevolgen: Nationaal trauma; verlies van populaire leider. Vreedzame machtsoverdracht demonstreerde constitutionele veerkracht. Zette complottheorieën in gang die blijven. Veranderde Amerikaanse politieke cultuur—einde van onschuld, toegenomen cynisme. Philosify's visie: De moord toonde dat Amerikaanse instituties het verlies van elk individu overleven. Geen persoon is onmisbaar. Constitutioneel bestuur blijft functioneren ongeacht wie de ambten bekleedt. Dit is de kracht—afhankelijkheid van principes en procedures, niet van persoonlijkheden.",
+      "headline": "President Kennedy vermoord in Dallas"
+    },
+    "1964ad": {
+      "title": "Wet op de Burgerrechten",
+      "description": "Baanbrekende wetgeving verbiedt discriminatie op basis van ras, huidskleur, religie, geslacht of nationale herkomst.",
+      "analysis": "Gevolgen: Beëindigde wettelijke segregatie; beschermde stemrechten; opende kansen in werkgelegenheid en openbare accommodaties. Elimineerde discriminatie niet maar vestigde juridisch kader om het te bestrijden. Breidde stichtingsprincipes uit naar alle burgers. Philosify's visie: De Civil Rights Act voltooide wat de Stichters begonnen—het principe uitbreiden dat individuele rechten toebehoren aan alle individuen. Rassendiscriminatie schendt individuele rechten door mensen te beoordelen als groepsleden in plaats van individuen. De Wet was een triomf van Amerikaanse principes.",
+      "headline": "Wet op de Burgerrechten verbiedt rassendiscriminatie"
+    },
+    "1965ad": {
+      "title": "Vietnamoorlog Escaleert",
+      "description": "De VS zetten gevechtstroepen in Vietnam in; de oorlog zal miljoenen levens eisen.",
+      "analysis": "Gevolgen: Meer dan 58.000 Amerikanen en miljoenen Vietnamezen gedood. Verdeelde de Amerikaanse samenleving; erodeerde vertrouwen in de overheid. Uiteindelijk onsuccesvol in het voorkomen van communistische overname. Veranderde Amerikaanse houding ten opzichte van militaire interventie. Philosify's visie: De tragedie van Vietnam was vechten met één hand gebonden—geleidelijke escalatie in plaats van beslissende kracht, politieke beperkingen op militaire actie. Amerika's zaak—het bestrijden van communistische expansie—was rechtvaardig. Het falen was strategisch en politiek, niet moreel.",
+      "headline": "VS sturen gevechtstroepen naar Vietnam"
+    },
+    "1966ad": {
+      "title": "Culturele Revolutie Begint",
+      "description": "Mao lanceert de Culturele Revolutie, gericht tegen \"contrarevolutionaire\" elementen.",
+      "analysis": "Gevolgen: Miljoenen gedood of vervolgd; cultureel erfgoed vernietigd; onderwijs voor een generatie verstoord. Rode Garden terroriseerden intellectuelen, leraren en iedereen die als onvoldoende communistisch werd beschouwd. Later verworpen door de Chinese Communistische Partij zelf. Philosify's visie: De Culturele Revolutie toont het logische eindpunt van collectivisme—vernietiging van alles wat het leven de moeite waard maakt. Kunst, geleerdheid, familiebanden, individueel denken—alles opgeofferd aan ideologie. Wanneer ideeën zulk offer eisen, zijn de ideeën kwaad.",
+      "headline": "Mao lanceert Culturele Revolutie, China verzinkt in chaos"
+    },
+    "1975ad": {
+      "title": "Cambodjaanse Genocide Begint",
+      "description": "De Rode Khmer grijpt de macht; genocide doodt 1,5-2 miljoen Cambodjanen.",
+      "analysis": "Gevolgen: Kwart van de bevolking van Cambodja vermoord. Opgeleide klasse specifiek getarget voor eliminatie. Samenleving verwoest; herstel duurde decennia. Tribunalen hielden uiteindelijk sommige daders verantwoordelijk. Philosify's visie: Cambodja bewijst dat communisme geen 'goed idee, slechte implementatie' is—het is een moorddadige ideologie. De Rode Khmer volgden expliciet marxistische principes: elimineer klassen, vernietig de oude samenleving, creëer de nieuwe mens. De killing fields zijn het ware gezicht van het communisme.",
+      "headline": "Rode Khmer grijpt Cambodja, genocide begint"
+    },
+    "1979ad": {
+      "title": "Iraanse Revolutie",
+      "description": "De Islamitische Revolutie werpt de Sjah omver; Ayatollah Khomeini vestigt een theocratische dictatuur.",
+      "analysis": "Gevolgen: Verving een moderniserende autoritaire monarchie door een barbaarse theocratische dictatuur. Iran werd 's werelds leidende staatssponsor van terrorisme. Vrouwen verloren fundamentele rechten. Religieuze politie handhaaft middeleeuwse wetten. Het regime streeft naar kernwapens terwijl het oproept tot vernietiging van Israël en Amerika. Philosify's visie: Niet alle 'revoluties' zijn vooruitgang. Theocratie is onverenigbaar met menselijke vrijheid. Het falen van het Westen om de Shah te steunen en decennia van verzoening moedigden dit regime aan. Alleen regimeverandering of onvoorwaardelijke overgave kan deze bedreiging voor de beschaving beëindigen.",
+      "headline": "Islamitische Revolutie werpt Sjah omver, Iran wordt theocratie"
+    },
+    "1969ad": {
+      "title": "Maanlanding",
+      "description": "Astronauten van Apollo 11 betreden de Maan.",
+      "analysis": "POSITIVE: Greatest technological achievement in history; united humanity in wonder; advanced technology. NEGATIVE: Enormous cost; program later abandoned. Long-term: Proved nothing is impossible; inspired generations; space exploration continues.",
+      "headline": "Armstrong betreedt de Maan"
+    },
+    "1989ad": {
+      "title": "Val van de Berlijnse Muur",
+      "description": "De Berlijnse Muur valt; de Koude Oorlog begint te eindigen.",
+      "analysis": "Gevolgen: Herenigde Duitsland; bevrijdde Oost-Europa van Sovjet-overheersing. Beëindigde vreedzaam de Koude Oorlog-verdeling. Miljoenen kregen vrijheid. Demonstreerde dat zelfs schijnbaar permanente tirannieën kunnen instorten wanneer mensen weigeren ze te accepteren. Philosify's visie: De val van de Muur bewees dat kwade systemen de zaden van hun eigen vernietiging bevatten. Communisme stortte in omdat het de menselijke natuur en economische werkelijkheid tegensprak. Mensen willen vrijheid; ze grijpen die wanneer ze kunnen. Ideeën doen ertoe—slechte falen uiteindelijk.",
+      "headline": "Berlijnse Muur valt, vrijheid overspoelt Oost-Europa"
+    },
+    "1991ad": {
+      "title": "Sovjet-Unie Valt Uiteen",
+      "description": "De Sovjet-Unie valt officieel uiteen; de Koude Oorlog eindigt.",
+      "analysis": "Gevolgen: Communistische supermacht hield op te bestaan zonder dat er een schot werd gelost. Vijftien naties kregen onafhankelijkheid. Nucleaire impasse beëindigd. Honderden miljoenen bevrijd van communistisch bewind. Rechtvaardigde degenen die zeiden dat communisme gedoemd was. Philosify's visie: De Sovjet-ineenstorting bewees dat socialisme niet kan werken. Zonder privé-eigendom en marktprijzen is economische berekening onmogelijk. De USSR viel niet door Reagan of Gorbatsjov alleen—het viel omdat zijn ideeën onjuist waren. De werkelijkheid wint.",
+      "headline": "Sovjet-Unie valt uiteen, Koude Oorlog eindigt"
+    },
+    "2001ad": {
+      "title": "Aanslagen van 11 September",
+      "description": "Terroristen van Al Qaida vallen het World Trade Center en het Pentagon aan en doden bijna 3.000 mensen.",
+      "analysis": "Gevolgen: Bijna 3.000 vermoord door islamitische terroristen. Amerika reageerde met oorlog in Afghanistan om Al-Qaeda en de Taliban te vernietigen. Zette twee decennia van militaire operaties in gang. Veranderde beveiligingsprocedures wereldwijd. Onthulde kwetsbaarheid van open samenlevingen voor terrorisme. Philosify's visie: Kwaad bestaat en moet vernietigd worden. 11 september was een oorlogsdaad door een vijand die de oorlog verklaarde aan de westerse beschaving. De juiste respons is overweldigend geweld tot onvoorwaardelijke overgave. Verzoening en onderhandeling belonen agressie.",
+      "headline": "Terroristen treffen World Trade Center en Pentagon"
+    },
+    "2008ad": {
+      "title": "Wereldwijde Financiële Crisis",
+      "description": "Het faillissement van Lehman Brothers veroorzaakt een wereldwijde financiële crisis.",
+      "analysis": "Gevolgen: Miljoenen verloren banen, huizen, spaargeld. Recessie verspreidde zich wereldwijd. Leidde tot massale reddingsoperaties en uitgebreide regulering. Debat gaat door over oorzaken—overheidshuisvestingsbeleid, Fed-beleid, Wall Street-praktijken. Philosify's visie: De crisis had meerdere oorzaken, maar overheidsinterventie—subprime-leningen pushen, impliciete garanties aan Fannie Mae en Freddie Mac, Fed-rentemanipulatie—creëerde voorwaarden voor ramp. Reddingsoperaties beloonden falen en creëerden moreel risico. Markten werken; verstoorde markten niet.",
+      "headline": "Lehman Brothers stort in, wereldwijde financiële meltdown"
+    },
+    "2020ad": {
+      "title": "COVID-19 Pandemie",
+      "description": "Een wereldwijde pandemie leidt tot ongekende lockdowns en economische ontwrichting.",
+      "analysis": "POSITIVE: Accelerated medical research and vaccine development; remote work became viable. NEGATIVE: Millions died; economic disruption; mental health impacts; educational setbacks. Long-term: Transformed work, medicine, and public health; full effects still emerging.",
+      "headline": "COVID-19-pandemie legt de wereld plat"
+    },
+    "2023ad": {
+      "title": "7 Oktober: Hamas-aanval op Israël",
+      "description": "Hamas-terroristen vermoorden 1.200 Israëlische burgers en nemen 250 gijzelaars.",
+      "analysis": "Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities against civilians including rape, torture, and murder of children. Revealed the true nature of Hamas as a genocidal terrorist organization. Much of the Western intelligentsia shamefully sided with the terrorists, exposing moral bankruptcy in academia and media. Philosophical significance: Evil must be defeated, not negotiated with. Israel's right to self-defense is absolute. Victory means dismantling Hamas's capability to harm civilians. There is no moral equivalence between terrorists and their victims.",
+      "headline": "Hamas vermoordt 1.200 Israëli's in verrassingsaanval"
+    },
+    "2022ad": {
+      "title": "Rusland Valt Oekraïne Binnen",
+      "description": "Rusland begint een grootschalige invasie van Oekraïne; de grootste oorlog in Europa sinds de Tweede Wereldoorlog.",
+      "analysis": "Consequences: Russia, an American enemy, launched unprovoked aggression against Ukraine, revealing imperial ambitions and military weakness. The West responded with sanctions and military aid. Ukraine's fierce resistance has degraded Russian military capability significantly. Philosophical significance: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with negotiated concessions.",
+      "headline": "Rusland lanceert grootschalige invasie van Oekraïne"
+    },
+    "2024ad": {
+      "title": "Iran-Israël Spanningen Escaleren",
+      "description": "Iran lanceert raketten op Israël; Israël reageert met precisieaanvallen.",
+      "analysis": "Consequences: Iran's theocratic regime openly attacks Israel, dropping pretense of proxy warfare. Israel demonstrates superior defensive and offensive capabilities. Regional conflict intensifies with Hezbollah and Houthis. Philosophical significance: Appeasement of the Iranian regime over decades enabled this aggression. The only path to peace is through strength and the defeat of those who seek destruction. Terrorist-sponsoring regimes cannot be trusted with negotiations—only unconditional surrender or regime change ends the threat.",
+      "headline": "Iran vuurt raketten af op Israël, regio op de rand"
+    }
+  },
+  "quiz": {
+    "title": "Quiz",
+    "leaderboard": "BESTE SCORES",
+    "welcome": "Test je Filosofiekennis",
+    "description": "Beantwoord vragen over metafysica, epistemologie, ethiek, politiek en esthetiek.",
+    "rule1": "10 vragen per credit",
+    "rule2": "Vragen worden moeilijker bij elk goed antwoord",
+    "rule3": "Fout? Betaal 1 credit om door te gaan",
+    "rule4": "10 goede antwoorden op rij = 1 credit terug!",
+    "starting": "Starten...",
+    "start": "Start Quiz",
+    "checking": "Controleren...",
+    "submit": "Antwoord Verzenden",
+    "correct": "Correct!",
+    "wrong": "Fout!",
+    "correctWas": "Juiste antwoord:",
+    "explanation": "Uitleg",
+    "streak": "Reeks",
+    "score": "Score",
+    "next": "Volgende Vraag",
+    "continue": "Doorgaan",
+    "wrongAnswer": "Fout Antwoord!",
+    "payToContinueWrong": "Betaal 1 credit om je sessie voort te zetten.",
+    "completed10": "Goed gedaan!",
+    "payToContinue10": "Je hebt 10 vragen voltooid! Betaal 1 credit voor nog 10.",
+    "bestStreak": "Beste Reeks",
+    "continuing": "Voortzetten...",
+    "payToContinue": "Quiz Voortzetten",
+    "endQuiz": "Quiz Beëindigen",
+    "quizComplete": "Quiz Voltooid!",
+    "finalScore": "Eindscore",
+    "totalCorrect": "Goede Antwoorden",
+    "creditsEarned": "Verdiende Credits",
+    "playAgain": "Opnieuw Spelen",
+    "categories": {
+      "metaphysics": "Metafysica",
+      "epistemology": "Epistemologie",
+      "ethics": "Ethiek",
+      "politics": "Politiek",
+      "aesthetics": "Esthetiek",
+      "applied": "Toegepaste Filosofie",
+      "history": "Geschiedenis van de Filosofie",
+      "american_exceptionalism": "Amerikaans Exceptionalisme",
+      "virtues": "Deugden",
+      "economics": "Economie",
+      "law": "Objectief Recht"
+    }
   }
 }

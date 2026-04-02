@@ -532,6 +532,10 @@
       "history": {
         "title": "历史",
         "description": "探索2600年的哲学思想"
+      },
+      "quiz": {
+        "title": "测验",
+        "description": "测试你的哲学知识"
       }
     },
     "comingSoonDesc": {
@@ -1609,99 +1613,617 @@
     }
   },
   "historicalEvents": {
-    "594bc": "Solon\\'s Reforms in Athens",
-    "509bc": "Roman Republic Founded",
-    "490bc": "Battle of Marathon",
-    "480bc": "Battle of Thermopylae & Salamis",
-    "399bc": "Trial and Death of Socrates",
-    "336bc": "Alexander the Great Begins Conquest",
-    "323bc": "Death of Alexander the Great",
-    "264bc": "First Punic War Begins",
-    "146bc": "Destruction of Carthage",
-    "49bc": "Caesar Crosses the Rubicon",
-    "44bc": "Assassination of Julius Caesar",
-    "31bc": "Battle of Actium",
-    "30ad": "Crucifixion of Jesus",
-    "79ad": "Eruption of Vesuvius",
-    "180ad": "Death of Marcus Aurelius",
-    "313ad": "Edict of Milan",
-    "380ad": "Christianity Becomes State Religion",
-    "410ad": "Visigoths Sack Rome",
-    "476ad": "Fall of Western Roman Empire",
-    "529ad": "Closing of Platonic Academy",
-    "622ad": "Hegira - Birth of Islam",
-    "732ad": "Battle of Tours",
-    "800ad": "Charlemagne Crowned Emperor",
-    "1054ad": "Great Schism",
-    "1066ad": "Norman Conquest of England",
-    "1095ad": "First Crusade Called",
-    "1215ad": "Magna Carta Signed",
-    "1265ad": "First English Parliament",
-    "1347ad": "Black Death Reaches Europe",
-    "1439ad": "Gutenberg\\'s Printing Press",
-    "1453ad": "Fall of Constantinople",
-    "1492ad": "Columbus Reaches Americas",
-    "1517ad": "Protestant Reformation Begins",
-    "1543ad": "Copernican Revolution",
-    "1588ad": "Defeat of Spanish Armada",
-    "1607ad": "Jamestown Founded",
-    "1620ad": "Mayflower Compact",
-    "1642ad": "English Civil War Begins",
-    "1648ad": "Peace of Westphalia",
-    "1687ad": "Newton\\'s Principia Published",
-    "1688ad": "Glorious Revolution",
-    "1689ad": "Locke\\'s Two Treatises Published",
-    "1776ad": "American Declaration of Independence",
-    "1787ad": "U.S. Constitution Written",
-    "1789ad": "French Revolution Begins",
-    "1791ad": "Bill of Rights Ratified",
-    "1804ad": "Napoleon Crowned Emperor",
-    "1815ad": "Battle of Waterloo",
-    "1833ad": "British Slavery Abolition Act",
-    "1848ad": "Revolutions of 1848",
-    "1848ad_2": "Communist Manifesto Published",
-    "1859ad": "Origin of Species Published",
-    "1861ad": "American Civil War Begins",
-    "1863ad": "Emancipation Proclamation",
-    "1865ad": "13th Amendment Ratified",
-    "1869ad": "Transcontinental Railroad Completed",
-    "1876ad": "Telephone Invented",
-    "1879ad": "Edison\\'s Light Bulb",
-    "1886ad": "Statue of Liberty Dedicated",
-    "1903ad": "Wright Brothers\\' Flight",
-    "1905ad": "Einstein\\'s Miracle Year",
-    "1914ad": "World War I Begins",
-    "1917ad": "Russian Revolution",
-    "1918ad": "World War I Ends",
-    "1920ad": "19th Amendment Ratified",
-    "1929ad": "Stock Market Crash",
-    "1933ad": "Hitler Becomes Chancellor",
-    "1939ad": "World War II Begins",
-    "1941ad": "Pearl Harbor Attack",
-    "1942ad": "Holocaust: Systematic Genocide",
-    "1944ad": "D-Day Invasion",
-    "1945ad": "Atomic Bombs End WWII",
-    "1945ad_2": "United Nations Founded",
-    "1947ad": "Ayn Rand\\'s The Fountainhead Success",
-    "1948ad": "Israel Founded",
-    "1950ad": "Korean War Begins",
-    "1949ad": "Communist China Established",
-    "1957ad": "Atlas Shrugged Published",
-    "1961ad": "First Human in Space",
-    "1963ad": "Kennedy Assassination",
-    "1964ad": "Civil Rights Act",
-    "1965ad": "Vietnam War Escalates",
-    "1966ad": "Cultural Revolution Begins",
-    "1975ad": "Cambodian Genocide Begins",
-    "1979ad": "Iranian Revolution",
-    "1969ad": "Moon Landing",
-    "1989ad": "Fall of Berlin Wall",
-    "1991ad": "Soviet Union Dissolves",
-    "2001ad": "September 11 Attacks",
-    "2008ad": "Global Financial Crisis",
-    "2020ad": "COVID-19 Pandemic",
-    "2023ad": "October 7: Hamas Attack on Israel",
-    "2024ad": "Iran-Israel Tensions Escalate",
-    "2022ad": "Russia Invades Ukraine"
+    "594bc": {
+      "title": "梭伦在雅典的改革",
+      "description": "梭伦在雅典实施宪政改革，为民主制度奠定基础。",
+      "analysis": "后果：梭伦废除了债务奴隶制，创立了基于财产的公民权制度，将经济利益与政治参与挂钩，并确立了后来演变为雅典民主的法治原则。这些改革将希腊政治理念传播到整个地中海地区。Philosify的观点：这是承认社会中个人权利的关键一步。通过将参与权与财产所有权挂钩，梭伦激励了生产性公民身份。即使统治者也受法律约束而非任意专断——这一原则是自由的基石。",
+      "headline": "梭伦废除债务奴隶制，重写雅典法律"
+    },
+    "509bc": {
+      "title": "罗马共和国建立",
+      "description": "罗马推翻君主制，建立由选举产生的执政官领导的共和国。",
+      "analysis": "后果：罗马创建了在执政官、元老院和民众大会之间分配权力的制度。与社会利益攸关的公民士兵建立了一个延续500年的帝国。罗马的法律、工程和治理影响了此后所有的西方文明。Philosify的观点：共和制证明了分散权力和法治能够促进人类繁荣。当个人权利受到制度保护，而不是依赖于统治者的随意决定时，繁荣便会随之而来。罗马后来沦为帝国的命运表明了权力集中的危险。",
+      "headline": "罗马推翻君主制，宣布共和"
+    },
+    "490bc": {
+      "title": "马拉松战役",
+      "description": "希腊人击退波斯入侵，保卫了希腊的独立和文化。",
+      "analysis": "后果：希腊独立得以保存，使哲学、民主、科学和艺术得以继续发展。这证明了为自由而战的公民军队能够击败为遥远皇帝作战的更大规模的军队。Philosify的观点：马拉松战役表明，为自己的价值观而战的自由人比为主人作战的奴隶更有战斗力。希腊的胜利使发现理性是人类生存工具的哲学传统得以延续。西方文明的存在归功于这场战役。",
+      "headline": "希腊人在马拉松粉碎波斯入侵"
+    },
+    "480bc": {
+      "title": "温泉关和萨拉米斯战役",
+      "description": "希腊人抵抗波斯入侵；300名斯巴达人进行了传奇的最后抵抗。",
+      "analysis": "后果：斯巴达人的牺牲为希腊团结争取了时间；萨拉米斯海战的胜利具有决定性意义。波斯的扩张被永久遏制。希腊文明得以存续，产生了苏格拉底、柏拉图、亚里士多德以及西方思想的基础。Philosify的观点：温泉关代表的是英雄主义——而非殉道。斯巴达人为他们最高的价值——自由——而战。他们不是为虚无而牺牲；他们为希腊赢得了胜利。英雄为自己的价值观冒险；殉道者为死亡本身而死。",
+      "headline": "三百斯巴达勇士血战温泉关"
+    },
+    "399bc": {
+      "title": "苏格拉底的审判与死亡",
+      "description": "苏格拉底因\"腐蚀青年\"被雅典民主制判处死刑。",
+      "analysis": "后果：苏格拉底拒绝逃跑使他成为知识诚信的殉道者。柏拉图保存了他的教导并创立了学园。这场审判提出了关于个人良知与国家权威关系的根本问题，至今仍具有现实意义。Philosify的观点：民主处死了其最伟大的哲学家——这证明没有宪法限制政府权力的多数统治就是暴政。个人权利必须受到保护以免受多数人侵害。苏格拉底证明了一个有思想的人必须遵循理性，而非大众意见，哪怕要付出生命的代价。",
+      "headline": "雅典判处苏格拉底死刑"
+    },
+    "336bc": {
+      "title": "亚历山大大帝开始征服",
+      "description": "亚历山大成为国王并发起将传播希腊文化的征服战役。",
+      "analysis": "后果：希腊语言、哲学、科学和商业传播到从埃及到印度的广大地区。亚历山大建立的城市成为学习中心。希腊化世界使东西方思想交流延续了数个世纪。Philosify的观点：亚历山大的征服结果参半——希腊理性主义的传播是有价值的，但通过征服建立帝国侵犯了个人权利。持久的遗产是文化的而非政治的：通过贸易和学习传播的思想比通过刀剑传播的思想更持久。",
+      "headline": "亚历山大发起征服已知世界的战役"
+    },
+    "323bc": {
+      "title": "亚历山大大帝之死",
+      "description": "亚历山大32岁去世；帝国分裂为继承者王国。",
+      "analysis": "后果：帝国分裂为相互征战的继业者国家。然而，希腊文化和商业在这些王国中持续存在。图书馆、学校和贸易网络继续运作。国家之间的竞争有时促进了创新。Philosify的观点：建立在一人魅力之上的帝国很少能在其创建者去世后存续。持久的制度需要原则，而非人格。希腊化世界尽管政治分裂仍能存续，表明文化和贸易——自愿交换——比政治统一更重要。",
+      "headline": "亚历山大大帝32岁驾崩，帝国分崩离析"
+    },
+    "264bc": {
+      "title": "第一次布匿战争开始",
+      "description": "罗马和迦太基开始了长达一个世纪的地中海霸权争夺战。",
+      "analysis": "后果：罗马发展了海军能力并扩展到意大利以外。西西里岛因长期战争而遭受严重破坏。这使罗马走上了通往地中海霸权的道路，并带来了前所未有的和平与贸易。Philosify的观点：征服战争涉及大规模的生命和财产破坏。然而，罗马的最终胜利带来了罗马和平——证明统一的法治，即使不完美地应用，也能比敌对势力之间的持续战争带来更多繁荣。",
+      "headline": "罗马与迦太基争夺地中海霸权"
+    },
+    "146bc": {
+      "title": "迦太基的毁灭",
+      "description": "罗马彻底摧毁迦太基，成为地中海的至高强权。",
+      "analysis": "后果：迦太基文明彻底毁灭；50,000名幸存者被奴役。罗马的地中海垄断使得延续数个世纪的前所未有的贸易和文化交流成为可能。Philosify的观点：对已战败敌人的全面战争是过度的——迦太基已不再构成威胁。然而，由此产生的罗马和平使三大洲的繁荣成为可能。教训：法治下的稳定秩序，即使是残酷建立的，也比永久冲突更好。",
+      "headline": "罗马将迦太基夷为平地"
+    },
+    "49bc": {
+      "title": "凯撒渡过卢比孔河",
+      "description": "尤利乌斯·凯撒发动将终结罗马共和国的内战。",
+      "analysis": "后果：摧毁了460年的共和政府。凯撒的改革解决了实际问题——债务、土地分配、公民权——但确立了军事夺权的先例。最终导致了帝国，带来了稳定但终结了罗马的政治自由。Philosify的观点：无论凯撒的不满多么合理，以武力夺取权力摧毁了宪政秩序。共和国的制衡机制虽不完美，但比「仁慈」独裁者的统治更能保护自由。良好的意图不能成为摧毁制度的理由。",
+      "headline": "凯撒渡过卢比孔河，挥师进军罗马"
+    },
+    "44bc": {
+      "title": "尤利乌斯·凯撒被刺杀",
+      "description": "罗马元老院议员在三月十五日刺杀凯撒。",
+      "analysis": "后果：引发了另一场比第一次更具破坏性的内战。共和国无法恢复；屋大维成为奥古斯都，第一位皇帝。刺客们的事业失败了；他们的方法使共和主义蒙羞。Philosify的观点：当根本条件不变时，消灭个人无法解决政治问题。刺客们正确地认定了暴政，但没有提出可行的替代方案。原则和制度比人物更重要——除掉凯撒并没有恢复共和国。",
+      "headline": "元老院议员在三月十五日刺杀凯撒"
+    },
+    "31bc": {
+      "title": "亚克兴海战",
+      "description": "屋大维击败安东尼和克利奥帕特拉，成为罗马唯一的统治者。",
+      "analysis": "后果：结束了数十年的内战。奥古斯都带来了和平、繁荣和持续两个世纪的罗马和平。贸易繁荣，城市发展，艺术和文学繁盛。但共和国已死；权力集中于一人。Philosify的观点：奥古斯都和平表明秩序能够促进繁荣——但代价是政治自由。安全与自由之间的权衡是真实的。罗马选择了安全；最终，集中的权力腐败了，帝国陷落。对权力的宪法限制仍然是必要的。",
+      "headline": "屋大维在亚克兴击败安东尼与克利奥帕特拉"
+    },
+    "30ad": {
+      "title": "耶稣被钉十字架",
+      "description": "拿撒勒的耶稣在耶路撒冷被钉十字架；基督教的创立事件。",
+      "analysis": "后果：基督教从这一事件中诞生，最终改变了西方文明的价值观、艺术、哲学、法律和制度。普世道德平等、个人良知和关怀边缘人群的概念进入了西方文化。Philosify的观点：基督教引入了有价值的概念——个人道德价值、良知、慈善——但也引入了与理性相冲突的信仰认识论。其混合遗产既包括人道主义进步，也包括宗教迫害。思想必须根据其内容和后果来评判，而非其来源。",
+      "headline": "拿撒勒的耶稣在耶路撒冷被钉十字架"
+    },
+    "79ad": {
+      "title": "维苏威火山爆发",
+      "description": "火山爆发摧毁庞贝和赫库兰尼姆。",
+      "analysis": "后果：数千人死亡；繁荣的城市在数小时内被毁。然而，火山灰下的保存使我们获得了对罗马日常生活、艺术、建筑和文化的无与伦比的了解，否则这些知识将会失传。Philosify的观点：自然灾害提醒我们现实对人类愿望是漠不关心的。自然按照因果关系运作，而非意图。正确的回应是通过科学理解自然力量并设计保护措施——而非祈祷或宿命论。庞贝的保存服务于人类知识。",
+      "headline": "维苏威火山爆发，庞贝城被掩埋于灰烬之下"
+    },
+    "180ad": {
+      "title": "马可·奥勒留之死",
+      "description": "\"五贤帝\"中的最后一位去世；罗马开始漫长的衰落。",
+      "analysis": "后果：马可·奥勒留选择了他不称职的儿子康茂德作为继承人，终结了收养有能力继承人的做法。罗马进入了持续数个世纪的不稳定、内战和衰落时期。Philosify的观点：即使是哲学家王也会做出错误决定。马可·奥勒留的统治证明了哲学可以指导治理——但他的继承选择证明了集中的权力取决于出身和性格的偶然因素。制度制衡比明智的统治者更重要。",
+      "headline": "马可·奥勒留驾崩，罗马黄金时代终结"
+    },
+    "313ad": {
+      "title": "米兰敕令",
+      "description": "君士坦丁在整个罗马帝国将基督教合法化。",
+      "analysis": "后果：结束了对基督徒的迫害；确立了宗教宽容的原则。基督教在国家支持下迅速发展，建立了医院、学校和慈善机构。然而，开始了政教纠葛的过程。Philosify的观点：宗教宽容对自由至关重要——国家既不应迫害也不应提倡宗教。敕令正确地结束了迫害，但君士坦丁后来对基督教的偏袒为未来的宗教强制开了先例。",
+      "headline": "君士坦丁在罗马帝国全境将基督教合法化"
+    },
+    "380ad": {
+      "title": "基督教成为国教",
+      "description": "狄奥多西皇帝将基督教定为罗马国教。",
+      "analysis": "后果：基督教获得了在整个帝国建立医院、学校和社会服务的资源。然而，异教徒和基督教「异端」现在面临迫害。宗教强制取代了宗教宽容。Philosify的观点：国教侵犯了良心自由。强迫信仰既不道德也无效——你无法强迫真诚的信念。政教合一的中世纪模式导致了数个世纪的宗教战争和迫害。政教分离保护双方。",
+      "headline": "皇帝宣布基督教为罗马唯一国教"
+    },
+    "410ad": {
+      "title": "西哥特人洗劫罗马",
+      "description": "阿拉里克的西哥特人洗劫罗马；\"永恒之城\"800年来首次沦陷。",
+      "analysis": "后果：整个帝国的心理震撼；暴露了罗马的军事弱点。然而，西哥特人寻求融合而非毁灭——罗马继续运作。促使奥古斯丁写作《上帝之城》，塑造了数个世纪的基督教政治思想。Philosify的观点：文明在放弃建立它们的原则时会衰落。罗马的衰落更多是由于内部腐朽——税收、管制、货币贬值——而非外部压力。西哥特人利用了弱点；他们并没有创造弱点。",
+      "headline": "蛮族800年来首次洗劫罗马"
+    },
+    "476ad": {
+      "title": "西罗马帝国灭亡",
+      "description": "最后一位西罗马皇帝被废黜；古代世界终结的传统日期。",
+      "analysis": "后果：贸易崩溃，城市萎缩，识字率下降，技术知识失传。日耳曼王国保留了一些罗马制度，但无法维持复杂的文明。开始了分裂和地方权力的中世纪时期。Philosify的观点：文明不是自动的——它需要持续的努力来维持。罗马衰落是因为罗马人停止做使罗马伟大的事情：生产、贸易、法治、军事纪律。黑暗时代展示了当文明基础被侵蚀时会发生什么。",
+      "headline": "末代罗马皇帝被废黜，西罗马帝国覆灭"
+    },
+    "529ad": {
+      "title": "柏拉图学院关闭",
+      "description": "查士丁尼皇帝关闭雅典学院，终结了古代哲学学校。",
+      "analysis": "后果：结束了雅典900年的哲学教育。哲学家们逃往波斯，保存了后来通过伊斯兰学者返回欧洲的希腊文本。基督教正统在帝国内压制了异教学问。Philosify的观点：以武力压制思想既不道德又徒劳。真理不能通过关闭学校来摧毁——这些思想存活下来并最终引发了文艺复兴。知识自由是必不可少的；审查延缓但不能阻止知识的传播。",
+      "headline": "查士丁尼关闭运行900年的柏拉图学院"
+    },
+    "622ad": {
+      "title": "希吉拉 - 伊斯兰教诞生",
+      "description": "穆罕默德迁移至麦地那，标志着伊斯兰历法的开始。",
+      "analysis": "后果：伊斯兰教统一了阿拉伯部落，创造了横跨三大洲的先进文明，保存并传播了希腊学问，推进了数学、天文学和医学。同时也通过军事征服扩张，将宗教法律强加于被征服的人民。Philosify的观点：伊斯兰文明在科学和哲学上的成就是尽管而非因为宗教教义——是通过重视理性的个别思想家实现的。宗教本身，像所有基于信仰的体系一样，最终与产生这些成就的理性探究相冲突。",
+      "headline": "穆罕默德出走麦地那，伊斯兰教诞生"
+    },
+    "732ad": {
+      "title": "图尔战役",
+      "description": "查理·马特阻止穆斯林势力向西欧的推进。",
+      "analysis": "后果：保存了法兰克的独立和基督教的西欧。西欧与伊斯兰世界分开发展，有着不同的政治、宗教和知识轨迹。确立了加洛林王朝的军事声望。Philosify的观点：这场战役的意义在于保存了欧洲的独立——使后来的文艺复兴、宗教改革、启蒙运动和个人权利的发展成为可能。无论对所涉宗教持何种看法，欧洲的独立发展产生了惠及全人类的自由思想。",
+      "headline": "查理·马特阻止穆斯林进军欧洲"
+    },
+    "800ad": {
+      "title": "查理曼加冕为帝",
+      "description": "教皇利奥三世为查理曼加冕，复兴了西罗马帝国的概念。",
+      "analysis": "后果：加洛林文艺复兴保存了古典学问；在整个帝国建立了学校。创造了持续数个世纪的教皇-皇帝冲突模式。帝国在查理曼死后分裂，但欧洲统一的理念延续下来。Philosify的观点：查理曼的成就表明个人领导力很重要——但他帝国的崩溃表明持久的制度需要的不仅仅是一个领导者的意志。最持久的遗产是文化的：保存学问使未来的进步成为可能。",
+      "headline": "教皇为查理曼加冕为西方皇帝"
+    },
+    "1054ad": {
+      "title": "东西教会大分裂",
+      "description": "基督教分裂为罗马天主教和东正教。",
+      "analysis": "后果：基督教世界分裂为拥有不同神学和文化发展的竞争领域。相互逐出教门滋生了持久的敌意。然而，教会之间的竞争为异见创造了空间，并最终促进了宗教多元化。Philosify的观点：宗教垄断压制探究和自由。大分裂虽然源于冲突，但无意中创造了最终削弱宗教权威对思想束缚的竞争。多元化——即使是偶然的——服务于自由。",
+      "headline": "基督教一分为二：罗马对阵君士坦丁堡"
+    },
+    "1066ad": {
+      "title": "诺曼征服英格兰",
+      "description": "征服者威廉在黑斯廷斯击败哈罗德，改变了英格兰历史。",
+      "analysis": "后果：盎格鲁-撒克逊精英被剥夺；诺曼法语对英语语言和文化产生影响。引入了大陆行政实践，最终促进了普通法和议会的发展。创造了后来将其语言和制度传播到世界各地的英格兰民族。Philosify的观点：征服侵犯了被征服者的权利——但历史根据长期后果来评判。部分源于诺曼行政管理的英国普通法成为世界范围内个人权利的基础。意外的后果有时超过了意图。",
+      "headline": "威廉在黑斯廷斯战役中征服英格兰"
+    },
+    "1095ad": {
+      "title": "第一次十字军东征号召",
+      "description": "教皇乌尔班二世号召发动十字军东征，从穆斯林手中夺回圣地。",
+      "analysis": "后果：开辟了贸易路线并从伊斯兰世界带回知识。各方都有巨大伤亡；犹太人和穆斯林遭到屠杀。文明之间产生持久的宗教仇恨。然而，欧洲与更先进的伊斯兰文明的接触加速了文化和技术发展。Philosify的观点：宗教战争是最糟糕的——为信仰而非理性利益而战，它们不允许妥协。然而意外的后果——接触保存的希腊学问——帮助激发了欧洲的知识觉醒。思想尽管有意图的阻碍仍会传播。",
+      "headline": "教皇号召第一次十字军东征夺回圣地"
+    },
+    "1215ad": {
+      "title": "大宪章签署",
+      "description": "英格兰贵族迫使约翰王签署限制王权的《大宪章》。",
+      "analysis": "后果：确立了统治者受法律约束的原则；保障了正当程序保护；为宪政政府奠定基础。虽然最初只保护男爵特权并经常被违反，但其原则逐渐扩展到保护所有公民并影响了世界各地的宪法。Philosify的观点：大宪章是人类自由史上的里程碑——即使国王也受法律约束的原则。从这颗种子生长出宪政政府、个人权利和有限政府。思想一旦确立，往往会在逻辑上扩展到其全部含义。",
+      "headline": "英格兰贵族迫使国王签署大宪章"
+    },
+    "1265ad": {
+      "title": "首届英国议会",
+      "description": "西蒙·德·蒙福尔在英格兰召集了首届民选议会。",
+      "analysis": "后果：为代议制政府创造了先例；赋予平民在贵族之外的治理发言权。虽然最初权力有限且只代表有产阶层，但演变成为许多国家采用的议会民主模式。Philosify的观点：代议制政府是对权力的关键制衡。当纳税人对税收支出有发言权时，政府就会受到约束。议会演变成为自由的捍卫者——不完美，但远优于绝对君主制。",
+      "headline": "英格兰召开首届民选议会"
+    },
+    "1347ad": {
+      "title": "黑死病到达欧洲",
+      "description": "黑死病在数年间杀死了欧洲30-60%的人口。",
+      "analysis": "后果：难以想象的苦难；社会崩溃；因瘟疫而遭到指责的少数民族遭受迫害。然而，幸存者因劳动力短缺而看到工资上涨；封建制度削弱；技术创新加速以替代失去的劳动力。Philosify的观点：灾难揭示了什么是重要的：当劳动力变得稀缺时，工人的价值上升。瘟疫通过赋予工人对抗领主的权力而意外地促进了个人自由。自然对人类愿望漠不关心——但人类可以通过理性应对来适应甚至从灾难中获益。",
+      "headline": "黑死病席卷欧洲，数百万人死亡"
+    },
+    "1439ad": {
+      "title": "古腾堡印刷机",
+      "description": "约翰内斯·古腾堡在欧洲发明了活字印刷术。",
+      "analysis": "后果：使知识民主化；使思想能够迅速传播；大大降低了书籍成本；提高了识字率。通过在制度控制之外传播思想，使宗教改革、科学革命和启蒙运动成为可能。也更有效地传播了宣传。Philosify的观点：印刷机是历史上最伟大的发明之一——它打破了精英对知识的垄断。当思想可以自由传播时，真理就有机会对抗既定的错误。赋予个人对抗制度权力的技术服务于自由。",
+      "headline": "古腾堡发明印刷机，知识传播迎来革命"
+    },
+    "1453ad": {
+      "title": "君士坦丁堡陷落",
+      "description": "奥斯曼土耳其人攻克君士坦丁堡，终结了拜占庭帝国。",
+      "analysis": "后果：逃往意大利的希腊学者带来了推动文艺复兴的手稿。奥斯曼帝国将君士坦丁堡维持为主要的文化和商业中心。贸易路线西移，刺激了大西洋探险。东罗马帝国在延续1000年后终结。Philosify的观点：陷落使希腊学问散播到整个欧洲，加速了文艺复兴。思想无法被征服所遏制——它们随着人和书籍迁移。奥斯曼人征服了一座城市；希腊人通过知识保存了一个文明。",
+      "headline": "君士坦丁堡沦陷于奥斯曼土耳其"
+    },
+    "1492ad": {
+      "title": "哥伦布到达美洲",
+      "description": "克里斯托弗·哥伦布的航行为欧洲探索打开了新大陆。",
+      "analysis": "后果：开始了两个半球之间作物、动物、思想的交流——改变了全球农业、饮食和经济。原住民人口因疾病和征服而遭受毁灭性打击；奴隶制被引入美洲。最终导致了建立在启蒙原则之上的国家。Philosify的观点：哥伦布的航行对原住民造成了灾难性后果——征服和疾病侵犯了他们的生命和财产权。然而，长期结果包括美国的建立，这确立了个人权利作为政府的基础。历史的道德复杂性不允许简单的判断。",
+      "headline": "哥伦布到达新大陆"
+    },
+    "1517ad": {
+      "title": "新教改革开始",
+      "description": "马丁·路德张贴九十五条论纲，挑战天主教会的权威。",
+      "analysis": "后果：挑战了宗教垄断；强调个人信仰和圣经阅读；导致了宗教多元化。引发了一个世纪的宗教战争和各方迫害。最终确立了个人可以为自己解读信仰的原则，促进了个人主义的兴起。Philosify的观点：宗教改革的持久贡献是打破了宗教垄断。无论路德的意图如何，个人可以自己阅读和解释的原则在逻辑上延伸到所有领域。宗教多元化是迈向知识自由的一步。",
+      "headline": "路德张贴九十五条论纲，挑战教会权威"
+    },
+    "1543ad": {
+      "title": "哥白尼革命",
+      "description": "哥白尼发表日心说，将地球从宇宙中心移除。",
+      "analysis": "后果：展示了观察和数学推翻既定信念的力量。最初遭到天主教和新教当局的抵制。开辟了通往现代天文学和科学方法的道路。改变了人类对自己在宇宙中位置的理解。Philosify的观点：哥白尼表明，无论传统、权威或愿望如何，现实就是现实。日心模型是真实的，无论教会是否接受。科学通过跟随证据前进——将理性应用于自然的本质。",
+      "headline": "哥白尼证明地球绕太阳运行"
+    },
+    "1588ad": {
+      "title": "西班牙无敌舰队战败",
+      "description": "英格兰击败西班牙入侵舰队，保卫了新教的独立。",
+      "analysis": "后果：保存了英格兰的独立免于天主教西班牙的统治；海军力量北移；使英格兰殖民美洲成为可能。英格兰作为主要海军强国崛起，为全球影响力和英语语言与法律的传播奠定了基础。Philosify的观点：英格兰的独立保存了一个将发展普通法、议会政府并最终启发美国建国的国家。无敌舰队的失败使产生《独立宣言》的自由传统成为可能。",
+      "headline": "英格兰摧毁西班牙无敌舰队"
+    },
+    "1607ad": {
+      "title": "詹姆斯敦建立",
+      "description": "美洲第一个永久性英国殖民地建立。",
+      "analysis": "后果：开始了带来自治传统、普通法和最终革命思想的英国殖民。与美洲原住民的关系恶化；几十年内引入了奴隶制。美国共和国的种子由带来英国法律和政治传统的殖民者种下。Philosify的观点：詹姆斯敦带来了善与恶——自治和奴隶制。相信自己作为英国人的权利的殖民者最终会将这些原则延伸到其逻辑结论：权利属于所有个人，而不仅仅是英国人。",
+      "headline": "美洲首个英国殖民地建立"
+    },
+    "1620ad": {
+      "title": "五月花号公约",
+      "description": "清教徒在普利茅斯建立自治殖民地。",
+      "analysis": "后果：美洲第一个书面自治框架；在实践中展示了社会契约理论。书面宪法和同意政府的模式影响了美国的建立。最初仅限教会成员参与。Philosify的观点：公约确立了同意政府——合法政府源于被统治者的同意，而非神授权利或征服的激进思想。这一原则一旦确立，在逻辑上就延伸到所有人，而不仅仅是最初的签署者。",
+      "headline": "清教徒签署五月花号公约，建立自治殖民地"
+    },
+    "1642ad": {
+      "title": "英国内战开始",
+      "description": "议会与查理一世因宪政原则爆发战争。",
+      "analysis": "后果：确立了议会至上；推进了宪政政府；使宗教宽容成为可能。数万人死亡；克伦威尔下的临时军事独裁。确立了英国君主必须与议会共同执政，而非对抗议会。Philosify的观点：内战确立了没有统治者可以凌驾于法律或人民代表之上。即使是临时独裁也无法撤销这一原则。战争代价高昂，但替代方案——绝对君主制——对自由来说会更糟糕。",
+      "headline": "英国内战爆发：议会对阵国王"
+    },
+    "1648ad": {
+      "title": "威斯特伐利亚和约",
+      "description": "条约终结三十年战争并建立现代国家体系。",
+      "analysis": "后果：结束了造成数百万人死亡的毁灭性宗教战争。确立了创建现代国际体系的国家主权和不干涉原则。欧洲的宗教分裂被固定下来，但宗教战争结束了。Philosify的观点：威斯特伐利亚通过确立各国不干涉彼此宗教事务来结束宗教战争。主权原则有其局限性——它不应保护暴政——但结束宗教战争是一项成就。务实的和平胜过永久的圣战。",
+      "headline": "威斯特伐利亚和约终结三十年战争"
+    },
+    "1687ad": {
+      "title": "牛顿《原理》出版",
+      "description": "艾萨克·牛顿发表运动定律和万有引力定律。",
+      "analysis": "后果：证明了宇宙按可发现的规律运行；实现了现代物理学和工程学。启发了启蒙运动的信心，相信理性可以理解自然并改善社会。提出了关于决定论和目的的哲学问题。Philosify的观点：牛顿表明宇宙是有序的、有规律的，并且可以被人类理性所理解。这是科学和技术的基础——也是相信现实可以被理解和改善的信心基础。理性有效；它是我们生存的工具。",
+      "headline": "牛顿揭示支配宇宙的定律"
+    },
+    "1688ad": {
+      "title": "光荣革命",
+      "description": "奥兰治的威廉取代詹姆斯二世；议会确立至高地位。",
+      "analysis": "后果：在没有重大流血的情况下建立了君主立宪制、议会至上和宗教宽容。《权利法案》保护了个人自由。天主教徒被排除在继承权之外。和平宪政改革的模式。Philosify的观点：光荣革命以最小的暴力实现了政权更迭——证明了根本性变革不需要恐怖。这里建立的对权力的宪法限制成为美国继承并改进的英国传统。",
+      "headline": "奥兰治的威廉在不流血政变中夺取英国王位"
+    },
+    "1689ad": {
+      "title": "洛克《政府论》出版",
+      "description": "约翰·洛克发表自然权利和有限政府理论。",
+      "analysis": "后果：阐明了个人权利、同意政府和革命权的哲学基础。直接影响了美国建国者。英语世界最具影响力的政治哲学；古典自由主义的基础。Philosify的观点：洛克确立了个人拥有先于政府的自然权利——政府存在是为了保护这些权利，而非授予它们。这是美国和全世界自由的哲学基础。洛克不完美但方向正确。",
+      "headline": "洛克发表自然权利与有限政府理论"
+    },
+    "1776ad": {
+      "title": "美国独立宣言",
+      "description": "美洲殖民地宣布独立，主张自然权利。",
+      "analysis": "后果：第一个明确建立在自然权利、被统治者同意和有限政府原则之上的国家。激励了世界各地的自由运动。权利最初未延伸至被奴役者或妇女——但原则最终扩展到包括所有人。Philosify的观点：《独立宣言》是人类最伟大的政治文献。'人人生而平等'拥有'不可剥夺的权利'是正当政府的基础。建国者们知道他们的实践未达到原则的要求——但他们确立了要求自我实现的原则。",
+      "headline": "美洲殖民地宣布脱离英国独立"
+    },
+    "1787ad": {
+      "title": "美国宪法制定",
+      "description": "制宪会议为有限联邦政府创建框架。",
+      "analysis": "后果：创建了持久的制衡体系；联邦结构平衡了国家和地方利益。在奴隶制问题上做出妥协；最初没有《权利法案》。仍在使用的最古老成文宪法；影响了世界各地的宪法。Philosify的观点：宪法是启蒙原则的实际应用——有限政府、分权、联邦制。它不完美但被设计为可通过修正案改进。这一框架已使美国繁荣并保护自由两个多世纪。",
+      "headline": "制宪者在费城起草美国宪法"
+    },
+    "1789ad": {
+      "title": "法国大革命开始",
+      "description": "攻占巴士底狱拉开了将震撼欧洲的革命序幕。",
+      "analysis": "后果：结束了封建特权；传播了公民身份和平等的思想。演变为恐怖统治、独裁和数十年的战争；数千人被断头台处决。将民族主义传播到整个欧洲；展示了革命性变革的潜力和危险。Philosify的观点：法国大革命说明了美国和法国方法之间的区别。美国：个人权利受政府保护。法国：将个人牺牲给集体的'公意'。恐怖统治不是意外而是集体主义哲学的后果。",
+      "headline": "巴黎民众攻占巴士底狱，大革命爆发"
+    },
+    "1791ad": {
+      "title": "权利法案批准",
+      "description": "美国宪法前十条修正案保护个人自由。",
+      "analysis": "后果：明确保护言论、宗教、出版、集会和武器权利以及正当程序权利。限制联邦权力；将权力保留给州和人民。权利扩展的解释基础。最初仅适用于联邦政府。Philosify的观点：《权利法案》不是授予权利——它禁止政府侵犯预先存在的自然权利。'国会不得制定法律...'这些修正案承认权利是人性固有的，而非政府的恩赐。这种理解对自由至关重要。",
+      "headline": "权利法案获批准，个人自由受到保障"
+    },
+    "1804ad": {
+      "title": "拿破仑加冕称帝",
+      "description": "拿破仑·波拿巴自封为法兰西皇帝。",
+      "analysis": "后果：革命共和国变成了独裁统治。拿破仑法典在整个欧洲现代化了民法。数百万人死于拿破仑战争。在镇压自由的同时传播了启蒙改革。在整个欧洲唤醒了民族主义。Philosify的观点：拿破仑证明了良好的改革不能为独裁辩护。《拿破仑法典》是进步的，但由暴君强加。手段与目的同样重要——自由不能通过征服来传播。拿破仑最大的遗产是意外的：激发了民族抵抗运动。",
+      "headline": "拿破仑自封为法兰西皇帝"
+    },
+    "1815ad": {
+      "title": "滑铁卢战役",
+      "description": "拿破仑战败；维也纳会议恢复欧洲秩序。",
+      "analysis": "后果：结束了数十年的战争；使一个世纪相对的欧洲和平成为可能。维也纳会议创建了均势体系。反动的解决方案最初压制了自由运动，但它们后来出现了。和平环境中经济发展蓬勃。Philosify的观点：维也纳会议是反动的但带来了和平。均势体系虽不完美，但阻止了一个世纪的欧洲大战。稳定促进繁荣——但压制自由运动只是推迟了它们的胜利。",
+      "headline": "拿破仑在滑铁卢战败，被永久流放"
+    },
+    "1833ad": {
+      "title": "英国废奴法案",
+      "description": "英国在整个帝国范围内废除奴隶制。",
+      "analysis": "后果：结束了大英帝国的奴隶制；皇家海军在全球镇压奴隶贸易。全球废奴运动的重要一步。奴隶主得到补偿而被奴役者一无所获；其他形式的剥削继续存在。道德领导力激励了其他国家。Philosify的观点：废奴承认所有人都有权利——奴隶制是对一个人的生命和劳动的盗窃。英国的废奴表明道德进步是可能的。它通过和平立法而非革命实现的事实表明，理性可以战胜根深蒂固的利益。",
+      "headline": "英国在全帝国范围内废除奴隶制"
+    },
+    "1848ad": {
+      "title": "1848年革命",
+      "description": "革命浪潮席卷欧洲，要求建立宪政政府。",
+      "analysis": "后果：大多数革命被镇压；反动政府回归。然而，广泛传播了自由和民族主义思想；结束了奥地利帝国的农奴制；显示了民众对改革的渴望。改革最终通过演变而非革命而来。Philosify的观点：1848年表明自由思想已从精英传播到大众。虽然立即失败，但革命表明旧秩序在知识上已经破产。镇压不能杀死思想——它推迟它们的实现。",
+      "headline": "革命浪潮席卷整个欧洲"
+    },
+    "1848ad_2": {
+      "title": "共产党宣言出版",
+      "description": "马克思和恩格斯发表呼吁暴力革命和废除私有财产的宣言。",
+      "analysis": "后果：这份文件成为20世纪谋杀超过一亿人的政权的意识形态基础——在苏联、中国、柬埔寨、古巴、朝鲜等地。无论共产主义在哪里实施，结果都是暴政、贫困和大规模死亡。Philosify的观点：《宣言》否定个人权利、私有财产和自由市场——人类繁荣和自由的基础。其对阶级斗争和集体所有制的呼吁从根本上与人性不相容。马克思在历史、经济学和人性方面都是错误的。死亡人数证明了这一点。",
+      "headline": "马克思和恩格斯发表共产党宣言"
+    },
+    "1859ad": {
+      "title": "物种起源出版",
+      "description": "达尔文发表自然选择进化论。",
+      "analysis": "后果：统一了生物学；通过自然过程解释了生命的多样性。现代医学、遗传学和生物技术的基础。被滥用来为社会达尔文主义和优生学辩护。改变了对生命和人类在自然界中位置的理解。Philosify的观点：进化论是真实的——证据是压倒性的。这并不降低人的尊严；它解释了我们的起源而不决定我们的命运。我们进化出了超越本能的理性能力。生物学描述的是什么；伦理学决定的是应该是什么。",
+      "headline": "达尔文出版《物种起源》，动摇生物学根基"
+    },
+    "1861ad": {
+      "title": "美国内战开始",
+      "description": "围绕奴隶制和州权问题爆发战争；美国历史上最惨烈的冲突。",
+      "analysis": "后果：620,000人死亡——比所有其他战争中死亡的美国人还多。结束了奴隶制；保存了联邦。重建时代过早结束；种族不平等又持续了一个世纪。确立了国家将保持统一，奴隶制与美国原则不相容。Philosify的观点：内战是争取自由反对奴隶制的战争——对个人权利的最终侵犯。林肯正确地理解到一个'半奴隶半自由'的国家是自相矛盾的。联邦的事业是正义的；代价是悲剧性但必要的。",
+      "headline": "南方脱离联邦，美国内战爆发"
+    },
+    "1863ad": {
+      "title": "解放奴隶宣言",
+      "description": "林肯宣布叛乱各州的奴隶\"永远自由\"。",
+      "analysis": "后果：将内战转变为争取自由的斗争，而不仅仅是联邦。使黑人士兵能够为自己的解放而战。在道义和物质上削弱了邦联。未解放边境州的奴隶；完全平等还需要一个世纪。Philosify的观点：解放是美国实践其建国原则。'人人生而平等'意味着它所说的——《解放宣言》开始了兑现这一承诺的过程。林肯理解奴隶制在原则上是错误的，而不仅仅是政策。",
+      "headline": "林肯宣布叛乱各州所有奴隶永远自由"
+    },
+    "1865ad": {
+      "title": "第十三修正案批准",
+      "description": "美国全境废除奴隶制和非自愿劳役。",
+      "analysis": "后果：在宪法上废除了奴隶制；完成了《独立宣言》所承诺的。前奴隶最初被剥夺土地和完整公民权利；佃农制和吉姆·克劳法随之而来。但奴隶制被宪法修正案永久废除。Philosify的观点：第十三修正案将本应从一开始就写入宪法的内容铭刻于宪法——任何人都不能拥有另一个人。争取完全平等的斗争继续进行，但基本原则已经确立：个人权利属于所有个人。",
+      "headline": "第十三修正案在美国废除奴隶制"
+    },
+    "1869ad": {
+      "title": "横贯大陆铁路完工",
+      "description": "连接大西洋和太平洋海岸的横贯大陆铁路在普罗蒙特里峰竣工。",
+      "analysis": "后果：在经济上统一了大陆；促进了定居、商业和通讯跨越广大距离。将旅行时间从数月减少到数天。用被剥削的移民劳工建造；破坏了美洲原住民的土地和野牛群。改变了美国经济和定居模式。Philosify的观点：铁路展示了自由企业和工程学能够实现的成就。尽管有政府参与和劳工剥削，该项目创造了巨大价值。促进贸易和流动的基础设施服务于人类繁荣——当通过自愿交换而非强迫劳动建设时。",
+      "headline": "横贯大陆铁路通车，东西海岸相连"
+    },
+    "1876ad": {
+      "title": "电话发明",
+      "description": "亚历山大·格拉汉姆·贝尔获得电话专利。",
+      "analysis": "后果：实现了跨距离即时通讯；改变了商业、政府和个人关系。创造了新的产业和经济机会。电信革命的开始，继续改变着社会。Philosify的观点：电话体现了发明家如何在服务自身利益的同时服务所有人。贝尔寻求利润，通过为他人创造价值来实现。这是资本主义的最佳体现——自愿交换为各方创造财富。",
+      "headline": "贝尔发明电话"
+    },
+    "1879ad": {
+      "title": "爱迪生的电灯泡",
+      "description": "托马斯·爱迪生发明实用的白炽灯泡。",
+      "analysis": "后果：将生产时间延长到日光之外；改善了家庭和工作场所的安全；实现了新产业；改变了日常生活。电气化改变了现代文明的各个方面。爱迪生的系统发明方法成为工业研究的模式。Philosify的观点：爱迪生不仅发明了电灯泡——他创造了使其有用的发电和配电系统。他体现了资本主义奖励的生产天才：发现问题，创造解决方案，通过服务他人获利。",
+      "headline": "爱迪生用电灯泡照亮世界"
+    },
+    "1886ad": {
+      "title": "自由女神像落成",
+      "description": "法国赠送给美国的礼物庆祝照亮世界的自由。",
+      "analysis": "后果：成为美国理想的持久象征；欢迎数百万寻求自由和机会的移民。理想并不总是与歧视和限制的现实相匹配。仍然是自由和为受压迫者提供庇护的强大象征。Philosify的观点：雕像代表美国的建国理想：自由是人类的自然状态。'给我你疲惫的、贫穷的、渴望自由呼吸的大众'——最好的美国欢迎那些寻求自由的人。这个理想仍然值得追求。",
+      "headline": "自由女神像在纽约港揭幕"
+    },
+    "1903ad": {
+      "title": "莱特兄弟首飞",
+      "description": "在基蒂霍克完成首次有操控的动力飞行。",
+      "analysis": "后果：开创了航空时代；改变了交通、商业、通讯和战争。使世界变小——任何地点在数小时内即可到达。使空中轰炸成为可能，但也使人道主义援助和全球商业成为可能。Philosify的观点：两位来自俄亥俄州的自行车修理工实现了学者们认为不可能的事情。莱特兄弟体现了美国的实践天才——动手实验、坚持不懈、理性解决问题。是个人主动性而非政府项目打开了天空。",
+      "headline": "莱特兄弟实现人类首次动力飞行"
+    },
+    "1905ad": {
+      "title": "爱因斯坦奇迹年",
+      "description": "爱因斯坦发表关于狭义相对论、光电效应和布朗运动的论文。",
+      "analysis": "后果：革新了物理学；表明空间和时间是相对的，质量和能量等价。实现了核能、GPS和无数技术。也使核武器成为可能。改变了对宇宙的理解。Philosify的观点：爱因斯坦，一个专利局职员，通过纯粹的思考推翻了几个世纪的物理学。他的工作证明现实是客观的和可知的——但我们的知识必须不断根据证据修正。真理存在；我们的工作是通过理性发现它。",
+      "headline": "爱因斯坦改写物理学定律"
+    },
+    "1914ad": {
+      "title": "第一次世界大战开始",
+      "description": "弗朗茨·斐迪南大公遇刺引发全球冲突。",
+      "analysis": "后果：1700万人死亡；帝国被摧毁；欧洲版图被重新划分。使共产主义和法西斯主义的兴起成为可能。不稳定的和平解决为第二次世界大战埋下了种子。摧毁了19世纪对进步的乐观信念。Philosify的观点：一战是民族主义、军国主义和纠缠不清的联盟的结果——都是思想的失败。这场灾难使旧秩序失信而没有建立更好的秩序。坏思想的后果以数百万生命来衡量。",
+      "headline": "大公遇刺，欧洲陷入战火"
+    },
+    "1917ad": {
+      "title": "俄国革命",
+      "description": "布尔什维克在俄国夺取政权，建立共产主义极权国家。",
+      "analysis": "后果：建立了第一个主要的共产主义国家。用更糟糕的东西取代了一个专制政权——一个通过清洗、饥荒和古拉格谋杀了2000多万本国人民的政权。向世界输出共产主义意识形态，在中国、柬埔寨、古巴等地导致类似暴行。Philosify的观点：俄国革命证明了集体主义导致大规模谋杀。当个人权利从属于'集体'、'工人'或'人民'时，结果总是暴政。20世纪共产主义的一亿受害者是对马克思的最终反驳。",
+      "headline": "布尔什维克在俄国夺取政权"
+    },
+    "1918ad": {
+      "title": "第一次世界大战结束",
+      "description": "停战协定签署；战争导致1700万人死亡并重塑世界秩序。",
+      "analysis": "后果：创建了国际联盟；终结了奥斯曼、奥匈、德意志和俄罗斯帝国。报复性的和平条款羞辱了德国；新边界制造了种族冲突。不稳定的解决和未解决的不满直接导致了第二次世界大战。Philosify的观点：《凡尔赛条约》表明没有正义的和平是不稳定的。惩罚德国制造了希特勒利用的怨恨。既不和解也不彻底击败敌人的和平留下了两种方法中最糟糕的部分。",
+      "headline": "停战协定签署，一战结束"
+    },
+    "1920ad": {
+      "title": "第十九修正案批准",
+      "description": "美国女性获得投票权。",
+      "analysis": "后果：将政治平等扩展到妇女；证明了数十年和平倡导的正当性。选民数量翻倍。妇女成为选民的多数。将'人人生而平等'的定义扩展到其逻辑结论。Philosify的观点：妇女选举权是建国原则的逻辑延伸。权利属于作为个人的个人——而非作为群体成员。修正案纠正了美国实践中的不一致；原则一直存在等待被应用。",
+      "headline": "美国女性赢得投票权"
+    },
+    "1929ad": {
+      "title": "股市崩盘",
+      "description": "黑色星期二引发大萧条。",
+      "analysis": "后果：前所未有的经济崩溃；全球大规模失业。促进了欧洲极端主义的兴起。导致了美国新政对政府的扩张。改变了政府在经济中的角色；关于原因和补救措施的辩论仍在继续。Philosify的观点：大萧条的原因存在争议，但政府干预——斯穆特-霍利关税、货币紧缩、增税——使情况变得更糟。教训：危机期间的政府干预往往加剧损害。当市场被允许运作时，它会更快地自我纠正。",
+      "headline": "华尔街崩盘，大萧条开始"
+    },
+    "1933ad": {
+      "title": "希特勒成为总理",
+      "description": "阿道夫·希特勒被任命为德国总理。",
+      "analysis": "后果：结束了魏玛民主；开始迫害犹太人；导致了第二次世界大战和大屠杀。7000-8500万人死亡；600万犹太人被谋杀。展示了当宪法保护失效时民主如何投票走向暴政。Philosify的观点：希特勒在民主体制内合法崛起——证明没有对政府权力的宪法限制的民主不是自由。纳粹赢得了选举。个人权利必须受到保护免受多数人侵害，而非由多数人保护。魏玛的失败是制度的，不仅仅是个人的。",
+      "headline": "希特勒被任命为德国总理"
+    },
+    "1939ad": {
+      "title": "第二次世界大战开始",
+      "description": "德国入侵波兰；英国和法国宣战。",
+      "analysis": "后果：历史上最致命的冲突：7000-8500万人死亡。大屠杀谋杀了600万犹太人。纳粹和日本帝国被摧毁。导致联合国、非殖民化和冷战。永久地使法西斯主义失信。Philosify的观点：二战是善与恶的战争——盟国和轴心国之间没有道德对等。绥靖失败了；只有武力才能阻止希特勒。教训：邪恶必须及早果断地面对。软弱招致侵略；实力威慑侵略。",
+      "headline": "德国入侵波兰，第二次世界大战爆发"
+    },
+    "1941ad": {
+      "title": "珍珠港事件",
+      "description": "日本袭击美国太平洋舰队；美国加入第二次世界大战。",
+      "analysis": "后果：2403名美国人死亡；使美国加入战争。美国的工业和军事力量扭转了对德国和日本的战局。美国成为全球超级大国。永久结束了美国孤立主义。Philosify的观点：珍珠港证明了海洋不能保护免受坚定敌人的侵害。美国的加入将世界从纳粹和日本暴政中拯救出来。袭击是邪恶的；回应——全面战争直到无条件投降——是正义的。美国的事业是正义的。",
+      "headline": "日本轰炸珍珠港，美国参战"
+    },
+    "1942ad": {
+      "title": "大屠杀：系统性种族灭绝",
+      "description": "纳粹德国实施\"最终解决方案\"，屠杀六百万犹太人和数百万其他人。",
+      "analysis": "后果：工业化规模的谋杀：600万犹太人，加上数百万罗姆人、残疾人、同性恋者和政治犯。无法估量的人类损失——科学家、艺术家、学者、家庭。导致人权宣言和种族灭绝公约。建立以色列作为庇护所。Philosify的观点：大屠杀是集体主义的终极后果——将个人视为要被消灭的群体成员。它始于思想：某些群体低人一等，个人没有固有权利，集体高于个人。思想有后果。",
+      "headline": "纳粹启动最终解决方案，系统性屠杀犹太人"
+    },
+    "1944ad": {
+      "title": "诺曼底登陆",
+      "description": "盟军在诺曼底登陆，开始解放西欧。",
+      "analysis": "后果：开始从纳粹占领下解放西欧。伤亡惨重但成功建立了滩头阵地。西欧被民主国家解放；东欧被苏联占领。两个区域的对比将定义冷战。Philosify的观点：诺曼底代表自由世界战胜邪恶的承诺。美国、英国、加拿大和其他盟军士兵为解放素未谋面的人而牺牲。这不是牺牲而是英雄主义——为值得付出生命的价值而战。",
+      "headline": "盟军在诺曼底登陆日强攻海滩"
+    },
+    "1945ad": {
+      "title": "原子弹结束二战",
+      "description": "美国向广岛和长崎投下原子弹；日本无条件投降。",
+      "analysis": "Consequences: The atomic bombs ended World War II with Japan's unconditional surrender—the only acceptable outcome against an aggressor nation. Japan started the war with Pearl Harbor and committed horrific atrocities across Asia (Rape of Nanking, POW torture, Unit 731). The bombs saved hundreds of thousands of American soldiers' lives and likely millions of Japanese lives—Japan was arming civilians to fight to the death. Philosophical significance: America had every right to use overwhelming force against an enemy that attacked first and refused to surrender. Our soldiers' lives take priority over enemy civilians. The decision was rational, moral, and life-affirming. Victory, not prolonged bloodshed, is the goal of a just war.",
+      "headline": "原子弹投向日本，战争结束"
+    },
+    "1945ad_2": {
+      "title": "联合国成立",
+      "description": "成立维护和平与安全的国际组织。",
+      "analysis": "POSITIVE: Created forum for diplomacy; agencies address humanitarian needs; human rights declarations. NEGATIVE: Security Council veto limits effectiveness; cannot override sovereignty. Long-term: Imperfect but useful forum for international cooperation.",
+      "headline": "联合国成立以维护世界和平"
+    },
+    "1947ad": {
+      "title": "艾茵·兰德《源泉》的成功",
+      "description": "《源泉》成为畅销书，展示个人主义哲学。",
+      "analysis": "POSITIVE: Celebrated individual creativity and integrity; challenged collectivist thinking; inspired entrepreneurs and artists. NEGATIVE: Critics argued it dismissed community and social bonds. Long-term: Influenced libertarian movement; remains widely read and debated.",
+      "headline": "兰德《源泉》成为畅销书，个人主义兴起"
+    },
+    "1948ad": {
+      "title": "以色列建国",
+      "description": "以色列国宣布成立，为犹太民族提供家园。",
+      "analysis": "POSITIVE: Provided refuge for Jews after Holocaust; built successful democracy; technological innovation. NEGATIVE: Displacement of Palestinians; ongoing regional conflict. Long-term: Complex legacy of refuge, conflict, and competing national aspirations.",
+      "headline": "以色列宣布建国，犹太家园诞生"
+    },
+    "1950ad": {
+      "title": "朝鲜战争开始",
+      "description": "朝鲜入侵韩国；联合国军进行干预。",
+      "analysis": "POSITIVE: South Korea preserved; became prosperous democracy. NEGATIVE: Millions killed; peninsula remains divided; North Korea became totalitarian state. Long-term: Stark contrast between North and South demonstrates different systems' outcomes.",
+      "headline": "朝鲜入侵韩国，战争爆发"
+    },
+    "1949ad": {
+      "title": "中华人民共和国成立",
+      "description": "毛泽东在中国建立共产主义极权独裁体制。",
+      "analysis": "Consequences: Mao's regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, and family structures. Philosophical significance: Communism is the deadliest ideology in human history. China's economic success only came AFTER the CCP abolished communist economics and opened markets, allowing people to trade freely domestically and internationally. The political system remains authoritarian, but prosperity required abandoning Marx. The regime still commits genocide against Uyghurs and threatens Taiwan.",
+      "headline": "毛泽东宣告建立共产主义中国，世界最大国家赤化"
+    },
+    "1957ad": {
+      "title": "《阿特拉斯耸耸肩》出版",
+      "description": "安·兰德出版她的哲学小说。",
+      "analysis": "POSITIVE: Defended productive achievement; critiqued excessive regulation; inspired entrepreneurs. NEGATIVE: Critics argued it lacked compassion for the less fortunate. Long-term: One of most influential American novels; continues to spark debate about capitalism and individualism.",
+      "headline": "艾茵·兰德出版《阿特拉斯耸耸肩》"
+    },
+    "1961ad": {
+      "title": "人类首次进入太空",
+      "description": "尤里·加加林成为首位绕地球轨道飞行的人类。",
+      "analysis": "POSITIVE: Opened space age; demonstrated human capacity to transcend earthly limits; inspired generations. NEGATIVE: Space race diverted resources; Cold War competition. Long-term: Space exploration continues to advance science and inspire humanity.",
+      "headline": "加加林环绕地球，成为首位太空人"
+    },
+    "1963ad": {
+      "title": "肯尼迪遇刺",
+      "description": "约翰·F·肯尼迪总统在达拉斯遇刺。",
+      "analysis": "POSITIVE: Peaceful transfer of power demonstrated constitutional resilience. NEGATIVE: National trauma; loss of popular leader; conspiracy theories persist. Long-term: Showed institutions survive loss of any individual; changed American political culture.",
+      "headline": "肯尼迪总统在达拉斯遇刺"
+    },
+    "1964ad": {
+      "title": "民权法案",
+      "description": "里程碑式的立法禁止基于种族、肤色、宗教、性别或国籍的歧视。",
+      "analysis": "POSITIVE: Ended legal segregation; protected voting rights; opened opportunities. NEGATIVE: Did not eliminate discrimination; implementation faced resistance. Long-term: Transformed American society; extended founding principles to all citizens.",
+      "headline": "民权法案宣布种族歧视违法"
+    },
+    "1965ad": {
+      "title": "越南战争升级",
+      "description": "美国向越南派遣作战部队；战争将夺去数百万人的生命。",
+      "analysis": "POSITIVE: Attempted to prevent communist expansion. NEGATIVE: Over 58,000 Americans and millions of Vietnamese killed; divided American society; ultimately unsuccessful. Long-term: Changed American attitudes toward military intervention; lessons still debated.",
+      "headline": "美国向越南派出作战部队"
+    },
+    "1966ad": {
+      "title": "文化大革命开始",
+      "description": "毛泽东发动文化大革命，打击\"反革命\"分子。",
+      "analysis": "POSITIVE: None. NEGATIVE: Millions killed or persecuted; cultural heritage destroyed; education disrupted for generation. Long-term: Traumatized Chinese society; later repudiated by Chinese Communist Party itself.",
+      "headline": "毛泽东发动文化大革命，中国陷入混乱"
+    },
+    "1975ad": {
+      "title": "柬埔寨大屠杀开始",
+      "description": "红色高棉夺取政权；种族灭绝导致150-200万柬埔寨人死亡。",
+      "analysis": "POSITIVE: None. NEGATIVE: Quarter of population killed; society devastated; educated class targeted for elimination. Long-term: Cambodia slowly recovered; tribunals eventually held perpetrators accountable.",
+      "headline": "红色高棉夺取柬埔寨，种族灭绝开始"
+    },
+    "1979ad": {
+      "title": "伊朗革命",
+      "description": "伊斯兰革命推翻国王；霍梅尼建立神权独裁统治。",
+      "analysis": "Consequences: Replaced a modernizing authoritarian monarchy with a barbaric theocratic dictatorship. Iran became the world's leading state sponsor of terrorism. Women lost fundamental rights. Religious police enforce medieval laws. The regime has pursued nuclear weapons while calling for the destruction of Israel and America. Philosophical significance: Not all \"revolutions\" are progress. Theocracy is incompatible with human freedom. The West's failure to support the Shah and decades of appeasement emboldened this regime. Only regime change or unconditional surrender can end this threat to civilization.",
+      "headline": "伊斯兰革命推翻伊朗国王，建立神权政体"
+    },
+    "1969ad": {
+      "title": "登月",
+      "description": "阿波罗11号宇航员踏上月球。",
+      "analysis": "POSITIVE: Greatest technological achievement in history; united humanity in wonder; advanced technology. NEGATIVE: Enormous cost; program later abandoned. Long-term: Proved nothing is impossible; inspired generations; space exploration continues.",
+      "headline": "阿姆斯特朗登上月球"
+    },
+    "1989ad": {
+      "title": "柏林墙倒塌",
+      "description": "柏林墙倒塌；冷战开始走向终结。",
+      "analysis": "POSITIVE: Reunified Germany; freed Eastern Europe; ended Cold War division; peaceful revolution. NEGATIVE: Economic difficulties for former communist states; not all transitions smooth. Long-term: Demonstrated that even seemingly permanent systems can collapse; expanded freedom to millions.",
+      "headline": "柏林墙倒塌，自由之风席卷东欧"
+    },
+    "1991ad": {
+      "title": "苏联解体",
+      "description": "苏联正式解体；冷战结束。",
+      "analysis": "POSITIVE: Ended communist superpower; freed 15 nations; ended nuclear standoff. NEGATIVE: Economic collapse in former Soviet states; some regions remain authoritarian. Long-term: Transformed international order; debate continues about post-Soviet development.",
+      "headline": "苏联解体，冷战结束"
+    },
+    "2001ad": {
+      "title": "9·11恐怖袭击",
+      "description": "基地组织恐怖分子袭击世贸中心和五角大楼，造成近3000人死亡。",
+      "analysis": "Consequences: Nearly 3,000 innocent people murdered by Islamic terrorists. America responded with war in Afghanistan to destroy Al-Qaeda and the Taliban regime that harbored them. Triggered two decades of military operations against terrorist networks. Philosophical significance: Evil exists and must be destroyed. The proper response to terrorism is overwhelming force, not negotiation. The failure to achieve complete victory in Afghanistan demonstrated the cost of nation-building over decisive military defeat of enemies.",
+      "headline": "恐怖分子袭击世贸中心和五角大楼"
+    },
+    "2008ad": {
+      "title": "全球金融危机",
+      "description": "雷曼兄弟倒闭引发全球金融危机。",
+      "analysis": "POSITIVE: Led to financial reforms; exposed weaknesses in system. NEGATIVE: Millions lost jobs and homes; recession spread globally. Long-term: Changed banking regulation; debates about causes and responses continue.",
+      "headline": "雷曼兄弟倒闭，全球金融危机爆发"
+    },
+    "2020ad": {
+      "title": "新冠疫情",
+      "description": "全球大流行导致前所未有的封锁和经济动荡。",
+      "analysis": "POSITIVE: Accelerated medical research and vaccine development; remote work became viable. NEGATIVE: Millions died; economic disruption; mental health impacts; educational setbacks. Long-term: Transformed work, medicine, and public health; full effects still emerging.",
+      "headline": "新冠疫情使全球陷入停摆"
+    },
+    "2023ad": {
+      "title": "10月7日：哈马斯袭击以色列",
+      "description": "哈马斯恐怖分子屠杀1200名以色列平民并劫持250名人质。",
+      "analysis": "Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities against civilians including rape, torture, and murder of children. Revealed the true nature of Hamas as a genocidal terrorist organization. Much of the Western intelligentsia shamefully sided with the terrorists, exposing moral bankruptcy in academia and media. Philosophical significance: Evil must be defeated, not negotiated with. Israel's right to self-defense is absolute. Victory means dismantling Hamas's capability to harm civilians. There is no moral equivalence between terrorists and their victims.",
+      "headline": "哈马斯突袭屠杀1200名以色列人"
+    },
+    "2022ad": {
+      "title": "俄罗斯入侵乌克兰",
+      "description": "俄罗斯对乌克兰发动全面入侵；二战以来欧洲最大的战争。",
+      "analysis": "Consequences: Russia, an American enemy, launched unprovoked aggression against Ukraine, revealing imperial ambitions and military weakness. The West responded with sanctions and military aid. Ukraine's fierce resistance has degraded Russian military capability significantly. Philosophical significance: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with negotiated concessions.",
+      "headline": "俄罗斯对乌克兰发动全面入侵"
+    },
+    "2024ad": {
+      "title": "伊朗-以色列紧张局势升级",
+      "description": "伊朗向以色列发射导弹；以色列以精确打击回应。",
+      "analysis": "Consequences: Iran's theocratic regime openly attacks Israel, dropping pretense of proxy warfare. Israel demonstrates superior defensive and offensive capabilities. Regional conflict intensifies with Hezbollah and Houthis. Philosophical significance: Appeasement of the Iranian regime over decades enabled this aggression. The only path to peace is through strength and the defeat of those who seek destruction. Terrorist-sponsoring regimes cannot be trusted with negotiations—only unconditional surrender or regime change ends the threat.",
+      "headline": "伊朗向以色列发射导弹，地区濒临战争边缘"
+    }
+  },
+  "quiz": {
+    "title": "测验",
+    "leaderboard": "最佳成绩",
+    "welcome": "测试你的哲学知识",
+    "description": "回答关于形而上学、认识论、伦理学、政治学和美学的问题。",
+    "rule1": "每个积分10道题",
+    "rule2": "每答对一题，问题就会变难",
+    "rule3": "答错了？支付1个积分继续",
+    "rule4": "连续答对10题 = 返还1个积分！",
+    "starting": "正在启动...",
+    "start": "开始测验",
+    "checking": "检查中...",
+    "submit": "提交答案",
+    "correct": "正确！",
+    "wrong": "错误！",
+    "correctWas": "正确答案：",
+    "explanation": "解释",
+    "streak": "连续",
+    "score": "得分",
+    "next": "下一题",
+    "continue": "继续",
+    "wrongAnswer": "答错了！",
+    "payToContinueWrong": "支付1个积分以继续会话。",
+    "completed10": "做得好！",
+    "payToContinue10": "你完成了10道题！支付1个积分再答10题。",
+    "bestStreak": "最佳连续",
+    "continuing": "继续中...",
+    "payToContinue": "继续测验",
+    "endQuiz": "结束测验",
+    "quizComplete": "测验完成！",
+    "finalScore": "最终得分",
+    "totalCorrect": "正确数",
+    "creditsEarned": "获得积分",
+    "playAgain": "再玩一次",
+    "categories": {
+      "metaphysics": "形而上学",
+      "epistemology": "认识论",
+      "ethics": "伦理学",
+      "politics": "政治学",
+      "aesthetics": "美学",
+      "applied": "应用哲学",
+      "history": "哲学史",
+      "american_exceptionalism": "美国例外主义",
+      "virtues": "美德",
+      "economics": "经济学",
+      "law": "客观法律"
+    }
   }
 }

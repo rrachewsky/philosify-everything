@@ -532,6 +532,10 @@
       "history": {
         "title": "역사",
         "description": "2600년의 철학적 사상을 탐구합니다"
+      },
+      "quiz": {
+        "title": "퀴즈",
+        "description": "철학 지식을 테스트하세요"
       }
     },
     "comingSoonDesc": {
@@ -1503,99 +1507,617 @@
     }
   },
   "historicalEvents": {
-    "594bc": "Solon\\'s Reforms in Athens",
-    "509bc": "Roman Republic Founded",
-    "490bc": "Battle of Marathon",
-    "480bc": "Battle of Thermopylae & Salamis",
-    "399bc": "Trial and Death of Socrates",
-    "336bc": "Alexander the Great Begins Conquest",
-    "323bc": "Death of Alexander the Great",
-    "264bc": "First Punic War Begins",
-    "146bc": "Destruction of Carthage",
-    "49bc": "Caesar Crosses the Rubicon",
-    "44bc": "Assassination of Julius Caesar",
-    "31bc": "Battle of Actium",
-    "30ad": "Crucifixion of Jesus",
-    "79ad": "Eruption of Vesuvius",
-    "180ad": "Death of Marcus Aurelius",
-    "313ad": "Edict of Milan",
-    "380ad": "Christianity Becomes State Religion",
-    "410ad": "Visigoths Sack Rome",
-    "476ad": "Fall of Western Roman Empire",
-    "529ad": "Closing of Platonic Academy",
-    "622ad": "Hegira - Birth of Islam",
-    "732ad": "Battle of Tours",
-    "800ad": "Charlemagne Crowned Emperor",
-    "1054ad": "Great Schism",
-    "1066ad": "Norman Conquest of England",
-    "1095ad": "First Crusade Called",
-    "1215ad": "Magna Carta Signed",
-    "1265ad": "First English Parliament",
-    "1347ad": "Black Death Reaches Europe",
-    "1439ad": "Gutenberg\\'s Printing Press",
-    "1453ad": "Fall of Constantinople",
-    "1492ad": "Columbus Reaches Americas",
-    "1517ad": "Protestant Reformation Begins",
-    "1543ad": "Copernican Revolution",
-    "1588ad": "Defeat of Spanish Armada",
-    "1607ad": "Jamestown Founded",
-    "1620ad": "Mayflower Compact",
-    "1642ad": "English Civil War Begins",
-    "1648ad": "Peace of Westphalia",
-    "1687ad": "Newton\\'s Principia Published",
-    "1688ad": "Glorious Revolution",
-    "1689ad": "Locke\\'s Two Treatises Published",
-    "1776ad": "American Declaration of Independence",
-    "1787ad": "U.S. Constitution Written",
-    "1789ad": "French Revolution Begins",
-    "1791ad": "Bill of Rights Ratified",
-    "1804ad": "Napoleon Crowned Emperor",
-    "1815ad": "Battle of Waterloo",
-    "1833ad": "British Slavery Abolition Act",
-    "1848ad": "Revolutions of 1848",
-    "1848ad_2": "Communist Manifesto Published",
-    "1859ad": "Origin of Species Published",
-    "1861ad": "American Civil War Begins",
-    "1863ad": "Emancipation Proclamation",
-    "1865ad": "13th Amendment Ratified",
-    "1869ad": "Transcontinental Railroad Completed",
-    "1876ad": "Telephone Invented",
-    "1879ad": "Edison\\'s Light Bulb",
-    "1886ad": "Statue of Liberty Dedicated",
-    "1903ad": "Wright Brothers\\' Flight",
-    "1905ad": "Einstein\\'s Miracle Year",
-    "1914ad": "World War I Begins",
-    "1917ad": "Russian Revolution",
-    "1918ad": "World War I Ends",
-    "1920ad": "19th Amendment Ratified",
-    "1929ad": "Stock Market Crash",
-    "1933ad": "Hitler Becomes Chancellor",
-    "1939ad": "World War II Begins",
-    "1941ad": "Pearl Harbor Attack",
-    "1942ad": "Holocaust: Systematic Genocide",
-    "1944ad": "D-Day Invasion",
-    "1945ad": "Atomic Bombs End WWII",
-    "1945ad_2": "United Nations Founded",
-    "1947ad": "Ayn Rand\\'s The Fountainhead Success",
-    "1948ad": "Israel Founded",
-    "1950ad": "Korean War Begins",
-    "1949ad": "Communist China Established",
-    "1957ad": "Atlas Shrugged Published",
-    "1961ad": "First Human in Space",
-    "1963ad": "Kennedy Assassination",
-    "1964ad": "Civil Rights Act",
-    "1965ad": "Vietnam War Escalates",
-    "1966ad": "Cultural Revolution Begins",
-    "1975ad": "Cambodian Genocide Begins",
-    "1979ad": "Iranian Revolution",
-    "1969ad": "Moon Landing",
-    "1989ad": "Fall of Berlin Wall",
-    "1991ad": "Soviet Union Dissolves",
-    "2001ad": "September 11 Attacks",
-    "2008ad": "Global Financial Crisis",
-    "2020ad": "COVID-19 Pandemic",
-    "2023ad": "October 7: Hamas Attack on Israel",
-    "2024ad": "Iran-Israel Tensions Escalate",
-    "2022ad": "Russia Invades Ukraine"
+    "594bc": {
+      "title": "아테네의 솔론 개혁",
+      "description": "솔론이 아테네에서 헌법 개혁을 시행하여 민주주의의 기반을 마련하다.",
+      "analysis": "결과: 솔론은 채무 노예제를 폐지하고, 경제적 이해관계를 정치 참여와 연결하는 재산 기반 시민권을 창설했으며, 이후 아테네 민주주의로 발전할 법치주의를 확립했다. 이러한 개혁은 지중해 전역에 그리스 정치 사상을 전파했다. Philosify의 견해: 사회 내에서 개인의 권리를 인정하는 결정적인 진전이었다. 재산 소유와 참정권을 연결함으로써, 솔론은 생산적 시민권에 대한 인센티브를 창출했다. 통치자조차도 자의적 변덕이 아닌 법에 구속된다는 원칙은 자유의 기초가 된다.",
+      "headline": "솔론, 채무 노예제 폐지하고 아테네 법 개편"
+    },
+    "509bc": {
+      "title": "로마 공화국 건국",
+      "description": "로마가 군주제를 타도하고 선출된 집정관에 의한 공화국을 수립하다.",
+      "analysis": "결과: 로마는 집정관, 원로원, 민회에 권력을 분산하는 제도를 창설했다. 사회에 이해관계를 가진 시민-군인들이 500년간 지속된 제국을 건설했다. 로마의 법, 공학, 통치 방식은 이후 모든 서양 문명에 영향을 미쳤다. Philosify의 견해: 공화국은 분산된 권력과 법치주의가 인간 번영을 가능케 함을 보여주었다. 개인의 권리가 통치자의 변덕이 아닌 제도에 의해 보호될 때 번영이 따른다. 로마가 후에 제정으로 전락한 것은 권력 집중의 위험성을 보여준다.",
+      "headline": "로마, 군주제 타도하고 공화국 선포"
+    },
+    "490bc": {
+      "title": "마라톤 전투",
+      "description": "그리스가 페르시아의 침략을 격퇴하고 그리스의 독립과 문화를 수호하다.",
+      "analysis": "결과: 그리스의 독립이 보존되어 철학, 민주주의, 과학, 예술의 지속적인 발전이 가능해졌다. 자신의 자유를 위해 싸우는 시민군이 먼 황제를 위해 싸우는 대군보다 강할 수 있음을 증명했다. Philosify의 견해: 마라톤 전투는 자신의 가치를 위해 싸우는 자유인이 주인을 위해 싸우는 노예보다 효과적임을 보여준다. 그리스의 승리는 인류의 생존 도구로서 이성을 발견한 철학적 전통을 가능케 했다. 서양 문명은 이 전투 덕분에 존재한다.",
+      "headline": "그리스군, 마라톤에서 페르시아 침공 격파"
+    },
+    "480bc": {
+      "title": "테르모필레 및 살라미스 전투",
+      "description": "그리스가 페르시아의 침략에 저항하다; 300명의 스파르타 전사가 전설적인 항전을 벌이다.",
+      "analysis": "결과: 스파르타인들의 희생은 그리스 연합을 위한 시간을 벌어주었고, 살라미스 해전이 결정적 승리를 가져왔다. 페르시아의 팽창은 영구히 저지되었다. 그리스 문명은 살아남아 소크라테스, 플라톤, 아리스토텔레스와 서양 사상의 기초를 탄생시켰다. Philosify의 견해: 테르모필레는 영웅주의를 상징한다—순교가 아닌. 스파르타인들은 자신들의 최고 가치인 자유를 위해 싸웠다. 그들은 헛되이 목숨을 바친 것이 아니라, 그리스의 승리를 위한 시간을 샀다. 영웅은 자신의 가치를 위해 목숨을 건다; 순교자는 죽음 자체를 위해 죽는다.",
+      "headline": "300명의 스파르타 전사, 테르모필레에서 사수"
+    },
+    "399bc": {
+      "title": "소크라테스의 재판과 죽음",
+      "description": "소크라테스가 \"청년을 타락시켰다\"는 죄목으로 아테네 민주주의에 의해 사형을 선고받다.",
+      "analysis": "결과: 도주를 거부한 소크라테스는 지적 진실성의 순교자가 되었다. 플라톤은 그의 가르침을 보존하고 아카데미를 설립했다. 이 재판은 오늘날까지 유효한 개인의 양심 대 국가 권위에 관한 근본적 질문을 제기했다. Philosify의 견해: 민주주의가 자신의 가장 위대한 철학자를 처형했다—이는 헌법적 제한 없는 다수결이 폭정임을 증명한다. 개인의 권리는 다수로부터 보호받아야 한다. 소크라테스는 생각하는 사람은 대중의 의견이 아닌 이성을 따라야 함을 보여주었다, 죽음에 이르더라도.",
+      "headline": "아테네, 소크라테스에게 사형 선고"
+    },
+    "336bc": {
+      "title": "알렉산드로스 대왕의 정복 시작",
+      "description": "알렉산드로스가 왕위에 올라 그리스 문화를 전파할 원정을 시작하다.",
+      "analysis": "결과: 그리스어, 철학, 과학, 상업이 이집트에서 인도까지 광대한 영토에 전파되었다. 알렉산드로스는 학문의 중심지가 된 도시들을 건설했다. 헬레니즘 세계는 수 세기 동안 동서양 간의 사상 교류를 가능케 했다. Philosify의 견해: 알렉산드로스의 정복은 혼합된 결과를 가져왔다—그리스 합리주의의 확산은 가치있었으나, 정복을 통한 제국 건설은 개인의 권리를 침해한다. 지속적인 유산은 정치적인 것이 아닌 문화적인 것이다: 교역과 학문으로 전파된 사상은 칼로 전파된 것보다 오래 지속된다.",
+      "headline": "알렉산드로스, 세계 정복 원정 개시"
+    },
+    "323bc": {
+      "title": "알렉산드로스 대왕의 죽음",
+      "description": "알렉산드로스가 32세에 사망하고 제국이 후계 왕국들로 분열되다.",
+      "analysis": "결과: 제국은 전쟁하는 후계 왕국들로 분열되었다. 그러나 그리스 문화와 상업은 이 왕국들 전역에서 지속되었다. 도서관, 학교, 무역 네트워크가 계속 유지되었다. 국가들 간의 경쟁이 때로는 혁신을 촉진했다. Philosify의 견해: 한 사람의 카리스마로 건설된 제국은 그 창건자의 생존 이후까지 지속되는 경우가 드물다. 지속적인 제도는 인격이 아닌 원칙을 필요로 한다. 정치적 분열에도 불구하고 헬레니즘 세계가 존속한 것은 문화와 교역—자발적 교환—이 정치적 통일보다 중요함을 보여준다.",
+      "headline": "알렉산드로스 대왕 32세에 사망, 제국 분열"
+    },
+    "264bc": {
+      "title": "제1차 포에니 전쟁 시작",
+      "description": "로마와 카르타고가 지중해 패권을 두고 한 세기에 걸친 전쟁을 시작하다.",
+      "analysis": "결과: 로마는 해군 역량을 개발하고 이탈리아 반도를 넘어 확장했다. 시칠리아는 장기간의 전쟁으로 황폐화되었다. 이로써 로마는 전례 없는 평화와 교역을 가져올 지중해 지배의 길에 올랐다. Philosify의 견해: 정복 전쟁은 생명과 재산의 막대한 파괴를 수반한다. 그러나 로마의 최종 승리는 팍스 로마나를 가져왔다—이는 불완전하게 적용되었더라도 통일된 법치주의가 경쟁 세력 간의 끊임없는 전쟁보다 더 많은 번영을 가능케 함을 보여준다.",
+      "headline": "로마와 카르타고, 지중해 패권 다투며 충돌"
+    },
+    "146bc": {
+      "title": "카르타고 멸망",
+      "description": "로마가 카르타고를 완전히 멸망시키고 지중해 최강국이 되다.",
+      "analysis": "결과: 카르타고 문명의 완전한 파괴; 5만 명의 생존자가 노예가 되었다. 로마의 지중해 독점은 전례 없는 교역, 문화 교류, 그리고 수 세기 동안 지속된 팍스 로마나를 가능케 했다. Philosify의 견해: 패배한 적에 대한 전면전은 과도했다—카르타고는 더 이상 위협이 되지 않았다. 그러나 그 결과로 나타난 로마의 평화는 세 대륙에 걸친 번영을 가능케 했다. 교훈: 잔혹하게 확립되었더라도 법치주의 하의 안정된 질서가 영구적인 갈등보다 낫다.",
+      "headline": "로마, 카르타고를 잿더미로 만들다"
+    },
+    "49bc": {
+      "title": "카이사르가 루비콘강을 건너다",
+      "description": "율리우스 카이사르가 로마 공화국을 종식시킬 내전을 시작하다.",
+      "analysis": "결과: 460년간의 공화정을 파괴했다. 카이사르의 개혁은 실제 문제들—부채, 토지 분배, 시민권—을 다루었으나, 군사력에 의한 권력 장악의 선례를 세웠다. 제정으로의 전환은 안정을 가져왔으나 로마의 정치적 자유를 종식시켰다. Philosify의 견해: 카이사르의 불만이 아무리 정당했더라도, 무력에 의한 권력 장악은 헌법 질서를 파괴했다. 공화국의 견제와 균형은 불완전했으나, '자비로운' 독재자의 통치보다 자유를 더 잘 보호했다. 좋은 의도가 제도 파괴를 정당화하지 않는다.",
+      "headline": "카이사르, 루비콘강 건너 로마로 진군"
+    },
+    "44bc": {
+      "title": "율리우스 카이사르 암살",
+      "description": "로마 원로원 의원들이 3월 15일에 카이사르를 암살하다.",
+      "analysis": "결과: 첫 번째보다 더 파괴적인 또 다른 내전을 촉발했다. 공화국은 복원될 수 없었고, 옥타비아누스가 초대 황제 아우구스투스로 등장했다. 암살자들의 대의는 패배했고, 그들의 방법은 공화주의에 오명을 남겼다. Philosify의 견해: 근본적인 조건이 그대로인 상황에서 개인을 제거하는 것으로는 정치적 문제를 해결할 수 없다. 암살자들은 폭정을 정확히 식별했으나 실행 가능한 대안을 제시하지 못했다. 원칙과 제도가 인격보다 중요하다—카이사르 제거가 공화국을 복원하지 못했다.",
+      "headline": "원로원 의원들, 3월 15일 율리우스 카이사르 암살"
+    },
+    "31bc": {
+      "title": "악티움 해전",
+      "description": "옥타비아누스가 안토니우스와 클레오파트라를 격파하고 로마의 유일한 지배자가 되다.",
+      "analysis": "결과: 수십 년간의 내전이 종식되었다. 아우구스투스는 평화, 번영, 그리고 2세기 동안 지속된 팍스 로마나를 가져왔다. 교역이 번성하고, 도시가 성장하며, 예술과 문학이 융성했다. 그러나 공화국은 죽었고, 권력은 한 사람에게 집중되었다. Philosify의 견해: 아우구스투스의 평화는 질서가 번영을 가능케 함을 보여준다—그러나 정치적 자유의 대가를 치렀다. 안보와 자유 사이의 상충은 실재한다. 로마는 안보를 선택했고, 결국 집중된 권력은 부패하여 제국이 멸망했다. 권력에 대한 헌법적 제한은 여전히 필수적이다.",
+      "headline": "옥타비아누스, 악티움에서 안토니우스와 클레오파트라 격파"
+    },
+    "30ad": {
+      "title": "예수의 십자가형",
+      "description": "나사렛 예수가 예루살렘에서 십자가형에 처해지다; 기독교의 창시적 사건.",
+      "analysis": "결과: 기독교가 이 사건에서 출현하여 결국 서양 문명의 가치, 예술, 철학, 법, 제도를 변화시켰다. 보편적 도덕적 평등, 개인의 양심, 소외된 자에 대한 관심이라는 개념이 서양 문화에 도입되었다. Philosify의 견해: 기독교는 가치 있는 개념들—개인의 도덕적 가치, 양심, 자선—을 도입했으나, 이성과 충돌하는 신앙 기반 인식론도 함께 가져왔다. 혼합된 유산에는 인도주의적 진보와 종교적 박해가 모두 포함된다. 사상은 그 출처가 아닌 내용과 결과로 판단해야 한다.",
+      "headline": "나사렛 예수, 예루살렘에서 십자가형에 처해지다"
+    },
+    "79ad": {
+      "title": "베수비오 화산 폭발",
+      "description": "화산 폭발로 폼페이와 헤르쿨라네움이 파괴되다.",
+      "analysis": "결과: 수천 명이 사망하고, 번영하던 도시들이 몇 시간 만에 파괴되었다. 그러나 화산재 아래의 보존은 그렇지 않았다면 잃어버렸을 로마 일상생활, 예술, 건축, 문화에 대한 비할 데 없는 지식을 우리에게 제공했다. Philosify의 견해: 자연재해는 현실이 인간의 소망에 무관심함을 상기시켜 준다. 자연은 의도가 아닌 인과법칙에 따라 작동한다. 적절한 대응은 과학을 통해 자연력을 이해하고 보호 조치를 설계하는 것이다—기도나 숙명론이 아니라. 폼페이의 보존은 인류의 지식에 기여한다.",
+      "headline": "베수비오 화산 폭발, 폼페이가 화산재에 묻히다"
+    },
+    "180ad": {
+      "title": "마르쿠스 아우렐리우스의 죽음",
+      "description": "\"오현제\" 중 마지막 황제가 사망하고 로마의 장기적 쇠퇴가 시작되다.",
+      "analysis": "결과: 마르쿠스 아우렐리우스는 적합하지 않은 아들 콤모두스를 후계자로 선택하여, 유능한 후계자를 양자로 삼는 관행을 종식시켰다. 로마는 수 세기에 걸쳐 제국을 약화시킬 불안정, 내전, 쇠퇴의 시기로 접어들었다. Philosify의 견해: 철학자-왕조차도 잘못된 결정을 내린다. 마르쿠스 아우렐리우스의 통치는 철학이 통치를 인도할 수 있음을 증명했으나, 그의 후계 선택은 집중된 권력이 출생과 성격의 우연에 좌우됨을 증명했다. 제도적 견제가 현명한 통치자보다 더 중요하다.",
+      "headline": "마르쿠스 아우렐리우스 사망, 로마 황금시대 종언"
+    },
+    "313ad": {
+      "title": "밀라노 칙령",
+      "description": "콘스탄티누스가 로마 제국 전역에서 기독교를 합법화하다.",
+      "analysis": "결과: 기독교인에 대한 박해가 종식되고, 종교적 관용의 원칙이 확립되었다. 기독교는 국가의 지원과 함께 급속히 성장하여 병원, 학교, 자선 기관을 설립했다. 그러나 교회-국가 결탁의 과정이 시작되었다. Philosify의 견해: 종교적 관용은 자유에 필수적이다—국가는 종교를 박해하지도 장려하지도 말아야 한다. 칙령은 박해를 올바르게 종식시켰으나, 콘스탄티누스의 이후 기독교 우대는 미래의 종교적 강제의 선례가 되었다.",
+      "headline": "콘스탄티누스, 로마 제국 전역에서 기독교 합법화"
+    },
+    "380ad": {
+      "title": "기독교가 국교로 지정됨",
+      "description": "테오도시우스 황제가 기독교를 로마의 국교로 지정하다.",
+      "analysis": "결과: 기독교는 제국 전역에 병원, 학교, 사회 서비스를 건설할 자원을 얻었다. 그러나 이교도와 기독교 '이단'은 이제 박해를 받게 되었다. 종교적 관용은 종교적 강제로 대체되었다. Philosify의 견해: 국교는 양심의 자유를 침해한다. 신앙을 강제하는 것은 도덕적으로도 옳지 않고 효과도 없다—진정한 확신을 강제할 수는 없다. 교회-국가 결합의 중세 모델은 수 세기에 걸친 종교 전쟁과 박해를 낳았다. 교회와 국가의 분리가 양자를 보호한다.",
+      "headline": "황제, 기독교를 로마의 유일한 국교로 선포"
+    },
+    "410ad": {
+      "title": "서고트족의 로마 약탈",
+      "description": "알라리크의 서고트족이 로마를 약탈하다; \"영원의 도시\"가 800년 만에 처음으로 함락되다.",
+      "analysis": "결과: 제국 전역에 심리적 충격; 로마의 군사적 취약함이 드러났다. 그러나 서고트족은 파괴가 아닌 통합을 추구했고, 로마는 계속 기능했다. 아우구스티누스의 '신국론'을 촉발하여 수 세기 동안 기독교 정치 사상을 재형성했다. Philosify의 견해: 문명은 그것을 건설한 원칙들을 포기할 때 몰락한다. 로마의 쇠퇴는 외부 압력보다 내부 부패—과세, 규제, 화폐 가치 절하—의 결과였다. 서고트족은 약점을 이용했을 뿐, 그것을 만들어낸 것이 아니다.",
+      "headline": "야만족, 800년 만에 처음으로 로마 약탈"
+    },
+    "476ad": {
+      "title": "서로마 제국의 멸망",
+      "description": "마지막 서로마 황제가 폐위되다; 고대 세계 종말의 전통적인 날짜.",
+      "analysis": "결과: 교역이 붕괴하고, 도시가 축소되며, 문해력이 저하되고, 기술적 지식이 상실되었다. 게르만 왕국들은 일부 로마 제도를 보존했으나 복잡한 문명을 유지할 수 없었다. 분열과 지역화된 권력의 중세 시대가 시작되었다. Philosify의 견해: 문명은 자동으로 유지되지 않는다—유지하기 위한 지속적인 노력이 필요하다. 로마는 로마를 위대하게 만든 것들—생산, 교역, 법치, 군사적 규율—을 로마인들이 그만두었기 때문에 멸망했다. 암흑시대는 문명의 기초가 침식될 때 어떤 일이 일어나는지를 보여준다.",
+      "headline": "마지막 로마 황제 폐위, 서로마 제국 멸망"
+    },
+    "529ad": {
+      "title": "플라톤 아카데미 폐쇄",
+      "description": "유스티니아누스 황제가 아테네의 아카데미를 폐쇄하고 고대 철학 학교에 종지부를 찍다.",
+      "analysis": "결과: 아테네에서 900년간의 철학 교육이 종식되었다. 철학자들은 페르시아로 피신하여 나중에 이슬람 학자들을 통해 유럽에 다시 전해질 그리스 문헌들을 보존했다. 기독교 정통주의가 제국 내에서 이교 학문을 억압했다. Philosify의 견해: 무력으로 사상을 억압하는 것은 부도덕하고도 무용하다. 학교를 닫아도 진리는 파괴할 수 없다—사상은 살아남아 결국 르네상스를 촉발했다. 지적 자유는 필수적이다; 검열은 지식의 전파를 지연시킬 수 있을 뿐 막을 수는 없다.",
+      "headline": "유스티니아누스, 900년 역사의 플라톤 아카데미 폐쇄"
+    },
+    "622ad": {
+      "title": "헤지라 - 이슬람의 탄생",
+      "description": "무함마드의 메디나 이주가 이슬람 달력의 시작을 알리다.",
+      "analysis": "결과: 이슬람은 아랍 부족들을 통합하고, 세 대륙에 걸친 정교한 문명을 창조했으며, 그리스 학문을 보존하고 전달했고, 수학, 천문학, 의학을 발전시켰다. 또한 군사적 정복을 통해 확산되며, 정복된 민족들에게 종교법을 부과했다. Philosify의 견해: 이슬람 문명의 과학과 철학에서의 성취는 종교 교리에도 불구하고 일어난 것이다—이성을 중시한 개별 사상가들 덕분에. 모든 신앙 기반 체계와 마찬가지로 종교 자체는 궁극적으로 그러한 성취를 낳은 합리적 탐구와 충돌한다.",
+      "headline": "무함마드, 메디나로 피신하며 이슬람 탄생"
+    },
+    "732ad": {
+      "title": "투르 전투",
+      "description": "카를 마르텔이 서유럽으로의 이슬람 세력 진출을 저지하다.",
+      "analysis": "결과: 프랑크 왕국의 독립과 기독교 서유럽이 보존되었다. 서유럽은 이슬람 세계와 별도로, 다른 정치적, 종교적, 지적 궤적을 따라 발전했다. 카롤링거 왕조의 군사적 명성이 확립되었다. Philosify의 견해: 이 전투의 의의는 유럽의 독립을 보존한 데 있다—이는 결국 르네상스, 종교개혁, 계몽주의, 그리고 개인 권리의 발전을 가능케 했다. 관련된 종교들에 대한 견해와 무관하게, 유럽의 별도 발전은 전 인류에게 이로운 자유의 사상을 낳았다.",
+      "headline": "카를 마르텔, 유럽으로의 이슬람 진출 저지"
+    },
+    "800ad": {
+      "title": "카를 대제의 대관식",
+      "description": "교황 레오 3세가 카를 대제에게 황제관을 수여하고 서로마 제국의 개념을 부활시키다.",
+      "analysis": "결과: 카롤링거 르네상스는 고전 학문을 보존했고, 학교들이 제국 전역에 설립되었다. 수 세기 동안 지속될 교황-황제 갈등의 패턴이 만들어졌다. 카를 대제의 죽음 후 제국은 분열되었으나 유럽 통일의 이념은 지속되었다. Philosify의 견해: 카를 대제의 업적은 개인의 지도력이 중요함을 보여준다—그러나 그의 제국의 붕괴는 지속적인 제도가 한 지도자의 의지 이상을 필요로 함을 보여준다. 가장 오래 지속된 유산은 문화적인 것이었다: 미래의 발전을 가능케 한 학문의 보존.",
+      "headline": "교황, 카를 대제에게 서방 황제 관을 수여"
+    },
+    "1054ad": {
+      "title": "동서 교회의 대분열",
+      "description": "기독교가 로마 가톨릭교회와 동방 정교회로 분열되다.",
+      "analysis": "결과: 기독교 세계가 서로 다른 신학적, 문화적 발전을 이룬 경쟁 영역들로 분열되었다. 상호 파문은 지속적인 적대감을 낳았다. 그러나 교회들 간의 경쟁은 이견의 공간을 만들어 결국 종교적 다원주의에 기여했다. Philosify의 견해: 종교적 독점은 탐구와 자유를 억압한다. 갈등에서 비롯되었으나 분열은 의도치 않게 결국 종교적 권위의 사상에 대한 지배를 약화시킨 경쟁을 만들어냈다. 우연적이라도 다원주의는 자유에 기여한다.",
+      "headline": "기독교 동서로 분열: 로마 대 콘스탄티노플"
+    },
+    "1066ad": {
+      "title": "노르만 정복",
+      "description": "정복왕 윌리엄이 헤이스팅스에서 해럴드를 격파하고 영국 역사를 변화시키다.",
+      "analysis": "결과: 앵글로색슨 귀족이 몰락하고, 영어와 문화에 노르만 프랑스의 영향이 미쳤다. 결국 보통법과 의회의 발전에 기여할 대륙식 행정 관행이 도입되었다. 전 세계에 언어와 제도를 전파할 영국 국가가 탄생했다. Philosify의 견해: 정복은 피정복민의 권리를 침해한다—그러나 역사는 장기적 결과로 판단한다. 부분적으로 노르만 행정에서 발전한 영국 보통법은 전 세계 개인 권리의 기초가 되었다. 의도하지 않은 결과가 때로는 의도를 초월한다.",
+      "headline": "윌리엄, 헤이스팅스 전투에서 영국 정복"
+    },
+    "1095ad": {
+      "title": "제1차 십자군 선포",
+      "description": "교황 우르바누스 2세가 무슬림으로부터 성지를 탈환하기 위한 십자군을 선포하다.",
+      "analysis": "결과: 교역로가 개척되고 이슬람 세계의 지식이 전해졌다. 모든 측에서 엄청난 사상자가 발생했고, 유대인과 무슬림에 대한 학살이 있었다. 문명들 간의 지속적인 종교적 증오가 생겨났다. 그러나 더 발전된 이슬람 문명과의 유럽의 접촉은 문화적, 기술적 발전을 가속화했다. Philosify의 견해: 종교 전쟁은 가장 최악이다—합리적 이익이 아닌 신앙을 위해 싸우므로 타협을 허용하지 않는다. 그러나 의도치 않은 결과—보존된 그리스 학문과의 접촉—는 유럽의 지적 각성을 촉발하는 데 기여했다. 사상은 의도와 무관하게 전파된다.",
+      "headline": "교황, 성지 탈환 위해 제1차 십자군 선포"
+    },
+    "1215ad": {
+      "title": "마그나 카르타 서명",
+      "description": "영국 귀족들이 존 왕에게 왕권을 제한하는 대헌장에 서명하도록 강요하다.",
+      "analysis": "결과: 통치자도 법의 지배를 받는다는 원칙이 확립되었고, 적법 절차의 보호가 보장되었으며, 입헌 정부의 기초가 마련되었다. 처음에는 귀족의 특권만을 보호하고 자주 위반되었으나, 그 원칙들은 점차 모든 시민을 보호하도록 확대되어 전 세계 헌법에 영향을 미쳤다. Philosify의 견해: 마그나 카르타는 인류 자유의 이정표다—왕조차도 법에 구속된다는 원칙. 이 씨앗에서 입헌 정부, 개인 권리, 제한된 정부가 자랐다. 일단 확립된 사상은 그 완전한 함의로 논리적으로 확장되는 경향이 있다.",
+      "headline": "영국 귀족들, 국왕에게 마그나 카르타 서명 강요"
+    },
+    "1265ad": {
+      "title": "최초의 영국 의회",
+      "description": "시몽 드 몽포르가 영국 최초의 선출된 의회를 소집하다.",
+      "analysis": "결과: 대의제 정부의 선례가 창설되었고, 귀족과 함께 평민도 통치에 목소리를 갖게 되었다. 처음에는 권한이 제한되고 재산 계급만을 대표했으나, 많은 국가들이 채택한 의회 민주주의의 모델로 발전했다. Philosify의 견해: 대의제 정부는 권력에 대한 결정적인 견제다. 세금을 내는 사람들이 세금 사용에 목소리를 가질 때, 정부는 제약된다. 의회는 자유의 수호자로 진화했다—불완전하지만 절대 군주제보다 훨씬 우월하다.",
+      "headline": "영국 최초의 선출 의회 소집"
+    },
+    "1347ad": {
+      "title": "흑사병이 유럽에 도달",
+      "description": "흑사병이 수년간 유럽 인구의 30~60%를 사망시키다.",
+      "analysis": "결과: 상상할 수 없는 고통; 사회적 붕괴; 역병의 원인으로 지목된 소수 집단에 대한 박해. 그러나 생존자들은 노동력 부족으로 더 높은 임금을 받게 되었고, 농노들이 영주에 대해 협상력을 갖게 되어 봉건제가 약화되었으며, 잃어버린 노동력을 대체하기 위한 기술 혁신이 촉진되었다. Philosify의 견해: 재앙은 무엇이 중요한지를 드러낸다: 노동력이 희소해지면 노동자의 가치가 상승한다. 역병은 우연히 노동자들에게 영주에 대항할 힘을 줌으로써 개인의 자유를 증진시켰다. 자연은 인간의 소망에 무관심하지만—인간은 합리적 대응을 통해 재앙에서도 적응하고 이익을 얻을 수 있다.",
+      "headline": "흑사병 유럽 휩쓸어, 수백만 명 사망"
+    },
+    "1439ad": {
+      "title": "구텐베르크의 인쇄기",
+      "description": "요하네스 구텐베르크가 유럽에서 활판 인쇄술을 개발하다.",
+      "analysis": "결과: 지식이 민주화되고, 사상의 급속한 전파가 가능해졌으며, 책 비용이 급격히 줄어들고, 문해력이 높아졌다. 사상이 제도적 통제를 벗어나 전파될 수 있어 종교개혁, 과학혁명, 계몽주의를 가능케 했다. 선전도 더 효율적으로 퍼졌다. Philosify의 견해: 인쇄기는 역사상 가장 위대한 발명 중 하나다—엘리트가 가진 지식의 독점을 깨뜨렸다. 사상이 자유롭게 전파될 수 있을 때, 진리는 확립된 오류에 맞서 승리할 기회를 갖는다. 개인에게 제도에 대항하는 힘을 주는 기술은 자유에 기여한다.",
+      "headline": "구텐베르크, 인쇄기 발명으로 지식 혁명 일으키다"
+    },
+    "1453ad": {
+      "title": "콘스탄티노플 함락",
+      "description": "오스만 투르크가 콘스탄티노플을 정복하고 비잔틴 제국을 멸망시키다.",
+      "analysis": "결과: 이탈리아로 피신한 그리스 학자들이 르네상스를 촉발한 문헌들을 가져왔다. 오스만 제국은 콘스탄티노플을 주요 문화 및 상업 중심지로 유지했다. 교역로가 서쪽으로 이동하여 대서양 탐험을 촉진했다. 1,000년 후 동로마 제국이 종말을 맞았다. Philosify의 견해: 함락은 그리스 학문을 유럽 전역에 분산시켜 르네상스를 가속화했다. 사상은 정복으로 억제될 수 없다—사람과 책과 함께 이동한다. 오스만은 도시를 정복했으나, 그리스인들은 지식을 통해 문명을 보존했다.",
+      "headline": "콘스탄티노플, 오스만 투르크에 함락"
+    },
+    "1492ad": {
+      "title": "콜럼버스가 아메리카에 도달",
+      "description": "크리스토퍼 콜럼버스의 항해가 신대륙을 유럽 탐험에 열다.",
+      "analysis": "결과: 양 반구 간 작물, 동물, 사상의 교환이 시작되어—전 세계의 농업, 식단, 경제를 변화시켰다. 원주민 인구는 질병과 정복으로 황폐화되었고, 노예제가 아메리카에 도입되었다. 결국 계몽주의 원칙에 기초한 국가들의 탄생으로 이어졌다. Philosify의 견해: 콜럼버스의 항해는 원주민에게 파멸적인 결과를 가져왔다—정복과 질병은 그들의 생명과 재산에 대한 권리를 침해했다. 그러나 장기적 결과에는 개인 권리를 정부의 기초로 확립한 미국 건국이 포함된다. 역사의 도덕적 복잡성은 단순한 판단을 허용하지 않는다.",
+      "headline": "콜럼버스, 신대륙에 도달"
+    },
+    "1517ad": {
+      "title": "종교개혁 시작",
+      "description": "마르틴 루터가 95개조 반박문을 게시하고 가톨릭 교회의 권위에 도전하다.",
+      "analysis": "결과: 종교적 독점에 도전하고, 개인의 신앙과 성경 읽기를 강조했으며, 종교적 다원주의로 이어졌다. 한 세기에 걸친 종교 전쟁과 양측의 박해를 촉발했다. 결국 개인이 스스로 신앙을 해석할 수 있다는 원칙을 확립하여 개인주의의 대두에 기여했다. Philosify의 견해: 종교개혁의 지속적인 기여는 종교적 독점의 타파였다. 루터의 의도가 무엇이었든, 개인이 스스로 읽고 해석할 수 있다는 원칙은 논리적으로 모든 영역으로 확장된다. 종교적 다원주의는 지적 자유를 향한 한 걸음이었다.",
+      "headline": "루터, 95개조 반박문 게시하며 교회 권위에 도전"
+    },
+    "1543ad": {
+      "title": "코페르니쿠스 혁명",
+      "description": "코페르니쿠스가 지동설을 발표하고 지구를 우주의 중심에서 밀어내다.",
+      "analysis": "결과: 관찰과 수학이 받아들여진 믿음을 뒤집을 수 있음을 보여주었다. 처음에는 가톨릭과 개신교 당국 모두의 저항에 부딪혔다. 현대 천문학과 과학적 방법의 길을 열었다. 우주에서 인류의 위치에 대한 이해를 변화시켰다. Philosify의 견해: 코페르니쿠스는 현실은 전통, 권위, 소망과 무관하게 있는 그대로임을 보여주었다. 태양 중심 모델은 교회가 받아들이든 말든 진실이었다. 과학은 증거가 이끄는 곳을 따라감으로써 발전한다—자연에 적용된 이성의 정수.",
+      "headline": "코페르니쿠스, 지구가 태양 주위를 돈다는 것을 증명"
+    },
+    "1588ad": {
+      "title": "스페인 무적함대 패배",
+      "description": "영국이 스페인의 무적함대를 격파하고 개신교의 독립을 수호하다.",
+      "analysis": "결과: 가톨릭 스페인으로부터 영국의 독립이 보존되고, 해군력이 북쪽으로 이동했으며, 아메리카에 대한 영국의 식민지화가 가능해졌다. 영국은 전 세계적 영향력과 영어, 영국법 전파의 기초를 마련하는 주요 해군 강국으로 부상했다. Philosify의 견해: 영국의 독립은 보통법, 의회 정부를 발전시키고 결국 미국 건국에 영감을 준 국가를 보존했다. 무적함대의 패배는 독립선언서를 낳은 자유의 전통을 가능케 했다.",
+      "headline": "영국, 스페인 무적함대 격파"
+    },
+    "1607ad": {
+      "title": "제임스타운 건설",
+      "description": "아메리카 최초의 영구적인 영국 식민지가 설립되다.",
+      "analysis": "결과: 자치 전통, 보통법, 그리고 결국 혁명적 사상을 가져온 영국 식민지화가 시작되었다. 원주민과의 관계가 악화되었고, 수십 년 내에 노예제가 도입되었다. 영국의 법적, 정치적 전통을 가져온 식민지인들에 의해 미국 공화국의 씨앗이 뿌려졌다. Philosify의 견해: 제임스타운은 선과 악을 모두 가져왔다—자치와 노예제. 영국인으로서 자신의 권리를 믿은 식민지인들은 결국 그 원칙들을 논리적 결론으로 확장할 것이었다: 권리는 영국인만이 아닌 모든 개인에게 속한다.",
+      "headline": "아메리카에 최초의 영국 식민지 설립"
+    },
+    "1620ad": {
+      "title": "메이플라워 협약",
+      "description": "필그림들이 플리머스에 자치 식민지를 설립하다.",
+      "analysis": "결과: 아메리카 최초의 문서화된 자치 틀; 사회 계약론을 실제로 실현했다. 성문 헌법과 동의에 의한 정부의 모델이 미국 건국에 영향을 미쳤다. 처음에는 교회 구성원만 참여가 제한되었다. Philosify의 견해: 협약은 동의에 의한 정부를 확립했다—합법적인 정부는 신권이나 정복이 아닌 피통치자의 동의에서 비롯된다는 급진적 사상. 일단 확립된 이 원칙은 논리적으로 원래 서명자뿐만 아니라 모든 사람에게로 확장된다.",
+      "headline": "필그림, 메이플라워 협약 서명하고 자치 식민지 건설"
+    },
+    "1642ad": {
+      "title": "영국 내전 시작",
+      "description": "의회와 찰스 1세가 헌법적 원칙을 둘러싸고 전쟁에 돌입하다.",
+      "analysis": "결과: 의회 우위가 확립되고, 입헌 정부가 발전했으며, 종교적 관용이 가능해졌다. 수만 명이 사망하고, 크롬웰 하에서 일시적인 군사 독재가 있었다. 영국 군주는 의회에 반하지 않고 의회와 함께 통치해야 함을 확정지었다. Philosify의 견해: 내전은 어떤 통치자도 법이나 국민의 대표자 위에 있지 않다는 것을 확립했다. 일시적인 독재조차도 이 원칙을 무효화할 수 없었다. 전쟁은 대가가 컸으나, 대안—절대 군주제—은 자유에 더 나빴을 것이다.",
+      "headline": "영국 내전 발발: 의회 대 국왕"
+    },
+    "1648ad": {
+      "title": "베스트팔렌 조약",
+      "description": "조약들이 30년 전쟁을 종식시키고 근대 국가 체제를 확립하다.",
+      "analysis": "결과: 수백만 명의 목숨을 앗아간 파괴적인 종교 전쟁이 종식되었다. 현대 국제 체제를 창출한 국가 주권과 불간섭 원칙이 확립되었다. 유럽의 종교적 분열은 제자리에 고정되었으나, 종교 전쟁은 끝났다. Philosify의 견해: 베스트팔렌은 국가들이 서로의 종교 문제에 간섭하지 않기로 함으로써 종교 전쟁을 종식시켰다. 주권 원칙에는 한계가 있다—그것이 폭정을 보호해서는 안 된다—그러나 종교 전쟁의 종식은 성취였다. 실용적 평화가 영구적인 성전보다 낫다.",
+      "headline": "베스트팔렌 조약, 30년 전쟁 종결"
+    },
+    "1687ad": {
+      "title": "뉴턴의 프린키피아 출판",
+      "description": "아이작 뉴턴이 운동 법칙과 만유인력의 법칙을 발표하다.",
+      "analysis": "결과: 우주가 발견 가능한 법칙에 따라 작동함을 입증했고, 현대 물리학과 공학을 가능케 했다. 이성이 자연을 이해하고 사회를 개선할 수 있다는 계몽주의적 확신을 불어넣었다. 결정론과 목적에 관한 철학적 질문을 제기했다. Philosify의 견해: 뉴턴은 우주가 질서정연하고, 합법칙적이며, 인간의 이성으로 이해 가능함을 보여주었다. 이것이 과학과 기술의 기초이며—현실은 이해되고 개선될 수 있다는 확신의 기초다. 이성은 작동한다; 그것은 우리의 생존 도구다.",
+      "headline": "뉴턴, 우주를 지배하는 법칙 밝히다"
+    },
+    "1688ad": {
+      "title": "명예혁명",
+      "description": "오라녜공 윌리엄이 제임스 2세를 대체하다; 의회가 우위를 주장하다.",
+      "analysis": "결과: 입헌 군주제, 의회 우위, 종교적 관용이 큰 유혈 없이 확립되었다. 권리장전이 개인의 자유를 보호했다. 평화적 헌법 개혁의 모델이 되었다. 가톨릭 신자는 계승에서 배제되었다. Philosify의 견해: 명예혁명은 최소한의 폭력으로 정권 교체를 달성했다—근본적인 변화에 테러가 필요하지 않음을 증명했다. 여기서 확립된 권력에 대한 헌법적 제한은 미국이 계승하여 개선한 영국 전통이 되었다.",
+      "headline": "오라녜공 윌리엄, 무혈 쿠데타로 영국 왕위 장악"
+    },
+    "1689ad": {
+      "title": "로크의 통치론 출판",
+      "description": "존 로크가 자연권과 제한된 정부의 이론을 발표하다.",
+      "analysis": "결과: 개인 권리, 동의에 기반한 정부, 혁명권에 대한 철학적 기초를 명확히 했다. 미국 건국자들에게 직접적인 영향을 미쳤다. 영어권 세계에서 가장 영향력 있는 정치 철학이자 고전적 자유주의의 기초가 되었다. Philosify의 견해: 로크는 개인이 정부보다 선재하는 자연권을 가진다고 확립했다—정부는 이러한 권리를 부여하는 것이 아니라 보호하기 위해 존재한다. 이것이 미국과 전 세계 자유의 철학적 기초다. 로크는 불완전했으나 방향적으로 올바랐다.",
+      "headline": "로크, 자연권과 제한 정부 이론 발표"
+    },
+    "1776ad": {
+      "title": "미국 독립선언",
+      "description": "미국 식민지들이 자연권을 주장하며 독립을 선언하다.",
+      "analysis": "결과: 자연권, 피통치자의 동의, 제한된 정부의 원칙 위에 명시적으로 건국된 최초의 국가. 전 세계적으로 자유를 위한 운동에 영감을 주었다. 처음에는 노예나 여성에게 권리가 확대되지 않았으나—원칙들은 결국 모두를 포함하도록 확장되었다. Philosify의 견해: 독립선언서는 인류 최고의 정치 문서다. '양도할 수 없는 권리'를 가진 '만인이 평등하게 창조되었다'는 것이 적절한 정부의 기초다. 건국자들은 자신들의 실천이 원칙에 미치지 못함을 알았으나—그들은 스스로의 완성을 요구하는 원칙들을 확립했다.",
+      "headline": "미국 식민지, 영국으로부터 독립 선언"
+    },
+    "1787ad": {
+      "title": "미국 헌법 작성",
+      "description": "헌법 제정 회의가 제한된 연방 정부의 틀을 만들다.",
+      "analysis": "결과: 견제와 균형의 내구성 있는 체계가 창설되었고, 연방 구조가 국가적, 지역적 이익의 균형을 맞추었다. 노예제에 대한 타협이 있었고, 처음에는 권리장전이 없었다. 현재도 사용 중인 가장 오래된 성문 헌법으로, 전 세계 헌법들에 영향을 미쳤다. Philosify의 견해: 헌법은 계몽주의 원칙의 실천적 적용이다—제한된 정부, 권력분립, 연방주의. 불완전하지만 수정을 통해 개선되도록 설계되었다. 이 틀은 2세기 이상 미국의 번영을 가능케 하고 자유를 보호해왔다.",
+      "headline": "건국자들, 필라델피아에서 미국 헌법 기초"
+    },
+    "1789ad": {
+      "title": "프랑스 혁명 시작",
+      "description": "바스티유 습격이 유럽을 뒤흔들 혁명을 시작하다.",
+      "analysis": "결과: 봉건적 특권이 종식되고, 시민권과 평등의 사상이 전파되었다. 공포정치, 독재, 수십 년간의 전쟁으로 타락했고, 수천 명이 기요틴으로 처형되었다. 유럽 전역에 민족주의를 전파했으며, 혁명적 변화의 잠재력과 위험성을 모두 보여주었다. Philosify의 견해: 프랑스 혁명은 미국과 프랑스 접근법의 차이를 예시한다. 미국: 정부로부터 보호받는 개인의 권리. 프랑스: 개인을 집단에 희생시키는 '일반의지'. 공포정치는 우연이 아니라 집단주의 철학의 결과였다.",
+      "headline": "파리 시민, 바스티유를 습격하며 혁명 발발"
+    },
+    "1791ad": {
+      "title": "권리장전 비준",
+      "description": "미국 헌법의 첫 10개 수정 조항이 개인의 자유를 보호하다.",
+      "analysis": "결과: 언론, 종교, 출판, 집회, 무기 소지, 적법 절차의 권리를 명시적으로 보호했다. 연방 권력을 제한하고, 권한을 주와 국민에게 유보했다. 해석을 통해 권리 확장의 기초가 되었다. 처음에는 연방 정부에만 적용되었다. Philosify의 견해: 권리장전은 권리를 부여하지 않는다—정부가 기존의 자연권을 침해하는 것을 금지한다. '의회는 어떠한 법률도 제정할 수 없다...' 수정 조항들은 권리가 정부의 선물이 아니라 인간 본성에 내재한다는 것을 인정한다. 이 이해가 자유에 필수적이다.",
+      "headline": "권리장전 비준, 개인의 자유 보호"
+    },
+    "1804ad": {
+      "title": "나폴레옹 황제 대관식",
+      "description": "나폴레옹 보나파르트가 스스로 프랑스 황제로 대관하다.",
+      "analysis": "결과: 혁명적 공화국이 독재로 변했다. 나폴레옹의 법전은 유럽 전역의 민법을 현대화했다. 수백만 명이 나폴레옹 전쟁에서 사망했다. 계몽주의 개혁을 전파하면서 자유를 짓밟았다. 유럽 전역에서 민족주의를 일깨웠다. Philosify의 견해: 나폴레옹은 좋은 개혁이 독재를 정당화하지 않음을 보여준다. 나폴레옹 법전은 진보적이었으나 폭군에 의해 부과되었다. 수단은 목적만큼이나 중요하다—자유는 정복으로 전파될 수 없다. 나폴레옹의 가장 큰 유산은 의도치 않은 것이었다: 국가적 저항 운동에 영감을 준 것.",
+      "headline": "나폴레옹, 스스로 프랑스 황제로 대관"
+    },
+    "1815ad": {
+      "title": "워털루 전투",
+      "description": "나폴레옹이 패배하다; 비엔나 회의가 유럽 질서를 회복하다.",
+      "analysis": "결과: 수십 년간의 전쟁이 종식되고, 한 세기의 상대적 유럽 평화가 가능해졌다. 비엔나 회의는 세력 균형 체제를 창설했다. 반동적 정착이 자유주의 운동을 처음에는 억압했으나, 나중에 다시 부상했다. 경제 발전이 평화로운 환경에서 번성했다. Philosify의 견해: 비엔나 회의는 반동적이었으나 평화를 가져왔다. 세력 균형 체제는 불완전했으나 한 세기 동안 주요 유럽 전쟁을 방지했다. 안정은 번영을 가능케 한다—그러나 자유주의 운동을 억압해도 그 승리를 지연시킬 뿐이었다.",
+      "headline": "나폴레옹 워털루에서 패배, 영구 추방"
+    },
+    "1833ad": {
+      "title": "영국 노예제 폐지법",
+      "description": "영국이 제국 전역에서 노예제를 폐지하다.",
+      "analysis": "결과: 대영제국 전역에서 노예제가 종식되고, 왕립 해군이 전 세계적으로 노예 무역을 억압했다. 세계 폐지 운동의 주요 단계. 노예 소유주는 보상을 받았으나 노예는 아무것도 받지 못했고, 착취는 다른 형태로 계속되었다. 도덕적 지도력이 다른 국가들에 영감을 주었다. Philosify의 견해: 폐지는 모든 인간이 권리를 가진다는 것을 인정했다—노예제는 사람의 생명과 노동의 절도다. 영국의 폐지는 도덕적 진보가 가능함을 보여주었다. 혁명이 아닌 평화적 입법을 통해 이루어졌다는 사실은 이성이 확립된 이해관계에 승리할 수 있음을 보여준다.",
+      "headline": "영국, 제국 전역에서 노예제 폐지"
+    },
+    "1848ad": {
+      "title": "1848년 혁명",
+      "description": "유럽 전역에서 혁명의 물결이 입헌 정부를 요구하다.",
+      "analysis": "결과: 대부분의 혁명이 진압되고 반동 정부가 복귀했다. 그러나 자유주의와 민족주의 사상이 널리 전파되었고, 오스트리아 제국에서 농노제가 종식되었으며, 개혁에 대한 대중의 열망이 드러났다. 개혁은 결국 혁명이 아닌 진화를 통해 이루어졌다. Philosify의 견해: 1848년은 자유의 사상이 엘리트를 넘어 대중에게 전파되었음을 보여주었다. 즉각적으로는 실패했으나, 혁명들은 구체제가 지적으로 파산했음을 보여주었다. 억압은 사상을 죽이지 못한다—그 실현을 지연시킬 뿐이다.",
+      "headline": "혁명의 물결, 유럽 전역 휩쓸다"
+    },
+    "1848ad_2": {
+      "title": "공산당 선언 출판",
+      "description": "마르크스와 엥겔스가 폭력 혁명과 사유재산 폐지를 촉구하는 선언문을 발표하다.",
+      "analysis": "결과: 이 문서는 20세기에 1억 명 이상을 살해한 정권들—소련, 중국, 캄보디아, 쿠바, 북한 등—의 이념적 기초가 되었다. 공산주의가 실현된 곳마다 결과는 폭정, 빈곤, 대량 학살이었다. Philosify의 견해: 선언은 개인 권리, 사유재산, 자유 시장—인류 번영과 자유의 기초—을 거부한다. 계급 투쟁과 집단 소유에 대한 요구는 인간 본성과 근본적으로 양립 불가능하다. 마르크스는 역사, 경제, 인간 본성에 대해 틀렸다. 사망자 수가 그것을 증명한다.",
+      "headline": "마르크스와 엥겔스, 공산당 선언 발표"
+    },
+    "1859ad": {
+      "title": "종의 기원 출판",
+      "description": "다윈이 자연선택에 의한 진화론을 발표하다.",
+      "analysis": "결과: 생물학을 통합하고, 자연 과정을 통해 생명의 다양성을 설명했다. 현대 의학, 유전학, 생명공학의 기초가 되었다. 사회적 다윈주의와 우생학을 정당화하는 데 오용되기도 했다. 생명과 자연에서 인류의 위치에 대한 이해를 변화시켰다. Philosify의 견해: 진화는 참이다—증거가 압도적이다. 이것이 인간의 존엄성을 줄이지 않는다; 우리의 운명을 결정하지 않으면서 우리의 기원을 설명한다. 우리는 본능을 초월하는 이성의 능력을 진화시켰다. 생물학은 '있는 것'을 설명하고, 윤리학은 '있어야 하는 것'을 결정한다.",
+      "headline": "다윈, 종의 기원 출판하며 생물학 기반 뒤흔들다"
+    },
+    "1861ad": {
+      "title": "미국 남북전쟁 시작",
+      "description": "노예제와 주권 문제를 둘러싸고 전쟁이 시작되다; 미국 역사상 가장 많은 사망자를 낸 전쟁.",
+      "analysis": "결과: 다른 모든 전쟁을 합친 것보다 더 많은 62만 명의 미국인이 사망했다. 노예제를 종식시키고 연방을 보존했다. 재건 시대는 조기에 끝났고, 인종 불평등은 한 세기 더 지속되었다. 국가가 연합을 유지할 것이며 노예제가 미국 원칙과 양립 불가함을 확정지었다. Philosify의 견해: 남북전쟁은 노예제—개인 권리에 대한 궁극적 침해—에 맞선 자유를 위한 전쟁이었다. 링컨은 '반은 노예, 반은 자유인'인 국가가 스스로 모순됨을 올바르게 이해했다. 북부의 대의는 정의로웠고, 대가는 비극적이었으나 필요했다.",
+      "headline": "남부 연방 이탈, 미국 남북전쟁 개전"
+    },
+    "1863ad": {
+      "title": "노예해방선언",
+      "description": "링컨이 반란주의 노예들을 \"영원히 자유\"라고 선언하다.",
+      "analysis": "결과: 남북전쟁을 단순한 연방 보존이 아닌 자유를 위한 싸움으로 전환시켰다. 흑인 병사들이 자신의 해방을 위해 싸울 수 있게 했다. 남부연합을 도덕적으로나 물질적으로 약화시켰다. 접경 주의 노예는 해방시키지 않았고, 완전한 평등은 한 세기 더 걸렸다. Philosify의 견해: 노예해방은 미국이 건국 원칙에 부합하게 살아가는 것이었다. '만인이 평등하게 창조되었다'는 것은 말 그대로의 의미였다—선언은 그 약속을 이행하는 과정을 시작했다. 링컨은 노예제가 단순히 정책이 아닌 원칙적으로 잘못되었음을 이해했다.",
+      "headline": "링컨, 반란주 모든 노예 영원히 자유 선언"
+    },
+    "1865ad": {
+      "title": "수정헌법 제13조 비준",
+      "description": "미국 전역에서 노예제와 비자발적 예속이 폐지되다.",
+      "analysis": "결과: 노예제를 헌법적으로 폐지하고, 독립선언서가 약속한 것을 완성했다. 전 노예들은 처음에 토지와 완전한 시민권을 거부당했고, 소작제와 짐 크로우 법이 뒤따랐다. 그러나 노예제는 헌법 수정에 의해 영구적으로 종식되었다. Philosify의 견해: 수정헌법 제13조는 처음부터 헌법에 있었어야 할 것을 명문화했다—어떤 사람도 다른 사람을 소유할 수 없다. 완전한 평등을 위한 투쟁은 계속되었으나, 근본 원칙은 확립되었다: 개인 권리는 모든 개인에게 속한다.",
+      "headline": "수정헌법 제13조, 미국에서 노예제 폐지"
+    },
+    "1869ad": {
+      "title": "대륙횡단철도 완성",
+      "description": "대서양과 태평양 연안을 잇는 대륙횡단철도가 프로몬토리 서밋에서 완공되다.",
+      "analysis": "결과: 대륙을 경제적으로 통합하고, 광대한 거리에 걸친 정착, 상업, 통신을 가능케 했다. 이동 시간을 수개월에서 수일로 단축했다. 착취당한 이민 노동으로 건설되었고, 원주민 땅을 침범했다. 미국 경제와 정착 패턴을 변화시켰다. Philosify의 견해: 철도는 자유로운 기업과 공학이 달성할 수 있는 것을 보여주었다. 정부 관여와 노동 착취에도 불구하고, 프로젝트는 엄청난 가치를 창출했다. 교역과 이동을 가능케 하는 인프라는 인간 번영에 기여한다—자발적 교환으로 건설될 때, 강제 노동이 아닐 때.",
+      "headline": "대륙횡단철도 완공, 동서 해안 연결"
+    },
+    "1876ad": {
+      "title": "전화기 발명",
+      "description": "알렉산더 그레이엄 벨이 전화기의 특허를 취득하다.",
+      "analysis": "결과: 거리를 넘어 즉각적인 통신이 가능해지고, 비즈니스, 정부, 개인 관계가 변화했다. 새로운 산업과 경제적 기회를 창출했다. 사회를 계속 변화시키는 통신 혁명의 시작이었다. Philosify의 견해: 전화기는 발명가들이 자신의 이익을 추구하면서 모든 사람에게 봉사하는 방식을 예시한다. 벨은 이익을 추구했고, 타인에게 가치를 창출함으로써 그것을 달성했다. 이것이 최상의 자본주의다—모든 당사자에게 부를 창출하는 자발적 교환.",
+      "headline": "벨, 전화기 발명"
+    },
+    "1879ad": {
+      "title": "에디슨의 전구",
+      "description": "토머스 에디슨이 실용적인 백열전구를 개발하다.",
+      "analysis": "결과: 생산적인 시간을 일광을 넘어 연장하고, 가정과 작업장의 안전을 개선했으며, 새로운 산업을 가능케 하고, 일상생활을 변화시켰다. 전기화는 현대 문명의 모든 측면을 변화시켰다. 에디슨의 체계적인 발명 방법은 산업 연구의 모델이 되었다. Philosify의 견해: 에디슨은 전구만 발명한 것이 아니라, 그것을 유용하게 만드는 발전 및 배전 시스템을 창조했다. 그는 자본주의가 보상하는 생산적 천재를 예시한다: 문제를 식별하고, 해결책을 창조하고, 타인에게 봉사함으로써 이익을 얻는다.",
+      "headline": "에디슨, 전구로 세상을 밝히다"
+    },
+    "1886ad": {
+      "title": "자유의 여신상 제막",
+      "description": "프랑스가 미국에 보낸 선물이 세계를 비추는 자유를 기념하다.",
+      "analysis": "결과: 미국 이상의 지속적인 상징이 되었고, 자유와 기회를 찾는 수백만 이민자들을 환영했다. 이상이 항상 차별과 제한의 현실과 일치하지는 않았다. 자유와 억압받는 자들의 피난처라는 강력한 상징으로 남아있다. Philosify의 견해: 여신상은 미국의 건국 이상인 자유를 인류의 자연 상태로 상징한다. '지치고, 가난하고, 자유롭게 숨쉬기를 갈망하는 대중들을 내게 보내라'—최선의 미국은 자유를 추구하는 자들을 환영한다. 이상은 여전히 추구할 가치가 있다.",
+      "headline": "자유의 여신상, 뉴욕항에서 제막"
+    },
+    "1903ad": {
+      "title": "라이트 형제의 첫 비행",
+      "description": "키티호크에서 최초의 조종된 동력 비행이 이루어지다.",
+      "analysis": "POSITIVE: Opened era of aviation; transformed transportation, commerce, and warfare; shrank the world. NEGATIVE: Also enabled aerial bombing and new forms of warfare. Long-term: Aviation became essential to modern life; inspired space exploration.",
+      "headline": "라이트 형제, 인류 최초 동력 비행 성공"
+    },
+    "1905ad": {
+      "title": "아인슈타인의 기적의 해",
+      "description": "아인슈타인이 특수 상대성 이론, 광전 효과, 브라운 운동에 관한 논문을 발표하다.",
+      "analysis": "POSITIVE: Revolutionized physics; enabled nuclear energy, GPS, and modern technology; showed power of theoretical thinking. NEGATIVE: Also made nuclear weapons possible. Long-term: Transformed our understanding of space, time, and matter.",
+      "headline": "아인슈타인, 물리학 법칙을 다시 쓰다"
+    },
+    "1914ad": {
+      "title": "제1차 세계대전 시작",
+      "description": "프란츠 페르디난트 대공의 암살이 세계적 분쟁을 촉발하다.",
+      "analysis": "POSITIVE: Ended empires that denied self-determination; eventually led to international institutions. NEGATIVE: 17 million dead; destabilized Europe; enabled rise of fascism and communism. Long-term: Destroyed old order without creating stable new one; set stage for World War II.",
+      "headline": "대공 암살, 유럽 전쟁에 돌입"
+    },
+    "1917ad": {
+      "title": "러시아 혁명",
+      "description": "볼셰비키가 러시아에서 권력을 장악하고 공산주의 전체주의 국가를 수립하다.",
+      "analysis": "Consequences: Established the first major communist totalitarian state. Replaced one autocracy with something far worse—a regime that murdered 20+ million of its own people through purges, engineered famines, and gulags. Exported communist ideology worldwide, leading to similar atrocities in China, Cambodia, Cuba, and elsewhere. Philosophical significance: Collectivism leads to mass murder. When individual rights are subordinated to \"the collective\" or \"the workers,\" the result is always tyranny. The 20th century proved that socialism and communism are incompatible with human life and flourishing.",
+      "headline": "볼셰비키, 러시아에서 권력 장악"
+    },
+    "1918ad": {
+      "title": "제1차 세계대전 종료",
+      "description": "휴전 협정이 체결되다; 전쟁으로 1700만 명이 사망하고 세계 질서가 재편되다.",
+      "analysis": "POSITIVE: Created League of Nations attempt at collective security; ended Ottoman, Austro-Hungarian, German, and Russian empires. NEGATIVE: Vindictive peace terms humiliated Germany; new borders created ethnic conflicts. Long-term: Unstable settlement planted seeds for World War II.",
+      "headline": "휴전 협정 체결, 대전 종료"
+    },
+    "1920ad": {
+      "title": "수정헌법 제19조 비준",
+      "description": "여성이 미국에서 투표권을 획득하다.",
+      "analysis": "POSITIVE: Extended political equality to women; vindicated decades of peaceful advocacy; doubled electorate. NEGATIVE: Many women of color still faced voting barriers. Long-term: Transformed American politics; women became majority of voters.",
+      "headline": "미국 여성, 참정권 쟁취"
+    },
+    "1929ad": {
+      "title": "주식시장 대폭락",
+      "description": "검은 화요일이 대공황을 촉발하다.",
+      "analysis": "POSITIVE: Eventually led to financial reforms and social safety nets. NEGATIVE: Unprecedented economic collapse; mass unemployment; contributed to rise of extremism. Long-term: Transformed role of government in economy; still debated by economists.",
+      "headline": "월스트리트 폭락, 대공황 시작"
+    },
+    "1933ad": {
+      "title": "히틀러 총리 취임",
+      "description": "아돌프 히틀러가 독일 총리로 임명되다.",
+      "analysis": "POSITIVE: None. NEGATIVE: Ended Weimar democracy; began persecution of Jews and others; led to World War II and Holocaust. Long-term: Demonstrated how democracies can vote themselves out of existence; cautionary tale about demagogues and economic crisis.",
+      "headline": "히틀러, 독일 총리에 임명"
+    },
+    "1939ad": {
+      "title": "제2차 세계대전 시작",
+      "description": "독일이 폴란드를 침공하다; 영국과 프랑스가 선전포고하다.",
+      "analysis": "POSITIVE: Allied victory eventually liberated occupied countries; led to human rights declarations. NEGATIVE: 70-85 million dead; Holocaust murdered 6 million Jews; cities destroyed. Long-term: Discredited fascism; created international institutions; began decolonization.",
+      "headline": "독일 폴란드 침공, 제2차 세계대전 개전"
+    },
+    "1941ad": {
+      "title": "진주만 공습",
+      "description": "일본이 미국 태평양 함대를 공격하다; 미국이 제2차 세계대전에 참전하다.",
+      "analysis": "POSITIVE: American entry turned tide of war; brought resources that ensured Allied victory. NEGATIVE: Thousands killed; led to internment of Japanese Americans. Long-term: America emerged as global superpower; ended isolationism.",
+      "headline": "일본 진주만 폭격, 미국 참전"
+    },
+    "1942ad": {
+      "title": "홀로코스트: 조직적 대량학살",
+      "description": "나치 독일이 \"최종 해결책\"을 실행하여 600만 유대인과 수백만 명을 학살하다.",
+      "analysis": "POSITIVE: None. NEGATIVE: Industrial-scale murder of civilians; six million Jews and millions of others killed; immeasurable human loss and suffering. Long-term: Led to human rights declarations, genocide conventions, and establishment of Israel; permanent reminder of where hatred leads.",
+      "headline": "나치, 최종 해결책 시행하며 유대인 조직적 학살"
+    },
+    "1944ad": {
+      "title": "노르망디 상륙작전",
+      "description": "연합군이 노르망디에 상륙하여 서유럽 해방을 시작하다.",
+      "analysis": "POSITIVE: Began liberation of Western Europe; demonstrated Allied commitment; hastened war's end. NEGATIVE: Heavy casualties on beaches; difficult fighting ahead. Long-term: Western Europe liberated; contrasted with Soviet control of Eastern Europe.",
+      "headline": "연합군, D-데이에 노르망디 해변 상륙"
+    },
+    "1945ad": {
+      "title": "원자폭탄으로 제2차 세계대전 종료",
+      "description": "미국이 히로시마와 나가사키에 원자폭탄을 투하하다; 일본이 무조건 항복하다.",
+      "analysis": "Consequences: The atomic bombs ended World War II with Japan's unconditional surrender—the only acceptable outcome against an aggressor nation. Japan started the war with Pearl Harbor and committed horrific atrocities across Asia (Rape of Nanking, POW torture, Unit 731). The bombs saved hundreds of thousands of American soldiers' lives and likely millions of Japanese lives—Japan was arming civilians to fight to the death. Philosophical significance: America had every right to use overwhelming force against an enemy that attacked first and refused to surrender. Our soldiers' lives take priority over enemy civilians. The decision was rational, moral, and life-affirming. Victory, not prolonged bloodshed, is the goal of a just war.",
+      "headline": "일본에 원자폭탄 투하, 전쟁 종결"
+    },
+    "1945ad_2": {
+      "title": "유엔 창설",
+      "description": "평화와 안보 유지를 위한 국제기구가 설립되다.",
+      "analysis": "POSITIVE: Created forum for diplomacy; agencies address humanitarian needs; human rights declarations. NEGATIVE: Security Council veto limits effectiveness; cannot override sovereignty. Long-term: Imperfect but useful forum for international cooperation.",
+      "headline": "세계 평화 유지 위해 유엔 설립"
+    },
+    "1947ad": {
+      "title": "아인 랜드의 파운틴헤드 성공",
+      "description": "파운틴헤드가 베스트셀러가 되어 개인주의 철학을 제시하다.",
+      "analysis": "POSITIVE: Celebrated individual creativity and integrity; challenged collectivist thinking; inspired entrepreneurs and artists. NEGATIVE: Critics argued it dismissed community and social bonds. Long-term: Influenced libertarian movement; remains widely read and debated.",
+      "headline": "랜드의 '파운틴헤드' 베스트셀러, 개인주의 부상"
+    },
+    "1948ad": {
+      "title": "이스라엘 건국",
+      "description": "이스라엘 국가가 선포되어 유대 민족에게 조국을 제공하다.",
+      "analysis": "POSITIVE: Provided refuge for Jews after Holocaust; built successful democracy; technological innovation. NEGATIVE: Displacement of Palestinians; ongoing regional conflict. Long-term: Complex legacy of refuge, conflict, and competing national aspirations.",
+      "headline": "이스라엘 건국 선포, 유대 민족의 조국 탄생"
+    },
+    "1950ad": {
+      "title": "한국전쟁 발발",
+      "description": "북한이 남한을 침공하다; 유엔군이 개입하다.",
+      "analysis": "POSITIVE: South Korea preserved; became prosperous democracy. NEGATIVE: Millions killed; peninsula remains divided; North Korea became totalitarian state. Long-term: Stark contrast between North and South demonstrates different systems' outcomes.",
+      "headline": "북한 남침, 전쟁 발발"
+    },
+    "1949ad": {
+      "title": "중화인민공화국 수립",
+      "description": "마오쩌둥이 중국에 공산주의 전체주의 독재 체제를 수립하다.",
+      "analysis": "Consequences: Mao's regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, and family structures. Philosophical significance: Communism is the deadliest ideology in human history. China's economic success only came AFTER the CCP abolished communist economics and opened markets, allowing people to trade freely domestically and internationally. The political system remains authoritarian, but prosperity required abandoning Marx. The regime still commits genocide against Uyghurs and threatens Taiwan.",
+      "headline": "마오쩌둥 공산 중국 선포, 세계 최대 국가 적색화"
+    },
+    "1957ad": {
+      "title": "아틀라스 출판",
+      "description": "아인 랜드가 자신의 철학 소설을 출판하다.",
+      "analysis": "POSITIVE: Defended productive achievement; critiqued excessive regulation; inspired entrepreneurs. NEGATIVE: Critics argued it lacked compassion for the less fortunate. Long-term: One of most influential American novels; continues to spark debate about capitalism and individualism.",
+      "headline": "아인 랜드, '아틀라스가 어깨를 으쓱하다' 출판"
+    },
+    "1961ad": {
+      "title": "최초의 우주 비행사",
+      "description": "유리 가가린이 인류 최초로 지구 궤도를 돌다.",
+      "analysis": "POSITIVE: Opened space age; demonstrated human capacity to transcend earthly limits; inspired generations. NEGATIVE: Space race diverted resources; Cold War competition. Long-term: Space exploration continues to advance science and inspire humanity.",
+      "headline": "가가린, 지구 궤도 비행으로 인류 최초 우주인"
+    },
+    "1963ad": {
+      "title": "케네디 암살",
+      "description": "존 F. 케네디 대통령이 댈러스에서 암살되다.",
+      "analysis": "POSITIVE: Peaceful transfer of power demonstrated constitutional resilience. NEGATIVE: National trauma; loss of popular leader; conspiracy theories persist. Long-term: Showed institutions survive loss of any individual; changed American political culture.",
+      "headline": "케네디 대통령, 댈러스에서 암살"
+    },
+    "1964ad": {
+      "title": "민권법",
+      "description": "획기적인 법률이 인종, 피부색, 종교, 성별 또는 출신 국가에 따른 차별을 금지하다.",
+      "analysis": "POSITIVE: Ended legal segregation; protected voting rights; opened opportunities. NEGATIVE: Did not eliminate discrimination; implementation faced resistance. Long-term: Transformed American society; extended founding principles to all citizens.",
+      "headline": "민권법, 인종 차별 불법화"
+    },
+    "1965ad": {
+      "title": "베트남 전쟁 확대",
+      "description": "미국이 베트남에 전투 부대를 투입하다; 전쟁으로 수백만 명이 사망하게 되다.",
+      "analysis": "POSITIVE: Attempted to prevent communist expansion. NEGATIVE: Over 58,000 Americans and millions of Vietnamese killed; divided American society; ultimately unsuccessful. Long-term: Changed American attitudes toward military intervention; lessons still debated.",
+      "headline": "미국, 베트남에 전투 병력 파견"
+    },
+    "1966ad": {
+      "title": "문화대혁명 시작",
+      "description": "마오가 \"반혁명\" 요소를 겨냥하여 문화대혁명을 발동하다.",
+      "analysis": "POSITIVE: None. NEGATIVE: Millions killed or persecuted; cultural heritage destroyed; education disrupted for generation. Long-term: Traumatized Chinese society; later repudiated by Chinese Communist Party itself.",
+      "headline": "마오, 문화대혁명 발동하며 중국 혼란에 빠지다"
+    },
+    "1975ad": {
+      "title": "캄보디아 대학살 시작",
+      "description": "크메르 루주가 권력을 장악하다; 대량학살로 150~200만 캄보디아인이 사망하다.",
+      "analysis": "POSITIVE: None. NEGATIVE: Quarter of population killed; society devastated; educated class targeted for elimination. Long-term: Cambodia slowly recovered; tribunals eventually held perpetrators accountable.",
+      "headline": "크메르 루주 캄보디아 장악, 대학살 시작"
+    },
+    "1979ad": {
+      "title": "이란 혁명",
+      "description": "이슬람 혁명이 샤를 타도하다; 호메이니가 신정 독재 체제를 수립하다.",
+      "analysis": "Consequences: Replaced a modernizing authoritarian monarchy with a barbaric theocratic dictatorship. Iran became the world's leading state sponsor of terrorism. Women lost fundamental rights. Religious police enforce medieval laws. The regime has pursued nuclear weapons while calling for the destruction of Israel and America. Philosophical significance: Not all \"revolutions\" are progress. Theocracy is incompatible with human freedom. The West's failure to support the Shah and decades of appeasement emboldened this regime. Only regime change or unconditional surrender can end this threat to civilization.",
+      "headline": "이슬람 혁명으로 샤 축출, 이란 신정국가로"
+    },
+    "1969ad": {
+      "title": "달 착륙",
+      "description": "아폴로 11호 우주비행사들이 달 위를 걷다.",
+      "analysis": "POSITIVE: Greatest technological achievement in history; united humanity in wonder; advanced technology. NEGATIVE: Enormous cost; program later abandoned. Long-term: Proved nothing is impossible; inspired generations; space exploration continues.",
+      "headline": "암스트롱, 달 위를 걷다"
+    },
+    "1989ad": {
+      "title": "베를린 장벽 붕괴",
+      "description": "베를린 장벽이 무너지다; 냉전이 종식되기 시작하다.",
+      "analysis": "POSITIVE: Reunified Germany; freed Eastern Europe; ended Cold War division; peaceful revolution. NEGATIVE: Economic difficulties for former communist states; not all transitions smooth. Long-term: Demonstrated that even seemingly permanent systems can collapse; expanded freedom to millions.",
+      "headline": "베를린 장벽 붕괴, 자유가 동유럽을 휩쓸다"
+    },
+    "1991ad": {
+      "title": "소련 해체",
+      "description": "소련이 공식적으로 해체되다; 냉전이 종식되다.",
+      "analysis": "POSITIVE: Ended communist superpower; freed 15 nations; ended nuclear standoff. NEGATIVE: Economic collapse in former Soviet states; some regions remain authoritarian. Long-term: Transformed international order; debate continues about post-Soviet development.",
+      "headline": "소련 붕괴, 냉전 종식"
+    },
+    "2001ad": {
+      "title": "9.11 테러",
+      "description": "알카에다 테러리스트들이 세계무역센터와 펜타곤을 공격하여 약 3,000명을 살해하다.",
+      "analysis": "Consequences: Nearly 3,000 innocent people murdered by Islamic terrorists. America responded with war in Afghanistan to destroy Al-Qaeda and the Taliban regime that harbored them. Triggered two decades of military operations against terrorist networks. Philosophical significance: Evil exists and must be destroyed. The proper response to terrorism is overwhelming force, not negotiation. The failure to achieve complete victory in Afghanistan demonstrated the cost of nation-building over decisive military defeat of enemies.",
+      "headline": "테러리스트, 세계무역센터와 펜타곤 공격"
+    },
+    "2008ad": {
+      "title": "세계 금융위기",
+      "description": "리먼 브라더스의 파산이 세계적인 금융 위기를 촉발하다.",
+      "analysis": "POSITIVE: Led to financial reforms; exposed weaknesses in system. NEGATIVE: Millions lost jobs and homes; recession spread globally. Long-term: Changed banking regulation; debates about causes and responses continue.",
+      "headline": "리먼 브라더스 파산, 글로벌 금융 위기"
+    },
+    "2020ad": {
+      "title": "COVID-19 팬데믹",
+      "description": "세계적 팬데믹이 전례 없는 봉쇄와 경제적 혼란을 초래하다.",
+      "analysis": "POSITIVE: Accelerated medical research and vaccine development; remote work became viable. NEGATIVE: Millions died; economic disruption; mental health impacts; educational setbacks. Long-term: Transformed work, medicine, and public health; full effects still emerging.",
+      "headline": "코로나19 팬데믹, 세계가 멈추다"
+    },
+    "2023ad": {
+      "title": "10월 7일: 하마스의 이스라엘 공격",
+      "description": "하마스 테러리스트들이 이스라엘 민간인 1,200명을 학살하고 250명을 인질로 잡다.",
+      "analysis": "Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities against civilians including rape, torture, and murder of children. Revealed the true nature of Hamas as a genocidal terrorist organization. Much of the Western intelligentsia shamefully sided with the terrorists, exposing moral bankruptcy in academia and media. Philosophical significance: Evil must be defeated, not negotiated with. Israel's right to self-defense is absolute. Victory means dismantling Hamas's capability to harm civilians. There is no moral equivalence between terrorists and their victims.",
+      "headline": "하마스, 기습 공격으로 이스라엘인 1,200명 학살"
+    },
+    "2022ad": {
+      "title": "러시아의 우크라이나 침공",
+      "description": "러시아가 우크라이나에 전면 침공을 개시하다; 제2차 세계대전 이후 유럽 최대의 전쟁.",
+      "analysis": "Consequences: Russia, an American enemy, launched unprovoked aggression against Ukraine, revealing imperial ambitions and military weakness. The West responded with sanctions and military aid. Ukraine's fierce resistance has degraded Russian military capability significantly. Philosophical significance: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with negotiated concessions.",
+      "headline": "러시아, 우크라이나 전면 침공 개시"
+    },
+    "2024ad": {
+      "title": "이란-이스라엘 긴장 고조",
+      "description": "이란이 이스라엘에 미사일을 발사하다; 이스라엘이 정밀 타격으로 대응하다.",
+      "analysis": "Consequences: Iran's theocratic regime openly attacks Israel, dropping pretense of proxy warfare. Israel demonstrates superior defensive and offensive capabilities. Regional conflict intensifies with Hezbollah and Houthis. Philosophical significance: Appeasement of the Iranian regime over decades enabled this aggression. The only path to peace is through strength and the defeat of those who seek destruction. Terrorist-sponsoring regimes cannot be trusted with negotiations—only unconditional surrender or regime change ends the threat.",
+      "headline": "이란, 이스라엘에 미사일 발사하며 지역 위기 고조"
+    }
+  },
+  "quiz": {
+    "title": "퀴즈",
+    "leaderboard": "최고 점수",
+    "welcome": "철학 지식 테스트",
+    "description": "형이상학, 인식론, 윤리학, 정치학, 미학에 관한 질문에 답하세요.",
+    "rule1": "크레딧당 10문제",
+    "rule2": "정답마다 질문이 어려워집니다",
+    "rule3": "틀렸나요? 1크레딧으로 계속하기",
+    "rule4": "10문제 연속 정답 = 1크레딧 환급!",
+    "starting": "시작 중...",
+    "start": "퀴즈 시작",
+    "checking": "확인 중...",
+    "submit": "답변 제출",
+    "correct": "정답!",
+    "wrong": "오답!",
+    "correctWas": "정답:",
+    "explanation": "설명",
+    "streak": "연속",
+    "score": "점수",
+    "next": "다음 질문",
+    "continue": "계속",
+    "wrongAnswer": "틀린 답!",
+    "payToContinueWrong": "세션을 계속하려면 1크레딧을 지불하세요.",
+    "completed10": "잘했어요!",
+    "payToContinue10": "10문제 완료! 10문제 더를 위해 1크레딧을 지불하세요.",
+    "bestStreak": "최고 연속",
+    "continuing": "계속 중...",
+    "payToContinue": "퀴즈 계속하기",
+    "endQuiz": "퀴즈 종료",
+    "quizComplete": "퀴즈 완료!",
+    "finalScore": "최종 점수",
+    "totalCorrect": "정답 수",
+    "creditsEarned": "획득 크레딧",
+    "playAgain": "다시 플레이",
+    "categories": {
+      "metaphysics": "형이상학",
+      "epistemology": "인식론",
+      "ethics": "윤리학",
+      "politics": "정치학",
+      "aesthetics": "미학",
+      "applied": "응용 철학",
+      "history": "철학사",
+      "american_exceptionalism": "미국 예외주의",
+      "virtues": "덕목",
+      "economics": "경제학",
+      "law": "객관적 법"
+    }
   }
 }
