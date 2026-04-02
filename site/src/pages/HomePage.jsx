@@ -126,6 +126,7 @@ export function HomePage({
   onOpenMusic,
   onOpenCommunity,
   onOpenCategory,
+  onOpenQuiz,
   anySidebarOpen,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -154,8 +155,11 @@ export function HomePage({
       case 'community':
         onOpenCommunity?.();
         break;
+      case 'quiz':
+        onOpenQuiz?.();
+        break;
       default:
-        // books, films, news, ideas -> ComingSoonSidebar
+        // books, films, news, ideas, history -> ComingSoonSidebar or their own sidebars
         onOpenCategory?.(categoryId);
         break;
     }
@@ -169,7 +173,7 @@ export function HomePage({
   }, []);
 
   // Stagger category labels 1 by 1, starting 5s after video autoplay
-  const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news', 'history'];
+  const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news', 'history', 'quiz'];
   const LABEL_START_DELAY = 5000; // 5s after video starts
   const LABEL_STAGGER = 400; // 400ms between each label
   const isAuthenticated = !!user;
@@ -297,7 +301,7 @@ export function HomePage({
           {/* Category labels below video in 3 columns (styled differently per breakpoint) */}
           {user && (
             <div className="mobile-category-labels">
-              {['music', 'ideas', 'films', 'books', 'community', 'news', 'history'].map((id) => (
+              {['music', 'ideas', 'films', 'books', 'community', 'news', 'history', 'quiz'].map((id) => (
                 <button
                   key={`mobile-${id}`}
                   className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}

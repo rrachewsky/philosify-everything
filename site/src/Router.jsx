@@ -25,8 +25,9 @@ import { LiteratureSidebar } from './components/literature/LiteratureSidebar';
 import { CinemaSidebar } from './components/cinema/CinemaSidebar';
 import NewsSidebar from './components/news/NewsSidebar';
 import { HistorySidebar } from './components/history';
+import { QuizSidebar } from './components/quiz/QuizSidebar';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
-import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas, useHistorySidebar } from './hooks';
+import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas, useHistorySidebar, useQuiz } from './hooks';
 import { useCinemaSidebar } from './hooks/useCinemaSidebar.js';
 import { useNews } from './hooks/useNews.js';
 import { useCommunity } from './hooks/useCommunity.js';
@@ -48,6 +49,7 @@ function HomePageWrapper({
   onCommunity,
   onOpenMusic,
   onOpenCategory,
+  onOpenQuiz,
   onSignUp,
   onBuyCredits,
   onViewAnalysis,
@@ -167,6 +169,7 @@ function HomePageWrapper({
         onOpenMusic={onOpenMusic}
         onOpenCommunity={onCommunity}
         onOpenCategory={onOpenCategory}
+        onOpenQuiz={onOpenQuiz}
         anySidebarOpen={anySidebarOpen}
       />
       <LoginModal
@@ -284,6 +287,7 @@ export function Router() {
   const news = useNews();
   const cinema = useCinemaSidebar();
   const history = useHistorySidebar();
+  const quiz = useQuiz();
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
   // NOTE: Modal Scoping Rule
@@ -336,6 +340,7 @@ export function Router() {
                 onCommunity={community.open}
                 onOpenMusic={music.open}
                 onOpenCategory={openCategory}
+                onOpenQuiz={quiz.open}
                 onSignUp={music.isOpen ? null : undefined}
                 onBuyCredits={music.isOpen ? null : undefined}
                 onViewAnalysis={music.openWithResult}
@@ -346,7 +351,7 @@ export function Router() {
                    else if (type === 'films') result ? cinema.openWithResult(result) : cinema.open();
                   else result ? music.openWithResult(result) : music.open();
                 }}
-                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || !!comingSoonCategory}
+                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || quiz.isOpen || !!comingSoonCategory}
               />
             }
           />
@@ -507,6 +512,13 @@ export function Router() {
 
         {/* History Sidebar (Philosophy Graph - Free) */}
         <HistorySidebar isOpen={history.isOpen} onClose={history.close} />
+
+        {/* Quiz Sidebar */}
+        <QuizSidebar
+          isOpen={quiz.isOpen}
+          onClose={quiz.close}
+          user={music.user}
+        />
       </Suspense>
     </BrowserRouter>
   );

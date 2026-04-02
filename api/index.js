@@ -3587,6 +3587,38 @@ export default {
       }
 
       // ============================================================
+      // QUIZ — Philosophical Quiz Feature
+      // ============================================================
+      if (url.pathname === "/api/quiz/start" && request.method === "POST") {
+        const { handleQuizStart } = await import("./src/handlers/quiz.js");
+        return handleQuizStart(request, env);
+      }
+      if (url.pathname === "/api/quiz/answer" && request.method === "POST") {
+        const { handleQuizAnswer } = await import("./src/handlers/quiz.js");
+        return handleQuizAnswer(request, env);
+      }
+      if (url.pathname === "/api/quiz/continue" && request.method === "POST") {
+        const { handleQuizContinue } = await import("./src/handlers/quiz.js");
+        return handleQuizContinue(request, env);
+      }
+      if (url.pathname === "/api/quiz/question" && request.method === "GET") {
+        const { handleQuizNextQuestion } = await import("./src/handlers/quiz.js");
+        return handleQuizNextQuestion(request, env);
+      }
+      if (url.pathname === "/api/quiz/leaderboard" && request.method === "GET") {
+        const { handleQuizLeaderboard } = await import("./src/handlers/quiz.js");
+        return handleQuizLeaderboard(request, env);
+      }
+      if (url.pathname === "/api/quiz/resume" && request.method === "GET") {
+        const { handleQuizResume } = await import("./src/handlers/quiz.js");
+        return handleQuizResume(request, env);
+      }
+      if (url.pathname === "/api/quiz/end" && request.method === "POST") {
+        const { handleQuizEnd } = await import("./src/handlers/quiz.js");
+        return handleQuizEnd(request, env);
+      }
+
+      // ============================================================
       // ADS PLATFORM ROUTES
       // ============================================================
 
