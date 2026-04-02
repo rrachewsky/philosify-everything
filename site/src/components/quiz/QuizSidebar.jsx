@@ -11,91 +11,81 @@ import '../TopTenTicker.css';
 
 // ============================================================
 // QUIZ API FUNCTIONS
+// All API calls use quizFetch which auto-refreshes the auth
+// cookie on 401 and retries once before failing.
 // ============================================================
+async function refreshAuthSession() {
+  const resp = await fetch(`${config.apiUrl}/auth/session`, { credentials: 'include' });
+  return resp.ok;
+}
+
+async function quizFetch(url, options = {}) {
+  const resp = await fetch(url, { credentials: 'include', ...options });
+  if (resp.status === 401) {
+    // Token expired — refresh and retry once
+    const refreshed = await refreshAuthSession();
+    if (refreshed) {
+      const retry = await fetch(url, { credentials: 'include', ...options });
+      const data = await retry.json();
+      if (!retry.ok) {
+        const error = new Error(data.error || 'Request failed');
+        error.code = data.code;
+        error.isAuthError = retry.status === 401;
+        throw error;
+      }
+      return data;
+    }
+    const error = new Error('Unauthorized');
+    error.isAuthError = true;
+    throw error;
+  }
+  const data = await resp.json();
+  if (!resp.ok) {
+    const error = new Error(data.error || 'Request failed');
+    error.code = data.code;
+    throw error;
+  }
+  return data;
+}
+
 async function startQuiz(lang) {
-  const response = await fetch(`${config.apiUrl}/api/quiz/start`, {
+  return quizFetch(`${config.apiUrl}/api/quiz/start`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ lang }),
   });
-  const data = await response.json();
-  if (!response.ok) {
-    const error = new Error(data.error || 'Failed to start quiz');
-    error.code = data.code;
-    throw error;
-  }
-  return data;
 }
 
 async function submitAnswer(sessionId, questionId, answer, lang) {
-  const response = await fetch(`${config.apiUrl}/api/quiz/answer`, {
+  return quizFetch(`${config.apiUrl}/api/quiz/answer`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sessionId, questionId, answer, lang }),
   });
-  const data = await response.json();
-  if (!response.ok) {
-    const error = new Error(data.error || 'Failed to submit answer');
-    error.code = data.code;
-    throw error;
-  }
-  return data;
 }
 
 async function continueQuiz(sessionId, lang) {
-  const response = await fetch(`${config.apiUrl}/api/quiz/continue`, {
+  return quizFetch(`${config.apiUrl}/api/quiz/continue`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sessionId, lang }),
   });
-  const data = await response.json();
-  if (!response.ok) {
-    const error = new Error(data.error || 'Failed to continue quiz');
-    error.code = data.code;
-    throw error;
-  }
-  return data;
 }
 
 async function fetchLeaderboard() {
-  const response = await fetch(`${config.apiUrl}/api/quiz/leaderboard`, {
-    method: 'GET',
-    credentials: 'include',
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error || 'Failed to fetch leaderboard');
-  }
-  return data;
+  return quizFetch(`${config.apiUrl}/api/quiz/leaderboard`, { method: 'GET' });
 }
 
 async function resumeQuiz(lang) {
-  const response = await fetch(`${config.apiUrl}/api/quiz/resume?lang=${lang}`, {
-    method: 'GET',
-    credentials: 'include',
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error || 'Failed to resume quiz');
-  }
-  return data;
+  return quizFetch(`${config.apiUrl}/api/quiz/resume?lang=${lang}`, { method: 'GET' });
 }
 
 async function endQuiz(sessionId) {
-  const response = await fetch(`${config.apiUrl}/api/quiz/end`, {
+  return quizFetch(`${config.apiUrl}/api/quiz/end`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sessionId }),
   });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error || 'Failed to end quiz');
-  }
-  return data;
 }
 
 // ============================================================
@@ -324,7 +314,7 @@ export function QuizSidebar({
     } catch (err) {
       if (err.code === 'INSUFFICIENT_CREDITS') {
         paymentModal.open();
-      } else if (err.message === 'Unauthorized') {
+      } else if (err.isAuthError) {
         setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
         loginModal.open();
       } else {
@@ -351,21 +341,9 @@ export function QuizSidebar({
         window.dispatchEvent(new CustomEvent('credits-changed'));
       }
     } catch (err) {
-      if (err.message === 'Unauthorized') {
-        // Session expired — try refreshing auth by calling /auth/session
-        try {
-          const refreshResp = await fetch(`${config.apiUrl}/auth/session`, { credentials: 'include' });
-          if (refreshResp.ok) {
-            // Auth refreshed — retry the answer
-            setError(t('quiz.sessionRefreshed', 'Session refreshed. Please submit your answer again.'));
-          } else {
-            setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
-            loginModal.open();
-          }
-        } catch (e) {
-          setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
-          loginModal.open();
-        }
+      if (err.isAuthError) {
+        setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
+        loginModal.open();
       } else {
         setError(err.message);
       }
@@ -417,7 +395,7 @@ export function QuizSidebar({
     } catch (err) {
       if (err.code === 'INSUFFICIENT_CREDITS') {
         paymentModal.open();
-      } else if (err.message === 'Unauthorized') {
+      } else if (err.isAuthError) {
         setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
         loginModal.open();
       } else {
