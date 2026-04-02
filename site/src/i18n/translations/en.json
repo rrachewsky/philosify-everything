@@ -532,6 +532,10 @@
       "history": {
         "title": "History",
         "description": "Explore 2,600 years of philosophical thought"
+      },
+      "quiz": {
+        "title": "Quiz",
+        "description": "Test your knowledge of philosophy"
       }
     },
     "comingSoonDesc": {
@@ -1621,99 +1625,620 @@
     }
   },
   "historicalEvents": {
-    "594bc": "Solon\\'s Reforms in Athens",
-    "509bc": "Roman Republic Founded",
-    "490bc": "Battle of Marathon",
-    "480bc": "Battle of Thermopylae & Salamis",
-    "399bc": "Trial and Death of Socrates",
-    "336bc": "Alexander the Great Begins Conquest",
-    "323bc": "Death of Alexander the Great",
-    "264bc": "First Punic War Begins",
-    "146bc": "Destruction of Carthage",
-    "49bc": "Caesar Crosses the Rubicon",
-    "44bc": "Assassination of Julius Caesar",
-    "31bc": "Battle of Actium",
-    "30ad": "Crucifixion of Jesus",
-    "79ad": "Eruption of Vesuvius",
-    "180ad": "Death of Marcus Aurelius",
-    "313ad": "Edict of Milan",
-    "380ad": "Christianity Becomes State Religion",
-    "410ad": "Visigoths Sack Rome",
-    "476ad": "Fall of Western Roman Empire",
-    "529ad": "Closing of Platonic Academy",
-    "622ad": "Hegira - Birth of Islam",
-    "732ad": "Battle of Tours",
-    "800ad": "Charlemagne Crowned Emperor",
-    "1054ad": "Great Schism",
-    "1066ad": "Norman Conquest of England",
-    "1095ad": "First Crusade Called",
-    "1215ad": "Magna Carta Signed",
-    "1265ad": "First English Parliament",
-    "1347ad": "Black Death Reaches Europe",
-    "1439ad": "Gutenberg\\'s Printing Press",
-    "1453ad": "Fall of Constantinople",
-    "1492ad": "Columbus Reaches Americas",
-    "1517ad": "Protestant Reformation Begins",
-    "1543ad": "Copernican Revolution",
-    "1588ad": "Defeat of Spanish Armada",
-    "1607ad": "Jamestown Founded",
-    "1620ad": "Mayflower Compact",
-    "1642ad": "English Civil War Begins",
-    "1648ad": "Peace of Westphalia",
-    "1687ad": "Newton\\'s Principia Published",
-    "1688ad": "Glorious Revolution",
-    "1689ad": "Locke\\'s Two Treatises Published",
-    "1776ad": "American Declaration of Independence",
-    "1787ad": "U.S. Constitution Written",
-    "1789ad": "French Revolution Begins",
-    "1791ad": "Bill of Rights Ratified",
-    "1804ad": "Napoleon Crowned Emperor",
-    "1815ad": "Battle of Waterloo",
-    "1833ad": "British Slavery Abolition Act",
-    "1848ad": "Revolutions of 1848",
-    "1848ad_2": "Communist Manifesto Published",
-    "1859ad": "Origin of Species Published",
-    "1861ad": "American Civil War Begins",
-    "1863ad": "Emancipation Proclamation",
-    "1865ad": "13th Amendment Ratified",
-    "1869ad": "Transcontinental Railroad Completed",
-    "1876ad": "Telephone Invented",
-    "1879ad": "Edison\\'s Light Bulb",
-    "1886ad": "Statue of Liberty Dedicated",
-    "1903ad": "Wright Brothers\\' Flight",
-    "1905ad": "Einstein\\'s Miracle Year",
-    "1914ad": "World War I Begins",
-    "1917ad": "Russian Revolution",
-    "1918ad": "World War I Ends",
-    "1920ad": "19th Amendment Ratified",
-    "1929ad": "Stock Market Crash",
-    "1933ad": "Hitler Becomes Chancellor",
-    "1939ad": "World War II Begins",
-    "1941ad": "Pearl Harbor Attack",
-    "1942ad": "Holocaust: Systematic Genocide",
-    "1944ad": "D-Day Invasion",
-    "1945ad": "Atomic Bombs End WWII",
-    "1945ad_2": "United Nations Founded",
-    "1947ad": "Ayn Rand\\'s The Fountainhead Success",
-    "1948ad": "Israel Founded",
-    "1950ad": "Korean War Begins",
-    "1949ad": "Communist China Established",
-    "1957ad": "Atlas Shrugged Published",
-    "1961ad": "First Human in Space",
-    "1963ad": "Kennedy Assassination",
-    "1964ad": "Civil Rights Act",
-    "1965ad": "Vietnam War Escalates",
-    "1966ad": "Cultural Revolution Begins",
-    "1975ad": "Cambodian Genocide Begins",
-    "1979ad": "Iranian Revolution",
-    "1969ad": "Moon Landing",
-    "1989ad": "Fall of Berlin Wall",
-    "1991ad": "Soviet Union Dissolves",
-    "2001ad": "September 11 Attacks",
-    "2008ad": "Global Financial Crisis",
-    "2020ad": "COVID-19 Pandemic",
-    "2023ad": "October 7: Hamas Attack on Israel",
-    "2024ad": "Iran-Israel Tensions Escalate",
-    "2022ad": "Russia Invades Ukraine"
+    "594bc": {
+      "title": "Solon's Reforms in Athens",
+      "description": "Solon establishes constitutional reforms in Athens, laying groundwork for democracy.",
+      "analysis": "Consequences: Solon abolished debt slavery, created property-based citizenship tying economic stake to political participation, and established rule of law that would evolve into Athenian democracy. These reforms spread Greek political ideas throughout the Mediterranean. Philosify's view: A crucial step toward recognizing individual rights within society. By linking participation to property ownership, Solon created incentives for productive citizenship. The principle that even rulers are bound by law—not arbitrary whim—is foundational to liberty.",
+      "headline": "Solon abolishes debt slavery, rewrites Athenian law"
+    },
+    "509bc": {
+      "title": "Roman Republic Founded",
+      "description": "Rome overthrows monarchy and establishes the Republic with elected consuls.",
+      "analysis": "Consequences: Rome created institutions distributing power across consuls, Senate, and assemblies. Citizen-soldiers with stake in their society built an empire lasting 500 years. Roman law, engineering, and governance influenced all subsequent Western civilization. Philosify's view: The Republic demonstrated that dispersed power and rule of law enable human flourishing. When individuals have rights protected by institutions rather than dependent on a ruler's whim, prosperity follows. Rome's later fall into empire shows the danger of concentrating power.",
+      "headline": "Rome overthrows monarchy, declares republic"
+    },
+    "490bc": {
+      "title": "Battle of Marathon",
+      "description": "Greeks defeat Persian invasion, preserving Greek independence and culture.",
+      "analysis": "Consequences: Greek independence preserved, allowing continued development of philosophy, democracy, science, and arts. Demonstrated that citizen armies fighting for their own freedom could defeat larger forces fighting for a distant emperor. Philosify's view: Marathon shows that free men fighting for their values are more effective than slaves fighting for masters. The Greek victory enabled the philosophical tradition that discovered reason as humanity's tool of survival. Western civilization owes its existence to this battle.",
+      "headline": "Greeks crush Persian invasion at Marathon"
+    },
+    "480bc": {
+      "title": "Battle of Thermopylae & Salamis",
+      "description": "Greeks resist Persian invasion; 300 Spartans make legendary stand.",
+      "analysis": "Consequences: The Spartans' sacrifice bought time for Greek unity; the naval victory at Salamis proved decisive. Persian expansion halted permanently. Greek civilization survived to produce Socrates, Plato, Aristotle, and the foundations of Western thought. Philosify's view: Thermopylae represents heroism—not martyrdom. The Spartans fought for their highest value: freedom. They didn't sacrifice themselves for nothing; they bought victory for Greece. A hero risks life for his values; a martyr dies for death's sake.",
+      "headline": "300 Spartans hold the line at Thermopylae"
+    },
+    "399bc": {
+      "title": "Trial and Death of Socrates",
+      "description": "Socrates condemned to death by Athenian democracy for \"corrupting youth.\"",
+      "analysis": "Consequences: Socrates' refusal to flee made him a martyr for intellectual integrity. Plato preserved his teachings and founded the Academy. The trial raised fundamental questions about individual conscience versus state authority that remain relevant today. Philosify's view: Democracy executed its greatest philosopher—proving that majority rule without constitutional limits on government power is tyranny. Individual rights must be protected FROM majorities. Socrates demonstrated that a thinking person must follow reason, not popular opinion, even unto death.",
+      "headline": "Athens sentences Socrates to death"
+    },
+    "336bc": {
+      "title": "Alexander the Great Begins Conquest",
+      "description": "Alexander becomes king and launches campaign that will spread Greek culture.",
+      "analysis": "Consequences: Greek language, philosophy, science, and commerce spread across vast territories from Egypt to India. Alexander founded cities that became centers of learning. The Hellenistic world enabled exchange of ideas between East and West for centuries. Philosify's view: Alexander's conquests had mixed results—the spread of Greek rationalism was valuable, but empire-building through conquest violates individual rights. The enduring legacy is cultural, not political: ideas spread by trade and learning outlast those spread by sword.",
+      "headline": "Alexander launches campaign to conquer the known world"
+    },
+    "323bc": {
+      "title": "Death of Alexander the Great",
+      "description": "Alexander dies at 32, his empire fragmenting into successor kingdoms.",
+      "analysis": "Consequences: The empire split into warring successor states. However, Greek culture and commerce persisted throughout these kingdoms. Libraries, schools, and trade networks continued. Competition among states sometimes fostered innovation. Philosify's view: Empires built on one person's charisma rarely survive their founders. Lasting institutions require principles, not personalities. The Hellenistic world's survival despite political fragmentation shows that culture and trade—voluntary exchange—matter more than political unity.",
+      "headline": "Alexander the Great dead at 32, empire shatters"
+    },
+    "264bc": {
+      "title": "First Punic War Begins",
+      "description": "Rome and Carthage begin century of wars for Mediterranean dominance.",
+      "analysis": "Consequences: Rome developed naval capabilities and expanded beyond Italy. Sicily devastated by prolonged warfare. Set Rome on path to Mediterranean dominance that would bring unprecedented peace and trade. Philosify's view: Wars of conquest involve massive destruction of life and property. However, Rome's eventual victory brought the Pax Romana—demonstrating that unified rule of law, even imperfectly applied, enables more prosperity than constant warfare between rival powers.",
+      "headline": "Rome and Carthage clash for Mediterranean supremacy"
+    },
+    "146bc": {
+      "title": "Destruction of Carthage",
+      "description": "Rome destroys Carthage completely, becoming supreme Mediterranean power.",
+      "analysis": "Consequences: Complete destruction of Carthaginian civilization; 50,000 survivors enslaved. Rome's Mediterranean monopoly enabled unprecedented trade, cultural exchange, and the eventual Pax Romana lasting centuries. Philosify's view: Total war against a defeated enemy is excessive—Carthage posed no further threat. However, the resulting Roman peace enabled prosperity across three continents. The lesson: stable order under rule of law, even established brutally, beats perpetual conflict.",
+      "headline": "Rome burns Carthage to the ground"
+    },
+    "49bc": {
+      "title": "Caesar Crosses the Rubicon",
+      "description": "Julius Caesar starts civil war that will end the Roman Republic.",
+      "analysis": "Consequences: Destroyed 460 years of republican government. Caesar's reforms addressed real problems—debt, land distribution, citizenship—but established precedent for military seizure of power. Led to Empire, which brought stability but ended Roman political liberty. Philosify's view: However justified Caesar's grievances, seizing power by force destroyed the constitutional order. The Republic's checks and balances, though imperfect, protected liberty better than rule by 'benevolent' dictators. Good intentions don't justify destroying institutions.",
+      "headline": "Caesar crosses Rubicon, marches on Rome"
+    },
+    "44bc": {
+      "title": "Assassination of Julius Caesar",
+      "description": "Roman senators assassinate Caesar on the Ides of March.",
+      "analysis": "Consequences: Triggered another civil war more destructive than the first. The Republic could not be restored; Octavian emerged as Augustus, first Emperor. The assassins' cause was lost; their methods discredited republicanism. Philosify's view: Political problems cannot be solved by eliminating individuals when underlying conditions remain. The assassins correctly identified tyranny but offered no viable alternative. Principles and institutions matter more than personalities—removing Caesar didn't restore the Republic.",
+      "headline": "Senators assassinate Julius Caesar on Ides of March"
+    },
+    "31bc": {
+      "title": "Battle of Actium",
+      "description": "Octavian defeats Antony and Cleopatra, becoming sole ruler of Rome.",
+      "analysis": "Consequences: Ended decades of civil war. Augustus brought peace, prosperity, and the Pax Romana lasting two centuries. Trade flourished, cities grew, arts and literature thrived. But the Republic was dead; power concentrated in one person. Philosify's view: The Augustan peace shows that order enables prosperity—but at the cost of political liberty. The trade-off between security and freedom is real. Rome chose security; eventually, concentrated power corrupted and the Empire fell. Constitutional limits on power remain essential.",
+      "headline": "Octavian defeats Antony and Cleopatra at Actium"
+    },
+    "30ad": {
+      "title": "Crucifixion of Jesus",
+      "description": "Jesus of Nazareth crucified in Jerusalem, founding event of Christianity.",
+      "analysis": "Consequences: Christianity emerged from this event, eventually transforming Western civilization's values, art, philosophy, law, and institutions. Concepts of universal moral equality, individual conscience, and care for the marginalized entered Western culture. Philosify's view: Christianity introduced valuable concepts—individual moral worth, conscience, charity—but also faith-based epistemology that conflicts with reason. The mixed legacy includes both humanitarian progress and religious persecution. Ideas must be judged by their content and consequences, not their source.",
+      "headline": "Jesus of Nazareth crucified in Jerusalem"
+    },
+    "79ad": {
+      "title": "Eruption of Vesuvius",
+      "description": "Volcanic eruption destroys Pompeii and Herculaneum.",
+      "analysis": "Consequences: Thousands killed; thriving cities destroyed in hours. However, preservation under volcanic ash gave us unparalleled knowledge of Roman daily life, art, architecture, and culture that would otherwise be lost. Philosify's view: Natural disasters remind us of reality's indifference to human wishes. Nature operates by causality, not intention. The proper response is understanding natural forces through science and engineering protective measures—not prayer or fatalism. Pompeii's preservation serves human knowledge.",
+      "headline": "Vesuvius erupts, buries Pompeii in ash"
+    },
+    "180ad": {
+      "title": "Death of Marcus Aurelius",
+      "description": "Last of the \"Five Good Emperors\" dies; Rome begins long decline.",
+      "analysis": "Consequences: Marcus Aurelius chose his unfit son Commodus as successor, ending the practice of adopting capable heirs. Rome entered period of instability, civil wars, and decline that would weaken the empire over centuries. Philosify's view: Even philosopher-kings make poor decisions. Marcus Aurelius' reign proved philosophy can guide governance—but his succession choice proved that concentrated power depends on accidents of birth and character. Institutional checks matter more than wise rulers.",
+      "headline": "Marcus Aurelius dead, Rome's golden age ends"
+    },
+    "313ad": {
+      "title": "Edict of Milan",
+      "description": "Constantine legalizes Christianity throughout the Roman Empire.",
+      "analysis": "Consequences: Ended persecution of Christians; established principle of religious tolerance. Christianity grew rapidly with state support, building hospitals, schools, and charitable institutions. However, began process of church-state entanglement. Philosify's view: Religious tolerance is essential to liberty—the state should neither persecute nor promote religion. The Edict correctly ended persecution, but Constantine's later favoritism toward Christianity set precedents for future religious coercion.",
+      "headline": "Constantine legalizes Christianity across Roman Empire"
+    },
+    "380ad": {
+      "title": "Christianity Becomes State Religion",
+      "description": "Emperor Theodosius makes Christianity the official religion of Rome.",
+      "analysis": "Consequences: Christianity gained resources to build hospitals, schools, and social services across the empire. However, pagans and Christian 'heretics' now faced persecution. Religious coercion replaced religious tolerance. Philosify's view: State religion violates freedom of conscience. Compelling belief is both immoral and ineffective—you cannot force genuine conviction. The medieval model of church-state union produced centuries of religious warfare and persecution. Separation of church and state protects both.",
+      "headline": "Emperor declares Christianity sole religion of Rome"
+    },
+    "410ad": {
+      "title": "Visigoths Sack Rome",
+      "description": "Alaric's Visigoths sack Rome; the \"Eternal City\" falls for first time in 800 years.",
+      "analysis": "Consequences: Psychological shock throughout the empire; revealed Rome's military weakness. However, Visigoths sought integration, not destruction—Rome continued functioning. Prompted Augustine's 'City of God,' reshaping Christian political thought for centuries. Philosify's view: Civilizations fall when they abandon the principles that built them. Rome's decline resulted from internal decay—taxation, regulation, currency debasement—more than external pressure. The Visigoths exploited weakness; they didn't create it.",
+      "headline": "Barbarians sack Rome for first time in 800 years"
+    },
+    "476ad": {
+      "title": "Fall of Western Roman Empire",
+      "description": "Last Western Roman Emperor deposed; traditional date for end of ancient world.",
+      "analysis": "Consequences: Trade collapsed, cities shrank, literacy declined, technical knowledge was lost. Germanic kingdoms preserved some Roman institutions but couldn't maintain complex civilization. Began medieval period of fragmentation and localized power. Philosify's view: Civilization is not automatic—it requires continuous effort to maintain. Rome fell because Romans stopped doing what made Rome great: production, trade, rule of law, military discipline. The Dark Ages show what happens when civilization's foundations erode.",
+      "headline": "Last Roman Emperor deposed, Western Empire falls"
+    },
+    "529ad": {
+      "title": "Closing of Platonic Academy",
+      "description": "Emperor Justinian closes the Academy in Athens, ending ancient philosophy schools.",
+      "analysis": "Consequences: Ended 900 years of philosophical education in Athens. Philosophers fled to Persia, preserving Greek texts that later returned to Europe via Islamic scholars. Christian orthodoxy suppressed pagan learning in the empire. Philosify's view: Suppressing ideas by force is both immoral and futile. Truth cannot be destroyed by closing schools—the ideas survived and eventually sparked the Renaissance. Intellectual freedom is essential; censorship delays but cannot prevent the spread of knowledge.",
+      "headline": "Justinian shuts down Plato's Academy after 900 years"
+    },
+    "622ad": {
+      "title": "Hegira - Birth of Islam",
+      "description": "Muhammad's migration to Medina marks the beginning of the Islamic calendar.",
+      "analysis": "Consequences: Islam united Arab tribes, created sophisticated civilization spanning three continents, preserved and transmitted Greek learning, advanced mathematics, astronomy, and medicine. Also spread through military conquest, imposing religious law on conquered peoples. Philosify's view: Islamic civilization's achievements in science and philosophy occurred despite, not because of, religious doctrine—through individual thinkers who valued reason. The religion itself, like all faith-based systems, ultimately conflicts with the rational inquiry that produced those achievements.",
+      "headline": "Muhammad flees to Medina, Islam is born"
+    },
+    "732ad": {
+      "title": "Battle of Tours",
+      "description": "Charles Martel halts Muslim advance into Western Europe.",
+      "analysis": "Consequences: Preserved Frankish independence and Christian Western Europe. Western Europe developed separately from Islamic world, with different political, religious, and intellectual trajectories. Established Carolingian dynasty's military reputation. Philosify's view: The battle's significance lies in preserving European independence—enabling the eventual Renaissance, Reformation, Enlightenment, and development of individual rights. Whatever one's view of the religions involved, Europe's separate development produced the ideas of liberty that benefit all humanity.",
+      "headline": "Charles Martel halts Muslim advance into Europe"
+    },
+    "800ad": {
+      "title": "Charlemagne Crowned Emperor",
+      "description": "Pope Leo III crowns Charlemagne, reviving the concept of Western Roman Empire.",
+      "analysis": "Consequences: Carolingian Renaissance preserved classical learning; schools established across the empire. Created pattern of pope-emperor conflict lasting centuries. Empire fragmented after Charlemagne's death, but idea of European unity persisted. Philosify's view: Charlemagne's achievements show that individual leadership matters—but his empire's collapse shows that lasting institutions require more than one leader's will. The most enduring legacy was cultural: preservation of learning that enabled future progress.",
+      "headline": "Pope crowns Charlemagne Emperor of the West"
+    },
+    "1054ad": {
+      "title": "Great Schism",
+      "description": "Christianity splits into Roman Catholic and Eastern Orthodox churches.",
+      "analysis": "Consequences: Divided Christendom into competing spheres with distinct theological and cultural developments. Mutual excommunications bred lasting hostility. However, competition between churches created spaces for dissent and eventually contributed to religious pluralism. Philosify's view: Religious monopolies suppress inquiry and freedom. The Schism, though born of conflict, inadvertently created competition that eventually weakened religious authority's stranglehold on thought. Pluralism—even accidental—serves liberty.",
+      "headline": "Christianity splits in two: Rome vs. Constantinople"
+    },
+    "1066ad": {
+      "title": "Norman Conquest of England",
+      "description": "William the Conqueror defeats Harold at Hastings, reshaping English history.",
+      "analysis": "Consequences: Anglo-Saxon elite dispossessed; Norman French influence on English language and culture. Introduced continental administrative practices that eventually contributed to development of common law and Parliament. Created the English nation that would spread its language and institutions worldwide. Philosify's view: Conquest violates rights of the conquered—but history judges by long-term consequences. English common law, emerging partly from Norman administration, became a foundation for individual rights worldwide. Unintended consequences sometimes exceed intentions.",
+      "headline": "William conquers England at Battle of Hastings"
+    },
+    "1095ad": {
+      "title": "First Crusade Called",
+      "description": "Pope Urban II calls for crusade to reclaim Holy Land from Muslims.",
+      "analysis": "Consequences: Opened trade routes and brought knowledge from Islamic world. Enormous casualties on all sides; massacres of Jews and Muslims. Lasting religious hatred between civilizations. However, European contact with more advanced Islamic civilization accelerated cultural and technological development. Philosify's view: Religious wars are the worst kind—fought over faith rather than rational interests, they admit no compromise. Yet the unintended consequence—exposure to preserved Greek learning—helped spark Europe's intellectual awakening. Ideas spread despite intentions.",
+      "headline": "Pope calls First Crusade to reclaim Holy Land"
+    },
+    "1215ad": {
+      "title": "Magna Carta Signed",
+      "description": "English barons force King John to sign charter limiting royal power.",
+      "analysis": "Consequences: Established principle that rulers are subject to law; guaranteed due process protections; foundation for constitutional government. Though initially protecting only baronial privileges and frequently violated, its principles gradually expanded to protect all citizens and influenced constitutions worldwide. Philosify's view: The Magna Carta is a landmark in human liberty—the principle that even kings are bound by law. From this seed grew constitutional government, individual rights, and limited government. Ideas, once established, tend to expand logically to their full implications.",
+      "headline": "English barons force King to sign Magna Carta"
+    },
+    "1265ad": {
+      "title": "First English Parliament",
+      "description": "Simon de Montfort summons first elected Parliament in England.",
+      "analysis": "Consequences: Created precedent for representative government; gave commoners voice in governance alongside nobles. Though initially limited in power and representing only propertied classes, evolved into model of parliamentary democracy adopted by many nations. Philosify's view: Representative government is a crucial check on power. When those who pay taxes have voice in how they're spent, government is constrained. Parliament evolved into a defender of liberty—imperfect, but far superior to absolute monarchy.",
+      "headline": "First elected Parliament convenes in England"
+    },
+    "1347ad": {
+      "title": "Black Death Reaches Europe",
+      "description": "Bubonic plague kills 30-60% of European population over several years.",
+      "analysis": "Consequences: Unimaginable suffering; social breakdown; persecution of minorities blamed for plague. However, survivors saw higher wages due to labor shortage; feudalism weakened as peasants gained bargaining power; technological innovation accelerated to replace lost labor. Philosify's view: Catastrophes reveal what matters: when labor becomes scarce, workers' value rises. The plague accidentally advanced individual liberty by empowering workers against lords. Nature is indifferent to human wishes—but humans can adapt and even benefit from disasters through rational response.",
+      "headline": "Black Death sweeps Europe, millions perish"
+    },
+    "1439ad": {
+      "title": "Gutenberg's Printing Press",
+      "description": "Johannes Gutenberg develops movable type printing in Europe.",
+      "analysis": "Consequences: Democratized knowledge; enabled rapid spread of ideas; reduced cost of books dramatically; increased literacy. Enabled Reformation, Scientific Revolution, and Enlightenment by spreading ideas beyond institutional control. Also spread propaganda more efficiently. Philosify's view: The printing press is one of history's greatest inventions—it broke the monopoly on knowledge held by elites. When ideas can spread freely, truth has a chance against established error. Technology that empowers individuals against institutions serves liberty.",
+      "headline": "Gutenberg invents printing press, revolutionizes knowledge"
+    },
+    "1453ad": {
+      "title": "Fall of Constantinople",
+      "description": "Ottoman Turks conquer Constantinople, ending the Byzantine Empire.",
+      "analysis": "Consequences: Greek scholars fleeing to Italy brought manuscripts that fueled Renaissance. Ottoman Empire maintained Constantinople as major cultural and commercial center. Trade routes shifted westward, spurring Atlantic exploration. End of Eastern Roman Empire after 1,000 years. Philosify's view: The fall dispersed Greek learning throughout Europe, accelerating the Renaissance. Ideas cannot be contained by conquest—they migrate with people and books. The Ottomans conquered a city; the Greeks preserved a civilization through knowledge.",
+      "headline": "Constantinople falls to the Ottoman Turks"
+    },
+    "1492ad": {
+      "title": "Columbus Reaches Americas",
+      "description": "Christopher Columbus's voyage opens the New World to European exploration.",
+      "analysis": "Consequences: Began exchange of crops, animals, ideas between hemispheres—transforming agriculture, diet, and economies worldwide. Indigenous populations devastated by disease and conquest; slavery introduced to Americas. Eventually led to nations founded on Enlightenment principles. Philosify's view: Columbus' voyage had catastrophic consequences for indigenous peoples—conquest and disease violated their rights to life and property. However, the long-term result included the American founding, which established individual rights as the basis for government. History's moral complexity doesn't permit simple judgments.",
+      "headline": "Columbus reaches the New World"
+    },
+    "1517ad": {
+      "title": "Protestant Reformation Begins",
+      "description": "Martin Luther posts 95 Theses, challenging Catholic Church authority.",
+      "analysis": "Consequences: Challenged religious monopoly; emphasized individual faith and Bible reading; led to religious pluralism. Triggered century of religious wars and persecution on all sides. Eventually established that individuals could interpret faith for themselves, contributing to rise of individualism. Philosify's view: The Reformation's lasting contribution was breaking religious monopoly. Whatever Luther's intentions, the principle that individuals can read and interpret for themselves extends logically to all domains. Religious pluralism was a step toward intellectual freedom.",
+      "headline": "Luther nails 95 Theses, challenges Church authority"
+    },
+    "1543ad": {
+      "title": "Copernican Revolution",
+      "description": "Copernicus publishes heliocentric theory, displacing Earth from center of universe.",
+      "analysis": "Consequences: Demonstrated power of observation and mathematics to overturn accepted beliefs. Initially resisted by both Catholic and Protestant authorities. Opened path to modern astronomy and scientific method. Changed humanity's understanding of its place in the universe. Philosify's view: Copernicus showed that reality is what it is, regardless of tradition, authority, or wishes. The heliocentric model was true whether or not the Church accepted it. Science advances by following evidence wherever it leads—the essence of reason applied to nature.",
+      "headline": "Copernicus proves Earth revolves around the Sun"
+    },
+    "1588ad": {
+      "title": "Defeat of Spanish Armada",
+      "description": "England defeats Spanish invasion fleet, preserving Protestant independence.",
+      "analysis": "Consequences: Preserved English independence from Catholic Spain; shifted naval power northward; enabled English colonization of Americas. England emerged as major naval power, laying foundation for global influence and spread of English language and law. Philosify's view: English independence preserved a nation that would develop common law, parliamentary government, and eventually inspire the American founding. The Armada's defeat enabled the tradition of liberty that produced the Declaration of Independence.",
+      "headline": "England destroys the Spanish Armada"
+    },
+    "1607ad": {
+      "title": "Jamestown Founded",
+      "description": "First permanent English settlement in America established.",
+      "analysis": "Consequences: Began English colonization that brought self-governing traditions, common law, and eventually revolutionary ideas. Relations with Native Americans deteriorated; slavery introduced within decades. Seeds of American republic planted by colonists bringing English legal and political traditions. Philosify's view: Jamestown brought both good and evil—self-government and slavery. The colonists who believed in their rights as Englishmen would eventually extend those principles to their logical conclusion: rights belong to all individuals, not just Englishmen.",
+      "headline": "First English colony established in America"
+    },
+    "1620ad": {
+      "title": "Mayflower Compact",
+      "description": "Pilgrims establish self-governing colony at Plymouth.",
+      "analysis": "Consequences: First written framework of self-government in Americas; demonstrated social contract theory in practice. Model of written constitution and government by consent influenced American founding. Limited participation to church members initially. Philosify's view: The Compact established government by consent—the radical idea that legitimate government derives from agreement of the governed, not divine right or conquest. This principle, once established, logically extends to all people, not just original signers.",
+      "headline": "Pilgrims sign Mayflower Compact, found self-governing colony"
+    },
+    "1642ad": {
+      "title": "English Civil War Begins",
+      "description": "Parliament and King Charles I go to war over constitutional principles.",
+      "analysis": "Consequences: Established Parliamentary supremacy; advanced constitutional government; enabled religious toleration. Tens of thousands killed; temporary military dictatorship under Cromwell. Settled that English monarchs must rule with Parliament, not against it. Philosify's view: The Civil War established that no ruler is above the law or the people's representatives. Even temporary dictatorship couldn't undo this principle. The war was costly, but the alternative—absolute monarchy—would have been worse for liberty.",
+      "headline": "English Civil War erupts: Parliament vs. King"
+    },
+    "1648ad": {
+      "title": "Peace of Westphalia",
+      "description": "Treaties end Thirty Years' War and establish modern state system.",
+      "analysis": "Consequences: Ended devastating religious wars that killed millions. Established state sovereignty and non-interference principles that created modern international system. Religious division of Europe frozen in place, but religious wars ended. Philosify's view: Westphalia ended religious wars by establishing that states would not interfere in each other's religious affairs. The principle of sovereignty has limits—it shouldn't protect tyranny—but ending religious wars was an achievement. Pragmatic peace beats perpetual holy war.",
+      "headline": "Peace of Westphalia ends Thirty Years' War"
+    },
+    "1687ad": {
+      "title": "Newton's Principia Published",
+      "description": "Isaac Newton publishes laws of motion and universal gravitation.",
+      "analysis": "Consequences: Demonstrated universe operates by discoverable laws; enabled modern physics and engineering. Inspired Enlightenment confidence that reason could understand nature and improve society. Raised philosophical questions about determinism and purpose. Philosify's view: Newton showed that the universe is orderly, lawful, and comprehensible to human reason. This is the foundation of science and technology—and of confidence that reality can be understood and improved. Reason works; it's our tool for living.",
+      "headline": "Newton reveals laws governing the universe"
+    },
+    "1688ad": {
+      "title": "Glorious Revolution",
+      "description": "William of Orange replaces James II; Parliament asserts supremacy.",
+      "analysis": "Consequences: Established constitutional monarchy, parliamentary supremacy, and religious toleration without major bloodshed. Bill of Rights protected individual liberties. Model of peaceful constitutional reform. Catholics excluded from succession. Philosify's view: The Glorious Revolution achieved regime change with minimal violence—proving that fundamental change doesn't require terror. Constitutional limits on power, established here, became the English tradition that America inherited and improved upon.",
+      "headline": "William of Orange seizes English throne in bloodless coup"
+    },
+    "1689ad": {
+      "title": "Locke's Two Treatises Published",
+      "description": "John Locke publishes theory of natural rights and limited government.",
+      "analysis": "Consequences: Articulated philosophical foundation for individual rights, consent-based government, and right of revolution. Directly influenced American founders. Most influential political philosophy in English-speaking world; basis for classical liberalism. Philosify's view: Locke established that individuals have natural rights that precede government—government exists to protect these rights, not grant them. This is the philosophical foundation of America and of liberty worldwide. Locke was imperfect but directionally correct.",
+      "headline": "Locke publishes theory of natural rights and limited government"
+    },
+    "1776ad": {
+      "title": "American Declaration of Independence",
+      "description": "American colonies declare independence, asserting natural rights.",
+      "analysis": "Consequences: First nation founded explicitly on principles of natural rights, consent of governed, and limited government. Inspired movements for liberty worldwide. Rights not initially extended to enslaved people or women—but principles eventually expanded to include all. Philosify's view: The Declaration is humanity's greatest political document. 'All men are created equal' with 'unalienable rights' is the foundation of proper government. The Founders knew their practice fell short of their principles—but they established principles that demanded their own fulfillment.",
+      "headline": "American colonies declare independence from Britain"
+    },
+    "1787ad": {
+      "title": "U.S. Constitution Written",
+      "description": "Constitutional Convention creates framework for limited federal government.",
+      "analysis": "Consequences: Created durable system of checks and balances; federal structure balanced national and local interests. Compromises on slavery; initially no Bill of Rights. Oldest written constitution still in use; influenced constitutions worldwide. Philosify's view: The Constitution is a practical application of Enlightenment principles—limited government, separated powers, federalism. It's imperfect but designed to be improved through amendment. The framework has enabled American prosperity and protected liberty for over two centuries.",
+      "headline": "Framers draft U.S. Constitution in Philadelphia"
+    },
+    "1789ad": {
+      "title": "French Revolution Begins",
+      "description": "Storming of the Bastille begins revolution that will convulse Europe.",
+      "analysis": "Consequences: Ended feudal privileges; spread ideas of citizenship and equality. Devolved into Terror, dictatorship, and decades of war; thousands executed by guillotine. Spread nationalism across Europe; demonstrated both potential and dangers of revolutionary change. Philosify's view: The French Revolution illustrates the difference between American and French approaches. America: individual rights protected from government. France: 'general will' that sacrificed individuals to the collective. The Terror was not an accident but a consequence of collectivist philosophy.",
+      "headline": "Paris mob storms the Bastille, revolution erupts"
+    },
+    "1791ad": {
+      "title": "Bill of Rights Ratified",
+      "description": "First ten amendments to U.S. Constitution protect individual liberties.",
+      "analysis": "Consequences: Explicitly protected speech, religion, press, assembly, arms, and due process rights. Limited federal power; reserved powers to states and people. Foundation for expansion of rights through interpretation. Initially applied only to federal government. Philosify's view: The Bill of Rights doesn't grant rights—it forbids government from violating pre-existing natural rights. 'Congress shall make no law...' The amendments recognize that rights are inherent in human nature, not gifts from government. This understanding is essential to liberty.",
+      "headline": "Bill of Rights ratified, individual liberties protected"
+    },
+    "1804ad": {
+      "title": "Napoleon Crowned Emperor",
+      "description": "Napoleon Bonaparte crowns himself Emperor of the French.",
+      "analysis": "Consequences: Revolutionary republic became dictatorship. Napoleon's legal code modernized civil law across Europe. Millions died in Napoleonic Wars. Spread Enlightenment reforms while crushing liberty. Awakened nationalism across Europe. Philosify's view: Napoleon demonstrates that good reforms don't justify dictatorship. The Napoleonic Code was progressive, but imposed by a tyrant. Means matter as much as ends—liberty cannot be spread by conquest. Napoleon's greatest legacy was unintended: inspiring national resistance movements.",
+      "headline": "Napoleon crowns himself Emperor of France"
+    },
+    "1815ad": {
+      "title": "Battle of Waterloo",
+      "description": "Napoleon defeated; Congress of Vienna restores European order.",
+      "analysis": "Consequences: Ended decades of war; enabled century of relative European peace. Congress of Vienna created balance of power system. Reactionary settlement suppressed liberal movements initially, but they emerged later. Economic development flourished in peaceful environment. Philosify's view: The Congress of Vienna was reactionary but produced peace. The balance of power system, though imperfect, prevented major European war for a century. Stability enables prosperity—but suppressing liberal movements only delayed their triumph.",
+      "headline": "Napoleon defeated at Waterloo, exiled for good"
+    },
+    "1833ad": {
+      "title": "British Slavery Abolition Act",
+      "description": "Britain abolishes slavery throughout its empire.",
+      "analysis": "Consequences: Ended slavery in British Empire; Royal Navy suppressed slave trade globally. Major step in worldwide abolition movement. Slaveholders compensated while enslaved received nothing; exploitation continued in other forms. Moral leadership inspired other nations. Philosify's view: Abolition recognized that all humans have rights—slavery is theft of a person's life and labor. Britain's abolition showed moral progress is possible. The fact that it happened through peaceful legislation, not revolution, demonstrates that reason can triumph over entrenched interests.",
+      "headline": "Britain abolishes slavery throughout its empire"
+    },
+    "1848ad": {
+      "title": "Revolutions of 1848",
+      "description": "Wave of revolutions across Europe demands constitutional government.",
+      "analysis": "Consequences: Most revolutions suppressed; reactionary governments returned. However, spread liberal and nationalist ideas widely; ended serfdom in Austrian Empire; showed popular desire for reform. Reforms eventually came through evolution rather than revolution. Philosify's view: 1848 showed that ideas of liberty had spread beyond elites to masses. Though immediately unsuccessful, the revolutions demonstrated that the old order was intellectually bankrupt. Suppression doesn't kill ideas—it delays their implementation.",
+      "headline": "Revolutions sweep across Europe"
+    },
+    "1848ad_2": {
+      "title": "Communist Manifesto Published",
+      "description": "Marx and Engels publish manifesto calling for violent revolution and abolition of private property.",
+      "analysis": "Consequences: This document became the ideological foundation for regimes that murdered over 100 million people in the 20th century—in the Soviet Union, China, Cambodia, Cuba, North Korea, and elsewhere. Wherever communism was implemented, the result was tyranny, poverty, and mass death. Philosify's view: The Manifesto rejects individual rights, private property, and free markets—the foundations of human prosperity and freedom. Its call for class warfare and collective ownership is fundamentally incompatible with human nature. Marx was wrong about history, economics, and human nature. The body count proves it.",
+      "headline": "Marx and Engels publish Communist Manifesto"
+    },
+    "1859ad": {
+      "title": "Origin of Species Published",
+      "description": "Darwin publishes theory of evolution by natural selection.",
+      "analysis": "Consequences: Unified biology; explained diversity of life through natural processes. Foundation for modern medicine, genetics, and biotechnology. Misused to justify social Darwinism and eugenics. Transformed understanding of life and humanity's place in nature. Philosify's view: Evolution is true—the evidence is overwhelming. This doesn't reduce human dignity; it explains our origins without determining our destiny. We evolved the capacity for reason, which transcends instinct. Biology describes what is; ethics determines what ought to be.",
+      "headline": "Darwin publishes Origin of Species, shakes foundations of biology"
+    },
+    "1861ad": {
+      "title": "American Civil War Begins",
+      "description": "War begins over slavery and states' rights; deadliest American conflict.",
+      "analysis": "Consequences: 620,000 dead—more Americans than all other wars combined. Ended slavery; preserved the Union. Reconstruction era ended prematurely; racial inequality persisted for another century. Settled that the nation would remain united and slavery was incompatible with American principles. Philosify's view: The Civil War was a war for liberty against slavery—the ultimate violation of individual rights. Lincoln correctly understood that a nation 'half slave and half free' contradicted itself. The Union cause was just; the cost was tragic but necessary.",
+      "headline": "American Civil War begins as South secedes"
+    },
+    "1863ad": {
+      "title": "Emancipation Proclamation",
+      "description": "Lincoln declares slaves in rebel states \"forever free.\"",
+      "analysis": "Consequences: Transformed Civil War into fight for freedom, not just union. Enabled Black soldiers to fight for their own liberation. Weakened Confederacy morally and materially. Did not free slaves in border states; full equality would not follow for a century. Philosify's view: Emancipation was America living up to its founding principles. 'All men are created equal' meant what it said—the Proclamation began the process of fulfilling that promise. Lincoln understood that slavery was wrong on principle, not just policy.",
+      "headline": "Lincoln declares all slaves in rebel states forever free"
+    },
+    "1865ad": {
+      "title": "13th Amendment Ratified",
+      "description": "Slavery and involuntary servitude abolished throughout United States.",
+      "analysis": "Consequences: Constitutionally abolished slavery; completed what Declaration of Independence promised. Former slaves denied land and full citizenship rights initially; sharecropping and Jim Crow followed. But slavery was ended permanently by constitutional amendment. Philosify's view: The 13th Amendment inscribed in the Constitution what should have been there from the start—that no person can own another. The struggle for full equality continued, but the fundamental principle was established: individual rights belong to all individuals.",
+      "headline": "13th Amendment abolishes slavery in America"
+    },
+    "1869ad": {
+      "title": "Transcontinental Railroad Completed",
+      "description": "Railroad linking Atlantic and Pacific coasts completed at Promontory Summit.",
+      "analysis": "Consequences: United continent economically; enabled settlement, commerce, and communication across vast distances. Reduced travel time from months to days. Built with exploited immigrant labor; disrupted Native American lands. Transformed American economy and settlement patterns. Philosify's view: The railroad demonstrated what free enterprise and engineering could achieve. Despite government involvement and labor exploitation, the project created enormous value. Infrastructure enabling trade and movement serves human flourishing—when built by voluntary exchange, not forced labor.",
+      "headline": "Transcontinental railroad completed, coasts connected"
+    },
+    "1876ad": {
+      "title": "Telephone Invented",
+      "description": "Alexander Graham Bell patents the telephone.",
+      "analysis": "Consequences: Enabled instant communication across distances; transformed business, government, and personal relationships. Created new industries and economic opportunities. Beginning of telecommunications revolution that continues to transform society. Philosify's view: The telephone exemplifies how inventors serving their own interests serve everyone. Bell sought profit and achieved it by creating value for others. This is capitalism at its best—voluntary exchange creating wealth for all parties.",
+      "headline": "Bell invents the telephone"
+    },
+    "1879ad": {
+      "title": "Edison's Light Bulb",
+      "description": "Thomas Edison develops practical incandescent light bulb.",
+      "analysis": "Consequences: Extended productive hours beyond daylight; improved safety in homes and workplaces; enabled new industries; transformed daily life. Electrification changed every aspect of modern civilization. Edison's method of systematic invention became model for industrial research. Philosify's view: Edison didn't just invent the light bulb—he created the system of electrical generation and distribution that made it useful. He exemplifies the productive genius that capitalism rewards: identify problems, create solutions, profit by serving others.",
+      "headline": "Edison lights up the world with electric bulb"
+    },
+    "1886ad": {
+      "title": "Statue of Liberty Dedicated",
+      "description": "France's gift to America celebrates liberty enlightening the world.",
+      "analysis": "Consequences: Became enduring symbol of American ideals; welcomed millions of immigrants seeking freedom and opportunity. Ideals not always matched by reality of discrimination and restriction. Remains powerful symbol of liberty and refuge for the oppressed. Philosify's view: The statue represents America's founding ideal: liberty as humanity's natural condition. 'Give me your tired, your poor, your huddled masses yearning to breathe free'—America at its best welcomes those seeking liberty. The ideal remains worth striving for.",
+      "headline": "Statue of Liberty unveiled in New York Harbor"
+    },
+    "1903ad": {
+      "title": "Wright Brothers' Flight",
+      "description": "First controlled, powered airplane flight at Kitty Hawk.",
+      "analysis": "Consequences: Opened era of aviation; transformed transportation, commerce, communication, and warfare. Aircraft became essential to modern life. Made the world smaller—any point reachable within hours. Enabled aerial bombing but also humanitarian aid and global commerce. Philosify's view: Two bicycle mechanics from Ohio achieved what academics said was impossible. The Wrights exemplify American practical genius—hands-on experimentation, persistence, rational problem-solving. Individual initiative, not government programs, opened the skies.",
+      "headline": "Wright Brothers achieve first powered flight"
+    },
+    "1905ad": {
+      "title": "Einstein's Miracle Year",
+      "description": "Einstein publishes papers on special relativity, photoelectric effect, and Brownian motion.",
+      "analysis": "Consequences: Revolutionized physics; showed that space and time are relative, mass and energy equivalent. Enabled nuclear energy, GPS, and countless technologies. Also made nuclear weapons possible. Transformed understanding of the universe. Philosify's view: Einstein, a patent clerk, overthrew centuries of physics through pure thought. His work demonstrates that reality is objective and knowable—but our knowledge must constantly be revised by evidence. Truth exists; our job is to discover it through reason.",
+      "headline": "Einstein rewrites the laws of physics"
+    },
+    "1914ad": {
+      "title": "World War I Begins",
+      "description": "Assassination of Archduke Franz Ferdinand triggers global conflict.",
+      "analysis": "Consequences: 17 million dead; empires destroyed; map of Europe redrawn. Enabled rise of communism and fascism. Unstable peace settlement planted seeds for World War II. Destroyed 19th century's optimistic faith in progress. Philosify's view: WWI resulted from nationalism, militarism, and entangling alliances—all failures of ideas. The catastrophe discredited the old order without establishing a better one. Bad ideas have consequences measured in millions of lives.",
+      "headline": "Archduke assassinated, Europe plunges into war"
+    },
+    "1917ad": {
+      "title": "Russian Revolution",
+      "description": "Bolsheviks seize power in Russia, establishing communist totalitarian state.",
+      "analysis": "Consequences: Established the first major communist state. Replaced one autocracy with something far worse—a regime that murdered 20+ million through purges, famines, and gulags. Exported communist ideology worldwide, causing similar atrocities in China, Cambodia, Cuba, and elsewhere. Philosify's view: The Russian Revolution proves that collectivism leads to mass murder. When individual rights are subordinated to 'the collective,' 'the workers,' or 'the people,' the result is always tyranny. The 20th century's 100 million victims of communism are the ultimate refutation of Marx.",
+      "headline": "Bolsheviks seize power in Russia"
+    },
+    "1918ad": {
+      "title": "World War I Ends",
+      "description": "Armistice signed; war kills 17 million and reshapes global order.",
+      "analysis": "Consequences: Created League of Nations; ended Ottoman, Austro-Hungarian, German, and Russian empires. Vindictive peace terms humiliated Germany; new borders created ethnic conflicts. Unstable settlement and unresolved grievances led directly to World War II. Philosify's view: The Versailles Treaty shows that peace without justice is unstable. Punishing Germany created resentment that Hitler exploited. A peace that neither reconciled nor decisively defeated the enemy left the worst of both approaches.",
+      "headline": "Armistice signed, the Great War is over"
+    },
+    "1920ad": {
+      "title": "19th Amendment Ratified",
+      "description": "Women gain right to vote in United States.",
+      "analysis": "Consequences: Extended political equality to women; vindicated decades of peaceful advocacy. Doubled the electorate. Women became majority of voters. Expanded definition of 'all men are created equal' to its logical conclusion. Philosify's view: Women's suffrage was the logical extension of founding principles. Rights belong to individuals as individuals—not as members of groups. The amendment corrected an inconsistency in American practice; the principle was always there waiting to be applied.",
+      "headline": "Women win right to vote in America"
+    },
+    "1929ad": {
+      "title": "Stock Market Crash",
+      "description": "Black Tuesday triggers Great Depression.",
+      "analysis": "Consequences: Unprecedented economic collapse; mass unemployment worldwide. Contributed to rise of extremism in Europe. Led to New Deal expansion of government in America. Transformed role of government in economy; debate continues about causes and remedies. Philosify's view: The Depression's causes are debated, but government responses—Smoot-Hawley tariffs, monetary contraction, tax increases—made it worse. The lesson: government intervention during crises often compounds the damage. Markets correct themselves faster when allowed to function.",
+      "headline": "Wall Street crashes, Great Depression begins"
+    },
+    "1933ad": {
+      "title": "Hitler Becomes Chancellor",
+      "description": "Adolf Hitler appointed Chancellor of Germany.",
+      "analysis": "Consequences: Ended Weimar democracy; began persecution of Jews; led to World War II and Holocaust. 70-85 million dead; 6 million Jews murdered. Demonstrated how democracies can vote themselves into tyranny when constitutional protections fail. Philosify's view: Hitler rose legally within a democratic system—proving that democracy without constitutional limits on government power is not freedom. The Nazis won elections. Individual rights must be protected FROM majorities, not by them. Weimar's failure was institutional, not just personal.",
+      "headline": "Hitler appointed Chancellor of Germany"
+    },
+    "1939ad": {
+      "title": "World War II Begins",
+      "description": "Germany invades Poland; Britain and France declare war.",
+      "analysis": "Consequences: Deadliest conflict in history: 70-85 million dead. Holocaust murdered 6 million Jews. Nazi and Japanese empires destroyed. Led to United Nations, decolonization, and Cold War. Discredited fascism permanently. Philosify's view: WWII was a war of good against evil—there is no moral equivalence between the Allies and Axis. Appeasement failed; only force stopped Hitler. The lesson: evil must be confronted early and decisively. Weakness invites aggression; strength deters it.",
+      "headline": "Germany invades Poland, World War II begins"
+    },
+    "1941ad": {
+      "title": "Pearl Harbor Attack",
+      "description": "Japan attacks U.S. Pacific Fleet; America enters World War II.",
+      "analysis": "Consequences: 2,403 Americans killed; brought America into war. American industrial and military power turned the tide against both Germany and Japan. America emerged as global superpower. Ended American isolationism permanently. Philosify's view: Pearl Harbor proved that oceans don't protect against determined enemies. America's entry saved the world from Nazi and Japanese tyranny. The attack was evil; the response—total war until unconditional surrender—was just. America's cause was righteous.",
+      "headline": "Japan bombs Pearl Harbor, America enters the war"
+    },
+    "1942ad": {
+      "title": "Holocaust: Systematic Genocide",
+      "description": "Nazi Germany implements the \"Final Solution,\" murdering six million Jews and millions of others.",
+      "analysis": "Consequences: Industrial-scale murder: 6 million Jews, plus millions of Roma, disabled, homosexuals, and political prisoners. Immeasurable human loss—scientists, artists, scholars, families. Led to human rights declarations and genocide conventions. Established Israel as refuge. Philosify's view: The Holocaust is the ultimate consequence of collectivism—treating individuals as members of groups to be eliminated. It began with ideas: that some groups are inferior, that individuals have no inherent rights, that the collective trumps the person. Ideas have consequences.",
+      "headline": "Nazis launch Final Solution, systematic murder of Jews"
+    },
+    "1944ad": {
+      "title": "D-Day Invasion",
+      "description": "Allied forces land at Normandy, beginning liberation of Western Europe.",
+      "analysis": "Consequences: Began liberation of Western Europe from Nazi occupation. Heavy casualties but successful beachhead established. Western Europe liberated by democracies; Eastern Europe occupied by Soviets. Contrast between the two zones would define Cold War. Philosify's view: D-Day represents the free world's commitment to defeat evil. American, British, Canadian, and other Allied soldiers died to liberate people they'd never met. This was not sacrifice but heroism—fighting for values worth dying for.",
+      "headline": "Allied forces storm Normandy beaches on D-Day"
+    },
+    "1945ad": {
+      "title": "Atomic Bombs End WWII",
+      "description": "U.S. drops atomic bombs on Hiroshima and Nagasaki; Japan surrenders.",
+      "analysis": "Consequences: Japan surrendered unconditionally—the only acceptable outcome against an aggressor that attacked Pearl Harbor, committed the Rape of Nanking, tortured POWs, and vowed to fight to the last. The bombs killed approximately 200,000. The alternative—Operation Downfall invasion—was projected to cost 500,000-1,000,000 American casualties and millions of Japanese. Japan was arming civilians with bamboo spears. Philosify's view: America had absolute moral right to use overwhelming force against an enemy that started the war and refused to surrender. American soldiers' lives take priority over enemy civilians. The decision was rational, moral, and life-affirming. Victory, not prolonged bloodshed, is the goal of just war. The bombs saved far more lives than they took.",
+      "headline": "Atomic bombs dropped on Japan, war ends"
+    },
+    "1945ad_2": {
+      "title": "United Nations Founded",
+      "description": "International organization established to maintain peace and security.",
+      "analysis": "Consequences: Created forum for diplomacy and international cooperation. Agencies address humanitarian needs worldwide. Human rights declarations established global standards. Security Council veto limits effectiveness; cannot override sovereignty of major powers. Philosify's view: The UN is imperfect—it often treats democratic nations and tyrannies as moral equals. But it provides a forum for diplomacy and humanitarian coordination. International institutions should serve liberty, not legitimize tyranny.",
+      "headline": "United Nations established to maintain world peace"
+    },
+    "1947ad": {
+      "title": "Ayn Rand's The Fountainhead Success",
+      "description": "The Fountainhead becomes bestseller, presenting individualist philosophy.",
+      "analysis": "Consequences: Celebrated individual creativity, integrity, and rational self-interest. Challenged collectivist thinking dominant in academia and culture. Inspired entrepreneurs, artists, architects, and advocates of liberty. Remains widely read and debated. Philosify's view: The Fountainhead dramatizes the conflict between the creator and the collective—Howard Roark embodies integrity, independence, and productive achievement. The novel demonstrates that philosophy can be presented through art, reaching audiences academic philosophy cannot.",
+      "headline": "Rand's Fountainhead becomes bestseller, individualism rises"
+    },
+    "1948ad": {
+      "title": "Israel Founded",
+      "description": "State of Israel declared, providing homeland for Jewish people.",
+      "analysis": "Consequences: Provided refuge for Jews after Holocaust and from persecution worldwide. Built successful democracy and technological innovator in hostile region. Ongoing conflict with Palestinians and neighboring states. Target of terrorism and international hostility. Philosify's view: Israel is the only free nation in the Middle East—a democracy with rule of law, property rights, and individual liberty. It has absolute right to exist and defend itself. Those who single out Israel for condemnation while ignoring tyrannies reveal their actual motives.",
+      "headline": "State of Israel declared, Jewish homeland born"
+    },
+    "1950ad": {
+      "title": "Korean War Begins",
+      "description": "North Korea invades South Korea; UN forces intervene.",
+      "analysis": "Consequences: Millions killed; peninsula divided to this day. South Korea became prosperous democracy; North Korea became totalitarian nightmare. Stark contrast demonstrates different systems' outcomes on same population. Armistice but no peace treaty; threat continues. Philosify's view: Korea is the definitive experiment in political economy—same people, same culture, divided by ideology. South: capitalism, prosperity, freedom. North: communism, poverty, tyranny. The comparison refutes every excuse for socialism.",
+      "headline": "North Korea invades South, war erupts"
+    },
+    "1949ad": {
+      "title": "Communist China Established",
+      "description": "Mao Zedong establishes communist dictatorship in China.",
+      "analysis": "Consequences: Mao's regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, family structures. China's economic success came only AFTER abandoning communist economics. Philosify's view: Communist China proves socialism kills. The regime still commits genocide against Uyghurs, threatens Taiwan, and suppresses liberty. China's prosperity came from allowing markets domestically while maintaining political tyranny. Economic freedom without political freedom is unstable.",
+      "headline": "Mao proclaims Communist China, world's largest nation turns red"
+    },
+    "1957ad": {
+      "title": "Atlas Shrugged Published",
+      "description": "Ayn Rand publishes her philosophical novel.",
+      "analysis": "Consequences: Defended productive achievement against parasitism; dramatized what happens when creators withdraw. Inspired entrepreneurs, innovators, and advocates of capitalism. One of most influential American novels; continues to spark debate about capitalism, individualism, and morality. Philosify's view: Atlas Shrugged answers the question: what is the moral basis of capitalism? The novel demonstrates that production is a virtue, that creators have the right to their work, and that collectivism is parasitism. It provides the moral defense capitalism needs.",
+      "headline": "Ayn Rand publishes Atlas Shrugged"
+    },
+    "1961ad": {
+      "title": "First Human in Space",
+      "description": "Yuri Gagarin becomes first human to orbit Earth.",
+      "analysis": "Consequences: Opened space age; demonstrated human capacity to transcend earthly limits. Space race advanced technology with civilian applications. Inspired generations to pursue science and engineering. Space exploration continues advancing human knowledge and capabilities. Philosify's view: Space exploration shows human reason's power to transcend natural limits. Whether achieved by governments or private enterprise, extending human presence beyond Earth serves human flourishing and survival. The cosmos awaits rational beings capable of exploring it.",
+      "headline": "Gagarin orbits Earth, first human in space"
+    },
+    "1963ad": {
+      "title": "Kennedy Assassination",
+      "description": "President John F. Kennedy assassinated in Dallas.",
+      "analysis": "Consequences: National trauma; loss of popular leader. Peaceful transfer of power demonstrated constitutional resilience. Spawned conspiracy theories that persist. Changed American political culture—end of innocence, increased cynicism. Philosify's view: The assassination showed that American institutions survive the loss of any individual. No person is indispensable. Constitutional government continues functioning regardless of who occupies offices. This is its strength—dependence on principles and procedures, not personalities.",
+      "headline": "President Kennedy assassinated in Dallas"
+    },
+    "1964ad": {
+      "title": "Civil Rights Act",
+      "description": "Landmark legislation outlaws discrimination based on race, color, religion, sex, or national origin.",
+      "analysis": "Consequences: Ended legal segregation; protected voting rights; opened opportunities in employment and public accommodations. Did not eliminate discrimination but established legal framework for fighting it. Extended founding principles to all citizens. Philosify's view: The Civil Rights Act completed what the Founders began—extending the principle that individual rights belong to all individuals. Racial discrimination violates individual rights by judging people as group members rather than individuals. The Act was a triumph of American principles.",
+      "headline": "Civil Rights Act outlaws racial discrimination"
+    },
+    "1965ad": {
+      "title": "Vietnam War Escalates",
+      "description": "U.S. commits combat troops to Vietnam; war will claim millions of lives.",
+      "analysis": "Consequences: Over 58,000 Americans and millions of Vietnamese killed. Divided American society; eroded trust in government. Ultimately unsuccessful in preventing communist takeover. Changed American attitudes toward military intervention. Philosify's view: Vietnam's tragedy was fighting with one hand tied—gradual escalation instead of decisive force, political constraints on military action. America's cause—opposing communist expansion—was just. The failure was strategic and political, not moral.",
+      "headline": "U.S. sends combat troops to Vietnam"
+    },
+    "1966ad": {
+      "title": "Cultural Revolution Begins",
+      "description": "Mao launches Cultural Revolution, targeting \"counter-revolutionary\" elements.",
+      "analysis": "Consequences: Millions killed or persecuted; cultural heritage destroyed; education disrupted for a generation. Red Guards terrorized intellectuals, teachers, and anyone deemed insufficiently communist. Later repudiated by Chinese Communist Party itself. Philosify's view: The Cultural Revolution shows collectivism's logical endpoint—destruction of everything that makes life worth living. Art, learning, family bonds, individual thought—all sacrificed to ideology. When ideas demand such sacrifice, the ideas are evil.",
+      "headline": "Mao launches Cultural Revolution, China descends into chaos"
+    },
+    "1975ad": {
+      "title": "Cambodian Genocide Begins",
+      "description": "Khmer Rouge seizes power; genocide kills 1.5-2 million Cambodians.",
+      "analysis": "Consequences: Quarter of Cambodia's population murdered. Educated class specifically targeted for elimination. Society devastated; recovery took decades. Tribunals eventually held some perpetrators accountable. Philosify's view: Cambodia proves that communism isn't 'good idea, bad implementation'—it's a murderous ideology. The Khmer Rouge explicitly followed Marxist principles: eliminate classes, destroy the old society, create the new man. The killing fields are communism's true face.",
+      "headline": "Khmer Rouge seizes Cambodia, genocide begins"
+    },
+    "1979ad": {
+      "title": "Iranian Revolution",
+      "description": "Islamic Revolution overthrows Shah; Ayatollah Khomeini establishes theocracy.",
+      "analysis": "Consequences: Replaced modernizing authoritarian monarchy with medieval theocratic tyranny. Iran became world's leading state sponsor of terrorism. Women lost fundamental rights. Religious police enforce barbaric laws. Regime pursues nuclear weapons while calling for destruction of Israel and America. Philosify's view: Not all revolutions are progress. The Iranian Revolution replaced bad with far worse. Theocracy is incompatible with human freedom—religious law enforced by state violates rights of conscience. The regime understands only force; appeasement emboldens it.",
+      "headline": "Islamic Revolution topples Shah, Iran becomes theocracy"
+    },
+    "1969ad": {
+      "title": "Moon Landing",
+      "description": "Apollo 11 astronauts walk on the Moon.",
+      "analysis": "Consequences: Greatest technological achievement in human history. Proved that no challenge is beyond human capability when reason is applied. United humanity in wonder. Advanced technology with countless civilian applications. Inspired generations. Philosify's view: The moon landing demonstrates human reason's unlimited potential. We evolved on this planet but are not confined to it. The achievement resulted from engineering, mathematics, physics—from minds committed to reality and refusing to accept 'impossible.' This is humanity at its best.",
+      "headline": "Armstrong walks on the Moon"
+    },
+    "1989ad": {
+      "title": "Fall of Berlin Wall",
+      "description": "Berlin Wall falls; Cold War begins to end.",
+      "analysis": "Consequences: Reunified Germany; freed Eastern Europe from Soviet domination. Ended Cold War division peacefully. Millions gained freedom. Demonstrated that even seemingly permanent tyrannies can collapse when people refuse to accept them. Philosify's view: The Wall's fall proved that evil systems contain the seeds of their destruction. Communism collapsed because it contradicted human nature and economic reality. People want freedom; they will seize it when they can. Ideas matter—bad ones eventually fail.",
+      "headline": "Berlin Wall falls, freedom sweeps Eastern Europe"
+    },
+    "1991ad": {
+      "title": "Soviet Union Dissolves",
+      "description": "USSR officially dissolves; Cold War ends.",
+      "analysis": "Consequences: Communist superpower ceased to exist without a shot fired. Fifteen nations gained independence. Nuclear standoff ended. Freed hundreds of millions from communist rule. Vindicated those who said communism was doomed. Philosify's view: The Soviet collapse proved socialism cannot work. Without private property and market prices, economic calculation is impossible. The USSR didn't fall because of Reagan or Gorbachev alone—it fell because its ideas were false. Reality wins.",
+      "headline": "Soviet Union collapses, Cold War ends"
+    },
+    "2001ad": {
+      "title": "September 11 Attacks",
+      "description": "Al-Qaeda terrorists attack World Trade Center and Pentagon, killing nearly 3,000.",
+      "analysis": "Consequences: Nearly 3,000 murdered by Islamic terrorists. America responded with war in Afghanistan to destroy Al-Qaeda and Taliban. Triggered two decades of military operations. Changed security procedures worldwide. Revealed vulnerability of open societies to terrorism. Philosify's view: Evil exists and must be destroyed. September 11 was an act of war by an enemy that declared war on Western civilization. The proper response is overwhelming force until unconditional surrender. Appeasement and negotiation reward aggression.",
+      "headline": "Terrorists strike World Trade Center and Pentagon"
+    },
+    "2008ad": {
+      "title": "Global Financial Crisis",
+      "description": "Lehman Brothers collapse triggers worldwide financial crisis.",
+      "analysis": "Consequences: Millions lost jobs, homes, savings. Recession spread globally. Led to massive government bailouts and expanded regulation. Debate continues about causes—government housing policy, Fed policy, Wall Street practices. Philosify's view: The crisis had multiple causes, but government intervention—pushing subprime lending, implicit guarantees to Fannie Mae and Freddie Mac, Fed interest rate manipulation—created conditions for disaster. Bailouts rewarded failure and created moral hazard. Markets work; distorted markets don't.",
+      "headline": "Lehman Brothers collapses, global financial meltdown"
+    },
+    "2020ad": {
+      "title": "COVID-19 Pandemic",
+      "description": "Global pandemic leads to unprecedented lockdowns and economic disruption.",
+      "analysis": "Consequences: Millions died worldwide. Unprecedented government lockdowns destroyed businesses and livelihoods. Remote work became viable. Accelerated existing trends in technology and society. Exposed dependence on Chinese manufacturing. Revealed tension between liberty and safety. Philosify's view: The pandemic response varied—Sweden kept society open while others locked down. The trade-offs between safety and liberty are real. Governments seized power they're reluctant to relinquish. The virus came from China; the response revealed authoritarian tendencies in democracies.",
+      "headline": "COVID-19 pandemic shuts down the world"
+    },
+    "2023ad": {
+      "title": "October 7: Hamas Attack on Israel",
+      "description": "Hamas terrorists massacre 1,200 Israeli civilians and take 250 hostages.",
+      "analysis": "Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities including rape, torture, murder of children, burning families alive. 250 hostages taken. Israel responded with military campaign to destroy Hamas. Much of Western intelligentsia shamefully sided with terrorists. Philosify's view: October 7 revealed evil in its purest form—and revealed the moral bankruptcy of those who blamed the victims or called for 'proportionality.' Israel has absolute right to destroy Hamas completely. There is no moral equivalence between terrorists and their victims. Those who cannot distinguish deserve contempt.",
+      "headline": "Hamas massacres 1,200 Israelis in surprise attack"
+    },
+    "2022ad": {
+      "title": "Russia Invades Ukraine",
+      "description": "Russia launches full-scale invasion of Ukraine; largest war in Europe since WWII.",
+      "analysis": "Consequences: Russia launched unprovoked war of conquest against sovereign nation. Ukrainian resistance revealed Russian military weakness. West responded with sanctions and military aid. Hundreds of thousands killed. Russia committed war crimes including targeting civilians, deportation of children, torture. Philosify's view: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with territory.",
+      "headline": "Russia launches full-scale invasion of Ukraine"
+    },
+    "2024ad": {
+      "title": "Iran-Israel Tensions Escalate",
+      "description": "Iran launches missiles at Israel; Israel responds with precision strikes.",
+      "analysis": "Consequences: Iran's theocratic regime openly attacked Israel, dropping pretense of proxy warfare. Israel demonstrated superior defensive and offensive capabilities. Regional conflict intensified through Iranian proxies—Hezbollah, Houthis, militias in Iraq and Syria. Philosify's view: Four decades of Western appeasement emboldened Iran's regime. Nuclear negotiations, sanctions relief, and diplomatic outreach failed. The regime understands only strength. Either regime change from within, external force, or eventual nuclear capability—those are the options. Deterrence requires credible threat of devastating response.",
+      "headline": "Iran fires missiles at Israel, region on the brink"
+    }
+  },
+  "quiz": {
+    "title": "Quiz",
+    "leaderboard": "TOP SCORES",
+    "welcome": "Test Your Philosophy",
+    "description": "Answer questions about metaphysics, epistemology, ethics, politics, and aesthetics.",
+    "rule1": "10 questions per credit",
+    "rule2": "Questions get harder with each correct answer",
+    "rule3": "Wrong answer? Pay 1 credit to continue",
+    "rule4": "10 correct in a row = 1 credit back!",
+    "starting": "Starting...",
+    "start": "Start Quiz",
+    "checking": "Checking...",
+    "submit": "Submit Answer",
+    "correct": "Correct!",
+    "wrong": "Wrong!",
+    "correctWas": "Correct answer:",
+    "explanation": "Explanation",
+    "streak": "Streak",
+    "score": "Score",
+    "next": "Next Question",
+    "continue": "Continue",
+    "wrongAnswer": "Wrong Answer!",
+    "payToContinueWrong": "Pay 1 credit to continue your quiz session.",
+    "completed10": "Great job!",
+    "payToContinue10": "You completed 10 questions! Pay 1 credit for 10 more.",
+    "bestStreak": "Best Streak",
+    "continuing": "Continuing...",
+    "payToContinue": "Continue Quiz",
+    "endQuiz": "End Quiz",
+    "quizComplete": "Quiz Complete!",
+    "finalScore": "Final Score",
+    "totalCorrect": "Correct",
+    "creditsEarned": "Credits Earned",
+    "playAgain": "Play Again",
+    "categories": {
+      "metaphysics": "Metaphysics",
+      "epistemology": "Epistemology",
+      "ethics": "Ethics",
+      "politics": "Politics",
+      "aesthetics": "Aesthetics",
+      "applied": "Applied Philosophy",
+      "history": "History of Philosophy",
+      "american_exceptionalism": "American Exceptionalism",
+      "virtues": "Virtues",
+      "economics": "Economics",
+      "law": "Objective Law",
+      "music": "Music & Philosophy",
+      "cinema": "Cinema & Philosophy",
+      "quotes": "Philosopher Quotes"
+    }
   }
 }

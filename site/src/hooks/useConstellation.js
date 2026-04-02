@@ -124,16 +124,33 @@ function hashString(str) {
   return Math.abs(hash);
 }
 
-// Event density factor — slows timeline when many events cluster in a short period
-// Used by both the playback loop and exposed for ticker calibration
-function getEventDensityFactor(year) {
-  const WINDOW = 30; // ±30 years around current position
-  const BASE_EVENTS = 2; // "normal" number of events in that window
-  const eventsInWindow = HISTORICAL_EVENTS.filter(
-    e => e.year >= year - WINDOW && e.year <= year + WINDOW
-  ).length;
-  // More events → smaller factor (min 0.25 = 4x slower in densest areas)
-  return Math.max(0.25, 1 / (1 + Math.max(0, eventsInWindow - BASE_EVENTS) * 0.2));
+// Constant-visual-speed factor for the ticker.
+// Makes year advance faster during sparse event periods and slower during
+// dense periods, so the ticker strip scrolls at a near-constant pixel speed.
+// Sparse period (few events, big year gap) → factor > 1 → year jumps faster
+// Dense period (many events, small gap)    → factor < 1 → year crawls slower
+const SORTED_HE = [...HISTORICAL_EVENTS].sort((a, b) => a.year - b.year);
+const AVG_EVENT_GAP = SORTED_HE.length > 1
+  ? (SORTED_HE[SORTED_HE.length - 1].year - SORTED_HE[0].year) / (SORTED_HE.length - 1)
+  : 1;
+
+function getEventSpeedFactor(year) {
+  // Find the two events bracketing the current year
+  let localGap = AVG_EVENT_GAP;
+  for (let i = 0; i < SORTED_HE.length - 1; i++) {
+    if (year >= SORTED_HE[i].year && year <= SORTED_HE[i + 1].year) {
+      localGap = SORTED_HE[i + 1].year - SORTED_HE[i].year;
+      break;
+    }
+  }
+  // Before first or after last event: use average gap
+  if (year < SORTED_HE[0].year || year > SORTED_HE[SORTED_HE.length - 1].year) {
+    localGap = AVG_EVENT_GAP;
+  }
+  // Factor = localGap / avgGap, clamped:
+  //   max 4x during very sparse periods (fast-forward through empty years)
+  //   min 0.5x during very dense periods (slow down to read headlines)
+  return Math.max(0.5, Math.min(4.0, localGap / AVG_EVENT_GAP));
 }
 
 export function useConstellation() {
@@ -235,9 +252,9 @@ export function useConstellation() {
       lastTimeRef.current = timestamp;
 
       setCurrentYear(prev => {
-        // Density factor inside updater so it uses latest year, not stale closure
-        const densityFactor = getEventDensityFactor(prev);
-        const yearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed * densityFactor;
+        // Speed factor adapts year advance to maintain constant ticker visual speed
+        const speedFactor = getEventSpeedFactor(prev);
+        const yearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed * speedFactor;
         const next = prev + yearsToAdvance;
         if (next >= MAX_YEAR) {
           setIsPlaying(false);

@@ -4,7 +4,8 @@
 //   .top-ten-ticker > .ticker-label + .ticker-track > .ticker-content > .ticker-item[]
 //
 // Only difference: NO looping. Single pass from -600 to 2026.
-// translateX on .ticker-content is driven by currentYear (not CSS animation).
+// Constant visual scroll speed (like the other tickers).
+// translateX on .ticker-content is driven by currentYear.
 // Dragging the ticker scrubs the global timeline.
 // ============================================================
 
@@ -49,9 +50,8 @@ export function HistoricalEventTicker({
   }, []);
 
   // ---- Measure actual item positions after first render ----
-  // useLayoutEffect runs before paint, so user never sees the unmeasured frame.
   useLayoutEffect(() => {
-    if (itemOffsets) return; // already measured
+    if (itemOffsets) return;
     const content = contentRef.current;
     if (!content) return;
     const items = content.querySelectorAll('.ticker-item');
@@ -64,10 +64,14 @@ export function HistoricalEventTicker({
     setItemOffsets(offsets);
   });
 
-  // ---- Year <-> pixel offset mapping (from measured positions) ----
+  // ---- Year <-> pixel offset mapping ----
+  // Uses UNIFORM mapping: each event gets equal visual distance regardless of
+  // year gap. This produces constant visual scroll speed (like the other tickers).
+  // The year-to-offset curve is piecewise-linear with anchors at each event,
+  // but the offsets are the actual measured DOM positions (which are uniformly
+  // spaced since items are in a flex row with similar widths).
   const { yearToOffset, offsetToYear } = useMemo(() => {
     if (!itemOffsets || itemOffsets.length === 0) {
-      // Before measurement: push everything off-screen right
       return {
         yearToOffset: () => -99999,
         offsetToYear: () => minYear,
@@ -79,17 +83,31 @@ export function HistoricalEventTicker({
       offset: itemOffsets[i],
     }));
 
-    const totalOffset = anchors[anchors.length - 1].offset - anchors[0].offset;
-    const totalYears = anchors[anchors.length - 1].year - anchors[0].year;
-    const avgRate = totalYears > 0 ? totalOffset / totalYears : 1;
+    // For extrapolation: use average item width as the rate
+    // (how many pixels per year outside the event range)
+    const avgItemWidth = itemOffsets.length > 1
+      ? (itemOffsets[itemOffsets.length - 1] - itemOffsets[0]) / (itemOffsets.length - 1)
+      : 400;
+    // Years per item for extrapolation regions
+    const firstEventYear = anchors[0].year;
+    const lastEventYear = anchors[anchors.length - 1].year;
+    // Before first event: use avgItemWidth per (avg years between first few events)
+    const earlyAvgYears = anchors.length > 1
+      ? (anchors[1].year - anchors[0].year)
+      : 100;
+    const lateAvgYears = anchors.length > 1
+      ? (anchors[anchors.length - 1].year - anchors[anchors.length - 2].year)
+      : 100;
+    const earlyRate = avgItemWidth / earlyAvgYears; // px per year before first event
+    const lateRate = avgItemWidth / lateAvgYears;   // px per year after last event
 
     const _yearToOffset = (year) => {
-      if (year <= anchors[0].year) {
-        return anchors[0].offset - (anchors[0].year - year) * avgRate;
+      if (year <= firstEventYear) {
+        return anchors[0].offset - (firstEventYear - year) * earlyRate;
       }
-      if (year >= anchors[anchors.length - 1].year) {
+      if (year >= lastEventYear) {
         return anchors[anchors.length - 1].offset
-          + (year - anchors[anchors.length - 1].year) * avgRate;
+          + (year - lastEventYear) * lateRate;
       }
       for (let i = 0; i < anchors.length - 1; i++) {
         if (year >= anchors[i].year && year <= anchors[i + 1].year) {
@@ -103,11 +121,11 @@ export function HistoricalEventTicker({
 
     const _offsetToYear = (offset) => {
       if (offset <= anchors[0].offset) {
-        return anchors[0].year - (anchors[0].offset - offset) / avgRate;
+        return firstEventYear - (anchors[0].offset - offset) / earlyRate;
       }
       if (offset >= anchors[anchors.length - 1].offset) {
-        return anchors[anchors.length - 1].year
-          + (offset - anchors[anchors.length - 1].offset) / avgRate;
+        return lastEventYear
+          + (offset - anchors[anchors.length - 1].offset) / lateRate;
       }
       for (let i = 0; i < anchors.length - 1; i++) {
         if (offset >= anchors[i].offset && offset <= anchors[i + 1].offset) {
@@ -137,7 +155,6 @@ export function HistoricalEventTicker({
     e.preventDefault();
     const deltaX = e.clientX - dragStartXRef.current;
     if (Math.abs(deltaX) > 3) didDragRef.current = true;
-    // Drag left → offset increases → time advances
     const newOffset = dragStartOffsetRef.current - deltaX;
     const newYear = Math.max(minYear, Math.min(maxYear, offsetToYear(newOffset)));
     setCurrentYear(newYear);
@@ -157,8 +174,6 @@ export function HistoricalEventTicker({
   // ---- Render ----
   if (SORTED_EVENTS.length === 0) return null;
 
-  // translateX positions the content strip so that the event whose year
-  // matches currentYear sits at the right edge of the track.
   const scrollOffset = yearToOffset(currentYear);
   const translateX = containerWidth - scrollOffset;
 
@@ -190,7 +205,9 @@ export function HistoricalEventTicker({
         >
           {SORTED_EVENTS.map((event) => {
             const cat = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
-            const headline = EVENT_HEADLINES[event.id] || event.title;
+            const headline = t(`historicalEvents.${event.id}.headline`, {
+              defaultValue: EVENT_HEADLINES[event.id] || event.title,
+            });
 
             return (
               <button
@@ -199,18 +216,9 @@ export function HistoricalEventTicker({
                 onClick={() => handleEventClick(event)}
                 style={{ direction: 'ltr' }}
               >
-                <span className="ticker-rank">{cat.icon}</span>
-                <span
-                  className="ticker-song"
-                  style={{
-                    maxWidth: 'none',
-                    overflow: 'visible',
-                    textOverflow: 'unset',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {headline} ({formatYear(event.year)})
-                </span>
+                <span className="ticker-rank">{cat.icon} {formatYear(event.year)}</span>
+                <span className="ticker-separator">&mdash;</span>
+                <span className="ticker-song">{headline}</span>
               </button>
             );
           })}
