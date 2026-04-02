@@ -366,15 +366,18 @@ export function QuizSidebar({
     // Get next question
     setLoading(true);
     try {
-      const response = await fetch(`${config.apiUrl}/api/quiz/question?sessionId=${session.id}`, {
-        credentials: 'include',
+      const data = await quizFetch(`${config.apiUrl}/api/quiz/question?sessionId=${session.id}`, {
+        method: 'GET',
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
       setCurrentQuestion(data.question);
       setGameState('playing');
     } catch (err) {
-      setError(err.message);
+      if (err.isAuthError) {
+        setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
+        loginModal.open();
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -554,7 +557,7 @@ export function QuizSidebar({
 
               {/* Options */}
               <div className="quiz-question__options">
-                {currentQuestion.options.map((option) => (
+                {(currentQuestion.options || []).map((option) => (
                   <button
                     key={option.id}
                     className={`quiz-option ${selectedAnswer === option.id ? 'quiz-option--selected' : ''}`}
@@ -595,7 +598,7 @@ export function QuizSidebar({
                     <span className="quiz-feedback__icon">✗</span>
                     <span>{t('quiz.wrong', 'Wrong!')}</span>
                     <span className="quiz-feedback__correct">
-                      {t('quiz.correctWas', 'Correct answer:')} {feedback.correctAnswer.toUpperCase()}
+                      {t('quiz.correctWas', 'Correct answer:')} {feedback.correctAnswer?.toUpperCase() ?? '?'}
                     </span>
                   </>
                 )}
@@ -714,7 +717,7 @@ export function QuizSidebar({
                 isOpen={true}
                 onClose={loginModal.close}
                 onSwitchToSignup={() => { loginModal.close(); signupModal.open(); }}
-                onSwitchToForgot={() => { loginModal.close(); forgotPasswordModal.open(); }}
+                onSwitchToForgotPassword={() => { loginModal.close(); forgotPasswordModal.open(); }}
               />
             )}
             {signupModal.isOpen && (
