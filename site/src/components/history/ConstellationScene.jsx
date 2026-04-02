@@ -601,6 +601,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   onNodeHover,
   onEdgeSelect,
   currentYear,
+  isPlaying,
 }, ref) {
   const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language;
@@ -620,11 +621,17 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   const targetCameraRef = useRef(null);
   const hoveredNodeRef = useRef(null); // Track hovered node for mobile tap
   const targetEarthRotationRef = useRef(getEarthRotationForYear(-600)); // Target Y-rotation based on timeline year
+  const isPlayingRef = useRef(isPlaying);
 
   // Keep hoveredNodeRef in sync with hoveredNode prop
   useEffect(() => {
     hoveredNodeRef.current = hoveredNode;
   }, [hoveredNode]);
+
+  // Keep isPlayingRef in sync
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   // Update Earth rotation target when timeline year changes
   useEffect(() => {
@@ -1031,9 +1038,14 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Continuous Earth rotation
+      // Earth rotation: smoothly lerp toward target rotation for current era
+      // When paused, globe stays still. When playing, it tracks the geographic
+      // center of philosophical activity for the current timeline year.
       if (earthRef.current) {
-        earthRef.current.rotation.y += 0.002;
+        const target = targetEarthRotationRef.current;
+        const current = earthRef.current.rotation.y;
+        // Smooth lerp toward target (0.02 = gentle tracking)
+        earthRef.current.rotation.y += (target - current) * 0.02;
       }
 
       // Camera fly-to animation
@@ -1283,9 +1295,9 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
 
   const resetView = useCallback(() => {
     if (!cameraRef.current) return;
-    const camera = cameraRef.current;
-    camera.position.set(0, 100, 350);
-    camera.lookAt(0, 0, 0);
+    // Use smooth animation to return to default view
+    targetCameraRef.current = new THREE.Vector3(0, 100, 350);
+    isAnimatingRef.current = true;
   }, []);
 
   // Expose flyToNode and zoom methods

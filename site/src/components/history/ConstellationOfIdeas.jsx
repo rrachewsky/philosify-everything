@@ -208,6 +208,7 @@ export function ConstellationOfIdeas() {
         onNodeHover={setHoveredNode}
         onEdgeSelect={handleEdgeSelect}
         currentYear={currentYear}
+        isPlaying={isPlaying}
       />
 
       {/* Year Display - Centered above globe */}

@@ -15,7 +15,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 // Timeline constants
 const MIN_YEAR = -600;
 const MAX_YEAR = 2026;
-const YEARS_PER_SECOND_1X = 2.5; // At 1x speed, ~17 minutes for full timeline
+const YEARS_PER_SECOND_1X = 1.875; // At 1x speed, ~23 minutes for full timeline (reduced 25% from 2.5)
 
 // Era definitions with year ranges
 // Note: Some eras overlap historically (Counter-Enlightenment was a reaction during Enlightenment)
@@ -147,10 +147,10 @@ function getEventSpeedFactor(year) {
   if (year < SORTED_HE[0].year || year > SORTED_HE[SORTED_HE.length - 1].year) {
     localGap = AVG_EVENT_GAP;
   }
-  // Factor = localGap / avgGap, clamped:
-  //   max 4x during very sparse periods (fast-forward through empty years)
-  //   min 0.5x during very dense periods (slow down to read headlines)
-  return Math.max(0.5, Math.min(4.0, localGap / AVG_EVENT_GAP));
+  // Factor = localGap / avgGap * 1.25 (boosted 25% for faster ticker flow), clamped:
+  //   max 5x during very sparse periods (fast-forward through empty years)
+  //   min 0.6x during very dense periods (slow down to read headlines)
+  return Math.max(0.6, Math.min(5.0, (localGap / AVG_EVENT_GAP) * 1.25));
 }
 
 export function useConstellation() {
