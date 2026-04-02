@@ -199,12 +199,13 @@ export function HistoricalEventTicker({
                 onClick={() => handleEventClick(event)}
                 style={{ direction: 'ltr' }}
               >
-                <span className="ticker-rank">{cat.icon}</span>
+                <span className="ticker-rank">{cat.icon} {formatYear(event.year)}</span>
+                <span className="ticker-separator">&mdash;</span>
                 <span
                   className="ticker-song"
                   style={{ maxWidth: 'none', overflow: 'visible', textOverflow: 'unset' }}
                 >
-                  {title} &mdash; {event.description} ({formatYear(event.year)})
+                  {title}
                 </span>
               </button>
             );
