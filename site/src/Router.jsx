@@ -280,7 +280,6 @@ function DebateDeepLink({ onOpenDebate }) {
 }
 
 export function Router() {
-  const { user } = useAuth();
   const community = useCommunity();
   const ideas = useIdeas();
   const music = useMusicSidebar();
@@ -518,7 +517,7 @@ export function Router() {
         <QuizSidebar
           isOpen={quiz.isOpen}
           onClose={quiz.close}
-          user={user}
+          user={music.user}
         />
       </Suspense>
     </BrowserRouter>
