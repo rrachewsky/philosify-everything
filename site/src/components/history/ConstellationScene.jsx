@@ -621,7 +621,7 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   const targetCameraRef = useRef(null);
   const hoveredNodeRef = useRef(null); // Track hovered node for mobile tap
   const targetEarthRotationRef = useRef(getEarthRotationForYear(-600)); // Target Y-rotation based on timeline year
-  const isPlayingRef = useRef(isPlaying);
+  const isPlayingRef = useRef(isPlaying !== undefined ? isPlaying : true);
 
   // Keep hoveredNodeRef in sync with hoveredNode prop
   useEffect(() => {
@@ -703,11 +703,13 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     });
     
     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-    // Initial rotation: face Greece/Eastern Mediterranean when History opens
-    // getEarthRotationForYear gives ~-0.42 rad for 24°E, but the texture
-    // needs an additional offset to actually show that region on the visible face.
-    // Camera looks at the globe from z+ axis, so we rotate to put Greece front-center.
-    earth.rotation.y = -Math.PI * 0.85; // ~153° — puts Eastern Mediterranean facing camera
+    // Initial rotation: face Greece/Eastern Mediterranean when History opens.
+    // Camera is at (0, 100, 350) looking at origin — sees the +Z face of the globe.
+    // Default Three.js SphereGeometry puts ~90°W (Americas) facing +Z at rotation.y=0.
+    // Greece is at ~24°E. To bring 24°E to face +Z:
+    //   offset = (targetLongitude - defaultLongitude) in degrees = 24 - (-90) = 114°
+    //   rotation.y = +114° in radians = +1.99 rad
+    earth.rotation.y = (90 + 24) * Math.PI / 180; // +1.99 rad — Greece/Eastern Med faces camera
     scene.add(earth);
     earthRef.current = earth;
 
