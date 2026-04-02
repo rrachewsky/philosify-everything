@@ -78,16 +78,18 @@ export function HistoricalEventTicker({
         >
           {visibleEvents.map((event, i) => {
             const category = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
+            // Try to get translated title, fallback to English
+            const translatedTitle = t(`historicalEvents.${event.id}`, { defaultValue: event.title });
             return (
               <button
-                key={`${event.year}-${event.title}`}
+                key={event.id || `${event.year}-${i}`}
                 className="ticker-item"
                 onClick={() => onEventClick(event)}
                 style={{ direction: 'ltr' }}
               >
                 <span className="ticker-rank">{category.icon} {formatYear(event.year)}</span>
                 <span className="ticker-separator">—</span>
-                <span className="ticker-song">{event.title}</span>
+                <span className="ticker-song">{translatedTitle}</span>
               </button>
             );
           })}

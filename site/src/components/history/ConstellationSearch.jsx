@@ -1,5 +1,5 @@
 // ============================================================
-// CONSTELLATION SEARCH - Search philosophers with camera fly-to
+// CONSTELLATION SEARCH - Inline expanding search field
 // ============================================================
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -18,17 +18,38 @@ export function ConstellationSearch({
   onSelect,
   onClose,
   formatYear,
+  isOpen,
 }) {
   const { t } = useTranslation();
   const inputRef = useRef(null);
+  const containerRef = useRef(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Focus input on mount
+  // Focus input when opened
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    } else {
+      setQuery('');
+      setResults([]);
+    }
+  }, [isOpen]);
+
+  // Close when clicking outside
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen, onClose]);
 
   // Search on query change
   useEffect(() => {
@@ -52,177 +73,109 @@ export function ConstellationSearch({
     } else if (e.key === 'Enter' && results[selectedIndex]) {
       e.preventDefault();
       onSelect(results[selectedIndex]);
+      setQuery('');
     } else if (e.key === 'Escape') {
       onClose();
     }
   }, [results, selectedIndex, onSelect, onClose]);
 
+  if (!isOpen) return null;
+
   return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.container} onClick={e => e.stopPropagation()}>
-        {/* Search input */}
-        <div style={styles.inputWrapper}>
-          <svg
-            style={styles.searchIcon}
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="M21 21l-4.35-4.35" />
-          </svg>
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={t('constellation.searchPlaceholder')}
-            style={styles.input}
-          />
-          <button style={styles.closeButton} onClick={onClose}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+    <div ref={containerRef} style={styles.container}>
+      {/* Search input */}
+      <input
+        ref={inputRef}
+        type="text"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder={t('constellation.findPhilosopher', 'Find a philosopher...')}
+        style={styles.input}
+      />
 
-        {/* Results */}
-        {results.length > 0 && (
-          <div style={styles.results}>
-            {results.map((node, index) => {
-              const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
-              return (
-                <button
-                  key={node.id}
+      {/* Results dropdown */}
+      {results.length > 0 && (
+        <div style={styles.results}>
+          {results.map((node, index) => {
+            const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
+            return (
+              <button
+                key={node.id}
+                style={{
+                  ...styles.resultItem,
+                  ...(index === selectedIndex ? styles.resultItemActive : {}),
+                }}
+                onClick={() => {
+                  onSelect(node);
+                  setQuery('');
+                }}
+                onMouseEnter={() => setSelectedIndex(index)}
+              >
+                <div
                   style={{
-                    ...styles.resultItem,
-                    ...(index === selectedIndex ? styles.resultItemActive : {}),
+                    ...styles.traditionDot,
+                    background: schoolColor,
                   }}
-                  onClick={() => onSelect(node)}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                >
-                  <div
-                    style={{
-                      ...styles.traditionDot,
-                      background: schoolColor,
-                    }}
-                  />
-                  <div style={styles.resultInfo}>
-                    <div style={styles.resultName}>{getTranslatedName(node, t)}</div>
-                    <div style={styles.resultMeta}>
-                      {formatYear(node.birth_year)} · {t(`constellation.schools.${node.school_of_thought}`, node.school_of_thought)}
-                    </div>
+                />
+                <div style={styles.resultInfo}>
+                  <div style={styles.resultName}>{getTranslatedName(node, t)}</div>
+                  <div style={styles.resultMeta}>
+                    {formatYear(node.birth_year)}
                   </div>
-                  <svg
-                    style={styles.flyIcon}
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* No results */}
-        {query.trim() && results.length === 0 && (
-          <div style={styles.noResults}>
-            {t('constellation.noResults')} "{query}"
-          </div>
-        )}
-
-        {/* Hint */}
-        {!query.trim() && (
-          <div style={styles.hint}>
-            {t('constellation.searchHint')}
-          </div>
-        )}
-      </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
 const styles = {
-  overlay: {
-    position: 'absolute',
-    inset: 0,
-    background: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingTop: 100,
-    zIndex: 200,
-  },
-
   container: {
-    width: '100%',
-    maxWidth: 400,
-    margin: '0 16px',
-    background: 'rgba(25, 25, 35, 0.95)',
-    borderRadius: 12,
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    backdropFilter: 'blur(16px)',
-    overflow: 'hidden',
-    boxShadow: '0 16px 48px rgba(0, 0, 0, 0.4)',
-  },
-
-  inputWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    padding: '14px 16px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-  },
-
-  searchIcon: {
-    color: 'rgba(255, 255, 255, 0.5)',
-    flexShrink: 0,
+    position: 'absolute',
+    left: 56,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    zIndex: 150,
   },
 
   input: {
-    flex: 1,
-    background: 'transparent',
-    border: 'none',
-    outline: 'none',
+    width: 180,
+    height: 40,
+    padding: '0 12px',
+    background: 'rgba(20, 20, 30, 0.95)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: 8,
     color: '#F2F2F5',
-    fontSize: 15,
-  },
-
-  closeButton: {
-    width: 28,
-    height: 28,
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: 'none',
-    borderRadius: 6,
-    color: 'rgba(255, 255, 255, 0.6)',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
+    fontSize: 14,
+    outline: 'none',
+    backdropFilter: 'blur(8px)',
   },
 
   results: {
-    maxHeight: 320,
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    width: 220,
+    marginTop: 4,
+    background: 'rgba(20, 20, 30, 0.95)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: 8,
+    backdropFilter: 'blur(16px)',
+    overflow: 'hidden',
+    maxHeight: 240,
     overflowY: 'auto',
   },
 
   resultItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
     width: '100%',
-    padding: '12px 20px',
+    padding: '10px 12px',
     background: 'transparent',
     border: 'none',
     cursor: 'pointer',
@@ -230,12 +183,12 @@ const styles = {
   },
 
   resultItemActive: {
-    background: 'rgba(214, 21, 140, 0.15)',
+    background: 'rgba(214, 21, 140, 0.2)',
   },
 
   traditionDot: {
-    width: 10,
-    height: 10,
+    width: 8,
+    height: 8,
     borderRadius: '50%',
     flexShrink: 0,
   },
@@ -246,7 +199,7 @@ const styles = {
   },
 
   resultName: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 600,
     color: '#F2F2F5',
     whiteSpace: 'nowrap',
@@ -257,29 +210,7 @@ const styles = {
   resultMeta: {
     fontSize: 11,
     color: 'rgba(255, 255, 255, 0.5)',
-    marginTop: 2,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-
-  flyIcon: {
-    color: 'rgba(255, 255, 255, 0.3)',
-    flexShrink: 0,
-  },
-
-  noResults: {
-    padding: '24px 20px',
-    textAlign: 'center',
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontSize: 14,
-  },
-
-  hint: {
-    padding: '24px 20px',
-    textAlign: 'center',
-    color: 'rgba(255, 255, 255, 0.4)',
-    fontSize: 13,
+    marginTop: 1,
   },
 };
 

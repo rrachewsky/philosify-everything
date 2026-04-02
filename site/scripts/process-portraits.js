@@ -20,29 +20,9 @@ const SEPIA_MATRIX = [
 
 // Files to process (modified + new)
 const FILES_TO_PROCESS = [
-  'a_j_ayer.jpg',
-  'allan_gotthelf.jpg',
-  'anselm.jpg',
-  'auberon_herbert.jpg',
-  'austin.jpg',
-  'averroes.jpg',
-  'barbara_branden.jpg',
-  'ben_bayer.jpg',
-  'boethius.jpg',
-  'buddha.jpg',
-  'isabel_paterson.jpg',
-  'karl_marx.jpg',
-  'laozi.jpg',
-  'maimonides.jpg',
-  'max_stirner.jpg',
-  'peter_railton.jpg',
-  'proclus.jpg',
-  'protagoras.jpg',
-  'pythagoras.jpg',
-  'robert_nozick.jpg',
-  'sextus_empiricus.jpg',
-  'stephen_hicks.jpg',
-  'wilhelm_von_humboldt.jpg',
+  'winston_churchill.jpg',
+  'martin_luther_king_jr.jpg',
+  'steve_pinker.jpg',
 ];
 
 // Special files that need renaming

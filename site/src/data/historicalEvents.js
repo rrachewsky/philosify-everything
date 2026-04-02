@@ -20,6 +20,7 @@ export const EVENT_CATEGORIES = {
 export const HISTORICAL_EVENTS = [
   // Ancient World (-600 to -1)
   {
+    id: "594bc",
     year: -594,
     category: 'political',
     title: 'Solon\'s Reforms in Athens',
@@ -27,6 +28,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Established rule of law, abolished debt slavery, created property-based citizenship that linked economic stake to political participation. NEGATIVE: Debt forgiveness disrupted existing contracts; class-based voting still excluded the poor from highest offices. Long-term: These reforms planted seeds for Athenian democracy and Western political thought.',
   },
   {
+    id: "509bc",
     year: -509,
     category: 'political',
     title: 'Roman Republic Founded',
@@ -34,6 +36,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Created institutions distributing power across consuls, Senate, and assemblies; established concept of citizen-soldiers with stake in their society. NEGATIVE: Power remained concentrated among patrician families; plebeians had limited rights initially. Long-term: Republic lasted 500 years and influenced all subsequent republican governments.',
   },
   {
+    id: "490bc",
     year: -490,
     category: 'war',
     title: 'Battle of Marathon',
@@ -41,6 +44,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Preserved Greek independence, allowing continued development of philosophy, democracy, and arts; demonstrated that citizen armies could defeat larger forces. NEGATIVE: Encouraged Greek confidence that later led to overreach; did not end Persian threat. Long-term: Greek civilization\'s survival enabled contributions that shaped Western thought.',
   },
   {
+    id: "480bc",
     year: -480,
     category: 'war',
     title: 'Battle of Thermopylae & Salamis',
@@ -48,6 +52,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: United Greek city-states against common enemy; naval victory at Salamis proved decisive. NEGATIVE: Enormous casualties; temporary unity dissolved after Persian threat ended. Long-term: Created enduring symbols of resistance and sacrifice that influenced military culture for millennia.',
   },
   {
+    id: "399bc",
     year: -399,
     category: 'philosophy',
     title: 'Trial and Death of Socrates',
@@ -55,6 +60,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Socrates\' refusal to flee made him a martyr for intellectual integrity; inspired Plato to preserve his teachings. NEGATIVE: Democracy executed its greatest philosopher; revealed how majorities can suppress dissent. Long-term: Raised fundamental questions about relationship between individual conscience and state authority.',
   },
   {
+    id: "336bc",
     year: -336,
     category: 'political',
     title: 'Alexander the Great Begins Conquest',
@@ -62,6 +68,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Spread Greek language, philosophy, and commerce across vast territories; founded cities that became centers of learning. NEGATIVE: Enormous human cost of conquest; disrupted existing civilizations. Long-term: Created Hellenistic world that enabled exchange of ideas between East and West.',
   },
   {
+    id: "323bc",
     year: -323,
     category: 'political',
     title: 'Death of Alexander the Great',
@@ -69,6 +76,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Successor kingdoms preserved Greek culture and maintained trade networks; competition among them fostered innovation. NEGATIVE: Wars of succession caused decades of conflict; empire\'s unity lost. Long-term: Demonstrated that empires built on one person\'s charisma rarely survive their founders.',
   },
   {
+    id: "264bc",
     year: -264,
     category: 'war',
     title: 'First Punic War Begins',
@@ -76,6 +84,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Roman victory eventually brought stability to western Mediterranean; Rome developed naval capabilities. NEGATIVE: Massive casualties on both sides; Sicily devastated. Long-term: Set Rome on path to Mediterranean dominance that would last centuries.',
   },
   {
+    id: "146bc",
     year: -146,
     category: 'war',
     title: 'Destruction of Carthage',
@@ -83,6 +92,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended century of devastating wars; Roman dominance enabled Pax Romana. NEGATIVE: Complete destruction of a civilization; 50,000 survivors enslaved; set precedent for total war. Long-term: Rome\'s Mediterranean monopoly enabled unprecedented trade and cultural exchange.',
   },
   {
+    id: "49bc",
     year: -49,
     category: 'political',
     title: 'Caesar Crosses the Rubicon',
@@ -90,6 +100,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Caesar\'s reforms addressed real problems—debt, land distribution, citizenship. NEGATIVE: Destroyed 460 years of republican government; established precedent for military seizure of power. Long-term: Transition to Empire brought stability but ended Roman political liberty.',
   },
   {
+    id: "44bc",
     year: -44,
     category: 'political',
     title: 'Assassination of Julius Caesar',
@@ -97,6 +108,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Assassins genuinely believed they were saving the Republic. NEGATIVE: Triggered another civil war more destructive than the first; Republic could not be restored. Long-term: Demonstrated that political problems cannot be solved by eliminating individuals when underlying conditions remain.',
   },
   {
+    id: "31bc",
     year: -31,
     category: 'political',
     title: 'Battle of Actium',
@@ -106,6 +118,7 @@ export const HISTORICAL_EVENTS = [
 
   // Roman Empire & Early Christianity (1-500)
   {
+    id: "30ad",
     year: 30,
     category: 'religion',
     title: 'Crucifixion of Jesus',
@@ -113,6 +126,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Christianity introduced concepts of universal moral equality, individual conscience, and hope for the marginalized. NEGATIVE: Religious persecution would follow—first of Christians, later by Christians. Long-term: Transformed Western civilization\'s values, art, philosophy, and institutions.',
   },
   {
+    id: "79ad",
     year: 79,
     category: 'culture',
     title: 'Eruption of Vesuvius',
@@ -120,6 +134,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Preservation under ash gave us unparalleled knowledge of Roman daily life, art, and architecture. NEGATIVE: Thousands killed; thriving cities destroyed. Long-term: Reminds us of nature\'s power and human civilization\'s vulnerability to natural disasters.',
   },
   {
+    id: "180ad",
     year: 180,
     category: 'political',
     title: 'Death of Marcus Aurelius',
@@ -127,6 +142,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Marcus Aurelius\' reign demonstrated philosophy could guide practical governance. NEGATIVE: His choice of his unfit son Commodus as successor showed even wise rulers make poor succession decisions. Long-term: End of Rome\'s golden age; beginning of instability that would weaken the empire.',
   },
   {
+    id: "313ad",
     year: 313,
     category: 'religion',
     title: 'Edict of Milan',
@@ -134,6 +150,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended persecution of Christians; established principle of religious tolerance. NEGATIVE: Began process of church-state entanglement that would complicate both institutions. Long-term: Christianity\'s growth transformed European culture, education, and social welfare.',
   },
   {
+    id: "380ad",
     year: 380,
     category: 'religion',
     title: 'Christianity Becomes State Religion',
@@ -141,6 +158,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Christianity gained resources to build hospitals, schools, and social services. NEGATIVE: Pagans and heretics now faced persecution; religious coercion began. Long-term: Created medieval model of church-state relations that would last a millennium.',
   },
   {
+    id: "410ad",
     year: 410,
     category: 'war',
     title: 'Visigoths Sack Rome',
@@ -148,6 +166,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Visigoths sought integration, not destruction; Rome continued functioning. NEGATIVE: Psychological shock throughout the empire; revealed Rome\'s military weakness. Long-term: Prompted Augustine\'s "City of God," shaping Christian political thought for centuries.',
   },
   {
+    id: "476ad",
     year: 476,
     category: 'political',
     title: 'Fall of Western Roman Empire',
@@ -157,6 +176,7 @@ export const HISTORICAL_EVENTS = [
 
   // Medieval Period (500-1400)
   {
+    id: "529ad",
     year: 529,
     category: 'philosophy',
     title: 'Closing of Platonic Academy',
@@ -164,6 +184,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Philosophers fleeing to Persia preserved Greek texts that later returned to Europe. NEGATIVE: Ended 900 years of philosophical education in Athens; Christian orthodoxy suppressed pagan learning. Long-term: Greek philosophy survived through Islamic scholars and eventually sparked the Renaissance.',
   },
   {
+    id: "622ad",
     year: 622,
     category: 'religion',
     title: 'Hegira - Birth of Islam',
@@ -171,6 +192,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Islam united Arab tribes, created sophisticated civilization, preserved Greek learning, advanced mathematics and science. NEGATIVE: Military expansion conquered many peoples; religious law sometimes restricted inquiry. Long-term: Created one of history\'s great civilizations, shaping a quarter of humanity.',
   },
   {
+    id: "732ad",
     year: 732,
     category: 'war',
     title: 'Battle of Tours',
@@ -178,6 +200,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Preserved Frankish independence and Christian Western Europe. NEGATIVE: Continued religious warfare between Christian and Islamic civilizations. Long-term: Western Europe developed separately from Islamic world, with different political and religious trajectories.',
   },
   {
+    id: "800ad",
     year: 800,
     category: 'political',
     title: 'Charlemagne Crowned Emperor',
@@ -185,6 +208,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Carolingian Renaissance preserved learning; united much of Western Europe; established schools. NEGATIVE: Created pattern of pope-emperor conflict; empire fragmented after Charlemagne\'s death. Long-term: Idea of European unity and cultural renewal would periodically resurface.',
   },
   {
+    id: "1054ad",
     year: 1054,
     category: 'religion',
     title: 'Great Schism',
@@ -192,6 +216,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Regional autonomy allowed different theological and cultural developments; competition between churches created space for dissent. NEGATIVE: Divided Christendom weakened response to external threats; mutual excommunications bred lasting hostility. Long-term: Created distinct Eastern and Western European religious and cultural traditions.',
   },
   {
+    id: "1066ad",
     year: 1066,
     category: 'war',
     title: 'Norman Conquest of England',
@@ -199,6 +224,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Introduced continental administrative practices; eventually contributed to development of common law and Parliament. NEGATIVE: Anglo-Saxon elite dispossessed; peasants\' conditions worsened under feudalism. Long-term: Created the English nation that would spread its language and institutions worldwide.',
   },
   {
+    id: "1095ad",
     year: 1095,
     category: 'war',
     title: 'First Crusade Called',
@@ -206,6 +232,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Opened trade routes, brought back knowledge from Islamic world, expanded European horizons. NEGATIVE: Enormous casualties on all sides; massacres of Jews and Muslims; lasting religious hatred. Long-term: Increased European contact with more advanced Islamic civilization accelerated cultural and technological development.',
   },
   {
+    id: "1215ad",
     year: 1215,
     category: 'political',
     title: 'Magna Carta Signed',
@@ -213,6 +240,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Established principle that rulers are subject to law; due process protections; foundation for constitutional government. NEGATIVE: Originally protected only baronial privileges; frequently violated by kings. Long-term: Its principles gradually expanded to protect all citizens and influenced constitutions worldwide.',
   },
   {
+    id: "1265ad",
     year: 1265,
     category: 'political',
     title: 'First English Parliament',
@@ -220,6 +248,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Created precedent for representative government; gave commoners voice in governance. NEGATIVE: Initially had limited power; represented only propertied classes. Long-term: Evolved into model of parliamentary democracy adopted by many nations.',
   },
   {
+    id: "1347ad",
     year: 1347,
     category: 'culture',
     title: 'Black Death Reaches Europe',
@@ -229,6 +258,7 @@ export const HISTORICAL_EVENTS = [
 
   // Renaissance & Reformation (1400-1600)
   {
+    id: "1439ad",
     year: 1439,
     category: 'technology',
     title: 'Gutenberg\'s Printing Press',
@@ -236,6 +266,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Democratized knowledge; enabled rapid spread of ideas; reduced cost of books; increased literacy. NEGATIVE: Also spread propaganda and misinformation more efficiently. Long-term: Revolutionized communication, enabled Reformation, Scientific Revolution, and Enlightenment.',
   },
   {
+    id: "1453ad",
     year: 1453,
     category: 'war',
     title: 'Fall of Constantinople',
@@ -243,6 +274,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Greek scholars fleeing to Italy brought manuscripts that fueled Renaissance; Ottomans maintained city as major cultural center. NEGATIVE: End of Eastern Roman Empire after 1,000 years; Christian population subjected to Ottoman rule. Long-term: Accelerated Renaissance; shifted trade routes westward.',
   },
   {
+    id: "1492ad",
     year: 1492,
     category: 'science',
     title: 'Columbus Reaches Americas',
@@ -250,6 +282,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Began exchange of crops, animals, ideas between hemispheres; eventually led to new nations founded on Enlightenment principles. NEGATIVE: Indigenous population devastated by disease and conquest; slavery introduced to Americas. Long-term: Transformed both hemispheres; created the modern interconnected world.',
   },
   {
+    id: "1517ad",
     year: 1517,
     category: 'religion',
     title: 'Protestant Reformation Begins',
@@ -257,6 +290,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Challenged religious monopoly; emphasized individual faith and Bible reading; led to religious pluralism. NEGATIVE: Triggered century of religious wars; persecution on both sides. Long-term: Established principle that individuals could interpret faith for themselves; contributed to rise of individualism.',
   },
   {
+    id: "1543ad",
     year: 1543,
     category: 'science',
     title: 'Copernican Revolution',
@@ -264,6 +298,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Demonstrated power of observation and mathematics to overturn accepted beliefs; opened path to modern astronomy. NEGATIVE: Initially resisted by both Catholic and Protestant authorities. Long-term: Began scientific revolution that transformed humanity\'s understanding of the universe.',
   },
   {
+    id: "1588ad",
     year: 1588,
     category: 'war',
     title: 'Defeat of Spanish Armada',
@@ -273,6 +308,7 @@ export const HISTORICAL_EVENTS = [
 
   // Early Modern Period (1600-1800)
   {
+    id: "1607ad",
     year: 1607,
     category: 'political',
     title: 'Jamestown Founded',
@@ -280,6 +316,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Began English colonization that brought self-governing traditions and common law. NEGATIVE: Relations with Native Americans deteriorated; slavery introduced within decades. Long-term: Seeds of American republic planted by colonists bringing English legal and political traditions.',
   },
   {
+    id: "1620ad",
     year: 1620,
     category: 'political',
     title: 'Mayflower Compact',
@@ -287,6 +324,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: First written framework of self-government in Americas; demonstrated social contract in practice. NEGATIVE: Excluded women and non-Pilgrims from political participation. Long-term: Model of written constitution and government by consent influenced American founding.',
   },
   {
+    id: "1642ad",
     year: 1642,
     category: 'war',
     title: 'English Civil War Begins',
@@ -294,6 +332,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Established Parliamentary supremacy; advanced constitutional government; enabled religious toleration. NEGATIVE: Tens of thousands killed; temporary military dictatorship under Cromwell. Long-term: Settled that English monarchs must rule with Parliament, not against it.',
   },
   {
+    id: "1648ad",
     year: 1648,
     category: 'political',
     title: 'Peace of Westphalia',
@@ -301,6 +340,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended devastating religious wars; established state sovereignty and non-interference principles. NEGATIVE: Millions already dead; religious division of Europe frozen in place. Long-term: Created modern international system based on sovereign states.',
   },
   {
+    id: "1687ad",
     year: 1687,
     category: 'science',
     title: 'Newton\'s Principia Published',
@@ -308,6 +348,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Demonstrated universe operates by discoverable laws; inspired confidence in human reason; enabled modern physics. NEGATIVE: Mechanistic worldview raised philosophical questions about free will and purpose. Long-term: Foundation of modern physics and engineering; inspired Enlightenment confidence in reason.',
   },
   {
+    id: "1688ad",
     year: 1688,
     category: 'revolution',
     title: 'Glorious Revolution',
@@ -315,6 +356,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Established constitutional monarchy, parliamentary supremacy, and religious toleration without major bloodshed. NEGATIVE: Catholics excluded from succession; Ireland suffered under new Protestant rule. Long-term: Model of peaceful constitutional reform; Bill of Rights protected individual liberties.',
   },
   {
+    id: "1689ad",
     year: 1689,
     category: 'philosophy',
     title: 'Locke\'s Two Treatises Published',
@@ -322,6 +364,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Articulated philosophical foundation for individual rights and consent-based government; influenced American founders. NEGATIVE: Locke\'s theory used to justify both liberty and colonialism. Long-term: Most influential political philosophy in English-speaking world; basis for liberalism.',
   },
   {
+    id: "1776ad",
     year: 1776,
     category: 'revolution',
     title: 'American Declaration of Independence',
@@ -329,6 +372,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: First nation founded explicitly on principles of natural rights and consent of governed; inspired global movements for liberty. NEGATIVE: Rights not extended to enslaved people or women; Native American lands taken. Long-term: Created model of constitutional republic; its principles eventually expanded to include all.',
   },
   {
+    id: "1787ad",
     year: 1787,
     category: 'political',
     title: 'U.S. Constitution Written',
@@ -336,6 +380,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Created durable system of checks and balances; federal structure balanced national and local interests. NEGATIVE: Compromises on slavery; initially no Bill of Rights. Long-term: Oldest written constitution still in use; influenced constitutions worldwide.',
   },
   {
+    id: "1789ad",
     year: 1789,
     category: 'revolution',
     title: 'French Revolution Begins',
@@ -343,6 +388,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended feudal privileges; spread ideas of citizenship and equality; inspired reform movements. NEGATIVE: Devolved into Terror, dictatorship, and decades of war; thousands executed. Long-term: Demonstrated both potential and dangers of revolutionary change; spread nationalism across Europe.',
   },
   {
+    id: "1791ad",
     year: 1791,
     category: 'political',
     title: 'Bill of Rights Ratified',
@@ -352,6 +398,7 @@ export const HISTORICAL_EVENTS = [
 
   // Industrial Age (1800-1900)
   {
+    id: "1804ad",
     year: 1804,
     category: 'political',
     title: 'Napoleon Crowned Emperor',
@@ -359,6 +406,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Napoleon\'s legal code modernized civil law; spread Enlightenment reforms across Europe. NEGATIVE: Revolutionary republic became dictatorship; millions died in Napoleonic Wars. Long-term: Napoleonic Code influenced legal systems worldwide; nationalism awakened across Europe.',
   },
   {
+    id: "1815ad",
     year: 1815,
     category: 'war',
     title: 'Battle of Waterloo',
@@ -366,6 +414,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended decades of war; century of relative peace followed; enabled economic development. NEGATIVE: Reactionary settlement suppressed liberal movements; ignored nationalist aspirations. Long-term: Balance of power system maintained peace until 1914; suppressed movements emerged later.',
   },
   {
+    id: "1833ad",
     year: 1833,
     category: 'political',
     title: 'British Slavery Abolition Act',
@@ -373,6 +422,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended slavery in British Empire; Royal Navy suppressed slave trade globally; moral leadership inspired other nations. NEGATIVE: Slaveholders compensated while enslaved received nothing; exploitation continued in other forms. Long-term: Major step in global abolition movement; demonstrated moral progress was possible.',
   },
   {
+    id: "1848ad",
     year: 1848,
     category: 'revolution',
     title: 'Revolutions of 1848',
@@ -380,6 +430,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Spread liberal and nationalist ideas; ended serfdom in Austrian Empire; showed popular desire for reform. NEGATIVE: Most revolutions suppressed; reactionary governments returned. Long-term: Reforms eventually came through evolution rather than revolution; nationalism grew stronger.',
   },
   {
+    id: "1848ad_2",
     year: 1848,
     category: 'philosophy',
     title: 'Communist Manifesto Published',
@@ -387,6 +438,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Drew attention to industrial workers\' conditions; inspired labor movements and reforms. NEGATIVE: Its implementation led to totalitarian regimes responsible for tens of millions of deaths. Long-term: Most influential revolutionary ideology of modern era; shaped 20th century conflicts.',
   },
   {
+    id: "1859ad",
     year: 1859,
     category: 'science',
     title: 'Origin of Species Published',
@@ -394,6 +446,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Unified biology; explained diversity of life; foundation for modern medicine and genetics. NEGATIVE: Misused to justify social Darwinism and eugenics. Long-term: Fundamental scientific theory; transformed understanding of life and humanity\'s place in nature.',
   },
   {
+    id: "1861ad",
     year: 1861,
     category: 'war',
     title: 'American Civil War Begins',
@@ -401,6 +454,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended slavery; preserved the Union; eventually led to citizenship for formerly enslaved. NEGATIVE: 620,000 dead; Reconstruction era ended prematurely; racial inequality persisted. Long-term: Settled that the nation would remain united and that slavery was incompatible with American principles.',
   },
   {
+    id: "1863ad",
     year: 1863,
     category: 'political',
     title: 'Emancipation Proclamation',
@@ -408,6 +462,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Transformed war into fight for freedom; enabled Black soldiers to fight; weakened Confederacy. NEGATIVE: Did not free slaves in border states; full equality did not follow. Long-term: Crucial step toward ending slavery; demonstrated that founding principles applied to all people.',
   },
   {
+    id: "1865ad",
     year: 1865,
     category: 'political',
     title: '13th Amendment Ratified',
@@ -415,6 +470,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Constitutionally abolished slavery; completed what Declaration of Independence promised. NEGATIVE: Former slaves denied land and full citizenship rights; sharecropping and Jim Crow followed. Long-term: Fundamental constitutional change; struggle for full equality continued for another century.',
   },
   {
+    id: "1869ad",
     year: 1869,
     category: 'technology',
     title: 'Transcontinental Railroad Completed',
@@ -422,6 +478,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: United continent economically; enabled settlement and commerce; reduced travel time from months to days. NEGATIVE: Built with exploited immigrant labor; disrupted Native American lands and buffalo herds. Long-term: Transformed American economy and settlement patterns; model for infrastructure development.',
   },
   {
+    id: "1876ad",
     year: 1876,
     category: 'technology',
     title: 'Telephone Invented',
@@ -429,6 +486,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Enabled instant communication across distances; transformed business and personal relationships. NEGATIVE: New technology created new inequalities between those with and without access. Long-term: Beginning of telecommunications revolution that continues to transform society.',
   },
   {
+    id: "1879ad",
     year: 1879,
     category: 'technology',
     title: 'Edison\'s Light Bulb',
@@ -436,6 +494,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Extended productive hours; improved safety; enabled new industries; transformed daily life. NEGATIVE: Initially available only to wealthy; created demand for more power generation. Long-term: Electrification transformed every aspect of modern life; Edison\'s method of systematic invention became model.',
   },
   {
+    id: "1886ad",
     year: 1886,
     category: 'political',
     title: 'Statue of Liberty Dedicated',
@@ -445,6 +504,7 @@ export const HISTORICAL_EVENTS = [
 
   // Modern Era (1900-2000)
   {
+    id: "1903ad",
     year: 1903,
     category: 'technology',
     title: 'Wright Brothers\' Flight',
@@ -452,6 +512,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Opened era of aviation; transformed transportation, commerce, and warfare; shrank the world. NEGATIVE: Also enabled aerial bombing and new forms of warfare. Long-term: Aviation became essential to modern life; inspired space exploration.',
   },
   {
+    id: "1905ad",
     year: 1905,
     category: 'science',
     title: 'Einstein\'s Miracle Year',
@@ -459,6 +520,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Revolutionized physics; enabled nuclear energy, GPS, and modern technology; showed power of theoretical thinking. NEGATIVE: Also made nuclear weapons possible. Long-term: Transformed our understanding of space, time, and matter.',
   },
   {
+    id: "1914ad",
     year: 1914,
     category: 'war',
     title: 'World War I Begins',
@@ -466,6 +528,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended empires that denied self-determination; eventually led to international institutions. NEGATIVE: 17 million dead; destabilized Europe; enabled rise of fascism and communism. Long-term: Destroyed old order without creating stable new one; set stage for World War II.',
   },
   {
+    id: "1917ad",
     year: 1917,
     category: 'revolution',
     title: 'Russian Revolution',
@@ -473,6 +536,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended tsarist autocracy; inspired workers\' movements; rapid industrialization. NEGATIVE: Established totalitarian regime; millions died in purges, famines, and gulags. Long-term: Created first major communist state; Cold War ideological conflict shaped rest of century.',
   },
   {
+    id: "1918ad",
     year: 1918,
     category: 'war',
     title: 'World War I Ends',
@@ -480,6 +544,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Created League of Nations attempt at collective security; ended Ottoman, Austro-Hungarian, German, and Russian empires. NEGATIVE: Vindictive peace terms humiliated Germany; new borders created ethnic conflicts. Long-term: Unstable settlement planted seeds for World War II.',
   },
   {
+    id: "1920ad",
     year: 1920,
     category: 'political',
     title: '19th Amendment Ratified',
@@ -487,6 +552,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Extended political equality to women; vindicated decades of peaceful advocacy; doubled electorate. NEGATIVE: Many women of color still faced voting barriers. Long-term: Transformed American politics; women became majority of voters.',
   },
   {
+    id: "1929ad",
     year: 1929,
     category: 'economy',
     title: 'Stock Market Crash',
@@ -494,6 +560,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Eventually led to financial reforms and social safety nets. NEGATIVE: Unprecedented economic collapse; mass unemployment; contributed to rise of extremism. Long-term: Transformed role of government in economy; still debated by economists.',
   },
   {
+    id: "1933ad",
     year: 1933,
     category: 'political',
     title: 'Hitler Becomes Chancellor',
@@ -501,6 +568,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: None. NEGATIVE: Ended Weimar democracy; began persecution of Jews and others; led to World War II and Holocaust. Long-term: Demonstrated how democracies can vote themselves out of existence; cautionary tale about demagogues and economic crisis.',
   },
   {
+    id: "1939ad",
     year: 1939,
     category: 'war',
     title: 'World War II Begins',
@@ -508,6 +576,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Allied victory eventually liberated occupied countries; led to human rights declarations. NEGATIVE: 70-85 million dead; Holocaust murdered 6 million Jews; cities destroyed. Long-term: Discredited fascism; created international institutions; began decolonization.',
   },
   {
+    id: "1941ad",
     year: 1941,
     category: 'war',
     title: 'Pearl Harbor Attack',
@@ -515,6 +584,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: American entry turned tide of war; brought resources that ensured Allied victory. NEGATIVE: Thousands killed; led to internment of Japanese Americans. Long-term: America emerged as global superpower; ended isolationism.',
   },
   {
+    id: "1942ad",
     year: 1942,
     category: 'war',
     title: 'Holocaust: Systematic Genocide',
@@ -522,6 +592,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: None. NEGATIVE: Industrial-scale murder of civilians; six million Jews and millions of others killed; immeasurable human loss and suffering. Long-term: Led to human rights declarations, genocide conventions, and establishment of Israel; permanent reminder of where hatred leads.',
   },
   {
+    id: "1944ad",
     year: 1944,
     category: 'war',
     title: 'D-Day Invasion',
@@ -529,6 +600,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Began liberation of Western Europe; demonstrated Allied commitment; hastened war\'s end. NEGATIVE: Heavy casualties on beaches; difficult fighting ahead. Long-term: Western Europe liberated; contrasted with Soviet control of Eastern Europe.',
   },
   {
+    id: "1945ad",
     year: 1945,
     category: 'war',
     title: 'Atomic Bombs End WWII',
@@ -536,6 +608,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended war quickly, avoiding invasion casualties; demonstrated nuclear weapons\' horror. NEGATIVE: Over 100,000 civilians killed instantly; radiation effects continued. Long-term: Nuclear age began; Cold War deterrence prevented major power war; proliferation remains threat.',
   },
   {
+    id: "1945ad_2",
     year: 1945,
     category: 'political',
     title: 'United Nations Founded',
@@ -543,6 +616,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Created forum for diplomacy; agencies address humanitarian needs; human rights declarations. NEGATIVE: Security Council veto limits effectiveness; cannot override sovereignty. Long-term: Imperfect but useful forum for international cooperation.',
   },
   {
+    id: "1947ad",
     year: 1947,
     category: 'philosophy',
     title: 'Ayn Rand\'s The Fountainhead Success',
@@ -550,6 +624,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Celebrated individual creativity and integrity; challenged collectivist thinking; inspired entrepreneurs and artists. NEGATIVE: Critics argued it dismissed community and social bonds. Long-term: Influenced libertarian movement; remains widely read and debated.',
   },
   {
+    id: "1948ad",
     year: 1948,
     category: 'political',
     title: 'Israel Founded',
@@ -557,6 +632,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Provided refuge for Jews after Holocaust; built successful democracy; technological innovation. NEGATIVE: Displacement of Palestinians; ongoing regional conflict. Long-term: Complex legacy of refuge, conflict, and competing national aspirations.',
   },
   {
+    id: "1950ad",
     year: 1950,
     category: 'war',
     title: 'Korean War Begins',
@@ -564,6 +640,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: South Korea preserved; became prosperous democracy. NEGATIVE: Millions killed; peninsula remains divided; North Korea became totalitarian state. Long-term: Stark contrast between North and South demonstrates different systems\' outcomes.',
   },
   {
+    id: "1949ad",
     year: 1949,
     category: 'political',
     title: 'Communist China Established',
@@ -571,6 +648,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Unified China after decades of war; later market reforms lifted hundreds of millions from poverty. NEGATIVE: Tens of millions died in famines and political campaigns; human rights violations continue. Long-term: China became major world power; ongoing tension between economic growth and political control.',
   },
   {
+    id: "1957ad",
     year: 1957,
     category: 'philosophy',
     title: 'Atlas Shrugged Published',
@@ -578,6 +656,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Defended productive achievement; critiqued excessive regulation; inspired entrepreneurs. NEGATIVE: Critics argued it lacked compassion for the less fortunate. Long-term: One of most influential American novels; continues to spark debate about capitalism and individualism.',
   },
   {
+    id: "1961ad",
     year: 1961,
     category: 'technology',
     title: 'First Human in Space',
@@ -585,6 +664,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Opened space age; demonstrated human capacity to transcend earthly limits; inspired generations. NEGATIVE: Space race diverted resources; Cold War competition. Long-term: Space exploration continues to advance science and inspire humanity.',
   },
   {
+    id: "1963ad",
     year: 1963,
     category: 'political',
     title: 'Kennedy Assassination',
@@ -592,6 +672,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Peaceful transfer of power demonstrated constitutional resilience. NEGATIVE: National trauma; loss of popular leader; conspiracy theories persist. Long-term: Showed institutions survive loss of any individual; changed American political culture.',
   },
   {
+    id: "1964ad",
     year: 1964,
     category: 'political',
     title: 'Civil Rights Act',
@@ -599,6 +680,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended legal segregation; protected voting rights; opened opportunities. NEGATIVE: Did not eliminate discrimination; implementation faced resistance. Long-term: Transformed American society; extended founding principles to all citizens.',
   },
   {
+    id: "1965ad",
     year: 1965,
     category: 'war',
     title: 'Vietnam War Escalates',
@@ -606,6 +688,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Attempted to prevent communist expansion. NEGATIVE: Over 58,000 Americans and millions of Vietnamese killed; divided American society; ultimately unsuccessful. Long-term: Changed American attitudes toward military intervention; lessons still debated.',
   },
   {
+    id: "1966ad",
     year: 1966,
     category: 'political',
     title: 'Cultural Revolution Begins',
@@ -613,6 +696,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: None. NEGATIVE: Millions killed or persecuted; cultural heritage destroyed; education disrupted for generation. Long-term: Traumatized Chinese society; later repudiated by Chinese Communist Party itself.',
   },
   {
+    id: "1975ad",
     year: 1975,
     category: 'war',
     title: 'Cambodian Genocide Begins',
@@ -620,6 +704,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: None. NEGATIVE: Quarter of population killed; society devastated; educated class targeted for elimination. Long-term: Cambodia slowly recovered; tribunals eventually held perpetrators accountable.',
   },
   {
+    id: "1979ad",
     year: 1979,
     category: 'revolution',
     title: 'Iranian Revolution',
@@ -627,6 +712,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Ended unpopular authoritarian monarchy. NEGATIVE: Established religious dictatorship; sponsored terrorism; women\'s rights restricted. Long-term: Created ongoing regional tensions; demonstrated religious movements\' political power.',
   },
   {
+    id: "1969ad",
     year: 1969,
     category: 'technology',
     title: 'Moon Landing',
@@ -634,6 +720,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Greatest technological achievement in history; united humanity in wonder; advanced technology. NEGATIVE: Enormous cost; program later abandoned. Long-term: Proved nothing is impossible; inspired generations; space exploration continues.',
   },
   {
+    id: "1989ad",
     year: 1989,
     category: 'revolution',
     title: 'Fall of Berlin Wall',
@@ -641,6 +728,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Reunified Germany; freed Eastern Europe; ended Cold War division; peaceful revolution. NEGATIVE: Economic difficulties for former communist states; not all transitions smooth. Long-term: Demonstrated that even seemingly permanent systems can collapse; expanded freedom to millions.',
   },
   {
+    id: "1991ad",
     year: 1991,
     category: 'political',
     title: 'Soviet Union Dissolves',
@@ -650,6 +738,7 @@ export const HISTORICAL_EVENTS = [
 
   // Contemporary Era (2000-present)
   {
+    id: "2001ad",
     year: 2001,
     category: 'war',
     title: 'September 11 Attacks',
@@ -657,6 +746,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: International solidarity against terrorism; security improvements. NEGATIVE: Nearly 3,000 killed; triggered long wars; civil liberties concerns. Long-term: Transformed security, foreign policy, and public consciousness; effects still unfolding.',
   },
   {
+    id: "2008ad",
     year: 2008,
     category: 'economy',
     title: 'Global Financial Crisis',
@@ -664,6 +754,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Led to financial reforms; exposed weaknesses in system. NEGATIVE: Millions lost jobs and homes; recession spread globally. Long-term: Changed banking regulation; debates about causes and responses continue.',
   },
   {
+    id: "2020ad",
     year: 2020,
     category: 'culture',
     title: 'COVID-19 Pandemic',
@@ -671,6 +762,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: Accelerated medical research and vaccine development; remote work became viable. NEGATIVE: Millions died; economic disruption; mental health impacts; educational setbacks. Long-term: Transformed work, medicine, and public health; full effects still emerging.',
   },
   {
+    id: "2023ad",
     year: 2023,
     category: 'war',
     title: 'October 7: Hamas Attack on Israel',
@@ -678,6 +770,7 @@ export const HISTORICAL_EVENTS = [
     analysis: 'POSITIVE: International solidarity with victims of terrorism. NEGATIVE: Worst attack on Jews since Holocaust; civilian massacre; ongoing war and humanitarian crisis. Long-term: Regional destabilization; peace prospects diminished; humanitarian concerns on all sides.',
   },
   {
+    id: "2024ad",
     year: 2024,
     category: 'war',
     title: 'Iran-Israel Tensions Escalate',
