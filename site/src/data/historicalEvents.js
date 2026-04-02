@@ -645,7 +645,7 @@ export const HISTORICAL_EVENTS = [
     category: 'political',
     title: 'Communist China Established',
     description: 'Mao Zedong establishes communist totalitarian dictatorship in China.',
-    analysis: 'Consequences: Mao\'s regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, and family structures. Only after Mao\'s death did limited market reforms allow economic growth—despite communism, not because of it. Philosophical significance: Communism is the deadliest ideology in human history. The Chinese people\'s economic success came from the degree to which they abandoned Marxist economics. The regime remains a totalitarian threat, committing genocide against Uyghurs and threatening Taiwan.',
+    analysis: 'Consequences: Mao\'s regime murdered 45-65 million people through the Great Leap Forward famine, Cultural Revolution, and political purges—the largest mass murder in human history. Destroyed traditional Chinese culture, religion, and family structures. Philosophical significance: Communism is the deadliest ideology in human history. China\'s economic success only came AFTER the CCP abolished communist economics and opened markets, allowing people to trade freely domestically and internationally. The political system remains authoritarian, but prosperity required abandoning Marx. The regime still commits genocide against Uyghurs and threatens Taiwan.',
   },
   {
     id: "1957ad",
