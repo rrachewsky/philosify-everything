@@ -32,7 +32,8 @@ export function HistoricalEventTicker({
   const [containerWidth, setContainerWidth] = useState(1000);
   const [itemOffsets, setItemOffsets] = useState(null);
 
-  // Drag state
+  // Drag state — using mouse/touch events (like working tickers) instead of
+  // pointer capture, so button clicks propagate naturally.
   const [isDragging, setIsDragging] = useState(false);
   const dragStartXRef = useRef(0);
   const dragStartOffsetRef = useRef(0);
@@ -65,11 +66,6 @@ export function HistoricalEventTicker({
   });
 
   // ---- Year <-> pixel offset mapping ----
-  // Uses UNIFORM mapping: each event gets equal visual distance regardless of
-  // year gap. This produces constant visual scroll speed (like the other tickers).
-  // The year-to-offset curve is piecewise-linear with anchors at each event,
-  // but the offsets are the actual measured DOM positions (which are uniformly
-  // spaced since items are in a flex row with similar widths).
   const { yearToOffset, offsetToYear } = useMemo(() => {
     if (!itemOffsets || itemOffsets.length === 0) {
       return {
@@ -83,23 +79,19 @@ export function HistoricalEventTicker({
       offset: itemOffsets[i],
     }));
 
-    // For extrapolation: use average item width as the rate
-    // (how many pixels per year outside the event range)
     const avgItemWidth = itemOffsets.length > 1
       ? (itemOffsets[itemOffsets.length - 1] - itemOffsets[0]) / (itemOffsets.length - 1)
       : 400;
-    // Years per item for extrapolation regions
     const firstEventYear = anchors[0].year;
     const lastEventYear = anchors[anchors.length - 1].year;
-    // Before first event: use avgItemWidth per (avg years between first few events)
     const earlyAvgYears = anchors.length > 1
       ? (anchors[1].year - anchors[0].year)
       : 100;
     const lateAvgYears = anchors.length > 1
       ? (anchors[anchors.length - 1].year - anchors[anchors.length - 2].year)
       : 100;
-    const earlyRate = avgItemWidth / earlyAvgYears; // px per year before first event
-    const lateRate = avgItemWidth / lateAvgYears;   // px per year after last event
+    const earlyRate = avgItemWidth / earlyAvgYears;
+    const lateRate = avgItemWidth / lateAvgYears;
 
     const _yearToOffset = (year) => {
       if (year <= firstEventYear) {
@@ -140,32 +132,50 @@ export function HistoricalEventTicker({
     return { yearToOffset: _yearToOffset, offsetToYear: _offsetToYear };
   }, [itemOffsets, minYear]);
 
-  // ---- Drag handlers (scrub timeline) ----
-  const handlePointerDown = useCallback((e) => {
-    if (e.button !== 0) return;
-    e.currentTarget.setPointerCapture(e.pointerId);
+  // ---- Drag handlers (mouse/touch, same pattern as working tickers) ----
+  const handleMouseDown = useCallback((e) => {
+    if (!trackRef.current) return;
     setIsDragging(true);
     didDragRef.current = false;
-    dragStartXRef.current = e.clientX;
+    dragStartXRef.current = e.pageX;
     dragStartOffsetRef.current = yearToOffset(currentYear);
   }, [currentYear, yearToOffset]);
 
-  const handlePointerMove = useCallback((e) => {
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const handleMouseMove = useCallback((e) => {
     if (!isDragging) return;
     e.preventDefault();
-    const deltaX = e.clientX - dragStartXRef.current;
+    const deltaX = e.pageX - dragStartXRef.current;
     if (Math.abs(deltaX) > 3) didDragRef.current = true;
     const newOffset = dragStartOffsetRef.current - deltaX;
     const newYear = Math.max(minYear, Math.min(maxYear, offsetToYear(newOffset)));
     setCurrentYear(newYear);
   }, [isDragging, minYear, maxYear, setCurrentYear, offsetToYear]);
 
-  const handlePointerUp = useCallback((e) => {
-    if (!isDragging) return;
-    e.currentTarget.releasePointerCapture(e.pointerId);
-    setIsDragging(false);
-  }, [isDragging]);
+  const handleTouchStart = useCallback((e) => {
+    setIsDragging(true);
+    didDragRef.current = false;
+    dragStartXRef.current = e.touches[0].pageX;
+    dragStartOffsetRef.current = yearToOffset(currentYear);
+  }, [currentYear, yearToOffset]);
 
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging) return;
+    const deltaX = e.touches[0].pageX - dragStartXRef.current;
+    if (Math.abs(deltaX) > 3) didDragRef.current = true;
+    const newOffset = dragStartOffsetRef.current - deltaX;
+    const newYear = Math.max(minYear, Math.min(maxYear, offsetToYear(newOffset)));
+    setCurrentYear(newYear);
+  }, [isDragging, minYear, maxYear, setCurrentYear, offsetToYear]);
+
+  // ---- Click handler (only fires if user didn't drag) ----
   const handleEventClick = useCallback((event) => {
     if (didDragRef.current) return;
     onEventClick(event);
@@ -190,10 +200,13 @@ export function HistoricalEventTicker({
           overflow: 'hidden',
           cursor: isDragging ? 'grabbing' : 'grab',
         }}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
       >
         <div
           ref={contentRef}
@@ -218,7 +231,12 @@ export function HistoricalEventTicker({
               >
                 <span className="ticker-rank">{cat.icon} {formatYear(event.year)}</span>
                 <span className="ticker-separator">&mdash;</span>
-                <span className="ticker-song">{headline}</span>
+                <span
+                  className="ticker-song"
+                  style={{ maxWidth: 'none', overflow: 'visible', textOverflow: 'unset' }}
+                >
+                  {headline}
+                </span>
               </button>
             );
           })}
