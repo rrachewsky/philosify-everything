@@ -770,6 +770,14 @@ export const HISTORICAL_EVENTS = [
     analysis: 'Consequences: Worst massacre of Jews since the Holocaust. Barbaric atrocities against civilians including rape, torture, and murder of children. Revealed the true nature of Hamas as a genocidal terrorist organization. Much of the Western intelligentsia shamefully sided with the terrorists, exposing moral bankruptcy in academia and media. Philosophical significance: Evil must be defeated, not negotiated with. Israel\'s right to self-defense is absolute. Victory means dismantling Hamas\'s capability to harm civilians. There is no moral equivalence between terrorists and their victims.',
   },
   {
+    id: "2022ad",
+    year: 2022,
+    category: 'war',
+    title: 'Russia Invades Ukraine',
+    description: 'Russia launches full-scale invasion of Ukraine; largest war in Europe since WWII.',
+    analysis: 'Consequences: Russia, an American enemy, launched unprovoked aggression against Ukraine, revealing imperial ambitions and military weakness. The West responded with sanctions and military aid. Ukraine\'s fierce resistance has degraded Russian military capability significantly. Philosophical significance: Russia is the evil aggressor; Ukraine has absolute right to self-defense and victory. American support for Ukraine is not sacrifice but strategic self-interest—we weaken a nuclear-armed enemy without risking American lives. Ukraine fights, Russia bleeds, America benefits. Aggression must be defeated, not rewarded with negotiated concessions.',
+  },
+  {
     id: "2024ad",
     year: 2024,
     category: 'war',
