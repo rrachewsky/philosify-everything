@@ -5,6 +5,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SCHOOL_COLORS, PHILOSOPHER_PORTRAITS } from '@/data/constellationSeedData.js';
+import { HISTORICAL_EVENTS } from '@/data/historicalEvents.js';
 
 // Re-export for convenience
 export { SCHOOL_COLORS, PHILOSOPHER_PORTRAITS };
@@ -123,6 +124,18 @@ function hashString(str) {
   return Math.abs(hash);
 }
 
+// Event density factor — slows timeline when many events cluster in a short period
+// Used by both the playback loop and exposed for ticker calibration
+function getEventDensityFactor(year) {
+  const WINDOW = 30; // ±30 years around current position
+  const BASE_EVENTS = 2; // "normal" number of events in that window
+  const eventsInWindow = HISTORICAL_EVENTS.filter(
+    e => e.year >= year - WINDOW && e.year <= year + WINDOW
+  ).length;
+  // More events → smaller factor (min 0.25 = 4x slower in densest areas)
+  return Math.max(0.25, 1 / (1 + Math.max(0, eventsInWindow - BASE_EVENTS) * 0.2));
+}
+
 export function useConstellation() {
   const { t } = useTranslation();
   const [data, setData] = useState(null);
@@ -221,10 +234,10 @@ export function useConstellation() {
       const deltaMs = timestamp - lastTimeRef.current;
       lastTimeRef.current = timestamp;
 
-      // Calculate years to advance
-      const yearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed;
-
       setCurrentYear(prev => {
+        // Density factor inside updater so it uses latest year, not stale closure
+        const densityFactor = getEventDensityFactor(prev);
+        const yearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed * densityFactor;
         const next = prev + yearsToAdvance;
         if (next >= MAX_YEAR) {
           setIsPlaying(false);

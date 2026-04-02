@@ -1,57 +1,166 @@
 // ============================================================
-// HISTORICAL EVENT TICKER - Continuous chronological flow
-// Events scroll from oldest to newest, no looping/restart
+// HISTORICAL EVENT TICKER
+// Same structure as Music/News/Cinema/Literature tickers:
+//   .top-ten-ticker > .ticker-label + .ticker-track > .ticker-content > .ticker-item[]
+//
+// Only difference: NO looping. Single pass from -600 to 2026.
+// translateX on .ticker-content is driven by currentYear (not CSS animation).
+// Dragging the ticker scrubs the global timeline.
 // ============================================================
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HISTORICAL_EVENTS, EVENT_CATEGORIES } from '@/data/historicalEvents.js';
 import '../TopTenTicker.css';
 
+// Pre-sort events once (chronological, earliest first).
+const SORTED_EVENTS = [...HISTORICAL_EVENTS].sort((a, b) => a.year - b.year);
+
 export function HistoricalEventTicker({
   currentYear,
+  setCurrentYear,
   formatYear,
   onEventClick,
+  isPlaying,
+  minYear,
+  maxYear,
 }) {
   const { t } = useTranslation();
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeftState, setScrollLeftState] = useState(0);
   const trackRef = useRef(null);
   const contentRef = useRef(null);
-  const lastScrollRef = useRef(0);
+  const [containerWidth, setContainerWidth] = useState(1000);
+  const [itemOffsets, setItemOffsets] = useState(null);
 
-  // Get events up to current year (chronological order - oldest first)
-  const visibleEvents = HISTORICAL_EVENTS.filter(event => event.year <= currentYear);
+  // Drag state
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetRef = useRef(0);
+  const didDragRef = useRef(false);
 
-  // Auto-scroll to keep newest events visible
+  // ---- Measure container width ----
   useEffect(() => {
-    if (contentRef.current && trackRef.current && !isDragging) {
-      // Scroll to show the end (most recent events)
-      const scrollWidth = contentRef.current.scrollWidth;
-      const clientWidth = trackRef.current.clientWidth;
-      if (scrollWidth > clientWidth) {
-        // Smooth scroll to end
-        trackRef.current.scrollLeft = scrollWidth - clientWidth;
-      }
+    const track = trackRef.current;
+    if (!track) return;
+    const measure = () => setContainerWidth(track.clientWidth);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
+    return () => ro.disconnect();
+  }, []);
+
+  // ---- Measure actual item positions after first render ----
+  // useLayoutEffect runs before paint, so user never sees the unmeasured frame.
+  useLayoutEffect(() => {
+    if (itemOffsets) return; // already measured
+    const content = contentRef.current;
+    if (!content) return;
+    const items = content.querySelectorAll('.ticker-item');
+    if (items.length !== SORTED_EVENTS.length) return;
+
+    const contentRect = content.getBoundingClientRect();
+    const offsets = Array.from(items).map(
+      (item) => item.getBoundingClientRect().left - contentRect.left
+    );
+    setItemOffsets(offsets);
+  });
+
+  // ---- Year <-> pixel offset mapping (from measured positions) ----
+  const { yearToOffset, offsetToYear } = useMemo(() => {
+    if (!itemOffsets || itemOffsets.length === 0) {
+      // Before measurement: push everything off-screen right
+      return {
+        yearToOffset: () => -99999,
+        offsetToYear: () => minYear,
+      };
     }
-  }, [visibleEvents.length, isDragging]);
 
-  if (visibleEvents.length === 0) return null;
+    const anchors = SORTED_EVENTS.map((event, i) => ({
+      year: event.year,
+      offset: itemOffsets[i],
+    }));
 
-  const handleMouseDown = (e) => {
-    if (!trackRef.current) return;
+    const totalOffset = anchors[anchors.length - 1].offset - anchors[0].offset;
+    const totalYears = anchors[anchors.length - 1].year - anchors[0].year;
+    const avgRate = totalYears > 0 ? totalOffset / totalYears : 1;
+
+    const _yearToOffset = (year) => {
+      if (year <= anchors[0].year) {
+        return anchors[0].offset - (anchors[0].year - year) * avgRate;
+      }
+      if (year >= anchors[anchors.length - 1].year) {
+        return anchors[anchors.length - 1].offset
+          + (year - anchors[anchors.length - 1].year) * avgRate;
+      }
+      for (let i = 0; i < anchors.length - 1; i++) {
+        if (year >= anchors[i].year && year <= anchors[i + 1].year) {
+          const ratio =
+            (year - anchors[i].year) / (anchors[i + 1].year - anchors[i].year);
+          return anchors[i].offset + ratio * (anchors[i + 1].offset - anchors[i].offset);
+        }
+      }
+      return 0;
+    };
+
+    const _offsetToYear = (offset) => {
+      if (offset <= anchors[0].offset) {
+        return anchors[0].year - (anchors[0].offset - offset) / avgRate;
+      }
+      if (offset >= anchors[anchors.length - 1].offset) {
+        return anchors[anchors.length - 1].year
+          + (offset - anchors[anchors.length - 1].offset) / avgRate;
+      }
+      for (let i = 0; i < anchors.length - 1; i++) {
+        if (offset >= anchors[i].offset && offset <= anchors[i + 1].offset) {
+          const ratio =
+            (offset - anchors[i].offset) / (anchors[i + 1].offset - anchors[i].offset);
+          return anchors[i].year + ratio * (anchors[i + 1].year - anchors[i].year);
+        }
+      }
+      return minYear;
+    };
+
+    return { yearToOffset: _yearToOffset, offsetToYear: _offsetToYear };
+  }, [itemOffsets, minYear]);
+
+  // ---- Drag handlers (scrub timeline) ----
+  const handlePointerDown = useCallback((e) => {
+    if (e.button !== 0) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
     setIsDragging(true);
-    setStartX(e.pageX - trackRef.current.offsetLeft);
-    setScrollLeftState(trackRef.current.scrollLeft);
-  };
-  const handleMouseUp = () => setIsDragging(false);
-  const handleMouseMove = (e) => {
-    if (!isDragging || !trackRef.current) return;
+    didDragRef.current = false;
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetRef.current = yearToOffset(currentYear);
+  }, [currentYear, yearToOffset]);
+
+  const handlePointerMove = useCallback((e) => {
+    if (!isDragging) return;
     e.preventDefault();
-    const x = e.pageX - trackRef.current.offsetLeft;
-    trackRef.current.scrollLeft = scrollLeftState - (x - startX) * 2;
-  };
+    const deltaX = e.clientX - dragStartXRef.current;
+    if (Math.abs(deltaX) > 3) didDragRef.current = true;
+    // Drag left → offset increases → time advances
+    const newOffset = dragStartOffsetRef.current - deltaX;
+    const newYear = Math.max(minYear, Math.min(maxYear, offsetToYear(newOffset)));
+    setCurrentYear(newYear);
+  }, [isDragging, minYear, maxYear, setCurrentYear, offsetToYear]);
+
+  const handlePointerUp = useCallback((e) => {
+    if (!isDragging) return;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    setIsDragging(false);
+  }, [isDragging]);
+
+  const handleEventClick = useCallback((event) => {
+    if (didDragRef.current) return;
+    onEventClick(event);
+  }, [onEventClick]);
+
+  // ---- Render ----
+  if (SORTED_EVENTS.length === 0) return null;
+
+  // translateX positions the content strip so that the event whose year
+  // matches currentYear sits at the right edge of the track.
+  const scrollOffset = yearToOffset(currentYear);
+  const translateX = containerWidth - scrollOffset;
 
   return (
     <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
@@ -62,34 +171,41 @@ export function HistoricalEventTicker({
       <div
         className="ticker-track"
         ref={trackRef}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onMouseMove={handleMouseMove}
-        style={{ overflowX: 'auto' }}
+        style={{
+          overflow: 'hidden',
+          cursor: isDragging ? 'grabbing' : 'grab',
+        }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
       >
         <div
           ref={contentRef}
           className="ticker-content"
-          style={{ 
+          style={{
+            transform: `translateX(${translateX}px)`,
             animation: 'none',
-            width: 'max-content',
           }}
         >
-          {visibleEvents.map((event, i) => {
-            const category = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
-            // Try to get translated title, fallback to English
-            const translatedTitle = t(`historicalEvents.${event.id}`, { defaultValue: event.title });
+          {SORTED_EVENTS.map((event) => {
+            const cat = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
+            const title = t(`historicalEvents.${event.id}.title`, { defaultValue: event.title });
+
             return (
               <button
-                key={event.id || `${event.year}-${i}`}
+                key={event.id}
                 className="ticker-item"
-                onClick={() => onEventClick(event)}
+                onClick={() => handleEventClick(event)}
                 style={{ direction: 'ltr' }}
               >
-                <span className="ticker-rank">{category.icon} {formatYear(event.year)}</span>
-                <span className="ticker-separator">—</span>
-                <span className="ticker-song">{translatedTitle}</span>
+                <span className="ticker-rank">{cat.icon}</span>
+                <span
+                  className="ticker-song"
+                  style={{ maxWidth: 'none', overflow: 'visible', textOverflow: 'unset' }}
+                >
+                  {title} &mdash; {event.description} ({formatYear(event.year)})
+                </span>
               </button>
             );
           })}
