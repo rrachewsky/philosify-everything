@@ -147,10 +147,10 @@ function getEventSpeedFactor(year) {
   if (year < SORTED_HE[0].year || year > SORTED_HE[SORTED_HE.length - 1].year) {
     localGap = AVG_EVENT_GAP;
   }
-  // Factor = localGap / avgGap * 1.25 (boosted 25% for faster ticker flow), clamped:
-  //   max 5x during very sparse periods (fast-forward through empty years)
-  //   min 0.6x during very dense periods (slow down to read headlines)
-  return Math.max(0.6, Math.min(5.0, (localGap / AVG_EVENT_GAP) * 1.25));
+  // Factor = localGap / avgGap * 1.625 (boosted for comfortable ticker flow), clamped:
+  //   max 6x during very sparse periods (fast-forward through empty years)
+  //   min 0.7x during very dense periods (slow down to read headlines)
+  return Math.max(0.7, Math.min(6.0, (localGap / AVG_EVENT_GAP) * 1.625));
 }
 
 export function useConstellation() {

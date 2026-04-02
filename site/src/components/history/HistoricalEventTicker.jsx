@@ -233,7 +233,7 @@ export function HistoricalEventTicker({
                 <span className="ticker-separator">&mdash;</span>
                 <span
                   className="ticker-song"
-                  style={{ maxWidth: 'none', overflow: 'visible', textOverflow: 'unset' }}
+                  style={{ maxWidth: 'none', overflow: 'visible', textOverflow: 'unset', fontSize: '13px' }}
                 >
                   {headline}
                 </span>
