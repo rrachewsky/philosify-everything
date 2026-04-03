@@ -16,27 +16,114 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
   const { t, i18n } = useTranslation();
   const { user, sessionBalance: balance } = useAuth();
 
-  // Conversation state (client-only, PRIVATE per user)
+  // ---- Encrypted conversation storage (per user) ----
+  // Uses Web Crypto to derive a key from the user ID, encrypts messages
+  // in sessionStorage. Another user cannot decrypt them.
+  const getUserId = () => user?.id || user?.userId || null;
+
+  const getStorageKey = () => {
+    const uid = getUserId();
+    return uid ? `uz_${uid.substring(0, 8)}` : null;
+  };
+
+  // Derive an encryption key from user ID using Web Crypto
+  const deriveKey = async (userId) => {
+    const encoder = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw', encoder.encode(userId + '_unsafe_zone_key'),
+      { name: 'PBKDF2' }, false, ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: encoder.encode('philosify_uz'), iterations: 1000, hash: 'SHA-256' },
+      keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+    );
+  };
+
+  const encryptAndStore = async (msgs) => {
+    const uid = getUserId();
+    const storageKey = getStorageKey();
+    if (!uid || !storageKey || msgs.length === 0) {
+      if (storageKey) sessionStorage.removeItem(storageKey);
+      return;
+    }
+    try {
+      const key = await deriveKey(uid);
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const encoded = new TextEncoder().encode(JSON.stringify(msgs));
+      const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoded);
+      const payload = JSON.stringify({
+        iv: Array.from(iv),
+        data: Array.from(new Uint8Array(encrypted)),
+      });
+      sessionStorage.setItem(storageKey, payload);
+    } catch (e) {
+      // Encryption failed — don't store
+    }
+  };
+
+  const decryptAndLoad = async () => {
+    const uid = getUserId();
+    const storageKey = getStorageKey();
+    if (!uid || !storageKey) return [];
+    try {
+      const raw = sessionStorage.getItem(storageKey);
+      if (!raw) return [];
+      const { iv, data } = JSON.parse(raw);
+      const key = await deriveKey(uid);
+      const decrypted = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: new Uint8Array(iv) },
+        key, new Uint8Array(data)
+      );
+      return JSON.parse(new TextDecoder().decode(decrypted));
+    } catch (e) {
+      // Decryption failed (wrong user or corrupted) — clear it
+      sessionStorage.removeItem(storageKey);
+      return [];
+    }
+  };
+
+  // Conversation state (client-only, ENCRYPTED per user)
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const prevUserIdRef = useRef(null);
+  const initializedRef = useRef(false);
 
   // Refs
   const sidebarRef = useRef(null);
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
 
+  // ---- Load encrypted conversation when user is available ----
+  useEffect(() => {
+    const uid = getUserId();
+    if (!uid || initializedRef.current) return;
+    initializedRef.current = true;
+    decryptAndLoad().then(msgs => {
+      if (msgs.length > 0) setMessages(msgs);
+    });
+  }, [user]);
+
+  // ---- Save encrypted conversation when messages change ----
+  useEffect(() => {
+    if (!initializedRef.current) return;
+    encryptAndStore(messages);
+  }, [messages]);
+
   // ---- SECURITY: Clear conversation when user changes or signs out ----
   useEffect(() => {
-    const currentUserId = user?.id || user?.userId || null;
+    const currentUserId = getUserId();
     if (prevUserIdRef.current !== null && prevUserIdRef.current !== currentUserId) {
-      // User changed — wipe everything
+      // User changed — wipe everything including storage
       setMessages([]);
       setInput('');
       setError(null);
       setLoading(false);
+      initializedRef.current = false;
+      // Clear old user's storage
+      const oldKey = prevUserIdRef.current ? `uz_${prevUserIdRef.current.substring(0, 8)}` : null;
+      if (oldKey) sessionStorage.removeItem(oldKey);
     }
     prevUserIdRef.current = currentUserId;
   }, [user]);
@@ -46,9 +133,6 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
   const signupModal = useModal();
   const forgotPasswordModal = useModal();
   const paymentModal = useModal();
-
-  // Conversation persists while sidebar is closed (same user).
-  // Only wiped on user change (security effect above).
 
   // ---- Body scroll lock (same as all sidebars) ----
   useEffect(() => {
@@ -152,12 +236,14 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
     }
   }, [sendMessage]);
 
-  // ---- Start over ----
+  // ---- Start over (also clears encrypted storage) ----
   const handleStartOver = useCallback(() => {
     setMessages([]);
     setInput('');
     setError(null);
-  }, []);
+    const storageKey = getStorageKey();
+    if (storageKey) sessionStorage.removeItem(storageKey);
+  }, [user]);
 
   // ---- Render ----
   const isIdle = messages.length === 0;
