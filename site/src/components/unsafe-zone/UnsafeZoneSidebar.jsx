@@ -47,15 +47,8 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
   const forgotPasswordModal = useModal();
   const paymentModal = useModal();
 
-  // ---- SECURITY: Clear conversation when sidebar closes ----
-  useEffect(() => {
-    if (!isOpen) {
-      setMessages([]);
-      setInput('');
-      setError(null);
-      setLoading(false);
-    }
-  }, [isOpen]);
+  // Conversation persists while sidebar is closed (same user).
+  // Only wiped on user change (security effect above).
 
   // ---- Body scroll lock (same as all sidebars) ----
   useEffect(() => {
