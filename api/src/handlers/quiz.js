@@ -47,6 +47,7 @@ Rules:
 - Keep option "id" fields unchanged (a, b, c, d)
 - Use local name forms for philosophers (e.g., Aristóteles, Платон, 亚里士多德)
 - Keep it natural and punchy, not word-for-word
+- CRITICAL: All four option texts MUST be approximately the same length (within ±3 words of each other). If the correct answer is longer, expand the wrong answers to match. If the correct answer is shorter, expand it slightly. The user must NOT be able to guess the correct answer by picking the longest option.
 - Return the EXACT same JSON structure with translated strings`;
 
     const res = await fetch(
@@ -103,6 +104,71 @@ async function cacheTranslation(questionId, lang, translated, env) {
 }
 
 // ============================================================
+// HELPER: Balance option lengths using Gemini (for English)
+// Rewrites short wrong answers to match correct answer length.
+// Cached to DB under translations._balanced so it runs once per question.
+// ============================================================
+async function balanceOptionsWithAI(question, env) {
+  try {
+    const options = typeof question.options === 'string'
+      ? JSON.parse(question.options) : question.options;
+    if (!Array.isArray(options) || options.length < 4) return options;
+
+    const correctOpt = options.find(o => o.id === question.correct_answer);
+    const wrongOpts = options.filter(o => o.id !== question.correct_answer);
+    const correctWords = correctOpt?.text?.split(/\s+/).length || 0;
+    const avgWrongWords = wrongOpts.reduce((s, o) => s + (o.text?.split(/\s+/).length || 0), 0) / wrongOpts.length;
+
+    // Only balance if correct is significantly longer
+    if (correctWords / (avgWrongWords || 1) <= 1.3) return options;
+
+    // Check cache
+    if (question.translations?._balanced) return question.translations._balanced;
+
+    const apiKey = await getSecret(env.GEMINI_API_KEY);
+    if (!apiKey) return options;
+
+    const prompt = `Rewrite ONLY the wrong answers in this quiz question to be approximately the same word count as the correct answer (${correctWords} words). The correct answer must NOT change. Wrong answers must remain plausible but clearly incorrect.
+
+Question: "${question.question}"
+Correct answer (${question.correct_answer}): "${correctOpt.text}" (${correctWords} words)
+Wrong answers: ${wrongOpts.map(o => `${o.id}: "${o.text}" (${o.text.split(/\s+/).length}w)`).join(', ')}
+
+Return ONLY a JSON array of all 4 options: [{"id":"a","text":"..."},{"id":"b","text":"..."},{"id":"c","text":"..."},{"id":"d","text":"..."}]
+Keep option IDs unchanged. Keep the correct answer text exactly as-is. No markdown fences.`;
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
+        }),
+      },
+    );
+
+    if (!res.ok) return options;
+
+    const data = await res.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const jsonStr = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const balanced = JSON.parse(jsonStr);
+
+    if (!Array.isArray(balanced) || balanced.length !== 4) return options;
+
+    // Cache to DB
+    cacheTranslation(question.id, '_balanced', balanced, env).catch(() => {});
+
+    return balanced;
+  } catch (err) {
+    console.error('[Quiz] Balance options failed:', err.message);
+    return typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+  }
+}
+
+// ============================================================
 // HELPER: Shuffle options so correct answer lands on a random letter
 // Returns { options: [...], correctAnswer: 'new_letter', shuffleMap: {old -> new} }
 // ============================================================
@@ -155,13 +221,16 @@ async function getTranslatedQuestion(question, lang, env) {
       qText = t.question || qText;
       qOptions = t.options || qOptions;
     } else {
-      // Try AI translation
+      // Try AI translation (also balances option lengths in the prompt)
       const ai = await translateQuestionWithAI(question, lang, env);
       if (ai) {
         qText = ai.question || qText;
         qOptions = ai.options || qOptions;
       }
     }
+  } else {
+    // English: balance option lengths if needed (correct answer typically longer)
+    qOptions = await balanceOptionsWithAI(question, env);
   }
 
   // Shuffle options so correct answer is not always in the same position
