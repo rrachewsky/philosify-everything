@@ -2237,6 +2237,7 @@
     "streakBonus": "+1 credit (reeksbonus!)",
     "player": "Speler",
     "pts": "ptn",
-    "genericError": "Er ging iets mis. Probeer het opnieuw."
+    "genericError": "Er ging iets mis. Probeer het opnieuw.",
+    "theCorrectAnswer": "Het juiste antwoord"
   }
 }

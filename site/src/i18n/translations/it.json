@@ -2152,6 +2152,7 @@
     "streakBonus": "+1 credito (bonus serie!)",
     "player": "Giocatore",
     "pts": "pti",
-    "genericError": "Qualcosa è andato storto. Riprova."
+    "genericError": "Qualcosa è andato storto. Riprova.",
+    "theCorrectAnswer": "La risposta corretta"
   }
 }

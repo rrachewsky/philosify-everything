@@ -2237,6 +2237,7 @@
     "streakBonus": "+1 积分（连胜奖励！）",
     "player": "玩家",
     "pts": "分",
-    "genericError": "出了点问题。请重试。"
+    "genericError": "出了点问题。请重试。",
+    "theCorrectAnswer": "正确答案"
   }
 }

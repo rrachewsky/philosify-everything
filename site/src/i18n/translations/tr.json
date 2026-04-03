@@ -2237,6 +2237,7 @@
     "streakBonus": "+1 kredi (seri bonusu!)",
     "player": "Oyuncu",
     "pts": "puan",
-    "genericError": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
+    "genericError": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+    "theCorrectAnswer": "Doğru cevap"
   }
 }

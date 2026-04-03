@@ -2170,6 +2170,7 @@
     "streakBonus": "+1 Credit (Serienbonus!)",
     "player": "Spieler",
     "pts": "Pkt",
-    "genericError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    "genericError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "theCorrectAnswer": "Die richtige Antwort"
   }
 }

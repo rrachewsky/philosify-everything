@@ -483,17 +483,25 @@ export async function handleQuizAnswer(request, env) {
 
     await supabase.from('quiz_sessions').update(updateData, `id=eq.${sessionId}`);
 
-    // Find the text of the correct answer option
+    // Find the correct answer text (using original option ID from DB)
     const options = question.translations?.[lang]?.options || question.options;
     const parsedOptions = typeof options === 'string' ? JSON.parse(options) : options;
     const correctOption = parsedOptions?.find(o => o.id === question.correct_answer);
 
+    // Get the shuffled correct letter (what the user would have seen)
+    const shuffledCorrectLetter = shuffledCorrect;
+
+    // Get explanation: wrong-specific when wrong, correct explanation when correct
+    const wrongExplanation = await getTranslatedExplanation(question, lang, false, answer, env);
+    const correctExplanation = await getTranslatedExplanation(question, lang, true, answer, env);
+
     // Build response with translated explanation
     return jsonResponse({
       isCorrect,
-      correctAnswer: question.correct_answer,
+      correctAnswer: shuffledCorrectLetter,
       correctAnswerText: correctOption?.text || '',
-      explanation: await getTranslatedExplanation(question, lang, isCorrect, answer, env),
+      explanation: isCorrect ? correctExplanation : wrongExplanation,
+      correctExplanation: isCorrect ? null : correctExplanation,
       session: {
         id: sessionId,
         questionNumber: newQuestionNumber + 1,

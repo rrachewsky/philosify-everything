@@ -2237,6 +2237,7 @@
     "streakBonus": "+1 kredyt (bonus za serię!)",
     "player": "Gracz",
     "pts": "pkt",
-    "genericError": "Coś poszło nie tak. Spróbuj ponownie."
+    "genericError": "Coś poszło nie tak. Spróbuj ponownie.",
+    "theCorrectAnswer": "Prawidłowa odpowiedź"
   }
 }

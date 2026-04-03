@@ -2157,6 +2157,7 @@
     "streakBonus": "+1 crédito (bônus de sequência!)",
     "player": "Jogador",
     "pts": "pts",
-    "genericError": "Algo deu errado. Tente novamente."
+    "genericError": "Algo deu errado. Tente novamente.",
+    "theCorrectAnswer": "A resposta correta"
   }
 }

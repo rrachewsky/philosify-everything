@@ -2120,6 +2120,7 @@
     "streakBonus": "+1 קרדיט (בונוס רצף!)",
     "player": "שחקן",
     "pts": "נק",
-    "genericError": "משהו השתבש. אנא נסה שוב."
+    "genericError": "משהו השתבש. אנא נסה שוב.",
+    "theCorrectAnswer": "התשובה הנכונה"
   }
 }

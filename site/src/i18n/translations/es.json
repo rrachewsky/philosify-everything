@@ -2178,6 +2178,7 @@
     "streakBonus": "+1 crédito (¡bonus de racha!)",
     "player": "Jugador",
     "pts": "pts",
-    "genericError": "Algo salió mal. Inténtalo de nuevo."
+    "genericError": "Algo salió mal. Inténtalo de nuevo.",
+    "theCorrectAnswer": "La respuesta correcta"
   }
 }

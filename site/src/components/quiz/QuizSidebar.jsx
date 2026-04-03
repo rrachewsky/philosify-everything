@@ -749,8 +749,23 @@ export function QuizSidebar({
               </div>
 
               <div className="quiz-feedback__explanation">
-                <h4>{feedback.isCorrect ? t('quiz.whyCorrect', 'Why this is correct') : t('quiz.whyWrong', 'Why your answer was wrong')}</h4>
-                <p>{feedback.explanation}</p>
+                {feedback.isCorrect ? (
+                  <>
+                    <h4>{t('quiz.whyCorrect', 'Why this is correct')}</h4>
+                    <p>{feedback.explanation}</p>
+                  </>
+                ) : (
+                  <>
+                    <h4>{t('quiz.whyWrong', 'Why your answer was wrong')}</h4>
+                    <p>{feedback.explanation}</p>
+                    {feedback.correctExplanation && (
+                      <>
+                        <h4 style={{ marginTop: '0.75rem', color: '#00e5ff' }}>{t('quiz.theCorrectAnswer', 'The correct answer')}</h4>
+                        <p>{feedback.correctExplanation}</p>
+                      </>
+                    )}
+                  </>
+                )}
               </div>
 
               <div className="quiz-feedback__stats">

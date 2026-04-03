@@ -2131,6 +2131,7 @@
     "streakBonus": "+1 크레딧 (연속 정답 보너스!)",
     "player": "플레이어",
     "pts": "점",
-    "genericError": "문제가 발생했습니다. 다시 시도해주세요."
+    "genericError": "문제가 발생했습니다. 다시 시도해주세요.",
+    "theCorrectAnswer": "정답"
   }
 }

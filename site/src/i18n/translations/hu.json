@@ -2237,6 +2237,7 @@
     "streakBonus": "+1 kredit (sorozatbónusz!)",
     "player": "Játékos",
     "pts": "pont",
-    "genericError": "Valami hiba történt. Kérjük, próbálja újra."
+    "genericError": "Valami hiba történt. Kérjük, próbálja újra.",
+    "theCorrectAnswer": "A helyes válasz"
   }
 }
