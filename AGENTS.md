@@ -2,6 +2,30 @@
 
 Instructions for AI coding agents working in the Philosify codebase.
 
+## Data Storage Policy (MANDATORY — NEVER VIOLATE)
+
+**No sensitive, private, classified, confidential, or personal data of ANY kind may be stored outside Supabase.**
+
+This includes but is not limited to:
+- User conversations (Unsafe Zone, Colloquium, DMs, etc.)
+- User preferences tied to identity
+- Authentication tokens, session data, credentials
+- Quiz answers, scores, or session state
+- Any data that could identify a user or reveal their activity
+
+**Allowed in browser storage (localStorage/sessionStorage):**
+- UI preferences not tied to identity (e.g., language choice, dismissed banners)
+- Temporary action state (e.g., pending payment redirect)
+- Non-sensitive flags (e.g., "push notification banner dismissed")
+
+**Never allowed in browser storage:**
+- Conversation history
+- User-generated content
+- Authentication tokens or secrets
+- Any data that belongs to a specific user
+
+All user data must be stored in Supabase with Row Level Security (RLS) policies enforced. The API (service role) handles reads/writes. The frontend never touches Supabase directly for sensitive data.
+
 ## Build/Lint/Test Commands
 
 ### Backend (api/)
