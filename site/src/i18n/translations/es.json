@@ -2165,6 +2165,8 @@
       "virtues": "Virtudes",
       "economics": "Economía",
       "law": "Ley Objetiva"
-    }
+    },
+    "whyCorrect": "Por qué es correcto",
+    "whyWrong": "Por qué tu respuesta era incorrecta"
   }
 }

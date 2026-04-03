@@ -2224,6 +2224,8 @@
       "virtues": "Erdemler",
       "economics": "Ekonomi",
       "law": "Objektif Hukuk"
-    }
+    },
+    "whyCorrect": "Neden doğru",
+    "whyWrong": "Cevabınız neden yanlıştı"
   }
 }

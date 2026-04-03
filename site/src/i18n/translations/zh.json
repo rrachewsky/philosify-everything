@@ -2224,6 +2224,8 @@
       "virtues": "美德",
       "economics": "经济学",
       "law": "客观法律"
-    }
+    },
+    "whyCorrect": "为什么这是正确的",
+    "whyWrong": "为什么你的答案是错误的"
   }
 }

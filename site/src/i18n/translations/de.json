@@ -2157,6 +2157,8 @@
       "virtues": "Tugenden",
       "economics": "Wirtschaft",
       "law": "Objektives Recht"
-    }
+    },
+    "whyCorrect": "Warum das richtig ist",
+    "whyWrong": "Warum Ihre Antwort falsch war"
   }
 }

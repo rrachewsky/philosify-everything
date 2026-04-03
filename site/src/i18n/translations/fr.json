@@ -2149,6 +2149,8 @@
       "virtues": "Vertus",
       "economics": "Économie",
       "law": "Droit Objectif"
-    }
+    },
+    "whyCorrect": "Pourquoi c'est correct",
+    "whyWrong": "Pourquoi votre réponse était fausse"
   }
 }

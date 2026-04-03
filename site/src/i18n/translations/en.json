@@ -2239,6 +2239,8 @@
       "music": "Music & Philosophy",
       "cinema": "Cinema & Philosophy",
       "quotes": "Philosopher Quotes"
-    }
+    },
+    "whyCorrect": "Why this is correct",
+    "whyWrong": "Why your answer was wrong"
   }
 }

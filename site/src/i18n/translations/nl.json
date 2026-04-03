@@ -2224,6 +2224,8 @@
       "virtues": "Deugden",
       "economics": "Economie",
       "law": "Objectief Recht"
-    }
+    },
+    "whyCorrect": "Waarom dit juist is",
+    "whyWrong": "Waarom uw antwoord fout was"
   }
 }

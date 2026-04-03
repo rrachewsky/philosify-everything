@@ -2224,6 +2224,8 @@
       "virtues": "Erények",
       "economics": "Közgazdaságtan",
       "law": "Objektív Jog"
-    }
+    },
+    "whyCorrect": "Miért helyes ez",
+    "whyWrong": "Miért volt rossz a válaszod"
   }
 }

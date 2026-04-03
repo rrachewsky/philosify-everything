@@ -2224,6 +2224,8 @@
       "virtues": "Cnoty",
       "economics": "Ekonomia",
       "law": "Prawo Obiektywne"
-    }
+    },
+    "whyCorrect": "Dlaczego to jest poprawne",
+    "whyWrong": "Dlaczego twoja odpowiedź była błędna"
   }
 }
