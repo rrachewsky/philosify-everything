@@ -415,6 +415,11 @@
     transform: translateY(0);
   }
 
+  /* Unsafe Zone distinct color */
+  .mobile-label--danger {
+    color: #D6158C !important;
+  }
+
   /* Tap feedback */
   .mobile-label:active {
     color: #ec4899;
@@ -611,6 +616,10 @@
   .logo-authenticated ~ .mobile-category-labels .mobile-label:nth-child(3n+1) { text-align: left; }
   .logo-authenticated ~ .mobile-category-labels .mobile-label:nth-child(3n+2) { text-align: center; }
   .logo-authenticated ~ .mobile-category-labels .mobile-label:nth-child(3n+3) { text-align: right; }
+
+  .logo-authenticated ~ .mobile-category-labels .mobile-label--danger {
+    color: #D6158C !important;
+  }
 
   .logo-authenticated ~ .mobile-category-labels .mobile-label--visible {
     opacity: 1;

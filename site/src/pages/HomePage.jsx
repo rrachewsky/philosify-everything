@@ -173,7 +173,7 @@ export function HomePage({
   }, []);
 
   // Stagger category labels 1 by 1, starting 5s after video autoplay
-  const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news', 'history', 'quiz'];
+  const MOBILE_LABEL_ORDER = ['music', 'ideas', 'films', 'books', 'community', 'news', 'history', 'quiz', 'unsafe-zone'];
   const LABEL_START_DELAY = 5000; // 5s after video starts
   const LABEL_STAGGER = 400; // 400ms between each label
   const isAuthenticated = !!user;
@@ -304,7 +304,7 @@ export function HomePage({
               {['music', 'ideas', 'films', 'books', 'community', 'news', 'history', 'quiz', 'unsafe-zone'].map((id) => (
                 <button
                   key={`mobile-${id}`}
-                  className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}
+                  className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}${id === 'unsafe-zone' ? ' mobile-label--danger' : ''}`}
                   onClick={() => handleHotspotClick(id)}
                 >
                   {t(`home.categories.${id}.title`, id)}
