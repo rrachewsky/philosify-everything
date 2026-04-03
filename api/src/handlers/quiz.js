@@ -8,6 +8,7 @@ import { jsonResponse } from '../utils/index.js';
 import { getServiceSupabase, callRpc } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
 import { reserveCredit, confirmReservation, releaseReservation } from '../credits/index.js';
+import { getSecret } from '../utils/secrets.js';
 
 // ============================================================
 // HELPER: Error response with CORS
@@ -17,11 +18,96 @@ function errorResponse(message, status, origin, env) {
 }
 
 // ============================================================
-// HELPER: Get translated question content
-// Falls back to English if translation not available
+// HELPER: Runtime AI translation via Gemini
+// Translates a quiz question on-the-fly and caches to DB
 // ============================================================
-function getTranslatedQuestion(question, lang) {
-  if (!lang || lang === 'en' || !question.translations || !question.translations[lang]) {
+async function translateQuestionWithAI(question, lang, env) {
+  try {
+    const apiKey = await getSecret(env.GEMINI_API_KEY);
+    if (!apiKey) return null;
+
+    const options = typeof question.options === 'string'
+      ? JSON.parse(question.options) : question.options;
+    const wrongExpl = typeof question.wrong_explanations === 'string'
+      ? JSON.parse(question.wrong_explanations) : question.wrong_explanations;
+
+    const prompt = `Translate this philosophical quiz question into the language with ISO code "${lang}".
+Return ONLY a valid JSON object, no markdown fences, no explanation.
+
+Input:
+{
+  "question": ${JSON.stringify(question.question)},
+  "options": ${JSON.stringify(options)},
+  "explanation": ${JSON.stringify(question.explanation)},
+  "wrong_explanations": ${JSON.stringify(wrongExpl)}
+}
+
+Rules:
+- Translate question text, all option texts, explanation, and each wrong_explanation value
+- Keep option "id" fields unchanged (a, b, c, d)
+- Use local name forms for philosophers (e.g., Aristóteles, Платон, 亚里士多德)
+- Keep it natural and punchy, not word-for-word
+- Return the EXACT same JSON structure with translated strings`;
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.1, maxOutputTokens: 2048 },
+        }),
+      },
+    );
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const jsonStr = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const translated = JSON.parse(jsonStr);
+
+    // Validate translation has required fields
+    if (!translated.question || !translated.options || !translated.explanation) return null;
+
+    // Cache to DB (fire-and-forget — don't block the response)
+    cacheTranslation(question.id, lang, translated, env).catch(() => {});
+
+    return translated;
+  } catch (err) {
+    console.error(`[Quiz] AI translation failed for ${lang}:`, err.message);
+    return null;
+  }
+}
+
+// Cache AI translation back to the DB so future requests don't need Gemini
+async function cacheTranslation(questionId, lang, translated, env) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    // First read current translations
+    const { data: rows } = await supabase
+      .from('quiz_questions')
+      .select('translations', { filter: `id=eq.${questionId}`, limit: 1 });
+    const current = (Array.isArray(rows) ? rows[0] : rows)?.translations || {};
+    current[lang] = translated;
+    // Write merged translations back
+    await supabase.from('quiz_questions').update(
+      { translations: current },
+      `id=eq.${questionId}`
+    );
+    console.log(`[Quiz] Cached ${lang} translation for question ${questionId}`);
+  } catch (err) {
+    console.error(`[Quiz] Cache translation failed:`, err.message);
+  }
+}
+
+// ============================================================
+// HELPER: Get translated question content
+// Uses DB cache first, falls back to AI translation, then English
+// ============================================================
+async function getTranslatedQuestion(question, lang, env) {
+  if (!lang || lang === 'en') {
     return {
       id: question.id,
       category: question.category,
@@ -31,31 +117,69 @@ function getTranslatedQuestion(question, lang) {
     };
   }
 
-  const t = question.translations[lang];
+  // Check DB cache first
+  if (question.translations && question.translations[lang]?.question) {
+    const t = question.translations[lang];
+    return {
+      id: question.id,
+      category: question.category,
+      difficulty: question.difficulty,
+      question: t.question,
+      options: t.options || question.options,
+    };
+  }
+
+  // Try AI translation
+  const ai = await translateQuestionWithAI(question, lang, env);
+  if (ai) {
+    return {
+      id: question.id,
+      category: question.category,
+      difficulty: question.difficulty,
+      question: ai.question,
+      options: ai.options || question.options,
+    };
+  }
+
+  // Final fallback: English
   return {
     id: question.id,
     category: question.category,
     difficulty: question.difficulty,
-    question: t.question || question.question,
-    options: t.options || question.options,
+    question: question.question,
+    options: question.options,
   };
 }
 
 // ============================================================
 // HELPER: Get translated explanation
-// Falls back to English if translation not available
+// Uses DB cache first, falls back to AI translation, then English
 // ============================================================
-function getTranslatedExplanation(question, lang, isCorrect, userAnswer) {
-  if (!lang || lang === 'en' || !question.translations || !question.translations[lang]) {
+async function getTranslatedExplanation(question, lang, isCorrect, userAnswer, env) {
+  const englishFallback = isCorrect
+    ? question.explanation
+    : (question.wrong_explanations?.[userAnswer] || question.explanation);
+
+  if (!lang || lang === 'en') return englishFallback;
+
+  // Check DB cache
+  if (question.translations && question.translations[lang]?.explanation) {
+    const t = question.translations[lang];
     return isCorrect
-      ? question.explanation
-      : (question.wrong_explanations?.[userAnswer] || question.explanation);
+      ? t.explanation
+      : (t.wrong_explanations?.[userAnswer] || t.explanation);
   }
 
-  const t = question.translations[lang];
-  return isCorrect
-    ? (t.explanation || question.explanation)
-    : (t.wrong_explanations?.[userAnswer] || t.explanation || question.explanation);
+  // AI translation already cached by getTranslatedQuestion if it ran
+  // Try to read from the cached translation
+  if (question._aiTranslation?.[lang]) {
+    const t = question._aiTranslation[lang];
+    return isCorrect
+      ? (t.explanation || englishFallback)
+      : (t.wrong_explanations?.[userAnswer] || t.explanation || englishFallback);
+  }
+
+  return englishFallback;
 }
 
 // ============================================================
@@ -193,7 +317,7 @@ export async function handleQuizStart(request, env) {
         creditsSpent: 1,
         creditsEarned: 0,
       },
-      question: getTranslatedQuestion(question, lang),
+      question: await getTranslatedQuestion(question, lang, env),
     }, 200, origin, env);
 
   } catch (err) {
@@ -323,7 +447,7 @@ export async function handleQuizAnswer(request, env) {
       isCorrect,
       correctAnswer: question.correct_answer,
       correctAnswerText: correctOption?.text || '',
-      explanation: getTranslatedExplanation(question, lang, isCorrect, answer),
+      explanation: await getTranslatedExplanation(question, lang, isCorrect, answer, env),
       session: {
         id: sessionId,
         questionNumber: newQuestionNumber + 1,
@@ -436,7 +560,7 @@ export async function handleQuizContinue(request, env) {
         creditsSpent: session.credits_spent + 1,
         creditsEarned: session.credits_earned,
       },
-      question: getTranslatedQuestion(nextQuestion, lang),
+      question: await getTranslatedQuestion(nextQuestion, lang, env),
     }, 200, origin, env);
 
   } catch (err) {
@@ -508,7 +632,7 @@ export async function handleQuizNextQuestion(request, env) {
     }
 
     return jsonResponse({
-      question: getTranslatedQuestion(question, lang),
+      question: await getTranslatedQuestion(question, lang, env),
     }, 200, origin, env);
 
   } catch (err) {
@@ -578,7 +702,7 @@ export async function handleQuizResume(request, env) {
         creditsSpent: session.credits_spent,
         creditsEarned: session.credits_earned,
       },
-      question: question ? getTranslatedQuestion(question, lang) : null,
+      question: question ? await getTranslatedQuestion(question, lang, env) : null,
     }, 200, origin, env);
 
   } catch (err) {
