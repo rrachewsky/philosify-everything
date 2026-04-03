@@ -1,0 +1,472 @@
+{
+  "594bc": {
+    "title": "Reformas de Solón en Atenas",
+    "description": "Solón establece reformas constitucionales en Atenas, sentando las bases para la democracia.",
+    "analysis": "POSITIVO: Estableció el estado de derecho, abolió la esclavitud por deudas, creó ciudadanía basada en propiedad que vinculaba participación económica con participación política. NEGATIVO: El perdón de deudas rompió contratos existentes; el voto basado en clases aún excluía a los pobres de los cargos más altos. A largo plazo: Estas reformas plantaron las semillas de la democracia ateniense y el pensamiento político occidental."
+  },
+  "509bc": {
+    "title": "República Romana Fundada",
+    "description": "Roma derroca la monarquía y establece la República con cónsules electos.",
+    "analysis": "POSITIVO: Creó instituciones distribuyendo poder entre cónsules, Senado y asambleas; estableció el concepto de ciudadanos-soldados con participación en su sociedad. NEGATIVO: El poder permaneció concentrado entre familias patricias; plebeyos tenían derechos limitados inicialmente. A largo plazo: La República duró 500 años e influyó en todos los gobiernos republicanos posteriores."
+  },
+  "490bc": {
+    "title": "Batalla de Maratón",
+    "description": "Los griegos derrotan la invasión persa, preservando la independencia y cultura griegas.",
+    "analysis": "POSITIVO: Preservó la independencia griega, permitiendo el desarrollo continuo de filosofía, democracia y artes; demostró que ejércitos ciudadanos podían derrotar fuerzas mayores. NEGATIVO: Fomentó la confianza griega que más tarde llevó a excesos; no acabó con la amenaza persa. A largo plazo: La supervivencia de la civilización griega permitió contribuciones que moldearon el pensamiento occidental."
+  },
+  "480bc": {
+    "title": "Batallas de las Termópilas y Salamina",
+    "description": "Los griegos resisten la invasión persa; 300 espartanos hacen resistencia legendaria.",
+    "analysis": "POSITIVO: Unió ciudades-estado griegas contra enemigo común; victoria naval en Salamina fue decisiva. NEGATIVO: Enormes bajas; unidad temporal se disolvió después de que terminara la amenaza persa. A largo plazo: Creó símbolos duraderos de resistencia y sacrificio que influyeron en la cultura militar por milenios."
+  },
+  "399bc": {
+    "title": "Juicio y Muerte de Sócrates",
+    "description": "Sócrates condenado a muerte por la democracia ateniense por \"corromper a la juventud\".",
+    "analysis": "POSITIVO: La negativa de Sócrates a huir lo convirtió en mártir de la integridad intelectual; inspiró a Platón a preservar sus enseñanzas. NEGATIVO: La democracia ejecutó a su mayor filósofo; reveló cómo las mayorías pueden suprimir la disidencia. A largo plazo: Planteó preguntas fundamentales sobre la relación entre conciencia individual y autoridad del Estado."
+  },
+  "336bc": {
+    "title": "Alejandro Magno Inicia Conquistas",
+    "description": "Alejandro se convierte en rey y lanza campaña que esparcirá la cultura griega.",
+    "analysis": "POSITIVO: Esparció el idioma griego, filosofía y comercio por vastos territorios; fundó ciudades que se convirtieron en centros de aprendizaje. NEGATIVO: Enorme costo humano de la conquista; perturbó civilizaciones existentes. A largo plazo: Creó el mundo helenístico que permitió intercambio de ideas entre Oriente y Occidente."
+  },
+  "323bc": {
+    "title": "Muerte de Alejandro Magno",
+    "description": "Alejandro muere a los 32 años, su imperio fragmentándose en reinos sucesores.",
+    "analysis": "POSITIVO: Reinos sucesores preservaron la cultura griega y mantuvieron redes comerciales; competencia entre ellos fomentó innovación. NEGATIVO: Guerras de sucesión causaron décadas de conflicto; unidad del imperio perdida. A largo plazo: Demostró que imperios construidos en el carisma de una persona raramente sobreviven a sus fundadores."
+  },
+  "264bc": {
+    "title": "Primera Guerra Púnica Comienza",
+    "description": "Roma y Cartago inician siglo de guerras por la dominancia mediterránea.",
+    "analysis": "POSITIVO: La victoria romana eventualmente trajo estabilidad al Mediterráneo occidental; Roma desarrolló capacidades navales. NEGATIVO: Bajas masivas de ambos lados; Sicilia devastada. A largo plazo: Puso a Roma en el camino de la dominancia mediterránea que duraría siglos."
+  },
+  "146bc": {
+    "title": "Destrucción de Cartago",
+    "description": "Roma destruye Cartago completamente, convirtiéndose en potencia suprema del Mediterráneo.",
+    "analysis": "POSITIVO: Terminó siglo de guerras devastadoras; dominancia romana posibilitó la Pax Romana. NEGATIVO: Destrucción completa de una civilización; 50,000 sobrevivientes esclavizados; estableció precedente para guerra total. A largo plazo: El monopolio mediterráneo de Roma posibilitó comercio e intercambio cultural sin precedentes."
+  },
+  "49bc": {
+    "title": "César Cruza el Rubicón",
+    "description": "Julio César inicia guerra civil que terminará la República Romana.",
+    "analysis": "POSITIVO: Las reformas de César abordaron problemas reales—deuda, distribución de tierras, ciudadanía. NEGATIVO: Destruyó 460 años de gobierno republicano; estableció precedente para toma militar del poder. A largo plazo: La transición al Imperio trajo estabilidad pero terminó con la libertad política romana."
+  },
+  "44bc": {
+    "title": "Asesinato de Julio César",
+    "description": "Senadores romanos asesinan a César en los Idus de Marzo.",
+    "analysis": "POSITIVO: Los asesinos genuinamente creían estar salvando la República. NEGATIVO: Desencadenó otra guerra civil más destructiva que la primera; la República no pudo ser restaurada. A largo plazo: Demostró que problemas políticos no pueden resolverse eliminando individuos cuando condiciones subyacentes permanecen."
+  },
+  "31bc": {
+    "title": "Batalla de Accio",
+    "description": "Octavio derrota a Antonio y Cleopatra, convirtiéndose en gobernante único de Roma.",
+    "analysis": "POSITIVO: Terminó décadas de guerra civil; Augusto trajo paz y prosperidad. NEGATIVO: La República definitivamente terminó; poder concentrado en una persona. A largo plazo: La Pax Romana posibilitó dos siglos de relativa paz y crecimiento económico."
+  },
+  "30ad": {
+    "title": "Crucifixión de Jesús",
+    "description": "Jesús de Nazaret crucificado en Jerusalén, evento fundador del Cristianismo.",
+    "analysis": "POSITIVO: El Cristianismo introdujo conceptos de igualdad moral universal, conciencia individual y esperanza para los marginados. NEGATIVO: Persecución religiosa seguiría—primero de cristianos, después por cristianos. A largo plazo: Transformó los valores, arte, filosofía e instituciones de la civilización occidental."
+  },
+  "79ad": {
+    "title": "Erupción del Vesubio",
+    "description": "Erupción volcánica destruye Pompeya y Herculano.",
+    "analysis": "POSITIVO: La preservación bajo cenizas nos dio conocimiento incomparable de la vida diaria romana, arte y arquitectura. NEGATIVO: Miles muertos; ciudades prósperas destruidas. A largo plazo: Nos recuerda el poder de la naturaleza y la vulnerabilidad de la civilización humana ante desastres naturales."
+  },
+  "180ad": {
+    "title": "Muerte de Marco Aurelio",
+    "description": "Último de los \"Cinco Buenos Emperadores\" muere; Roma inicia largo declive.",
+    "analysis": "POSITIVO: El reinado de Marco Aurelio demostró que la filosofía podía guiar la gobernanza práctica. NEGATIVO: Su elección de su hijo inadecuado Cómodo como sucesor mostró que incluso gobernantes sabios toman malas decisiones de sucesión. A largo plazo: Fin de la era dorada de Roma; inicio de inestabilidad que debilitaría el imperio."
+  },
+  "313ad": {
+    "title": "Edicto de Milán",
+    "description": "Constantino legaliza el Cristianismo en todo el Imperio Romano.",
+    "analysis": "POSITIVO: Terminó con la persecución de cristianos; estableció principio de tolerancia religiosa. NEGATIVO: Inició proceso de entrelazamiento iglesia-estado que complicaría ambas instituciones. A largo plazo: El crecimiento del Cristianismo transformó la cultura europea, educación y asistencia social."
+  },
+  "380ad": {
+    "title": "El Cristianismo se Convierte en Religión Oficial",
+    "description": "Emperador Teodosio hace del Cristianismo la religión oficial de Roma.",
+    "analysis": "POSITIVO: El Cristianismo ganó recursos para construir hospitales, escuelas y servicios sociales. NEGATIVO: Paganos y herejes ahora enfrentaban persecución; coerción religiosa comenzó. A largo plazo: Creó el modelo medieval de relaciones iglesia-estado que duraría un milenio."
+  },
+  "410ad": {
+    "title": "Visigodos Saquean Roma",
+    "description": "Visigodos de Alarico saquean Roma; la \"Ciudad Eterna\" cae por primera vez en 800 años.",
+    "analysis": "POSITIVO: Visigodos buscaban integración, no destrucción; Roma continuó funcionando. NEGATIVO: Shock psicológico en todo el imperio; reveló la debilidad militar de Roma. A largo plazo: Motivó \"La Ciudad de Dios\" de Agustín, moldeando el pensamiento político cristiano por siglos."
+  },
+  "476ad": {
+    "title": "Caída del Imperio Romano de Occidente",
+    "description": "Último Emperador Romano de Occidente depuesto; fecha tradicional para fin del mundo antiguo.",
+    "analysis": "POSITIVO: Removió estructura imperial moribunda; reinos germánicos preservaron algunas instituciones romanas. NEGATIVO: Comercio colapsó, ciudades encogieron, alfabetización declinó, conocimiento se perdió. A largo plazo: Inició el período medieval; sin embargo, la idea de Roma continuó inspirando civilizaciones futuras."
+  },
+  "529ad": {
+    "title": "Cierre de la Academia Platónica",
+    "description": "Emperador Justiniano cierra la Academia en Atenas, terminando escuelas de filosofía antiguas.",
+    "analysis": "POSITIVO: Filósofos huyendo a Persia preservaron textos griegos que después regresaron a Europa. NEGATIVO: Terminó 900 años de educación filosófica en Atenas; ortodoxia cristiana suprimió aprendizaje pagano. A largo plazo: La filosofía griega sobrevivió a través de eruditos islámicos y eventualmente desencadenó el Renacimiento."
+  },
+  "622ad": {
+    "title": "Hégira - Nacimiento del Islam",
+    "description": "La migración de Mahoma a Medina marca el inicio del calendario islámico.",
+    "analysis": "POSITIVO: El Islam unió tribus árabes, creó civilización sofisticada, preservó aprendizaje griego, avanzó matemáticas y ciencia. NEGATIVO: Expansión militar conquistó muchos pueblos; ley religiosa a veces restringió investigación. A largo plazo: Creó una de las grandes civilizaciones de la historia, moldeando un cuarto de la humanidad."
+  },
+  "732ad": {
+    "title": "Batalla de Tours",
+    "description": "Carlos Martel detiene avance musulmán en Europa Occidental.",
+    "analysis": "POSITIVO: Preservó la independencia franca y la Europa Occidental cristiana. NEGATIVO: Continuó la guerra religiosa entre civilizaciones cristiana e islámica. A largo plazo: Europa Occidental se desarrolló separadamente del mundo islámico, con trayectorias políticas y religiosas diferentes."
+  },
+  "800ad": {
+    "title": "Carlomagno Coronado Emperador",
+    "description": "Papa León III corona a Carlomagno, reviviendo el concepto del Imperio Romano de Occidente.",
+    "analysis": "POSITIVO: El Renacimiento Carolingio preservó aprendizaje; unió gran parte de Europa Occidental; estableció escuelas. NEGATIVO: Creó patrón de conflicto papa-emperador; imperio se fragmentó después de la muerte de Carlomagno. A largo plazo: La idea de unidad europea y renovación cultural resurgiría periódicamente."
+  },
+  "1054ad": {
+    "title": "Gran Cisma",
+    "description": "El Cristianismo se divide en iglesias Católica Romana y Ortodoxa Oriental.",
+    "analysis": "POSITIVO: Autonomía regional permitió desarrollos teológicos y culturales diferentes; competencia entre iglesias creó espacio para disidencia. NEGATIVO: Cristiandad dividida debilitó respuesta a amenazas externas; excomuniones mutuas generaron hostilidad duradera. A largo plazo: Creó tradiciones religiosas y culturales distintas de Europa Oriental y Occidental."
+  },
+  "1066ad": {
+    "title": "Conquista Normanda de Inglaterra",
+    "description": "Guillermo el Conquistador derrota a Harold en Hastings, remodelando la historia inglesa.",
+    "analysis": "POSITIVO: Introdujo prácticas administrativas continentales; eventualmente contribuyó al desarrollo del derecho común y Parlamento. NEGATIVO: Élite anglosajona desplazada; condiciones de los campesinos empeoraron bajo feudalismo. A largo plazo: Creó la nación inglesa que esparciría su idioma e instituciones por el mundo."
+  },
+  "1095ad": {
+    "title": "Primera Cruzada Convocada",
+    "description": "Papa Urbano II convoca cruzada para reclamar Tierra Santa de los musulmanes.",
+    "analysis": "POSITIVO: Abrió rutas comerciales, trajo conocimiento del mundo islámico, expandió horizontes europeos. NEGATIVO: Enormes bajas de todos los lados; masacres de judíos y musulmanes; odio religioso duradero. A largo plazo: Mayor contacto europeo con la civilización islámica más avanzada aceleró el desarrollo cultural y tecnológico."
+  },
+  "1215ad": {
+    "title": "Carta Magna Firmada",
+    "description": "Barones ingleses fuerzan al Rey Juan a firmar carta limitando poder real.",
+    "analysis": "POSITIVO: Estableció principio de que gobernantes están sujetos a la ley; protecciones del debido proceso; fundación para gobierno constitucional. NEGATIVO: Originalmente protegía solo privilegios de los barones; frecuentemente violada por reyes. A largo plazo: Sus principios gradualmente se expandieron para proteger a todos los ciudadanos e influyeron constituciones mundialmente."
+  },
+  "1265ad": {
+    "title": "Primer Parlamento Inglés",
+    "description": "Simón de Montfort convoca primer Parlamento electo en Inglaterra.",
+    "analysis": "POSITIVO: Creó precedente para gobierno representativo; dio voz a los comunes en la gobernanza. NEGATIVO: Inicialmente tenía poder limitado; representaba solo clases propietarias. A largo plazo: Evolucionó hacia modelo de democracia parlamentaria adoptado por muchas naciones."
+  },
+  "1347ad": {
+    "title": "Peste Negra Llega a Europa",
+    "description": "Peste bubónica mata 30-60% de la población europea a lo largo de varios años.",
+    "analysis": "POSITIVO: Sobrevivientes vieron salarios más altos debido a escasez de mano de obra; debilitó feudalismo; estimuló innovación tecnológica. NEGATIVO: Sufrimiento inimaginable; colapso social; persecución de minorías culpadas por la peste. A largo plazo: Transformó la economía y sociedad europeas, contribuyendo al fin del orden medieval."
+  },
+  "1439ad": {
+    "title": "Imprenta de Gutenberg",
+    "description": "Johannes Gutenberg desarrolla impresión con tipos móviles en Europa.",
+    "analysis": "POSITIVO: Democratizó el conocimiento; permitió rápida diseminación de ideas; redujo costo de los libros; aumentó alfabetización. NEGATIVO: También esparció propaganda y desinformación más eficientemente. A largo plazo: Revolucionó la comunicación, posibilitó la Reforma, Revolución Científica e Ilustración."
+  },
+  "1453ad": {
+    "title": "Caída de Constantinopla",
+    "description": "Turcos otomanos conquistan Constantinopla, terminando el Imperio Bizantino.",
+    "analysis": "POSITIVO: Eruditos griegos huyendo a Italia trajeron manuscritos que alimentaron el Renacimiento; otomanos mantuvieron la ciudad como importante centro cultural. NEGATIVO: Fin del Imperio Romano de Oriente después de 1,000 años; población cristiana sometida al dominio otomano. A largo plazo: Aceleró el Renacimiento; desplazó rutas comerciales hacia el occidente."
+  },
+  "1492ad": {
+    "title": "Colón Llega a las Américas",
+    "description": "El viaje de Cristóbal Colón abre el Nuevo Mundo a la exploración europea.",
+    "analysis": "POSITIVO: Inició intercambio de cultivos, animales, ideas entre hemisferios; eventualmente llevó a nuevas naciones fundadas en principios ilustrados. NEGATIVO: Población indígena devastada por enfermedades y conquista; esclavitud introducida en las Américas. A largo plazo: Transformó ambos hemisferios; creó el mundo interconectado moderno."
+  },
+  "1517ad": {
+    "title": "Reforma Protestante Comienza",
+    "description": "Martín Lutero publica 95 Tesis, desafiando autoridad de la Iglesia Católica.",
+    "analysis": "POSITIVO: Desafió monopolio religioso; enfatizó fe individual y lectura bíblica; llevó al pluralismo religioso. NEGATIVO: Desencadenó siglo de guerras religiosas; persecución de ambos lados. A largo plazo: Estableció principio de que individuos podían interpretar la fe por sí mismos; contribuyó al ascenso del individualismo."
+  },
+  "1543ad": {
+    "title": "Revolución Copernicana",
+    "description": "Copérnico publica teoría heliocéntrica, desplazando la Tierra del centro del universo.",
+    "analysis": "POSITIVO: Demostró poder de la observación y matemáticas para derribar creencias aceptadas; abrió camino a la astronomía moderna. NEGATIVO: Inicialmente resistida por autoridades católicas y protestantes. A largo plazo: Inició revolución científica que transformó la comprensión humana del universo."
+  },
+  "1588ad": {
+    "title": "Derrota de la Armada Española",
+    "description": "Inglaterra derrota flota de invasión española, preservando independencia protestante.",
+    "analysis": "POSITIVO: Preservó independencia inglesa; desplazó poder naval hacia el norte; posibilitó colonización inglesa de las Américas. NEGATIVO: Continuó guerra religiosa entre potencias católicas y protestantes. A largo plazo: El ascenso de Inglaterra como potencia naval sentó base para influencia global."
+  },
+  "1607ad": {
+    "title": "Jamestown Fundada",
+    "description": "Primer asentamiento inglés permanente en América establecido.",
+    "analysis": "POSITIVO: Inició colonización inglesa que trajo tradiciones de autogobierno y derecho común. NEGATIVO: Relaciones con nativos americanos deterioraron; esclavitud introducida en décadas. A largo plazo: Semillas de la república americana plantadas por colonos trayendo tradiciones legales y políticas inglesas."
+  },
+  "1620ad": {
+    "title": "Pacto del Mayflower",
+    "description": "Peregrinos establecen colonia autogobernada en Plymouth.",
+    "analysis": "POSITIVO: Primer marco escrito de autogobierno en las Américas; demostró contrato social en práctica. NEGATIVO: Excluyó a mujeres y no-peregrinos de participación política. A largo plazo: Modelo de constitución escrita y gobierno por consentimiento influyó en la fundación americana."
+  },
+  "1642ad": {
+    "title": "Guerra Civil Inglesa Comienza",
+    "description": "Parlamento y Rey Carlos I entran en guerra sobre principios constitucionales.",
+    "analysis": "POSITIVO: Estableció supremacía parlamentaria; avanzó gobierno constitucional; posibilitó tolerancia religiosa. NEGATIVO: Decenas de miles muertos; dictadura militar temporal bajo Cromwell. A largo plazo: Definió que monarcas ingleses deben gobernar con el Parlamento, no contra él."
+  },
+  "1648ad": {
+    "title": "Paz de Westfalia",
+    "description": "Tratados terminan Guerra de los Treinta Años y establecen sistema moderno de estados.",
+    "analysis": "POSITIVO: Terminó devastadoras guerras religiosas; estableció soberanía estatal y principios de no-interferencia. NEGATIVO: Millones ya muertos; división religiosa de Europa congelada. A largo plazo: Creó sistema internacional moderno basado en estados soberanos."
+  },
+  "1687ad": {
+    "title": "Principia de Newton Publicado",
+    "description": "Isaac Newton publica leyes del movimiento y gravitación universal.",
+    "analysis": "POSITIVO: Demostró que el universo opera por leyes descubribles; inspiró confianza en la razón humana; posibilitó física moderna. NEGATIVO: Visión mecanicista planteó preguntas filosóficas sobre libre albedrío y propósito. A largo plazo: Fundación de la física e ingeniería modernas; inspiró confianza ilustrada en la razón."
+  },
+  "1688ad": {
+    "title": "Revolución Gloriosa",
+    "description": "Guillermo de Orange reemplaza a Jacobo II; Parlamento afirma supremacía.",
+    "analysis": "POSITIVO: Estableció monarquía constitucional, supremacía parlamentaria y tolerancia religiosa sin gran derramamiento de sangre. NEGATIVO: Católicos excluidos de la sucesión; Irlanda sufrió bajo nuevo dominio protestante. A largo plazo: Modelo de reforma constitucional pacífica; Declaración de Derechos protegió libertades individuales."
+  },
+  "1689ad": {
+    "title": "Dos Tratados de Locke Publicados",
+    "description": "John Locke publica teoría de los derechos naturales y gobierno limitado.",
+    "analysis": "POSITIVO: Articuló fundamento filosófico para derechos individuales y gobierno basado en consentimiento; influyó en fundadores americanos. NEGATIVO: La teoría de Locke fue usada para justificar tanto libertad como colonialismo. A largo plazo: Filosofía política más influyente en el mundo angloparlante; base del liberalismo."
+  },
+  "1776ad": {
+    "title": "Declaración de Independencia Americana",
+    "description": "Colonias americanas declaran independencia, afirmando derechos naturales.",
+    "analysis": "POSITIVO: Primera nación fundada explícitamente en principios de derechos naturales y consentimiento de los gobernados; inspiró movimientos globales por la libertad. NEGATIVO: Derechos no extendidos a personas esclavizadas ni mujeres; tierras de nativos americanos tomadas. A largo plazo: Creó modelo de república constitucional; sus principios eventualmente se expandieron para incluir a todos."
+  },
+  "1787ad": {
+    "title": "Constitución de EE.UU. Escrita",
+    "description": "Convención Constitucional crea marco para gobierno federal limitado.",
+    "analysis": "POSITIVO: Creó sistema duradero de pesos y contrapesos; estructura federal equilibró intereses nacionales y locales. NEGATIVO: Compromisos sobre esclavitud; inicialmente sin Declaración de Derechos. A largo plazo: Constitución escrita más antigua aún en uso; influyó constituciones mundialmente."
+  },
+  "1789ad": {
+    "title": "Revolución Francesa Comienza",
+    "description": "Toma de la Bastilla inicia revolución que convulsionará Europa.",
+    "analysis": "POSITIVO: Terminó con privilegios feudales; esparció ideas de ciudadanía e igualdad; inspiró movimientos de reforma. NEGATIVO: Degeneró en Terror, dictadura y décadas de guerra; miles ejecutados. A largo plazo: Demostró tanto potencial como peligros del cambio revolucionario; esparció nacionalismo por Europa."
+  },
+  "1791ad": {
+    "title": "Carta de Derechos Ratificada",
+    "description": "Primeras diez enmiendas a la Constitución de EE.UU. protegen libertades individuales.",
+    "analysis": "POSITIVO: Protegió explícitamente derechos de expresión, religión, prensa, reunión y debido proceso; limitó poder federal. NEGATIVO: Inicialmente aplicaba solo al gobierno federal; no protegía a personas esclavizadas. A largo plazo: Protecciones fundamentales para libertad individual; interpretada para expandir derechos con el tiempo."
+  },
+  "1804ad": {
+    "title": "Napoleón Coronado Emperador",
+    "description": "Napoleón Bonaparte se corona Emperador de los Franceses.",
+    "analysis": "POSITIVO: El código legal de Napoleón modernizó el derecho civil; esparció reformas ilustradas por Europa. NEGATIVO: República revolucionaria se convirtió en dictadura; millones murieron en las Guerras Napoleónicas. A largo plazo: El Código Napoleónico influyó sistemas jurídicos mundialmente; nacionalismo despertó en toda Europa."
+  },
+  "1815ad": {
+    "title": "Batalla de Waterloo",
+    "description": "Napoleón derrotado; Congreso de Viena restaura orden europeo.",
+    "analysis": "POSITIVO: Terminó décadas de guerra; un siglo de relativa paz siguió; posibilitó desarrollo económico. NEGATIVO: Acuerdo reaccionario suprimió movimientos liberales; ignoró aspiraciones nacionalistas. A largo plazo: Sistema de equilibrio de poder mantuvo paz hasta 1914; movimientos suprimidos emergieron después."
+  },
+  "1833ad": {
+    "title": "Ley Británica de Abolición de la Esclavitud",
+    "description": "Gran Bretaña abole esclavitud en todo su imperio.",
+    "analysis": "POSITIVO: Terminó con esclavitud en el Imperio Británico; Marina Real suprimió comercio de esclavos globalmente; liderazgo moral inspiró otras naciones. NEGATIVO: Esclavistas compensados mientras esclavizados no recibieron nada; explotación continuó en otras formas. A largo plazo: Paso importante en el movimiento abolicionista global; demostró que progreso moral era posible."
+  },
+  "1848ad": {
+    "title": "Revoluciones de 1848",
+    "description": "Ola de revoluciones por Europa demanda gobierno constitucional.",
+    "analysis": "POSITIVO: Esparció ideas liberales y nacionalistas; terminó con servidumbre en el Imperio Austríaco; mostró deseo popular de reforma. NEGATIVO: La mayoría de revoluciones suprimidas; gobiernos reaccionarios regresaron. A largo plazo: Reformas eventualmente vinieron a través de evolución en vez de revolución; nacionalismo creció más fuerte."
+  },
+  "1848ad_2": {
+    "title": "Manifiesto Comunista Publicado",
+    "description": "Marx y Engels publican manifiesto pidiendo revolución violenta y abolición de la propiedad privada.",
+    "analysis": "Consecuencias: Este documento se convirtió en la base ideológica para regímenes que asesinaron a más de 100 millones de personas en el siglo 20—en la Unión Soviética, China, Camboya, Cuba y otros lugares. Dondequiera que el comunismo fue implementado, el resultado fue tiranía, pobreza y muerte masiva. Significado filosófico: El Manifiesto rechazó derechos individuales, propiedad privada y mercados libres—los fundamentos de la prosperidad humana. Su llamado a la guerra de clases y propiedad colectiva es fundamentalmente incompatible con la naturaleza humana y la libertad. La historia ha probado que Marx estaba equivocado en todas las predicciones."
+  },
+  "1859ad": {
+    "title": "El Origen de las Especies Publicado",
+    "description": "Darwin publica teoría de la evolución por selección natural.",
+    "analysis": "POSITIVO: Unificó la biología; explicó la diversidad de la vida; fundación para medicina y genética modernas. NEGATIVO: Mal utilizada para justificar darwinismo social y eugenesia. A largo plazo: Teoría científica fundamental; transformó la comprensión de la vida y el lugar de la humanidad en la naturaleza."
+  },
+  "1861ad": {
+    "title": "Guerra Civil Americana Comienza",
+    "description": "Guerra comienza sobre esclavitud y derechos de los estados; conflicto americano más mortal.",
+    "analysis": "POSITIVO: Terminó con la esclavitud; preservó la Unión; eventualmente llevó a la ciudadanía para ex-esclavizados. NEGATIVO: 620,000 muertos; era de la Reconstrucción terminó prematuramente; desigualdad racial persistió. A largo plazo: Definió que la nación permanecería unida y que la esclavitud era incompatible con los principios americanos."
+  },
+  "1863ad": {
+    "title": "Proclamación de Emancipación",
+    "description": "Lincoln declara esclavos en estados rebeldes \"para siempre libres\".",
+    "analysis": "POSITIVO: Transformó la guerra en lucha por la libertad; permitió que soldados negros lucharan; debilitó a la Confederación. NEGATIVO: No liberó esclavos en estados fronterizos; igualdad plena no siguió. A largo plazo: Paso crucial para terminar con la esclavitud; demostró que principios fundadores aplicaban a todas las personas."
+  },
+  "1865ad": {
+    "title": "13ª Enmienda Ratificada",
+    "description": "Esclavitud y servidumbre involuntaria abolidas en todo Estados Unidos.",
+    "analysis": "POSITIVO: Abolió constitucionalmente la esclavitud; completó lo que la Declaración de Independencia prometió. NEGATIVO: Ex-esclavos negados tierra y derechos plenos de ciudadanía; aparcería y Jim Crow siguieron. A largo plazo: Cambio constitucional fundamental; lucha por igualdad plena continuó por otro siglo."
+  },
+  "1869ad": {
+    "title": "Ferrocarril Transcontinental Completado",
+    "description": "Ferrocarril conectando costas Atlántica y Pacífica completado en Promontory Summit.",
+    "analysis": "POSITIVO: Unió el continente económicamente; posibilitó colonización y comercio; redujo tiempo de viaje de meses a días. NEGATIVO: Construido con trabajo inmigrante explotado; perturbó tierras de nativos americanos y manadas de búfalos. A largo plazo: Transformó economía americana y patrones de asentamiento; modelo para desarrollo de infraestructura."
+  },
+  "1876ad": {
+    "title": "Teléfono Inventado",
+    "description": "Alexander Graham Bell patenta el teléfono.",
+    "analysis": "POSITIVO: Posibilitó comunicación instantánea a través de distancias; transformó negocios y relaciones personales. NEGATIVO: Nueva tecnología creó nuevas desigualdades entre quienes tenían y no tenían acceso. A largo plazo: Inicio de la revolución de las telecomunicaciones que continúa transformando la sociedad."
+  },
+  "1879ad": {
+    "title": "Bombilla de Edison",
+    "description": "Thomas Edison desarrolla bombilla incandescente práctica.",
+    "analysis": "POSITIVO: Extendió horas productivas; mejoró seguridad; posibilitó nuevas industrias; transformó vida diaria. NEGATIVO: Inicialmente disponible solo para ricos; creó demanda de más generación de energía. A largo plazo: La electrificación transformó todos los aspectos de la vida moderna; el método de invención sistemática de Edison se convirtió en modelo."
+  },
+  "1886ad": {
+    "title": "Estatua de la Libertad Dedicada",
+    "description": "Regalo de Francia a América celebra la libertad iluminando el mundo.",
+    "analysis": "POSITIVO: Símbolo poderoso de libertad y oportunidad; recibió millones de inmigrantes buscando vidas mejores. NEGATIVO: Ideales no siempre correspondieron a realidad de discriminación y restricción. A largo plazo: Símbolo duradero de los ideales americanos de libertad y refugio para los oprimidos."
+  },
+  "1903ad": {
+    "title": "Vuelo de los Hermanos Wright",
+    "description": "Primer vuelo controlado y motorizado de avión en Kitty Hawk.",
+    "analysis": "POSITIVO: Abrió era de la aviación; transformó transporte, comercio y guerra; encogió el mundo. NEGATIVO: También posibilitó bombardeo aéreo y nuevas formas de guerra. A largo plazo: La aviación se volvió esencial para la vida moderna; inspiró exploración espacial."
+  },
+  "1905ad": {
+    "title": "Año Milagroso de Einstein",
+    "description": "Einstein publica artículos sobre relatividad especial, efecto fotoeléctrico y movimiento browniano.",
+    "analysis": "POSITIVO: Revolucionó la física; posibilitó energía nuclear, GPS y tecnología moderna; mostró poder del pensamiento teórico. NEGATIVO: También hizo posibles las armas nucleares. A largo plazo: Transformó nuestra comprensión del espacio, tiempo y materia."
+  },
+  "1914ad": {
+    "title": "Primera Guerra Mundial Comienza",
+    "description": "Asesinato del Archiduque Francisco Fernando desencadena conflicto global.",
+    "analysis": "POSITIVO: Terminó con imperios que negaban autodeterminación; eventualmente llevó a instituciones internacionales. NEGATIVO: 17 millones de muertos; desestabilizó Europa; posibilitó ascenso del fascismo y comunismo. A largo plazo: Destruyó orden antiguo sin crear nuevo estable; preparó terreno para Segunda Guerra Mundial."
+  },
+  "1917ad": {
+    "title": "Revolución Rusa",
+    "description": "Bolcheviques toman el poder en Rusia, estableciendo estado totalitario comunista.",
+    "analysis": "Consecuencias: Estableció el primer gran estado totalitario comunista. Reemplazó una autocracia con algo mucho peor—un régimen que asesinó a 20+ millones de su propio pueblo a través de purgas, hambrunas diseñadas y gulags. Exportó ideología comunista mundialmente, llevando a atrocidades similares en China, Camboya, Cuba y otros lugares. Significado filosófico: El colectivismo lleva al asesinato masivo. Cuando los derechos individuales son subordinados al \"colectivo\" o a los \"trabajadores\", el resultado es siempre tiranía. El siglo 20 probó que socialismo y comunismo son incompatibles con la vida y prosperidad humana."
+  },
+  "1918ad": {
+    "title": "Primera Guerra Mundial Termina",
+    "description": "Armisticio firmado; guerra mata 17 millones y remodela orden global.",
+    "analysis": "POSITIVO: Creó intento de la Liga de las Naciones de seguridad colectiva; terminó con imperios Otomano, Austrohúngaro, Alemán y Ruso. NEGATIVO: Términos de paz vengativos humillaron a Alemania; nuevas fronteras crearon conflictos étnicos. A largo plazo: Acuerdo inestable plantó semillas para la Segunda Guerra Mundial."
+  },
+  "1920ad": {
+    "title": "19ª Enmienda Ratificada",
+    "description": "Mujeres ganan derecho al voto en Estados Unidos.",
+    "analysis": "POSITIVO: Extendió igualdad política a las mujeres; validó décadas de defensa pacífica; dobló el electorado. NEGATIVO: Muchas mujeres de color aún enfrentaban barreras al voto. A largo plazo: Transformó la política americana; mujeres se convirtieron en mayoría de votantes."
+  },
+  "1929ad": {
+    "title": "Caída de la Bolsa de Valores",
+    "description": "Martes Negro desencadena Gran Depresión.",
+    "analysis": "POSITIVO: Eventualmente llevó a reformas financieras y redes de seguridad social. NEGATIVO: Colapso económico sin precedentes; desempleo masivo; contribuyó al ascenso del extremismo. A largo plazo: Transformó papel del gobierno en la economía; aún debatido por economistas."
+  },
+  "1933ad": {
+    "title": "Hitler se Convierte en Canciller",
+    "description": "Adolf Hitler nombrado Canciller de Alemania.",
+    "analysis": "POSITIVO: Ninguno. NEGATIVO: Terminó con la democracia de Weimar; inició persecución de judíos y otros; llevó a la Segunda Guerra Mundial y Holocausto. A largo plazo: Demostró cómo las democracias pueden votar para salir de existencia; historia de advertencia sobre demagogos y crisis económica."
+  },
+  "1939ad": {
+    "title": "Segunda Guerra Mundial Comienza",
+    "description": "Alemania invade Polonia; Gran Bretaña y Francia declaran guerra.",
+    "analysis": "POSITIVO: Victoria aliada eventualmente liberó países ocupados; llevó a declaraciones de derechos humanos. NEGATIVO: 70-85 millones de muertos; Holocausto asesinó 6 millones de judíos; ciudades destruidas. A largo plazo: Desacreditó fascismo; creó instituciones internacionales; inició descolonización."
+  },
+  "1941ad": {
+    "title": "Ataque a Pearl Harbor",
+    "description": "Japón ataca Flota del Pacífico de EE.UU.; América entra en la Segunda Guerra Mundial.",
+    "analysis": "POSITIVO: Entrada americana cambió la marea de la guerra; trajo recursos que aseguraron victoria aliada. NEGATIVO: Miles muertos; llevó al internamiento de japoneses-americanos. A largo plazo: América emergió como superpotencia global; terminó con aislacionismo."
+  },
+  "1942ad": {
+    "title": "Holocausto: Genocidio Sistemático",
+    "description": "Alemania nazi implementa la \"Solución Final\", asesinando seis millones de judíos y millones de otros.",
+    "analysis": "POSITIVO: Ninguno. NEGATIVO: Asesinato industrial de civiles; seis millones de judíos y millones de otros muertos; pérdida y sufrimiento humano inconmensurables. A largo plazo: Llevó a declaraciones de derechos humanos, convenciones sobre genocidio y establecimiento de Israel; recordatorio permanente de a dónde lleva el odio."
+  },
+  "1944ad": {
+    "title": "Invasión del Día D",
+    "description": "Fuerzas aliadas desembarcan en Normandía, iniciando liberación de Europa Occidental.",
+    "analysis": "POSITIVO: Inició liberación de Europa Occidental; demostró compromiso aliado; aceleró fin de la guerra. NEGATIVO: Pesadas bajas en las playas; combates difíciles por delante. A largo plazo: Europa Occidental liberada; contrastó con control soviético de Europa Oriental."
+  },
+  "1945ad": {
+    "title": "Bombas Atómicas Terminan la Segunda Guerra",
+    "description": "EE.UU. lanza bombas atómicas en Hiroshima y Nagasaki; Japón se rinde incondicionalmente.",
+    "analysis": "Consecuencias: Las bombas atómicas terminaron la Segunda Guerra Mundial con la rendición incondicional de Japón—el único resultado aceptable contra una nación agresora. Japón inició la guerra con Pearl Harbor y cometió atrocidades horrendas por Asia (Violación de Nankín, tortura de prisioneros de guerra, Unidad 731). Las bombas salvaron cientos de miles de vidas de soldados americanos y probablemente millones de vidas japonesas—Japón estaba armando civiles para luchar hasta la muerte. Significado filosófico: América tenía todo el derecho de usar fuerza abrumadora contra un enemigo que atacó primero y se negó a rendirse. Las vidas de nuestros soldados tienen prioridad sobre civiles enemigos. La decisión fue racional, moral y afirmadora de la vida. Victoria, no derramamiento de sangre prolongado, es el objetivo de una guerra justa."
+  },
+  "1945ad_2": {
+    "title": "Naciones Unidas Fundadas",
+    "description": "Organización internacional establecida para mantener paz y seguridad.",
+    "analysis": "POSITIVO: Creó foro para diplomacia; agencias atienden necesidades humanitarias; declaraciones de derechos humanos. NEGATIVO: Veto del Consejo de Seguridad limita efectividad; no puede anular soberanía. A largo plazo: Foro imperfecto pero útil para cooperación internacional."
+  },
+  "1947ad": {
+    "title": "Éxito de El Manantial de Ayn Rand",
+    "description": "El Manantial se convierte en bestseller, presentando filosofía individualista.",
+    "analysis": "POSITIVO: Celebró creatividad e integridad individuales; desafió pensamiento colectivista; inspiró emprendedores y artistas. NEGATIVO: Críticos argumentaron que descartaba comunidad y lazos sociales. A largo plazo: Influyó en movimiento libertario; sigue siendo ampliamente leído y debatido."
+  },
+  "1948ad": {
+    "title": "Israel Fundado",
+    "description": "Estado de Israel declarado, proporcionando patria para el pueblo judío.",
+    "analysis": "POSITIVO: Proporcionó refugio para judíos después del Holocausto; construyó democracia exitosa; innovación tecnológica. NEGATIVO: Desplazamiento de palestinos; conflicto regional continuo. A largo plazo: Legado complejo de refugio, conflicto y aspiraciones nacionales en competencia."
+  },
+  "1950ad": {
+    "title": "Guerra de Corea Comienza",
+    "description": "Corea del Norte invade Corea del Sur; fuerzas de la ONU intervienen.",
+    "analysis": "POSITIVO: Corea del Sur preservada; se convirtió en democracia próspera. NEGATIVO: Millones muertos; península sigue dividida; Corea del Norte se convirtió en estado totalitario. A largo plazo: Contraste marcado entre Norte y Sur demuestra resultados de sistemas diferentes."
+  },
+  "1949ad": {
+    "title": "China Comunista Establecida",
+    "description": "Mao Zedong establece dictadura totalitaria comunista en China.",
+    "analysis": "Consecuencias: El régimen de Mao asesinó a 45-65 millones de personas a través de la hambruna del Gran Salto Adelante, Revolución Cultural y purgas políticas—el mayor asesinato masivo en la historia humana. Destruyó cultura tradicional china, religión y estructuras familiares. Significado filosófico: El comunismo es la ideología más mortal en la historia humana. El éxito económico de China solo vino DESPUÉS de que el PCCh abolió la economía comunista y abrió mercados, permitiendo que la gente comerciara libremente doméstica e internacionalmente. El sistema político sigue siendo autoritario, pero la prosperidad requirió abandonar a Marx. El régimen aún comete genocidio contra uigures y amenaza a Taiwán."
+  },
+  "1957ad": {
+    "title": "La Rebelión de Atlas Publicado",
+    "description": "Ayn Rand publica su novela filosófica.",
+    "analysis": "POSITIVO: Defendió logro productivo; criticó regulación excesiva; inspiró emprendedores. NEGATIVO: Críticos argumentaron que carecía de compasión por los menos afortunados. A largo plazo: Una de las novelas americanas más influyentes; continúa generando debate sobre capitalismo e individualismo."
+  },
+  "1961ad": {
+    "title": "Primer Humano en el Espacio",
+    "description": "Yuri Gagarin se convierte en primer humano en orbitar la Tierra.",
+    "analysis": "POSITIVO: Abrió era espacial; demostró capacidad humana de trascender límites terrestres; inspiró generaciones. NEGATIVO: Carrera espacial desvió recursos; competencia de la Guerra Fría. A largo plazo: Exploración espacial continúa avanzando ciencia e inspirando humanidad."
+  },
+  "1963ad": {
+    "title": "Asesinato de Kennedy",
+    "description": "Presidente John F. Kennedy asesinado en Dallas.",
+    "analysis": "POSITIVO: Transferencia pacífica de poder demostró resiliencia constitucional. NEGATIVO: Trauma nacional; pérdida de líder popular; teorías conspirativas persisten. A largo plazo: Mostró que instituciones sobreviven a la pérdida de cualquier individuo; cambió cultura política americana."
+  },
+  "1964ad": {
+    "title": "Ley de Derechos Civiles",
+    "description": "Legislación histórica prohíbe discriminación basada en raza, color, religión, sexo u origen nacional.",
+    "analysis": "POSITIVO: Terminó con segregación legal; protegió derechos de voto; abrió oportunidades. NEGATIVO: No eliminó discriminación; implementación enfrentó resistencia. A largo plazo: Transformó sociedad americana; extendió principios fundadores a todos los ciudadanos."
+  },
+  "1965ad": {
+    "title": "Guerra de Vietnam se Intensifica",
+    "description": "EE.UU. compromete tropas de combate en Vietnam; guerra costará millones de vidas.",
+    "analysis": "POSITIVO: Intentó prevenir expansión comunista. NEGATIVO: Más de 58,000 americanos y millones de vietnamitas muertos; dividió sociedad americana; finalmente sin éxito. A largo plazo: Cambió actitudes americanas hacia intervención militar; lecciones aún debatidas."
+  },
+  "1966ad": {
+    "title": "Revolución Cultural Comienza",
+    "description": "Mao lanza Revolución Cultural, apuntando a elementos \"contrarrevolucionarios\".",
+    "analysis": "POSITIVO: Ninguno. NEGATIVO: Millones muertos o perseguidos; patrimonio cultural destruido; educación interrumpida por generación. A largo plazo: Traumatizó sociedad china; después repudiada por el propio Partido Comunista Chino."
+  },
+  "1975ad": {
+    "title": "Genocidio Camboyano Comienza",
+    "description": "Jemer Rojo toma poder; genocidio mata 1.5-2 millones de camboyanos.",
+    "analysis": "POSITIVO: Ninguno. NEGATIVO: Un cuarto de la población muerta; sociedad devastada; clase educada apuntada para eliminación. A largo plazo: Camboya lentamente se recuperó; tribunales eventualmente responsabilizaron a perpetradores."
+  },
+  "1979ad": {
+    "title": "Revolución Iraní",
+    "description": "Revolución Islámica derroca al Sha; Ayatolá Jomeini establece dictadura teocrática.",
+    "analysis": "Consecuencias: Reemplazó monarquía autoritaria modernizadora con dictadura teocrática bárbara. Irán se convirtió en el principal patrocinador estatal del terrorismo mundial. Mujeres perdieron derechos fundamentales. Policía religiosa impone leyes medievales. El régimen ha buscado armas nucleares mientras pide la destrucción de Israel y América. Significado filosófico: No todas las \"revoluciones\" son progreso. La teocracia es incompatible con la libertad humana. El fracaso de Occidente en apoyar al Sha y décadas de apaciguamiento envalentonaron a este régimen. Solo el cambio de régimen o la rendición incondicional puede terminar con esta amenaza a la civilización."
+  },
+  "1969ad": {
+    "title": "Alunizaje",
+    "description": "Astronautas del Apollo 11 caminan en la Luna.",
+    "analysis": "POSITIVO: Mayor logro tecnológico de la historia; unió humanidad en asombro; avanzó tecnología. NEGATIVO: Costo enorme; programa después abandonado. A largo plazo: Probó que nada es imposible; inspiró generaciones; exploración espacial continúa."
+  },
+  "1989ad": {
+    "title": "Caída del Muro de Berlín",
+    "description": "Muro de Berlín cae; Guerra Fría comienza a terminar.",
+    "analysis": "POSITIVO: Reunificó Alemania; liberó Europa Oriental; terminó división de la Guerra Fría; revolución pacífica. NEGATIVO: Dificultades económicas para ex-estados comunistas; no todas las transiciones suaves. A largo plazo: Demostró que incluso sistemas aparentemente permanentes pueden colapsar; expandió libertad a millones."
+  },
+  "1991ad": {
+    "title": "Unión Soviética se Disuelve",
+    "description": "URSS oficialmente se disuelve; Guerra Fría termina.",
+    "analysis": "POSITIVO: Terminó con superpotencia comunista; liberó 15 naciones; terminó con confrontación nuclear. NEGATIVO: Colapso económico en ex-estados soviéticos; algunas regiones siguen autoritarias. A largo plazo: Transformó orden internacional; debate continúa sobre desarrollo post-soviético."
+  },
+  "2001ad": {
+    "title": "Ataques del 11 de Septiembre",
+    "description": "Terroristas de Al-Qaeda atacan World Trade Center y Pentágono, matando casi 3,000.",
+    "analysis": "Consecuencias: Casi 3,000 personas inocentes asesinadas por terroristas islámicos. América respondió con guerra en Afganistán para destruir Al-Qaeda y régimen Talibán que los albergaba. Desencadenó dos décadas de operaciones militares contra redes terroristas. Significado filosófico: El mal existe y debe ser destruido. La respuesta adecuada al terrorismo es fuerza abrumadora, no negociación. El fracaso en lograr victoria completa en Afganistán demostró el costo de la construcción de naciones sobre la derrota militar decisiva de enemigos."
+  },
+  "2008ad": {
+    "title": "Crisis Financiera Global",
+    "description": "Colapso de Lehman Brothers desencadena crisis financiera mundial.",
+    "analysis": "POSITIVO: Llevó a reformas financieras; expuso debilidades en el sistema. NEGATIVO: Millones perdieron empleos y hogares; recesión se extendió globalmente. A largo plazo: Cambió regulación bancaria; debates sobre causas y respuestas continúan."
+  },
+  "2020ad": {
+    "title": "Pandemia de COVID-19",
+    "description": "Pandemia global lleva a confinamientos sin precedentes y disrupción económica.",
+    "analysis": "POSITIVO: Aceleró investigación médica y desarrollo de vacunas; trabajo remoto se volvió viable. NEGATIVO: Millones murieron; disrupción económica; impactos en salud mental; retrocesos educativos. A largo plazo: Transformó trabajo, medicina y salud pública; efectos completos aún emergiendo."
+  },
+  "2023ad": {
+    "title": "7 de Octubre: Ataque de Hamás a Israel",
+    "description": "Terroristas de Hamás masacran 1,200 civiles israelíes y toman 250 rehenes.",
+    "analysis": "Consecuencias: Peor masacre de judíos desde el Holocausto. Atrocidades bárbaras contra civiles incluyendo violación, tortura y asesinato de niños. Reveló la verdadera naturaleza de Hamás como organización terrorista genocida. Gran parte de la intelectualidad occidental vergonzosamente apoyó a los terroristas, exponiendo bancarrota moral en academia y medios. Significado filosófico: El mal debe ser derrotado, no negociado. El derecho de Israel a la autodefensa es absoluto. Victoria significa desmantelar la capacidad de Hamás de dañar civiles. No hay equivalencia moral entre terroristas y sus víctimas."
+  },
+  "2022ad": {
+    "title": "Rusia Invade Ucrania",
+    "description": "Rusia lanza invasión a gran escala de Ucrania; mayor guerra en Europa desde la Segunda Guerra.",
+    "analysis": "Consecuencias: Rusia, un enemigo americano, lanzó agresión no provocada contra Ucrania, revelando ambiciones imperiales y debilidad militar. Occidente respondió con sanciones y ayuda militar. La feroz resistencia de Ucrania ha degradado significativamente la capacidad militar rusa. Significado filosófico: Rusia es el agresor maligno; Ucrania tiene derecho absoluto a la autodefensa y victoria. El apoyo americano a Ucrania no es sacrificio sino interés estratégico propio—debilitamos un enemigo con armas nucleares sin arriesgar vidas americanas. Ucrania lucha, Rusia sangra, América se beneficia. La agresión debe ser derrotada, no recompensada con concesiones negociadas."
+  },
+  "2024ad": {
+    "title": "Tensiones Irán-Israel se Intensifican",
+    "description": "Irán lanza misiles contra Israel; Israel responde con ataques de precisión.",
+    "analysis": "Consecuencias: El régimen teocrático de Irán ataca abiertamente a Israel, abandonando pretexto de guerra por proxy. Israel demuestra capacidades defensivas y ofensivas superiores. Conflicto regional se intensifica con Hezbolá y hutíes. Significado filosófico: El apaciguamiento del régimen iraní durante décadas posibilitó esta agresión. El único camino hacia la paz es a través de la fuerza y la derrota de aquellos que buscan destrucción. Regímenes patrocinadores del terrorismo no pueden confiarse en negociaciones—solo la rendición incondicional o el cambio de régimen termina con la amenaza."
+  }
+}

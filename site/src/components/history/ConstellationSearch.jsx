@@ -90,7 +90,7 @@ export function ConstellationSearch({
         value={query}
         onChange={e => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder={t('constellation.findPhilosopher', 'Find a philosopher...')}
+        placeholder={t('constellation.search', 'Search...')}
         style={styles.input}
       />
 
@@ -135,15 +135,12 @@ export function ConstellationSearch({
 
 const styles = {
   container: {
-    position: 'absolute',
-    left: 56,
-    top: '50%',
-    transform: 'translateY(-50%)',
+    position: 'relative',
     zIndex: 150,
   },
 
   input: {
-    width: 180,
+    width: 140,
     height: 40,
     padding: '0 12px',
     background: 'rgba(20, 20, 30, 0.95)',

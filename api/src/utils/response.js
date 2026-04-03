@@ -4,6 +4,10 @@
 
 import { getCorsHeaders } from './cors.js';
 
+export function errorResponse(message, status = 400, originOrCors = 'https://philosify.org', env = {}) {
+  return jsonResponse({ error: message }, status, originOrCors, env);
+}
+
 export function jsonResponse(data, status = 200, originOrCors = 'https://philosify.org', env = {}) {
   const cors =
     originOrCors &&

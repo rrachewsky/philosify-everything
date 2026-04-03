@@ -20,6 +20,9 @@ function Landing() {
           <Link to="/placements" className="btn btn--ghost">
             Placements
           </Link>
+          <Link to="/policy" className="btn btn--ghost">
+            Policy
+          </Link>
           <Link to="/login" className="btn btn--ghost">
             Sign in
           </Link>

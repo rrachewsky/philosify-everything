@@ -129,6 +129,11 @@ function CreateCampaign() {
         <div>
           <p className="eyebrow">Campaign composer</p>
           <h2>Create a new campaign</h2>
+          <p className="lead">
+            All campaigns are subject to the <Link to="/policy">Advertising Policy</Link>. The
+            advertiser and any agency remain fully responsible for all ads, claims, assets, and
+            destination pages, even when Philosify assists with creative preparation.
+          </p>
         </div>
         <Link to="/app/campaigns" className="btn btn--ghost">
           Back to campaigns

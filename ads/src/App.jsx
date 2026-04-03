@@ -11,6 +11,7 @@ import CreateCampaign from '@pages/CreateCampaign';
 import PlanDetail from '@pages/PlanDetail';
 import Billing from '@pages/Billing';
 import Placements from '@pages/Placements';
+import Policy from '@pages/Policy';
 import Settings from '@pages/Settings';
 import AdminLogin from '@pages/admin/AdminLogin';
 import AdminDashboard from '@pages/admin/AdminDashboard';
@@ -42,6 +43,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/placements" element={<Placements publicView />} />
+      <Route path="/policy" element={<Policy />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 

@@ -159,6 +159,13 @@ function Signup() {
           </button>
         </form>
 
+        <p className="helper-text">
+          By creating an account, you agree to the{' '}
+          <Link to="/policy">Advertising Policy</Link>, including the rule that the advertiser and
+          any agency remain fully responsible for all ads posted, whether prepared by them or with
+          Philosify creative assistance.
+        </p>
+
         <p className="auth-card__footer">
           Already approved? <Link to="/login">Sign in instead</Link>
         </p>
