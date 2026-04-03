@@ -251,17 +251,23 @@ export function useConstellation() {
       const deltaMs = timestamp - lastTimeRef.current;
       lastTimeRef.current = timestamp;
 
+      let reachedEnd = false;
       setCurrentYear(prev => {
         // Speed factor adapts year advance to maintain constant ticker visual speed
         const speedFactor = getEventSpeedFactor(prev);
         const yearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed * speedFactor;
         const next = prev + yearsToAdvance;
         if (next >= MAX_YEAR) {
-          setIsPlaying(false);
+          reachedEnd = true;
           return MAX_YEAR;
         }
         return next;
       });
+
+      if (reachedEnd) {
+        setIsPlaying(false);
+        return; // Stop animation loop
+      }
 
       animationRef.current = requestAnimationFrame(animate);
     };

@@ -156,9 +156,11 @@ async function getTranslatedQuestion(question, lang, env) {
 // Uses DB cache first, falls back to AI translation, then English
 // ============================================================
 async function getTranslatedExplanation(question, lang, isCorrect, userAnswer, env) {
+  const wrongExpl = typeof question.wrong_explanations === 'string'
+    ? JSON.parse(question.wrong_explanations) : question.wrong_explanations;
   const englishFallback = isCorrect
     ? question.explanation
-    : (question.wrong_explanations?.[userAnswer] || question.explanation);
+    : (wrongExpl?.[userAnswer] || question.explanation);
 
   if (!lang || lang === 'en') return englishFallback;
 
@@ -294,11 +296,12 @@ export async function handleQuizStart(request, env) {
     await confirmReservation(env, reservation.reservationId, `quiz:start:${session.id}`);
 
     // Get first question (difficulty 1)
-    const { data: question, error: questionError } = await supabase
+    const { data: questionData, error: questionError } = await supabase
       .rpc('get_quiz_question', {
         p_difficulty: 1,
         p_excluded_ids: [],
       });
+    const question = Array.isArray(questionData) ? questionData[0] : questionData;
 
     if (questionError || !question) {
       console.error('[Quiz] Failed to get question:', questionError);
@@ -781,7 +784,7 @@ export async function handleQuizEnd(request, env) {
       .from('quiz_sessions')
       .update(
         { status: 'completed', ended_at: new Date().toISOString() },
-        `id=eq.${sessionId}&user_id=eq.${user.userId}&status=eq.active`
+        `id=eq.${sessionId}&user_id=eq.${user.userId}&status=in.(active,failed)`
       );
 
     if (error || !session) {

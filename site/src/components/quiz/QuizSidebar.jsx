@@ -445,6 +445,8 @@ export function QuizSidebar({
       const q = data.question;
       if (q && q.question && q.options && q.options.length > 0) {
         setCurrentQuestion(q);
+        // Increment questionNumber since the API doesn't return updated session for next-question
+        setSession(prev => prev ? { ...prev, questionNumber: (prev.questionNumber || 1) + 1 } : prev);
         setGameState('playing');
       } else {
         setError(t('quiz.noQuestions', 'No more questions available at this difficulty. Quiz ended.'));
