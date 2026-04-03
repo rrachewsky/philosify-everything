@@ -2120,6 +2120,17 @@
       "law": "객관적 법"
     },
     "whyCorrect": "왜 이것이 정답인가",
-    "whyWrong": "왜 당신의 답이 틀렸는가"
+    "whyWrong": "왜 당신의 답이 틀렸는가",
+    "sessionExpired": "세션이 만료되었습니다. 다시 로그인해주세요.",
+    "sessionExpiring": "세션이 곧 만료됩니다. 진행 상황을 저장하세요.",
+    "noQuestions": "더 이상 문제가 없습니다. 퀴즈 종료.",
+    "chooseNickname": "리더보드에 사용할 닉네임을 선택하세요",
+    "nicknamePlaceholder": "예: 필로마스터",
+    "saveAndStart": "저장 후 퀴즈 시작",
+    "playingAs": "플레이어 이름:",
+    "streakBonus": "+1 크레딧 (연속 정답 보너스!)",
+    "player": "플레이어",
+    "pts": "점",
+    "genericError": "문제가 발생했습니다. 다시 시도해주세요."
   }
 }

@@ -2226,6 +2226,17 @@
       "law": "Objektív Jog"
     },
     "whyCorrect": "Miért helyes ez",
-    "whyWrong": "Miért volt rossz a válaszod"
+    "whyWrong": "Miért volt rossz a válaszod",
+    "sessionExpired": "A munkamenet lejárt. Kérjük, jelentkezzen be újra.",
+    "sessionExpiring": "A munkamenet hamarosan lejár. Mentse el a haladását.",
+    "noQuestions": "Nincs több elérhető kérdés. A kvíz véget ért.",
+    "chooseNickname": "Válasszon becenevet a ranglistához",
+    "nicknamePlaceholder": "pl: FiloMester",
+    "saveAndStart": "Mentés és Kvíz indítása",
+    "playingAs": "Játszik mint:",
+    "streakBonus": "+1 kredit (sorozatbónusz!)",
+    "player": "Játékos",
+    "pts": "pont",
+    "genericError": "Valami hiba történt. Kérjük, próbálja újra."
   }
 }

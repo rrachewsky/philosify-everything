@@ -2226,6 +2226,17 @@
       "law": "Prawo Obiektywne"
     },
     "whyCorrect": "Dlaczego to jest poprawne",
-    "whyWrong": "Dlaczego twoja odpowiedź była błędna"
+    "whyWrong": "Dlaczego twoja odpowiedź była błędna",
+    "sessionExpired": "Sesja wygasła. Zaloguj się ponownie.",
+    "sessionExpiring": "Twoja sesja wkrótce wygaśnie. Zapisz postęp.",
+    "noQuestions": "Brak dostępnych pytań. Quiz zakończony.",
+    "chooseNickname": "Wybierz swój pseudonim do rankingu",
+    "nicknamePlaceholder": "np. FiloMistrz",
+    "saveAndStart": "Zapisz i Rozpocznij Quiz",
+    "playingAs": "Grasz jako:",
+    "streakBonus": "+1 kredyt (bonus za serię!)",
+    "player": "Gracz",
+    "pts": "pkt",
+    "genericError": "Coś poszło nie tak. Spróbuj ponownie."
   }
 }

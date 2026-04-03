@@ -2226,6 +2226,17 @@
       "law": "Objektif Hukuk"
     },
     "whyCorrect": "Neden doğru",
-    "whyWrong": "Cevabınız neden yanlıştı"
+    "whyWrong": "Cevabınız neden yanlıştı",
+    "sessionExpired": "Oturum süresi doldu. Lütfen tekrar giriş yapın.",
+    "sessionExpiring": "Oturumunuz yakında sona erecek. İlerlemenizi kaydedin.",
+    "noQuestions": "Başka soru kalmadı. Quiz sona erdi.",
+    "chooseNickname": "Sıralama için takma adınızı seçin",
+    "nicknamePlaceholder": "örn: FiloUsta",
+    "saveAndStart": "Kaydet ve Quiz Başlat",
+    "playingAs": "Şu adla oynuyorsunuz:",
+    "streakBonus": "+1 kredi (seri bonusu!)",
+    "player": "Oyuncu",
+    "pts": "puan",
+    "genericError": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin."
   }
 }

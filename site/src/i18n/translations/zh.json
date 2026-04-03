@@ -2226,6 +2226,17 @@
       "law": "客观法律"
     },
     "whyCorrect": "为什么这是正确的",
-    "whyWrong": "为什么你的答案是错误的"
+    "whyWrong": "为什么你的答案是错误的",
+    "sessionExpired": "会话已过期。请重新登录。",
+    "sessionExpiring": "您的会话即将过期。请保存进度。",
+    "noQuestions": "没有更多问题了。测验结束。",
+    "chooseNickname": "选择您的排行榜昵称",
+    "nicknamePlaceholder": "例如：哲学大师",
+    "saveAndStart": "保存并开始测验",
+    "playingAs": "当前玩家：",
+    "streakBonus": "+1 积分（连胜奖励！）",
+    "player": "玩家",
+    "pts": "分",
+    "genericError": "出了点问题。请重试。"
   }
 }

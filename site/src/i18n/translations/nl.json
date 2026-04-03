@@ -2226,6 +2226,17 @@
       "law": "Objectief Recht"
     },
     "whyCorrect": "Waarom dit juist is",
-    "whyWrong": "Waarom uw antwoord fout was"
+    "whyWrong": "Waarom uw antwoord fout was",
+    "sessionExpired": "Sessie verlopen. Log opnieuw in.",
+    "sessionExpiring": "Uw sessie verloopt binnenkort. Sla uw voortgang op.",
+    "noQuestions": "Geen vragen meer beschikbaar. Quiz beëindigd.",
+    "chooseNickname": "Kies je bijnaam voor het klassement",
+    "nicknamePlaceholder": "bijv. FiloMeester",
+    "saveAndStart": "Opslaan & Quiz starten",
+    "playingAs": "Je speelt als:",
+    "streakBonus": "+1 credit (reeksbonus!)",
+    "player": "Speler",
+    "pts": "ptn",
+    "genericError": "Er ging iets mis. Probeer het opnieuw."
   }
 }

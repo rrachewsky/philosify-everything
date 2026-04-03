@@ -2159,6 +2159,17 @@
       "law": "Objektives Recht"
     },
     "whyCorrect": "Warum das richtig ist",
-    "whyWrong": "Warum Ihre Antwort falsch war"
+    "whyWrong": "Warum Ihre Antwort falsch war",
+    "sessionExpired": "Sitzung abgelaufen. Bitte erneut anmelden.",
+    "sessionExpiring": "Ihre Sitzung läuft bald ab. Speichern Sie Ihren Fortschritt.",
+    "noQuestions": "Keine weiteren Fragen verfügbar. Quiz beendet.",
+    "chooseNickname": "Wählen Sie Ihren Spitznamen für die Rangliste",
+    "nicknamePlaceholder": "z.B. PhiloMeister",
+    "saveAndStart": "Speichern & Quiz starten",
+    "playingAs": "Sie spielen als:",
+    "streakBonus": "+1 Credit (Serienbonus!)",
+    "player": "Spieler",
+    "pts": "Pkt",
+    "genericError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
   }
 }

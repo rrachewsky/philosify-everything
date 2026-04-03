@@ -2167,6 +2167,17 @@
       "law": "Ley Objetiva"
     },
     "whyCorrect": "Por qué es correcto",
-    "whyWrong": "Por qué tu respuesta era incorrecta"
+    "whyWrong": "Por qué tu respuesta era incorrecta",
+    "sessionExpired": "Sesión expirada. Inicie sesión nuevamente.",
+    "sessionExpiring": "Su sesión expirará pronto. Guarde su progreso.",
+    "noQuestions": "No hay más preguntas disponibles. Quiz terminado.",
+    "chooseNickname": "Elige tu apodo para la clasificación",
+    "nicknamePlaceholder": "ej: FiloMaestro",
+    "saveAndStart": "Guardar e Iniciar Quiz",
+    "playingAs": "Jugando como:",
+    "streakBonus": "+1 crédito (¡bonus de racha!)",
+    "player": "Jugador",
+    "pts": "pts",
+    "genericError": "Algo salió mal. Inténtalo de nuevo."
   }
 }

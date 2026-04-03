@@ -2125,6 +2125,17 @@
       "law": "客観的法"
     },
     "whyCorrect": "なぜこれが正しいのか",
-    "whyWrong": "なぜあなたの答えが間違っていたのか"
+    "whyWrong": "なぜあなたの答えが間違っていたのか",
+    "sessionExpired": "セッションが期限切れです。再度ログインしてください。",
+    "sessionExpiring": "セッションがまもなく期限切れになります。進捗を保存してください。",
+    "noQuestions": "利用可能な問題がありません。クイズ終了。",
+    "chooseNickname": "ランキング用のニックネームを選んでください",
+    "nicknamePlaceholder": "例：フィロマスター",
+    "saveAndStart": "保存してクイズを開始",
+    "playingAs": "プレイヤー名：",
+    "streakBonus": "+1 クレジット（連続正解ボーナス！）",
+    "player": "プレイヤー",
+    "pts": "点",
+    "genericError": "問題が発生しました。もう一度お試しください。"
   }
 }

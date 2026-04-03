@@ -2241,6 +2241,17 @@
       "quotes": "Philosopher Quotes"
     },
     "whyCorrect": "Why this is correct",
-    "whyWrong": "Why your answer was wrong"
+    "whyWrong": "Why your answer was wrong",
+    "sessionExpired": "Session expired. Please log in again.",
+    "sessionExpiring": "Your session will expire soon. Save your progress.",
+    "noQuestions": "No more questions available. Quiz ended.",
+    "chooseNickname": "Choose your nickname for the leaderboard",
+    "nicknamePlaceholder": "e.g. PhiloMaster",
+    "saveAndStart": "Save & Start Quiz",
+    "playingAs": "Playing as:",
+    "streakBonus": "+1 credit (streak bonus!)",
+    "player": "Player",
+    "pts": "pts",
+    "genericError": "Something went wrong. Please try again."
   }
 }

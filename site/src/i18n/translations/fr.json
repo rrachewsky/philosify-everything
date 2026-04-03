@@ -2151,6 +2151,17 @@
       "law": "Droit Objectif"
     },
     "whyCorrect": "Pourquoi c'est correct",
-    "whyWrong": "Pourquoi votre réponse était fausse"
+    "whyWrong": "Pourquoi votre réponse était fausse",
+    "sessionExpired": "Session expirée. Veuillez vous reconnecter.",
+    "sessionExpiring": "Votre session expirera bientôt. Sauvegardez votre progression.",
+    "noQuestions": "Plus de questions disponibles. Quiz terminé.",
+    "chooseNickname": "Choisissez votre pseudo pour le classement",
+    "nicknamePlaceholder": "ex: PhiloMaître",
+    "saveAndStart": "Enregistrer et Commencer",
+    "playingAs": "Vous jouez en tant que :",
+    "streakBonus": "+1 crédit (bonus de série !)",
+    "player": "Joueur",
+    "pts": "pts",
+    "genericError": "Une erreur est survenue. Veuillez réessayer."
   }
 }

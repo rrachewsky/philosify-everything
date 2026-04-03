@@ -2141,6 +2141,17 @@
       "law": "Diritto Oggettivo"
     },
     "whyCorrect": "Perché è corretto",
-    "whyWrong": "Perché la tua risposta era sbagliata"
+    "whyWrong": "Perché la tua risposta era sbagliata",
+    "sessionExpired": "Sessione scaduta. Effettua nuovamente il login.",
+    "sessionExpiring": "La sessione scadrà a breve. Salva i tuoi progressi.",
+    "noQuestions": "Nessuna altra domanda disponibile. Quiz terminato.",
+    "chooseNickname": "Scegli il tuo nickname per la classifica",
+    "nicknamePlaceholder": "es: FiloMaestro",
+    "saveAndStart": "Salva e Inizia Quiz",
+    "playingAs": "Stai giocando come:",
+    "streakBonus": "+1 credito (bonus serie!)",
+    "player": "Giocatore",
+    "pts": "pti",
+    "genericError": "Qualcosa è andato storto. Riprova."
   }
 }

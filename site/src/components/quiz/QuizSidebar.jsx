@@ -176,9 +176,9 @@ function LeaderboardTicker({ onRefresh }) {
                 style={{ direction: 'ltr', cursor: 'default' }}
               >
                 <span className="ticker-rank">#{rank}</span>
-                <span className="ticker-song">{entry.nickname || `Player #${rank}`}</span>
+                <span className="ticker-song">{entry.nickname || `${t('quiz.player', 'Player')} #${rank}`}</span>
                 <span className="ticker-separator">·</span>
-                <span className="ticker-artist">{entry.score} pts · 🔥{entry.max_streak}</span>
+                <span className="ticker-artist">{entry.score} {t('quiz.pts', 'pts')} · 🔥{entry.max_streak}</span>
               </div>
             );
           })}
@@ -391,7 +391,7 @@ export function QuizSidebar({
         setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
         loginModal.open();
       } else {
-        setError(err.message);
+        setError(t('quiz.genericError', 'Something went wrong. Please try again.'));
       }
     } finally {
       setLoading(false);
@@ -418,7 +418,7 @@ export function QuizSidebar({
         setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
         loginModal.open();
       } else {
-        setError(err.message);
+        setError(t('quiz.genericError', 'Something went wrong. Please try again.'));
       }
     } finally {
       setLoading(false);
@@ -457,7 +457,7 @@ export function QuizSidebar({
         setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
         loginModal.open();
       } else {
-        setError(err.message);
+        setError(t('quiz.genericError', 'Something went wrong. Please try again.'));
       }
     } finally {
       setLoading(false);
@@ -489,7 +489,7 @@ export function QuizSidebar({
         setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
         loginModal.open();
       } else {
-        setError(err.message);
+        setError(t('quiz.genericError', 'Something went wrong. Please try again.'));
       }
     } finally {
       setLoading(false);
@@ -729,7 +729,7 @@ export function QuizSidebar({
                     <span className="quiz-feedback__icon">✓</span>
                     <span>{t('quiz.correct', 'Correct!')}</span>
                     {feedback.streakBonus && (
-                      <span className="quiz-feedback__bonus">🎉 +1 credit (streak bonus!)</span>
+                      <span className="quiz-feedback__bonus">🎉 {t('quiz.streakBonus', '+1 credit (streak bonus!)')}</span>
                     )}
                   </>
                 ) : (
