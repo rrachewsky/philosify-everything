@@ -314,10 +314,15 @@ export function QuizSidebar({
     setError(null);
     try {
       const data = await startQuiz(i18n.language);
-      setSession(data.session);
-      setCurrentQuestion(data.question);
-      setGameState('playing');
-      window.dispatchEvent(new CustomEvent('credits-changed'));
+      const q = data.question;
+      if (q && q.question && q.options && q.options.length > 0) {
+        setSession(data.session);
+        setCurrentQuestion(q);
+        setGameState('playing');
+        window.dispatchEvent(new CustomEvent('credits-changed'));
+      } else {
+        setError(t('quiz.noQuestions', 'No questions available. Please try again later.'));
+      }
     } catch (err) {
       if (err.code === 'INSUFFICIENT_CREDITS') {
         paymentModal.open();
@@ -373,11 +378,19 @@ export function QuizSidebar({
     // Get next question
     setLoading(true);
     try {
-      const data = await quizFetch(`${config.apiUrl}/api/quiz/question?sessionId=${session.id}`, {
+      const data = await quizFetch(`${config.apiUrl}/api/quiz/question?sessionId=${session.id}&lang=${i18n.language}`, {
         method: 'GET',
       });
-      setCurrentQuestion(data.question);
-      setGameState('playing');
+      const q = data.question;
+      if (q && q.question && q.options && q.options.length > 0) {
+        setCurrentQuestion(q);
+        setGameState('playing');
+      } else {
+        setError(t('quiz.noQuestions', 'No more questions available at this difficulty. Quiz ended.'));
+        setGameState('idle');
+        setSession(null);
+        setCurrentQuestion(null);
+      }
     } catch (err) {
       if (err.isAuthError) {
         setError(t('quiz.sessionExpired', 'Session expired. Please log in again.'));
@@ -396,11 +409,17 @@ export function QuizSidebar({
     setError(null);
     try {
       const data = await continueQuiz(session.id, i18n.language);
-      setSession(data.session);
-      setCurrentQuestion(data.question);
+      const q = data.question;
       setSelectedAnswer(null);
       setFeedback(null);
-      setGameState('playing');
+      if (q && q.question && q.options && q.options.length > 0) {
+        setSession(data.session);
+        setCurrentQuestion(q);
+        setGameState('playing');
+      } else {
+        setError(t('quiz.noQuestions', 'No questions available. Please try again later.'));
+        setGameState('idle');
+      }
       window.dispatchEvent(new CustomEvent('credits-changed'));
     } catch (err) {
       if (err.code === 'INSUFFICIENT_CREDITS') {

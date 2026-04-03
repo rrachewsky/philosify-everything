@@ -472,16 +472,32 @@ export async function handleQuizNextQuestion(request, env) {
       return errorResponse('No active session', 400, origin, env);
     }
 
-    // Get question at current difficulty
-    const { data: questionData, error: questionError } = await supabase
-      .rpc('get_quiz_question', {
-        p_difficulty: session.current_difficulty,
-        p_excluded_ids: session.answered_question_ids || [],
-      });
+    // Get question at current difficulty, falling back to nearby difficulties
+    const excludedIds = session.answered_question_ids || [];
+    let question = null;
+    const targetDiff = session.current_difficulty;
 
-    const question = Array.isArray(questionData) ? questionData[0] : questionData;
+    // Try exact difficulty, then expand range ±1, ±2, etc.
+    for (let offset = 0; offset <= 5 && !question; offset++) {
+      const diffs = offset === 0
+        ? [targetDiff]
+        : [targetDiff + offset, targetDiff - offset].filter(d => d >= 1 && d <= 10);
 
-    if (questionError || !question) {
+      for (const diff of diffs) {
+        const { data: questionData, error: questionError } = await supabase
+          .rpc('get_quiz_question', {
+            p_difficulty: diff,
+            p_excluded_ids: excludedIds,
+          });
+        const q = Array.isArray(questionData) ? questionData[0] : questionData;
+        if (!questionError && q && q.question) {
+          question = q;
+          break;
+        }
+      }
+    }
+
+    if (!question) {
       return errorResponse('No questions available', 500, origin, env);
     }
 
@@ -523,15 +539,22 @@ export async function handleQuizResume(request, env) {
       return jsonResponse({ hasSession: false }, 200, origin, env);
     }
 
-    // If session is active, get the next question
+    // If session is active, get the next question (with difficulty fallback)
     let question = null;
     if (session.status === 'active') {
-      const { data: questionData } = await supabase
-        .rpc('get_quiz_question', {
-          p_difficulty: session.current_difficulty,
-          p_excluded_ids: session.answered_question_ids || [],
-        });
-      question = questionData;
+      const excludedIds = session.answered_question_ids || [];
+      const targetDiff = session.current_difficulty;
+      for (let offset = 0; offset <= 5 && !question; offset++) {
+        const diffs = offset === 0
+          ? [targetDiff]
+          : [targetDiff + offset, targetDiff - offset].filter(d => d >= 1 && d <= 10);
+        for (const diff of diffs) {
+          const { data: qData, error: qError } = await supabase
+            .rpc('get_quiz_question', { p_difficulty: diff, p_excluded_ids: excludedIds });
+          const q = Array.isArray(qData) ? qData[0] : qData;
+          if (!qError && q && q.question) { question = q; break; }
+        }
+      }
     }
 
     return jsonResponse({
