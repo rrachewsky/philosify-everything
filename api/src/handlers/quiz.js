@@ -170,13 +170,12 @@ async function getTranslatedExplanation(question, lang, isCorrect, userAnswer, e
       : (t.wrong_explanations?.[userAnswer] || t.explanation);
   }
 
-  // AI translation already cached by getTranslatedQuestion if it ran
-  // Try to read from the cached translation
-  if (question._aiTranslation?.[lang]) {
-    const t = question._aiTranslation[lang];
+  // No cached translation — call Gemini to translate the explanation
+  const ai = await translateQuestionWithAI(question, lang, env);
+  if (ai) {
     return isCorrect
-      ? (t.explanation || englishFallback)
-      : (t.wrong_explanations?.[userAnswer] || t.explanation || englishFallback);
+      ? (ai.explanation || englishFallback)
+      : (ai.wrong_explanations?.[userAnswer] || ai.explanation || englishFallback);
   }
 
   return englishFallback;
