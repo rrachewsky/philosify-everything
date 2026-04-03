@@ -301,7 +301,7 @@ export function HomePage({
           {/* Category labels below video in 3 columns (styled differently per breakpoint) */}
           {user && (
             <div className="mobile-category-labels">
-              {['music', 'ideas', 'films', 'books', 'community', 'news', 'history', 'quiz'].map((id) => (
+              {['music', 'ideas', 'films', 'books', 'community', 'news', 'history', 'quiz', 'unsafe-zone'].map((id) => (
                 <button
                   key={`mobile-${id}`}
                   className={`mobile-label ${visibleLabels.includes(id) ? 'mobile-label--visible' : ''}`}

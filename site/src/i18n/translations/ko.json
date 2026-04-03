@@ -536,6 +536,9 @@
       "quiz": {
         "title": "퀴즈",
         "description": "철학 지식을 테스트하세요"
+      },
+      "unsafe-zone": {
+        "title": "위험 구역"
       }
     },
     "comingSoonDesc": {
@@ -2133,5 +2136,13 @@
     "pts": "점",
     "genericError": "문제가 발생했습니다. 다시 시도해주세요.",
     "theCorrectAnswer": "정답"
+  },
+  "unsafeZone": {
+    "title": "위험 구역",
+    "subtitle": "교리 없음. 오류 없음. 환상 없음.",
+    "placeholder": "진짜 질문을 가져오세요.",
+    "startOver": "다시 시작",
+    "cost": "메시지당 1크레딧",
+    "error": "문제가 발생했습니다. 다시 시도해주세요."
   }
 }

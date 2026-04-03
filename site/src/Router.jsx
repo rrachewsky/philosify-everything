@@ -26,8 +26,9 @@ import { CinemaSidebar } from './components/cinema/CinemaSidebar';
 import NewsSidebar from './components/news/NewsSidebar';
 import { HistorySidebar } from './components/history';
 import { QuizSidebar } from './components/quiz/QuizSidebar';
+import { UnsafeZoneSidebar } from './components/unsafe-zone/UnsafeZoneSidebar';
 import { ComingSoonSidebar } from './components/ComingSoonSidebar';
-import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas, useHistorySidebar, useQuiz } from './hooks';
+import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas, useHistorySidebar, useQuiz, useUnsafeZone } from './hooks';
 import { useCinemaSidebar } from './hooks/useCinemaSidebar.js';
 import { useNews } from './hooks/useNews.js';
 import { useCommunity } from './hooks/useCommunity.js';
@@ -288,6 +289,7 @@ export function Router() {
   const cinema = useCinemaSidebar();
   const history = useHistorySidebar();
   const quiz = useQuiz();
+  const unsafeZone = useUnsafeZone();
   const [comingSoonCategory, setComingSoonCategory] = useState(null);
 
   // NOTE: Modal Scoping Rule
@@ -316,11 +318,13 @@ export function Router() {
         cinema.open();
       } else if (category === 'history') {
         history.open();
+      } else if (category === 'unsafe-zone') {
+        unsafeZone.open();
       } else {
         setComingSoonCategory(category);
       }
     },
-    [ideas, literature, news, cinema, history]
+    [ideas, literature, news, cinema, history, unsafeZone]
   );
 
   // Close ComingSoon sidebar
@@ -351,7 +355,7 @@ export function Router() {
                    else if (type === 'films') result ? cinema.openWithResult(result) : cinema.open();
                   else result ? music.openWithResult(result) : music.open();
                 }}
-                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || quiz.isOpen || !!comingSoonCategory}
+                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || quiz.isOpen || unsafeZone.isOpen || !!comingSoonCategory}
               />
             }
           />
@@ -518,6 +522,12 @@ export function Router() {
           isOpen={quiz.isOpen}
           onClose={quiz.close}
           user={music.user}
+        />
+
+        {/* Unsafe Zone Sidebar */}
+        <UnsafeZoneSidebar
+          isOpen={unsafeZone.isOpen}
+          onClose={unsafeZone.close}
         />
       </Suspense>
     </BrowserRouter>

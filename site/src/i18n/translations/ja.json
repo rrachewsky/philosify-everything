@@ -536,6 +536,9 @@
       "quiz": {
         "title": "クイズ",
         "description": "哲学の知識をテストしよう"
+      },
+      "unsafe-zone": {
+        "title": "危険地帯"
       }
     },
     "comingSoonDesc": {
@@ -2138,5 +2141,13 @@
     "pts": "点",
     "genericError": "問題が発生しました。もう一度お試しください。",
     "theCorrectAnswer": "正解"
+  },
+  "unsafeZone": {
+    "title": "危険地帯",
+    "subtitle": "ドグマなし。誤謬なし。空想なし。",
+    "placeholder": "本当の質問を持ってきてください。",
+    "startOver": "やり直す",
+    "cost": "メッセージごとに1クレジット",
+    "error": "問題が発生しました。もう一度お試しください。"
   }
 }

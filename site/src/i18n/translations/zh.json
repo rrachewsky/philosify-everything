@@ -536,6 +536,9 @@
       "quiz": {
         "title": "测验",
         "description": "测试你的哲学知识"
+      },
+      "unsafe-zone": {
+        "title": "危险区域"
       }
     },
     "comingSoonDesc": {
@@ -2239,5 +2242,13 @@
     "pts": "分",
     "genericError": "出了点问题。请重试。",
     "theCorrectAnswer": "正确答案"
+  },
+  "unsafeZone": {
+    "title": "危险区域",
+    "subtitle": "没有教条。没有谬论。没有幻想。",
+    "placeholder": "提出你真正的问题。",
+    "startOver": "重新开始",
+    "cost": "每条消息1积分",
+    "error": "出了点问题。请重试。"
   }
 }

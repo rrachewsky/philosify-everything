@@ -536,6 +536,9 @@
       "quiz": {
         "title": "Quiz",
         "description": "Teste seu conhecimento de filosofia"
+      },
+      "unsafe-zone": {
+        "title": "Zona Insegura"
       }
     },
     "comingSoonDesc": {
@@ -2159,5 +2162,13 @@
     "pts": "pts",
     "genericError": "Algo deu errado. Tente novamente.",
     "theCorrectAnswer": "A resposta correta"
+  },
+  "unsafeZone": {
+    "title": "Zona Insegura",
+    "subtitle": "Sem dogmas. Sem falácias. Sem fantasia.",
+    "placeholder": "Traga sua verdadeira questão.",
+    "startOver": "Recomeçar",
+    "cost": "1 crédito por mensagem",
+    "error": "Algo deu errado. Tente novamente."
   }
 }

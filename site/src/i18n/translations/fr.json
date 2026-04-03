@@ -536,6 +536,9 @@
       "quiz": {
         "title": "Quiz",
         "description": "Testez vos connaissances en philosophie"
+      },
+      "unsafe-zone": {
+        "title": "Zone Dangereuse"
       }
     },
     "comingSoonDesc": {
@@ -2164,5 +2167,13 @@
     "pts": "pts",
     "genericError": "Une erreur est survenue. Veuillez réessayer.",
     "theCorrectAnswer": "La bonne réponse"
+  },
+  "unsafeZone": {
+    "title": "Zone Dangereuse",
+    "subtitle": "Pas de dogmes. Pas de sophismes. Pas de fantaisie.",
+    "placeholder": "Posez votre vraie question.",
+    "startOver": "Recommencer",
+    "cost": "1 crédit par message",
+    "error": "Une erreur est survenue. Réessayez."
   }
 }

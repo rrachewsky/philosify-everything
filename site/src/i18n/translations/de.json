@@ -536,6 +536,9 @@
       "quiz": {
         "title": "Quiz",
         "description": "Testen Sie Ihr Wissen über Philosophie"
+      },
+      "unsafe-zone": {
+        "title": "Unsichere Zone"
       }
     },
     "comingSoonDesc": {
@@ -2172,5 +2175,13 @@
     "pts": "Pkt",
     "genericError": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
     "theCorrectAnswer": "Die richtige Antwort"
+  },
+  "unsafeZone": {
+    "title": "Unsichere Zone",
+    "subtitle": "Keine Dogmen. Keine Trugschlüsse. Keine Fantasie.",
+    "placeholder": "Stellen Sie Ihre echte Frage.",
+    "startOver": "Neu beginnen",
+    "cost": "1 Credit pro Nachricht",
+    "error": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
   }
 }

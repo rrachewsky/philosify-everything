@@ -536,6 +536,9 @@
       "quiz": {
         "title": "Quiz",
         "description": "Test je kennis van filosofie"
+      },
+      "unsafe-zone": {
+        "title": "Onveilige Zone"
       }
     },
     "comingSoonDesc": {
@@ -2239,5 +2242,13 @@
     "pts": "ptn",
     "genericError": "Er ging iets mis. Probeer het opnieuw.",
     "theCorrectAnswer": "Het juiste antwoord"
+  },
+  "unsafeZone": {
+    "title": "Onveilige Zone",
+    "subtitle": "Geen dogma's. Geen drogredenen. Geen fantasie.",
+    "placeholder": "Stel je echte vraag.",
+    "startOver": "Opnieuw beginnen",
+    "cost": "1 credit per bericht",
+    "error": "Er ging iets mis. Probeer het opnieuw."
   }
 }

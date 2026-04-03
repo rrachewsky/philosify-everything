@@ -536,6 +536,9 @@
       "quiz": {
         "title": "Quiz",
         "description": "Test your knowledge of philosophy"
+      },
+      "unsafe-zone": {
+        "title": "Unsafe Zone"
       }
     },
     "comingSoonDesc": {
@@ -2254,5 +2257,13 @@
     "pts": "pts",
     "genericError": "Something went wrong. Please try again.",
     "theCorrectAnswer": "The correct answer"
+  },
+  "unsafeZone": {
+    "title": "Unsafe Zone",
+    "subtitle": "No dogmas. No fallacies. No fantasy.",
+    "placeholder": "Bring your real question.",
+    "startOver": "Start over",
+    "cost": "1 credit per message",
+    "error": "Something went wrong. Please try again."
   }
 }

@@ -536,6 +536,9 @@
       "quiz": {
         "title": "Quiz",
         "description": "Felsefe bilginizi test edin"
+      },
+      "unsafe-zone": {
+        "title": "Güvensiz Bölge"
       }
     },
     "comingSoonDesc": {
@@ -2239,5 +2242,13 @@
     "pts": "puan",
     "genericError": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
     "theCorrectAnswer": "Doğru cevap"
+  },
+  "unsafeZone": {
+    "title": "Güvensiz Bölge",
+    "subtitle": "Dogma yok. Safsata yok. Fantezi yok.",
+    "placeholder": "Gerçek sorunuzu sorun.",
+    "startOver": "Baştan başla",
+    "cost": "Mesaj başına 1 kredi",
+    "error": "Bir şeyler yanlış gitti. Tekrar deneyin."
   }
 }

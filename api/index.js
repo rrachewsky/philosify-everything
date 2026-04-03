@@ -3627,6 +3627,14 @@ export default {
       }
 
       // ============================================================
+      // UNSAFE ZONE ROUTES
+      // ============================================================
+      if (url.pathname === "/api/unsafe-zone" && request.method === "POST") {
+        const { handleUnsafeZone } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZone(request, env, origin);
+      }
+
+      // ============================================================
       // ADS PLATFORM ROUTES
       // ============================================================
 

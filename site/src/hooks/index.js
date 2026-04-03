@@ -27,3 +27,4 @@ export { useNews } from './useNews.js';
 export { useHistorySidebar } from './useHistorySidebar.js';
 export { useConstellation } from './useConstellation.js';
 export { useQuiz } from './useQuiz.js';
+export { useUnsafeZone } from './useUnsafeZone.js';

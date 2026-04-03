@@ -536,6 +536,9 @@
       "quiz": {
         "title": "Kvíz",
         "description": "Teszteld filozófiai tudásodat"
+      },
+      "unsafe-zone": {
+        "title": "Veszélyes Zóna"
       }
     },
     "comingSoonDesc": {
@@ -2239,5 +2242,13 @@
     "pts": "pont",
     "genericError": "Valami hiba történt. Kérjük, próbálja újra.",
     "theCorrectAnswer": "A helyes válasz"
+  },
+  "unsafeZone": {
+    "title": "Veszélyes Zóna",
+    "subtitle": "Nincsenek dogmák. Nincsenek téveszmék. Nincs fantázia.",
+    "placeholder": "Hozd az igazi kérdésed.",
+    "startOver": "Újrakezdés",
+    "cost": "1 kredit üzenetenként",
+    "error": "Valami hiba történt. Próbálja újra."
   }
 }
