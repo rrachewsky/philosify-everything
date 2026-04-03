@@ -16,22 +16,46 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
   const { t, i18n } = useTranslation();
   const { user, sessionBalance: balance } = useAuth();
 
-  // Conversation state (client-only)
+  // Conversation state (client-only, PRIVATE per user)
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const prevUserIdRef = useRef(null);
 
   // Refs
   const sidebarRef = useRef(null);
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
 
+  // ---- SECURITY: Clear conversation when user changes or signs out ----
+  useEffect(() => {
+    const currentUserId = user?.id || user?.userId || null;
+    if (prevUserIdRef.current !== null && prevUserIdRef.current !== currentUserId) {
+      // User changed — wipe everything
+      setMessages([]);
+      setInput('');
+      setError(null);
+      setLoading(false);
+    }
+    prevUserIdRef.current = currentUserId;
+  }, [user]);
+
   // Modals
   const loginModal = useModal();
   const signupModal = useModal();
   const forgotPasswordModal = useModal();
   const paymentModal = useModal();
+
+  // ---- SECURITY: Clear conversation when sidebar closes ----
+  useEffect(() => {
+    if (!isOpen) {
+      setMessages([]);
+      setInput('');
+      setError(null);
+      setLoading(false);
+    }
+  }, [isOpen]);
 
   // ---- Body scroll lock (same as all sidebars) ----
   useEffect(() => {

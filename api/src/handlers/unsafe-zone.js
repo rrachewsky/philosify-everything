@@ -146,7 +146,12 @@ export async function handleUnsafeZone(request, env, origin) {
     const u = response.usage;
     console.log(`[UnsafeZone] ${model} — ${u.input_tokens + u.output_tokens} tokens (${u.input_tokens} in, ${u.output_tokens} out)`);
 
-    return jsonResponse({ reply }, 200, origin, env);
+    // Return with no-cache headers — private conversation data must never be cached
+    const resp = jsonResponse({ reply }, 200, origin, env);
+    resp.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    resp.headers.set('Pragma', 'no-cache');
+    resp.headers.set('Expires', '0');
+    return resp;
 
   } catch (err) {
     console.error('[UnsafeZone] Error:', err);
