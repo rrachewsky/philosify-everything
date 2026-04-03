@@ -354,6 +354,8 @@ export function HomePage({
       {/* Footer */}
       <div className="landing-footer-section">
         <footer className="landing-footer">
+          <span style={{ opacity: 0.5, fontSize: '0.75em' }}>{t('footerAiDisclaimer', 'AI-powered. Rigorous but fallible. The final word is always yours.')}</span>
+          <br />
           {t('footer0')}
           <br />
           {t('footer1')}
