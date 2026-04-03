@@ -103,51 +103,73 @@ async function cacheTranslation(questionId, lang, translated, env) {
 }
 
 // ============================================================
+// HELPER: Shuffle options so correct answer lands on a random letter
+// Returns { options: [...], correctAnswer: 'new_letter', shuffleMap: {old -> new} }
+// ============================================================
+function shuffleOptions(options, correctAnswer) {
+  const parsed = typeof options === 'string' ? JSON.parse(options) : options;
+  if (!Array.isArray(parsed) || parsed.length === 0) return { options: parsed, correctAnswer };
+
+  // Fisher-Yates shuffle
+  const shuffled = [...parsed];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  // Assign new letter IDs (a, b, c, d) based on new positions
+  const letters = ['a', 'b', 'c', 'd'];
+  const oldToNew = {}; // maps old option id -> new letter
+  const newOptions = shuffled.map((opt, i) => {
+    oldToNew[opt.id] = letters[i];
+    return { id: letters[i], text: opt.text };
+  });
+
+  return {
+    options: newOptions,
+    correctAnswer: oldToNew[correctAnswer] || correctAnswer,
+    shuffleMap: oldToNew,
+  };
+}
+
+// ============================================================
 // HELPER: Get translated question content
 // Uses DB cache first, falls back to AI translation, then English
 // ============================================================
 async function getTranslatedQuestion(question, lang, env) {
-  if (!lang || lang === 'en') {
-    return {
-      id: question.id,
-      category: question.category,
-      difficulty: question.difficulty,
-      question: question.question,
-      options: question.options,
-    };
+  let qText = question.question;
+  let qOptions = typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+
+  // Apply translation if not English
+  if (lang && lang !== 'en') {
+    // Check DB cache first
+    if (question.translations && question.translations[lang]?.question) {
+      const t = question.translations[lang];
+      qText = t.question || qText;
+      qOptions = t.options || qOptions;
+    } else {
+      // Try AI translation
+      const ai = await translateQuestionWithAI(question, lang, env);
+      if (ai) {
+        qText = ai.question || qText;
+        qOptions = ai.options || qOptions;
+      }
+    }
   }
 
-  // Check DB cache first
-  if (question.translations && question.translations[lang]?.question) {
-    const t = question.translations[lang];
-    return {
-      id: question.id,
-      category: question.category,
-      difficulty: question.difficulty,
-      question: t.question,
-      options: t.options || question.options,
-    };
-  }
+  // Shuffle options so correct answer is not always in the same position
+  const { options: shuffledOptions, correctAnswer: shuffledCorrect, shuffleMap } =
+    shuffleOptions(qOptions, question.correct_answer);
 
-  // Try AI translation
-  const ai = await translateQuestionWithAI(question, lang, env);
-  if (ai) {
-    return {
-      id: question.id,
-      category: question.category,
-      difficulty: question.difficulty,
-      question: ai.question,
-      options: ai.options || question.options,
-    };
-  }
-
-  // Final fallback: English
   return {
     id: question.id,
     category: question.category,
     difficulty: question.difficulty,
-    question: question.question,
-    options: question.options,
+    question: qText,
+    options: shuffledOptions,
+    // Internal: the shuffled correct answer letter (stored in session for validation)
+    _shuffledCorrectAnswer: shuffledCorrect,
+    _shuffleMap: shuffleMap,
   };
 }
 
@@ -295,11 +317,16 @@ export async function handleQuizStart(request, env) {
     // Confirm the credit reservation
     await confirmReservation(env, reservation.reservationId, `quiz:start:${session.id}`);
 
-    // Get first question (difficulty 1)
+    // Get question IDs this user already answered correctly (across all sessions)
+    const { data: historyData } = await supabase
+      .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
+    const userCorrectIds = Array.isArray(historyData) ? historyData : (historyData || []);
+
+    // Get first question (difficulty 1), excluding previously correct ones
     const { data: questionData, error: questionError } = await supabase
       .rpc('get_quiz_question', {
         p_difficulty: 1,
-        p_excluded_ids: [],
+        p_excluded_ids: userCorrectIds,
       });
     const question = Array.isArray(questionData) ? questionData[0] : questionData;
 
@@ -308,7 +335,16 @@ export async function handleQuizStart(request, env) {
       return errorResponse('No questions available', 500, origin, env);
     }
 
-    // Return session and translated question (without correct answer!)
+    // Translate and shuffle options
+    const translated = await getTranslatedQuestion(question, lang, env);
+
+    // Store current question + shuffled correct answer in session
+    await supabase.from('quiz_sessions').update({
+      current_question_id: question.id,
+      current_correct_answer: translated._shuffledCorrectAnswer,
+    }, `id=eq.${session.id}`);
+
+    // Return session and question (without correct answer!)
     return jsonResponse({
       session: {
         id: session.id,
@@ -319,7 +355,13 @@ export async function handleQuizStart(request, env) {
         creditsSpent: 1,
         creditsEarned: 0,
       },
-      question: await getTranslatedQuestion(question, lang, env),
+      question: {
+        id: translated.id,
+        category: translated.category,
+        difficulty: translated.difficulty,
+        question: translated.question,
+        options: translated.options,
+      },
     }, 200, origin, env);
 
   } catch (err) {
@@ -378,8 +420,10 @@ export async function handleQuizAnswer(request, env) {
       return errorResponse('Question already answered', 400, origin, env);
     }
 
-    // Check answer
-    const isCorrect = answer === question.correct_answer;
+    // Check answer against the shuffled correct answer stored in the session
+    // (options are shuffled when served, so the correct letter changes each time)
+    const shuffledCorrect = session.current_correct_answer || question.correct_answer;
+    const isCorrect = answer === shuffledCorrect;
 
     // Calculate new values
     let newStreak = isCorrect ? session.current_streak + 1 : 0;
@@ -520,11 +564,18 @@ export async function handleQuizContinue(request, env) {
     // Confirm immediately
     await confirmReservation(env, reservation.reservationId, `quiz:continue:${sessionId}`);
 
+    // Get user's cross-session correct history
+    const { data: historyData } = await supabase
+      .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
+    const userCorrectIds = Array.isArray(historyData) ? historyData : (historyData || []);
+    // Merge with current session's answered IDs
+    const allExcluded = [...new Set([...(session.answered_question_ids || []), ...userCorrectIds])];
+
     // Get next question at current difficulty
     const { data: question, error: questionError } = await supabase
       .rpc('get_quiz_question', {
         p_difficulty: session.current_difficulty,
-        p_excluded_ids: session.answered_question_ids || [],
+        p_excluded_ids: allExcluded,
       });
 
     let nextQuestion = question;
@@ -534,7 +585,7 @@ export async function handleQuizContinue(request, env) {
       const { data: fallback } = await supabase
         .rpc('get_quiz_question', {
           p_difficulty: Math.max(1, session.current_difficulty - 1),
-          p_excluded_ids: session.answered_question_ids || [],
+          p_excluded_ids: allExcluded,
         });
 
       nextQuestion = fallback;
@@ -543,11 +594,16 @@ export async function handleQuizContinue(request, env) {
       }
     }
 
-    // Reactivate session
+    // Translate and shuffle
+    const translated = await getTranslatedQuestion(nextQuestion, lang, env);
+
+    // Reactivate session with new question tracking
     await supabase.from('quiz_sessions').update({
       status: 'active',
       credits_spent: session.credits_spent + 1,
       current_question_number: 0,
+      current_question_id: nextQuestion.id,
+      current_correct_answer: translated._shuffledCorrectAnswer,
       ended_at: null,
       last_activity_at: new Date().toISOString(),
     }, `id=eq.${sessionId}`);
@@ -562,7 +618,13 @@ export async function handleQuizContinue(request, env) {
         creditsSpent: session.credits_spent + 1,
         creditsEarned: session.credits_earned,
       },
-      question: await getTranslatedQuestion(nextQuestion, lang, env),
+      question: {
+        id: translated.id,
+        category: translated.category,
+        difficulty: translated.difficulty,
+        question: translated.question,
+        options: translated.options,
+      },
     }, 200, origin, env);
 
   } catch (err) {
@@ -604,12 +666,16 @@ export async function handleQuizNextQuestion(request, env) {
       return errorResponse('No active session', 400, origin, env);
     }
 
+    // Get user's cross-session correct history
+    const { data: historyData } = await supabase
+      .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
+    const userCorrectIds = Array.isArray(historyData) ? historyData : (historyData || []);
+    const allExcluded = [...new Set([...(session.answered_question_ids || []), ...userCorrectIds])];
+
     // Get question at current difficulty, falling back to nearby difficulties
-    const excludedIds = session.answered_question_ids || [];
     let question = null;
     const targetDiff = session.current_difficulty;
 
-    // Try exact difficulty, then expand range ±1, ±2, etc.
     for (let offset = 0; offset <= 5 && !question; offset++) {
       const diffs = offset === 0
         ? [targetDiff]
@@ -619,7 +685,7 @@ export async function handleQuizNextQuestion(request, env) {
         const { data: questionData, error: questionError } = await supabase
           .rpc('get_quiz_question', {
             p_difficulty: diff,
-            p_excluded_ids: excludedIds,
+            p_excluded_ids: allExcluded,
           });
         const q = Array.isArray(questionData) ? questionData[0] : questionData;
         if (!questionError && q && q.question) {
@@ -633,8 +699,23 @@ export async function handleQuizNextQuestion(request, env) {
       return errorResponse('No questions available', 500, origin, env);
     }
 
+    // Translate and shuffle
+    const translated = await getTranslatedQuestion(question, lang, env);
+
+    // Store current question + shuffled answer in session
+    await supabase.from('quiz_sessions').update({
+      current_question_id: question.id,
+      current_correct_answer: translated._shuffledCorrectAnswer,
+    }, `id=eq.${sessionId}`);
+
     return jsonResponse({
-      question: await getTranslatedQuestion(question, lang, env),
+      question: {
+        id: translated.id,
+        category: translated.category,
+        difficulty: translated.difficulty,
+        question: translated.question,
+        options: translated.options,
+      },
     }, 200, origin, env);
 
   } catch (err) {
@@ -673,8 +754,14 @@ export async function handleQuizResume(request, env) {
 
     // If session is active, get the next question (with difficulty fallback)
     let question = null;
+    let translatedQuestion = null;
     if (session.status === 'active') {
-      const excludedIds = session.answered_question_ids || [];
+      // Get user's cross-session correct history
+      const { data: historyData } = await supabase
+        .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
+      const userCorrectIds = Array.isArray(historyData) ? historyData : (historyData || []);
+      const allExcluded = [...new Set([...(session.answered_question_ids || []), ...userCorrectIds])];
+
       const targetDiff = session.current_difficulty;
       for (let offset = 0; offset <= 5 && !question; offset++) {
         const diffs = offset === 0
@@ -682,10 +769,23 @@ export async function handleQuizResume(request, env) {
           : [targetDiff + offset, targetDiff - offset].filter(d => d >= 1 && d <= 10);
         for (const diff of diffs) {
           const { data: qData, error: qError } = await supabase
-            .rpc('get_quiz_question', { p_difficulty: diff, p_excluded_ids: excludedIds });
+            .rpc('get_quiz_question', { p_difficulty: diff, p_excluded_ids: allExcluded });
           const q = Array.isArray(qData) ? qData[0] : qData;
           if (!qError && q && q.question) { question = q; break; }
         }
+      }
+
+      if (question) {
+        const t = await getTranslatedQuestion(question, lang, env);
+        // Store shuffled answer in session
+        await supabase.from('quiz_sessions').update({
+          current_question_id: question.id,
+          current_correct_answer: t._shuffledCorrectAnswer,
+        }, `id=eq.${session.id}`);
+        translatedQuestion = {
+          id: t.id, category: t.category, difficulty: t.difficulty,
+          question: t.question, options: t.options,
+        };
       }
     }
 
@@ -704,7 +804,7 @@ export async function handleQuizResume(request, env) {
         creditsSpent: session.credits_spent,
         creditsEarned: session.credits_earned,
       },
-      question: question ? await getTranslatedQuestion(question, lang, env) : null,
+      question: translatedQuestion,
     }, 200, origin, env);
 
   } catch (err) {
