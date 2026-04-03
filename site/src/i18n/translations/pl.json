@@ -2249,6 +2249,15 @@
     "placeholder": "Zadaj swoje prawdziwe pytanie.",
     "startOver": "Zacznij od nowa",
     "cost": "1 kredyt za wiadomość",
-    "error": "Coś poszło nie tak. Spróbuj ponownie."
+    "error": "Coś poszło nie tak. Spróbuj ponownie.",
+    "welcome1": "Większość miejsc w internecie oferuje ci zgodę, potwierdzenie albo rozrywkę.",
+    "welcome2": "To nie jest jedno z nich.",
+    "welcome3": "Niebezpieczna Strefa istnieje, ponieważ prawdziwe pytania zasługują na prawdziwe odpowiedzi. Nie na pocieszenie. Nie na listę perspektyw. Nie na kogoś, kto mówi ci to, co chcesz usłyszeć.",
+    "welcome4": "Nosisz w sobie pytania, które nie mieszczą się w pasku wyszukiwania. Dylematy, które wciąż wracają. Lęki, których jeszcze nie nazwałeś. Decyzje, wokół których krążysz od miesięcy albo lat, nigdy nie lądując w żadnym uczciwym miejscu.",
+    "welcome5": "Tutaj je przynosisz.",
+    "welcome6": "To, co się tu dzieje, nie jest terapią, nie jest poradą i nie jest osądem. To rygorystyczny, cierpliwy dialog filozoficzny — zaprojektowany, by wydobyć to, co naprawdę kryje się w pytaniu, które ze sobą nosisz, zedrzeć wymówki i zapożyczone przekonania i zostawić ci coś, czego naprawdę możesz użyć: jasność co do tego, co naprawdę myślisz, co naprawdę cenisz i jaka jest uczciwa odpowiedź.",
+    "welcome7": "Zostaną ci zadane precyzyjne pytania. Zostaniesz potraktowany poważnie. Nikt ci nie powie, co masz robić.",
+    "welcome8": "Ostatni krok zawsze należy do ciebie.",
+    "welcome9": "Nie jesteś tu po pocieszenie. Jesteś tu po jasność."
   }
 }

@@ -2249,6 +2249,15 @@
     "placeholder": "Hozd az igazi kérdésed.",
     "startOver": "Újrakezdés",
     "cost": "1 kredit üzenetenként",
-    "error": "Valami hiba történt. Próbálja újra."
+    "error": "Valami hiba történt. Próbálja újra.",
+    "welcome1": "A legtöbb online tér egyetértést, megerősítést vagy szórakoztatást kínál.",
+    "welcome2": "Ez nem egy ilyen hely.",
+    "welcome3": "A Veszélyes Zóna azért létezik, mert az igazi kérdések igazi válaszokat érdemelnek. Nem vigaszt. Nem nézőpontok listáját. Nem valakit, aki azt mondja, amit hallani akarsz.",
+    "welcome4": "Olyan kérdéseket hordozol, amelyek nem férnek bele egy keresőmezőbe. Dilemmákat, amelyek folyton visszatérnek. Félelmeket, amelyeknek még nevet sem adtál. Döntéseket, amelyek körül hónapok vagy évek óta keringesz anélkül, hogy őszintén bárhol is megállapodnál.",
+    "welcome5": "Ide hozod őket.",
+    "welcome6": "Ami itt történik, az nem terápia, nem tanácsadás és nem ítélkezés. Szigorú, türelmes, filozófiai párbeszéd — arra tervezve, hogy felszínre hozza, mi rejlik valójában a kérdésedben, lehántsa a kibúvókat és a kölcsönvett meggyőződéseket, és hagyjon neked valamit, amit valóban használhatsz: tisztánlátást arról, mit gondolsz igazán, mit értékelsz igazán, és mi az őszinte válasz valójában.",
+    "welcome7": "Pontos kérdéseket kapsz. Komolyan vesznek. Nem mondják meg, mit tegyél.",
+    "welcome8": "Az utolsó lépés mindig a tied.",
+    "welcome9": "Nem a vigaszért vagy itt. A tisztánlátásért."
   }
 }

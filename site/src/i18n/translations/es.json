@@ -2190,6 +2190,15 @@
     "placeholder": "Trae tu verdadera pregunta.",
     "startOver": "Empezar de nuevo",
     "cost": "1 crédito por mensaje",
-    "error": "Algo salió mal. Inténtalo de nuevo."
+    "error": "Algo salió mal. Inténtalo de nuevo.",
+    "welcome1": "La mayoría de los espacios en línea te ofrecen acuerdo, validación o distracción.",
+    "welcome2": "Este no es uno de ellos.",
+    "welcome3": "Unsafe Zone existe porque las preguntas reales merecen respuestas reales. No consuelo. No una lista de perspectivas. No alguien diciéndote lo que quieres oír.",
+    "welcome4": "Cargas preguntas que no caben en un buscador. Dilemas que siguen volviendo. Miedos que no has nombrado. Decisiones que llevas rodeando durante meses o años sin llegar a ningún lugar honesto.",
+    "welcome5": "Aquí es donde traes esas preguntas.",
+    "welcome6": "Lo que ocurre aquí no es terapia, no es consejo y no es juicio. Es diálogo filosófico riguroso y paciente — diseñado para sacar a la superficie lo que realmente está dentro de la pregunta que cargas, despojarte de las evasiones y creencias prestadas, y dejarte con algo que realmente puedas usar: claridad sobre lo que realmente piensas, lo que realmente valoras y cuál es la respuesta honesta.",
+    "welcome7": "Se te harán preguntas precisas. Serás tomado en serio. No se te dirá qué hacer.",
+    "welcome8": "El último paso es siempre tuyo.",
+    "welcome9": "No estás aquí por consuelo. Estás aquí por claridad."
   }
 }

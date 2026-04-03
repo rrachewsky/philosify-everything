@@ -2249,6 +2249,15 @@
     "placeholder": "Gerçek sorunuzu sorun.",
     "startOver": "Baştan başla",
     "cost": "Mesaj başına 1 kredi",
-    "error": "Bir şeyler yanlış gitti. Tekrar deneyin."
+    "error": "Bir şeyler yanlış gitti. Tekrar deneyin.",
+    "welcome1": "İnternetteki çoğu alan sana onay, doğrulama ya da dikkat dağınıklığı sunar.",
+    "welcome2": "Burası onlardan biri değil.",
+    "welcome3": "Güvensiz Bölge, gerçek soruların gerçek cevapları hak ettiği için var. Teselli değil. Bakış açıları listesi değil. Duymak istediğini söyleyen biri değil.",
+    "welcome4": "Bir arama çubuğuna sığmayan sorular taşıyorsun. Sürekli geri dönen ikilemler. Henüz adını koymadığın korkular. Aylardır ya da yıllardır etrafında döndüğün ama dürüst bir yere varamadığın kararlar.",
+    "welcome5": "Onları buraya getirirsin.",
+    "welcome6": "Burada olan şey terapi değil, tavsiye değil ve yargılama değil. Titiz, sabırlı, felsefi bir diyalogdur — taşıdığın sorunun içinde gerçekte ne olduğunu ortaya çıkarmak, kaçamakları ve ödünç alınmış inançları soymak ve sana gerçekten kullanabileceğin bir şey bırakmak için tasarlanmış: gerçekten ne düşündüğün, gerçekten neye değer verdiğin ve dürüst cevabın aslında ne olduğu hakkında netlik.",
+    "welcome7": "Sana keskin sorular sorulacak. Ciddiye alınacaksın. Ne yapman gerektiği söylenmeyecek.",
+    "welcome8": "Son adım her zaman senin.",
+    "welcome9": "Buraya teselli için değilsin. Buraya netlik için geldin."
   }
 }

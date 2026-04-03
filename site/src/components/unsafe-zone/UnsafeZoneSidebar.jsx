@@ -169,43 +169,69 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
           height: 'calc(100dvh - 56px)',
           padding: 0,
         }}>
-          {/* Entry screen */}
+          {/* Entry screen with welcome message */}
           {isIdle ? (
             <div style={{
               flex: 1,
+              overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '2rem 1.5rem',
-              textAlign: 'center',
+              padding: '1.5rem',
               gap: '1rem',
             }}>
               <h2 style={{
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 700,
-                fontSize: '1.75rem',
+                fontSize: '1.5rem',
                 color: '#D6158C',
                 margin: 0,
+                textAlign: 'center',
                 letterSpacing: '-0.02em',
               }}>
                 {t('unsafeZone.title', 'Unsafe Zone')}
               </h2>
-              <p style={{
+
+              <div style={{
                 fontFamily: 'Inter, sans-serif',
-                fontSize: '0.95rem',
-                color: 'rgba(255, 255, 255, 0.6)',
-                margin: 0,
-                maxWidth: '320px',
-                lineHeight: 1.5,
+                fontSize: '0.88rem',
+                color: 'rgba(255, 255, 255, 0.7)',
+                lineHeight: 1.7,
               }}>
-                {t('unsafeZone.subtitle', 'No dogmas. No fallacies. No fantasy.')}
-              </p>
+                <p style={{ margin: '0 0 0.8rem', color: 'rgba(255, 255, 255, 0.45)' }}>
+                  {t('unsafeZone.welcome1', 'Most spaces online offer you agreement, validation, or distraction.')}
+                </p>
+                <p style={{ margin: '0 0 0.8rem', fontWeight: 600, color: '#FAFAFB' }}>
+                  {t('unsafeZone.welcome2', 'This is not one of them.')}
+                </p>
+                <p style={{ margin: '0 0 0.8rem' }}>
+                  {t('unsafeZone.welcome3', 'Unsafe Zone exists because real questions deserve real answers. Not comfort. Not a list of perspectives. Not someone telling you what you want to hear.')}
+                </p>
+                <p style={{ margin: '0 0 0.8rem' }}>
+                  {t('unsafeZone.welcome4', "You carry questions that don't fit in a search bar. Dilemmas that keep returning. Fears you haven't named. Decisions you've been circling for months or years without landing anywhere honest.")}
+                </p>
+                <p style={{ margin: '0 0 0.8rem', fontWeight: 600, color: '#D6158C' }}>
+                  {t('unsafeZone.welcome5', 'This is where you bring those.')}
+                </p>
+                <p style={{ margin: '0 0 0.8rem' }}>
+                  {t('unsafeZone.welcome6', 'What happens here is not therapy, not advice, and not judgment. It is rigorous, patient, philosophical dialogue \u2014 designed to surface what is actually inside the question you are carrying, strip away the evasions and borrowed beliefs, and leave you with something you can actually use: clarity about what you truly think, what you truly value, and what the honest answer actually is.')}
+                </p>
+                <p style={{ margin: '0 0 0.8rem' }}>
+                  {t('unsafeZone.welcome7', 'You will be asked precise questions. You will be taken seriously. You will not be told what to do.')}
+                </p>
+                <p style={{ margin: '0 0 0.8rem', color: 'rgba(255, 255, 255, 0.45)' }}>
+                  {t('unsafeZone.welcome8', 'The last step is always yours.')}
+                </p>
+                <p style={{ margin: '0.8rem 0 0', fontWeight: 600, color: '#89CFF0', textAlign: 'center' }}>
+                  {t('unsafeZone.welcome9', 'You are not here for comfort. You are here for clarity.')}
+                </p>
+              </div>
+
               <p style={{
                 fontFamily: 'Inter, sans-serif',
-                fontSize: '0.85rem',
-                color: 'rgba(255, 255, 255, 0.4)',
-                margin: '0.5rem 0 0',
+                fontSize: '0.8rem',
+                color: 'rgba(255, 255, 255, 0.35)',
+                margin: 0,
+                textAlign: 'center',
               }}>
                 {t('unsafeZone.cost', '1 credit per message')}
               </p>
