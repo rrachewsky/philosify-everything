@@ -494,9 +494,15 @@ export async function handleQuizAnswer(request, env) {
 
     await supabase.from('quiz_sessions').update(updateData, `id=eq.${sessionId}`);
 
-    // Find the correct answer text (using original option ID from DB)
-    const options = question.translations?.[lang]?.options || question.options;
-    const parsedOptions = typeof options === 'string' ? JSON.parse(options) : options;
+    // Find the correct answer text — use translated options if available
+    let translatedOptions = question.translations?.[lang]?.options;
+    if (!translatedOptions && lang && lang !== 'en') {
+      // Translation not cached yet — translate now
+      const ai = await translateQuestionWithAI(question, lang, env);
+      if (ai?.options) translatedOptions = ai.options;
+    }
+    const optionsToUse = translatedOptions || question.options;
+    const parsedOptions = typeof optionsToUse === 'string' ? JSON.parse(optionsToUse) : optionsToUse;
     const correctOption = parsedOptions?.find(o => o.id === question.correct_answer);
 
     // Get the shuffled correct letter (what the user would have seen)
