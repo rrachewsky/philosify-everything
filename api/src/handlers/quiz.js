@@ -687,3 +687,112 @@ export async function handleQuizEnd(request, env) {
     return errorResponse(err.message || 'Failed to end quiz', 500, origin, env);
   }
 }
+
+// ============================================================
+// GET PROFILE - Get user's quiz nickname
+// ============================================================
+export async function handleQuizGetProfile(request, env) {
+  const origin = request.headers.get('Origin') || '';
+
+  try {
+    const user = await getUserFromAuth(request, env);
+    if (!user?.userId) {
+      return errorResponse('Unauthorized', 401, origin, env);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    const { data: profiles } = await supabase
+      .from('quiz_profiles')
+      .select('nickname', { filter: `user_id=eq.${user.userId}`, limit: 1 });
+
+    const profile = Array.isArray(profiles) ? profiles[0] : profiles;
+
+    return jsonResponse({
+      nickname: profile?.nickname || null,
+    }, 200, origin, env);
+
+  } catch (err) {
+    console.error('[Quiz] Get profile error:', err);
+    return errorResponse(err.message || 'Failed to get profile', 500, origin, env);
+  }
+}
+
+// ============================================================
+// SET PROFILE - Set/update quiz nickname
+// ============================================================
+export async function handleQuizSetProfile(request, env) {
+  const origin = request.headers.get('Origin') || '';
+
+  try {
+    const user = await getUserFromAuth(request, env);
+    if (!user?.userId) {
+      return errorResponse('Unauthorized', 401, origin, env);
+    }
+
+    const body = await request.json();
+    const { nickname } = body;
+
+    if (!nickname || typeof nickname !== 'string') {
+      return errorResponse('Nickname is required', 400, origin, env);
+    }
+
+    // Sanitize: trim, limit length, remove special chars
+    const clean = nickname.trim().replace(/[<>&"']/g, '').substring(0, 20);
+
+    if (clean.length < 2) {
+      return errorResponse('Nickname must be at least 2 characters', 400, origin, env);
+    }
+
+    if (clean.length > 20) {
+      return errorResponse('Nickname must be 20 characters or less', 400, origin, env);
+    }
+
+    // Block offensive patterns (basic filter)
+    const blocked = /admin|moderator|philosify|staff|support/i;
+    if (blocked.test(clean)) {
+      return errorResponse('This nickname is not allowed', 400, origin, env);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    // Upsert profile (insert or update)
+    // Try insert first
+    const { data: existing } = await supabase
+      .from('quiz_profiles')
+      .select('user_id', { filter: `user_id=eq.${user.userId}`, limit: 1 });
+
+    const hasProfile = Array.isArray(existing) ? existing.length > 0 : !!existing;
+
+    if (hasProfile) {
+      const { error } = await supabase
+        .from('quiz_profiles')
+        .update(
+          { nickname: clean, updated_at: new Date().toISOString() },
+          `user_id=eq.${user.userId}`
+        );
+      if (error) {
+        if (error.message?.includes('unique') || error.message?.includes('duplicate')) {
+          return errorResponse('This nickname is already taken', 409, origin, env);
+        }
+        return errorResponse('Failed to update nickname', 500, origin, env);
+      }
+    } else {
+      const { error } = await supabase
+        .from('quiz_profiles')
+        .insert({ user_id: user.userId, nickname: clean });
+      if (error) {
+        if (error.message?.includes('unique') || error.message?.includes('duplicate')) {
+          return errorResponse('This nickname is already taken', 409, origin, env);
+        }
+        return errorResponse('Failed to set nickname', 500, origin, env);
+      }
+    }
+
+    return jsonResponse({ nickname: clean }, 200, origin, env);
+
+  } catch (err) {
+    console.error('[Quiz] Set profile error:', err);
+    return errorResponse(err.message || 'Failed to set nickname', 500, origin, env);
+  }
+}

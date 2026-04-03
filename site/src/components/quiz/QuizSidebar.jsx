@@ -76,6 +76,18 @@ async function fetchLeaderboard() {
   return quizFetch(`${config.apiUrl}/api/quiz/leaderboard`, { method: 'GET' });
 }
 
+async function getQuizProfile() {
+  return quizFetch(`${config.apiUrl}/api/quiz/profile`, { method: 'GET' });
+}
+
+async function setQuizProfile(nickname) {
+  return quizFetch(`${config.apiUrl}/api/quiz/profile`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nickname }),
+  });
+}
+
 async function resumeQuiz(lang) {
   return quizFetch(`${config.apiUrl}/api/quiz/resume?lang=${lang}`, { method: 'GET' });
 }
@@ -164,9 +176,9 @@ function LeaderboardTicker({ onRefresh }) {
                 style={{ direction: 'ltr', cursor: 'default' }}
               >
                 <span className="ticker-rank">#{rank}</span>
-                <span className="ticker-song">{entry.score} pts</span>
+                <span className="ticker-song">{entry.nickname || `Player #${rank}`}</span>
                 <span className="ticker-separator">·</span>
-                <span className="ticker-artist">{entry.max_streak} streak</span>
+                <span className="ticker-artist">{entry.score} pts · 🔥{entry.max_streak}</span>
               </div>
             );
           })}
@@ -198,6 +210,10 @@ export function QuizSidebar({
   const [loading, setLoading] = useState(false);
   const [leaderboardRefresh, setLeaderboardRefresh] = useState(0);
   const [sessionWarning, setSessionWarning] = useState(false);
+  const [nickname, setNickname] = useState(null);
+  const [nicknameInput, setNicknameInput] = useState('');
+  const [nicknameError, setNicknameError] = useState(null);
+  const [showNicknamePrompt, setShowNicknamePrompt] = useState(false);
   const sessionTimerRef = useRef(null);
 
   // Modals
@@ -234,6 +250,22 @@ export function QuizSidebar({
       if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
     };
   }, [isOpen]);
+
+  // Fetch nickname when sidebar opens
+  useEffect(() => {
+    if (!isOpen || !user) return;
+    const fetchProfile = async () => {
+      try {
+        const data = await getQuizProfile();
+        if (data.nickname) {
+          setNickname(data.nickname);
+        }
+      } catch (e) {
+        // Not critical
+      }
+    };
+    fetchProfile();
+  }, [isOpen, user]);
 
   // Check for active session when sidebar opens or user logs back in
   useEffect(() => {
@@ -299,16 +331,45 @@ export function QuizSidebar({
       setFeedback(null);
       setError(null);
       setSessionWarning(false);
+      setShowNicknamePrompt(false);
+      setNicknameError(null);
       if (sessionTimerRef.current) clearTimeout(sessionTimerRef.current);
     }
   }, [isOpen]);
 
-  // Start quiz - don't pre-check balance, let API handle insufficient credits
+  // Save nickname
+  const handleSaveNickname = async () => {
+    if (!nicknameInput.trim()) return;
+    setNicknameError(null);
+    try {
+      const data = await setQuizProfile(nicknameInput.trim());
+      setNickname(data.nickname);
+      setShowNicknamePrompt(false);
+      // Now actually start the quiz
+      handleStartQuizInternal();
+    } catch (err) {
+      setNicknameError(err.message);
+    }
+  };
+
+  // Start quiz - prompt for nickname if not set
   const handleStartQuiz = async () => {
     if (!user) {
       signupModal.open();
       return;
     }
+
+    // If no nickname, prompt first
+    if (!nickname) {
+      setShowNicknamePrompt(true);
+      return;
+    }
+
+    handleStartQuizInternal();
+  };
+
+  // Internal start quiz (called after nickname is set)
+  const handleStartQuizInternal = async () => {
 
     setLoading(true);
     setError(null);
@@ -543,14 +604,66 @@ export function QuizSidebar({
                 </div>
               </div>
 
-              <button
-                className="music-analyze__button"
-                onClick={handleStartQuiz}
-                disabled={loading}
-              >
-                {loading ? t('quiz.starting', 'Starting...') : t('quiz.start', 'Start Quiz')}
-                <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
-              </button>
+              {/* Nickname prompt */}
+              {showNicknamePrompt ? (
+                <div className="quiz-start__nickname" style={{
+                  margin: '1rem 0',
+                  padding: '1rem',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                }}>
+                  <p style={{ margin: '0 0 0.5rem', color: '#a855f7', fontWeight: 600 }}>
+                    {t('quiz.chooseNickname', 'Choose your nickname for the leaderboard')}
+                  </p>
+                  <input
+                    type="text"
+                    value={nicknameInput}
+                    onChange={(e) => setNicknameInput(e.target.value)}
+                    maxLength={20}
+                    placeholder={t('quiz.nicknamePlaceholder', 'e.g. PhiloMaster')}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: '6px',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      background: 'rgba(0,0,0,0.3)',
+                      color: '#fff',
+                      fontSize: '14px',
+                      marginBottom: '0.5rem',
+                      outline: 'none',
+                    }}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSaveNickname()}
+                  />
+                  {nicknameError && (
+                    <p style={{ margin: '0 0 0.5rem', color: '#ef4444', fontSize: '12px' }}>{nicknameError}</p>
+                  )}
+                  <button
+                    className="music-analyze__button"
+                    onClick={handleSaveNickname}
+                    disabled={!nicknameInput.trim() || nicknameInput.trim().length < 2}
+                  >
+                    {t('quiz.saveAndStart', 'Save & Start Quiz')}
+                    <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {nickname && (
+                    <p style={{ margin: '0.5rem 0', color: 'rgba(255,255,255,0.6)', fontSize: '13px' }}>
+                      {t('quiz.playingAs', 'Playing as:')} <span style={{ color: '#a855f7', fontWeight: 600 }}>{nickname}</span>
+                    </p>
+                  )}
+                  <button
+                    className="music-analyze__button"
+                    onClick={handleStartQuiz}
+                    disabled={loading}
+                  >
+                    {loading ? t('quiz.starting', 'Starting...') : t('quiz.start', 'Start Quiz')}
+                    <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
+                  </button>
+                </>
+              )}
             </div>
           )}
 
