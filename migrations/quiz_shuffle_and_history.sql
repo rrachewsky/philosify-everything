@@ -2,10 +2,11 @@
 -- QUIZ: Shuffle support + cross-session history
 -- ============================================================
 
--- Store the current question and its shuffled correct answer in the session
--- so the answer handler knows which letter is correct after shuffling
+-- Store the current question, shuffled correct answer, and reverse shuffle map
+-- so the answer handler knows which letter is correct and can reverse-map user answers
 ALTER TABLE quiz_sessions ADD COLUMN IF NOT EXISTS current_question_id UUID;
 ALTER TABLE quiz_sessions ADD COLUMN IF NOT EXISTS current_correct_answer TEXT;
+ALTER TABLE quiz_sessions ADD COLUMN IF NOT EXISTS current_shuffle_reverse JSONB DEFAULT '{}';
 
 -- Function to get question IDs a user answered correctly across ALL sessions
 -- Used to prevent repeating questions the user already knows

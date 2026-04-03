@@ -125,10 +125,17 @@ function shuffleOptions(options, correctAnswer) {
     return { id: letters[i], text: opt.text };
   });
 
+  // Build reverse map: new letter -> old letter (for answer validation)
+  const newToOld = {};
+  for (const [old, nw] of Object.entries(oldToNew)) {
+    newToOld[nw] = old;
+  }
+
   return {
     options: newOptions,
     correctAnswer: oldToNew[correctAnswer] || correctAnswer,
     shuffleMap: oldToNew,
+    reverseMap: newToOld,
   };
 }
 
@@ -158,7 +165,7 @@ async function getTranslatedQuestion(question, lang, env) {
   }
 
   // Shuffle options so correct answer is not always in the same position
-  const { options: shuffledOptions, correctAnswer: shuffledCorrect, shuffleMap } =
+  const { options: shuffledOptions, correctAnswer: shuffledCorrect, shuffleMap, reverseMap } =
     shuffleOptions(qOptions, question.correct_answer);
 
   return {
@@ -167,9 +174,10 @@ async function getTranslatedQuestion(question, lang, env) {
     difficulty: question.difficulty,
     question: qText,
     options: shuffledOptions,
-    // Internal: the shuffled correct answer letter (stored in session for validation)
+    // Internal: stored in session for answer validation
     _shuffledCorrectAnswer: shuffledCorrect,
     _shuffleMap: shuffleMap,
+    _reverseMap: reverseMap,
   };
 }
 
@@ -342,6 +350,7 @@ export async function handleQuizStart(request, env) {
     await supabase.from('quiz_sessions').update({
       current_question_id: question.id,
       current_correct_answer: translated._shuffledCorrectAnswer,
+      current_shuffle_reverse: translated._reverseMap || {},
     }, `id=eq.${session.id}`);
 
     // Return session and question (without correct answer!)
@@ -441,11 +450,13 @@ export async function handleQuizAnswer(request, env) {
       await addStreakBonus(env, user.userId);
     }
 
-    // Record answer
+    // Record answer (store original option ID, not shuffled letter)
+    const reverseMap = session.current_shuffle_reverse || {};
+    const originalAnswer = reverseMap[answer] || answer;
     await supabase.from('quiz_answers').insert({
       session_id: sessionId,
       question_id: questionId,
-      user_answer: answer,
+      user_answer: originalAnswer,
       is_correct: isCorrect,
       difficulty_at_time: question.difficulty,
     });
@@ -492,8 +503,9 @@ export async function handleQuizAnswer(request, env) {
     const shuffledCorrectLetter = shuffledCorrect;
 
     // Get explanation: wrong-specific when wrong, correct explanation when correct
-    const wrongExplanation = await getTranslatedExplanation(question, lang, false, answer, env);
-    const correctExplanation = await getTranslatedExplanation(question, lang, true, answer, env);
+    // (originalAnswer already reverse-mapped above from shuffled letter to original ID)
+    const wrongExplanation = await getTranslatedExplanation(question, lang, false, originalAnswer, env);
+    const correctExplanation = await getTranslatedExplanation(question, lang, true, originalAnswer, env);
 
     // Build response with translated explanation
     return jsonResponse({
@@ -612,6 +624,7 @@ export async function handleQuizContinue(request, env) {
       current_question_number: 0,
       current_question_id: nextQuestion.id,
       current_correct_answer: translated._shuffledCorrectAnswer,
+      current_shuffle_reverse: translated._reverseMap || {},
       ended_at: null,
       last_activity_at: new Date().toISOString(),
     }, `id=eq.${sessionId}`);
@@ -714,6 +727,7 @@ export async function handleQuizNextQuestion(request, env) {
     await supabase.from('quiz_sessions').update({
       current_question_id: question.id,
       current_correct_answer: translated._shuffledCorrectAnswer,
+      current_shuffle_reverse: translated._reverseMap || {},
     }, `id=eq.${sessionId}`);
 
     return jsonResponse({
@@ -789,6 +803,7 @@ export async function handleQuizResume(request, env) {
         await supabase.from('quiz_sessions').update({
           current_question_id: question.id,
           current_correct_answer: t._shuffledCorrectAnswer,
+          current_shuffle_reverse: t._reverseMap || {},
         }, `id=eq.${session.id}`);
         translatedQuestion = {
           id: t.id, category: t.category, difficulty: t.difficulty,
