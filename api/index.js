@@ -3633,6 +3633,14 @@ export default {
         const { handleUnsafeZone } = await import("./src/handlers/unsafe-zone.js");
         return handleUnsafeZone(request, env, origin);
       }
+      if (url.pathname === "/api/unsafe-zone/conversation" && request.method === "GET") {
+        const { handleUnsafeZoneLoad } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZoneLoad(request, env, origin);
+      }
+      if (url.pathname === "/api/unsafe-zone/conversation" && request.method === "DELETE") {
+        const { handleUnsafeZoneClear } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZoneClear(request, env, origin);
+      }
 
       // ============================================================
       // ADS PLATFORM ROUTES

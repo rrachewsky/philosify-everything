@@ -524,8 +524,9 @@ export function Router() {
           user={music.user}
         />
 
-        {/* Unsafe Zone Sidebar */}
+        {/* Unsafe Zone Sidebar — key forces full remount on user change */}
         <UnsafeZoneSidebar
+          key={`uz-${music.user?.id || music.user?.userId || 'anon'}`}
           isOpen={unsafeZone.isOpen}
           onClose={unsafeZone.close}
         />

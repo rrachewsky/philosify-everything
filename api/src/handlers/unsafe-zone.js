@@ -9,6 +9,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { jsonResponse } from '../utils/index.js';
+import { getServiceSupabase } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
 import { reserveCredit, confirmReservation, releaseReservation } from '../credits/index.js';
 import { getSecret } from '../utils/secrets.js';
@@ -86,6 +87,8 @@ export async function handleUnsafeZone(request, env, origin) {
       );
     }
 
+    const supabase = await getServiceSupabase(env);
+
     // Fetch guide from KV
     let guide = null;
     if (env.PHILOSIFY_KV) {
@@ -142,9 +145,31 @@ export async function handleUnsafeZone(request, env, origin) {
     // Confirm credit
     await confirmReservation(env, reservation.reservationId, `unsafe-zone:${user.userId}`);
 
-    // Dispatch credit change event via response header
     const u = response.usage;
     console.log(`[UnsafeZone] ${model} — ${u.input_tokens + u.output_tokens} tokens (${u.input_tokens} in, ${u.output_tokens} out)`);
+
+    // Save full conversation to Supabase (messages + assistant reply)
+    const fullConversation = [...messages, { role: 'assistant', content: reply }];
+    try {
+      const { data: existing } = await supabase
+        .from('unsafe_zone_conversations')
+        .select('user_id', { filter: `user_id=eq.${user.userId}`, limit: 1 });
+
+      if (existing && (Array.isArray(existing) ? existing.length > 0 : !!existing)) {
+        await supabase.from('unsafe_zone_conversations').update(
+          { messages: fullConversation, updated_at: new Date().toISOString() },
+          `user_id=eq.${user.userId}`
+        );
+      } else {
+        await supabase.from('unsafe_zone_conversations').insert({
+          user_id: user.userId,
+          messages: fullConversation,
+        });
+      }
+    } catch (saveErr) {
+      console.error('[UnsafeZone] Failed to save conversation:', saveErr.message);
+      // Non-blocking — still return the reply
+    }
 
     // Return with no-cache headers — private conversation data must never be cached
     const resp = jsonResponse({ reply }, 200, origin, env);
@@ -168,5 +193,60 @@ export async function handleUnsafeZone(request, env, origin) {
       { error: 'Failed to process your question. Please try again.' },
       500, origin, env
     );
+  }
+}
+
+// ============================================================
+// LOAD CONVERSATION — GET /api/unsafe-zone/conversation
+// Returns the user's saved conversation from Supabase.
+// ============================================================
+export async function handleUnsafeZoneLoad(request, env, origin) {
+  try {
+    const user = await getUserFromAuth(request, env);
+    if (!user?.userId) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    const { data: rows } = await supabase
+      .from('unsafe_zone_conversations')
+      .select('messages,updated_at', { filter: `user_id=eq.${user.userId}`, limit: 1 });
+
+    const row = Array.isArray(rows) ? rows[0] : rows;
+    const messages = row?.messages || [];
+
+    const resp = jsonResponse({ messages }, 200, origin, env);
+    resp.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    return resp;
+
+  } catch (err) {
+    console.error('[UnsafeZone] Load error:', err);
+    return jsonResponse({ error: 'Failed to load conversation' }, 500, origin, env);
+  }
+}
+
+// ============================================================
+// CLEAR CONVERSATION — DELETE /api/unsafe-zone/conversation
+// Deletes the user's conversation from Supabase.
+// ============================================================
+export async function handleUnsafeZoneClear(request, env, origin) {
+  try {
+    const user = await getUserFromAuth(request, env);
+    if (!user?.userId) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    await supabase
+      .from('unsafe_zone_conversations')
+      .delete(`user_id=eq.${user.userId}`);
+
+    return jsonResponse({ success: true }, 200, origin, env);
+
+  } catch (err) {
+    console.error('[UnsafeZone] Clear error:', err);
+    return jsonResponse({ error: 'Failed to clear conversation' }, 500, origin, env);
   }
 }
