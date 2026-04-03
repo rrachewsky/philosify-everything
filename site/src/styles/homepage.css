@@ -413,11 +413,9 @@
     transform: translateY(0);
   }
 
-  /* Unsafe Zone distinct color + always visible when authenticated */
+  /* Unsafe Zone distinct color */
   .mobile-label--danger {
     color: #D6158C !important;
-    opacity: 1 !important;
-    transform: translateY(0) !important;
   }
 
   /* Tap feedback */
@@ -617,8 +615,6 @@
 
   .logo-authenticated ~ .mobile-category-labels .mobile-label--danger {
     color: #D6158C !important;
-    opacity: 1 !important;
-    transform: translateY(0) !important;
   }
 
   .logo-authenticated ~ .mobile-category-labels .mobile-label--visible {
