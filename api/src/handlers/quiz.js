@@ -313,10 +313,16 @@ export async function handleQuizAnswer(request, env) {
 
     await supabase.from('quiz_sessions').update(updateData, `id=eq.${sessionId}`);
 
+    // Find the text of the correct answer option
+    const options = question.translations?.[lang]?.options || question.options;
+    const parsedOptions = typeof options === 'string' ? JSON.parse(options) : options;
+    const correctOption = parsedOptions?.find(o => o.id === question.correct_answer);
+
     // Build response with translated explanation
     return jsonResponse({
       isCorrect,
       correctAnswer: question.correct_answer,
+      correctAnswerText: correctOption?.text || '',
       explanation: getTranslatedExplanation(question, lang, isCorrect, answer),
       session: {
         id: sessionId,

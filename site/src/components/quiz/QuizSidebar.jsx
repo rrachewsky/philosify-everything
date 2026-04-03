@@ -625,13 +625,16 @@ export function QuizSidebar({
                     <span>{t('quiz.wrong', 'Wrong!')}</span>
                     <span className="quiz-feedback__correct">
                       {t('quiz.correctWas', 'Correct answer:')} {feedback.correctAnswer?.toUpperCase() ?? '?'}
+                      {feedback.correctAnswerText && (
+                        <> — {feedback.correctAnswerText}</>
+                      )}
                     </span>
                   </>
                 )}
               </div>
 
               <div className="quiz-feedback__explanation">
-                <h4>{t('quiz.explanation', 'Explanation')}</h4>
+                <h4>{feedback.isCorrect ? t('quiz.whyCorrect', 'Why this is correct') : t('quiz.whyWrong', 'Why your answer was wrong')}</h4>
                 <p>{feedback.explanation}</p>
               </div>
 
