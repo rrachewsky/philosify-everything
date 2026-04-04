@@ -122,6 +122,66 @@ export function ConstellationOfIdeas() {
     }
   }, [currentYear, setCurrentYear, setSelectedNode, setSoloNode]);
 
+  // Handle era filter with camera fly-to
+  const handleEraFilter = useCallback((eraId) => {
+    toggleEraFilter(eraId);
+    // After filter toggle, fly to a representative philosopher
+    // Use setTimeout to let the state update first
+    setTimeout(() => {
+      if (eraId && data?.nodes) {
+        const era = ERAS.find(e => e.id === eraId);
+        if (era) {
+          // Find philosophers in this era
+          let eraNodes;
+          if (era.filterByMovement) {
+            eraNodes = data.nodes.filter(n => era.movements?.includes(n.school));
+          } else {
+            eraNodes = data.nodes.filter(n => 
+              n.birth_year >= era.startYear && n.birth_year <= era.endYear
+            );
+          }
+          if (eraNodes.length > 0) {
+            // Fly to a philosopher near the middle of the era (by birth year)
+            const sorted = [...eraNodes].sort((a, b) => a.birth_year - b.birth_year);
+            const midNode = sorted[Math.floor(sorted.length / 2)];
+            if (sceneRef.current?.flyToNode) {
+              sceneRef.current.flyToNode(midNode);
+            }
+            // Also jump timeline to show them
+            setCurrentYear(midNode.birth_year + 20);
+          }
+        }
+      } else {
+        // Filter cleared - reset view
+        sceneRef.current?.resetView?.();
+      }
+    }, 50);
+  }, [toggleEraFilter, data, setCurrentYear]);
+
+  // Handle school filter with camera fly-to
+  const handleSchoolFilter = useCallback((schoolName) => {
+    toggleSchoolFilter(schoolName);
+    // After filter toggle, fly to a representative philosopher
+    setTimeout(() => {
+      if (schoolName && data?.nodes) {
+        const schoolNodes = data.nodes.filter(n => n.school === schoolName);
+        if (schoolNodes.length > 0) {
+          // Fly to a philosopher near the middle (by birth year)
+          const sorted = [...schoolNodes].sort((a, b) => a.birth_year - b.birth_year);
+          const midNode = sorted[Math.floor(sorted.length / 2)];
+          if (sceneRef.current?.flyToNode) {
+            sceneRef.current.flyToNode(midNode);
+          }
+          // Also jump timeline to show them
+          setCurrentYear(midNode.birth_year + 20);
+        }
+      } else {
+        // Filter cleared - reset view
+        sceneRef.current?.resetView?.();
+      }
+    }, 50);
+  }, [toggleSchoolFilter, data, setCurrentYear]);
+
   // Handle retry
   const handleRetry = useCallback(() => {
     window.location.reload();
@@ -315,9 +375,9 @@ export function ConstellationOfIdeas() {
         minYear={MIN_YEAR}
         maxYear={MAX_YEAR}
         selectedEra={selectedEra}
-        toggleEraFilter={toggleEraFilter}
+        toggleEraFilter={handleEraFilter}
         selectedSchool={selectedSchool}
-        toggleSchoolFilter={toggleSchoolFilter}
+        toggleSchoolFilter={handleSchoolFilter}
         schools={getSchools()}
       />
 

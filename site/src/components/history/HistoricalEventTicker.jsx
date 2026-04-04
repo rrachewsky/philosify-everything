@@ -214,6 +214,7 @@ export function HistoricalEventTicker({
           style={{
             transform: `translateX(${translateX}px)`,
             animation: 'none',
+            transition: isDragging ? 'none' : 'transform 0.3s ease-out',
           }}
         >
           {SORTED_EVENTS.map((event) => {
