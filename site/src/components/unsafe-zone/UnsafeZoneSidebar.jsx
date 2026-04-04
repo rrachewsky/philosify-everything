@@ -23,6 +23,7 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [conversationLoaded, setConversationLoaded] = useState(false);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
 
   // Refs
   const sidebarRef = useRef(null);
@@ -260,7 +261,7 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
                   {t('unsafeZone.welcome2', 'This is not one of them.')}
                 </p>
                 <p style={{ margin: '0 0 0.8rem' }}>
-                  {t('unsafeZone.welcome3', 'Unsafe Zone exists because real questions deserve real answers. Not comfort. Not a list of perspectives. Not someone telling you what you want to hear.')}
+                  {t('unsafeZone.welcome3', 'Unsafe Zone exists because real questions deserve to be examined — not answered. Not comfort. Not a list of perspectives. Not someone telling you what to think.')}
                 </p>
                 <p style={{ margin: '0 0 0.8rem' }}>
                   {t('unsafeZone.welcome4', "You carry questions that don't fit in a search bar. Dilemmas that keep returning. Fears you haven't named. Decisions you've been circling for months or years without landing anywhere honest.")}
@@ -302,6 +303,70 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
               flexDirection: 'column',
               gap: '0.75rem',
             }}>
+              {/* How it works link */}
+              <button
+                onClick={() => setShowHowItWorks(!showHowItWorks)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'rgba(137, 207, 240, 0.6)',
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  padding: 0,
+                  textAlign: 'center',
+                  fontFamily: 'Inter, sans-serif',
+                  textDecoration: 'underline',
+                  textUnderlineOffset: '2px',
+                }}
+              >
+                {showHowItWorks ? t('unsafeZone.hideIntro', 'Hide introduction') : t('unsafeZone.howItWorks', 'How it works')}
+              </button>
+
+              {/* Collapsible intro - all welcome premises */}
+              {showHowItWorks && (
+                <div style={{
+                  padding: '0.75rem 1rem',
+                  borderRadius: '12px',
+                  background: 'rgba(137, 207, 240, 0.06)',
+                  border: '1px solid rgba(137, 207, 240, 0.12)',
+                  fontSize: '0.8rem',
+                  lineHeight: 1.6,
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontFamily: 'Inter, sans-serif',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                }}>
+                  <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.45)' }}>
+                    {t('unsafeZone.welcome1', 'Most spaces online offer you agreement, validation, or distraction.')}
+                  </p>
+                  <p style={{ margin: 0, fontWeight: 600, color: '#FAFAFB' }}>
+                    {t('unsafeZone.welcome2', 'This is not one of them.')}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    {t('unsafeZone.welcome3', 'Unsafe Zone exists because real questions deserve to be examined — not answered. Not comfort. Not a list of perspectives. Not someone telling you what to think.')}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    {t('unsafeZone.welcome4', "You carry questions that don't fit in a search bar. Dilemmas that keep returning. Fears you haven't named. Decisions you've been circling for months or years without landing anywhere honest.")}
+                  </p>
+                  <p style={{ margin: 0, fontWeight: 600, color: '#D6158C' }}>
+                    {t('unsafeZone.welcome5', 'This is where you bring those.')}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    {t('unsafeZone.welcome6', 'What happens here is not therapy, not advice, and not judgment. It is rigorous, patient, philosophical dialogue — designed to surface what is actually inside the question you are carrying, strip away the evasions and borrowed beliefs, and leave you with something you can actually use: clarity about what you truly think, what you truly value, and what the honest answer actually is.')}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    {t('unsafeZone.welcome7', 'You will be asked precise questions. You will be taken seriously. You will not be told what to do.')}
+                  </p>
+                  <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.45)' }}>
+                    {t('unsafeZone.welcome8', 'The last step is always yours.')}
+                  </p>
+                  <p style={{ margin: 0, fontWeight: 600, color: '#89CFF0', textAlign: 'center' }}>
+                    {t('unsafeZone.welcome9', 'You are not here for comfort. You are here for clarity.')}
+                  </p>
+                </div>
+              )}
+
               {messages.map((msg, i) => (
                 <div
                   key={i}
