@@ -724,23 +724,23 @@ export async function handleQuizContinue(request, env) {
     const allExcluded = [...new Set([...(session.answered_question_ids || []), ...userCorrectIds])];
 
     // Get next question at current difficulty
-    const { data: question, error: questionError } = await supabase
+    const { data: questionData, error: questionError } = await supabase
       .rpc('get_quiz_question', {
         p_difficulty: session.current_difficulty,
         p_excluded_ids: allExcluded,
       });
 
-    let nextQuestion = question;
+    let nextQuestion = Array.isArray(questionData) ? questionData[0] : questionData;
 
     if (questionError || !nextQuestion) {
       // Try lower difficulty
-      const { data: fallback } = await supabase
+      const { data: fallbackData } = await supabase
         .rpc('get_quiz_question', {
           p_difficulty: Math.max(1, session.current_difficulty - 1),
           p_excluded_ids: allExcluded,
         });
 
-      nextQuestion = fallback;
+      nextQuestion = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
       if (!nextQuestion) {
         return errorResponse('No more questions available', 500, origin, env);
       }

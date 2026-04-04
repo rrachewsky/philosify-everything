@@ -224,8 +224,7 @@ export default function NewsSidebar({
       signupModal.open();
       return;
     }
-    // Only check balance if loaded AND insufficient (don't block if balance still loading)
-    if (balance !== null && balance.total !== undefined && balance.total < 1) {
+    if (!balance || balance.total === undefined || balance.total < 1) {
       setPendingAction({ type: 'news-analysis', article: selectedArticle });
       paymentModal.open();
       return;
@@ -246,8 +245,7 @@ export default function NewsSidebar({
       signupModal.open();
       return;
     }
-    // Only check balance if loaded AND insufficient (don't block if balance still loading)
-    if (balance !== null && balance.total !== undefined && balance.total < 3) {
+    if (!balance || balance.total === undefined || balance.total < 3) {
       if (selectedArticle) {
         setPendingAction({ type: 'news-panel', article: selectedArticle });
       }
