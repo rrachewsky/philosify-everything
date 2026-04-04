@@ -103,7 +103,7 @@ async function reserveCredits(env, userId, amount) {
   // Check balance first
   const { data: balance, error: balanceError } = await supabase
     .from('credits')
-    .select('free_remaining,purchased_remaining', { 
+    .select('free_remaining,purchased,total', { 
       filter: `user_id=eq.${userId}`, 
       limit: 1 
     });
@@ -114,14 +114,14 @@ async function reserveCredits(env, userId, amount) {
   }
   
   const row = Array.isArray(balance) ? balance[0] : balance;
-  const total = (row?.free_remaining || 0) + (row?.purchased_remaining || 0);
+  const total = row?.total || 0;
   
   console.log('[UnsafeZone] Balance check:', { 
     userId, 
     amount, 
     row, 
     free: row?.free_remaining, 
-    purchased: row?.purchased_remaining, 
+    purchased: row?.purchased, 
     total 
   });
   
@@ -140,7 +140,7 @@ async function reserveCredits(env, userId, amount) {
     .from('credits')
     .update({
       free_remaining: (row?.free_remaining || 0) - freeToDeduct,
-      purchased_remaining: (row?.purchased_remaining || 0) - purchasedToDeduct,
+      purchased: (row?.purchased || 0) - purchasedToDeduct,
     }, `user_id=eq.${userId}`);
   
   return { success: true, amount };
