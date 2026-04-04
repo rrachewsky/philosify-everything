@@ -103,9 +103,10 @@ async function reserveCredits(env, userId, amount) {
   // Check balance first
   const { data: balance } = await supabase
     .from('credits')
-    .select('free_remaining,purchased_remaining')
-    .eq('user_id', userId)
-    .limit(1);
+    .select('free_remaining,purchased_remaining', { 
+      filter: `user_id=eq.${userId}`, 
+      limit: 1 
+    });
   
   const row = Array.isArray(balance) ? balance[0] : balance;
   const total = (row?.free_remaining || 0) + (row?.purchased_remaining || 0);
@@ -125,8 +126,7 @@ async function reserveCredits(env, userId, amount) {
     .update({
       free_remaining: (row?.free_remaining || 0) - freeToDeduct,
       purchased_remaining: (row?.purchased_remaining || 0) - purchasedToDeduct,
-    })
-    .eq('user_id', userId);
+    }, `user_id=eq.${userId}`);
   
   return { success: true, amount };
 }
@@ -170,10 +170,10 @@ export async function handleUnsafeZone(request, env, origin) {
       // Resume existing session
       const { data: sessions } = await supabase
         .from('unsafe_zone_sessions')
-        .select('*')
-        .eq('id', sessionId)
-        .eq('user_id', user.userId)
-        .limit(1);
+        .select('*', { 
+          filter: `id=eq.${sessionId}&user_id=eq.${user.userId}`, 
+          limit: 1 
+        });
       session = Array.isArray(sessions) ? sessions[0] : sessions;
       
       if (!session) {
@@ -186,10 +186,10 @@ export async function handleUnsafeZone(request, env, origin) {
       // Check for existing active session
       const { data: activeSessions } = await supabase
         .from('unsafe_zone_sessions')
-        .select('*')
-        .eq('user_id', user.userId)
-        .eq('status', 'active')
-        .limit(1);
+        .select('*', { 
+          filter: `user_id=eq.${user.userId}&status=eq.active`, 
+          limit: 1 
+        });
       session = Array.isArray(activeSessions) ? activeSessions[0] : activeSessions;
     }
 
@@ -230,10 +230,10 @@ export async function handleUnsafeZone(request, env, origin) {
       // Fetch the created session
       const { data: created } = await supabase
         .from('unsafe_zone_sessions')
-        .select('*')
-        .eq('user_id', user.userId)
-        .eq('status', 'active')
-        .limit(1);
+        .select('*', { 
+          filter: `user_id=eq.${user.userId}&status=eq.active`, 
+          limit: 1 
+        });
       session = Array.isArray(created) ? created[0] : created;
     }
 
@@ -300,8 +300,7 @@ export async function handleUnsafeZone(request, env, origin) {
         messages: fullConversation,
         turn_count: newTurnCount,
         updated_at: new Date().toISOString(),
-      })
-      .eq('id', session.id);
+      }, `id=eq.${session.id}`);
 
     // Build response
     const responseData = {
@@ -360,10 +359,10 @@ export async function handleUnsafeZoneLoad(request, env, origin) {
 
     const { data: sessions } = await supabase
       .from('unsafe_zone_sessions')
-      .select('id,messages,turn_count,status,updated_at')
-      .eq('user_id', user.userId)
-      .eq('status', 'active')
-      .limit(1);
+      .select('id,messages,turn_count,status,updated_at', { 
+        filter: `user_id=eq.${user.userId}&status=eq.active`, 
+        limit: 1 
+      });
 
     const session = Array.isArray(sessions) ? sessions[0] : sessions;
     
@@ -404,10 +403,11 @@ export async function handleUnsafeZoneHistory(request, env, origin) {
     // Get all sessions, most recent first
     const { data: sessions } = await supabase
       .from('unsafe_zone_sessions')
-      .select('id,turn_count,status,created_at,updated_at,messages')
-      .eq('user_id', user.userId)
-      .order('created_at', { ascending: false })
-      .limit(50);
+      .select('id,turn_count,status,created_at,updated_at,messages', { 
+        filter: `user_id=eq.${user.userId}`,
+        order: 'created_at.desc',
+        limit: 50 
+      });
 
     // Transform to summary format (don't send full messages in list)
     const history = (sessions || []).map(s => {
@@ -448,10 +448,10 @@ export async function handleUnsafeZoneGetSession(request, env, origin, sessionId
 
     const { data: sessions } = await supabase
       .from('unsafe_zone_sessions')
-      .select('*')
-      .eq('id', sessionId)
-      .eq('user_id', user.userId)
-      .limit(1);
+      .select('*', { 
+        filter: `id=eq.${sessionId}&user_id=eq.${user.userId}`, 
+        limit: 1 
+      });
 
     const session = Array.isArray(sessions) ? sessions[0] : sessions;
     
@@ -497,9 +497,7 @@ export async function handleUnsafeZoneEnd(request, env, origin) {
       .update({
         status: 'completed',
         updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', user.userId)
-      .eq('status', 'active');
+      }, `user_id=eq.${user.userId}&status=eq.active`);
 
     return jsonResponse({ success: true }, 200, origin, env);
 
