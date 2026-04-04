@@ -137,7 +137,8 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
     }
 
     const requiredCredits = getRequiredCredits();
-    if (requiredCredits > 0 && (!balance || balance.total < requiredCredits)) {
+    // Only check balance if loaded AND insufficient (don't block if balance still loading)
+    if (requiredCredits > 0 && balance !== null && balance.total !== undefined && balance.total < requiredCredits) {
       setPendingAction({ type: 'unsafe-zone', credits: requiredCredits });
       paymentModal.open();
       return;
