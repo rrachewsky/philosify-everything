@@ -12,6 +12,7 @@
 // ============================================================
 
 import Anthropic from '@anthropic-ai/sdk';
+import { createClient } from '@supabase/supabase-js';
 import { jsonResponse } from '../utils/index.js';
 import { getServiceSupabase } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
@@ -95,33 +96,40 @@ function getTurnInfo(turnCount) {
 }
 
 // ============================================================
-// Reserve multiple credits
+// Reserve multiple credits (using official Supabase client)
 // ============================================================
 async function reserveCredits(env, userId, amount) {
-  const supabase = await getServiceSupabase(env);
+  const supabaseUrl = await getSecret(env.SUPABASE_URL);
+  const supabaseServiceKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+  
+  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
   
   // Check balance first
-  const { data: balance, error: balanceError } = await supabase
+  const { data: row, error: balanceError } = await supabase
     .from('credits')
-    .select('free_remaining,purchased,total', { 
-      filter: `user_id=eq.${userId}`, 
-      limit: 1 
-    });
+    .select('free_remaining, purchased, total')
+    .eq('user_id', userId)
+    .single();
   
   if (balanceError) {
-    console.error('[UnsafeZone] Error fetching balance:', balanceError);
+    console.error('[UnsafeZone] Error fetching balance:', balanceError.message);
     return { success: false, error: 'Failed to check balance' };
   }
   
-  const row = Array.isArray(balance) ? balance[0] : balance;
-  const total = row?.total || 0;
+  if (!row) {
+    console.error('[UnsafeZone] No credits row found for user:', userId);
+    return { success: false, error: 'No credits found' };
+  }
+  
+  const total = row.total || 0;
   
   console.log('[UnsafeZone] Balance check:', { 
     userId, 
     amount, 
-    row, 
-    free: row?.free_remaining, 
-    purchased: row?.purchased, 
+    free: row.free_remaining, 
+    purchased: row.purchased, 
     total 
   });
   
@@ -132,17 +140,24 @@ async function reserveCredits(env, userId, amount) {
   
   // Deduct credits (free first, then purchased)
   let remaining = amount;
-  let freeToDeduct = Math.min(row?.free_remaining || 0, remaining);
+  let freeToDeduct = Math.min(row.free_remaining || 0, remaining);
   remaining -= freeToDeduct;
   let purchasedToDeduct = remaining;
   
-  await supabase
+  const { error: updateError } = await supabase
     .from('credits')
     .update({
-      free_remaining: (row?.free_remaining || 0) - freeToDeduct,
-      purchased: (row?.purchased || 0) - purchasedToDeduct,
-    }, `user_id=eq.${userId}`);
+      free_remaining: (row.free_remaining || 0) - freeToDeduct,
+      purchased: (row.purchased || 0) - purchasedToDeduct,
+    })
+    .eq('user_id', userId);
   
+  if (updateError) {
+    console.error('[UnsafeZone] Error deducting credits:', updateError.message);
+    return { success: false, error: 'Failed to deduct credits' };
+  }
+  
+  console.log(`[UnsafeZone] Deducted ${amount} credits (${freeToDeduct} free, ${purchasedToDeduct} purchased)`);
   return { success: true, amount };
 }
 
