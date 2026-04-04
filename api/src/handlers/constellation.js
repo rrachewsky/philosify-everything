@@ -29,23 +29,94 @@ const TRADITION_BASE_X = {
 
 // ============================================================
 // 3D ORBITAL TETHER POSITIONING SYSTEM
-// Ensures NO overlapping cards by assigning unique (x, y, z)
+// Cards from same geographic area stay CLOSE together
+// Small inclination/altitude variations prevent overlap
 // 
 // Coordinate System:
-// - x_inclination: East/West tether angle (-15° to +15°)
-// - y_inclination: North/South tether angle (-10° to +10°)  
-// - z_altitude: Height above birthplace (60 to 150 km)
+// - x_inclination: East/West tether angle (small, ±5° max within region)
+// - y_inclination: North/South tether angle (small, ±5° max within region)  
+// - z_altitude: Height above birthplace (80 to 120 km)
 // ============================================================
 
 // Position precision (rounded to this many decimals)
 const POSITION_PRECISION = 1;
 
-// Available space bounds
-const BOUNDS = {
-  x_min: -15, x_max: 15,   // East/West inclination degrees
-  y_min: -10, y_max: 10,   // North/South inclination degrees
-  z_min: 60,  z_max: 150,  // Altitude in km
+// Geographic region base positions (clustered, not spread apart)
+// All regions are close to center, differentiated by small offsets
+const REGION_BASE = {
+  // Ancient Greece (Athens area)
+  greece: { x: 0, y: 0, z: 90 },
+  // Rome/Italy
+  rome: { x: 1, y: -1, z: 92 },
+  // Germany
+  germany: { x: -1, y: 2, z: 95 },
+  // France  
+  france: { x: -2, y: 1, z: 93 },
+  // Britain
+  britain: { x: -2, y: 3, z: 94 },
+  // China
+  china: { x: 3, y: 0, z: 88 },
+  // India
+  india: { x: 2, y: -2, z: 86 },
+  // Persia/Islamic
+  persia: { x: 1, y: -2, z: 89 },
+  // Default (unknown region)
+  default: { x: 0, y: 0, z: 100 },
 };
+
+// Map philosopher birthplaces to regions
+function getRegion(node) {
+  const birthplace = (node.birthplace || '').toLowerCase();
+  const name = (node.name || '').toLowerCase();
+  
+  // Greece
+  if (birthplace.includes('athens') || birthplace.includes('greece') || 
+      birthplace.includes('stagira') || birthplace.includes('samos') ||
+      birthplace.includes('abdera') || birthplace.includes('ephesus') ||
+      birthplace.includes('miletus') || birthplace.includes('elea')) {
+    return 'greece';
+  }
+  // Rome/Italy
+  if (birthplace.includes('rome') || birthplace.includes('italy') ||
+      birthplace.includes('naples') || birthplace.includes('aquino')) {
+    return 'rome';
+  }
+  // Germany
+  if (birthplace.includes('germany') || birthplace.includes('prussia') ||
+      birthplace.includes('königsberg') || birthplace.includes('frankfurt') ||
+      birthplace.includes('danzig') || birthplace.includes('röcken')) {
+    return 'germany';
+  }
+  // France
+  if (birthplace.includes('france') || birthplace.includes('paris') ||
+      birthplace.includes('lyon') || birthplace.includes('la haye')) {
+    return 'france';
+  }
+  // Britain
+  if (birthplace.includes('england') || birthplace.includes('britain') ||
+      birthplace.includes('scotland') || birthplace.includes('london') ||
+      birthplace.includes('edinburgh')) {
+    return 'britain';
+  }
+  // China
+  if (birthplace.includes('china') || birthplace.includes('qufu') ||
+      node.tradition === 'chinese') {
+    return 'china';
+  }
+  // India  
+  if (birthplace.includes('india') || birthplace.includes('lumbini') ||
+      node.tradition === 'indian') {
+    return 'india';
+  }
+  // Persia/Islamic
+  if (birthplace.includes('persia') || birthplace.includes('iran') ||
+      birthplace.includes('baghdad') || birthplace.includes('cordoba') ||
+      node.tradition === 'islamic') {
+    return 'persia';
+  }
+  
+  return 'default';
+}
 
 // Round to precision
 function roundTo(num, decimals) {
@@ -58,76 +129,48 @@ function positionKey(x, y, z) {
   return `${roundTo(x, POSITION_PRECISION)},${roundTo(y, POSITION_PRECISION)},${roundTo(z, POSITION_PRECISION)}`;
 }
 
-// Calculate ideal position based on philosophical meaning
-function calculateIdealPosition(node) {
-  const battles = node.battles || {};
-  
-  // X: Based on tradition (Western left, Eastern right)
-  const traditionX = {
-    western: -8,
-    chinese: 8,
-    indian: 5,
-    islamic: 2,
-  };
-  const idealX = traditionX[node.tradition] || 0;
-  
-  // Y: Based on battle scores (reason vs faith dominant axis)
-  let battleScore = 0;
-  Object.entries(BATTLE_WEIGHTS).forEach(([battle, weight]) => {
-    const score = battles[battle] || 0;
-    battleScore += score * weight;
-  });
-  const idealY = battleScore * 8; // Scale to ±8 degrees
-  
-  // Z: Based on era (ancient = lower, modern = higher)
-  const eraProgress = (node.birth_year + 600) / 2626; // 0 to 1
-  const idealZ = BOUNDS.z_min + eraProgress * (BOUNDS.z_max - BOUNDS.z_min);
-  
-  return { x: idealX, y: idealY, z: idealZ };
-}
-
-// Find nearest available position using spiral search
-function findAvailablePosition(idealX, idealY, idealZ, occupiedPositions) {
-  // Try ideal position first
-  let key = positionKey(idealX, idealY, idealZ);
+// Find nearest available position using tight spiral (stays close to base)
+function findAvailablePosition(baseX, baseY, baseZ, occupiedPositions) {
+  // Try base position first
+  let key = positionKey(baseX, baseY, baseZ);
   if (!occupiedPositions.has(key)) {
-    return { x: roundTo(idealX, POSITION_PRECISION), y: roundTo(idealY, POSITION_PRECISION), z: roundTo(idealZ, POSITION_PRECISION) };
+    return { x: roundTo(baseX, POSITION_PRECISION), y: roundTo(baseY, POSITION_PRECISION), z: roundTo(baseZ, POSITION_PRECISION) };
   }
   
-  // Spiral search outward from ideal position
-  const step = Math.pow(10, -POSITION_PRECISION); // 0.1 for precision=1
+  // Tight spiral - small steps to stay close
+  const step = 0.5; // Half degree steps
   
-  for (let radius = 1; radius <= 50; radius++) {
+  for (let radius = 1; radius <= 20; radius++) {
     const offset = radius * step;
     
-    // Try variations in x, y, z
+    // Try variations - prioritize Z (altitude) changes, then small x/y
     const variations = [
-      // Vary X
-      { x: idealX + offset, y: idealY, z: idealZ },
-      { x: idealX - offset, y: idealY, z: idealZ },
-      // Vary Y
-      { x: idealX, y: idealY + offset, z: idealZ },
-      { x: idealX, y: idealY - offset, z: idealZ },
-      // Vary Z (larger steps for altitude)
-      { x: idealX, y: idealY, z: idealZ + radius * 2 },
-      { x: idealX, y: idealY, z: idealZ - radius * 2 },
-      // Diagonal variations
-      { x: idealX + offset, y: idealY + offset, z: idealZ },
-      { x: idealX - offset, y: idealY + offset, z: idealZ },
-      { x: idealX + offset, y: idealY - offset, z: idealZ },
-      { x: idealX - offset, y: idealY - offset, z: idealZ },
-      // 3D diagonals
-      { x: idealX + offset, y: idealY, z: idealZ + radius * 2 },
-      { x: idealX - offset, y: idealY, z: idealZ + radius * 2 },
-      { x: idealX, y: idealY + offset, z: idealZ + radius * 2 },
-      { x: idealX, y: idealY - offset, z: idealZ + radius * 2 },
+      // Altitude variations first (vertical separation)
+      { x: baseX, y: baseY, z: baseZ + radius * 2 },
+      { x: baseX, y: baseY, z: baseZ - radius * 2 },
+      // Small X variations
+      { x: baseX + offset, y: baseY, z: baseZ },
+      { x: baseX - offset, y: baseY, z: baseZ },
+      // Small Y variations
+      { x: baseX, y: baseY + offset, z: baseZ },
+      { x: baseX, y: baseY - offset, z: baseZ },
+      // Diagonal + altitude
+      { x: baseX + offset, y: baseY + offset, z: baseZ + radius },
+      { x: baseX - offset, y: baseY + offset, z: baseZ + radius },
+      { x: baseX + offset, y: baseY - offset, z: baseZ - radius },
+      { x: baseX - offset, y: baseY - offset, z: baseZ - radius },
+      // More altitude with small offset
+      { x: baseX + offset * 0.5, y: baseY, z: baseZ + radius * 3 },
+      { x: baseX - offset * 0.5, y: baseY, z: baseZ - radius * 3 },
+      { x: baseX, y: baseY + offset * 0.5, z: baseZ + radius * 3 },
+      { x: baseX, y: baseY - offset * 0.5, z: baseZ - radius * 3 },
     ];
     
     for (const v of variations) {
-      // Check bounds
-      if (v.x < BOUNDS.x_min || v.x > BOUNDS.x_max) continue;
-      if (v.y < BOUNDS.y_min || v.y > BOUNDS.y_max) continue;
-      if (v.z < BOUNDS.z_min || v.z > BOUNDS.z_max) continue;
+      // Check bounds (tight bounds to keep cards close)
+      if (v.x < -10 || v.x > 10) continue;
+      if (v.y < -8 || v.y > 8) continue;
+      if (v.z < 60 || v.z > 140) continue;
       
       const vKey = positionKey(v.x, v.y, v.z);
       if (!occupiedPositions.has(vKey)) {
@@ -140,50 +183,62 @@ function findAvailablePosition(idealX, idealY, idealZ, occupiedPositions) {
     }
   }
   
-  // Fallback: random position within bounds (should never happen with enough space)
-  console.warn('[Constellation] Spiral search exhausted, using random fallback');
-  for (let attempt = 0; attempt < 1000; attempt++) {
-    const rx = roundTo(BOUNDS.x_min + Math.random() * (BOUNDS.x_max - BOUNDS.x_min), POSITION_PRECISION);
-    const ry = roundTo(BOUNDS.y_min + Math.random() * (BOUNDS.y_max - BOUNDS.y_min), POSITION_PRECISION);
-    const rz = roundTo(BOUNDS.z_min + Math.random() * (BOUNDS.z_max - BOUNDS.z_min), POSITION_PRECISION);
+  // Fallback with random small offset
+  for (let attempt = 0; attempt < 100; attempt++) {
+    const rx = roundTo(baseX + (Math.random() - 0.5) * 6, POSITION_PRECISION);
+    const ry = roundTo(baseY + (Math.random() - 0.5) * 4, POSITION_PRECISION);
+    const rz = roundTo(baseZ + (Math.random() - 0.5) * 40, POSITION_PRECISION);
     const rKey = positionKey(rx, ry, rz);
     if (!occupiedPositions.has(rKey)) {
       return { x: rx, y: ry, z: rz };
     }
   }
   
-  // Last resort: return ideal position anyway
-  return { x: roundTo(idealX, POSITION_PRECISION), y: roundTo(idealY, POSITION_PRECISION), z: roundTo(idealZ, POSITION_PRECISION) };
+  // Last resort
+  return { x: roundTo(baseX, POSITION_PRECISION), y: roundTo(baseY, POSITION_PRECISION), z: roundTo(baseZ + Math.random() * 20, POSITION_PRECISION) };
 }
 
 // Assign unique orbital positions to all nodes
+// Cards from same region stay CLOSE together
 function assignOrbitalPositions(nodes) {
   const occupiedPositions = new Set();
   const results = [];
   
-  // Sort nodes by historical weight (most important get ideal positions first)
-  const sortedNodes = [...nodes].sort((a, b) => (b.historical_weight || 0.5) - (a.historical_weight || 0.5));
+  // Group nodes by region
+  const regionGroups = {};
+  for (const node of nodes) {
+    const region = getRegion(node);
+    if (!regionGroups[region]) regionGroups[region] = [];
+    regionGroups[region].push(node);
+  }
   
-  for (const node of sortedNodes) {
-    const ideal = calculateIdealPosition(node);
-    const position = findAvailablePosition(ideal.x, ideal.y, ideal.z, occupiedPositions);
+  // Process each region - sort by historical weight within region
+  for (const [region, regionNodes] of Object.entries(regionGroups)) {
+    const base = REGION_BASE[region] || REGION_BASE.default;
     
-    // Mark position as occupied
-    occupiedPositions.add(positionKey(position.x, position.y, position.z));
+    // Sort by importance (most important gets base position)
+    regionNodes.sort((a, b) => (b.historical_weight || 0.5) - (a.historical_weight || 0.5));
     
-    results.push({
-      nodeId: node.id,
-      orbital_position: {
-        x_inclination: position.x,
-        y_inclination: position.y,
-        z_altitude: position.z,
-        // Legacy fields for compatibility
-        x: position.x * 5,  // Scale for visualization
-        y: position.y * 8,  // Scale for visualization
-        z: (position.z - 100) / 2,  // Center around 0
-        altitude: position.z,
-      }
-    });
+    for (const node of regionNodes) {
+      const position = findAvailablePosition(base.x, base.y, base.z, occupiedPositions);
+      
+      // Mark position as occupied
+      occupiedPositions.add(positionKey(position.x, position.y, position.z));
+      
+      results.push({
+        nodeId: node.id,
+        orbital_position: {
+          x_inclination: position.x,
+          y_inclination: position.y,
+          z_altitude: position.z,
+          // Legacy fields for visualization
+          x: position.x * 8,   // Scale for 3D view
+          y: position.y * 10,  // Scale for 3D view
+          z: (position.z - 100) * 1.5,  // Center and scale
+          altitude: position.z,
+        }
+      });
+    }
   }
   
   return results;
