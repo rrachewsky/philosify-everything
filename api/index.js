@@ -19,7 +19,17 @@ import {
   verifyStripeWebhook,
 } from "./src/payments/index.js";
 import { safeEq } from "./src/payments/crypto.js";
-import { handleSearch, handleAnalyze, handleBookSearch, handleBookAnalyze } from "./src/handlers/index.js";
+import {
+  handleSearch,
+  handleAnalyze,
+  handleBookSearch,
+  handleBookAnalyze,
+  handleAssignOrbitalCoordinates,
+  handleSetOrbitalCoordinates,
+  handleCheckOrbitalPosition,
+  handleGetOccupiedPositions,
+  handleBatchAssignOrbitalCoordinates,
+} from "./src/handlers/index.js";
 import { handleBookAnalysisHistory } from "./src/handlers/book-analysis-history.js";
 import { handleBookAnalysisDetail } from "./src/handlers/book-analysis-detail.js";
 import { handlePhilosopherPanel } from "./src/handlers/philosopher-panel.js";
@@ -3584,6 +3594,31 @@ export default {
       if (url.pathname === "/api/history/constellation/stats" && request.method === "GET") {
         const { handleConstellationStats } = await import("./src/handlers/constellation.js");
         return handleConstellationStats(request, env, origin);
+      }
+
+      // ============================================================
+      // ORBITAL COORDINATES — 3D Tether Position Management
+      // ============================================================
+      if (url.pathname.match(/^\/api\/orbital\/assign\/(.+)$/) && request.method === "POST") {
+        const nodeId = url.pathname.split("/")[4];
+        return handleAssignOrbitalCoordinates(request, env, nodeId);
+      }
+      
+      if (url.pathname.match(/^\/api\/orbital\/set\/(.+)$/) && request.method === "POST") {
+        const nodeId = url.pathname.split("/")[4];
+        return handleSetOrbitalCoordinates(request, env, nodeId);
+      }
+      
+      if (url.pathname === "/api/orbital/check" && request.method === "GET") {
+        return handleCheckOrbitalPosition(request, env);
+      }
+      
+      if (url.pathname === "/api/orbital/occupied" && request.method === "GET") {
+        return handleGetOccupiedPositions(request, env);
+      }
+      
+      if (url.pathname === "/api/orbital/batch-assign" && request.method === "POST") {
+        return handleBatchAssignOrbitalCoordinates(request, env);
       }
 
       // ============================================================

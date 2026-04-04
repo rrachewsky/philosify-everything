@@ -17,3 +17,12 @@ export { handleHistoryGraph, handleHistoryExtract, refreshGraphCache } from './h
 // Constellation of Ideas
 export { handleConstellation, handleConstellationCacheClear, handleConstellationStats } from './constellation.js';
 
+// Orbital Coordinates
+export {
+  handleAssignOrbitalCoordinates,
+  handleSetOrbitalCoordinates,
+  handleCheckOrbitalPosition,
+  handleGetOccupiedPositions,
+  handleBatchAssignOrbitalCoordinates,
+} from './orbital-coordinates.js';
+

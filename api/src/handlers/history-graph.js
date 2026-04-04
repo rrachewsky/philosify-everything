@@ -101,8 +101,13 @@ async function buildGraphData(env) {
       description: n.description,
       tradition: n.tradition,
       weight: n.weight,
+      // Geographic birthplace
       latitude: n.latitude,
       longitude: n.longitude,
+      // 3D orbital tether coordinates
+      x_inclination: n.x_inclination || 0,
+      y_inclination: n.y_inclination || 0,
+      z_altitude: n.z_altitude || 80,
       val: nodeVal(n),
       color: NODE_COLORS[n.type] || '#FFFFFF',
     })),
