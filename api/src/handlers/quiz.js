@@ -31,6 +31,8 @@ async function translateQuestionWithAI(question, lang, env) {
     const wrongExpl = typeof question.wrong_explanations === 'string'
       ? JSON.parse(question.wrong_explanations) : question.wrong_explanations;
 
+    // NEW STRUCTURE: options = [{"text": "...", "correct": true}, {"text": "..."}, ...]
+    // wrong_explanations keyed by index: {"0": "...", "1": "...", "2": "..."}
     const prompt = `Translate this philosophical quiz question into the language with ISO code "${lang}".
 Return ONLY a valid JSON object, no markdown fences, no explanation.
 
@@ -44,7 +46,8 @@ Input:
 
 Rules:
 - Translate question text, all option texts, explanation, and each wrong_explanation value
-- Keep option "id" fields unchanged (a, b, c, d)
+- Keep the "correct": true field on the correct option UNCHANGED
+- Keep wrong_explanations keys unchanged (they are indices: "0", "1", "2", "3")
 - Use local name forms for philosophers (e.g., Aristóteles, Платон, 亚里士多德)
 - Keep it natural and punchy, not word-for-word
 - CRITICAL: All four option texts MUST be approximately the same length (within ±3 words of each other). If the correct answer is longer, expand the wrong answers to match. If the correct answer is shorter, expand it slightly. The user must NOT be able to guess the correct answer by picking the longest option.
@@ -114,8 +117,9 @@ async function balanceOptionsWithAI(question, env) {
       ? JSON.parse(question.options) : question.options;
     if (!Array.isArray(options) || options.length < 4) return options;
 
-    const correctOpt = options.find(o => o.id === question.correct_answer);
-    const wrongOpts = options.filter(o => o.id !== question.correct_answer);
+    // NEW STRUCTURE: options = [{"text": "...", "correct": true}, {"text": "..."}, ...]
+    const correctOpt = options.find(o => o.correct === true);
+    const wrongOpts = options.filter(o => o.correct !== true);
     const correctWords = correctOpt?.text?.split(/\s+/).length || 0;
     const avgWrongWords = wrongOpts.reduce((s, o) => s + (o.text?.split(/\s+/).length || 0), 0) / wrongOpts.length;
 
@@ -128,14 +132,19 @@ async function balanceOptionsWithAI(question, env) {
     const apiKey = await getSecret(env.GEMINI_API_KEY);
     if (!apiKey) return options;
 
+    // Find correct answer index for reference
+    const correctIndex = options.findIndex(o => o.correct === true);
+
     const prompt = `Rewrite ONLY the wrong answers in this quiz question to be approximately the same word count as the correct answer (${correctWords} words). The correct answer must NOT change. Wrong answers must remain plausible but clearly incorrect.
 
 Question: "${question.question}"
-Correct answer (${question.correct_answer}): "${correctOpt.text}" (${correctWords} words)
-Wrong answers: ${wrongOpts.map(o => `${o.id}: "${o.text}" (${o.text.split(/\s+/).length}w)`).join(', ')}
+Correct answer (index ${correctIndex}): "${correctOpt.text}" (${correctWords} words)
+Wrong answers: ${wrongOpts.map((o, i) => `"${o.text}" (${o.text.split(/\s+/).length}w)`).join(', ')}
 
-Return ONLY a JSON array of all 4 options: [{"id":"a","text":"..."},{"id":"b","text":"..."},{"id":"c","text":"..."},{"id":"d","text":"..."}]
-Keep option IDs unchanged. Keep the correct answer text exactly as-is. No markdown fences.`;
+Return ONLY a JSON array of all 4 options in the SAME ORDER as the input:
+[{"text":"...", "correct": true}, {"text":"..."}, {"text":"..."}, {"text":"..."}]
+The option at index ${correctIndex} must have "correct": true and its text must be EXACTLY: "${correctOpt.text}"
+No markdown fences.`;
 
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
@@ -157,6 +166,12 @@ Keep option IDs unchanged. Keep the correct answer text exactly as-is. No markdo
     const balanced = JSON.parse(jsonStr);
 
     if (!Array.isArray(balanced) || balanced.length !== 4) return options;
+    
+    // Validate the correct answer is still marked
+    if (!balanced.some(o => o.correct === true)) {
+      console.error('[Quiz] Balanced options missing correct marker, using original');
+      return options;
+    }
 
     // Cache to DB
     cacheTranslation(question.id, '_balanced', balanced, env).catch(() => {});
@@ -170,44 +185,61 @@ Keep option IDs unchanged. Keep the correct answer text exactly as-is. No markdo
 
 // ============================================================
 // HELPER: Shuffle options so correct answer lands on a random letter
-// Returns { options: [...], correctAnswer: 'new_letter', shuffleMap: {old -> new} }
+// NEW STRUCTURE: options = [{"text": "...", "correct": true}, {"text": "..."}, ...]
+// Letters (a, b, c, d) are assigned ONLY at display time based on position.
+// Returns:
+//   options: [{id, text}, ...] - options with assigned letter IDs for display
+//   correctAnswer: 'letter' - the letter of the correct answer after shuffle
+//   letterToIndex: {a: 2, b: 0, c: 3, d: 1} - maps letter -> original index (for wrong_explanations)
 // ============================================================
-function shuffleOptions(options, correctAnswer) {
+function shuffleOptions(options) {
   const parsed = typeof options === 'string' ? JSON.parse(options) : options;
-  if (!Array.isArray(parsed) || parsed.length === 0) return { options: parsed, correctAnswer };
+  if (!Array.isArray(parsed) || parsed.length === 0) {
+    return { options: parsed, correctAnswer: null, letterToIndex: {} };
+  }
+
+  // Find original index of correct answer
+  const originalCorrectIndex = parsed.findIndex(opt => opt.correct === true);
+  if (originalCorrectIndex === -1) {
+    console.error('[Quiz] CRITICAL: No option has correct: true', JSON.stringify(parsed));
+    return { options: parsed, correctAnswer: null, letterToIndex: {} };
+  }
+
+  // Create array with original indices to track through shuffle
+  const withIndices = parsed.map((opt, i) => ({ ...opt, _originalIndex: i }));
 
   // Fisher-Yates shuffle
-  const shuffled = [...parsed];
-  for (let i = shuffled.length - 1; i > 0; i--) {
+  for (let i = withIndices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    [withIndices[i], withIndices[j]] = [withIndices[j], withIndices[i]];
   }
 
-  // Assign new letter IDs (a, b, c, d) based on new positions
+  // Assign letter IDs (a, b, c, d) based on shuffled positions
   const letters = ['a', 'b', 'c', 'd'];
-  const oldToNew = {}; // maps old option id -> new letter
-  const newOptions = shuffled.map((opt, i) => {
-    oldToNew[opt.id] = letters[i];
-    return { id: letters[i], text: opt.text };
-  });
+  let correctLetter = null;
+  const letterToIndex = {}; // maps letter -> original index
 
-  // Build reverse map: new letter -> old letter (for answer validation)
-  const newToOld = {};
-  for (const [old, nw] of Object.entries(oldToNew)) {
-    newToOld[nw] = old;
-  }
+  const newOptions = withIndices.map((opt, i) => {
+    const letter = letters[i];
+    letterToIndex[letter] = opt._originalIndex;
+    if (opt.correct === true) {
+      correctLetter = letter;
+    }
+    // Return option with assigned letter (don't expose "correct" or _originalIndex to frontend)
+    return { id: letter, text: opt.text };
+  });
 
   return {
     options: newOptions,
-    correctAnswer: oldToNew[correctAnswer] || correctAnswer,
-    shuffleMap: oldToNew,
-    reverseMap: newToOld,
+    correctAnswer: correctLetter,
+    letterToIndex: letterToIndex,
   };
 }
 
 // ============================================================
 // HELPER: Get translated question content
 // Uses DB cache first, falls back to AI translation, then English
+// NEW STRUCTURE: options = [{"text": "...", "correct": true}, {"text": "..."}, ...]
 // ============================================================
 async function getTranslatedQuestion(question, lang, env) {
   let qText = question.question;
@@ -234,8 +266,9 @@ async function getTranslatedQuestion(question, lang, env) {
   }
 
   // Shuffle options so correct answer is not always in the same position
-  const { options: shuffledOptions, correctAnswer: shuffledCorrect, shuffleMap, reverseMap } =
-    shuffleOptions(qOptions, question.correct_answer);
+  // NEW: shuffleOptions now takes only options (finds correct via "correct: true")
+  const { options: shuffledOptions, correctAnswer: shuffledCorrect, letterToIndex } =
+    shuffleOptions(qOptions);
 
   return {
     id: question.id,
@@ -245,21 +278,23 @@ async function getTranslatedQuestion(question, lang, env) {
     options: shuffledOptions,
     // Internal: stored in session for answer validation
     _shuffledCorrectAnswer: shuffledCorrect,
-    _shuffleMap: shuffleMap,
-    _reverseMap: reverseMap,
+    _letterToIndex: letterToIndex, // maps letter -> original option index (for wrong_explanations)
   };
 }
 
 // ============================================================
 // HELPER: Get translated explanation
 // Uses DB cache first, falls back to AI translation, then English
+// userAnswerIndex is the original option index as a string ("0", "1", "2", "3")
 // ============================================================
-async function getTranslatedExplanation(question, lang, isCorrect, userAnswer, env) {
+async function getTranslatedExplanation(question, lang, isCorrect, userAnswerIndex, env) {
   const wrongExpl = typeof question.wrong_explanations === 'string'
     ? JSON.parse(question.wrong_explanations) : question.wrong_explanations;
+  
+  // wrong_explanations keyed by index ("0", "1", "2", "3")
   const englishFallback = isCorrect
     ? question.explanation
-    : (wrongExpl?.[userAnswer] || question.explanation);
+    : (wrongExpl?.[userAnswerIndex] || question.explanation);
 
   if (!lang || lang === 'en') return englishFallback;
 
@@ -268,7 +303,7 @@ async function getTranslatedExplanation(question, lang, isCorrect, userAnswer, e
     const t = question.translations[lang];
     return isCorrect
       ? t.explanation
-      : (t.wrong_explanations?.[userAnswer] || t.explanation);
+      : (t.wrong_explanations?.[userAnswerIndex] || t.explanation);
   }
 
   // No cached translation — call Gemini to translate the explanation
@@ -276,7 +311,7 @@ async function getTranslatedExplanation(question, lang, isCorrect, userAnswer, e
   if (ai) {
     return isCorrect
       ? (ai.explanation || englishFallback)
-      : (ai.wrong_explanations?.[userAnswer] || ai.explanation || englishFallback);
+      : (ai.wrong_explanations?.[userAnswerIndex] || ai.explanation || englishFallback);
   }
 
   return englishFallback;
@@ -415,12 +450,23 @@ export async function handleQuizStart(request, env) {
     // Translate and shuffle options
     const translated = await getTranslatedQuestion(question, lang, env);
 
+    // Validate shuffled answer exists (critical for answer validation)
+    if (!translated._shuffledCorrectAnswer) {
+      console.error('[Quiz] CRITICAL: shuffleOptions did not return a valid correct answer');
+      return errorResponse('Failed to prepare question', 500, origin, env);
+    }
+
     // Store current question + shuffled correct answer in session
-    await supabase.from('quiz_sessions').update({
+    const { error: updateError } = await supabase.from('quiz_sessions').update({
       current_question_id: question.id,
       current_correct_answer: translated._shuffledCorrectAnswer,
-      current_shuffle_reverse: translated._reverseMap || {},
+      current_shuffle_reverse: translated._letterToIndex || {}, // maps letter -> original index
     }, `id=eq.${session.id}`);
+
+    if (updateError) {
+      console.error('[Quiz] Failed to store shuffled answer in session:', updateError);
+      return errorResponse('Failed to prepare question', 500, origin, env);
+    }
 
     // Return session and question (without correct answer!)
     return jsonResponse({
@@ -499,8 +545,17 @@ export async function handleQuizAnswer(request, env) {
     }
 
     // Check answer against the shuffled correct answer stored in the session
-    // (options are shuffled when served, so the correct letter changes each time)
-    const shuffledCorrect = session.current_correct_answer || question.correct_answer;
+    // CRITICAL: We must use the shuffled answer, NOT the original question.correct_answer
+    // The options were shuffled when served, so the correct letter changes each time
+    const shuffledCorrect = session.current_correct_answer;
+    
+    // If shuffled answer is missing, the session is corrupted - fail safely
+    if (!shuffledCorrect) {
+      console.error('[Quiz] CRITICAL: session.current_correct_answer is missing for session', sessionId);
+      console.error('[Quiz] This indicates the shuffle data was not stored. Question ID:', questionId);
+      return errorResponse('Session data corrupted. Please start a new quiz.', 400, origin, env);
+    }
+    
     const isCorrect = answer === shuffledCorrect;
 
     // Calculate new values
@@ -519,13 +574,14 @@ export async function handleQuizAnswer(request, env) {
       await addStreakBonus(env, user.userId);
     }
 
-    // Record answer (store original option ID, not shuffled letter)
-    const reverseMap = session.current_shuffle_reverse || {};
-    const originalAnswer = reverseMap[answer] || answer;
+    // Record answer - store the original option index (for analytics/wrong_explanations)
+    // letterToIndex maps shuffled letter -> original index (e.g., {a: 2, b: 0, c: 3, d: 1})
+    const letterToIndex = session.current_shuffle_reverse || {};
+    const originalIndex = letterToIndex[answer];
     await supabase.from('quiz_answers').insert({
       session_id: sessionId,
       question_id: questionId,
-      user_answer: originalAnswer,
+      user_answer: String(originalIndex ?? answer), // Store as string index ("0", "1", etc.)
       is_correct: isCorrect,
       difficulty_at_time: question.difficulty,
     });
@@ -572,15 +628,16 @@ export async function handleQuizAnswer(request, env) {
     }
     const optionsToUse = translatedOptions || question.options;
     const parsedOptions = typeof optionsToUse === 'string' ? JSON.parse(optionsToUse) : optionsToUse;
-    const correctOption = parsedOptions?.find(o => o.id === question.correct_answer);
+    // NEW: Find correct option by "correct: true" flag instead of separate correct_answer column
+    const correctOption = parsedOptions?.find(o => o.correct === true);
 
     // Get the shuffled correct letter (what the user would have seen)
     const shuffledCorrectLetter = shuffledCorrect;
 
     // Get explanation: wrong-specific when wrong, correct explanation when correct
-    // (originalAnswer already reverse-mapped above from shuffled letter to original ID)
-    const wrongExplanation = await getTranslatedExplanation(question, lang, false, originalAnswer, env);
-    const correctExplanation = await getTranslatedExplanation(question, lang, true, originalAnswer, env);
+    // originalIndex is the original option index (0, 1, 2, 3) for wrong_explanations lookup
+    const wrongExplanation = await getTranslatedExplanation(question, lang, false, String(originalIndex), env);
+    const correctExplanation = await getTranslatedExplanation(question, lang, true, String(originalIndex), env);
 
     // Build response with translated explanation
     return jsonResponse({
@@ -692,17 +749,28 @@ export async function handleQuizContinue(request, env) {
     // Translate and shuffle
     const translated = await getTranslatedQuestion(nextQuestion, lang, env);
 
+    // Validate shuffled answer exists (critical for answer validation)
+    if (!translated._shuffledCorrectAnswer) {
+      console.error('[Quiz] CRITICAL: shuffleOptions did not return a valid correct answer in continue');
+      return errorResponse('Failed to prepare question', 500, origin, env);
+    }
+
     // Reactivate session with new question tracking
-    await supabase.from('quiz_sessions').update({
+    const { error: updateError } = await supabase.from('quiz_sessions').update({
       status: 'active',
       credits_spent: session.credits_spent + 1,
       current_question_number: 0,
       current_question_id: nextQuestion.id,
       current_correct_answer: translated._shuffledCorrectAnswer,
-      current_shuffle_reverse: translated._reverseMap || {},
+      current_shuffle_reverse: translated._letterToIndex || {}, // maps letter -> original index
       ended_at: null,
       last_activity_at: new Date().toISOString(),
     }, `id=eq.${sessionId}`);
+
+    if (updateError) {
+      console.error('[Quiz] Failed to store shuffled answer in continue:', updateError);
+      return errorResponse('Failed to prepare question', 500, origin, env);
+    }
 
     return jsonResponse({
       session: {
@@ -798,12 +866,23 @@ export async function handleQuizNextQuestion(request, env) {
     // Translate and shuffle
     const translated = await getTranslatedQuestion(question, lang, env);
 
+    // Validate shuffled answer exists (critical for answer validation)
+    if (!translated._shuffledCorrectAnswer) {
+      console.error('[Quiz] CRITICAL: shuffleOptions did not return a valid correct answer in next-question');
+      return errorResponse('Failed to prepare question', 500, origin, env);
+    }
+
     // Store current question + shuffled answer in session
-    await supabase.from('quiz_sessions').update({
+    const { error: updateError } = await supabase.from('quiz_sessions').update({
       current_question_id: question.id,
       current_correct_answer: translated._shuffledCorrectAnswer,
-      current_shuffle_reverse: translated._reverseMap || {},
+      current_shuffle_reverse: translated._letterToIndex || {}, // maps letter -> original index
     }, `id=eq.${sessionId}`);
+
+    if (updateError) {
+      console.error('[Quiz] Failed to store shuffled answer in next-question:', updateError);
+      return errorResponse('Failed to prepare question', 500, origin, env);
+    }
 
     return jsonResponse({
       question: {
@@ -874,16 +953,31 @@ export async function handleQuizResume(request, env) {
 
       if (question) {
         const t = await getTranslatedQuestion(question, lang, env);
-        // Store shuffled answer in session
-        await supabase.from('quiz_sessions').update({
-          current_question_id: question.id,
-          current_correct_answer: t._shuffledCorrectAnswer,
-          current_shuffle_reverse: t._reverseMap || {},
-        }, `id=eq.${session.id}`);
-        translatedQuestion = {
-          id: t.id, category: t.category, difficulty: t.difficulty,
-          question: t.question, options: t.options,
-        };
+        
+        // Validate shuffled answer exists (critical for answer validation)
+        if (!t._shuffledCorrectAnswer) {
+          console.error('[Quiz] CRITICAL: shuffleOptions did not return a valid correct answer in resume');
+          // Don't fail the whole resume, just don't return a question
+          translatedQuestion = null;
+        } else {
+          // Store shuffled answer in session
+          const { error: updateError } = await supabase.from('quiz_sessions').update({
+            current_question_id: question.id,
+            current_correct_answer: t._shuffledCorrectAnswer,
+            current_shuffle_reverse: t._letterToIndex || {}, // maps letter -> original index
+          }, `id=eq.${session.id}`);
+          
+          if (updateError) {
+            console.error('[Quiz] Failed to store shuffled answer in resume:', updateError);
+            // Don't fail the whole resume, just don't return a question
+            translatedQuestion = null;
+          } else {
+            translatedQuestion = {
+              id: t.id, category: t.category, difficulty: t.difficulty,
+              question: t.question, options: t.options,
+            };
+          }
+        }
       }
     }
 
