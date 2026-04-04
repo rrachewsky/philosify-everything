@@ -374,7 +374,9 @@ function calculateSpreadOffsets(nodes) {
         } else {
           // Circle layout for small groups - spread horizontally with vertical stagger
           const angle = (circleIndex / spreadCount) * Math.PI * 2;
-          const radius = layout.spreadRadius * (1 + (spreadCount - 1) * 0.2); // Larger radius
+          // Ensure minimum 1.8x spread for pairs (spreadCount=1 means 2 philosophers, 1 centered)
+          const radiusMultiplier = Math.max(1.8, 1 + (spreadCount - 1) * 0.2);
+          const radius = layout.spreadRadius * radiusMultiplier;
           
           offsetX = Math.cos(angle) * radius;
           offsetZ = Math.sin(angle) * radius * 0.4; // More Z spread
