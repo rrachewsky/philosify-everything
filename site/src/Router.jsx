@@ -229,7 +229,7 @@ function PushNavigateListener() {
 }
 
 // Handles return from PaymentSuccess — reads location.state and opens the correct sidebar
-function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone }) {
+function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone, onOpenCinema, onOpenNews }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -257,13 +257,19 @@ function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpe
       } else if (state.openUnsafeZone) {
         logger.log('[PaymentReturnHandler] Opening unsafe zone sidebar');
         onOpenUnsafeZone?.();
+      } else if (state.openCinema) {
+        logger.log('[PaymentReturnHandler] Opening cinema sidebar');
+        onOpenCinema?.();
+      } else if (state.openNews) {
+        logger.log('[PaymentReturnHandler] Opening news sidebar');
+        onOpenNews?.();
       }
       // Clear state AFTER opening sidebar (must be inside timeout to avoid cleanup race)
       navigate(location.pathname, { replace: true, state: null });
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone]);
+  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone, onOpenCinema, onOpenNews]);
 
   return null;
 }
@@ -410,6 +416,8 @@ export function Router() {
           onOpenIdeas={ideas.open}
           onOpenDebate={ideas.openWithDebate}
           onOpenUnsafeZone={unsafeZone.open}
+          onOpenCinema={cinema.openWithPendingAction}
+          onOpenNews={news.openWithPendingAction}
         />
 
         {/* Community Hub Sidebar */}
@@ -481,7 +489,6 @@ export function Router() {
           onClose={news.close}
           news={news}
           balance={music.balance}
-          onCreditsExhausted={() => setComingSoonCategory('credits')}
         />
 
         {/* Cinema Sidebar (Films) */}

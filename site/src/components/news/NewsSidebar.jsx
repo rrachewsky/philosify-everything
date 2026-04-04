@@ -10,11 +10,14 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNewsPreferences } from '../../hooks/useNewsPreferences.js';
+import { useModal, useAuth } from '../../hooks';
 import { translateArticle } from '../../services/api/newsApi.js';
 import { NewsSourcePicker } from './NewsSourcePicker.jsx';
+import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 import ResultsContainer from '../results/ResultsContainer.jsx';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
+import { setPendingAction } from '../../utils/pendingAction.js';
 import '../../styles/music-sidebar.css';
 
 // ============================================================
@@ -157,12 +160,18 @@ export default function NewsSidebar({
   onClose,
   news,
   balance,
-  onCreditsExhausted,
 }) {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const userLang = i18n.language || 'en';
   const contentRef = useRef(null);
   const searchInputRef = useRef(null);
+
+  // Internal modals (rendered inside sidebar)
+  const loginModal = useModal();
+  const signupModal = useModal();
+  const forgotPasswordModal = useModal();
+  const paymentModal = useModal();
 
   // Source picker state
   const [showSourcePicker, setShowSourcePicker] = useState(false);
@@ -207,6 +216,57 @@ export default function NewsSidebar({
     elapsedTime,
     formatTime,
   } = news;
+
+  // Handle analyze with auth/balance check (same pattern as Music)
+  const handleAnalyze = async () => {
+    if (!selectedArticle) return;
+    if (!user) {
+      signupModal.open();
+      return;
+    }
+    if (!balance || balance.total === undefined || balance.total < 1) {
+      setPendingAction({ type: 'news-analysis', article: selectedArticle });
+      paymentModal.open();
+      return;
+    }
+    try {
+      await analyzeArticle(userLang, 'grok');
+    } catch (err) {
+      if (err.code === 'INSUFFICIENT_CREDITS') {
+        setPendingAction({ type: 'news-analysis', article: selectedArticle });
+        paymentModal.open();
+      }
+    }
+  };
+
+  // Handle philosopher panel with auth/balance check
+  const handleOpenPanel = () => {
+    if (!user) {
+      signupModal.open();
+      return;
+    }
+    if (!balance || balance.total === undefined || balance.total < 3) {
+      if (selectedArticle) {
+        setPendingAction({ type: 'news-panel', article: selectedArticle });
+      }
+      paymentModal.open();
+      return;
+    }
+    setShowPhilosopherPicker(true);
+  };
+
+  // Handle panel confirm with error handling
+  const handlePanelConfirm = async (philosophers) => {
+    setShowPhilosopherPicker(false);
+    try {
+      await analyzeWithPanel(philosophers, userLang);
+    } catch (err) {
+      if (err.code === 'INSUFFICIENT_CREDITS') {
+        setPendingAction({ type: 'news-panel', article: selectedArticle });
+        paymentModal.open();
+      }
+    }
+  };
 
   // Scroll to top when state changes
   useEffect(() => {
@@ -411,7 +471,7 @@ export default function NewsSidebar({
             <div className="music-analyze__buttons-row">
               <button
                 className="music-analyze__button"
-                onClick={() => analyzeArticle(userLang, 'grok')}
+                onClick={handleAnalyze}
                 disabled={isAnalyzing || panelLoading}
               >
                 {t('home.categories.news.analyzeButton', 'Analyze Article')}
@@ -419,7 +479,7 @@ export default function NewsSidebar({
               </button>
               <button
                 className="music-analyze__button music-analyze__button--panel"
-                onClick={() => setShowPhilosopherPicker(true)}
+                onClick={handleOpenPanel}
                 disabled={isAnalyzing || panelLoading}
               >
                 {t('philosopherPanel.button', 'Philosopher Panel')}
@@ -472,7 +532,7 @@ export default function NewsSidebar({
             <div className="music-analyze__buttons-row" style={{ marginTop: '1rem' }}>
               <button
                 className="music-analyze__button music-analyze__button--panel"
-                onClick={() => setShowPhilosopherPicker(true)}
+                onClick={handleOpenPanel}
               >
                 {t('philosopherPanel.button', 'Philosopher Panel')}
                 <span className="music-analyze__cost">3 {t('philosopherPanel.credits', 'credits')}</span>
@@ -546,17 +606,51 @@ export default function NewsSidebar({
       {showPhilosopherPicker && (
         <PhilosopherPicker
           onClose={() => setShowPhilosopherPicker(false)}
-          onConfirm={async (philosophers) => {
-            setShowPhilosopherPicker(false);
-            try {
-              await analyzeWithPanel(philosophers, userLang);
-            } catch (err) {
-              if (err.code === 'INSUFFICIENT_CREDITS' && onCreditsExhausted) {
-                onCreditsExhausted();
-              }
-            }
-          }}
+          onConfirm={handlePanelConfirm}
         />
+      )}
+
+      {/* Auth/Payment Modals */}
+      {(loginModal.isOpen || signupModal.isOpen || forgotPasswordModal.isOpen || paymentModal.isOpen) && (
+        <div className="sidebar-modal-overlay">
+          {loginModal.isOpen && (
+            <LoginModal
+              isOpen={true}
+              onClose={loginModal.close}
+              onSwitchToSignup={() => {
+                loginModal.close();
+                signupModal.open();
+              }}
+              onSwitchToForgotPassword={() => {
+                loginModal.close();
+                forgotPasswordModal.open();
+              }}
+            />
+          )}
+          {signupModal.isOpen && (
+            <SignupModal
+              isOpen={true}
+              onClose={signupModal.close}
+              onSwitchToLogin={() => {
+                signupModal.close();
+                loginModal.open();
+              }}
+            />
+          )}
+          {forgotPasswordModal.isOpen && (
+            <ForgotPasswordModal
+              isOpen={true}
+              onClose={forgotPasswordModal.close}
+              onSwitchToLogin={() => {
+                forgotPasswordModal.close();
+                loginModal.open();
+              }}
+            />
+          )}
+          {paymentModal.isOpen && (
+            <PaymentModal isOpen={true} onClose={paymentModal.close} />
+          )}
+        </div>
       )}
     </div>
   );

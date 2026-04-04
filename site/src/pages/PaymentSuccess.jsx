@@ -201,6 +201,16 @@ export function PaymentSuccess() {
         navigate('/', { state: { openUnsafeZone: true } });
         return;
       }
+      // Cinema analysis or film panel — open cinema sidebar
+      if (pending.type === 'cinema-analysis' || pending.type === 'film-panel') {
+        navigate('/', { state: { openCinema: true } });
+        return;
+      }
+      // News analysis or news panel — open news sidebar
+      if (pending.type === 'news-analysis' || pending.type === 'news-panel') {
+        navigate('/', { state: { openNews: true } });
+        return;
+      }
     }
     navigate('/');
   };

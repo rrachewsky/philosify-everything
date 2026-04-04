@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { config } from '@/config';
 import { searchNews, fetchBreakingNews } from '../services/api/newsApi.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
+import { getPendingAction, clearPendingAction } from '../utils/pendingAction.js';
 
 export function useNews() {
   const { i18n } = useTranslation();
@@ -273,6 +274,21 @@ export function useNews() {
     });
   }, []);
 
+  // Open with pending action (after payment return)
+  const openWithPendingAction = useCallback(() => {
+    const action = getPendingAction();
+    if ((action?.type === 'news-analysis' || action?.type === 'news-panel') && action.article) {
+      setSelectedArticle(action.article);
+      clearPendingAction();
+      setIsOpen(true);
+      loadBreaking();
+    } else {
+      // Just open the sidebar if no valid pending action
+      setIsOpen(true);
+      loadBreaking();
+    }
+  }, [loadBreaking]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -322,5 +338,7 @@ export function useNews() {
     formatTime,
     // History
     openWithResult,
+    // Payment return
+    openWithPendingAction,
   };
 }
