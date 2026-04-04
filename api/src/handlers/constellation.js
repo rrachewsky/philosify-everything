@@ -27,46 +27,166 @@ const TRADITION_BASE_X = {
   islamic: 20,
 };
 
-// Simple string hash for consistent jitter
-function hashString(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
-  return Math.abs(hash);
+// ============================================================
+// 3D ORBITAL TETHER POSITIONING SYSTEM
+// Ensures NO overlapping cards by assigning unique (x, y, z)
+// 
+// Coordinate System:
+// - x_inclination: East/West tether angle (-15° to +15°)
+// - y_inclination: North/South tether angle (-10° to +10°)  
+// - z_altitude: Height above birthplace (60 to 150 km)
+// ============================================================
+
+// Position precision (rounded to this many decimals)
+const POSITION_PRECISION = 1;
+
+// Available space bounds
+const BOUNDS = {
+  x_min: -15, x_max: 15,   // East/West inclination degrees
+  y_min: -10, y_max: 10,   // North/South inclination degrees
+  z_min: 60,  z_max: 150,  // Altitude in km
+};
+
+// Round to precision
+function roundTo(num, decimals) {
+  const factor = Math.pow(10, decimals);
+  return Math.round(num * factor) / factor;
 }
 
-// Calculate orbital position based on battle scores and tradition
-function calculateOrbitalPosition(node) {
+// Create position key for uniqueness check
+function positionKey(x, y, z) {
+  return `${roundTo(x, POSITION_PRECISION)},${roundTo(y, POSITION_PRECISION)},${roundTo(z, POSITION_PRECISION)}`;
+}
+
+// Calculate ideal position based on philosophical meaning
+function calculateIdealPosition(node) {
   const battles = node.battles || {};
   
-  // Y position: weighted average of battle scores
-  let yScore = 0;
+  // X: Based on tradition (Western left, Eastern right)
+  const traditionX = {
+    western: -8,
+    chinese: 8,
+    indian: 5,
+    islamic: 2,
+  };
+  const idealX = traditionX[node.tradition] || 0;
+  
+  // Y: Based on battle scores (reason vs faith dominant axis)
+  let battleScore = 0;
   Object.entries(BATTLE_WEIGHTS).forEach(([battle, weight]) => {
     const score = battles[battle] || 0;
-    yScore += score * weight;
+    battleScore += score * weight;
   });
+  const idealY = battleScore * 8; // Scale to ±8 degrees
   
-  // Scale Y to orbital range (-80 to +80)
-  const y = yScore * 80;
+  // Z: Based on era (ancient = lower, modern = higher)
+  const eraProgress = (node.birth_year + 600) / 2626; // 0 to 1
+  const idealZ = BOUNDS.z_min + eraProgress * (BOUNDS.z_max - BOUNDS.z_min);
   
-  // X position: based on tradition with jitter
-  const baseX = TRADITION_BASE_X[node.tradition] || 0;
-  const schoolJitter = (hashString(node.school_of_thought || '') % 30) - 15;
-  const x = baseX + schoolJitter;
+  return { x: idealX, y: idealY, z: idealZ };
+}
+
+// Find nearest available position using spiral search
+function findAvailablePosition(idealX, idealY, idealZ, occupiedPositions) {
+  // Try ideal position first
+  let key = positionKey(idealX, idealY, idealZ);
+  if (!occupiedPositions.has(key)) {
+    return { x: roundTo(idealX, POSITION_PRECISION), y: roundTo(idealY, POSITION_PRECISION), z: roundTo(idealZ, POSITION_PRECISION) };
+  }
   
-  // Z position: based on era with some clustering
-  const eraDepth = ((node.birth_year + 600) / 2626) * 60 - 30;
-  const z = eraDepth + (hashString(node.name) % 20) - 10;
+  // Spiral search outward from ideal position
+  const step = Math.pow(10, -POSITION_PRECISION); // 0.1 for precision=1
   
-  // Altitude: base + bonus for historical weight
-  const BASE_ALTITUDE = 130;
-  const ALTITUDE_BONUS = 40;
-  const altitude = BASE_ALTITUDE + (node.historical_weight || 0.5) * ALTITUDE_BONUS;
+  for (let radius = 1; radius <= 50; radius++) {
+    const offset = radius * step;
+    
+    // Try variations in x, y, z
+    const variations = [
+      // Vary X
+      { x: idealX + offset, y: idealY, z: idealZ },
+      { x: idealX - offset, y: idealY, z: idealZ },
+      // Vary Y
+      { x: idealX, y: idealY + offset, z: idealZ },
+      { x: idealX, y: idealY - offset, z: idealZ },
+      // Vary Z (larger steps for altitude)
+      { x: idealX, y: idealY, z: idealZ + radius * 2 },
+      { x: idealX, y: idealY, z: idealZ - radius * 2 },
+      // Diagonal variations
+      { x: idealX + offset, y: idealY + offset, z: idealZ },
+      { x: idealX - offset, y: idealY + offset, z: idealZ },
+      { x: idealX + offset, y: idealY - offset, z: idealZ },
+      { x: idealX - offset, y: idealY - offset, z: idealZ },
+      // 3D diagonals
+      { x: idealX + offset, y: idealY, z: idealZ + radius * 2 },
+      { x: idealX - offset, y: idealY, z: idealZ + radius * 2 },
+      { x: idealX, y: idealY + offset, z: idealZ + radius * 2 },
+      { x: idealX, y: idealY - offset, z: idealZ + radius * 2 },
+    ];
+    
+    for (const v of variations) {
+      // Check bounds
+      if (v.x < BOUNDS.x_min || v.x > BOUNDS.x_max) continue;
+      if (v.y < BOUNDS.y_min || v.y > BOUNDS.y_max) continue;
+      if (v.z < BOUNDS.z_min || v.z > BOUNDS.z_max) continue;
+      
+      const vKey = positionKey(v.x, v.y, v.z);
+      if (!occupiedPositions.has(vKey)) {
+        return { 
+          x: roundTo(v.x, POSITION_PRECISION), 
+          y: roundTo(v.y, POSITION_PRECISION), 
+          z: roundTo(v.z, POSITION_PRECISION) 
+        };
+      }
+    }
+  }
   
-  return { x, y, z, altitude };
+  // Fallback: random position within bounds (should never happen with enough space)
+  console.warn('[Constellation] Spiral search exhausted, using random fallback');
+  for (let attempt = 0; attempt < 1000; attempt++) {
+    const rx = roundTo(BOUNDS.x_min + Math.random() * (BOUNDS.x_max - BOUNDS.x_min), POSITION_PRECISION);
+    const ry = roundTo(BOUNDS.y_min + Math.random() * (BOUNDS.y_max - BOUNDS.y_min), POSITION_PRECISION);
+    const rz = roundTo(BOUNDS.z_min + Math.random() * (BOUNDS.z_max - BOUNDS.z_min), POSITION_PRECISION);
+    const rKey = positionKey(rx, ry, rz);
+    if (!occupiedPositions.has(rKey)) {
+      return { x: rx, y: ry, z: rz };
+    }
+  }
+  
+  // Last resort: return ideal position anyway
+  return { x: roundTo(idealX, POSITION_PRECISION), y: roundTo(idealY, POSITION_PRECISION), z: roundTo(idealZ, POSITION_PRECISION) };
+}
+
+// Assign unique orbital positions to all nodes
+function assignOrbitalPositions(nodes) {
+  const occupiedPositions = new Set();
+  const results = [];
+  
+  // Sort nodes by historical weight (most important get ideal positions first)
+  const sortedNodes = [...nodes].sort((a, b) => (b.historical_weight || 0.5) - (a.historical_weight || 0.5));
+  
+  for (const node of sortedNodes) {
+    const ideal = calculateIdealPosition(node);
+    const position = findAvailablePosition(ideal.x, ideal.y, ideal.z, occupiedPositions);
+    
+    // Mark position as occupied
+    occupiedPositions.add(positionKey(position.x, position.y, position.z));
+    
+    results.push({
+      nodeId: node.id,
+      orbital_position: {
+        x_inclination: position.x,
+        y_inclination: position.y,
+        z_altitude: position.z,
+        // Legacy fields for compatibility
+        x: position.x * 5,  // Scale for visualization
+        y: position.y * 8,  // Scale for visualization
+        z: (position.z - 100) / 2,  // Center around 0
+        altitude: position.z,
+      }
+    });
+  }
+  
+  return results;
 }
 
 /**
@@ -177,21 +297,24 @@ export async function handleConstellation(request, env, origin) {
     // Fetch enrichment data from database
     const { mentionCounts, mergedEdges, stats } = await fetchEnrichmentData(env);
 
-    // Calculate orbital positions and add enrichment metadata
-    const nodesWithPositions = SEED_NODES.map(node => {
+    // Boost historical weights based on mention counts
+    const nodesWithWeights = SEED_NODES.map(node => {
       const mentionCount = mentionCounts[node.id] || 0;
-      
-      // Boost historical weight based on mention count
       const boostedWeight = Math.min(1.0, (node.historical_weight || 0.5) + mentionCount * 0.01);
-      
-      return {
-        ...node,
-        orbital_position: calculateOrbitalPosition({ ...node, historical_weight: boostedWeight }),
-        mention_count: mentionCount,
-        auto_enriched: mentionCount > 0,
-        source_type: 'seed',
-      };
+      return { ...node, historical_weight: boostedWeight, mention_count: mentionCount };
     });
+    
+    // Assign unique orbital positions (NO OVERLAPPING)
+    const orbitalPositions = assignOrbitalPositions(nodesWithWeights);
+    const positionMap = new Map(orbitalPositions.map(p => [p.nodeId, p.orbital_position]));
+    
+    // Build final nodes with positions
+    const nodesWithPositions = nodesWithWeights.map(node => ({
+      ...node,
+      orbital_position: positionMap.get(node.id),
+      auto_enriched: node.mention_count > 0,
+      source_type: 'seed',
+    }));
 
     // Combine seed edges with auto-discovered edges
     const seedEdges = SEED_EDGES.map(e => ({
