@@ -101,17 +101,32 @@ async function reserveCredits(env, userId, amount) {
   const supabase = await getServiceSupabase(env);
   
   // Check balance first
-  const { data: balance } = await supabase
+  const { data: balance, error: balanceError } = await supabase
     .from('credits')
     .select('free_remaining,purchased_remaining', { 
       filter: `user_id=eq.${userId}`, 
       limit: 1 
     });
   
+  if (balanceError) {
+    console.error('[UnsafeZone] Error fetching balance:', balanceError);
+    return { success: false, error: 'Failed to check balance' };
+  }
+  
   const row = Array.isArray(balance) ? balance[0] : balance;
   const total = (row?.free_remaining || 0) + (row?.purchased_remaining || 0);
   
+  console.log('[UnsafeZone] Balance check:', { 
+    userId, 
+    amount, 
+    row, 
+    free: row?.free_remaining, 
+    purchased: row?.purchased_remaining, 
+    total 
+  });
+  
   if (total < amount) {
+    console.log('[UnsafeZone] Insufficient credits:', { required: amount, available: total });
     return { success: false, error: 'Insufficient credits' };
   }
   
