@@ -33,6 +33,11 @@ export function useAuth() {
         logger.warn('[useAuth] Realtime token fetch failed:', res.status);
         if (mountedRef.current) {
           setRealtimeToken(null);
+          // Clear any scheduled refresh on auth failure (401) to stop retry loop
+          if (res.status === 401 && refreshTimerRef.current) {
+            clearTimeout(refreshTimerRef.current);
+            refreshTimerRef.current = null;
+          }
         }
         return;
       }

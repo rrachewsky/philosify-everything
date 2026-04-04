@@ -133,6 +133,12 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 401) {
+          // Session expired - prompt re-login
+          setMessages(messages); // Restore previous messages
+          loginModal.open();
+          return;
+        }
         if (response.status === 402) {
           setPendingAction({ type: 'unsafe-zone' });
           paymentModal.open();
