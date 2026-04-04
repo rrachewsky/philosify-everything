@@ -116,10 +116,12 @@ export function ConstellationOfIdeas() {
     if (node.birth_year > currentYear) {
       setCurrentYear(node.birth_year + 50);
     }
-    // Camera will fly to node via scene ref
-    if (sceneRef.current?.flyToNode) {
-      sceneRef.current.flyToNode(node);
-    }
+    // Wait for state update before flying to node (same as era/school filters)
+    setTimeout(() => {
+      if (sceneRef.current?.flyToNode) {
+        sceneRef.current.flyToNode(node);
+      }
+    }, 50);
   }, [currentYear, setCurrentYear, setSelectedNode, setSoloNode]);
 
   // Handle era filter with camera fly-to
