@@ -146,6 +146,7 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
 
     const userMessage = { role: 'user', content: trimmed };
     const updatedHistory = [...messages, userMessage];
+    const savedInput = trimmed; // Save input in case we need to restore it
 
     setMessages(updatedHistory);
     setInput('');
@@ -170,6 +171,7 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
       if (!response.ok) {
         if (response.status === 401) {
           setMessages(messages);
+          setInput(savedInput); // Restore input
           loginModal.open();
           return;
         }
@@ -178,6 +180,7 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
           setPendingAction({ type: 'unsafe-zone', credits: needed });
           paymentModal.open();
           setMessages(messages);
+          setInput(savedInput); // Restore input
           return;
         }
         throw new Error(data.error || 'Failed to get response');
@@ -197,7 +200,8 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
       window.dispatchEvent(new CustomEvent('credits-changed'));
     } catch (err) {
       setError(t('unsafeZone.error', 'Something went wrong. Please try again.'));
-      setMessages(messages); // Restore on error
+      setMessages(messages); // Restore messages on error
+      setInput(savedInput); // Restore input on error
     } finally {
       setLoading(false);
     }
