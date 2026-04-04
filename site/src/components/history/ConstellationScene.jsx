@@ -373,13 +373,15 @@ function calculateSpreadOffsets(nodes) {
           altitudeOffset = -circleIndex * layout.labelStagger;
         } else {
           // Circle layout for small groups - spread horizontally with vertical stagger
-          const angle = (circleIndex / spreadCount) * Math.PI * 2;
+          // Start at 45° offset so no philosopher lands exactly at angle 0 (which has no Z spread)
+          const angleOffset = Math.PI / 4;
+          const angle = angleOffset + (circleIndex / spreadCount) * Math.PI * 2;
           // Ensure minimum 1.8x spread for pairs (spreadCount=1 means 2 philosophers, 1 centered)
           const radiusMultiplier = Math.max(1.8, 1 + (spreadCount - 1) * 0.2);
           const radius = layout.spreadRadius * radiusMultiplier;
           
           offsetX = Math.cos(angle) * radius;
-          offsetZ = Math.sin(angle) * radius * 0.4; // More Z spread
+          offsetZ = Math.sin(angle) * radius * 0.8; // Increased vertical spread
           // Progressive altitude: each card at different height for tilted viewing
           altitudeOffset = -circleIndex * layout.labelStagger;
         }
