@@ -163,7 +163,8 @@ function positionKey(x, y, z) {
   return `${roundTo(x, POSITION_PRECISION)},${roundTo(y, POSITION_PRECISION)},${roundTo(z, POSITION_PRECISION)}`;
 }
 
-// Find nearest available position using tight spiral (stays close to base)
+// Find nearest available position using SUBTLE increments
+// Cards stay very close together - only tiny inclination differences
 function findAvailablePosition(baseX, baseY, baseZ, occupiedPositions) {
   // Try base position first
   let key = positionKey(baseX, baseY, baseZ);
@@ -171,40 +172,42 @@ function findAvailablePosition(baseX, baseY, baseZ, occupiedPositions) {
     return { x: roundTo(baseX, POSITION_PRECISION), y: roundTo(baseY, POSITION_PRECISION), z: roundTo(baseZ, POSITION_PRECISION) };
   }
   
-  // Tight spiral - small steps to stay close
-  const step = 0.5; // Half degree steps
-  
-  for (let radius = 1; radius <= 20; radius++) {
-    const offset = radius * step;
+  // Very subtle increments - 0.1 degree steps for x/y, 1km for z
+  // Prioritize altitude (z) changes to separate cards vertically
+  for (let ring = 1; ring <= 50; ring++) {
+    const xyStep = ring * 0.1;  // 0.1°, 0.2°, 0.3°... very subtle
+    const zStep = ring * 1;     // 1km, 2km, 3km... altitude variation
     
-    // Try variations - prioritize Z (altitude) changes, then small x/y
+    // Try variations - prioritize Z first, then tiny x/y adjustments
     const variations = [
-      // Altitude variations first (vertical separation)
-      { x: baseX, y: baseY, z: baseZ + radius * 2 },
-      { x: baseX, y: baseY, z: baseZ - radius * 2 },
-      // Small X variations
-      { x: baseX + offset, y: baseY, z: baseZ },
-      { x: baseX - offset, y: baseY, z: baseZ },
-      // Small Y variations
-      { x: baseX, y: baseY + offset, z: baseZ },
-      { x: baseX, y: baseY - offset, z: baseZ },
-      // Diagonal + altitude
-      { x: baseX + offset, y: baseY + offset, z: baseZ + radius },
-      { x: baseX - offset, y: baseY + offset, z: baseZ + radius },
-      { x: baseX + offset, y: baseY - offset, z: baseZ - radius },
-      { x: baseX - offset, y: baseY - offset, z: baseZ - radius },
-      // More altitude with small offset
-      { x: baseX + offset * 0.5, y: baseY, z: baseZ + radius * 3 },
-      { x: baseX - offset * 0.5, y: baseY, z: baseZ - radius * 3 },
-      { x: baseX, y: baseY + offset * 0.5, z: baseZ + radius * 3 },
-      { x: baseX, y: baseY - offset * 0.5, z: baseZ - radius * 3 },
+      // Altitude variations FIRST (best way to separate without visual overlap)
+      { x: baseX, y: baseY, z: baseZ + zStep },
+      { x: baseX, y: baseY, z: baseZ - zStep },
+      // Tiny X inclination
+      { x: baseX + xyStep, y: baseY, z: baseZ },
+      { x: baseX - xyStep, y: baseY, z: baseZ },
+      // Tiny Y inclination
+      { x: baseX, y: baseY + xyStep, z: baseZ },
+      { x: baseX, y: baseY - xyStep, z: baseZ },
+      // Combined: tiny x/y with altitude
+      { x: baseX + xyStep, y: baseY, z: baseZ + zStep },
+      { x: baseX - xyStep, y: baseY, z: baseZ + zStep },
+      { x: baseX, y: baseY + xyStep, z: baseZ + zStep },
+      { x: baseX, y: baseY - xyStep, z: baseZ + zStep },
+      { x: baseX + xyStep, y: baseY, z: baseZ - zStep },
+      { x: baseX - xyStep, y: baseY, z: baseZ - zStep },
+      // Diagonal tiny adjustments
+      { x: baseX + xyStep, y: baseY + xyStep, z: baseZ },
+      { x: baseX - xyStep, y: baseY + xyStep, z: baseZ },
+      { x: baseX + xyStep, y: baseY - xyStep, z: baseZ },
+      { x: baseX - xyStep, y: baseY - xyStep, z: baseZ },
     ];
     
     for (const v of variations) {
-      // Check bounds (tight bounds to keep cards close)
-      if (v.x < -10 || v.x > 10) continue;
-      if (v.y < -8 || v.y > 8) continue;
-      if (v.z < 60 || v.z > 140) continue;
+      // Keep within tight bounds
+      if (v.x < -5 || v.x > 5) continue;   // Max ±5° from region center
+      if (v.y < -5 || v.y > 5) continue;   // Max ±5° from region center
+      if (v.z < 60 || v.z > 140) continue; // Altitude range
       
       const vKey = positionKey(v.x, v.y, v.z);
       if (!occupiedPositions.has(vKey)) {
@@ -217,11 +220,11 @@ function findAvailablePosition(baseX, baseY, baseZ, occupiedPositions) {
     }
   }
   
-  // Fallback with random small offset
+  // Fallback with random subtle offset
   for (let attempt = 0; attempt < 100; attempt++) {
-    const rx = roundTo(baseX + (Math.random() - 0.5) * 6, POSITION_PRECISION);
-    const ry = roundTo(baseY + (Math.random() - 0.5) * 4, POSITION_PRECISION);
-    const rz = roundTo(baseZ + (Math.random() - 0.5) * 40, POSITION_PRECISION);
+    const rx = roundTo(baseX + (Math.random() - 0.5) * 2, POSITION_PRECISION);  // Max ±1° random
+    const ry = roundTo(baseY + (Math.random() - 0.5) * 2, POSITION_PRECISION);  // Max ±1° random
+    const rz = roundTo(baseZ + (Math.random() - 0.5) * 20, POSITION_PRECISION); // Max ±10km random
     const rKey = positionKey(rx, ry, rz);
     if (!occupiedPositions.has(rKey)) {
       return { x: rx, y: ry, z: rz };
@@ -229,7 +232,7 @@ function findAvailablePosition(baseX, baseY, baseZ, occupiedPositions) {
   }
   
   // Last resort
-  return { x: roundTo(baseX, POSITION_PRECISION), y: roundTo(baseY, POSITION_PRECISION), z: roundTo(baseZ + Math.random() * 20, POSITION_PRECISION) };
+  return { x: roundTo(baseX, POSITION_PRECISION), y: roundTo(baseY, POSITION_PRECISION), z: roundTo(baseZ + Math.random() * 10, POSITION_PRECISION) };
 }
 
 // Assign unique orbital positions to all nodes
