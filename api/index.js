@@ -3628,6 +3628,7 @@ export default {
 
       // ============================================================
       // UNSAFE ZONE ROUTES
+      // Session-based billing: 10 credits for 20 turns, 5 credits per 10 additional
       // ============================================================
       if (url.pathname === "/api/unsafe-zone" && request.method === "POST") {
         const { handleUnsafeZone } = await import("./src/handlers/unsafe-zone.js");
@@ -3640,6 +3641,19 @@ export default {
       if (url.pathname === "/api/unsafe-zone/conversation" && request.method === "DELETE") {
         const { handleUnsafeZoneClear } = await import("./src/handlers/unsafe-zone.js");
         return handleUnsafeZoneClear(request, env, origin);
+      }
+      if (url.pathname === "/api/unsafe-zone/history" && request.method === "GET") {
+        const { handleUnsafeZoneHistory } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZoneHistory(request, env, origin);
+      }
+      if (url.pathname.startsWith("/api/unsafe-zone/session/") && request.method === "GET") {
+        const sessionId = url.pathname.split("/api/unsafe-zone/session/")[1];
+        const { handleUnsafeZoneGetSession } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZoneGetSession(request, env, origin, sessionId);
+      }
+      if (url.pathname === "/api/unsafe-zone/end" && request.method === "POST") {
+        const { handleUnsafeZoneEnd } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZoneEnd(request, env, origin);
       }
 
       // ============================================================
