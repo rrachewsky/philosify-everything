@@ -284,10 +284,10 @@ function getLayoutConfig() {
     foundationalAltitudeBoost: isMobile ? 4 : 6,
     mostFoundationalAltitudeBoost: isMobile ? 8 : 10,
     labelOffset: isMobile ? 3.4 : 4.2,
-    proximityThreshold: isMobile ? 3.5 : 3.0,  // Wider detection for overlaps
-    spreadRadius: isMobile ? 20 : 24,          // More spread between cards
-    altitudeVariation: isMobile ? 8 : 10,
-    labelStagger: isMobile ? 6 : 8,            // More altitude separation
+    proximityThreshold: isMobile ? 10 : 8,     // Moderate detection range
+    spreadRadius: isMobile ? 18 : 22,          // Modest horizontal spread
+    altitudeVariation: isMobile ? 12 : 14,
+    labelStagger: isMobile ? 10 : 12,          // Good vertical separation
   };
 }
 
@@ -299,7 +299,8 @@ function calculateSpreadOffsets(nodes) {
   const groups = [];
   const assigned = new Set();
 
-  // Group nodes by proximity (use wider threshold)
+  // Group nodes by proximity using approximate spherical distance
+  // This catches cards that might visually overlap from any viewing angle
   nodes.forEach((node) => {
     if (assigned.has(node.id)) return;
 
@@ -310,7 +311,13 @@ function calculateSpreadOffsets(nodes) {
       if (assigned.has(other.id)) return;
       const latDiff = Math.abs(node.latitude - other.latitude);
       const lngDiff = Math.abs(node.longitude - other.longitude);
-      if (latDiff < layout.proximityThreshold && lngDiff < layout.proximityThreshold) {
+      // Use approximate great-circle distance (simplified for small angles)
+      const avgLat = (node.latitude + other.latitude) / 2;
+      const latRad = avgLat * Math.PI / 180;
+      const effectiveLngDiff = lngDiff * Math.cos(latRad); // Adjust for latitude
+      const distance = Math.sqrt(latDiff * latDiff + effectiveLngDiff * effectiveLngDiff);
+      
+      if (distance < layout.proximityThreshold) {
         group.push(other);
         assigned.add(other.id);
       }
