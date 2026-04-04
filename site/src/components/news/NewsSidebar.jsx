@@ -224,7 +224,10 @@ export default function NewsSidebar({
       signupModal.open();
       return;
     }
-    if (!balance || balance.total === undefined || balance.total < 1) {
+    // Wait for balance to load
+    if (balance === null) return;
+    
+    if (balance.total === undefined || balance.total < 1) {
       setPendingAction({ type: 'news-analysis', article: selectedArticle });
       paymentModal.open();
       return;
@@ -245,7 +248,10 @@ export default function NewsSidebar({
       signupModal.open();
       return;
     }
-    if (!balance || balance.total === undefined || balance.total < 3) {
+    // Wait for balance to load
+    if (balance === null) return;
+    
+    if (balance.total === undefined || balance.total < 3) {
       if (selectedArticle) {
         setPendingAction({ type: 'news-panel', article: selectedArticle });
       }

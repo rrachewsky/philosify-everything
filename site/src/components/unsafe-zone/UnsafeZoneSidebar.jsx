@@ -138,7 +138,15 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
 
     const requiredCredits = getRequiredCredits();
     console.log('[UnsafeZone] Balance check:', { balance, requiredCredits, total: balance?.total });
-    if (requiredCredits > 0 && (!balance || balance.total === undefined || balance.total < requiredCredits)) {
+    
+    // Wait for balance to load before proceeding
+    if (requiredCredits > 0 && balance === null) {
+      console.log('[UnsafeZone] Balance still loading, please wait');
+      return; // Don't send or open payment modal while loading
+    }
+    
+    // Check if user has sufficient credits
+    if (requiredCredits > 0 && (balance.total === undefined || balance.total < requiredCredits)) {
       console.log('[UnsafeZone] Opening payment modal - insufficient credits');
       setPendingAction({ type: 'unsafe-zone', credits: requiredCredits });
       paymentModal.open();

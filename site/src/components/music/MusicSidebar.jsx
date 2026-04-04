@@ -207,8 +207,11 @@ export function MusicSidebar({
       signupModal.open();
       return;
     }
-    // Check if balance is not loaded yet or has zero credits
-    if (!balance || balance.total === undefined || balance.total <= 0) {
+    // Wait for balance to load
+    if (balance === null) return;
+    
+    // Check if balance has zero credits
+    if (balance.total === undefined || balance.total <= 0) {
       setPendingAction({ type: 'analysis', track: selectedTrack });
       paymentModal.open();
       return;
@@ -228,7 +231,10 @@ export function MusicSidebar({
       signupModal.open();
       return;
     }
-    if (!balance || balance.total === undefined || balance.total < 3) {
+    // Wait for balance to load
+    if (balance === null) return;
+    
+    if (balance.total === undefined || balance.total < 3) {
       if (selectedTrack) {
         setPendingAction({ type: 'panel-analysis', track: selectedTrack });
       }

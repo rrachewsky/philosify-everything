@@ -201,7 +201,10 @@ export function CinemaSidebar({
       signupModal.open();
       return;
     }
-    if (!balance || balance.total === undefined || balance.total < 1) {
+    // Wait for balance to load
+    if (balance === null) return;
+    
+    if (balance.total === undefined || balance.total < 1) {
       setPendingAction({ type: 'cinema-analysis', film: selectedFilm });
       paymentModal.open();
       return;
@@ -218,7 +221,10 @@ export function CinemaSidebar({
       signupModal.open();
       return;
     }
-    if (!balance || balance.total === undefined || balance.total < 3) {
+    // Wait for balance to load
+    if (balance === null) return;
+    
+    if (balance.total === undefined || balance.total < 3) {
       if (selectedFilm) {
         setPendingAction({ type: 'film-panel', film: selectedFilm });
       }

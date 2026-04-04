@@ -293,8 +293,11 @@ export function LiteratureSidebar({
       signupModal.open();
       return;
     }
+    // Wait for balance to load
+    if (balance === null) return;
+    
     // No free analyses for books — always require credits
-    if (!balance || balance.total === undefined || balance.total <= 0) {
+    if (balance.total === undefined || balance.total <= 0) {
       if (selectedBook) {
         setPendingAction({ type: 'book-analysis', book: selectedBook });
       }
@@ -311,7 +314,10 @@ export function LiteratureSidebar({
       signupModal.open();
       return;
     }
-    if (!balance || balance.total === undefined || balance.total < 3) {
+    // Wait for balance to load
+    if (balance === null) return;
+    
+    if (balance.total === undefined || balance.total < 3) {
       if (selectedBook) {
         setPendingAction({ type: 'panel-analysis', book: selectedBook });
       }
