@@ -196,6 +196,11 @@ export function PaymentSuccess() {
         navigate('/', { state: { openMusic: true } });
         return;
       }
+      // Unsafe Zone — open unsafe zone sidebar
+      if (pending.type === 'unsafe-zone') {
+        navigate('/', { state: { openUnsafeZone: true } });
+        return;
+      }
     }
     navigate('/');
   };

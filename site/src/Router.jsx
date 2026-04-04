@@ -229,7 +229,7 @@ function PushNavigateListener() {
 }
 
 // Handles return from PaymentSuccess — reads location.state and opens the correct sidebar
-function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate }) {
+function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -254,13 +254,16 @@ function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpe
         onOpenIdeas?.();
       } else if (state.openCommunity) {
         onOpenCommunity?.(state.openCommunity);
+      } else if (state.openUnsafeZone) {
+        logger.log('[PaymentReturnHandler] Opening unsafe zone sidebar');
+        onOpenUnsafeZone?.();
       }
       // Clear state AFTER opening sidebar (must be inside timeout to avoid cleanup race)
       navigate(location.pathname, { replace: true, state: null });
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate]);
+  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone]);
 
   return null;
 }
@@ -406,6 +409,7 @@ export function Router() {
           onOpenCommunity={community.open}
           onOpenIdeas={ideas.open}
           onOpenDebate={ideas.openWithDebate}
+          onOpenUnsafeZone={unsafeZone.open}
         />
 
         {/* Community Hub Sidebar */}
