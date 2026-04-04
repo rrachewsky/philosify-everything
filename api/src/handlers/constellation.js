@@ -44,76 +44,110 @@ const POSITION_PRECISION = 1;
 // Geographic region base positions (clustered, not spread apart)
 // All regions are close to center, differentiated by small offsets
 const REGION_BASE = {
-  // Ancient Greece (Athens area)
+  // Ancient Greece (Athens area) - center of Western philosophy
   greece: { x: 0, y: 0, z: 90 },
-  // Rome/Italy
-  rome: { x: 1, y: -1, z: 92 },
-  // Germany
-  germany: { x: -1, y: 2, z: 95 },
-  // France  
-  france: { x: -2, y: 1, z: 93 },
-  // Britain
-  britain: { x: -2, y: 3, z: 94 },
-  // China
+  // Rome/Italy - close to Greece
+  rome: { x: 0.5, y: -0.5, z: 92 },
+  // Germany - Northern Europe cluster
+  germany: { x: -1, y: 1.5, z: 96 },
+  // France - Western Europe
+  france: { x: -1.5, y: 0.5, z: 94 },
+  // Britain - Northwestern Europe
+  britain: { x: -2, y: 2, z: 95 },
+  // USA - Modern West
+  usa: { x: -2.5, y: 1, z: 110 },
+  // Russia - Eastern Europe
+  russia: { x: 1, y: 2, z: 98 },
+  // China - East Asia
   china: { x: 3, y: 0, z: 88 },
-  // India
-  india: { x: 2, y: -2, z: 86 },
-  // Persia/Islamic
-  persia: { x: 1, y: -2, z: 89 },
-  // Default (unknown region)
+  // India - South Asia
+  india: { x: 2, y: -1.5, z: 86 },
+  // Persia/Islamic - Middle East
+  persia: { x: 1.5, y: -1, z: 89 },
+  // Default (unknown region) - center
   default: { x: 0, y: 0, z: 100 },
 };
 
 // Map philosopher birthplaces to regions
 function getRegion(node) {
+  const country = (node.birth_country_modern || '').toLowerCase();
+  const city = (node.birth_city || '').toLowerCase();
   const birthplace = (node.birthplace || '').toLowerCase();
-  const name = (node.name || '').toLowerCase();
+  const combined = `${country} ${city} ${birthplace}`;
   
-  // Greece
-  if (birthplace.includes('athens') || birthplace.includes('greece') || 
-      birthplace.includes('stagira') || birthplace.includes('samos') ||
-      birthplace.includes('abdera') || birthplace.includes('ephesus') ||
-      birthplace.includes('miletus') || birthplace.includes('elea')) {
+  // Ancient Greece (includes Turkey/Ionia - ancient Greek colonies)
+  if (country === 'greece' || 
+      combined.includes('athens') || combined.includes('stagira') || 
+      combined.includes('samos') || combined.includes('abdera') ||
+      combined.includes('miletus') || combined.includes('ephesus') ||
+      combined.includes('elea') || combined.includes('ionia') ||
+      combined.includes('cyprus') ||
+      // Ancient Greek cities in modern Turkey
+      (country === 'turkey' && (city.includes('miletus') || city.includes('ephesus') || 
+       city.includes('colophon') || city.includes('clazomenae') || city.includes('halicarnassus')))) {
     return 'greece';
   }
   // Rome/Italy
-  if (birthplace.includes('rome') || birthplace.includes('italy') ||
-      birthplace.includes('naples') || birthplace.includes('aquino')) {
+  if (country === 'italy' || combined.includes('rome') || 
+      combined.includes('naples') || combined.includes('aquino') ||
+      combined.includes('sicily') || combined.includes('agrigentum')) {
     return 'rome';
   }
   // Germany
-  if (birthplace.includes('germany') || birthplace.includes('prussia') ||
-      birthplace.includes('königsberg') || birthplace.includes('frankfurt') ||
-      birthplace.includes('danzig') || birthplace.includes('röcken')) {
+  if (country === 'germany' || combined.includes('prussia') ||
+      combined.includes('königsberg') || combined.includes('frankfurt') ||
+      combined.includes('danzig') || combined.includes('röcken') ||
+      combined.includes('trier') || combined.includes('breslau')) {
     return 'germany';
   }
   // France
-  if (birthplace.includes('france') || birthplace.includes('paris') ||
-      birthplace.includes('lyon') || birthplace.includes('la haye')) {
+  if (country === 'france' || combined.includes('paris') ||
+      combined.includes('lyon') || combined.includes('la haye') ||
+      combined.includes('bordeaux') || combined.includes('touraine')) {
     return 'france';
   }
   // Britain
-  if (birthplace.includes('england') || birthplace.includes('britain') ||
-      birthplace.includes('scotland') || birthplace.includes('london') ||
-      birthplace.includes('edinburgh')) {
+  if (country === 'england' || country === 'uk' || country === 'scotland' ||
+      country === 'united kingdom' || combined.includes('britain') ||
+      combined.includes('london') || combined.includes('edinburgh') ||
+      combined.includes('malmesbury') || combined.includes('wrington')) {
     return 'britain';
   }
+  // USA
+  if (country === 'usa' || country === 'united states' ||
+      combined.includes('new york') || combined.includes('cambridge') ||
+      combined.includes('boston') || combined.includes('chicago')) {
+    return 'usa';
+  }
   // China
-  if (birthplace.includes('china') || birthplace.includes('qufu') ||
+  if (country === 'china' || combined.includes('qufu') ||
       node.tradition === 'chinese') {
     return 'china';
   }
   // India  
-  if (birthplace.includes('india') || birthplace.includes('lumbini') ||
+  if (country === 'india' || country === 'nepal' || 
+      combined.includes('lumbini') || combined.includes('vaishali') ||
       node.tradition === 'indian') {
     return 'india';
   }
   // Persia/Islamic
-  if (birthplace.includes('persia') || birthplace.includes('iran') ||
-      birthplace.includes('baghdad') || birthplace.includes('cordoba') ||
+  if (country === 'iran' || country === 'iraq' || country === 'spain' ||
+      combined.includes('persia') || combined.includes('baghdad') || 
+      combined.includes('cordoba') || combined.includes('bukhara') ||
       node.tradition === 'islamic') {
     return 'persia';
   }
+  // Russia
+  if (country === 'russia' || combined.includes('moscow') ||
+      combined.includes('petersburg')) {
+    return 'russia';
+  }
+  
+  // Fallback: use tradition
+  if (node.tradition === 'western') return 'greece';
+  if (node.tradition === 'chinese') return 'china';
+  if (node.tradition === 'indian') return 'india';
+  if (node.tradition === 'islamic') return 'persia';
   
   return 'default';
 }
