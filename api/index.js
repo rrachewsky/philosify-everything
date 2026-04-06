@@ -3652,6 +3652,10 @@ export default {
         const { handleQuizEnd } = await import("./src/handlers/quiz.js");
         return handleQuizEnd(request, env);
       }
+      if (url.pathname === "/api/quiz/abandon" && request.method === "POST") {
+        const { handleQuizAbandon } = await import("./src/handlers/quiz.js");
+        return handleQuizAbandon(request, env);
+      }
       if (url.pathname === "/api/quiz/profile" && request.method === "GET") {
         const { handleQuizGetProfile } = await import("./src/handlers/quiz.js");
         return handleQuizGetProfile(request, env);

@@ -400,7 +400,56 @@ function getTranslatedName(node, t) {
   return translated || node.name;
 }
 
-// Create satellite mesh - positioned directly above city, attached to Earth
+// Apply tether inclination to a radial vector
+// x_inclination: East/West angle (degrees, positive = East)
+// y_inclination: North/South angle (degrees, positive = North)
+function applyTetherInclination(surfacePos, earthRadius, xInclination, yInclination, altitude) {
+  // Get the radial direction (from Earth center to surface point)
+  const radial = surfacePos.clone().normalize();
+  
+  // Calculate tangent vectors at this position
+  // East vector: perpendicular to radial, pointing East
+  const worldUp = new THREE.Vector3(0, 1, 0);
+  const eastVec = new THREE.Vector3().crossVectors(worldUp, radial).normalize();
+  // North vector: perpendicular to both radial and east
+  const northVec = new THREE.Vector3().crossVectors(radial, eastVec).normalize();
+  
+  // Convert inclination angles to radians
+  const xRad = (xInclination || 0) * Math.PI / 180;
+  const yRad = (yInclination || 0) * Math.PI / 180;
+  
+  // Apply rotations to the radial direction
+  // First rotate around North axis (for East/West inclination)
+  // Then rotate around East axis (for North/South inclination)
+  const inclinedDir = radial.clone();
+  
+  // East/West rotation (around north vector)
+  if (xRad !== 0) {
+    const cosX = Math.cos(xRad);
+    const sinX = Math.sin(xRad);
+    // Rodrigues rotation formula
+    inclinedDir.multiplyScalar(cosX);
+    inclinedDir.add(new THREE.Vector3().crossVectors(northVec, radial).multiplyScalar(sinX));
+    inclinedDir.add(northVec.clone().multiplyScalar(northVec.dot(radial) * (1 - cosX)));
+    inclinedDir.normalize();
+  }
+  
+  // North/South rotation (around east vector)
+  if (yRad !== 0) {
+    const cosY = Math.cos(yRad);
+    const sinY = Math.sin(yRad);
+    const tempDir = inclinedDir.clone();
+    inclinedDir.multiplyScalar(cosY);
+    inclinedDir.add(new THREE.Vector3().crossVectors(eastVec, tempDir).multiplyScalar(sinY));
+    inclinedDir.add(eastVec.clone().multiplyScalar(eastVec.dot(tempDir) * (1 - cosY)));
+    inclinedDir.normalize();
+  }
+  
+  // Calculate final position at the specified altitude along the inclined direction
+  return inclinedDir.multiplyScalar(earthRadius + altitude);
+}
+
+// Create satellite mesh - positioned using orbital tether inclination from API
 function createSatellite(node, earthRadius, spreadOffset = null, t = null) {
   const group = new THREE.Group();
   group.userData = { nodeId: node.id, node, isAutoEnriched: node.auto_enriched || false };
@@ -410,14 +459,6 @@ function createSatellite(node, earthRadius, spreadOffset = null, t = null) {
   const weight = node.historical_weight || 0.5;
   const isMostFoundational = weight >= 1.0; // Socrates, Plato, Aristotle, Kant, Confucius, Buddha
   const isFoundational = weight >= 0.9; // Major figures in philosophy
-  
-  // Calculate altitude - foundational philosophers orbit higher
-  let altitude = layout.baseAltitude;
-  if (isMostFoundational) {
-    altitude += layout.mostFoundationalAltitudeBoost;
-  } else if (isFoundational) {
-    altitude += layout.foundationalAltitudeBoost;
-  }
   
   // Get school color (primary) with tradition as fallback
   const schoolColorHex = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#FFFFFF';
@@ -436,26 +477,38 @@ function createSatellite(node, earthRadius, spreadOffset = null, t = null) {
   const tetherAnchorLocal = new THREE.Vector3(0, labelOffset - cardHeight / 2, 0);
   group.userData.tetherAnchorLocal = tetherAnchorLocal.clone();
   
-  // Position directly above city at calculated altitude
-  // This position is in Earth-local coordinates (satellite is child of Earth)
-  // Apply altitude offset from spread calculation if provided
-  const altitudeBoost = spreadOffset?.altitudeOffset || 0;
-  let finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + altitude + altitudeBoost);
+  // Surface position (birthplace on Earth)
   const surfacePos = latLngToVector3(node.latitude, node.longitude, earthRadius);
   
-  // Apply spread offset if provided (to separate overlapping philosophers)
-  if (spreadOffset && (spreadOffset.offsetX !== 0 || spreadOffset.offsetZ !== 0)) {
-    // Calculate tangent vectors at this position (perpendicular to radial direction)
-    const radial = finalPos.clone().normalize();
+  // Get orbital position from API (if available)
+  const orbital = node.orbital_position;
+  
+  let finalPos;
+  if (orbital && (orbital.x_inclination !== undefined || orbital.y_inclination !== undefined)) {
+    // Use API-provided orbital tether inclination
+    const xInclination = orbital.x_inclination || 0;
+    const yInclination = orbital.y_inclination || 0;
+    const altitude = orbital.z_altitude ? (orbital.z_altitude - 100) * 0.15 + layout.baseAltitude : layout.baseAltitude;
     
-    // Use world up as reference, cross with radial to get tangent
-    const worldUp = new THREE.Vector3(0, 1, 0);
-    const tangentX = new THREE.Vector3().crossVectors(worldUp, radial).normalize();
-    const tangentZ = new THREE.Vector3().crossVectors(radial, tangentX).normalize();
+    // Apply foundational boosts
+    let finalAltitude = altitude;
+    if (isMostFoundational) {
+      finalAltitude += layout.mostFoundationalAltitudeBoost;
+    } else if (isFoundational) {
+      finalAltitude += layout.foundationalAltitudeBoost;
+    }
     
-    // Apply offset in tangent space
-    finalPos.add(tangentX.multiplyScalar(spreadOffset.offsetX));
-    finalPos.add(tangentZ.multiplyScalar(spreadOffset.offsetZ));
+    // Calculate position using tether inclination
+    finalPos = applyTetherInclination(surfacePos, earthRadius, xInclination, yInclination, finalAltitude);
+  } else {
+    // Fallback: position directly above birthplace (legacy behavior)
+    let altitude = layout.baseAltitude;
+    if (isMostFoundational) {
+      altitude += layout.mostFoundationalAltitudeBoost;
+    } else if (isFoundational) {
+      altitude += layout.foundationalAltitudeBoost;
+    }
+    finalPos = latLngToVector3(node.latitude, node.longitude, earthRadius + altitude);
   }
   
   group.position.copy(finalPos);
@@ -1216,14 +1269,11 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
       });
     }
 
-    // Calculate spread offsets for overlapping philosophers
-    const spreadOffsets = calculateSpreadOffsets(nodes);
-
     // Add new satellites as CHILDREN of Earth (so they rotate with Earth)
+    // Positioning is now handled by the API's orbital_position data
     nodes.forEach(node => {
       if (!satellitesRef.current.has(node.id)) {
-        const spreadOffset = spreadOffsets.get(node.id) || null;
-        const satellite = createSatellite(node, 100, spreadOffset, t);
+        const satellite = createSatellite(node, 100, null, t);
         earth.add(satellite); // Add to Earth so satellites rotate WITH Earth
         satellitesRef.current.set(node.id, satellite);
 

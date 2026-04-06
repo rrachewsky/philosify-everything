@@ -29,43 +29,80 @@ const TRADITION_BASE_X = {
 
 // ============================================================
 // 3D ORBITAL TETHER POSITIONING SYSTEM
-// Cards from same geographic area stay CLOSE together
-// Small inclination/altitude variations prevent overlap
+// Philosophers from same region are positioned using a directional pattern:
+// 1st: 0° (center), 2nd: 5° East, 3rd: 5° West, 4th: 5° North, 5th: 5° South
+// Then diagonals (NE, NW, SE, SW), then increase to 10° and repeat...
 // 
 // Coordinate System:
-// - x_inclination: East/West tether angle (small, ±5° max within region)
-// - y_inclination: North/South tether angle (small, ±5° max within region)  
+// - x_inclination: East/West tether angle (degrees)
+// - y_inclination: North/South tether angle (degrees)  
 // - z_altitude: Height above birthplace (80 to 120 km)
+// - Max total inclination: 20° (sqrt(x² + y²) ≤ 20)
 // ============================================================
 
-// Position precision (rounded to this many decimals)
-const POSITION_PRECISION = 1;
+// Inclination step size (degrees)
+const INCLINATION_STEP = 5;
 
-// Geographic region base positions (clustered, not spread apart)
-// All regions are close to center, differentiated by small offsets
-const REGION_BASE = {
-  // Ancient Greece (Athens area) - center of Western philosophy
-  greece: { x: 0, y: 0, z: 90 },
-  // Rome/Italy - close to Greece
-  rome: { x: 0.5, y: -0.5, z: 92 },
-  // Germany - Northern Europe cluster
-  germany: { x: -1, y: 1.5, z: 96 },
-  // France - Western Europe
-  france: { x: -1.5, y: 0.5, z: 94 },
-  // Britain - Northwestern Europe
-  britain: { x: -2, y: 2, z: 95 },
-  // USA - Modern West
-  usa: { x: -2.5, y: 1, z: 110 },
-  // Russia - Eastern Europe
-  russia: { x: 1, y: 2, z: 98 },
-  // China - East Asia
-  china: { x: 3, y: 0, z: 88 },
-  // India - South Asia
-  india: { x: 2, y: -1.5, z: 86 },
-  // Persia/Islamic - Middle East
-  persia: { x: 1.5, y: -1, z: 89 },
-  // Default (unknown region) - center
-  default: { x: 0, y: 0, z: 100 },
+// Maximum total inclination (degrees) - sqrt(x² + y²) must not exceed this
+const MAX_INCLINATION = 20;
+
+// Base altitude for all philosophers (km above Earth surface)
+const BASE_ALTITUDE = 100;
+
+// Directional pattern for positioning within a region
+// Each ring adds positions at increasing distances from center
+// Pattern: Center → Cardinal directions → Diagonals → Next ring
+function getDirectionalPattern() {
+  const pattern = [];
+  
+  // Center (0°)
+  pattern.push({ x: 0, y: 0 });
+  
+  // Generate rings at 5°, 10°, 15°, 20° distances
+  for (let ring = 1; ring <= 4; ring++) {
+    const distance = ring * INCLINATION_STEP;
+    
+    // Skip if this ring would exceed max inclination
+    if (distance > MAX_INCLINATION) break;
+    
+    // Cardinal directions: E, W, N, S
+    pattern.push({ x: distance, y: 0 });           // East
+    pattern.push({ x: -distance, y: 0 });          // West
+    pattern.push({ x: 0, y: distance });           // North
+    pattern.push({ x: 0, y: -distance });          // South
+    
+    // Diagonal directions: NE, NW, SE, SW (at 45° angles)
+    // For diagonals, we use distance/sqrt(2) to keep total inclination = distance
+    const diag = Math.round((distance / Math.sqrt(2)) * 10) / 10;
+    
+    // Only add diagonals if they don't exceed max inclination
+    if (Math.sqrt(diag * diag + diag * diag) <= MAX_INCLINATION) {
+      pattern.push({ x: diag, y: diag });          // NE
+      pattern.push({ x: -diag, y: diag });         // NW
+      pattern.push({ x: diag, y: -diag });         // SE
+      pattern.push({ x: -diag, y: -diag });        // SW
+    }
+  }
+  
+  return pattern;
+}
+
+// Pre-compute the directional pattern
+const DIRECTIONAL_PATTERN = getDirectionalPattern();
+
+// Geographic region base altitudes (subtle variation by region)
+const REGION_ALTITUDE = {
+  greece: 100,
+  rome: 101,
+  germany: 102,
+  france: 101,
+  britain: 102,
+  usa: 105,
+  russia: 103,
+  china: 99,
+  india: 98,
+  persia: 100,
+  default: 100,
 };
 
 // Map philosopher birthplaces to regions
@@ -152,93 +189,36 @@ function getRegion(node) {
   return 'default';
 }
 
-// Round to precision
-function roundTo(num, decimals) {
-  const factor = Math.pow(10, decimals);
-  return Math.round(num * factor) / factor;
-}
-
-// Create position key for uniqueness check
-function positionKey(x, y, z) {
-  return `${roundTo(x, POSITION_PRECISION)},${roundTo(y, POSITION_PRECISION)},${roundTo(z, POSITION_PRECISION)}`;
-}
-
-// Find nearest available position using SUBTLE increments
-// Cards stay very close together - only tiny inclination differences
-function findAvailablePosition(baseX, baseY, baseZ, occupiedPositions) {
-  // Try base position first
-  let key = positionKey(baseX, baseY, baseZ);
-  if (!occupiedPositions.has(key)) {
-    return { x: roundTo(baseX, POSITION_PRECISION), y: roundTo(baseY, POSITION_PRECISION), z: roundTo(baseZ, POSITION_PRECISION) };
+// Assign position to a philosopher based on their index within their region
+// Uses the directional pattern: center, E, W, N, S, NE, NW, SE, SW, then next ring
+function getPositionForIndex(index, baseAltitude) {
+  // Get position from pattern (wraps around if we have more philosophers than pattern slots)
+  const patternIndex = index % DIRECTIONAL_PATTERN.length;
+  const ringMultiplier = Math.floor(index / DIRECTIONAL_PATTERN.length);
+  
+  const basePosition = DIRECTIONAL_PATTERN[patternIndex];
+  
+  // For overflow (more philosophers than pattern slots), add altitude variation
+  const altitudeOffset = ringMultiplier * 2; // 2km per overflow ring
+  
+  let x = basePosition.x;
+  let y = basePosition.y;
+  let z = baseAltitude + altitudeOffset;
+  
+  // Ensure total inclination doesn't exceed max
+  const totalInclination = Math.sqrt(x * x + y * y);
+  if (totalInclination > MAX_INCLINATION) {
+    const scale = MAX_INCLINATION / totalInclination;
+    x = Math.round(x * scale * 10) / 10;
+    y = Math.round(y * scale * 10) / 10;
   }
   
-  // Very subtle increments - 0.1 degree steps for x/y, 1km for z
-  // Prioritize altitude (z) changes to separate cards vertically
-  for (let ring = 1; ring <= 50; ring++) {
-    const xyStep = ring * 0.1;  // 0.1°, 0.2°, 0.3°... very subtle
-    const zStep = ring * 1;     // 1km, 2km, 3km... altitude variation
-    
-    // Try variations - prioritize Z first, then tiny x/y adjustments
-    const variations = [
-      // Altitude variations FIRST (best way to separate without visual overlap)
-      { x: baseX, y: baseY, z: baseZ + zStep },
-      { x: baseX, y: baseY, z: baseZ - zStep },
-      // Tiny X inclination
-      { x: baseX + xyStep, y: baseY, z: baseZ },
-      { x: baseX - xyStep, y: baseY, z: baseZ },
-      // Tiny Y inclination
-      { x: baseX, y: baseY + xyStep, z: baseZ },
-      { x: baseX, y: baseY - xyStep, z: baseZ },
-      // Combined: tiny x/y with altitude
-      { x: baseX + xyStep, y: baseY, z: baseZ + zStep },
-      { x: baseX - xyStep, y: baseY, z: baseZ + zStep },
-      { x: baseX, y: baseY + xyStep, z: baseZ + zStep },
-      { x: baseX, y: baseY - xyStep, z: baseZ + zStep },
-      { x: baseX + xyStep, y: baseY, z: baseZ - zStep },
-      { x: baseX - xyStep, y: baseY, z: baseZ - zStep },
-      // Diagonal tiny adjustments
-      { x: baseX + xyStep, y: baseY + xyStep, z: baseZ },
-      { x: baseX - xyStep, y: baseY + xyStep, z: baseZ },
-      { x: baseX + xyStep, y: baseY - xyStep, z: baseZ },
-      { x: baseX - xyStep, y: baseY - xyStep, z: baseZ },
-    ];
-    
-    for (const v of variations) {
-      // Keep within tight bounds
-      if (v.x < -5 || v.x > 5) continue;   // Max ±5° from region center
-      if (v.y < -5 || v.y > 5) continue;   // Max ±5° from region center
-      if (v.z < 60 || v.z > 140) continue; // Altitude range
-      
-      const vKey = positionKey(v.x, v.y, v.z);
-      if (!occupiedPositions.has(vKey)) {
-        return { 
-          x: roundTo(v.x, POSITION_PRECISION), 
-          y: roundTo(v.y, POSITION_PRECISION), 
-          z: roundTo(v.z, POSITION_PRECISION) 
-        };
-      }
-    }
-  }
-  
-  // Fallback with random subtle offset
-  for (let attempt = 0; attempt < 100; attempt++) {
-    const rx = roundTo(baseX + (Math.random() - 0.5) * 2, POSITION_PRECISION);  // Max ±1° random
-    const ry = roundTo(baseY + (Math.random() - 0.5) * 2, POSITION_PRECISION);  // Max ±1° random
-    const rz = roundTo(baseZ + (Math.random() - 0.5) * 20, POSITION_PRECISION); // Max ±10km random
-    const rKey = positionKey(rx, ry, rz);
-    if (!occupiedPositions.has(rKey)) {
-      return { x: rx, y: ry, z: rz };
-    }
-  }
-  
-  // Last resort
-  return { x: roundTo(baseX, POSITION_PRECISION), y: roundTo(baseY, POSITION_PRECISION), z: roundTo(baseZ + Math.random() * 10, POSITION_PRECISION) };
+  return { x, y, z };
 }
 
 // Assign unique orbital positions to all nodes
-// Cards from same region stay CLOSE together
+// Uses directional pattern: 1st=center, 2nd=E, 3rd=W, 4th=N, 5th=S, then diagonals...
 function assignOrbitalPositions(nodes) {
-  const occupiedPositions = new Set();
   const results = [];
   
   // Group nodes by region
@@ -249,18 +229,16 @@ function assignOrbitalPositions(nodes) {
     regionGroups[region].push(node);
   }
   
-  // Process each region - sort by historical weight within region
+  // Process each region
   for (const [region, regionNodes] of Object.entries(regionGroups)) {
-    const base = REGION_BASE[region] || REGION_BASE.default;
+    const baseAltitude = REGION_ALTITUDE[region] || REGION_ALTITUDE.default;
     
-    // Sort by importance (most important gets base position)
+    // Sort by importance (most important gets center position at 0°)
     regionNodes.sort((a, b) => (b.historical_weight || 0.5) - (a.historical_weight || 0.5));
     
-    for (const node of regionNodes) {
-      const position = findAvailablePosition(base.x, base.y, base.z, occupiedPositions);
-      
-      // Mark position as occupied
-      occupiedPositions.add(positionKey(position.x, position.y, position.z));
+    // Assign positions using directional pattern
+    regionNodes.forEach((node, index) => {
+      const position = getPositionForIndex(index, baseAltitude);
       
       results.push({
         nodeId: node.id,
@@ -268,14 +246,15 @@ function assignOrbitalPositions(nodes) {
           x_inclination: position.x,
           y_inclination: position.y,
           z_altitude: position.z,
-          // Legacy fields for visualization
-          x: position.x * 8,   // Scale for 3D view
-          y: position.y * 10,  // Scale for 3D view
-          z: (position.z - 100) * 1.5,  // Center and scale
-          altitude: position.z,
+          // Total inclination for reference
+          total_inclination: Math.round(Math.sqrt(position.x * position.x + position.y * position.y) * 10) / 10,
+          // Region for debugging
+          region: region,
+          // Index within region (0 = most important)
+          region_rank: index,
         }
       });
-    }
+    });
   }
   
   return results;

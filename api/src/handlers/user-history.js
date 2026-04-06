@@ -6,6 +6,7 @@
 //   - Book analyses
 //   - Philosopher panels (music, literature, news)
 //   - Colloquiums/debates accessed
+//   - Unsafe Zone sessions
 // Sorted chronologically (newest first).
 // ============================================================
 
@@ -37,7 +38,7 @@ export async function handleUserHistory(request, env, origin) {
     const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
 
     // Fetch all types in parallel
-    const [musicRows, bookRows, filmRows, panelRows, accessRows] = await Promise.all([
+    const [musicRows, bookRows, filmRows, panelRows, accessRows, unsafeRows] = await Promise.all([
       // Music analyses
       query(sbUrl, sbKey,
         `user_analysis_requests?user_id=eq.${uid}&select=analysis_id,song_title,artist_name,requested_at&order=requested_at.desc&limit=50`
@@ -57,6 +58,10 @@ export async function handleUserHistory(request, env, origin) {
       // Colloquiums/debates accessed
       query(sbUrl, sbKey,
         `colloquium_access?user_id=eq.${uid}&select=thread_id,access_type,credits_spent,created_at&order=created_at.desc&limit=50`
+      ),
+      // Unsafe Zone sessions
+      query(sbUrl, sbKey,
+        `unsafe_zone_sessions?user_id=eq.${uid}&select=id,turn_count,status,created_at,updated_at,messages&order=created_at.desc&limit=50`
       ),
     ]);
 
@@ -105,12 +110,31 @@ export async function handleUserHistory(request, env, origin) {
       credits: 3,
     }));
 
+    // Normalize Unsafe Zone sessions
+    const unsafeSessions = unsafeRows.map((r) => {
+      const firstUserMsg = (r.messages || []).find(m => m.role === 'user');
+      const preview = firstUserMsg?.content?.substring(0, 80) || '';
+      const cost = r.turn_count <= 20
+        ? 10
+        : 10 + Math.ceil((r.turn_count - 20) / 10) * 5;
+      return {
+        kind: "unsafe-zone",
+        mediaType: "unsafe-zone",
+        id: r.id,
+        title: "Unsafe Zone Talks" + (preview ? ': ' + preview + (preview.length >= 80 ? '...' : '') : ''),
+        artist: null,
+        turns: r.turn_count,
+        status: r.status,
+        date: r.created_at,
+        credits: cost,
+      };
+    });
+
     // Fetch thread titles for colloquiums
     let debates = [];
     if (accessRows.length > 0) {
       const threadIds = [...new Set(accessRows.map((r) => r.thread_id))];
 
-      // Fetch each thread individually using the same query helper
       const threadPromises = threadIds.map((tid) =>
         query(sbUrl, sbKey, `forum_threads?id=eq.${tid}&select=id,title,content,metadata,created_at`)
       );
@@ -136,7 +160,6 @@ export async function handleUserHistory(request, env, origin) {
         };
       });
 
-      // Deduplicate by thread_id (user may have multiple access records for same thread)
       const seen = new Set();
       debates = debates.filter((d) => {
         if (seen.has(d.id)) return false;
@@ -146,7 +169,7 @@ export async function handleUserHistory(request, env, origin) {
     }
 
     // Merge all and sort by date (newest first)
-    const all = [...music, ...books, ...films, ...panels, ...debates];
+    const all = [...music, ...books, ...films, ...panels, ...debates, ...unsafeSessions];
     all.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return jsonResponse(
@@ -154,7 +177,6 @@ export async function handleUserHistory(request, env, origin) {
         success: true,
         items: all,
         count: all.length,
-
       },
       200,
       origin,

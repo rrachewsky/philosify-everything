@@ -16,6 +16,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 const MIN_YEAR = -600;
 const MAX_YEAR = 2026;
 const YEARS_PER_SECOND_1X = 1.875; // At 1x speed, ~23 minutes for full timeline (reduced 25% from 2.5)
+const MAX_EVENTS_PER_SECOND = 0.25; // Limit ticker speed in dense periods (4 sec per event minimum)
 
 // Era definitions with year ranges
 // Note: Some eras overlap historically (Counter-Enlightenment was a reaction during Enlightenment)
@@ -134,19 +135,19 @@ const AVG_EVENT_GAP = SORTED_HE.length > 1
   ? (SORTED_HE[SORTED_HE.length - 1].year - SORTED_HE[0].year) / (SORTED_HE.length - 1)
   : 1;
 
-function getEventSpeedFactor(year) {
-  // Find the two events bracketing the current year
-  let localGap = AVG_EVENT_GAP;
+// Get the gap (in years) between events at the current year position
+function getLocalEventGap(year) {
   for (let i = 0; i < SORTED_HE.length - 1; i++) {
     if (year >= SORTED_HE[i].year && year <= SORTED_HE[i + 1].year) {
-      localGap = SORTED_HE[i + 1].year - SORTED_HE[i].year;
-      break;
+      return SORTED_HE[i + 1].year - SORTED_HE[i].year;
     }
   }
   // Before first or after last event: use average gap
-  if (year < SORTED_HE[0].year || year > SORTED_HE[SORTED_HE.length - 1].year) {
-    localGap = AVG_EVENT_GAP;
-  }
+  return AVG_EVENT_GAP;
+}
+
+function getEventSpeedFactor(year) {
+  const localGap = getLocalEventGap(year);
   // Factor = localGap / avgGap * 1.95 (boosted for comfortable ticker flow), clamped:
   //   max 7x during very sparse periods (fast-forward through empty years)
   //   min 0.8x during very dense periods (slow down to read headlines)
@@ -255,7 +256,13 @@ export function useConstellation() {
       setCurrentYear(prev => {
         // Speed factor adapts year advance to maintain constant ticker visual speed
         const speedFactor = getEventSpeedFactor(prev);
-        const yearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed * speedFactor;
+        const rawYearsToAdvance = (deltaMs / 1000) * YEARS_PER_SECOND_1X * playbackSpeed * speedFactor;
+        
+        // Limit max events per second (2.5 sec per event minimum in dense periods)
+        const localGap = getLocalEventGap(prev);
+        const maxYearsPerSec = MAX_EVENTS_PER_SECOND * localGap * playbackSpeed;
+        const yearsToAdvance = Math.min(rawYearsToAdvance, (deltaMs / 1000) * maxYearsPerSec);
+        
         const next = prev + yearsToAdvance;
         if (next >= MAX_YEAR) {
           reachedEnd = true;

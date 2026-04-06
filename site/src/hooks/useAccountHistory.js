@@ -11,7 +11,6 @@ import { logger } from '@/utils';
 
 function isDisplayableCreditType(type) {
   if (!type) return false;
-  // Show all credit event types including 'consume' (colloquium, spaces, etc.)
   return true;
 }
 
@@ -44,7 +43,7 @@ export function useAccountHistory(user) {
           const historyData = await historyRes.json();
           if (historyData.success && Array.isArray(historyData.items)) {
             const items = historyData.items.map((a) => ({
-              kind: a.kind, // 'analysis', 'panel', 'debate'
+              kind: a.kind, // 'analysis', 'panel', 'debate', 'unsafe-zone'
               mediaType: a.mediaType,
               id: a.id,
               analysisId: a.id,
@@ -55,6 +54,9 @@ export function useAccountHistory(user) {
               philosophers: a.philosophers,
               threadType: a.threadType,
               accessType: a.accessType,
+              turns: a.turns,
+              status: a.status,
+              credits: a.credits,
             }));
             setAnalysisItems(items);
             logger.log('[useAccountHistory] Loaded', items.length, 'history items');
@@ -114,7 +116,7 @@ export function useAccountHistory(user) {
     fetchAll();
   }, [fetchAll]);
 
-  // Auto-refresh when credits change (e.g. after colloquium access, add philosopher, etc.)
+  // Auto-refresh when credits change
   useEffect(() => {
     const handleCreditsChanged = () => {
       logger.log('[useAccountHistory] credits-changed event — refreshing history');
@@ -133,13 +135,21 @@ export function useAccountHistory(user) {
 
   const formatDescription = useCallback(
     (item, allItems) => {
+      // Unsafe Zone sessions
+      if (item.kind === 'unsafe-zone') {
+        const turns = item.turns || 0;
+        const credits = item.credits || 10;
+        const preview = item.title || 'Unsafe Zone Talks';
+        return `\u{1F9E0} ${preview} (${turns} turns, ${credits} credits)`;
+      }
+
       // Analyses, panels, debates
       if (item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate') {
         const icons = {
-          music: '\u{1F3B5}',        // musical note
-          literature: '\u{1F4DA}',   // books
-          news: '\u{1F4F0}',         // newspaper
-          ideas: '\u{1F4AC}',        // speech bubble
+          music: '\u{1F3B5}',
+          literature: '\u{1F4DA}',
+          news: '\u{1F4F0}',
+          ideas: '\u{1F4AC}',
         };
         const icon = icons[item.mediaType] || '\u{2728}';
         const title = item.title || t('account.notAvailable', { defaultValue: 'Not available' });
@@ -167,7 +177,6 @@ export function useAccountHistory(user) {
           if (item.metadata?.description) {
             return `${item.metadata.description} (${count} ${count === 1 ? 'credit' : 'credits'})`;
           }
-          // Match undescribed consume entries to nearby panel/analysis items by timestamp
           if (allItems && item.date) {
             const t0 = item.date.getTime();
             const match = allItems.find((other) => {
