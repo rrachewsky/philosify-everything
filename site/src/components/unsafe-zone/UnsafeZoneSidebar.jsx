@@ -18,7 +18,7 @@ const EXTENSION_COST = 5;
 const INITIAL_TURNS = 20;
 const EXTENSION_TURNS = 10;
 
-export function UnsafeZoneSidebar({ isOpen, onClose }) {
+export function UnsafeZoneSidebar({ isOpen, onClose, pendingSessionId, onClearPendingSession }) {
   const { t, i18n } = useTranslation();
   const { user, sessionBalance: balance } = useAuth();
 
@@ -295,6 +295,14 @@ export function UnsafeZoneSidebar({ isOpen, onClose }) {
       setError(t('unsafeZone.loadError', 'Failed to load session'));
     }
   }, [t]);
+
+  // ---- Auto-resume from history modal click ----
+  useEffect(() => {
+    if (isOpen && pendingSessionId && conversationLoaded) {
+      resumeSession(pendingSessionId);
+      if (onClearPendingSession) onClearPendingSession();
+    }
+  }, [isOpen, pendingSessionId, conversationLoaded, resumeSession, onClearPendingSession]);
 
   // ---- Render ----
   const isIdle = messages.length === 0 && conversationLoaded && !showHistory;

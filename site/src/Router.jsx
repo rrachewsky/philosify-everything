@@ -75,10 +75,10 @@ function HomePageWrapper({
         return;
       }
 
-      // Unsafe Zone — open the unsafe zone sidebar
+      // Unsafe Zone — open sidebar and resume the specific session
       if (kind === 'unsafe-zone') {
         historyModal.close();
-        if (onOpenSidebar) onOpenSidebar('unsafe-zone');
+        if (onOpenSidebar) onOpenSidebar('unsafe-zone', analysisId);
         return;
       }
 
@@ -117,10 +117,7 @@ function HomePageWrapper({
       if (mediaType === 'literature') {
         endpoint = `${API_URL}/api/book-analysis/${analysisId}`;
       } else if (mediaType === 'cinema') {
-        // Cinema has no detail endpoint yet — open the cinema sidebar
-        historyModal.close();
-        if (onOpenSidebar) onOpenSidebar('films');
-        return;
+        endpoint = `${API_URL}/api/cinema-analysis/${analysisId}`;
       } else {
         endpoint = `${API_URL}/api/analysis/${analysisId}`;
       }
@@ -140,6 +137,9 @@ function HomePageWrapper({
       if (mediaType === 'literature') {
         const formattedResult = { ...data, media_type: 'literature', cached: true };
         if (onOpenSidebar) onOpenSidebar('literature', formattedResult);
+      } else if (mediaType === 'cinema') {
+        const formattedResult = { ...data, media_type: 'cinema', cached: true };
+        if (onOpenSidebar) onOpenSidebar('films', formattedResult);
       } else {
         const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
         if (onViewAnalysis) {
@@ -382,7 +382,7 @@ export function Router() {
                    if (type === 'news') result ? news.openWithResult(result) : news.open();
                    else if (type === 'literature') result ? literature.openWithResult(result) : literature.open();
                    else if (type === 'films') result ? cinema.openWithResult(result) : cinema.open();
-                   else if (type === 'unsafe-zone') unsafeZone.open();
+                   else if (type === 'unsafe-zone') result ? unsafeZone.openWithSession(result) : unsafeZone.open();
                   else result ? music.openWithResult(result) : music.open();
                 }}
                 anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || quiz.isOpen || unsafeZone.isOpen || !!comingSoonCategory}
@@ -561,6 +561,8 @@ export function Router() {
           key={`uz-${music.user?.id || music.user?.userId || 'anon'}`}
           isOpen={unsafeZone.isOpen}
           onClose={unsafeZone.close}
+          pendingSessionId={unsafeZone.pendingSessionId}
+          onClearPendingSession={unsafeZone.clearPendingSession}
         />
       </Suspense>
     </BrowserRouter>

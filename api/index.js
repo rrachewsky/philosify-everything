@@ -614,6 +614,13 @@ export default {
         return handleBookAnalysisDetail(request, env, origin, bookAnalysisDetailMatch[1]);
       }
 
+      // Cinema analysis detail
+      const cinemaAnalysisDetailMatch = url.pathname.match(/^\/api\/cinema-analysis\/([0-9a-f-]+)$/i);
+      if (cinemaAnalysisDetailMatch && request.method === "GET") {
+        const { handleCinemaAnalysisDetail } = await import("./src/handlers/cinema-analysis-detail.js");
+        return handleCinemaAnalysisDetail(request, env, origin, cinemaAnalysisDetailMatch[1]);
+      }
+
       // Cancel book analysis - release lock + credit reservation
       if (url.pathname === "/api/cancel-book-analysis" && request.method === "POST") {
         const user = await getUserFromAuth(request, env);
