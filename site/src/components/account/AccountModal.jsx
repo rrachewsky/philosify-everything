@@ -297,9 +297,18 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
 
   const renderRight = (item) => {
     const credits = Number(item.credits || item.amount || 0);
-    const isClickable = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone' || getDebateThreadId(item);
+    const isNavigable = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone' || getDebateThreadId(item);
 
-    if (isClickable) {
+    // Quiz — show credits consumed but no arrow (not navigable)
+    if (item.kind === 'quiz') {
+      return credits > 0 ? (
+        <span className="transaction-amount negative">
+          -{credits}
+        </span>
+      ) : null;
+    }
+
+    if (isNavigable) {
       return (
         <span className="transaction-right-group">
           {credits > 0 && (
@@ -478,7 +487,7 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
               {historyItems.map((item) => {
                 const isInteraction = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone';
                 const debateThreadId = item.kind === 'debate' ? item.id : getDebateThreadId(item);
-                const isClickable = isInteraction || !!debateThreadId;
+                const isClickable = (isInteraction || !!debateThreadId) && item.kind !== 'quiz';
                 const handler = isInteraction
                   ? () => onViewAnalysis?.(item.analysisId || item.id, item.mediaType, item.kind)
                   : debateThreadId

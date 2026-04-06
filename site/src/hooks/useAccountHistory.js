@@ -9,9 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { config } from '@/config';
 import { logger } from '@/utils';
 
+// Only show credit additions/adjustments — consumption entries are already
+// represented by the unified history items (analyses, panels, debates, etc.)
 function isDisplayableCreditType(type) {
   if (!type) return false;
-  return true;
+  const displayTypes = ['purchase', 'signup_bonus', 'promo', 'refund'];
+  return displayTypes.includes(type);
 }
 
 export function useAccountHistory(user) {
@@ -43,7 +46,7 @@ export function useAccountHistory(user) {
           const historyData = await historyRes.json();
           if (historyData.success && Array.isArray(historyData.items)) {
             const items = historyData.items.map((a) => ({
-              kind: a.kind, // 'analysis', 'panel', 'debate', 'unsafe-zone'
+              kind: a.kind, // 'analysis', 'panel', 'debate', 'unsafe-zone', 'quiz'
               mediaType: a.mediaType,
               id: a.id,
               analysisId: a.id,
@@ -57,6 +60,11 @@ export function useAccountHistory(user) {
               turns: a.turns,
               status: a.status,
               credits: a.credits,
+              // Quiz-specific fields
+              score: a.score,
+              totalCorrect: a.totalCorrect,
+              totalQuestions: a.totalQuestions,
+              maxStreak: a.maxStreak,
             }));
             setAnalysisItems(items);
             logger.log('[useAccountHistory] Loaded', items.length, 'history items');
@@ -141,6 +149,16 @@ export function useAccountHistory(user) {
         const credits = item.credits || 10;
         const preview = item.title || 'Unsafe Zone Talks';
         return `\u{1F9E0} ${preview} (${turns} turns, ${credits} credits)`;
+      }
+
+      // Quiz sessions
+      if (item.kind === 'quiz') {
+        const score = item.score || 0;
+        const correct = item.totalCorrect || 0;
+        const total = item.totalQuestions || 0;
+        const streak = item.maxStreak || 0;
+        const status = item.status === 'completed' ? '\u{2705}' : item.status === 'failed' ? '\u{274C}' : '\u{23F3}';
+        return `\u{1F9E0} ${status} Quiz — Score: ${score} (${correct}/${total} correct, ${streak}\u{1F525} streak)`;
       }
 
       // Analyses, panels, debates

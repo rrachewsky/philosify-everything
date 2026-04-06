@@ -4,9 +4,11 @@
 // GET /api/user-history — Returns ALL user interactions:
 //   - Music analyses
 //   - Book analyses
+//   - Film analyses
 //   - Philosopher panels (music, literature, news)
 //   - Colloquiums/debates accessed
 //   - Unsafe Zone sessions
+//   - Quiz sessions
 // Sorted chronologically (newest first).
 // ============================================================
 
@@ -38,14 +40,14 @@ export async function handleUserHistory(request, env, origin) {
     const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
 
     // Fetch all types in parallel
-    const [musicRows, bookRows, filmRows, panelRows, accessRows, unsafeRows] = await Promise.all([
+    const [musicRows, bookRows, filmRows, panelRows, accessRows, unsafeRows, quizRows] = await Promise.all([
       // Music analyses
       query(sbUrl, sbKey,
         `user_analysis_requests?user_id=eq.${uid}&select=analysis_id,song_title,artist_name,requested_at&order=requested_at.desc&limit=50`
       ),
-      // Book analyses
+      // Book analyses (join through book_analyses → books to get title/author)
       query(sbUrl, sbKey,
-        `user_book_analysis_requests?user_id=eq.${uid}&select=analysis_id,title,author,requested_at&order=requested_at.desc&limit=50`
+        `user_book_analysis_requests?user_id=eq.${uid}&select=book_analysis_id,created_at,book_analyses:book_analysis_id(id,books:book_id(title,author))&order=created_at.desc&limit=50`
       ),
       // Film analyses
       query(sbUrl, sbKey,
@@ -63,6 +65,10 @@ export async function handleUserHistory(request, env, origin) {
       query(sbUrl, sbKey,
         `unsafe_zone_sessions?user_id=eq.${uid}&select=id,turn_count,status,created_at,updated_at,messages&order=created_at.desc&limit=50`
       ),
+      // Quiz sessions
+      query(sbUrl, sbKey,
+        `quiz_sessions?user_id=eq.${uid}&select=id,status,score,total_correct,total_wrong,max_streak,credits_spent,started_at,ended_at&order=started_at.desc&limit=50`
+      ),
     ]);
 
     // Normalize music (1 credit per analysis)
@@ -77,15 +83,20 @@ export async function handleUserHistory(request, env, origin) {
     }));
 
     // Normalize books (1 credit per analysis)
-    const books = bookRows.map((r) => ({
-      kind: "analysis",
-      mediaType: "literature",
-      id: r.analysis_id,
-      title: r.title,
-      artist: r.author,
-      date: r.requested_at,
-      credits: 1,
-    }));
+    // Data comes from PostgREST join: book_analyses → books
+    const books = bookRows.map((r) => {
+      const ba = r.book_analyses || {};
+      const book = ba.books ? (Array.isArray(ba.books) ? ba.books[0] : ba.books) : {};
+      return {
+        kind: "analysis",
+        mediaType: "literature",
+        id: r.book_analysis_id,
+        title: book.title || null,
+        artist: book.author || null,
+        date: r.created_at,
+        credits: 1,
+      };
+    });
 
     // Normalize films (1 credit per analysis)
     const films = filmRows.map((r) => ({
@@ -130,6 +141,25 @@ export async function handleUserHistory(request, env, origin) {
       };
     });
 
+    // Normalize quiz sessions
+    const quizSessions = quizRows.map((r) => {
+      const totalQuestions = (r.total_correct || 0) + (r.total_wrong || 0);
+      return {
+        kind: "quiz",
+        mediaType: "quiz",
+        id: r.id,
+        title: null,
+        artist: null,
+        score: r.score || 0,
+        totalCorrect: r.total_correct || 0,
+        totalQuestions,
+        maxStreak: r.max_streak || 0,
+        status: r.status,
+        date: r.started_at,
+        credits: r.credits_spent || 1,
+      };
+    });
+
     // Fetch thread titles for colloquiums
     let debates = [];
     if (accessRows.length > 0) {
@@ -169,7 +199,7 @@ export async function handleUserHistory(request, env, origin) {
     }
 
     // Merge all and sort by date (newest first)
-    const all = [...music, ...books, ...films, ...panels, ...debates, ...unsafeSessions];
+    const all = [...music, ...books, ...films, ...panels, ...debates, ...unsafeSessions, ...quizSessions];
     all.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return jsonResponse(

@@ -75,6 +75,18 @@ function HomePageWrapper({
         return;
       }
 
+      // Unsafe Zone — open the unsafe zone sidebar
+      if (kind === 'unsafe-zone') {
+        historyModal.close();
+        if (onOpenSidebar) onOpenSidebar('unsafe-zone');
+        return;
+      }
+
+      // Quiz — not navigable (no quiz review page)
+      if (kind === 'quiz') {
+        return;
+      }
+
       // Panels — fetch full analysis from KV, then open sidebar with result
       if (kind === 'panel') {
         try {
@@ -101,9 +113,17 @@ function HomePageWrapper({
       }
 
       // Regular analyses — fetch full data from API
-      const endpoint = mediaType === 'literature'
-        ? `${API_URL}/api/book-analysis/${analysisId}`
-        : `${API_URL}/api/analysis/${analysisId}`;
+      let endpoint;
+      if (mediaType === 'literature') {
+        endpoint = `${API_URL}/api/book-analysis/${analysisId}`;
+      } else if (mediaType === 'cinema') {
+        // Cinema has no detail endpoint yet — open the cinema sidebar
+        historyModal.close();
+        if (onOpenSidebar) onOpenSidebar('films');
+        return;
+      } else {
+        endpoint = `${API_URL}/api/analysis/${analysisId}`;
+      }
 
       const response = await fetch(endpoint, {
         method: 'GET',
@@ -362,6 +382,7 @@ export function Router() {
                    if (type === 'news') result ? news.openWithResult(result) : news.open();
                    else if (type === 'literature') result ? literature.openWithResult(result) : literature.open();
                    else if (type === 'films') result ? cinema.openWithResult(result) : cinema.open();
+                   else if (type === 'unsafe-zone') unsafeZone.open();
                   else result ? music.openWithResult(result) : music.open();
                 }}
                 anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || quiz.isOpen || unsafeZone.isOpen || !!comingSoonCategory}
