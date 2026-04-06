@@ -86,6 +86,8 @@ cd api && npm run dev
 
 ## Deployment Strategy
 
+Only two branches exist: `development` and `main`. There is NO `production` branch.
+
 ### Deploy to Development (Testing/WIP)
 
 - Push to `development` branch ONLY
@@ -93,14 +95,14 @@ cd api && npm run dev
 
 ### Deploy to Production
 
-- Push to ALL branches: `development`, `main`, `production`
+- Push to BOTH branches: `development`, `main`
 - Deploy API: `npm run deploy:prod` (workdir: api)
-- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-frontend --branch=production --commit-dirty=true` (workdir: site)
+- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-frontend --branch=main --commit-dirty=true` (workdir: site)
 - Production URL: https://philosify.org
 
 ```bash
 # Push to all branches for production deploy
-git push origin development main production
+git push origin development main
 ```
 
 ## Code Style Guidelines
