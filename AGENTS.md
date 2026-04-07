@@ -97,7 +97,7 @@ Only two branches exist: `development` and `main`. There is NO `production` bran
 
 - Push to BOTH branches: `development`, `main`
 - Deploy API: `npm run deploy:prod` (workdir: api)
-- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-frontend --branch=main --commit-dirty=true` (workdir: site)
+- Deploy Site: `npx wrangler pages deploy dist --project-name=philosify-frontend --branch=production --commit-dirty=true` (workdir: site)
 - Production URL: https://philosify.org
 
 ```bash
