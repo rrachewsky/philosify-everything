@@ -95,6 +95,9 @@ function HomePageWrapper({
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
           });
+          if (panelRes.status === 401) {
+            throw new Error('Session expired — please sign out and sign back in.');
+          }
           if (panelRes.ok) {
             const panelData = await panelRes.json();
             if (panelData.success && panelData.panel) {
@@ -127,6 +130,9 @@ function HomePageWrapper({
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
       });
+      if (response.status === 401) {
+        throw new Error('Session expired — please sign out and sign back in.');
+      }
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `HTTP ${response.status}`);

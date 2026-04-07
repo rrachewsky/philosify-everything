@@ -42,6 +42,10 @@ export function useAccountHistory(user) {
           credentials: 'include',
         });
 
+        if (historyRes.status === 401) {
+          setError('Session expired — please sign out and sign back in.');
+          return;
+        }
         if (historyRes.ok) {
           const historyData = await historyRes.json();
           if (historyData.success && Array.isArray(historyData.items)) {
