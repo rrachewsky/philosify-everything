@@ -101,17 +101,27 @@ export function useCinemaSidebar() {
   }, [filmSearch]);
 
   // Open with pre-populated result (from history)
+  // Regular analyses have a scorecard; panel results have an analysis HTML field
   const openWithResult = useCallback((analysisData) => {
     filmSearch.clearAll();
     const film = {
       title: analysisData.title,
-      director: analysisData.artist,
+      director: analysisData.artist || analysisData.director,
       tmdb_id: analysisData.tmdb_id,
       poster_url: analysisData.poster_url || analysisData.cover_url,
     };
     setSelectedFilm(film);
-    setPanelResult(analysisData);
-    setPanelError(null);
+    if (analysisData.scorecard) {
+      // Regular 1-credit analysis → show in ResultsContainer
+      setAnalysisResult(analysisData);
+      setAnalysisError(null);
+      setPanelResult(null);
+    } else {
+      // Philosopher panel → show as panel HTML
+      setPanelResult(analysisData);
+      setPanelError(null);
+      setAnalysisResult(null);
+    }
     setPanelLoading(false);
     setIsOpen(true);
   }, [filmSearch]);
