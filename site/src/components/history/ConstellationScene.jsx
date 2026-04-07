@@ -1322,69 +1322,31 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   // Only tether lines (philosopher → birthplace on Earth) are shown.
   // The edges data is still used for the info panel connections list.
 
-  // Highlight selected node — enlarge card, reposition to equator, thicken tether
+  // Highlight selected node — enlarge card and thicken tether
   useEffect(() => {
-    const earthRadius = 100;
-    const focusedAltitude = 35; // Higher altitude when focused
-
     satellitesRef.current.forEach((satellite, id) => {
       const isSelected = selectedNode?.id === id;
       const scaleFactor = isSelected ? 1.8 : 1.0;
-      const node = satellite.userData.node;
-
-      // Reposition: move to equator (lat=0) when selected, restore when not
-      if (isSelected && node) {
-        // Save original position for restoration
-        if (!satellite.userData.originalPosition) {
-          satellite.userData.originalPosition = satellite.position.clone();
-        }
-        // Place at equator (lat=0), same longitude, higher altitude
-        const equatorPos = latLngToVector3(0, node.longitude || 0, earthRadius + focusedAltitude);
-        satellite.position.copy(equatorPos);
-      } else if (satellite.userData.originalPosition) {
-        // Restore original position
-        satellite.position.copy(satellite.userData.originalPosition);
-        delete satellite.userData.originalPosition;
-      }
 
       satellite.children.forEach(child => {
         if (child instanceof THREE.Mesh) {
           child.material.opacity = isSelected ? 1 : 0.9;
         }
         if (child instanceof THREE.Sprite) {
-          child.scale.setScalar(isSelected ? 8 : 3 + (node?.historical_weight || 0.5) * 4);
+          child.scale.setScalar(isSelected ? 8 : 3 + (satellite.userData.node?.historical_weight || 0.5) * 4);
         }
+        // Scale up the text card group when selected
         if (child.userData?.isTextCard) {
           child.scale.set(scaleFactor, scaleFactor, scaleFactor);
         }
       });
 
-      // Update tether line: connect from new card position to birthplace
+      // Thicken and brighten the tether line when selected
       const tetherLine = tetherLinesRef.current.get(id);
       if (tetherLine) {
         tetherLine.material.opacity = isSelected ? 1.0 : 0.6;
         tetherLine.material.linewidth = isSelected ? 4 : 2;
         tetherLine.material.needsUpdate = true;
-
-        // Rebuild tether geometry to match card's current position
-        if (isSelected && node) {
-          const surfacePos = satellite.userData.surfacePosition;
-          const cardPos = satellite.position.clone();
-          const anchorLocal = satellite.userData.tetherAnchorLocal || new THREE.Vector3();
-          const tetherStart = cardPos.clone().add(anchorLocal);
-          const newPoints = [tetherStart, surfacePos.clone()];
-          tetherLine.geometry.dispose();
-          tetherLine.geometry = new THREE.BufferGeometry().setFromPoints(newPoints);
-        } else if (satellite.userData.targetPosition) {
-          // Restore original tether geometry
-          const surfacePos = satellite.userData.surfacePosition;
-          const targetPos = satellite.userData.targetPosition;
-          const anchorLocal = satellite.userData.tetherAnchorLocal || new THREE.Vector3();
-          const tetherStart = targetPos.clone().add(anchorLocal);
-          const newPoints = [tetherStart, surfacePos.clone()];
-          tetherLine.geometry.dispose();
-          tetherLine.geometry = new THREE.BufferGeometry().setFromPoints(newPoints);
-        }
       }
     });
   }, [selectedNode]);
