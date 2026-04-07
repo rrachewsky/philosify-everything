@@ -65,8 +65,11 @@ function HomePageWrapper({
   const paymentModal = useModal();
   const historyModal = useModal();
 
+  const [historyError, setHistoryError] = useState(null);
+
   const handleViewCachedAnalysis = async (analysisId, mediaType, kind) => {
     logger.log('[Router] Viewing history item:', analysisId, 'mediaType:', mediaType, 'kind:', kind);
+    setHistoryError(null);
     try {
       // Debates — open the debate view
       if (kind === 'debate') {
@@ -154,6 +157,7 @@ function HomePageWrapper({
       }
     } catch (err) {
       logger.error('[Router] Failed to load analysis:', err);
+      setHistoryError(err.message || 'Failed to load. Try again.');
     }
   };
 
@@ -222,6 +226,7 @@ function HomePageWrapper({
         user={user}
         onViewAnalysis={handleViewCachedAnalysis}
         onViewDebate={handleViewDebate}
+        historyError={historyError}
       />
     </>
   );

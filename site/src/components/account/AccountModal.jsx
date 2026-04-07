@@ -46,7 +46,7 @@ const COUNTRY_CODES = [
   { code: '+63', label: '+63 (PH)' },
 ];
 
-export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDebate }) {
+export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDebate, historyError: externalError }) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('history');
   const {
@@ -483,6 +483,10 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
               {t('account.noTransactions', { defaultValue: 'No history yet' })}
             </div>
           ) : (
+            <>
+            {externalError && (
+              <div className="account-error" style={{ marginBottom: '0.5rem' }}>{externalError}</div>
+            )}
             <div className="transaction-list">
               {historyItems.map((item) => {
                 const isInteraction = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone';
@@ -521,6 +525,7 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
                 );
               })}
             </div>
+            </>
           )}
         </div>
       )}
