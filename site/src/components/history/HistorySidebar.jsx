@@ -4,7 +4,7 @@
 // Uses same styling as Music/Cinema sidebars
 // ============================================================
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConstellationOfIdeas } from './ConstellationOfIdeas.jsx';
 import '../../styles/music-sidebar.css';
@@ -83,6 +83,35 @@ class HistoryErrorBoundary extends React.Component {
 
 export function HistorySidebar({ isOpen, onClose }) {
   const { t } = useTranslation();
+
+  // Lock body scroll and restore position on close (same pattern as other sidebars)
+  useEffect(() => {
+    if (isOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    }
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    };
+  }, [isOpen]);
   
   if (!isOpen) return null;
 

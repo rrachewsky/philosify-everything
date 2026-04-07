@@ -1322,10 +1322,12 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
   // Only tether lines (philosopher → birthplace on Earth) are shown.
   // The edges data is still used for the info panel connections list.
 
-  // Highlight selected node
+  // Highlight selected node — enlarge card and thicken tether
   useEffect(() => {
     satellitesRef.current.forEach((satellite, id) => {
       const isSelected = selectedNode?.id === id;
+      const scaleFactor = isSelected ? 1.8 : 1.0;
+
       satellite.children.forEach(child => {
         if (child instanceof THREE.Mesh) {
           child.material.opacity = isSelected ? 1 : 0.9;
@@ -1333,7 +1335,19 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         if (child instanceof THREE.Sprite) {
           child.scale.setScalar(isSelected ? 8 : 3 + (satellite.userData.node?.historical_weight || 0.5) * 4);
         }
+        // Scale up the text card group when selected
+        if (child.userData?.isTextCard) {
+          child.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        }
       });
+
+      // Thicken and brighten the tether line when selected
+      const tetherLine = tetherLinesRef.current.get(id);
+      if (tetherLine) {
+        tetherLine.material.opacity = isSelected ? 1.0 : 0.6;
+        tetherLine.material.linewidth = isSelected ? 4 : 2;
+        tetherLine.material.needsUpdate = true;
+      }
     });
   }, [selectedNode]);
 
