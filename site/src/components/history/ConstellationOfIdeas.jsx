@@ -115,32 +115,29 @@ export function ConstellationOfIdeas() {
     setSelectedNode(node);
     setSoloNode(node);
     setSelectedEdge(null);
-    if (node.birth_year > currentYear) {
-      setCurrentYear(node.birth_year + 50);
-    }
+    // Always jump timeline to philosopher's birth year
+    setCurrentYear(node.birth_year + 50);
     setTimeout(() => {
       if (sceneRef.current?.flyToNode) {
         sceneRef.current.flyToNode(node);
       }
     }, 50);
-  }, [findPhilosopher, currentYear, setCurrentYear, setSelectedNode, setSoloNode, setSelectedEdge]);
+  }, [findPhilosopher, setCurrentYear, setSelectedNode, setSoloNode, setSelectedEdge]);
 
   // Handle search result selection
   const handleSearchSelect = useCallback((node) => {
     setSelectedNode(node);
     setSoloNode(node); // Show only this philosopher on the globe
     setShowSearch(false);
-    // Jump timeline to show this philosopher
-    if (node.birth_year > currentYear) {
-      setCurrentYear(node.birth_year + 50);
-    }
+    // Always jump timeline to philosopher's birth year
+    setCurrentYear(node.birth_year + 50);
     // Wait for state update before flying to node (same as era/school filters)
     setTimeout(() => {
       if (sceneRef.current?.flyToNode) {
         sceneRef.current.flyToNode(node);
       }
     }, 50);
-  }, [currentYear, setCurrentYear, setSelectedNode, setSoloNode]);
+  }, [setCurrentYear, setSelectedNode, setSoloNode]);
 
   // Handle era filter with camera fly-to
   const handleEraFilter = useCallback((eraId) => {

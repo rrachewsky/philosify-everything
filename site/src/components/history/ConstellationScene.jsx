@@ -1107,9 +1107,24 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Continuous Earth rotation (pauses when timeline is paused)
-      if (earthRef.current && isPlayingRef.current) {
-        earthRef.current.rotation.y += 0.002;
+      // Earth rotation: lerp toward target when set, otherwise slow continuous spin
+      if (earthRef.current) {
+        if (targetEarthRotationRef.current !== null && !isPlayingRef.current) {
+          // Smoothly rotate globe toward target (e.g., philosopher's birthplace)
+          const current = earthRef.current.rotation.y;
+          const target = targetEarthRotationRef.current;
+          let diff = target - current;
+          // Normalize to [-PI, PI] for shortest rotation path
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          if (Math.abs(diff) > 0.005) {
+            earthRef.current.rotation.y += diff * 0.05;
+          } else {
+            earthRef.current.rotation.y = target;
+          }
+        } else if (isPlayingRef.current) {
+          earthRef.current.rotation.y += 0.002;
+        }
       }
 
       // Camera fly-to animation
@@ -1380,25 +1395,36 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
     flyToNode: (node) => {
       if (!cameraRef.current || !node || !earthRef.current) return;
       
-      const satellite = satellitesRef.current.get(node.id);
-      if (satellite) {
-        // Get satellite position in world coordinates (accounting for Earth rotation)
-        const worldPos = new THREE.Vector3();
-        satellite.getWorldPosition(worldPos);
-        const direction = worldPos.clone().normalize();
-        
-        // Position camera further back and lower to center the card in viewport
-        // This prevents cards at high latitudes from being hidden by the header
-        const cameraPos = direction.multiplyScalar(280);
-        
-        // For high-latitude positions (card near top/bottom of globe), 
-        // adjust camera Y to bring the card toward center of viewport
-        const latitudeOffset = worldPos.y * 0.4; // Shift camera opposite to card's Y
-        cameraPos.y -= latitudeOffset;
-        
-        targetCameraRef.current = cameraPos;
-        isAnimatingRef.current = true;
+      // Rotate globe to face the philosopher's birthplace
+      if (node.longitude !== undefined) {
+        targetEarthRotationRef.current = -node.longitude * Math.PI / 180;
       }
+      
+      // Delay camera fly-to so the globe has time to rotate toward birthplace
+      const doFly = () => {
+        const satellite = satellitesRef.current.get(node.id);
+        if (satellite) {
+          // Get satellite position in world coordinates (accounting for Earth rotation)
+          const worldPos = new THREE.Vector3();
+          satellite.getWorldPosition(worldPos);
+          const direction = worldPos.clone().normalize();
+          
+          // Position camera further back and lower to center the card in viewport
+          // This prevents cards at high latitudes from being hidden by the header
+          const cameraPos = direction.multiplyScalar(280);
+          
+          // For high-latitude positions (card near top/bottom of globe), 
+          // adjust camera Y to bring the card toward center of viewport
+          const latitudeOffset = worldPos.y * 0.4; // Shift camera opposite to card's Y
+          cameraPos.y -= latitudeOffset;
+          
+          targetCameraRef.current = cameraPos;
+          isAnimatingRef.current = true;
+        }
+      };
+      
+      // Wait for globe rotation to start, then fly camera
+      setTimeout(doFly, 300);
     },
     zoomIn,
     zoomOut,
