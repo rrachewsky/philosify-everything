@@ -62,6 +62,7 @@ export function useMusicSidebar() {
     }
     setIsAnalyzing(false);
     setIsOpen(false);
+    window.dispatchEvent(new Event('stopAllAudio'));
     logger.log('[MusicSidebar] isOpen set to false');
   }, []);
 

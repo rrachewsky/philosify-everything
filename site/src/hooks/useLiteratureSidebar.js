@@ -63,6 +63,7 @@ export function useLiteratureSidebar() {
     }
     setIsAnalyzing(false);
     setIsOpen(false);
+    window.dispatchEvent(new Event('stopAllAudio'));
     logger.log('[LiteratureSidebar] isOpen set to false');
   }, []);
 

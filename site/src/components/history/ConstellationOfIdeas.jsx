@@ -107,6 +107,24 @@ export function ConstellationOfIdeas() {
     setSelectedNode(null);
   }, [setSelectedEdge, setSelectedNode]);
 
+  // Handle influence click from info panel — same behavior as search select
+  const handleInfluenceSelect = useCallback((nodeId) => {
+    if (!nodeId) return;
+    const node = findPhilosopher(nodeId);
+    if (!node) return;
+    setSelectedNode(node);
+    setSoloNode(node);
+    setSelectedEdge(null);
+    if (node.birth_year > currentYear) {
+      setCurrentYear(node.birth_year + 50);
+    }
+    setTimeout(() => {
+      if (sceneRef.current?.flyToNode) {
+        sceneRef.current.flyToNode(node);
+      }
+    }, 50);
+  }, [findPhilosopher, currentYear, setCurrentYear, setSelectedNode, setSoloNode, setSelectedEdge]);
+
   // Handle search result selection
   const handleSearchSelect = useCallback((node) => {
     setSelectedNode(node);
@@ -396,7 +414,7 @@ export function ConstellationOfIdeas() {
             setSelectedEdge(null);
             setSoloNode(null); // Exit solo mode, return to normal view
           }}
-          onNodeSelect={handleNodeSelect}
+          onNodeSelect={handleInfluenceSelect}
           formatYear={formatYear}
           isMobile={isMobile}
           userId={user?.id}

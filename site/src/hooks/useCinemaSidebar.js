@@ -76,6 +76,7 @@ export function useCinemaSidebar() {
     if (abortRef.current) abortRef.current.abort();
     stopTimer();
     setIsOpen(false);
+    window.dispatchEvent(new Event('stopAllAudio'));
   }, [stopTimer]);
 
   const toggle = useCallback(() => {

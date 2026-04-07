@@ -66,6 +66,7 @@ export function useNewsSidebar() {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+    window.dispatchEvent(new Event('stopAllAudio'));
   }, []);
 
   const selectArticle = useCallback((article) => {
