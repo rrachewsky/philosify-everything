@@ -609,25 +609,26 @@ function createSchoolConnection(sourcePos, targetPos, schoolName) {
 }
 
 // Create tether line from satellite down to city location on Earth surface
+// Uses TubeGeometry for real thickness (WebGL ignores linewidth on Line materials)
 function createTetherLine(surfacePos, satellitePos, traditionColor) {
   const color = new THREE.Color(traditionColor);
   
-  // Straight line from the card down to the birthplace on Earth
-  const points = [satellitePos.clone(), surfacePos.clone()];
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  // Straight path from the card down to the birthplace on Earth
+  const path = new THREE.LineCurve3(satellitePos.clone(), surfacePos.clone());
   
-  // Higher opacity for visibility (linewidth doesn't work in WebGL but opacity does)
-  const material = new THREE.LineBasicMaterial({
+  // Tube with visible radius (0.3 units) — thin but actually visible
+  const geometry = new THREE.TubeGeometry(path, 1, 0.3, 4, false);
+  
+  const material = new THREE.MeshBasicMaterial({
     color: color,
     transparent: true,
     opacity: 0.6,
-    linewidth: 2,
   });
   
-  const line = new THREE.Line(geometry, material);
-  line.userData = { isTetherLine: true };
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.userData = { isTetherLine: true, baseRadius: 0.3 };
   
-  return line;
+  return mesh;
 }
 
 // Create influence chain line (philosopher to follower)
@@ -1356,11 +1357,13 @@ export const ConstellationScene = forwardRef(function ConstellationScene({
         }
       });
 
-      // Thicken and brighten the tether line when selected
+      // Thicken and brighten the tether when selected
       const tetherLine = tetherLinesRef.current.get(id);
       if (tetherLine) {
         tetherLine.material.opacity = isSelected ? 1.0 : 0.6;
-        tetherLine.material.linewidth = isSelected ? 4 : 2;
+        // Scale the tube mesh for thicker appearance when selected
+        const scaleFactor2 = isSelected ? 2.5 : 1.0;
+        tetherLine.scale.set(scaleFactor2, scaleFactor2, 1);
         tetherLine.material.needsUpdate = true;
       }
     });
