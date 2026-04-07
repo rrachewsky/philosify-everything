@@ -429,6 +429,9 @@ export const PHILOSOPHER_PORTRAITS = {
   'ramanuja': '/portraits/ramanuja.jpg',
   'gandhi': '/portraits/gandhi.jpg',
   
+  // CRITICAL SOCIOLOGY
+  'zygmunt_bauman': '/portraits/zygmunt_bauman.jpg',
+  
   // NEW ATHEISTS
   'sam_harris': '/portraits/sam_harris.jpg',
   'christopher_hitchens': '/portraits/christopher_hitchens.jpg',
@@ -6873,6 +6876,38 @@ export const SEED_NODES = [
     // Very high freedom (+0.9): fought against both Nazi and Communist tyranny.
     // High value (+0.7): believed in objective good and evil; moral clarity.
     battles: { reason_faith: 0.6, reality_mysticism: 0.8, individual_collective: 0.7, freedom_coercion: 0.9, value_nihilism: 0.7, market_planning: 0.3, beauty_chaos: 0.6, good_evil: 0.8 }
+  },
+
+  // CRITICAL SOCIOLOGY (v2.4)
+  {
+    id: 'zygmunt_bauman',
+    name: 'Zygmunt Bauman',
+    birth_year: 1925,
+    death_year: 2017,
+    dates: '1925–2017',
+    birth_city: 'Poznań',
+    birth_country_modern: 'Poland',
+    latitude: 52.4064,
+    longitude: 16.9252,
+    school_of_thought: 'Sociology / Critical Theory / Postmodernity',
+    school: 'Critical Theory',
+    tradition: 'western',
+    stance: 'anti',
+    is_champion: false,
+    key_ideas: ['Liquid modernity; consumer society; Modernity and the Holocaust; wasted lives; postmodern ethics'],
+    historical_weight: 0.8,
+    // Zygmunt Bauman: Polish-British sociologist; "liquid modernity" — solid institutions dissolved into fluid uncertainty.
+    // Modernity and the Holocaust: the Holocaust was a product of modern bureaucratic rationality, not its opposite.
+    // Consuming Life: identity is now purchased, not earned; citizens replaced by consumers.
+    // Wasted Lives: globalization produces surplus populations treated as human waste.
+    // Moderate reason (+0.5): uses rational analysis but distrusts Enlightenment reason as tool of control.
+    // Low reality (+0.4): social reality is constructed and fluid; no fixed essences.
+    // Collectivist (-0.3): critic of individualization as loneliness masquerading as freedom.
+    // Moderate freedom (+0.4): values freedom but argues consumer freedom is illusory.
+    // Moderate value (+0.4): moral responsibility is real but cannot be systematized.
+    // Anti-market (-0.5): capitalism commodifies everything including human relationships.
+    // Influenced by Levinas (ethics of the Other) and Frankfurt School.
+    battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: -0.3, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: -0.5, beauty_chaos: 0.4, good_evil: 0.4 }
   },
 ];
 

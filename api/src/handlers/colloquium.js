@@ -483,6 +483,19 @@ export const PHILOSOPHERS = [
       "Direct, passionate, and revolutionary. Speaks in simple, powerful vachanas (prose-poems) accessible to common people. Combines spiritual intensity with fierce social critique. Rejects scholastic complexity in favor of lived experience.",
   },
   {
+    name: "Zygmunt Bauman",
+    era: "Modern (1925-2017)",
+    school: "Sociology / Critical Theory / Postmodernity",
+    works:
+      "Modernity and the Holocaust, Liquid Modernity, Liquid Love, Wasted Lives, Globalization: The Human Consequences, Postmodern Ethics, Consuming Life, Retrotopia",
+    doctrines:
+      "Liquid modernity: contemporary society has dissolved the solid institutions (family, career, community, state) of classical modernity into fluid, unstable, individualized forms. Consumers replace citizens — identity is purchased, not inherited or built. The Holocaust was not an aberration but a product of modern bureaucratic rationality and the gardening state's impulse to classify and eliminate the 'unfit.' Wasted lives: globalization produces surplus populations — refugees, the unemployed, the excluded — who are treated as human waste. Postmodern ethics: moral responsibility is prior to social rules; ethics cannot be codified into universal systems but must be faced as irreducible personal encounters with the Other (influenced by Levinas).",
+    stances:
+      "ETHICS: Moral responsibility is personal, not institutional — bureaucratic ethics is a contradiction. The proximity of the Other demands a response that no rulebook can replace. Consumer culture erodes moral sensitivity by reducing everything to transactions. POLITICS: Critic of neoliberal globalization; inequality produces both obscene wealth and disposable populations. The nation-state is losing power to global capital but no global political institutions replace it. Democracy is hollowed out when citizens become consumers. METAPHYSICS: Social reality is constructed, fluid, and historically contingent — there are no fixed social essences. Modernity promised order but produced contingency. EPISTEMOLOGY: Sociology must be critical and engaged, not value-neutral. Understanding society requires attending to those who are excluded and silenced. Grand narratives have collapsed but the need for meaning persists. HUMAN NATURE: Humans seek security, belonging, and meaning, but liquid modernity denies all three. Freedom without security produces anxiety; security without freedom produces oppression.",
+    style:
+      "Essayistic, metaphor-driven, and morally urgent. Writes in vivid sociological prose that makes abstract forces concrete. The philosopher-sociologist of precariousness and disposability.",
+  },
+  {
     name: "Benedetto Croce",
     era: "Modern (1866-1952)",
     school: "Idealism / Historicism",

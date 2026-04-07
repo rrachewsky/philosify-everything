@@ -121,7 +121,9 @@ function getRegion(node) {
       combined.includes('cyprus') ||
       // Ancient Greek cities in modern Turkey
       (country === 'turkey' && (city.includes('miletus') || city.includes('ephesus') || 
-       city.includes('colophon') || city.includes('clazomenae') || city.includes('halicarnassus')))) {
+       city.includes('colophon') || city.includes('clazomenae') || city.includes('halicarnassus') ||
+       city.includes('soli') || city.includes('hierapolis') || city.includes('constantinople') ||
+       city.includes('chalcedon')))) {
     return 'greece';
   }
   // Rome/Italy
@@ -180,7 +182,10 @@ function getRegion(node) {
     return 'russia';
   }
   
-  // Fallback: use tradition
+  // Fallback: use birth country as its own region (respects geography)
+  if (country) return country;
+
+  // Last resort: use tradition (only if no country data at all)
   if (node.tradition === 'western') return 'greece';
   if (node.tradition === 'chinese') return 'china';
   if (node.tradition === 'indian') return 'india';
