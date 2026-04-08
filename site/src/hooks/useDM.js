@@ -228,7 +228,7 @@ export function useDM() {
         }
 
         const ch = sb
-          .channel(`dm-typing:${activeConversation.id}`)
+          .channel(`dm-typing:${activeConversation.id}`, { config: { private: true } })
           .on('broadcast', { event: 'typing' }, ({ payload }) => {
             if (payload.userId === user?.id) return; // Skip self
             const name = payload.displayName || 'Someone';

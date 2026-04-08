@@ -12,12 +12,11 @@
 // ============================================================
 
 import Anthropic from '@anthropic-ai/sdk';
-import { createClient } from '@supabase/supabase-js';
 import { jsonResponse } from '../utils/index.js';
 import { getServiceSupabase } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
 import { getSecret } from '../utils/secrets.js';
-import { callRpc } from '../utils/supabase.js';
+import { reserveCredit, confirmReservation, releaseReservation } from '../credits/index.js';
 
 // ============================================================
 // Constants
@@ -96,69 +95,64 @@ function getTurnInfo(turnCount) {
 }
 
 // ============================================================
-// Reserve multiple credits (using official Supabase client)
+// Reserve multiple credits atomically via reserve_credit RPC
+// ============================================================
+// Calls the atomic reserve_credit RPC N times (once per credit).
+// If any reservation fails mid-loop, all prior reservations are
+// released so the user is never charged for a failed attempt.
 // ============================================================
 async function reserveCredits(env, userId, amount) {
-  const supabaseUrl = await getSecret(env.SUPABASE_URL);
-  const supabaseServiceKey = await getSecret(env.SUPABASE_SERVICE_KEY);
-  
-  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
-  
-  // Check balance first
-  const { data: row, error: balanceError } = await supabase
-    .from('credits')
-    .select('free_remaining, purchased, total')
-    .eq('user_id', userId)
-    .single();
-  
-  if (balanceError) {
-    console.error('[UnsafeZone] Error fetching balance:', balanceError.message);
-    return { success: false, error: 'Failed to check balance' };
+  const reservationIds = [];
+
+  for (let i = 0; i < amount; i++) {
+    try {
+      const result = await reserveCredit(env, userId);
+
+      if (!result.success) {
+        console.log(`[UnsafeZone] Reservation ${i + 1}/${amount} failed: ${result.error}`);
+        // Release all reservations made so far
+        await releaseAllReservations(env, reservationIds);
+        return { success: false, error: result.error || 'Insufficient credits' };
+      }
+
+      reservationIds.push(result.reservationId);
+      console.log(`[UnsafeZone] Reserved credit ${i + 1}/${amount}: ${result.reservationId}`);
+    } catch (error) {
+      console.error(`[UnsafeZone] Reservation ${i + 1}/${amount} threw:`, error.message);
+      // Release all reservations made so far
+      await releaseAllReservations(env, reservationIds);
+      return { success: false, error: 'Credit reservation failed' };
+    }
   }
-  
-  if (!row) {
-    console.error('[UnsafeZone] No credits row found for user:', userId);
-    return { success: false, error: 'No credits found' };
+
+  console.log(`[UnsafeZone] All ${amount} credits reserved: [${reservationIds.join(', ')}]`);
+  return { success: true, reservationIds };
+}
+
+// ============================================================
+// Confirm all reservations (on successful AI response)
+// ============================================================
+async function confirmAllReservations(env, reservationIds, description) {
+  for (const id of reservationIds) {
+    try {
+      await confirmReservation(env, id, description);
+    } catch (error) {
+      console.error(`[UnsafeZone] Failed to confirm reservation ${id}:`, error.message);
+    }
   }
-  
-  const total = row.total || 0;
-  
-  console.log('[UnsafeZone] Balance check:', { 
-    userId, 
-    amount, 
-    free: row.free_remaining, 
-    purchased: row.purchased, 
-    total 
-  });
-  
-  if (total < amount) {
-    console.log('[UnsafeZone] Insufficient credits:', { required: amount, available: total });
-    return { success: false, error: 'Insufficient credits' };
+}
+
+// ============================================================
+// Release all reservations (on failure / rollback)
+// ============================================================
+async function releaseAllReservations(env, reservationIds) {
+  for (const id of reservationIds) {
+    try {
+      await releaseReservation(env, id, 'failed');
+    } catch (error) {
+      console.error(`[UnsafeZone] Failed to release reservation ${id}:`, error.message);
+    }
   }
-  
-  // Deduct credits (free first, then purchased)
-  let remaining = amount;
-  let freeToDeduct = Math.min(row.free_remaining || 0, remaining);
-  remaining -= freeToDeduct;
-  let purchasedToDeduct = remaining;
-  
-  const { error: updateError } = await supabase
-    .from('credits')
-    .update({
-      free_remaining: (row.free_remaining || 0) - freeToDeduct,
-      purchased: (row.purchased || 0) - purchasedToDeduct,
-    })
-    .eq('user_id', userId);
-  
-  if (updateError) {
-    console.error('[UnsafeZone] Error deducting credits:', updateError.message);
-    return { success: false, error: 'Failed to deduct credits' };
-  }
-  
-  console.log(`[UnsafeZone] Deducted ${amount} credits (${freeToDeduct} free, ${purchasedToDeduct} purchased)`);
-  return { success: true, amount };
 }
 
 // ============================================================
@@ -235,7 +229,8 @@ export async function handleUnsafeZone(request, env, origin) {
     const turnCount = session?.turn_count || 0;
     const turnInfo = getTurnInfo(turnCount);
 
-    // Handle billing
+    // Handle billing — atomic reserve/confirm/release pattern
+    let reservationIds = [];
     if (turnInfo.cost > 0) {
       const reservation = await reserveCredits(env, user.userId, turnInfo.cost);
       if (!reservation.success) {
@@ -246,7 +241,8 @@ export async function handleUnsafeZone(request, env, origin) {
           isExtension: !turnInfo.isFirstTurn,
         }, 402, origin, env);
       }
-      console.log(`[UnsafeZone] Charged ${turnInfo.cost} credits for ${turnInfo.isFirstTurn ? 'new session' : 'extension'}`);
+      reservationIds = reservation.reservationIds;
+      console.log(`[UnsafeZone] Reserved ${turnInfo.cost} credits for ${turnInfo.isFirstTurn ? 'new session' : 'extension'}`);
     }
 
     // Create session if new
@@ -303,23 +299,44 @@ export async function handleUnsafeZone(request, env, origin) {
     // Call Anthropic
     const apiKey = await getSecret(env.ANTHROPIC_API_KEY);
     if (!apiKey) {
+      await releaseAllReservations(env, reservationIds);
       return jsonResponse({ error: 'Service configuration error' }, 500, origin, env);
     }
 
     const client = new Anthropic({ apiKey });
 
-    console.log(`[UnsafeZone] Turn ${turnInfo.currentTurn}: Calling ${model} with ${messages.length} messages`);
+    let response;
+    try {
+      console.log(`[UnsafeZone] Turn ${turnInfo.currentTurn}: Calling ${model} with ${messages.length} messages`);
 
-    const response = await client.messages.create({
-      model,
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages,
-    });
+      response = await client.messages.create({
+        model,
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages,
+      });
+    } catch (aiError) {
+      console.error('[UnsafeZone] AI call failed:', aiError.message);
+      // Release all reservations — user is not charged for AI failures
+      await releaseAllReservations(env, reservationIds);
+
+      const errMsg = aiError.message || aiError.error?.message || '';
+      if (errMsg.includes('content') || errMsg.includes('blocked') || errMsg.includes('safety')) {
+        return jsonResponse({
+          error: 'The response was filtered. Please rephrase your question.',
+        }, 400, origin, env);
+      }
+
+      return jsonResponse(
+        { error: 'Failed to process your question. Please try again.' },
+        500, origin, env
+      );
+    }
 
     // Extract text reply
     const textContent = response.content.find(block => block.type === 'text');
     if (!textContent) {
+      await releaseAllReservations(env, reservationIds);
       return jsonResponse({ error: 'No response from AI' }, 500, origin, env);
     }
 
@@ -327,6 +344,11 @@ export async function handleUnsafeZone(request, env, origin) {
 
     const u = response.usage;
     console.log(`[UnsafeZone] ${model} — ${u.input_tokens + u.output_tokens} tokens (${u.input_tokens} in, ${u.output_tokens} out)`);
+
+    // AI succeeded — confirm all reservations
+    const description = `unsafe-zone:${turnInfo.isFirstTurn ? 'start' : 'extension'}:${session.id}`;
+    await confirmAllReservations(env, reservationIds, description);
+    console.log(`[UnsafeZone] Confirmed ${reservationIds.length} reservations for ${turnInfo.isFirstTurn ? 'new session' : 'extension'}`);
 
     // Save conversation to session
     const fullConversation = [...messages, { role: 'assistant', content: reply }];
@@ -366,14 +388,6 @@ export async function handleUnsafeZone(request, env, origin) {
 
   } catch (err) {
     console.error('[UnsafeZone] Error:', err);
-
-    // Check for content filtering
-    const errMsg = err.message || err.error?.message || '';
-    if (errMsg.includes('content') || errMsg.includes('blocked') || errMsg.includes('safety')) {
-      return jsonResponse({
-        error: 'The response was filtered. Please rephrase your question.',
-      }, 400, origin, env);
-    }
 
     return jsonResponse(
       { error: 'Failed to process your question. Please try again.' },

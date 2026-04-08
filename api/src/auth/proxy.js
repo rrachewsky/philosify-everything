@@ -334,7 +334,12 @@ async function handleSignUp(request, env, origin, isProd) {
 
   if (error) {
     console.error("[Auth Proxy] Sign up failed:", error.message, "| status:", error.status, "| code:", error.code, "| details:", JSON.stringify(error));
-    return jsonResponse({ error: error.message }, 400, origin, env);
+    return jsonResponse(
+      { message: "If this email is available, a confirmation has been sent" },
+      200,
+      origin,
+      env,
+    );
   }
 
   // If email confirmation is required, session might be null

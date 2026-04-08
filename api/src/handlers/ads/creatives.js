@@ -18,6 +18,15 @@ const ALLOWED_TYPES = [
   'image/webp',
 ];
 
+// Magic byte signatures for file type verification
+const MAGIC_BYTES = {
+  'image/png':  [0x89, 0x50, 0x4E, 0x47],  // .PNG
+  'image/jpeg': [0xFF, 0xD8, 0xFF],          // JFIF
+  'image/jpg':  [0xFF, 0xD8, 0xFF],          // JFIF (alias)
+  'image/gif':  [0x47, 0x49, 0x46],          // GIF
+  'image/webp': [0x52, 0x49, 0x46, 0x46],    // RIFF (WebP)
+};
+
 /**
  * POST /api/ads/creatives/upload
  * Upload creative to R2
@@ -56,14 +65,25 @@ export async function handleUploadCreative(request, env, corsHeaders) {
       return jsonResponse({ error: 'File too large. Maximum size is 2MB' }, 400, corsHeaders);
     }
 
+    // Magic byte validation: verify file content matches declared MIME type
+    const fileBuffer = await file.arrayBuffer();
+    const header = new Uint8Array(fileBuffer).slice(0, 12);
+    const expected = MAGIC_BYTES[file.type];
+    if (expected) {
+      const matches = expected.every((byte, i) => header[i] === byte);
+      if (!matches) {
+        return jsonResponse({
+          error: 'File content does not match declared type'
+        }, 400, corsHeaders);
+      }
+    }
+
     // Generate unique filename
     const ext = file.name.split('.').pop() || 'png';
     const filename = `ads/${advertiser.id}/${crypto.randomUUID()}.${ext}`;
 
     // Upload to R2 (using TTS_CACHE bucket, ads go in /ads/ folder)
-    const arrayBuffer = await file.arrayBuffer();
-    
-    await env.TTS_CACHE.put(filename, arrayBuffer, {
+    await env.TTS_CACHE.put(filename, fileBuffer, {
       httpMetadata: {
         contentType: file.type,
         cacheControl: 'public, max-age=31536000', // 1 year cache
@@ -72,6 +92,7 @@ export async function handleUploadCreative(request, env, corsHeaders) {
         advertiserId: advertiser.id,
         originalName: file.name,
         uploadedAt: new Date().toISOString(),
+        'X-Content-Type-Options': 'nosniff',
       },
     });
 

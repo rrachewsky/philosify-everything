@@ -51,6 +51,7 @@ export function getCorsHeaders(origin, env = {}) {
             "Content-Type, Authorization, X-Admin-Secret",
           "Access-Control-Allow-Credentials": "true",
           "Access-Control-Max-Age": "86400",
+          Vary: "Origin",
           ...securityHeaders,
         };
       }
@@ -94,6 +95,7 @@ export function getCorsHeaders(origin, env = {}) {
       "Content-Type, Authorization, X-Admin-Secret",
     "Access-Control-Allow-Credentials": "true",
     "Access-Control-Max-Age": "86400",
+    Vary: "Origin",
     ...securityHeaders,
   };
 }

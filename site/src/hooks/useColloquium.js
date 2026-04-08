@@ -68,7 +68,7 @@ export function useColloquium() {
         logger.log(`[useColloquium] Subscribing to ${channelName}...`);
 
         const channel = sb
-          .channel(channelName)
+          .channel(channelName, { config: { private: true } })
           .on('broadcast', { event: 'new-reply' }, () => {
             logger.log(`[useColloquium] Broadcast: new-reply for ${threadId}`);
             // Debounce refetch — multiple replies may arrive in quick succession

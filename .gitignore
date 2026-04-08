@@ -27,7 +27,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 .npm
 .yarn/
-package-lock.json
+# package-lock.json — MUST be committed for supply chain security
 yarn.lock
 pnpm-lock.yaml
 

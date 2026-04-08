@@ -286,6 +286,34 @@ import {
 // Request body size limit (1 MB)
 const MAX_BODY_SIZE = 1024 * 1024;
 
+// Daily AI spend cap per user (prevents runaway abuse)
+const DAILY_AI_CAP = 100;
+
+/**
+ * Check if a user has exceeded their daily AI call cap.
+ * Uses KV with TTL for automatic expiry — no cleanup needed.
+ * @returns {boolean} true if under cap (allowed), false if over cap (blocked)
+ */
+async function checkDailyAICap(env, userId, endpoint) {
+  if (!env.PHILOSIFY_KV || !userId) return true; // fail open if KV unavailable
+  try {
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const key = `ai_cap:${userId}:${today}`;
+    const raw = await env.PHILOSIFY_KV.get(key);
+    const count = raw ? parseInt(raw, 10) : 0;
+    if (count >= DAILY_AI_CAP) {
+      console.log(`[AICap] User ${userId} exceeded daily cap (${count}/${DAILY_AI_CAP}) on ${endpoint}`);
+      return false;
+    }
+    // Increment count with 24h TTL
+    await env.PHILOSIFY_KV.put(key, String(count + 1), { expirationTtl: 86400 });
+    return true;
+  } catch (err) {
+    console.error('[AICap] Error checking daily cap:', err.message);
+    return true; // fail open — don't block users due to KV errors
+  }
+}
+
 // HTML escape helper for Open Graph meta tags (prevents XSS/injection)
 function escapeHtml(str) {
   if (!str) return "";
@@ -584,12 +612,34 @@ export default {
 
       // Cinema full analysis (1 credit)
       if (url.pathname === "/api/cinema-analyze" && request.method === "POST") {
+        // Daily AI spend cap (auth checked inside handler)
+        const cinemaUser = await getUserFromAuth(request, env);
+        if (cinemaUser) {
+          const capOk = await checkDailyAICap(env, cinemaUser.userId, "cinema-analyze");
+          if (!capOk) {
+            return jsonResponse(
+              { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+              429, origin, env,
+            );
+          }
+        }
         const { handleCinemaAnalyze } = await import("./src/handlers/cinema-analyze.js");
         return handleCinemaAnalyze(request, env, origin, ctx);
       }
 
       // News full analysis (1 credit)
       if (url.pathname === "/api/news-analyze" && request.method === "POST") {
+        // Daily AI spend cap (auth checked inside handler)
+        const newsUser = await getUserFromAuth(request, env);
+        if (newsUser) {
+          const capOk = await checkDailyAICap(env, newsUser.userId, "news-analyze");
+          if (!capOk) {
+            return jsonResponse(
+              { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+              429, origin, env,
+            );
+          }
+        }
         const { handleNewsAnalyze } = await import("./src/handlers/news-analyze.js");
         return handleNewsAnalyze(request, env, origin, ctx);
       }
@@ -2867,6 +2917,15 @@ export default {
           );
         }
 
+        // Daily AI spend cap
+        const capOk = await checkDailyAICap(env, user.userId, "analyze");
+        if (!capOk) {
+          return jsonResponse(
+            { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+            429, origin, env,
+          );
+        }
+
         // Parse request body early
         let requestBody;
         try {
@@ -3260,6 +3319,15 @@ export default {
           );
         }
 
+        // Daily AI spend cap
+        const capOk = await checkDailyAICap(env, user.userId, "book-analyze");
+        if (!capOk) {
+          return jsonResponse(
+            { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+            429, origin, env,
+          );
+        }
+
         // Parse request body early
         let requestBody;
         try {
@@ -3427,6 +3495,17 @@ export default {
       // PHILOSOPHER PANEL — Multi-philosopher analysis (music + literature + news)
       // ============================================================
       if (url.pathname === "/api/philosopher-panel" && request.method === "POST") {
+        // Daily AI spend cap (auth checked inside handler)
+        const panelUser = await getUserFromAuth(request, env);
+        if (panelUser) {
+          const capOk = await checkDailyAICap(env, panelUser.userId, "philosopher-panel");
+          if (!capOk) {
+            return jsonResponse(
+              { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+              429, origin, env,
+            );
+          }
+        }
         return handlePhilosopherPanel(request, env, origin, ctx);
       }
 
@@ -3442,6 +3521,17 @@ export default {
       }
 
       if (url.pathname === "/api/news/translate" && request.method === "POST") {
+        // Daily AI spend cap (auth checked inside handler)
+        const ntUser = await getUserFromAuth(request, env);
+        if (ntUser) {
+          const capOk = await checkDailyAICap(env, ntUser.userId, "news-translate");
+          if (!capOk) {
+            return jsonResponse(
+              { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+              429, origin, env,
+            );
+          }
+        }
         // Rate limit - FAIL CLOSED for expensive Gemini API calls
         const ip = request.headers.get("cf-connecting-ip") || "unknown";
         const rateLimitKey = `news-translate:${ip}`;
@@ -3468,6 +3558,17 @@ export default {
       }
 
       if (url.pathname === "/api/news/tts" && request.method === "POST") {
+        // Daily AI spend cap (auth checked inside handler)
+        const ttsUser = await getUserFromAuth(request, env);
+        if (ttsUser) {
+          const capOk = await checkDailyAICap(env, ttsUser.userId, "news-tts");
+          if (!capOk) {
+            return jsonResponse(
+              { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+              429, origin, env,
+            );
+          }
+        }
         // Rate limit - FAIL CLOSED for expensive Gemini TTS API calls
         const ip = request.headers.get("cf-connecting-ip") || "unknown";
         const rateLimitKey = `news-tts:${ip}`;
@@ -3801,6 +3902,17 @@ export default {
       // Session-based billing: 10 credits for 20 turns, 5 credits per 10 additional
       // ============================================================
       if (url.pathname === "/api/unsafe-zone" && request.method === "POST") {
+        // Daily AI spend cap (auth checked inside handler)
+        const uzUser = await getUserFromAuth(request, env);
+        if (uzUser) {
+          const capOk = await checkDailyAICap(env, uzUser.userId, "unsafe-zone");
+          if (!capOk) {
+            return jsonResponse(
+              { error: "Daily AI usage limit reached", message: "You have exceeded the daily AI usage limit. Please try again tomorrow." },
+              429, origin, env,
+            );
+          }
+        }
         // Rate limit - FAIL CLOSED for expensive Claude API calls
         const ip = request.headers.get("cf-connecting-ip") || "unknown";
         const rateLimitKey = `unsafe-zone:${ip}`;

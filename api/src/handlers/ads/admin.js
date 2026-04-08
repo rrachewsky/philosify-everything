@@ -6,6 +6,7 @@
 import { getServiceSupabase } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
 import { getSecret } from '../../utils/secrets.js';
+import { safeEq } from '../../payments/crypto.js';
 import { manualVet } from './vetting.js';
 
 /**
@@ -19,13 +20,7 @@ async function verifyAdmin(request, env) {
     return false;
   }
   
-  // Timing-safe comparison
-  if (providedSecret.length !== adminSecret.length) return false;
-  let diff = 0;
-  for (let i = 0; i < providedSecret.length; i++) {
-    diff |= providedSecret.charCodeAt(i) ^ adminSecret.charCodeAt(i);
-  }
-  return diff === 0;
+  return safeEq(providedSecret, adminSecret);
 }
 
 /**
