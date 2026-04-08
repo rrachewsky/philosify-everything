@@ -97,7 +97,7 @@ export function SharedAnalysis() {
   useEffect(() => {
     const trackReferralIfNeeded = async () => {
       // Check if user just signed up/logged in from a share link
-      const pendingReferralSlug = localStorage.getItem('pendingReferralSlug');
+      const pendingReferralSlug = sessionStorage.getItem('pendingReferralSlug');
 
       if (pendingReferralSlug && isAuthenticated && user) {
         logger.log('[SharedAnalysis] Tracking referral for slug:', pendingReferralSlug);
@@ -118,10 +118,10 @@ export function SharedAnalysis() {
           }
 
           // Clear pending referral
-          localStorage.removeItem('pendingReferralSlug');
+          sessionStorage.removeItem('pendingReferralSlug');
         } catch (error) {
           logger.error('[SharedAnalysis] Error tracking referral:', error);
-          localStorage.removeItem('pendingReferralSlug');
+          sessionStorage.removeItem('pendingReferralSlug');
         }
       }
     };
@@ -227,7 +227,7 @@ export function SharedAnalysis() {
 
         // Store referral slug for tracking after signup ONLY for token-based links (/a/:slug)
         if (!isAuthenticated && slug) {
-          localStorage.setItem('pendingReferralSlug', identifier);
+      sessionStorage.setItem('pendingReferralSlug', identifier);
         }
       } catch (error) {
         logger.error('[SharedAnalysis] Error fetching analysis:', error);
@@ -244,7 +244,7 @@ export function SharedAnalysis() {
   const handleJoinClick = () => {
     // Store referral slug for tracking after signup ONLY for token-based links (/a/:slug)
     if (slug) {
-      localStorage.setItem('pendingReferralSlug', identifier);
+      sessionStorage.setItem('pendingReferralSlug', identifier);
     }
 
     // Store song data for pre-filling search after they get access
@@ -254,7 +254,7 @@ export function SharedAnalysis() {
         artist: analysis.artist,
         spotify_id: analysis.spotify_id,
       };
-      localStorage.setItem('sharedSongData', JSON.stringify(songData));
+      sessionStorage.setItem('sharedSongData', JSON.stringify(songData));
     }
 
     navigate('/');

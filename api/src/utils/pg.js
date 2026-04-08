@@ -32,7 +32,16 @@ export async function pg(
   const { url, key } = await getSupabaseCredentials(env);
   const params = [];
   if (select) params.push(`select=${encodeURIComponent(select)}`);
-  if (filter) params.push(filter);
+  if (filter) {
+    // Reject filter values containing suspicious PostgREST operators that could
+    // be injected via unsanitized user input (e.g., chained &or=, &not. etc.)
+    const DANGEROUS_PATTERN = /[&?]|(^|\.)or\(|(^|\.)not\./;
+    if (DANGEROUS_PATTERN.test(filter)) {
+      console.error(`[DB] Rejected suspicious filter: ${filter.substring(0, 100)}`);
+      return null;
+    }
+    params.push(filter);
+  }
   if (order) params.push(`order=${order}`);
   if (limit) params.push(`limit=${limit}`);
   const qs = params.length ? `?${params.join("&")}` : "";

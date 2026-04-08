@@ -40,6 +40,11 @@ export async function handleCreateGroup(request, env, origin) {
     }
 
     const { client: supabase, userId, email, setCookieHeader } = auth;
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const rateLimitOk = await checkRateLimit(env, `group-create:${userId}:${ip}`, true);
+    if (!rateLimitOk) {
+        return jsonResponse({ error: 'Too many requests' }, 429, origin, env);
+    }
 
     try {
         const body = await request.json();

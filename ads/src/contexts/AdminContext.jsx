@@ -21,7 +21,7 @@ export function AdminProvider({ children }) {
     try {
       await api.adminGet('/ads/admin/overview', secret);
       setAuthenticated(true);
-      window.localStorage.setItem(ADMIN_SECRET_KEY, secret);
+      window.sessionStorage.setItem(ADMIN_SECRET_KEY, secret);
       setAdminSecret(secret);
       return true;
     } catch {
@@ -33,7 +33,7 @@ export function AdminProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    const savedSecret = window.localStorage.getItem(ADMIN_SECRET_KEY) || '';
+    const savedSecret = window.sessionStorage.getItem(ADMIN_SECRET_KEY) || '';
     if (!savedSecret) {
       return;
     }
@@ -43,7 +43,7 @@ export function AdminProvider({ children }) {
   }, [validateSecret]);
 
   const logout = () => {
-    window.localStorage.removeItem(ADMIN_SECRET_KEY);
+    window.sessionStorage.removeItem(ADMIN_SECRET_KEY);
     setAdminSecret('');
     setAuthenticated(false);
   };

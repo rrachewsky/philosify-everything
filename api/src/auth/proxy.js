@@ -368,8 +368,9 @@ async function handleSignUp(request, env, origin, isProd) {
 
   response.headers.set("Set-Cookie", buildAuthCookie(data.session, isProd));
 
+  const maskedSignupEmail = email ? email.substring(0, 3) + '***@' + email.split('@')[1] : 'unknown';
   console.log(
-    `[Auth Proxy] ✅ Sign up successful: ${email} (lang: ${language || "en"})`,
+    `[Auth Proxy] ✅ Sign up successful: ${maskedSignupEmail} (lang: ${language || "en"})`,
   );
   return response;
 }

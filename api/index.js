@@ -950,7 +950,7 @@ export default {
           }
         } catch (err) {
           console.error("[Admin] Verify guide proof error:", err.message);
-          return jsonResponse({ error: err.message }, 500, origin, env);
+          return jsonResponse({ error: sanitizeErrorMessage(err.message) || "Internal error" }, 500, origin, env);
         }
       }
 
@@ -975,7 +975,7 @@ export default {
           return jsonResponse(result, 200, origin, env);
         } catch (err) {
           console.error("[Admin] Colloquium trigger error:", err.message);
-          return jsonResponse({ error: err.message }, 500, origin, env);
+          return jsonResponse({ error: sanitizeErrorMessage(err.message) || "Internal error" }, 500, origin, env);
         }
       }
 
@@ -3760,6 +3760,11 @@ export default {
       }
 
       if (url.pathname === "/api/history/constellation/stats" && request.method === "GET") {
+        const adminSecret = request.headers.get("X-Admin-Secret");
+        const expected = await getSecret(env.ADMIN_SECRET);
+        if (!adminSecret || !safeEq(adminSecret, expected)) {
+          return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+        }
         const { handleConstellationStats } = await import("./src/handlers/constellation.js");
         return handleConstellationStats(request, env, origin);
       }

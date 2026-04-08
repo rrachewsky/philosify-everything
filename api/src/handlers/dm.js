@@ -211,6 +211,9 @@ export async function handleCreateConversation(request, env, origin) {
   const auth = await getSupabaseForUser(request, env);
   if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
   const { userId, setCookieHeader } = auth;
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  const rateLimitOk = await checkRateLimit(env, `dm-create:${userId}:${ip}`, true);
+  if (!rateLimitOk) return jsonResponse({ error: "Too many requests" }, 429, origin, env);
 
   try {
     const body = await request.json();
