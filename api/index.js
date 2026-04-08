@@ -2644,7 +2644,31 @@ export default {
             });
           }
 
-          // For normal requests, return JSON with the analysis
+          // For normal requests: require authentication
+          let shareUser = null;
+          try {
+            shareUser = await getUserFromAuth(request, env);
+          } catch {
+            // Not authenticated
+          }
+
+          if (!shareUser?.userId) {
+            // Return 401 with a teaser (song + artist only, no analysis content)
+            return jsonResponse(
+              {
+                error: "Authentication required",
+                requiresAuth: true,
+                teaser: {
+                  song: enrichedAnalysis.song || enrichedAnalysis.title,
+                  artist: enrichedAnalysis.artist,
+                },
+              },
+              401,
+              origin,
+              env,
+            );
+          }
+
           return jsonResponse(
             { success: true, analysis: enrichedAnalysis },
             200,
@@ -2723,6 +2747,30 @@ export default {
               artist: songData?.artist,
               spotify_id: songData?.spotify_id || analysis.spotify_id,
             };
+
+            // Require authentication for full analysis content
+            let shareUser2 = null;
+            try {
+              shareUser2 = await getUserFromAuth(request, env);
+            } catch {
+              // Not authenticated
+            }
+
+            if (!shareUser2?.userId) {
+              return jsonResponse(
+                {
+                  error: "Authentication required",
+                  requiresAuth: true,
+                  teaser: {
+                    song: enrichedAnalysis.song || enrichedAnalysis.title,
+                    artist: enrichedAnalysis.artist,
+                  },
+                },
+                401,
+                origin,
+                env,
+              );
+            }
 
             return jsonResponse(
               { success: true, analysis: enrichedAnalysis },

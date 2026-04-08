@@ -24,6 +24,8 @@ export function SharedAnalysis() {
   const [error, setError] = useState(null);
   const [expired, setExpired] = useState(false);
   const [maxViewsReached, setMaxViewsReached] = useState(false);
+  const [requiresAuth, setRequiresAuth] = useState(false);
+  const [teaser, setTeaser] = useState(null);
 
   // Normalize analyses coming from different endpoints/shapes so ResultsContainer
   // always receives a consistent structure.
@@ -158,7 +160,7 @@ export function SharedAnalysis() {
         let lastErrorData = null;
 
         for (const endpoint of endpoints) {
-          response = await fetch(endpoint);
+          response = await fetch(endpoint, { credentials: 'include' });
           const contentType = response.headers.get('content-type') || '';
           if (contentType.includes('application/json')) {
             data = await response.json().catch(() => null);
@@ -186,7 +188,12 @@ export function SharedAnalysis() {
         if (!response?.ok) {
           const errorData = lastErrorData || {};
 
-          if (errorData.expired) {
+          if (errorData.requiresAuth) {
+            setRequiresAuth(true);
+            setTeaser(errorData.teaser || null);
+            setLoading(false);
+            return;
+          } else if (errorData.expired) {
             setExpired(true);
             setError(t('share.shareErrorExpired'));
           } else if (errorData.maxViewsReached) {
@@ -237,8 +244,15 @@ export function SharedAnalysis() {
       }
     };
 
+    // Reset auth-required state when user authenticates, so fetch retries
+    if (isAuthenticated && requiresAuth) {
+      setRequiresAuth(false);
+      setTeaser(null);
+      setLoading(true);
+    }
+
     fetchSharedAnalysis();
-  }, [identifier, t, isAuthenticated, i18n, slug]);
+  }, [identifier, t, isAuthenticated, i18n, slug]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle CTA click - go to home
   const handleJoinClick = () => {
@@ -294,7 +308,55 @@ export function SharedAnalysis() {
     );
   }
 
-  // Show analysis to everyone (authenticated or not)
+  // Auth required — show teaser and login prompt
+  if (requiresAuth) {
+    return (
+      <div className="max-w-xl mx-auto py-6 px-6">
+        <div className="mb-8 flex justify-center">
+          <img src="/logo.png" alt="Philosify" style={{ height: '136px', width: 'auto' }} />
+        </div>
+        <div
+          className="p-8 rounded-lg text-center"
+          style={{ background: 'rgba(0, 0, 0, 0.7)', color: 'white' }}
+        >
+          {teaser?.song && (
+            <p className="text-lg mb-2" style={{ opacity: 0.7 }}>
+              <strong>{teaser.song}</strong>
+              {teaser.artist ? ` — ${teaser.artist}` : ''}
+            </p>
+          )}
+          <h2 className="text-2xl font-bold mb-4">
+            {t('share.loginRequired', 'Log in to view this analysis')}
+          </h2>
+          <p className="text-base mb-6" style={{ opacity: 0.9 }}>
+            {t(
+              'share.loginRequiredDescription',
+              'Sign up or log in to Philosify to read the full philosophical analysis.'
+            )}
+          </p>
+          <Button
+            onClick={handleJoinClick}
+            style={{
+              background: 'linear-gradient(135deg, #E91E63 0%, #9C27B0 100%)',
+              color: 'white',
+              fontWeight: 'bold',
+              padding: '12px 32px',
+              fontSize: '16px',
+              width: '50%',
+              maxWidth: '320px',
+              minWidth: '180px',
+              display: 'block',
+              margin: '0 auto',
+            }}
+          >
+            {t('share.ctaButton', 'Join Philosify')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show analysis (authenticated)
   return (
     <div className="max-w-xl mx-auto py-6 px-6">
       {/* Header */}
