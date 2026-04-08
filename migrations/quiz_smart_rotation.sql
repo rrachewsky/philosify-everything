@@ -68,25 +68,6 @@ AS $$
   LIMIT 1;
 $$;
 
--- ============================================================
--- QUIZ: Objectivism questions (1 per every 10 questions)
--- Tagged with region = 'objectivism' for easy filtering
--- ============================================================
-
--- Fetch a random Objectivism question at a given difficulty
-CREATE OR REPLACE FUNCTION get_quiz_question_objectivism(
-  p_difficulty INTEGER,
-  p_excluded_ids UUID[]
-)
-RETURNS quiz_questions
-LANGUAGE sql
-STABLE
-AS $$
-  SELECT * FROM quiz_questions
-  WHERE active = true
-    AND difficulty = p_difficulty
-    AND region = 'objectivism'
-    AND id != ALL(p_excluded_ids)
-  ORDER BY random()
-  LIMIT 1;
-$$;
+-- Note: Objectivism questions are tagged with region = 'objectivism'
+-- but are included in the universal pool (no forced slot).
+-- They appear naturally alongside all other questions.

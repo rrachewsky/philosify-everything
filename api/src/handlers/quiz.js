@@ -170,50 +170,11 @@ function shouldBeRegional(questionNumber) {
   return pos === 2 || pos === 6; // 3rd and 7th questions in each block of 10
 }
 
-// Determine if the current question should be about Objectivism (1 out of 10)
-// Position 5 (0-indexed = the 5th question) is the Objectivism slot
-function shouldBeObjectivism(questionNumber) {
-  const pos = (questionNumber || 0) % 10;
-  return pos === 4; // 5th question in each block of 10
-}
-
-// Fetch an Objectivism-tagged question, relaxing difficulty if needed
-async function getObjectivismQuestion(supabase, difficulty, excludedIds) {
-  const { data: objData } = await supabase
-    .rpc('get_quiz_question_objectivism', {
-      p_difficulty: difficulty,
-      p_excluded_ids: excludedIds,
-    });
-  const obj = Array.isArray(objData) ? objData[0] : objData;
-  if (obj?.question) return obj;
-
-  // Relax difficulty
-  for (let offset = 1; offset <= 5; offset++) {
-    for (const diff of [difficulty - offset, difficulty + offset].filter(d => d >= 1 && d <= 10)) {
-      const { data: fallbackData } = await supabase
-        .rpc('get_quiz_question_objectivism', {
-          p_difficulty: diff,
-          p_excluded_ids: excludedIds,
-        });
-      const fallback = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
-      if (fallback?.question) return fallback;
-    }
-  }
-
-  return null;
-}
-
-// Smart question fetcher: picks Objectivism, regional, or universal based on position
-// Distribution per 10 questions: 1 Objectivism (pos 5) + 2 regional (pos 3, 7) + 7 universal
+// Smart question fetcher: picks regional or universal based on position
+// Objectivism questions are part of the general pool (no forced slot)
+// Distribution per 10 questions: 2 regional (pos 3, 7) + 8 universal (including Objectivism in the mix)
 async function fetchNextQuestion(supabase, difficulty, lang, excludedIds, questionNumber) {
   const region = getRegionForLang(lang);
-
-  // Position 5: Objectivism question
-  if (shouldBeObjectivism(questionNumber)) {
-    const objQuestion = await getObjectivismQuestion(supabase, difficulty, excludedIds);
-    if (objQuestion) return objQuestion;
-    // Fall through to universal if no Objectivism question available
-  }
 
   // Positions 3 and 7: Regional question
   if (shouldBeRegional(questionNumber)) {
