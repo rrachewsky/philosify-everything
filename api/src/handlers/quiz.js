@@ -1025,7 +1025,7 @@ export async function handleQuizSetProfile(request, env) {
       return errorResponse('Nickname is required', 400, origin, env);
     }
 
-    const clean = nickname.trim().replace(/[<>&"']/g, '').substring(0, 20);
+    const clean = nickname.trim().replace(/[<>&"'`\x00-\x1f]/g, '').substring(0, 20);
 
     if (clean.length < 2) return errorResponse('Nickname must be at least 2 characters', 400, origin, env);
     if (clean.length > 20) return errorResponse('Nickname must be 20 characters or less', 400, origin, env);

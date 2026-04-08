@@ -27,6 +27,7 @@ import {
   isProduction,
 } from "./cookies.js";
 import { handleAuthEmail } from "./email.js";
+import { getUserFromAuth } from "./jwt.js";
 
 // ============================================================
 // PKCE HELPERS (Web Crypto API - available in Cloudflare Workers)
@@ -596,9 +597,12 @@ async function handleGetSession(request, env, origin) {
  * No getUser() call — lightweight, server-side expiry check only.
  */
 async function handleGetRealtimeToken(request, env, origin) {
-  const session = getSessionFromCookie(request);
+  // SECURITY: Cryptographically verify the JWT before returning it.
+  // Previously this only checked the cookie's expires_at without verifying
+  // the token's signature, which could allow tampered tokens to be forwarded.
+  const user = await getUserFromAuth(request, env);
 
-  if (!session || !session.access_token) {
+  if (!user) {
     return new Response(JSON.stringify({ error: "Not authenticated" }), {
       status: 401,
       headers: {
@@ -611,20 +615,7 @@ async function handleGetRealtimeToken(request, env, origin) {
     });
   }
 
-  // Check expiry server-side (lightweight, no Supabase API call)
-  const nowSeconds = Math.floor(Date.now() / 1000);
-  if (session.expires_at && session.expires_at <= nowSeconds) {
-    return new Response(JSON.stringify({ error: "Token expired" }), {
-      status: 401,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store, max-age=0",
-        Pragma: "no-cache",
-        Expires: "0",
-        ...getCorsHeaders(origin, env),
-      },
-    });
-  }
+  const session = getSessionFromCookie(request);
 
   return new Response(
     JSON.stringify({

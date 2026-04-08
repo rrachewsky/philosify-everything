@@ -1617,9 +1617,8 @@ export default {
       ) {
         return handleUpdatePreferences(request, env, origin);
       }
-      if (url.pathname === "/api/push/test" && request.method === "POST") {
-        return handleTestPush(request, env, origin);
-      }
+      // REMOVED: /api/push/test route disabled per security audit
+      // Handler kept in push.js for internal use only
       // Admin-only push diagnostic (curl-friendly, no cookies needed)
       const pushDiagnoseMatch = url.pathname.match(
         /^\/api\/push\/diagnose\/([0-9a-f-]+)$/i,
@@ -1631,10 +1630,21 @@ export default {
         return handlePushDiagnose(request, env, origin, pushDiagnoseMatch[1]);
       }
       // Service worker endpoints (no auth needed - identified by endpoint URL)
+      // Rate limited with general limiter (10/min) since SW needs more headroom
       if (url.pathname === "/api/push/pending" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `push-pending:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+        }
         return handleGetPending(request, env, origin);
       }
       if (url.pathname === "/api/push/ack" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `push-ack:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+        }
         return handleAckNotifications(request, env, origin);
       }
 
@@ -3432,10 +3442,54 @@ export default {
       }
 
       if (url.pathname === "/api/news/translate" && request.method === "POST") {
+        // Rate limit - FAIL CLOSED for expensive Gemini API calls
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitKey = `news-translate:${ip}`;
+        let rateLimitOk = true;
+        if (env.ANALYZE_RATE_LIMITER) {
+          try {
+            const { success } = await env.ANALYZE_RATE_LIMITER.limit({ key: rateLimitKey });
+            rateLimitOk = success;
+            if (!success) console.log("[RateLimit] News translate rate limit exceeded for:", rateLimitKey);
+          } catch (error) {
+            console.error("[RateLimit] ANALYZE_RATE_LIMITER error:", error);
+            rateLimitOk = false;
+          }
+        } else {
+          rateLimitOk = await checkRateLimit(env, rateLimitKey, true);
+        }
+        if (!rateLimitOk) {
+          return jsonResponse(
+            { error: "Too many requests", message: "Rate limit exceeded. Please wait." },
+            429, origin, env,
+          );
+        }
         return handleNewsTranslate(request, env, origin);
       }
 
       if (url.pathname === "/api/news/tts" && request.method === "POST") {
+        // Rate limit - FAIL CLOSED for expensive Gemini TTS API calls
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitKey = `news-tts:${ip}`;
+        let rateLimitOk = true;
+        if (env.ANALYZE_RATE_LIMITER) {
+          try {
+            const { success } = await env.ANALYZE_RATE_LIMITER.limit({ key: rateLimitKey });
+            rateLimitOk = success;
+            if (!success) console.log("[RateLimit] News TTS rate limit exceeded for:", rateLimitKey);
+          } catch (error) {
+            console.error("[RateLimit] ANALYZE_RATE_LIMITER error:", error);
+            rateLimitOk = false;
+          }
+        } else {
+          rateLimitOk = await checkRateLimit(env, rateLimitKey, true);
+        }
+        if (!rateLimitOk) {
+          return jsonResponse(
+            { error: "Too many requests", message: "Rate limit exceeded. Please wait." },
+            429, origin, env,
+          );
+        }
         return handleNewsTTS(request, env, origin);
       }
 
@@ -3658,6 +3712,28 @@ export default {
       // QUIZ — Philosophical Quiz Feature
       // ============================================================
       if (url.pathname === "/api/quiz/start" && request.method === "POST") {
+        // Rate limit - FAIL CLOSED for potential AI generation
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitKey = `quiz-start:${ip}`;
+        let rateLimitOk = true;
+        if (env.ANALYZE_RATE_LIMITER) {
+          try {
+            const { success } = await env.ANALYZE_RATE_LIMITER.limit({ key: rateLimitKey });
+            rateLimitOk = success;
+            if (!success) console.log("[RateLimit] Quiz start rate limit exceeded for:", rateLimitKey);
+          } catch (error) {
+            console.error("[RateLimit] ANALYZE_RATE_LIMITER error:", error);
+            rateLimitOk = false;
+          }
+        } else {
+          rateLimitOk = await checkRateLimit(env, rateLimitKey, true);
+        }
+        if (!rateLimitOk) {
+          return jsonResponse(
+            { error: "Too many requests", message: "Rate limit exceeded. Please wait." },
+            429, origin, env,
+          );
+        }
         const { handleQuizStart } = await import("./src/handlers/quiz.js");
         return handleQuizStart(request, env);
       }
@@ -3666,6 +3742,28 @@ export default {
         return handleQuizAnswer(request, env);
       }
       if (url.pathname === "/api/quiz/continue" && request.method === "POST") {
+        // Rate limit - FAIL CLOSED for potential AI generation
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitKey = `quiz-continue:${ip}`;
+        let rateLimitOk = true;
+        if (env.ANALYZE_RATE_LIMITER) {
+          try {
+            const { success } = await env.ANALYZE_RATE_LIMITER.limit({ key: rateLimitKey });
+            rateLimitOk = success;
+            if (!success) console.log("[RateLimit] Quiz continue rate limit exceeded for:", rateLimitKey);
+          } catch (error) {
+            console.error("[RateLimit] ANALYZE_RATE_LIMITER error:", error);
+            rateLimitOk = false;
+          }
+        } else {
+          rateLimitOk = await checkRateLimit(env, rateLimitKey, true);
+        }
+        if (!rateLimitOk) {
+          return jsonResponse(
+            { error: "Too many requests", message: "Rate limit exceeded. Please wait." },
+            429, origin, env,
+          );
+        }
         const { handleQuizContinue } = await import("./src/handlers/quiz.js");
         return handleQuizContinue(request, env);
       }
@@ -3703,6 +3801,28 @@ export default {
       // Session-based billing: 10 credits for 20 turns, 5 credits per 10 additional
       // ============================================================
       if (url.pathname === "/api/unsafe-zone" && request.method === "POST") {
+        // Rate limit - FAIL CLOSED for expensive Claude API calls
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitKey = `unsafe-zone:${ip}`;
+        let rateLimitOk = true;
+        if (env.ANALYZE_RATE_LIMITER) {
+          try {
+            const { success } = await env.ANALYZE_RATE_LIMITER.limit({ key: rateLimitKey });
+            rateLimitOk = success;
+            if (!success) console.log("[RateLimit] Unsafe Zone rate limit exceeded for:", rateLimitKey);
+          } catch (error) {
+            console.error("[RateLimit] ANALYZE_RATE_LIMITER error:", error);
+            rateLimitOk = false;
+          }
+        } else {
+          rateLimitOk = await checkRateLimit(env, rateLimitKey, true);
+        }
+        if (!rateLimitOk) {
+          return jsonResponse(
+            { error: "Too many requests", message: "Rate limit exceeded. Please wait." },
+            429, origin, env,
+          );
+        }
         const { handleUnsafeZone } = await import("./src/handlers/unsafe-zone.js");
         return handleUnsafeZone(request, env, origin);
       }

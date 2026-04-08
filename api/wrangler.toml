@@ -35,7 +35,7 @@ R2_PUBLIC_URL = "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev"
 [[kv_namespaces]]
 binding = "PHILOSIFY_KV"
 id = "6ececc5beba846a9a33d47ada0890fa6"
-preview_id = "6ececc5beba846a9a33d47ada0890fa6"  # Same as prod for dev convenience
+preview_id = "dev_preview_kv_namespace"  # Isolated from production — create a separate KV namespace for dev
 
 # Native Rate Limiting (no KV operations)
 [[ratelimits]]
