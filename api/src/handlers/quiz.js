@@ -2,11 +2,12 @@
 // QUIZ HANDLERS - Philosophical Quiz API
 // ============================================================
 
-import { jsonResponse } from '../utils/index.js';
+import { jsonResponse, sanitizeErrorMessage } from '../utils/index.js';
 import { getServiceSupabase, callRpc } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
 import { reserveCredit, confirmReservation, releaseReservation } from '../credits/index.js';
 import { getSecret } from '../utils/secrets.js';
+import { isValidUUID } from '../utils/validation.js';
 
 // ============================================================
 // HELPER: Error response with CORS
@@ -488,7 +489,7 @@ export async function handleQuizStart(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Start error:', err);
-    return errorResponse(err.message || 'Failed to start quiz', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to start quiz', 500, origin, env);
   }
 }
 
@@ -510,6 +511,13 @@ export async function handleQuizAnswer(request, env) {
 
     if (!sessionId || !questionId || !answer) {
       return errorResponse('Missing required fields', 400, origin, env);
+    }
+
+    if (!isValidUUID(sessionId)) {
+      return errorResponse('Invalid session ID format', 400, origin, env);
+    }
+    if (!isValidUUID(questionId)) {
+      return errorResponse('Invalid question ID format', 400, origin, env);
     }
 
     const supabase = await getServiceSupabase(env);
@@ -636,7 +644,7 @@ export async function handleQuizAnswer(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Answer error:', err);
-    return errorResponse(err.message || 'Failed to submit answer', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to submit answer', 500, origin, env);
   }
 }
 
@@ -655,6 +663,7 @@ export async function handleQuizContinue(request, env) {
     const lang = getLangFromRequest(request, body);
 
     if (!sessionId) return errorResponse('Missing session ID', 400, origin, env);
+    if (!isValidUUID(sessionId)) return errorResponse('Invalid session ID format', 400, origin, env);
 
     const supabase = await getServiceSupabase(env);
 
@@ -730,7 +739,7 @@ export async function handleQuizContinue(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Continue error:', err);
-    return errorResponse(err.message || 'Failed to continue quiz', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to continue quiz', 500, origin, env);
   }
 }
 
@@ -810,7 +819,7 @@ export async function handleQuizNextQuestion(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Next question error:', err);
-    return errorResponse(err.message || 'Failed to get question', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to get question', 500, origin, env);
   }
 }
 
@@ -889,7 +898,7 @@ export async function handleQuizResume(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Resume error:', err);
-    return errorResponse(err.message || 'Failed to resume quiz', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to resume quiz', 500, origin, env);
   }
 }
 
@@ -922,7 +931,7 @@ export async function handleQuizLeaderboard(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Leaderboard error:', err);
-    return errorResponse(err.message || 'Failed to get leaderboard', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to get leaderboard', 500, origin, env);
   }
 }
 
@@ -969,7 +978,7 @@ export async function handleQuizEnd(request, env) {
 
   } catch (err) {
     console.error('[Quiz] End error:', err);
-    return errorResponse(err.message || 'Failed to end quiz', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to end quiz', 500, origin, env);
   }
 }
 
@@ -995,7 +1004,7 @@ export async function handleQuizGetProfile(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Get profile error:', err);
-    return errorResponse(err.message || 'Failed to get profile', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to get profile', 500, origin, env);
   }
 }
 
@@ -1058,7 +1067,7 @@ export async function handleQuizSetProfile(request, env) {
 
   } catch (err) {
     console.error('[Quiz] Set profile error:', err);
-    return errorResponse(err.message || 'Failed to set nickname', 500, origin, env);
+    return errorResponse(sanitizeErrorMessage(err.message) || 'Failed to set nickname', 500, origin, env);
   }
 }
 

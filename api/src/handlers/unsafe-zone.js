@@ -179,10 +179,18 @@ export async function handleUnsafeZone(request, env, origin) {
       return jsonResponse({ error: 'Messages array is required' }, 400, origin, env);
     }
 
+    // Input size limits
+    if (messages.length > 50) {
+      return jsonResponse({ error: 'Too many messages (max 50)' }, 400, origin, env);
+    }
+
     // Validate message format
     for (const msg of messages) {
       if (!msg.role || !msg.content || !['user', 'assistant'].includes(msg.role)) {
         return jsonResponse({ error: 'Invalid message format' }, 400, origin, env);
+      }
+      if (typeof msg.content === 'string' && msg.content.length > 5000) {
+        return jsonResponse({ error: 'Message content too long (max 5000 chars)' }, 400, origin, env);
       }
     }
 

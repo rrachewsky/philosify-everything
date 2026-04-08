@@ -43,6 +43,20 @@ const VALID_LANGUAGES = [
 ];
 
 /**
+ * UUID v4 regex for parameter validation
+ */
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Validates a UUID string
+ * @param {string} value - String to validate
+ * @returns {boolean} - True if valid UUID
+ */
+export function isValidUUID(value) {
+  return typeof value === 'string' && UUID_REGEX.test(value);
+}
+
+/**
  * Validates song and artist input
  * @param {string} song - Song title
  * @param {string} artist - Artist name

@@ -256,7 +256,8 @@ async function handleSignIn(request, env, origin, isProd) {
 
   response.headers.set("Set-Cookie", buildAuthCookie(data.session, isProd));
 
-  console.log(`[Auth Proxy] ✅ Sign in successful: ${email}`);
+  const maskedEmail = email ? email.substring(0, 3) + '***@' + email.split('@')[1] : 'unknown';
+  console.log(`[Auth Proxy] Sign in successful: ${data.user?.id || maskedEmail}`);
   return response;
 }
 
@@ -332,7 +333,7 @@ async function handleSignUp(request, env, origin, isProd) {
 
   if (error) {
     console.error("[Auth Proxy] Sign up failed:", error.message, "| status:", error.status, "| code:", error.code, "| details:", JSON.stringify(error));
-    return jsonResponse({ error: error.message, _debug: { status: error.status, code: error.code, name: error.name } }, 400, origin, env);
+    return jsonResponse({ error: error.message }, 400, origin, env);
   }
 
   // If email confirmation is required, session might be null
@@ -829,7 +830,7 @@ async function handleTokenExchange(request, env, origin, isProd) {
 
   response.headers.set("Set-Cookie", buildAuthCookie(session, isProd));
 
-  console.log(`[Auth Proxy] ✅ Token exchange successful: ${data.user.email}`);
+  console.log(`[Auth Proxy] Token exchange successful: ${data.user.id}`);
   return response;
 }
 
@@ -1023,7 +1024,7 @@ async function handleUpdatePassword(request, env, origin) {
     return jsonResponse({ error: error.message }, 400, origin, env);
   }
 
-  console.log(`[Auth Proxy] ✅ Password updated for user: ${data.user?.email}`);
+  console.log(`[Auth Proxy] Password updated for user: ${data.user?.id}`);
   return jsonResponse(
     { success: true, message: "Password updated successfully" },
     200,
@@ -1067,7 +1068,8 @@ async function handleResetPassword(request, env, origin) {
     );
   }
 
-  console.log(`[Auth Proxy] ✅ Password reset email sent to: ${email}`);
+  const maskedResetEmail = email ? email.substring(0, 3) + '***@' + email.split('@')[1] : 'unknown';
+  console.log(`[Auth Proxy] Password reset email sent to: ${maskedResetEmail}`);
   return jsonResponse(
     {
       success: true,

@@ -164,7 +164,7 @@ export async function handleAdsSignup(request, env, corsHeaders) {
     // Check if email already exists in advertisers
     const { data: existing } = await supabase
       .from('ads.advertisers')
-      .select('id', { filter: `email=eq.${email.toLowerCase()}` });
+      .select('id', { filter: `email=eq.${encodeURIComponent(email.toLowerCase())}` });
 
     if (existing && existing.length > 0) {
       // Generic message to prevent account enumeration
@@ -269,7 +269,7 @@ export async function handleAdsLogin(request, env, corsHeaders) {
     if (!advertiser) {
       const { data: byEmail } = await supabase
         .from('ads.advertisers')
-        .select('*', { filter: `email=eq.${email.toLowerCase()}` });
+        .select('*', { filter: `email=eq.${encodeURIComponent(email.toLowerCase())}` });
       advertiser = byEmail?.[0];
       
       // Link user_id if found by email

@@ -202,7 +202,7 @@ export async function fetchTopFilms(env) {
     debug.keyLength = apiKey?.length || 0;
     
     if (!apiKey) {
-      return { films: [], count: 0, fetchedAt: new Date().toISOString(), sources: [], _debug: "NO_API_KEY" };
+      return { films: [], count: 0, fetchedAt: new Date().toISOString(), sources: [] };
     }
 
     debug.step = "fetchTMDb";
@@ -236,12 +236,12 @@ export async function fetchTopFilms(env) {
     ];
 
     if (allFilms.length === 0) {
+      console.error('[Cinema] No films fetched from any source', debug);
       return { 
         films: [], 
         count: 0, 
         fetchedAt: new Date().toISOString(), 
         sources: [],
-        _debug: debug,
       };
     }
 
@@ -285,12 +285,12 @@ export async function fetchTopFilms(env) {
 
     return payload;
   } catch (error) {
+    console.error('[Cinema] fetchTopFilms failed:', { ...debug, error: error.message });
     return { 
       films: [], 
       count: 0, 
       fetchedAt: new Date().toISOString(), 
       sources: [],
-      _debug: { ...debug, error: error.message },
     };
   }
 }
@@ -402,13 +402,13 @@ export async function handleCinemaTop(request, env, origin, ctx) {
       },
     });
   } catch (error) {
+    console.error('[Cinema] handleCinemaTop error:', error.message);
     return new Response(
       JSON.stringify({
         films: [],
         count: 0,
         fetchedAt: new Date().toISOString(),
         sources: [],
-        _error: error.message,
       }),
       {
         status: 200,

@@ -539,10 +539,12 @@ export default {
         }
         const requestOrigin = request.headers.get("Origin") || "";
         const requestReferer = request.headers.get("Referer") || "";
-        if (
-          !requestOrigin.includes("philosify.org") &&
-          !requestReferer.includes("philosify.org")
-        ) {
+        try {
+          const checkUrl = new URL(requestOrigin || requestReferer);
+          if (!checkUrl.hostname.endsWith('philosify.org') && !checkUrl.hostname.endsWith('pages.dev')) {
+            return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+          }
+        } catch {
           return jsonResponse({ error: "Forbidden" }, 403, origin, env);
         }
         return jsonResponse(
@@ -3577,6 +3579,10 @@ export default {
       }
 
       if (url.pathname === "/api/history/graph/extract" && request.method === "POST") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
         return handleHistoryExtract(request, env, origin);
       }
 
@@ -3607,24 +3613,44 @@ export default {
       // ORBITAL COORDINATES — 3D Tether Position Management
       // ============================================================
       if (url.pathname.match(/^\/api\/orbital\/assign\/(.+)$/) && request.method === "POST") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
         const nodeId = url.pathname.split("/")[4];
         return handleAssignOrbitalCoordinates(request, env, nodeId);
       }
       
       if (url.pathname.match(/^\/api\/orbital\/set\/(.+)$/) && request.method === "POST") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
         const nodeId = url.pathname.split("/")[4];
         return handleSetOrbitalCoordinates(request, env, nodeId);
       }
       
       if (url.pathname === "/api/orbital/check" && request.method === "GET") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
         return handleCheckOrbitalPosition(request, env);
       }
       
       if (url.pathname === "/api/orbital/occupied" && request.method === "GET") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
         return handleGetOccupiedPositions(request, env);
       }
       
       if (url.pathname === "/api/orbital/batch-assign" && request.method === "POST") {
+        const user = await getUserFromAuth(request, env);
+        if (!user) {
+          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+        }
         return handleBatchAssignOrbitalCoordinates(request, env);
       }
 

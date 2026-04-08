@@ -20,6 +20,13 @@ export async function handleNewsTranslate(request, env, origin) {
       return jsonResponse({ error: "title and lang required" }, 400, origin, env);
     }
 
+    if (title.length > 500) {
+      return jsonResponse({ error: "Title too long (max 500 chars)" }, 400, origin, env);
+    }
+    if (description && description.length > 5000) {
+      return jsonResponse({ error: "Description too long (max 5000 chars)" }, 400, origin, env);
+    }
+
     const apiKey = await getSecret(env.GEMINI_API_KEY);
     if (!apiKey) {
       return jsonResponse({ error: "Translation service unavailable" }, 503, origin, env);

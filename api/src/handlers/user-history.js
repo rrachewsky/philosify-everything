@@ -12,7 +12,7 @@
 // Sorted chronologically (newest first).
 // ============================================================
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, sanitizeErrorMessage } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
@@ -214,6 +214,6 @@ export async function handleUserHistory(request, env, origin) {
     );
   } catch (err) {
     console.error("[UserHistory]", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    return jsonResponse({ error: sanitizeErrorMessage(err.message, 'Failed to load history') }, 500, origin, env);
   }
 }

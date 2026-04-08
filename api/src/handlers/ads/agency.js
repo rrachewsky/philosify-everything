@@ -7,7 +7,7 @@
 
 import * as jose from 'jose';
 import { getServiceSupabase, getSupabaseCredentials } from '../../utils/supabase.js';
-import { jsonResponse } from '../../utils/index.js';
+import { jsonResponse, sanitizeErrorMessage } from '../../utils/index.js';
 import { getSecret } from '../../utils/secrets.js';
 import { isValidEmail, isValidUrl, getCpmCents } from './utils.js';
 import { vetAdvertiser } from './vetting.js';
@@ -317,7 +317,7 @@ export async function handleAgencySignup(request, env, corsHeaders) {
     return response;
   } catch (err) {
     console.error('[Agency] Signup error:', err);
-    return jsonResponse({ error: err.message || 'Internal server error' }, 500, corsHeaders);
+    return jsonResponse({ error: sanitizeErrorMessage(err.message, 'Internal server error') }, 500, corsHeaders);
   }
 }
 

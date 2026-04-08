@@ -270,6 +270,10 @@ export async function handleNewsTTS(request, env, origin) {
     const { text, title, lang: rawLang } = await request.json();
     if (!text) return jsonResponse({ error: "No text" }, 400, origin, env);
 
+    if (text.length > 50000) {
+      return jsonResponse({ error: "Text too long (max 50000 chars)" }, 400, origin, env);
+    }
+
     // Validate language code to prevent injection
     const lang = SUPPORTED_LANGS.has(rawLang) ? rawLang : 'en';
 

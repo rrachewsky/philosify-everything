@@ -3,7 +3,7 @@
 // API endpoints for managing 3D orbital tether positions
 // ============================================================
 
-import { jsonResponse } from '../utils/index.js';
+import { jsonResponse, sanitizeErrorMessage } from '../utils/index.js';
 import { getSecret } from '../utils/secrets.js';
 import {
   assignOrbitalCoordinates,
@@ -60,7 +60,7 @@ export async function handleAssignOrbitalCoordinates(request, env, nodeId) {
     );
   } catch (error) {
     console.error('[OrbitalCoordinates] Assignment failed:', error);
-    return jsonResponse({ error: error.message }, 500);
+    return jsonResponse({ error: sanitizeErrorMessage(error.message, 'Orbital assignment failed') }, 500);
   }
 }
 
@@ -125,7 +125,8 @@ export async function handleSetOrbitalCoordinates(request, env, nodeId) {
     );
   } catch (error) {
     console.error('[OrbitalCoordinates] Manual set failed:', error);
-    return jsonResponse({ error: error.message }, error.message.includes('Invalid') ? 400 : 500);
+    const status = error.message?.includes('Invalid') ? 400 : 500;
+    return jsonResponse({ error: sanitizeErrorMessage(error.message, 'Failed to set coordinates') }, status);
   }
 }
 
@@ -150,7 +151,7 @@ export async function handleCheckOrbitalPosition(request, env) {
     });
   } catch (error) {
     console.error('[OrbitalCoordinates] Check failed:', error);
-    return jsonResponse({ error: error.message }, 400);
+    return jsonResponse({ error: sanitizeErrorMessage(error.message, 'Position check failed') }, 400);
   }
 }
 
@@ -184,7 +185,7 @@ export async function handleGetOccupiedPositions(request, env) {
     });
   } catch (error) {
     console.error('[OrbitalCoordinates] Get occupied failed:', error);
-    return jsonResponse({ error: error.message }, 500);
+    return jsonResponse({ error: sanitizeErrorMessage(error.message, 'Failed to get occupied positions') }, 500);
   }
 }
 
@@ -231,6 +232,6 @@ export async function handleBatchAssignOrbitalCoordinates(request, env) {
     });
   } catch (error) {
     console.error('[OrbitalCoordinates] Batch assign failed:', error);
-    return jsonResponse({ error: error.message }, 500);
+    return jsonResponse({ error: sanitizeErrorMessage(error.message, 'Batch assignment failed') }, 500);
   }
 }
