@@ -92,6 +92,13 @@ async function resumeQuiz(lang) {
   return quizFetch(`${config.apiUrl}/api/quiz/resume?lang=${lang}`, { method: 'GET' });
 }
 
+// Validate a question has all required fields including option text
+function isValidQuizQuestion(q) {
+  if (!q || !q.question || !q.category) return false;
+  if (!Array.isArray(q.options) || q.options.length !== 4) return false;
+  return q.options.every((o) => o && o.id && typeof o.text === 'string' && o.text.trim().length > 0);
+}
+
 async function endQuiz(sessionId) {
   return quizFetch(`${config.apiUrl}/api/quiz/end`, {
     method: 'POST',
@@ -276,16 +283,14 @@ export function QuizSidebar({
         const data = await resumeQuiz(i18n.language);
         if (data.hasSession && data.session) {
           const q = data.question;
-          // Validate question has all required fields before resuming
-          const isValidQuestion = q && q.question && q.options && q.options.length > 0 && q.category;
           setSession(data.session);
-          if (data.session.status === 'active' && isValidQuestion) {
+          if (data.session.status === 'active' && isValidQuizQuestion(q)) {
             setCurrentQuestion(q);
             setGameState('playing');
             setError(null);
           } else if (data.session.status === 'failed') {
             setGameState('paused');
-          } else if (data.session.status === 'active' && !isValidQuestion) {
+          } else if (data.session.status === 'active' && !isValidQuizQuestion(q)) {
             // Session exists but question data is invalid — end it silently
             try { await endQuiz(data.session.id); } catch (_) {}
             setSession(null);
@@ -376,7 +381,7 @@ export function QuizSidebar({
     try {
       const data = await startQuiz(i18n.language);
       const q = data.question;
-      if (q && q.question && q.options && q.options.length > 0) {
+      if (isValidQuizQuestion(q)) {
         setSession(data.session);
         setCurrentQuestion(q);
         setGameState('playing');
@@ -443,7 +448,7 @@ export function QuizSidebar({
         method: 'GET',
       });
       const q = data.question;
-      if (q && q.question && q.options && q.options.length > 0) {
+      if (isValidQuizQuestion(q)) {
         setCurrentQuestion(q);
         // Increment questionNumber since the API doesn't return updated session for next-question
         setSession(prev => prev ? { ...prev, questionNumber: (prev.questionNumber || 1) + 1 } : prev);
@@ -475,7 +480,7 @@ export function QuizSidebar({
       const q = data.question;
       setSelectedAnswer(null);
       setFeedback(null);
-      if (q && q.question && q.options && q.options.length > 0) {
+      if (isValidQuizQuestion(q)) {
         setSession(data.session);
         setCurrentQuestion(q);
         setGameState('playing');

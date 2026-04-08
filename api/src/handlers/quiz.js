@@ -10,6 +10,17 @@ import { getSecret } from '../utils/secrets.js';
 import { isValidUUID } from '../utils/validation.js';
 
 // ============================================================
+// QUIZ CATEGORIES — 14 philosophical domains
+// The quiz cycles through these in order so every category gets
+// equal representation. Used by question selection AND generation.
+// ============================================================
+const QUIZ_CATEGORIES = [
+  'metaphysics', 'epistemology', 'ethics', 'politics',
+  'aesthetics', 'applied', 'history', 'american_exceptionalism',
+  'virtues', 'economics', 'law', 'music', 'cinema', 'quotes',
+];
+
+// ============================================================
 // HELPER: Error response with CORS
 // ============================================================
 function errorResponse(message, status, origin, env) {
@@ -23,13 +34,27 @@ function errorResponse(message, status, origin, env) {
 // session storage — the server simply checks which letter the user picked
 // and whether that option has correct:true in the DB.
 // ============================================================
+function normalizeOption(opt) {
+  if (typeof opt === 'string') return { text: opt };
+  if (opt && typeof opt === 'object') {
+    return {
+      text: opt.text || opt.texto || '',
+      ...(opt.correct ? { correct: true } : {}),
+    };
+  }
+  return { text: '' };
+}
+
 function randomizeOptions(options) {
   const parsed = typeof options === 'string' ? JSON.parse(options) : options;
   if (!Array.isArray(parsed) || parsed.length === 0) return [];
   const letters = ['a', 'b', 'c', 'd'];
 
+  // Normalize: handle strings, missing text, etc.
+  const normalized = parsed.map(normalizeOption);
+
   // Fisher-Yates shuffle on a copy
-  const shuffled = [...parsed];
+  const shuffled = [...normalized];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -56,6 +81,21 @@ function prepareQuestion(question, translatedOptions) {
 
   const randomized = randomizeOptions(rawOptions);
 
+  // Safety check: ensure exactly 1 correct option exists
+  const correctCount = randomized.filter(o => o._correct).length;
+  if (correctCount !== 1) {
+    console.error(`[Quiz] Question ${question.id} has ${correctCount} correct options after randomization`);
+    // If no correct flag, try to recover from original DB options
+    if (correctCount === 0) {
+      const origOptions = typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+      const correctOrig = origOptions.find(o => o.correct === true);
+      if (correctOrig) {
+        const match = randomized.find(o => o.text === correctOrig.text);
+        if (match) match._correct = true;
+      }
+    }
+  }
+
   // Build map for validation: letter -> {text, correct}
   const optionMap = {};
   randomized.forEach(opt => {
@@ -77,9 +117,32 @@ async function getExcludedQuestionIds(supabase, userId, sessionAnsweredIds = [])
     supabase.rpc('get_user_correct_question_ids', { p_user_id: userId }),
     supabase.rpc('get_user_recent_wrong_question_ids', { p_user_id: userId, p_last_n_sessions: 3 }),
   ]);
-  const correctIds = Array.isArray(correctResult.data) ? correctResult.data : [];
-  const recentWrongIds = Array.isArray(recentWrongResult.data) ? recentWrongResult.data : [];
-  return [...new Set([...sessionAnsweredIds, ...correctIds, ...recentWrongIds])];
+
+  if (correctResult.error) {
+    console.error('[Quiz] Failed to get correct question IDs:', correctResult.error.message);
+  }
+  if (recentWrongResult.error) {
+    console.error('[Quiz] Failed to get recent wrong question IDs:', recentWrongResult.error.message);
+  }
+
+  // RPC returning UUID[] may come back as a flat array or nested — normalize
+  let correctIds = correctResult.data ?? [];
+  let recentWrongIds = recentWrongResult.data ?? [];
+
+  // Handle case where scalar UUID[] is returned as a single nested array
+  if (Array.isArray(correctIds) && correctIds.length === 1 && Array.isArray(correctIds[0])) {
+    correctIds = correctIds[0];
+  }
+  if (Array.isArray(recentWrongIds) && recentWrongIds.length === 1 && Array.isArray(recentWrongIds[0])) {
+    recentWrongIds = recentWrongIds[0];
+  }
+  // If it's not an array at all, wrap it
+  if (!Array.isArray(correctIds)) correctIds = [];
+  if (!Array.isArray(recentWrongIds)) recentWrongIds = [];
+
+  const excluded = [...new Set([...sessionAnsweredIds, ...correctIds, ...recentWrongIds])];
+  console.log(`[Quiz] Exclusion list for ${userId}: ${correctIds.length} correct, ${recentWrongIds.length} recent wrong, ${sessionAnsweredIds.length} current session = ${excluded.length} total`);
+  return excluded;
 }
 
 // ============================================================
@@ -171,23 +234,109 @@ function shouldBeRegional(questionNumber) {
   return pos === 2 || pos === 6; // 3rd and 7th questions in each block of 10
 }
 
-// Smart question fetcher: picks regional or universal based on position
-// Objectivism questions are part of the general pool (no forced slot)
-// Distribution per 10 questions: 2 regional (pos 3, 7) + 8 universal (including Objectivism in the mix)
+// ============================================================
+// HELPER: Validate a DB question has proper structure.
+// Returns true if valid. If invalid, deactivates it so it never appears again.
+// ============================================================
+function isValidDbQuestion(question) {
+  if (!question || !question.id || !question.question) return false;
+  const opts = typeof question.options === 'string' ? JSON.parse(question.options) : question.options;
+  if (!Array.isArray(opts) || opts.length !== 4) return false;
+  // Every option must have non-empty text
+  for (const o of opts) {
+    const text = (typeof o === 'string') ? o : (o?.text || o?.texto || '');
+    if (!text || !text.trim()) return false;
+  }
+  // Exactly 1 correct answer
+  const correctCount = opts.filter(o => typeof o === 'object' && o.correct === true).length;
+  if (correctCount !== 1) return false;
+  return true;
+}
+
+async function deactivateBadQuestion(supabase, questionId, reason) {
+  console.error(`[Quiz] Deactivating question ${questionId}: ${reason}`);
+  await supabase.from('quiz_questions').update({ active: false }, `id=eq.${questionId}`);
+}
+
+// ============================================================
+// HELPER: Fetch a question by category + difficulty
+// Returns a single random question or null.
+// ============================================================
+async function getQuestionByCategory(supabase, difficulty, category, excludedIds) {
+  const { data, error } = await supabase
+    .rpc('get_quiz_question_by_category', {
+      p_difficulty: difficulty,
+      p_category: category,
+      p_excluded_ids: excludedIds,
+    });
+  if (error) {
+    // RPC may not exist yet (migration not run) — log once and return null
+    console.error('[Quiz] get_quiz_question_by_category RPC error:', error.message);
+    return null;
+  }
+  const q = Array.isArray(data) ? data[0] : data;
+  return q?.question ? q : null;
+}
+
+// ============================================================
+// HELPER: Pick target category for a given question position.
+// Cycles through all 14 categories in order so the user sees
+// each category once before any category repeats.
+// ============================================================
+function getTargetCategory(questionNumber) {
+  return QUIZ_CATEGORIES[questionNumber % QUIZ_CATEGORIES.length];
+}
+
+// ============================================================
+// Smart question fetcher with CATEGORY ROTATION.
+//
+// Priority order:
+// 1. Regional slot (positions 3, 7 of every 10) → region-specific question
+// 2. Target category at target difficulty
+// 3. Target category at adjacent difficulties (±1, ±2, ±3)
+// 4. Next categories in rotation (cycle through remaining 13)
+// 5. Any category at target difficulty (pure random, last resort)
+// 6. Any category at adjacent difficulties (absolute last resort)
+//
+// This guarantees the user cycles through all 14 categories evenly.
+// ============================================================
 async function fetchNextQuestion(supabase, difficulty, lang, excludedIds, questionNumber) {
   const region = getRegionForLang(lang);
 
-  // Positions 3 and 7: Regional question
+  // --- Slot 1: Regional questions at positions 3 and 7 ---
   if (shouldBeRegional(questionNumber)) {
     const regional = await getRegionalQuestion(supabase, difficulty, region, excludedIds);
     if (regional) return regional;
-    // Fall through to universal if no regional available
+    // Fall through to category rotation if no regional available
   }
 
-  // Universal question (fallback for all slots)
+  // --- Slot 2: Category rotation ---
+  const targetCategory = getTargetCategory(questionNumber);
+
+  // Try target category at exact difficulty
+  let question = await getQuestionByCategory(supabase, difficulty, targetCategory, excludedIds);
+  if (question) return question;
+
+  // Try target category at adjacent difficulties
+  for (let offset = 1; offset <= 3 && !question; offset++) {
+    for (const diff of [difficulty + offset, difficulty - offset].filter(d => d >= 1 && d <= 10)) {
+      question = await getQuestionByCategory(supabase, diff, targetCategory, excludedIds);
+      if (question) return question;
+    }
+  }
+
+  // Target category exhausted — try remaining categories in rotation order
+  for (let i = 1; i < QUIZ_CATEGORIES.length; i++) {
+    const altCategory = QUIZ_CATEGORIES[(questionNumber + i) % QUIZ_CATEGORIES.length];
+    question = await getQuestionByCategory(supabase, difficulty, altCategory, excludedIds);
+    if (question) return question;
+  }
+
+  // --- Slot 3: Absolute fallback — any category, any nearby difficulty ---
   const { data: questionData, error: questionError } = await supabase
     .rpc('get_quiz_question', { p_difficulty: difficulty, p_excluded_ids: excludedIds });
-  let question = Array.isArray(questionData) ? questionData[0] : questionData;
+  question = Array.isArray(questionData) ? questionData[0] : questionData;
+  if (question?.question) return question;
 
   if (questionError || !question) {
     for (let offset = 1; offset <= 3 && !question; offset++) {
@@ -201,6 +350,64 @@ async function fetchNextQuestion(supabase, difficulty, lang, excludedIds, questi
   }
 
   return question;
+}
+
+// ============================================================
+// HELPER: Fetch, validate, translate, and prepare a question.
+// If a question has bad options in DB, deactivate it and try another.
+// If translation fails, falls back to English.
+// Returns { question, translatedText, clientOptions, optionMap } or null.
+// ============================================================
+const MAX_QUESTION_ATTEMPTS = 5;
+
+async function getValidatedQuestion(supabase, env, userId, difficulty, lang, excludedIds, questionNumber, existingOptionMaps) {
+  const localExcluded = [...excludedIds];
+
+  for (let attempt = 0; attempt < MAX_QUESTION_ATTEMPTS; attempt++) {
+    const question = await fetchNextQuestion(supabase, difficulty, lang, localExcluded, questionNumber);
+    if (!question) return null; // Pool exhausted
+
+    // --- Gate 1: DB-level validation (bad question = deactivate forever) ---
+    if (!isValidDbQuestion(question)) {
+      await deactivateBadQuestion(supabase, question.id, 'invalid options structure');
+      localExcluded.push(question.id);
+      continue;
+    }
+
+    // --- Gate 2: Reuse existing option map if we already prepared this question ---
+    if (existingOptionMaps?.[question.id]) {
+      const optionMap = existingOptionMaps[question.id];
+      const letters = ['a', 'b', 'c', 'd'];
+      const clientOptions = letters.filter(l => optionMap[l]).map(l => ({ id: l, text: optionMap[l].text }));
+      // Validate stored map has text on all options
+      if (clientOptions.length === 4 && clientOptions.every(o => o.text && o.text.trim())) {
+        const translatedText = await getTranslatedText(question, lang, env);
+        return { question, translatedText, clientOptions, optionMap };
+      }
+      // Stored map is broken — re-prepare below
+    }
+
+    // --- Gate 3: Translate and validate options ---
+    const translatedOptions = await getTranslatedOptions(question, lang, env);
+    const { clientOptions, optionMap } = prepareQuestion(question, translatedOptions);
+
+    // Final check: every client option must have non-empty text and exactly 1 correct
+    const allHaveText = clientOptions.length === 4 && clientOptions.every(o => o.text && o.text.trim());
+    const hasOneCorrect = Object.values(optionMap).filter(v => v.correct === true).length === 1;
+
+    if (!allHaveText || !hasOneCorrect) {
+      console.error(`[Quiz] Question ${question.id} failed final validation (text: ${allHaveText}, correct: ${hasOneCorrect}), deactivating`);
+      await deactivateBadQuestion(supabase, question.id, `final validation failed: text=${allHaveText}, oneCorrect=${hasOneCorrect}`);
+      localExcluded.push(question.id);
+      continue;
+    }
+
+    const translatedText = await getTranslatedText(question, lang, env);
+    return { question, translatedText, clientOptions, optionMap };
+  }
+
+  console.error(`[Quiz] Failed to find a valid question after ${MAX_QUESTION_ATTEMPTS} attempts`);
+  return null;
 }
 
 // ============================================================
@@ -255,6 +462,17 @@ Rules:
     const translated = JSON.parse(jsonStr);
 
     if (!translated.question || !translated.options || !translated.explanation) return null;
+    if (!Array.isArray(translated.options) || translated.options.length !== 4) return null;
+
+    // Normalize options: AI may return strings instead of {text: "..."} objects
+    translated.options = translated.options.map(normalizeOption);
+
+    // Validate all options have non-empty text
+    const allValid = translated.options.every(o => o.text && o.text.trim().length > 0);
+    if (!allValid) {
+      console.error(`[Quiz] AI translation for ${lang} returned options with empty text`);
+      return null;
+    }
 
     cacheTranslation(question.id, lang, translated, env).catch(() => {});
 
@@ -306,6 +524,16 @@ async function getTranslatedOptions(question, lang, env) {
   }
 
   if (!translatedOptions) return originalOptions;
+
+  // Normalize: handle strings, missing text fields
+  translatedOptions = translatedOptions.map(normalizeOption);
+
+  // Validate: every option must have non-empty text
+  const allHaveText = translatedOptions.every(o => o.text && o.text.trim().length > 0);
+  if (!allHaveText) {
+    console.error(`[Quiz] Translated options for ${lang} have empty text, falling back to originals`);
+    return originalOptions;
+  }
 
   // Ensure correct:true flag exists — old cached translations may lack it
   const hasCorrectFlag = translatedOptions.some(o => o.correct === true);
@@ -452,20 +680,20 @@ export async function handleQuizStart(request, env) {
 
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId);
 
-    const question = await fetchNextQuestion(supabase, 1, lang, allExcluded, 0);
+    const validated = await getValidatedQuestion(supabase, env, user.userId, 1, lang, allExcluded, 0, null);
 
-    if (!question) {
+    if (!validated) {
+      await releaseReservation(env, reservation.reservationId, 'quiz-no-valid-questions');
       return errorResponse('No questions available', 500, origin, env);
     }
 
-    const translatedOptions = await getTranslatedOptions(question, lang, env);
-    const translatedText = await getTranslatedText(question, lang, env);
-    const { clientOptions, optionMap } = prepareQuestion(question, translatedOptions);
+    const { question, translatedText, clientOptions, optionMap } = validated;
 
     // Store the option map in session so answer validation knows which letter = which option
     await supabase.from('quiz_sessions').update({
       current_question_id: question.id,
       current_option_map: optionMap,
+      question_option_maps: { [question.id]: optionMap },
     }, `id=eq.${session.id}`);
 
     return jsonResponse({
@@ -614,8 +842,12 @@ export async function handleQuizAnswer(request, env) {
 
     await supabase.from('quiz_sessions').update(updateData, `id=eq.${sessionId}`);
 
-    // Fire-and-forget: check if we should auto-generate new questions
-    maybeGenerateQuestions(env, lang);
+    // For every correct answer, generate 1 fresh question (fire-and-forget)
+    if (isCorrect) {
+      generateOneQuestion(env, lang).catch(err => {
+        console.error('[Quiz Gen] Background single-question generation failed:', err);
+      });
+    }
 
     const wrongExplanation = await getTranslatedExplanation(question, lang, false, wrongKey, env);
     const correctExplanation = await getTranslatedExplanation(question, lang, true, wrongKey, env);
@@ -692,12 +924,10 @@ export async function handleQuizContinue(request, env) {
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
     const questionNum = (session.answered_question_ids || []).length;
 
-    const nextQuestion = await fetchNextQuestion(supabase, session.current_difficulty, lang, allExcluded, questionNum);
-    if (!nextQuestion) return errorResponse('No more questions available', 500, origin, env);
+    const validated = await getValidatedQuestion(supabase, env, user.userId, session.current_difficulty, lang, allExcluded, questionNum, session.question_option_maps);
+    if (!validated) return errorResponse('No more questions available', 500, origin, env);
 
-    const translatedOptions = await getTranslatedOptions(nextQuestion, lang, env);
-    const translatedText = await getTranslatedText(nextQuestion, lang, env);
-    const { clientOptions, optionMap } = prepareQuestion(nextQuestion, translatedOptions);
+    const { question: nextQuestion, translatedText, clientOptions, optionMap } = validated;
 
     // Store option map keyed by question ID so pre-fetch cannot overwrite answers
     const questionOptionMaps = { ...(session.question_option_maps || {}), [nextQuestion.id]: optionMap };
@@ -771,30 +1001,12 @@ export async function handleQuizNextQuestion(request, env) {
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
     const questionNum = (session.answered_question_ids || []).length;
 
-    const question = await fetchNextQuestion(supabase, session.current_difficulty, lang, allExcluded, questionNum);
+    const validated = await getValidatedQuestion(supabase, env, user.userId, session.current_difficulty, lang, allExcluded, questionNum, session.question_option_maps);
 
-    if (!question) return errorResponse('No questions available', 500, origin, env);
+    if (!validated) return errorResponse('No questions available', 500, origin, env);
 
-    const translatedOptions = await getTranslatedOptions(question, lang, env);
-    const translatedText = await getTranslatedText(question, lang, env);
-
-    // Reuse existing option map if already stored for this question
-    // to prevent re-randomization overwriting the map the user already sees
-    const existingMaps = session.question_option_maps || {};
-    let optionMap, clientOptions;
-
-    if (existingMaps[question.id]) {
-      optionMap = existingMaps[question.id];
-      // Reconstruct clientOptions from stored map preserving order
-      const letters = ['a', 'b', 'c', 'd'];
-      clientOptions = letters
-        .filter(l => optionMap[l])
-        .map(l => ({ id: l, text: optionMap[l].text }));
-    } else {
-      ({ clientOptions, optionMap } = prepareQuestion(question, translatedOptions));
-    }
-
-    const questionOptionMaps = { ...existingMaps, [question.id]: optionMap };
+    const { question, translatedText, clientOptions, optionMap } = validated;
+    const questionOptionMaps = { ...(session.question_option_maps || {}), [question.id]: optionMap };
 
     const { error: updateError } = await supabase.from('quiz_sessions').update({
       current_question_id: question.id,
@@ -851,13 +1063,10 @@ export async function handleQuizResume(request, env) {
       const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
       const questionNum = (session.answered_question_ids || []).length;
 
-      const question = await fetchNextQuestion(supabase, session.current_difficulty, lang, allExcluded, questionNum);
+      const validated = await getValidatedQuestion(supabase, env, user.userId, session.current_difficulty, lang, allExcluded, questionNum, session.question_option_maps);
 
-      if (question) {
-        const translatedOptions = await getTranslatedOptions(question, lang, env);
-        const translatedText = await getTranslatedText(question, lang, env);
-        const { clientOptions, optionMap } = prepareQuestion(question, translatedOptions);
-
+      if (validated) {
+        const { question, translatedText, clientOptions, optionMap } = validated;
         const questionOptionMaps = { ...(session.question_option_maps || {}), [question.id]: optionMap };
 
         const { error: updateError } = await supabase.from('quiz_sessions').update({
@@ -1077,12 +1286,6 @@ export async function handleQuizSetProfile(request, env) {
 // Generates questions at the difficulty level with the smallest pool.
 // ============================================================
 
-const QUIZ_CATEGORIES = [
-  'metaphysics', 'epistemology', 'ethics', 'politics',
-  'aesthetics', 'applied', 'history', 'american_exceptionalism',
-  'virtues', 'economics', 'law', 'music', 'cinema', 'quotes',
-];
-
 async function generateQuizQuestions(env, count = 10) {
   try {
     const apiKey = await getSecret(env.GEMINI_API_KEY);
@@ -1093,25 +1296,33 @@ async function generateQuizQuestions(env, count = 10) {
 
     const supabase = await getServiceSupabase(env);
 
-    // Find difficulty levels with fewest questions
-    const { data: diffCounts } = await supabase
+    // Find difficulty levels AND categories with fewest questions
+    const { data: allQuestions } = await supabase
       .from('quiz_questions')
-      .select('difficulty', { count: 'exact', filter: 'active=eq.true' });
+      .select('difficulty,category', { filter: 'active=eq.true' });
 
-    // Count per difficulty from raw data
-    const counts = {};
-    if (Array.isArray(diffCounts)) {
-      diffCounts.forEach(q => {
-        counts[q.difficulty] = (counts[q.difficulty] || 0) + 1;
+    // Count per difficulty
+    const diffCounts = {};
+    const catCounts = {};
+    if (Array.isArray(allQuestions)) {
+      allQuestions.forEach(q => {
+        diffCounts[q.difficulty] = (diffCounts[q.difficulty] || 0) + 1;
+        catCounts[q.category] = (catCounts[q.category] || 0) + 1;
       });
     }
 
     // Find the difficulty level(s) that need the most questions
     const targetDifficulties = [];
     for (let d = 1; d <= 10; d++) {
-      targetDifficulties.push({ difficulty: d, count: counts[d] || 0 });
+      targetDifficulties.push({ difficulty: d, count: diffCounts[d] || 0 });
     }
     targetDifficulties.sort((a, b) => a.count - b.count);
+
+    // Find the most underserved category
+    const sortedCategories = QUIZ_CATEGORIES
+      .map(c => ({ category: c, count: catCounts[c] || 0 }))
+      .sort((a, b) => a.count - b.count);
+    const targetCategory = sortedCategories[0].category;
 
     // Distribute generation across the 3 most underserved difficulties
     const targets = targetDifficulties.slice(0, 3);
@@ -1119,7 +1330,6 @@ async function generateQuizQuestions(env, count = 10) {
 
     for (const target of targets) {
       const numToGenerate = Math.min(questionsPerTarget, count);
-      const category = QUIZ_CATEGORIES[Math.floor(Math.random() * QUIZ_CATEGORIES.length)];
 
       const prompt = `Generate ${numToGenerate} unique philosophy quiz questions at difficulty level ${target.difficulty}/10.
 
@@ -1130,7 +1340,8 @@ DIFFICULTY GUIDE:
 - 7-8: Expert level, obscure works, detailed doctrines, subtle philosophical differences
 - 9-10: Master level, specialized academic knowledge, original source texts
 
-CATEGORIES (pick a mix): ${QUIZ_CATEGORIES.join(', ')}
+TARGET CATEGORY: "${targetCategory}" — generate ALL questions in this category.
+ALL CATEGORIES: ${QUIZ_CATEGORIES.join(', ')}
 
 PHILOSIFY CONTEXT: This is for Philosify, a platform that analyzes ideas through philosophical lenses.
 Key values: reason over faith, reality over mysticism, individual rights, freedom, objective values.
@@ -1138,7 +1349,7 @@ Include questions about Objectivism, classical liberalism, and their critics alo
 
 FORMAT: Return a JSON array. Each element must have exactly these fields:
 {
-  "category": "one of the categories above",
+  "category": "${targetCategory}",
   "difficulty": ${target.difficulty},
   "question": "The question text in English",
   "options": [
@@ -1198,14 +1409,15 @@ RULES:
         if (!q.question || !q.options || !Array.isArray(q.options) || q.options.length !== 4) continue;
         if (!q.explanation || !q.wrong_explanations) continue;
 
-        // Find which option is correct and build the DB format
-        const correctIdx = q.options.findIndex(o => o.correct);
-        if (correctIdx < 0) continue;
+        // Normalize and validate options
+        const normalized = q.options.map(normalizeOption);
+        const correctCount = normalized.filter(o => o.correct).length;
+        if (correctCount !== 1) continue; // Must have exactly 1 correct answer
+        if (!normalized.every(o => o.text && o.text.trim().length > 0)) continue; // All must have text
 
-        const correctAnswer = String(correctIdx);
-        const dbOptions = q.options.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
+        const dbOptions = normalized.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
 
-        const validCategory = QUIZ_CATEGORIES.includes(q.category) ? q.category : category;
+        const validCategory = QUIZ_CATEGORIES.includes(q.category) ? q.category : targetCategory;
         const validDifficulty = Math.max(1, Math.min(10, q.difficulty || target.difficulty));
 
         const { error: insertError } = await supabase.from('quiz_questions').insert({
@@ -1213,7 +1425,6 @@ RULES:
           difficulty: validDifficulty,
           question: q.question,
           options: dbOptions,
-          correct_answer: correctAnswer,
           explanation: q.explanation,
           wrong_explanations: q.wrong_explanations,
         });
@@ -1314,11 +1525,13 @@ RULES:
       if (!q.question || !q.options || !Array.isArray(q.options) || q.options.length !== 4) continue;
       if (!q.explanation || !q.wrong_explanations) continue;
 
-      const correctIdx = q.options.findIndex(o => o.correct);
-      if (correctIdx < 0) continue;
+      // Normalize and validate options
+      const normalized = q.options.map(normalizeOption);
+      const correctCount = normalized.filter(o => o.correct).length;
+      if (correctCount !== 1) continue;
+      if (!normalized.every(o => o.text && o.text.trim().length > 0)) continue;
 
-      const correctAnswer = String(correctIdx);
-      const dbOptions = q.options.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
+      const dbOptions = normalized.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
       const validCategory = QUIZ_CATEGORIES.includes(q.category) ? q.category : 'history';
       const validDifficulty = Math.max(1, Math.min(10, q.difficulty || 3));
 
@@ -1327,7 +1540,6 @@ RULES:
         difficulty: validDifficulty,
         question: q.question,
         options: dbOptions,
-        correct_answer: correctAnswer,
         explanation: q.explanation,
         wrong_explanations: q.wrong_explanations,
         region: region,
@@ -1443,11 +1655,13 @@ RULES:
       if (!q.question || !q.options || !Array.isArray(q.options) || q.options.length !== 4) continue;
       if (!q.explanation || !q.wrong_explanations) continue;
 
-      const correctIdx = q.options.findIndex(o => o.correct);
-      if (correctIdx < 0) continue;
+      // Normalize and validate options
+      const normalized = q.options.map(normalizeOption);
+      const correctCount = normalized.filter(o => o.correct).length;
+      if (correctCount !== 1) continue;
+      if (!normalized.every(o => o.text && o.text.trim().length > 0)) continue;
 
-      const correctAnswer = String(correctIdx);
-      const dbOptions = q.options.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
+      const dbOptions = normalized.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
       const validCategory = QUIZ_CATEGORIES.includes(q.category) ? q.category : 'ethics';
       const validDifficulty = Math.max(1, Math.min(10, q.difficulty || 3));
 
@@ -1456,7 +1670,6 @@ RULES:
         difficulty: validDifficulty,
         question: q.question,
         options: dbOptions,
-        correct_answer: correctAnswer,
         explanation: q.explanation,
         wrong_explanations: q.wrong_explanations,
         region: 'objectivism',
@@ -1471,27 +1684,26 @@ RULES:
   }
 }
 
-// Check if auto-generation should trigger (every 10 global answers)
-// Generates: 5 universal + 3 regional + 2 objectivism questions
-async function maybeGenerateQuestions(env, lang) {
+// ============================================================
+// Generate exactly 1 fresh question per correct answer.
+// Rotates type: ~60% universal, ~20% regional, ~20% objectivism.
+// Universal questions always target the most underserved category.
+// ============================================================
+async function generateOneQuestion(env, lang) {
   try {
-    const supabase = await getServiceSupabase(env);
-    const { data: countData } = await supabase.rpc('get_global_answer_count');
-    const totalAnswers = typeof countData === 'number' ? countData : parseInt(countData, 10) || 0;
-
-    // Generate every 10 answers
-    if (totalAnswers > 0 && totalAnswers % 10 === 0) {
+    const roll = Math.random();
+    if (roll < 0.6) {
+      // Universal question — generateQuizQuestions auto-targets weakest category
+      await generateQuizQuestions(env, 1);
+    } else if (roll < 0.8) {
+      // Regional question
       const region = getRegionForLang(lang);
-      // Fire and forget — don't block the response
-      Promise.all([
-        generateQuizQuestions(env, 5),
-        generateRegionalQuestions(env, region, 3),
-        generateObjectivismQuestions(env, 2),
-      ]).catch(err => {
-        console.error('[Quiz Gen] Background generation failed:', err);
-      });
+      await generateRegionalQuestions(env, region, 1);
+    } else {
+      // Objectivism question
+      await generateObjectivismQuestions(env, 1);
     }
   } catch (err) {
-    console.error('[Quiz Gen] Check error:', err);
+    console.error('[Quiz Gen] Single question generation error:', err);
   }
 }
