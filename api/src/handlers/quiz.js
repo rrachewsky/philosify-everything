@@ -68,6 +68,20 @@ function prepareQuestion(question, translatedOptions) {
 }
 
 // ============================================================
+// HELPER: Build full exclusion list for question selection
+// Combines: correct answers (forever) + recent wrong answers (last 3 sessions) + current session
+// ============================================================
+async function getExcludedQuestionIds(supabase, userId, sessionAnsweredIds = []) {
+  const [correctResult, recentWrongResult] = await Promise.all([
+    supabase.rpc('get_user_correct_question_ids', { p_user_id: userId }),
+    supabase.rpc('get_user_recent_wrong_question_ids', { p_user_id: userId, p_last_n_sessions: 3 }),
+  ]);
+  const correctIds = Array.isArray(correctResult.data) ? correctResult.data : [];
+  const recentWrongIds = Array.isArray(recentWrongResult.data) ? recentWrongResult.data : [];
+  return [...new Set([...sessionAnsweredIds, ...correctIds, ...recentWrongIds])];
+}
+
+// ============================================================
 // HELPER: Runtime AI translation via Gemini
 // ============================================================
 async function translateQuestionWithAI(question, lang, env) {
@@ -314,12 +328,10 @@ export async function handleQuizStart(request, env) {
 
     await confirmReservation(env, reservation.reservationId, `quiz:start:${session.id}`);
 
-    const { data: historyData } = await supabase
-      .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
-    const userCorrectIds = Array.isArray(historyData) ? historyData : [];
+    const allExcluded = await getExcludedQuestionIds(supabase, user.userId);
 
     const { data: questionData, error: questionError } = await supabase
-      .rpc('get_quiz_question', { p_difficulty: 1, p_excluded_ids: userCorrectIds });
+      .rpc('get_quiz_question', { p_difficulty: 1, p_excluded_ids: allExcluded });
     const question = Array.isArray(questionData) ? questionData[0] : questionData;
 
     if (questionError || !question) {
@@ -475,6 +487,9 @@ export async function handleQuizAnswer(request, env) {
 
     await supabase.from('quiz_sessions').update(updateData, `id=eq.${sessionId}`);
 
+    // Fire-and-forget: check if we should auto-generate new questions
+    maybeGenerateQuestions(env);
+
     const wrongExplanation = await getTranslatedExplanation(question, lang, false, wrongKey, env);
     const correctExplanation = await getTranslatedExplanation(question, lang, true, wrongKey, env);
 
@@ -546,10 +561,7 @@ export async function handleQuizContinue(request, env) {
 
     await confirmReservation(env, reservation.reservationId, `quiz:continue:${sessionId}`);
 
-    const { data: historyData } = await supabase
-      .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
-    const userCorrectIds = Array.isArray(historyData) ? historyData : [];
-    const allExcluded = [...new Set([...(session.answered_question_ids || []), ...userCorrectIds])];
+    const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
 
     const { data: questionData, error: questionError } = await supabase
       .rpc('get_quiz_question', { p_difficulty: session.current_difficulty, p_excluded_ids: allExcluded });
@@ -639,10 +651,7 @@ export async function handleQuizNextQuestion(request, env) {
     const session = Array.isArray(sessions) ? sessions[0] : sessions;
     if (!session) return errorResponse('No active session', 400, origin, env);
 
-    const { data: historyData } = await supabase
-      .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
-    const userCorrectIds = Array.isArray(historyData) ? historyData : [];
-    const allExcluded = [...new Set([...(session.answered_question_ids || []), ...userCorrectIds])];
+    const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
 
     let question = null;
     const targetDiff = session.current_difficulty;
@@ -735,10 +744,7 @@ export async function handleQuizResume(request, env) {
     let translatedQuestion = null;
 
     if (session.status === 'active') {
-      const { data: historyData } = await supabase
-        .rpc('get_user_correct_question_ids', { p_user_id: user.userId });
-      const userCorrectIds = Array.isArray(historyData) ? historyData : [];
-      const allExcluded = [...new Set([...(session.answered_question_ids || []), ...userCorrectIds])];
+      const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
 
       let question = null;
       const targetDiff = session.current_difficulty;
@@ -970,5 +976,185 @@ export async function handleQuizSetProfile(request, env) {
   } catch (err) {
     console.error('[Quiz] Set profile error:', err);
     return errorResponse(err.message || 'Failed to set nickname', 500, origin, env);
+  }
+}
+
+// ============================================================
+// AUTO-GENERATION: Create new quiz questions via AI
+// Triggered after every 10 answers to keep the pool fresh.
+// Generates questions at the difficulty level with the smallest pool.
+// ============================================================
+
+const QUIZ_CATEGORIES = [
+  'metaphysics', 'epistemology', 'ethics', 'politics',
+  'aesthetics', 'applied', 'history', 'american_exceptionalism',
+  'virtues', 'economics', 'law', 'music', 'cinema', 'quotes',
+];
+
+async function generateQuizQuestions(env, count = 10) {
+  try {
+    const apiKey = await getSecret(env.GEMINI_API_KEY);
+    if (!apiKey) {
+      console.error('[Quiz Gen] No Gemini API key');
+      return;
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    // Find difficulty levels with fewest questions
+    const { data: diffCounts } = await supabase
+      .from('quiz_questions')
+      .select('difficulty', { count: 'exact', filter: 'active=eq.true' });
+
+    // Count per difficulty from raw data
+    const counts = {};
+    if (Array.isArray(diffCounts)) {
+      diffCounts.forEach(q => {
+        counts[q.difficulty] = (counts[q.difficulty] || 0) + 1;
+      });
+    }
+
+    // Find the difficulty level(s) that need the most questions
+    const targetDifficulties = [];
+    for (let d = 1; d <= 10; d++) {
+      targetDifficulties.push({ difficulty: d, count: counts[d] || 0 });
+    }
+    targetDifficulties.sort((a, b) => a.count - b.count);
+
+    // Distribute generation across the 3 most underserved difficulties
+    const targets = targetDifficulties.slice(0, 3);
+    const questionsPerTarget = Math.ceil(count / targets.length);
+
+    for (const target of targets) {
+      const numToGenerate = Math.min(questionsPerTarget, count);
+      const category = QUIZ_CATEGORIES[Math.floor(Math.random() * QUIZ_CATEGORIES.length)];
+
+      const prompt = `Generate ${numToGenerate} unique philosophy quiz questions at difficulty level ${target.difficulty}/10.
+
+DIFFICULTY GUIDE:
+- 1-2: Famous quotes, well-known philosophers, easy identification
+- 3-4: Intermediate concepts, matching ideas to thinkers, basic arguments
+- 5-6: Advanced concepts, nuanced distinctions, cross-tradition comparisons
+- 7-8: Expert level, obscure works, detailed doctrines, subtle philosophical differences
+- 9-10: Master level, specialized academic knowledge, original source texts
+
+CATEGORIES (pick a mix): ${QUIZ_CATEGORIES.join(', ')}
+
+PHILOSIFY CONTEXT: This is for Philosify, a platform that analyzes ideas through philosophical lenses.
+Key values: reason over faith, reality over mysticism, individual rights, freedom, objective values.
+Include questions about Objectivism, classical liberalism, and their critics alongside mainstream philosophy.
+
+FORMAT: Return a JSON array. Each element must have exactly these fields:
+{
+  "category": "one of the categories above",
+  "difficulty": ${target.difficulty},
+  "question": "The question text in English",
+  "options": [
+    {"text": "Option A text", "correct": true},
+    {"text": "Option B text"},
+    {"text": "Option C text"},
+    {"text": "Option D text"}
+  ],
+  "explanation": "Detailed explanation shown after correct answer (2-3 sentences)",
+  "wrong_explanations": {
+    "1": "Why option B is wrong",
+    "2": "Why option C is wrong",
+    "3": "Why option D is wrong"
+  }
+}
+
+RULES:
+- Exactly 4 options per question, exactly 1 correct
+- Questions must be factually accurate
+- Wrong explanations must be educational
+- No duplicate questions (be creative and varied)
+- Return ONLY the JSON array, no markdown fences`;
+
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+      const res = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.8, maxOutputTokens: 8192 },
+        }),
+      });
+
+      if (!res.ok) {
+        console.error('[Quiz Gen] Gemini API error:', res.status);
+        continue;
+      }
+
+      const data = await res.json();
+      const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const jsonStr = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+      let questions;
+      try {
+        questions = JSON.parse(jsonStr);
+      } catch (parseErr) {
+        console.error('[Quiz Gen] Failed to parse Gemini response:', parseErr.message);
+        continue;
+      }
+
+      if (!Array.isArray(questions)) continue;
+
+      // Insert valid questions into DB
+      let inserted = 0;
+      for (const q of questions) {
+        if (!q.question || !q.options || !Array.isArray(q.options) || q.options.length !== 4) continue;
+        if (!q.explanation || !q.wrong_explanations) continue;
+
+        // Find which option is correct and build the DB format
+        const correctIdx = q.options.findIndex(o => o.correct);
+        if (correctIdx < 0) continue;
+
+        const correctAnswer = String(correctIdx);
+        const dbOptions = q.options.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
+
+        const validCategory = QUIZ_CATEGORIES.includes(q.category) ? q.category : category;
+        const validDifficulty = Math.max(1, Math.min(10, q.difficulty || target.difficulty));
+
+        const { error: insertError } = await supabase.from('quiz_questions').insert({
+          category: validCategory,
+          difficulty: validDifficulty,
+          question: q.question,
+          options: dbOptions,
+          correct_answer: correctAnswer,
+          explanation: q.explanation,
+          wrong_explanations: q.wrong_explanations,
+        });
+
+        if (!insertError) {
+          inserted++;
+        } else {
+          console.error('[Quiz Gen] Insert error:', insertError.message);
+        }
+      }
+
+      console.log(`[Quiz Gen] Generated ${inserted} questions at difficulty ${target.difficulty} (pool was ${target.count})`);
+    }
+  } catch (err) {
+    console.error('[Quiz Gen] Error:', err);
+  }
+}
+
+// Check if auto-generation should trigger (every 10 global answers)
+async function maybeGenerateQuestions(env) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const { data: countData } = await supabase.rpc('get_global_answer_count');
+    const totalAnswers = typeof countData === 'number' ? countData : parseInt(countData, 10) || 0;
+
+    // Generate every 10 answers
+    if (totalAnswers > 0 && totalAnswers % 10 === 0) {
+      // Fire and forget — don't block the response
+      generateQuizQuestions(env, 10).catch(err => {
+        console.error('[Quiz Gen] Background generation failed:', err);
+      });
+    }
+  } catch (err) {
+    console.error('[Quiz Gen] Check error:', err);
   }
 }
