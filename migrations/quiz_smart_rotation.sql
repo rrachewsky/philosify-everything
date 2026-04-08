@@ -36,3 +36,34 @@ STABLE
 AS $$
   SELECT COUNT(*) FROM quiz_answers;
 $$;
+
+-- ============================================================
+-- QUIZ: Regional culture questions
+-- At least 2 out of every 10 questions must be region-specific.
+-- ============================================================
+
+-- Add region column (nullable — NULL = universal/global question)
+ALTER TABLE quiz_questions ADD COLUMN IF NOT EXISTS region TEXT;
+
+-- Index for fetching region-specific questions
+CREATE INDEX IF NOT EXISTS idx_quiz_questions_region 
+  ON quiz_questions(region, difficulty) WHERE active = true AND region IS NOT NULL;
+
+-- Fetch a random question for a specific region + difficulty
+CREATE OR REPLACE FUNCTION get_quiz_question_for_region(
+  p_difficulty INTEGER,
+  p_region TEXT,
+  p_excluded_ids UUID[]
+)
+RETURNS quiz_questions
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT * FROM quiz_questions
+  WHERE active = true
+    AND difficulty = p_difficulty
+    AND region = p_region
+    AND id != ALL(p_excluded_ids)
+  ORDER BY random()
+  LIMIT 1;
+$$;

@@ -82,6 +82,126 @@ async function getExcludedQuestionIds(supabase, userId, sessionAnsweredIds = [])
 }
 
 // ============================================================
+// HELPER: Map user language to philosophical/cultural region
+// ============================================================
+const LANG_TO_REGION = {
+  pt: 'lusophone',       // Brazil, Portugal — Portuguese-speaking world
+  es: 'hispanic',        // Spain, Latin America
+  fr: 'francophone',     // France, French-speaking world
+  de: 'germanic',        // Germany, Austria, Switzerland (German)
+  it: 'italian',         // Italy, Renaissance heritage
+  ru: 'russian',         // Russia, Eastern Europe
+  ja: 'japanese',        // Japan
+  ko: 'korean',          // Korea
+  zh: 'chinese',         // China, Chinese-speaking world
+  ar: 'arab',            // Arabic-speaking world, Islamic philosophy
+  fa: 'persian',         // Iran, Persian philosophy
+  he: 'jewish',          // Israel, Jewish philosophy
+  hi: 'indian',          // India, Hindu/Buddhist philosophy
+  tr: 'turkish',         // Turkey, Ottoman heritage
+  pl: 'polish',          // Poland
+  nl: 'dutch',           // Netherlands
+  hu: 'hungarian',       // Hungary
+  en: 'anglophone',      // English-speaking world (US, UK, Australia)
+};
+
+// Cultural context for each region (used in AI generation prompts)
+const REGION_CONTEXT = {
+  lusophone: 'Brazilian and Portuguese philosophy: Machado de Assis, Fernando Pessoa, Paulo Freire, Gilberto Freyre, Sérgio Buarque de Holanda, Olavo de Carvalho, Portuguese Age of Discoveries, Lusotropicalism, saudade, Brazilian positivism, Liberation Theology in Latin America',
+  hispanic: 'Spanish and Latin American philosophy: Ortega y Gasset, Borges, Octavio Paz, Sor Juana Inés de la Cruz, Bartolomé de las Casas, Simón Bolívar, Mariátegui, philosophy of mestizaje, Salamanca School, Hispanic scholasticism, Latin American liberation philosophy',
+  francophone: 'French philosophy: Descartes, Voltaire, Rousseau, Sartre, Beauvoir, Camus, Foucault, Derrida, Montaigne, Pascal, French Enlightenment, existentialism, structuralism, poststructuralism, laïcité, French Revolution ideals',
+  germanic: 'German and Austrian philosophy: Kant, Hegel, Marx, Nietzsche, Heidegger, Wittgenstein, Hayek, Popper, Frankfurt School, German Idealism, phenomenology, hermeneutics, Bildung, Mitteleuropa intellectual tradition',
+  italian: 'Italian philosophy: Machiavelli, Aquinas, Vico, Croce, Gramsci, Eco, Renaissance humanism, Roman Stoicism, Galileo and science vs. Church, Italian political thought, civic humanism',
+  russian: 'Russian philosophy: Dostoevsky, Tolstoy, Solzhenitsyn, Berdyaev, Solovyov, Herzen, Russian religious philosophy, nihilism in Russian literature, Soviet Marxism-Leninism, dissident thought, Slavophiles vs. Westernizers',
+  japanese: 'Japanese philosophy: Zen Buddhism, bushido, Nishida Kitaro, Watsuji Tetsuro, wabi-sabi, mono no aware, Kyoto School, samurai ethics, Japanese aesthetics, Dōgen, harmony (wa) in Japanese thought',
+  korean: 'Korean philosophy: Neo-Confucianism in Joseon dynasty, Yi Toegye, Yi Yulgok, Korean Buddhism, Donghak movement, Korean concept of jeong (deep emotional bond), han (collective sorrow), Korean ethics of filial piety',
+  chinese: 'Chinese philosophy: Confucius, Laozi, Zhuangzi, Mencius, Mozi, Han Fei, Zhu Xi, Wang Yangming, Daoism, Legalism, Neo-Confucianism, Chinese concept of ren (benevolence), li (ritual), dao (the Way)',
+  arab: 'Arab and Islamic philosophy: Al-Farabi, Avicenna, Averroes, Al-Ghazali, Ibn Khaldun, Islamic Golden Age, kalam (theology), falsafa (philosophy), Sufism, ijtihad, Mutazilites vs. Asharites',
+  persian: 'Persian philosophy: Zoroaster, Rumi, Hafez, Omar Khayyam, Suhrawardi, Mulla Sadra, Illumination philosophy, Persian Sufism, Persian poetry as philosophy, concept of fana (annihilation of self)',
+  jewish: 'Jewish philosophy: Maimonides, Spinoza, Buber, Levinas, Arendt, Philo of Alexandria, Talmudic reasoning, Kabbalah, Jewish ethics (tikkun olam), Holocaust philosophy, Zionist thought, Jewish existentialism',
+  indian: 'Indian philosophy: Vedanta, Buddhism, Jainism, Charvaka, Nyaya, Yoga, Gandhi, Tagore, Ambedkar, Sri Aurobindo, concept of dharma, karma, moksha, ahimsa, Indian debate traditions (shastrartha)',
+  turkish: 'Turkish and Ottoman philosophy: Ottoman intellectual tradition, Sufi orders, Kemalist modernization, Ziya Gökalp, Namık Kemal, Turkish synthesis of East and West, secular vs. religious identity',
+  polish: 'Polish philosophy: Copernicus, Twardowski, Lwów-Warsaw School, Kołakowski, Wojtyła (John Paul II), Polish Romanticism (Mickiewicz), Solidarity movement, Polish messianism, Jan Patočka influence',
+  dutch: 'Dutch philosophy: Spinoza, Erasmus, Grotius, Dutch Golden Age thought, tolerance and pluralism, Dutch Reformed tradition, Huizinga, concept of gezelligheid, Dutch pragmatic liberalism',
+  hungarian: 'Hungarian philosophy: Lukács, Polányi, Lakatos, Hungarian contributions to Vienna Circle, Budapest School, Hungarian liberalism, Bibó István on political hysteria, Central European intellectual tradition',
+  anglophone: 'Anglo-American philosophy: Locke, Hume, Mill, American Founders, Emerson, Thoreau, pragmatism (James, Dewey, Peirce), analytic philosophy, Ayn Rand, common law tradition, individual rights',
+};
+
+function getRegionForLang(lang) {
+  if (!lang) return 'anglophone';
+  const base = lang.split('-')[0].toLowerCase();
+  return LANG_TO_REGION[base] || 'anglophone';
+}
+
+// Fetch a regional question, falling back to universal if none available
+async function getRegionalQuestion(supabase, difficulty, region, excludedIds) {
+  // Try region-specific first
+  const { data: regionalData } = await supabase
+    .rpc('get_quiz_question_for_region', {
+      p_difficulty: difficulty,
+      p_region: region,
+      p_excluded_ids: excludedIds,
+    });
+  const regional = Array.isArray(regionalData) ? regionalData[0] : regionalData;
+  if (regional?.question) return regional;
+
+  // Relax difficulty: try adjacent levels for regional
+  for (let offset = 1; offset <= 3; offset++) {
+    for (const diff of [difficulty + offset, difficulty - offset].filter(d => d >= 1 && d <= 10)) {
+      const { data: fallbackData } = await supabase
+        .rpc('get_quiz_question_for_region', {
+          p_difficulty: diff,
+          p_region: region,
+          p_excluded_ids: excludedIds,
+        });
+      const fallback = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
+      if (fallback?.question) return fallback;
+    }
+  }
+
+  // No regional question available at all — return null (caller will use universal)
+  return null;
+}
+
+// Determine if the current question position should be regional (2 out of 10)
+// Positions 3 and 7 (0-indexed) are regional slots
+function shouldBeRegional(questionNumber) {
+  const pos = (questionNumber || 0) % 10;
+  return pos === 2 || pos === 6; // 3rd and 7th questions in each block of 10
+}
+
+// Smart question fetcher: picks regional or universal based on position
+async function fetchNextQuestion(supabase, difficulty, lang, excludedIds, questionNumber) {
+  const region = getRegionForLang(lang);
+
+  // Try regional question at positions 3 and 7
+  if (shouldBeRegional(questionNumber)) {
+    const regional = await getRegionalQuestion(supabase, difficulty, region, excludedIds);
+    if (regional) return regional;
+    // Fall through to universal if no regional available
+  }
+
+  // Universal question (or regional fallback)
+  const { data: questionData, error: questionError } = await supabase
+    .rpc('get_quiz_question', { p_difficulty: difficulty, p_excluded_ids: excludedIds });
+  let question = Array.isArray(questionData) ? questionData[0] : questionData;
+
+  if (questionError || !question) {
+    // Try adjacent difficulties
+    for (let offset = 1; offset <= 3 && !question; offset++) {
+      for (const diff of [difficulty - offset, difficulty + offset].filter(d => d >= 1 && d <= 10)) {
+        const { data: fallbackData } = await supabase
+          .rpc('get_quiz_question', { p_difficulty: diff, p_excluded_ids: excludedIds });
+        const q = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
+        if (q?.question) { question = q; break; }
+      }
+    }
+  }
+
+  return question;
+}
+
+// ============================================================
 // HELPER: Runtime AI translation via Gemini
 // ============================================================
 async function translateQuestionWithAI(question, lang, env) {
@@ -330,11 +450,9 @@ export async function handleQuizStart(request, env) {
 
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId);
 
-    const { data: questionData, error: questionError } = await supabase
-      .rpc('get_quiz_question', { p_difficulty: 1, p_excluded_ids: allExcluded });
-    const question = Array.isArray(questionData) ? questionData[0] : questionData;
+    const question = await fetchNextQuestion(supabase, 1, lang, allExcluded, 0);
 
-    if (questionError || !question) {
+    if (!question) {
       return errorResponse('No questions available', 500, origin, env);
     }
 
@@ -488,7 +606,7 @@ export async function handleQuizAnswer(request, env) {
     await supabase.from('quiz_sessions').update(updateData, `id=eq.${sessionId}`);
 
     // Fire-and-forget: check if we should auto-generate new questions
-    maybeGenerateQuestions(env);
+    maybeGenerateQuestions(env, lang);
 
     const wrongExplanation = await getTranslatedExplanation(question, lang, false, wrongKey, env);
     const correctExplanation = await getTranslatedExplanation(question, lang, true, wrongKey, env);
@@ -562,21 +680,10 @@ export async function handleQuizContinue(request, env) {
     await confirmReservation(env, reservation.reservationId, `quiz:continue:${sessionId}`);
 
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
+    const questionNum = (session.answered_question_ids || []).length;
 
-    const { data: questionData, error: questionError } = await supabase
-      .rpc('get_quiz_question', { p_difficulty: session.current_difficulty, p_excluded_ids: allExcluded });
-
-    let nextQuestion = Array.isArray(questionData) ? questionData[0] : questionData;
-
-    if (questionError || !nextQuestion) {
-      const { data: fallbackData } = await supabase
-        .rpc('get_quiz_question', {
-          p_difficulty: Math.max(1, session.current_difficulty - 1),
-          p_excluded_ids: allExcluded,
-        });
-      nextQuestion = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
-      if (!nextQuestion) return errorResponse('No more questions available', 500, origin, env);
-    }
+    const nextQuestion = await fetchNextQuestion(supabase, session.current_difficulty, lang, allExcluded, questionNum);
+    if (!nextQuestion) return errorResponse('No more questions available', 500, origin, env);
 
     const translatedOptions = await getTranslatedOptions(nextQuestion, lang, env);
     const translatedText = await getTranslatedText(nextQuestion, lang, env);
@@ -652,22 +759,9 @@ export async function handleQuizNextQuestion(request, env) {
     if (!session) return errorResponse('No active session', 400, origin, env);
 
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
+    const questionNum = (session.answered_question_ids || []).length;
 
-    let question = null;
-    const targetDiff = session.current_difficulty;
-
-    for (let offset = 0; offset <= 5 && !question; offset++) {
-      const diffs = offset === 0
-        ? [targetDiff]
-        : [targetDiff + offset, targetDiff - offset].filter(d => d >= 1 && d <= 10);
-
-      for (const diff of diffs) {
-        const { data: qData, error: qError } = await supabase
-          .rpc('get_quiz_question', { p_difficulty: diff, p_excluded_ids: allExcluded });
-        const q = Array.isArray(qData) ? qData[0] : qData;
-        if (!qError && q?.question) { question = q; break; }
-      }
-    }
+    const question = await fetchNextQuestion(supabase, session.current_difficulty, lang, allExcluded, questionNum);
 
     if (!question) return errorResponse('No questions available', 500, origin, env);
 
@@ -745,21 +839,9 @@ export async function handleQuizResume(request, env) {
 
     if (session.status === 'active') {
       const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
+      const questionNum = (session.answered_question_ids || []).length;
 
-      let question = null;
-      const targetDiff = session.current_difficulty;
-
-      for (let offset = 0; offset <= 5 && !question; offset++) {
-        const diffs = offset === 0
-          ? [targetDiff]
-          : [targetDiff + offset, targetDiff - offset].filter(d => d >= 1 && d <= 10);
-        for (const diff of diffs) {
-          const { data: qData, error: qError } = await supabase
-            .rpc('get_quiz_question', { p_difficulty: diff, p_excluded_ids: allExcluded });
-          const q = Array.isArray(qData) ? qData[0] : qData;
-          if (!qError && q?.question) { question = q; break; }
-        }
-      }
+      const question = await fetchNextQuestion(supabase, session.current_difficulty, lang, allExcluded, questionNum);
 
       if (question) {
         const translatedOptions = await getTranslatedOptions(question, lang, env);
@@ -1140,8 +1222,119 @@ RULES:
   }
 }
 
+// Generate region-specific questions for a given region
+async function generateRegionalQuestions(env, region, count = 4) {
+  const context = REGION_CONTEXT[region];
+  if (!context) return;
+
+  try {
+    const apiKey = await getSecret(env.GEMINI_API_KEY);
+    if (!apiKey) return;
+
+    const supabase = await getServiceSupabase(env);
+
+    const prompt = `Generate ${count} unique philosophy quiz questions specifically about ${region} cultural and philosophical traditions.
+
+REGIONAL FOCUS — these questions MUST be about:
+${context}
+
+DIFFICULTY: Mix of levels 1-6 (accessible to a broad audience).
+
+CATEGORIES (pick a mix): ${QUIZ_CATEGORIES.join(', ')}
+
+IMPORTANT: Questions must be about philosophers, thinkers, ideas, literary figures, historical events, or cultural concepts SPECIFIC to this region. Not generic philosophy that happens to mention the region.
+
+FORMAT: Return a JSON array. Each element must have exactly these fields:
+{
+  "category": "one of the categories above",
+  "difficulty": 3,
+  "question": "The question text in English",
+  "options": [
+    {"text": "Option A text", "correct": true},
+    {"text": "Option B text"},
+    {"text": "Option C text"},
+    {"text": "Option D text"}
+  ],
+  "explanation": "Detailed explanation shown after correct answer (2-3 sentences)",
+  "wrong_explanations": {
+    "1": "Why option B is wrong",
+    "2": "Why option C is wrong",
+    "3": "Why option D is wrong"
+  }
+}
+
+RULES:
+- Exactly 4 options per question, exactly 1 correct
+- Questions must be factually accurate and culturally respectful
+- Wrong explanations must be educational
+- Return ONLY the JSON array, no markdown fences`;
+
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+    const res = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.8, maxOutputTokens: 8192 },
+      }),
+    });
+
+    if (!res.ok) {
+      console.error('[Quiz Gen Regional] Gemini API error:', res.status);
+      return;
+    }
+
+    const data = await res.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const jsonStr = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    let questions;
+    try {
+      questions = JSON.parse(jsonStr);
+    } catch (parseErr) {
+      console.error('[Quiz Gen Regional] Failed to parse:', parseErr.message);
+      return;
+    }
+
+    if (!Array.isArray(questions)) return;
+
+    let inserted = 0;
+    for (const q of questions) {
+      if (!q.question || !q.options || !Array.isArray(q.options) || q.options.length !== 4) continue;
+      if (!q.explanation || !q.wrong_explanations) continue;
+
+      const correctIdx = q.options.findIndex(o => o.correct);
+      if (correctIdx < 0) continue;
+
+      const correctAnswer = String(correctIdx);
+      const dbOptions = q.options.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
+      const validCategory = QUIZ_CATEGORIES.includes(q.category) ? q.category : 'history';
+      const validDifficulty = Math.max(1, Math.min(10, q.difficulty || 3));
+
+      const { error: insertError } = await supabase.from('quiz_questions').insert({
+        category: validCategory,
+        difficulty: validDifficulty,
+        question: q.question,
+        options: dbOptions,
+        correct_answer: correctAnswer,
+        explanation: q.explanation,
+        wrong_explanations: q.wrong_explanations,
+        region: region,
+      });
+
+      if (!insertError) inserted++;
+    }
+
+    console.log(`[Quiz Gen Regional] Generated ${inserted} questions for ${region}`);
+  } catch (err) {
+    console.error('[Quiz Gen Regional] Error:', err);
+  }
+}
+
 // Check if auto-generation should trigger (every 10 global answers)
-async function maybeGenerateQuestions(env) {
+// Also generates regional questions for the user's region
+async function maybeGenerateQuestions(env, lang) {
   try {
     const supabase = await getServiceSupabase(env);
     const { data: countData } = await supabase.rpc('get_global_answer_count');
@@ -1150,7 +1343,12 @@ async function maybeGenerateQuestions(env) {
     // Generate every 10 answers
     if (totalAnswers > 0 && totalAnswers % 10 === 0) {
       // Fire and forget — don't block the response
-      generateQuizQuestions(env, 10).catch(err => {
+      // Generate 6 universal + 4 regional questions
+      const region = getRegionForLang(lang);
+      Promise.all([
+        generateQuizQuestions(env, 6),
+        generateRegionalQuestions(env, region, 4),
+      ]).catch(err => {
         console.error('[Quiz Gen] Background generation failed:', err);
       });
     }
