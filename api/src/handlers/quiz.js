@@ -170,24 +170,64 @@ function shouldBeRegional(questionNumber) {
   return pos === 2 || pos === 6; // 3rd and 7th questions in each block of 10
 }
 
-// Smart question fetcher: picks regional or universal based on position
+// Determine if the current question should be about Objectivism (1 out of 10)
+// Position 5 (0-indexed = the 5th question) is the Objectivism slot
+function shouldBeObjectivism(questionNumber) {
+  const pos = (questionNumber || 0) % 10;
+  return pos === 4; // 5th question in each block of 10
+}
+
+// Fetch an Objectivism-tagged question, relaxing difficulty if needed
+async function getObjectivismQuestion(supabase, difficulty, excludedIds) {
+  const { data: objData } = await supabase
+    .rpc('get_quiz_question_objectivism', {
+      p_difficulty: difficulty,
+      p_excluded_ids: excludedIds,
+    });
+  const obj = Array.isArray(objData) ? objData[0] : objData;
+  if (obj?.question) return obj;
+
+  // Relax difficulty
+  for (let offset = 1; offset <= 5; offset++) {
+    for (const diff of [difficulty - offset, difficulty + offset].filter(d => d >= 1 && d <= 10)) {
+      const { data: fallbackData } = await supabase
+        .rpc('get_quiz_question_objectivism', {
+          p_difficulty: diff,
+          p_excluded_ids: excludedIds,
+        });
+      const fallback = Array.isArray(fallbackData) ? fallbackData[0] : fallbackData;
+      if (fallback?.question) return fallback;
+    }
+  }
+
+  return null;
+}
+
+// Smart question fetcher: picks Objectivism, regional, or universal based on position
+// Distribution per 10 questions: 1 Objectivism (pos 5) + 2 regional (pos 3, 7) + 7 universal
 async function fetchNextQuestion(supabase, difficulty, lang, excludedIds, questionNumber) {
   const region = getRegionForLang(lang);
 
-  // Try regional question at positions 3 and 7
+  // Position 5: Objectivism question
+  if (shouldBeObjectivism(questionNumber)) {
+    const objQuestion = await getObjectivismQuestion(supabase, difficulty, excludedIds);
+    if (objQuestion) return objQuestion;
+    // Fall through to universal if no Objectivism question available
+  }
+
+  // Positions 3 and 7: Regional question
   if (shouldBeRegional(questionNumber)) {
     const regional = await getRegionalQuestion(supabase, difficulty, region, excludedIds);
     if (regional) return regional;
     // Fall through to universal if no regional available
   }
 
-  // Universal question (or regional fallback)
+  // Universal question (fallback for all slots)
   const { data: questionData, error: questionError } = await supabase
     .rpc('get_quiz_question', { p_difficulty: difficulty, p_excluded_ids: excludedIds });
   let question = Array.isArray(questionData) ? questionData[0] : questionData;
 
   if (questionError || !question) {
-    // Try adjacent difficulties
     for (let offset = 1; offset <= 3 && !question; offset++) {
       for (const diff of [difficulty - offset, difficulty + offset].filter(d => d >= 1 && d <= 10)) {
         const { data: fallbackData } = await supabase
@@ -1332,8 +1372,137 @@ RULES:
   }
 }
 
+// Generate Objectivism-specific questions
+// Sources: Ayn Rand's works, Objectivist philosophers, Bob Rach's songs, "O Grego, O Frade e a Heroína"
+async function generateObjectivismQuestions(env, count = 3) {
+  try {
+    const apiKey = await getSecret(env.GEMINI_API_KEY);
+    if (!apiKey) return;
+
+    const supabase = await getServiceSupabase(env);
+
+    const prompt = `Generate ${count} unique quiz questions about Objectivism and related works.
+
+CORE SOURCES (mix questions from ALL of these):
+
+1. AYN RAND'S PHILOSOPHY & WORKS:
+- Atlas Shrugged: John Galt's speech, Dagny Taggart, Hank Rearden, Francisco d'Anconia's money speech, the motor of the world, "Who is John Galt?", the Gulch
+- The Fountainhead: Howard Roark, Ellsworth Toohey, Dominique Francon, the Cortlandt trial, second-handers vs creators
+- The Virtue of Selfishness: rational self-interest, the trader principle, individual rights
+- Capitalism: The Unknown Ideal, Introduction to Objectivist Epistemology
+- Key concepts: A is A (law of identity), existence exists, consciousness as identification, reason as man's only absolute, the virtue of productiveness, sacrifice = trading a greater value for a lesser one, hero vs martyr (reason vs faith)
+
+2. BOB RACH'S SONGS (Objectivist-themed music by Philosify's creator):
+- "Heroine" — celebrates the Randian heroine archetype: a woman of reason, independence, and productive achievement; the rational woman who lives by her own judgment rather than others' approval
+- "My Life is Mine" — anthem of individual sovereignty and self-ownership; rejects sacrifice of self to collective; echoes Roark's "I came here to say that I do not recognize anyone's right to one minute of my life"
+- "Blank Slate" — challenges the tabula rasa / blank slate myth; argues humans have a specific nature (volitional, rational); references Steven Pinker's critique and Rand's view that man has an identity
+- Other songs explore themes of: virtuous self-interest, the producer vs the looter, romantic love as a response to values, the heroic in everyday life
+
+3. "O GREGO, O FRADE E A HEROÍNA" (The Greek, The Friar, and The Heroine):
+- A book exploring the fundamental distinction between animal instinct and human reason
+- Animals operate by instinct (automatic, deterministic); humans operate by reason (volitional, conceptual)
+- The "Greek" represents Aristotle and the rational tradition; the "Friar" represents medieval faith/mysticism; the "Heroine" represents the Objectivist ideal
+- Central thesis: applying the word "instinct" to humans is a philosophical error that denies man's rational nature
+- Key themes: reason vs faith, free will vs determinism, individual identity, the heroic human
+
+4. OBJECTIVIST THINKERS: Leonard Peikoff (OPAR), Yaron Brook, Tara Smith, Harry Binswanger, David Kelley, Stephen Hicks (Explaining Postmodernism), Andrew Bernstein, Craig Biddle, Nathaniel Branden (psychology of self-esteem)
+
+DIFFICULTY: Mix of levels 1-6.
+
+CATEGORIES: ethics, epistemology, aesthetics, music, applied, quotes
+
+FORMAT: Return a JSON array. Each element:
+{
+  "category": "one of the categories above",
+  "difficulty": 3,
+  "question": "The question text in English",
+  "options": [
+    {"text": "Option A text", "correct": true},
+    {"text": "Option B text"},
+    {"text": "Option C text"},
+    {"text": "Option D text"}
+  ],
+  "explanation": "Detailed explanation (2-3 sentences)",
+  "wrong_explanations": {
+    "1": "Why option B is wrong",
+    "2": "Why option C is wrong",
+    "3": "Why option D is wrong"
+  }
+}
+
+RULES:
+- At least 1 question must reference Bob Rach's songs or "O Grego, O Frade e a Heroína"
+- Questions must be factually accurate about Objectivism
+- Use "virtuous self-interest" NOT "rational egoism"
+- Sacrifice = trading a greater value for a lesser value (not all trade-offs)
+- Hero vs Martyr distinction: hero acts by reason, martyr acts by faith
+- Return ONLY the JSON array, no markdown fences`;
+
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+    const res = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.8, maxOutputTokens: 8192 },
+      }),
+    });
+
+    if (!res.ok) {
+      console.error('[Quiz Gen Objectivism] Gemini API error:', res.status);
+      return;
+    }
+
+    const data = await res.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const jsonStr = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    let questions;
+    try {
+      questions = JSON.parse(jsonStr);
+    } catch (parseErr) {
+      console.error('[Quiz Gen Objectivism] Failed to parse:', parseErr.message);
+      return;
+    }
+
+    if (!Array.isArray(questions)) return;
+
+    let inserted = 0;
+    for (const q of questions) {
+      if (!q.question || !q.options || !Array.isArray(q.options) || q.options.length !== 4) continue;
+      if (!q.explanation || !q.wrong_explanations) continue;
+
+      const correctIdx = q.options.findIndex(o => o.correct);
+      if (correctIdx < 0) continue;
+
+      const correctAnswer = String(correctIdx);
+      const dbOptions = q.options.map(o => ({ text: o.text, ...(o.correct ? { correct: true } : {}) }));
+      const validCategory = QUIZ_CATEGORIES.includes(q.category) ? q.category : 'ethics';
+      const validDifficulty = Math.max(1, Math.min(10, q.difficulty || 3));
+
+      const { error: insertError } = await supabase.from('quiz_questions').insert({
+        category: validCategory,
+        difficulty: validDifficulty,
+        question: q.question,
+        options: dbOptions,
+        correct_answer: correctAnswer,
+        explanation: q.explanation,
+        wrong_explanations: q.wrong_explanations,
+        region: 'objectivism',
+      });
+
+      if (!insertError) inserted++;
+    }
+
+    console.log(`[Quiz Gen Objectivism] Generated ${inserted} questions`);
+  } catch (err) {
+    console.error('[Quiz Gen Objectivism] Error:', err);
+  }
+}
+
 // Check if auto-generation should trigger (every 10 global answers)
-// Also generates regional questions for the user's region
+// Generates: 5 universal + 3 regional + 2 objectivism questions
 async function maybeGenerateQuestions(env, lang) {
   try {
     const supabase = await getServiceSupabase(env);
@@ -1342,12 +1511,12 @@ async function maybeGenerateQuestions(env, lang) {
 
     // Generate every 10 answers
     if (totalAnswers > 0 && totalAnswers % 10 === 0) {
-      // Fire and forget — don't block the response
-      // Generate 6 universal + 4 regional questions
       const region = getRegionForLang(lang);
+      // Fire and forget — don't block the response
       Promise.all([
-        generateQuizQuestions(env, 6),
-        generateRegionalQuestions(env, region, 4),
+        generateQuizQuestions(env, 5),
+        generateRegionalQuestions(env, region, 3),
+        generateObjectivismQuestions(env, 2),
       ]).catch(err => {
         console.error('[Quiz Gen] Background generation failed:', err);
       });
