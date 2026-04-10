@@ -707,14 +707,25 @@ export async function handleAgencyPayout(request, env, corsHeaders) {
       return jsonResponse({ error: 'Minimum payout is $100' }, 400, corsHeaders);
     }
 
-    // In production, this would trigger a Stripe payout
-    // For now, just record the request
+    const body = await request.json().catch(() => ({}));
+    const requestedAmount = body.amount_cents || agency.balance_cents;
+
+    if (requestedAmount > agency.balance_cents) {
+      return jsonResponse({ error: 'Insufficient balance' }, 400, corsHeaders);
+    }
+    if (requestedAmount < 10000) {
+      return jsonResponse({ error: 'Minimum payout is $100' }, 400, corsHeaders);
+    }
+
+    // Create payout record — admin processes via Stripe dashboard or bank transfer
     const { data: payout, error } = await supabase
       .from('ads.agency_payouts')
       .insert({
         agency_id: agency.id,
-        amount_cents: agency.balance_cents,
+        amount_cents: requestedAmount,
         status: 'pending',
+        payout_method: body.payout_method || 'bank_transfer',
+        payout_details: body.payout_details || null,
       });
 
     if (error) {
@@ -722,13 +733,55 @@ export async function handleAgencyPayout(request, env, corsHeaders) {
       return jsonResponse({ error: 'Failed to request payout' }, 500, corsHeaders);
     }
 
-    // Reset balance (will be restored if payout fails)
+    // Deduct from balance
+    const newBalance = agency.balance_cents - requestedAmount;
     await supabase.from('ads.agencies').update(
-      { balance_cents: 0, updated_at: new Date().toISOString() },
+      { balance_cents: newBalance, updated_at: new Date().toISOString() },
       `id=eq.${agency.id}`
     );
 
-    return jsonResponse({ success: true, payout }, 200, corsHeaders);
+    // Record transaction
+    await supabase.from('ads.agency_transactions').insert({
+      agency_id: agency.id,
+      type: 'payout',
+      amount_cents: -requestedAmount,
+      balance_after_cents: newBalance,
+      description: `Payout request: $${(requestedAmount / 100).toFixed(2)}`,
+    });
+
+    // Send notification email to admin for processing
+    try {
+      const { getSecret } = await import('../../utils/secrets.js');
+      const resendKey = await getSecret(env.RESEND_API_KEY);
+      if (resendKey) {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            from: 'Philosify Ads <ads@philosify.org>',
+            to: ['admin@philosify.org'],
+            subject: `Agency Payout Request: $${(requestedAmount / 100).toFixed(2)}`,
+            text: `Agency "${agency.company_name}" (${agency.email}) has requested a payout of $${(requestedAmount / 100).toFixed(2)}.
+
+Method: ${body.payout_method || 'bank_transfer'}
+Agency ID: ${agency.id}
+
+Please process in Stripe dashboard or via bank transfer.`,
+          }),
+        });
+      }
+    } catch (emailErr) {
+      console.warn('[Agency] Payout notification email failed:', emailErr.message);
+    }
+
+    return jsonResponse({
+      success: true,
+      payout_id: payout?.id,
+      amount_cents: requestedAmount,
+      new_balance_cents: newBalance,
+      status: 'pending',
+      message: 'Payout request submitted. Processing typically takes 3-5 business days.',
+    }, 200, corsHeaders);
   } catch (err) {
     console.error('[Agency] Payout request error:', err);
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);

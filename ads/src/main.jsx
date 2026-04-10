@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@contexts/AuthContext';
 import { AdminProvider } from '@contexts/AdminContext';
+import { AgencyProvider } from '@contexts/AgencyContext';
 import App from './App';
 import '@styles/global.css';
 
@@ -9,7 +10,9 @@ createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <AuthProvider>
       <AdminProvider>
-        <App />
+        <AgencyProvider>
+          <App />
+        </AgencyProvider>
       </AdminProvider>
     </AuthProvider>
   </BrowserRouter>

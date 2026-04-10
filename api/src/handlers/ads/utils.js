@@ -152,12 +152,14 @@ export function isValidUrl(url) {
 }
 
 /**
- * Get CPM for placement/duration
+ * Get CPM for placement/duration (fallback values — DB pricing_config is source of truth)
+ * These must match inventory.js DEFAULT_CPM and the pricing_config table
  */
+export const DEFAULT_CPM = {
+  sidebar: { 5: 600, 10: 800, 15: 1000, 20: 1200 },
+  constellation: { 5: 400 },
+};
+
 export function getCpmCents(placement, duration) {
-  const pricing = {
-    sidebar: { 5: 1000, 10: 2000, 15: 3000, 20: 4000 },
-    constellation: { 5: 800 },
-  };
-  return pricing[placement]?.[duration] || null;
+  return DEFAULT_CPM[placement]?.[duration] || null;
 }

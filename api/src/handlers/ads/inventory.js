@@ -329,11 +329,8 @@ export async function handleCalculateCart(request, env, corsHeaders) {
 
     const supabase = await getServiceSupabase(env);
 
-    // Default CPM values (fallback if DB not available)
-    const defaultCpm = {
-      sidebar: { 5: 600, 10: 800, 15: 1000, 20: 1200 },
-      constellation: { 5: 400 },
-    };
+    // Default CPM values (fallback if DB not available) — must match utils.js DEFAULT_CPM
+    const { DEFAULT_CPM: defaultCpm } = await import('./utils.js');
 
     // Get all pricing from DB
     const { data: pricingData } = await supabase

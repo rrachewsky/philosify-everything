@@ -16,6 +16,62 @@ import { getSecret } from '../../utils/secrets.js';
 
 // Token expiration (5 minutes - enough time for ad to display)
 const TOKEN_EXPIRY_MS = 5 * 60 * 1000;
+// Frequency cap: max impressions per order per user per day
+const FREQUENCY_CAP_PER_DAY = 3;
+
+/**
+ * Client-side targeting match (mirrors ads.user_matches_targeting DB function)
+ * Used as fallback when RPC is unavailable
+ */
+function matchTargeting(targeting, profile) {
+  if (!targeting || Object.keys(targeting).length === 0) return true;
+  if (!profile) return true; // No profile = show to everyone (untargeted)
+
+  // Genre matching
+  if (targeting.genres?.length > 0 && profile.genres?.length > 0) {
+    const overlap = targeting.genres.some(g => profile.genres.includes(g));
+    if (!overlap) return false;
+  }
+
+  // Philosophy matching
+  if (targeting.philosophies?.length > 0 && profile.philosophies?.length > 0) {
+    const overlap = targeting.philosophies.some(p => profile.philosophies.includes(p));
+    if (!overlap) return false;
+  }
+
+  // Language matching
+  if (targeting.languages?.length > 0 && profile.languages?.length > 0) {
+    const overlap = targeting.languages.some(l => profile.languages.includes(l));
+    if (!overlap) return false;
+  }
+
+  // Engagement matching
+  if (targeting.engagement?.length > 0 && profile.engagement_level) {
+    if (!targeting.engagement.includes(profile.engagement_level)) return false;
+  }
+
+  // Country matching
+  if (targeting.countries?.length > 0 && profile.country_code) {
+    if (!targeting.countries.includes(profile.country_code)) return false;
+  }
+
+  // Region matching
+  if (targeting.regions?.length > 0 && profile.geo_region) {
+    if (!targeting.regions.includes(profile.geo_region)) return false;
+  }
+
+  // US state matching
+  if (targeting.us_states?.length > 0 && profile.country_code === 'US' && profile.region_code) {
+    if (!targeting.us_states.includes(profile.region_code)) return false;
+  }
+
+  // BR state matching
+  if (targeting.br_states?.length > 0 && profile.country_code === 'BR' && profile.region_code) {
+    if (!targeting.br_states.includes(profile.region_code)) return false;
+  }
+
+  return true;
+}
 
 /**
  * Generate a signed impression token
@@ -144,8 +200,60 @@ export async function handleServeAd(request, env, corsHeaders) {
     const currentHour = now.getUTCHours();
     const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getUTCDay()];
 
-    // Find eligible orders
-    // Priority: scheduled orders first, then ASAP orders by creation date
+    // ============================================================
+    // AD SELECTION WITH TARGETING + FREQUENCY CAPPING
+    // ============================================================
+
+    // Try the database targeting function first (uses user profile for matching)
+    if (userId) {
+      try {
+        const { data: rpcResult, error: rpcError } = await supabase.rpc('ads.get_next_ad_for_user', {
+          p_user_id: userId,
+          p_placement: placement,
+        });
+        
+        if (!rpcError && rpcResult && rpcResult.length > 0) {
+          const match = rpcResult[0];
+          // Frequency cap check: max 3 impressions per order per user per day
+          const { data: recentImpressions } = await supabase
+            .from('ads.ad_impressions')
+            .select('id', {
+              filter: [
+                `order_id=eq.${match.id}`,
+                `user_id=eq.${userId}`,
+                `created_at=gte.${new Date().toISOString().split('T')[0]}`,
+              ].join('&'),
+            });
+
+          if (!recentImpressions || recentImpressions.length < 3) {
+            // Duration match check
+            if (!preferredDuration || match.duration === preferredDuration) {
+              const selectedOrder = match;
+              const impressionToken = await generateImpressionToken(env, selectedOrder.id, placement, selectedOrder.duration, ip);
+              return jsonResponse({
+                ad: {
+                  order_id: selectedOrder.id,
+                  creative_url: selectedOrder.creative_url,
+                  target_url: selectedOrder.target_url,
+                  duration: selectedOrder.duration,
+                  placement,
+                  impression_token: impressionToken,
+                },
+              }, 200, corsHeaders);
+            }
+          }
+        }
+      } catch (rpcErr) {
+        console.warn('[Ads] RPC targeting failed, falling back to manual:', rpcErr.message);
+      }
+    }
+
+    // Fallback: manual query (for unauthenticated users or when RPC fails)
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const currentHour = now.getUTCHours();
+    const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getUTCDay()];
+
     const { data: orders, error } = await supabase
       .from('ads.ad_orders')
       .select(`
@@ -155,6 +263,7 @@ export async function handleServeAd(request, env, corsHeaders) {
         target_url,
         duration,
         placement,
+        targeting,
         schedule_type,
         start_date,
         end_date,
@@ -167,7 +276,7 @@ export async function handleServeAd(request, env, corsHeaders) {
           'status=eq.active',
           'creative_status=eq.ready',
         ].join('&'),
-        order: 'schedule_type.asc,created_at.asc', // scheduled first, then ASAP by age
+        order: 'schedule_type.asc,created_at.asc',
       });
 
     if (error) {
@@ -179,27 +288,26 @@ export async function handleServeAd(request, env, corsHeaders) {
       return jsonResponse({ ad: null, reason: 'no_ads_available' }, 200, corsHeaders);
     }
 
-    // Find first eligible order
+    // Get user profile for targeting (if userId provided)
+    let userProfile = null;
+    if (userId) {
+      const { data: profiles } = await supabase
+        .from('ads.user_profiles')
+        .select('*', { filter: `user_id=eq.${userId}`, limit: 1 });
+      userProfile = profiles?.[0] || null;
+    }
+
+    // Find first eligible order with targeting + frequency cap
     let selectedOrder = null;
     for (const order of orders) {
-      // Check if still has impressions to deliver
-      if (order.impressions_delivered >= order.impressions_ordered) {
-        continue;
-      }
+      if (order.impressions_delivered >= order.impressions_ordered) continue;
 
-      // Check schedule
+      // Schedule check
       if (order.schedule_type === 'scheduled') {
-        // Check date range
-        if (today < order.start_date || today > order.end_date) {
-          continue;
-        }
-
-        // Check time windows if any
+        if (today < order.start_date || today > order.end_date) continue;
         if (order.time_windows && order.time_windows.length > 0) {
           const inTimeWindow = order.time_windows.some(window => {
-            if (window.day && window.day !== dayOfWeek) {
-              return false;
-            }
+            if (window.day && window.day !== dayOfWeek) return false;
             if (window.start && window.end) {
               const startHour = parseInt(window.start.split(':')[0]);
               const endHour = parseInt(window.end.split(':')[0]);
@@ -207,27 +315,38 @@ export async function handleServeAd(request, env, corsHeaders) {
             }
             return true;
           });
-          if (!inTimeWindow) {
-            continue;
-          }
+          if (!inTimeWindow) continue;
         }
       }
 
-      // Check advertiser status
+      // Targeting check: if order has targeting AND we have a user profile, match them
+      if (order.targeting && Object.keys(order.targeting).length > 0 && userProfile) {
+        if (!matchTargeting(order.targeting, userProfile)) continue;
+      }
+
+      // Frequency cap: max 3 impressions per order per user per day
+      if (userId) {
+        const { data: recentImpressions } = await supabase
+          .from('ads.ad_impressions')
+          .select('id', {
+            filter: [
+              `order_id=eq.${order.id}`,
+              `user_id=eq.${userId}`,
+              `created_at=gte.${today}`,
+            ].join('&'),
+          });
+        if (recentImpressions && recentImpressions.length >= 3) continue;
+      }
+
+      // Advertiser status check
       const { data: advertisers } = await supabase
         .from('ads.advertisers')
         .select('status', { filter: `id=eq.${order.advertiser_id}` });
+      if (!advertisers || advertisers.length === 0 || advertisers[0].status !== 'approved') continue;
 
-      if (!advertisers || advertisers.length === 0 || advertisers[0].status !== 'approved') {
-        continue;
-      }
-
-      // If preferred duration specified, try to match
+      // Duration preference
       if (preferredDuration && order.duration !== preferredDuration) {
-        // Keep looking, but remember this as fallback
-        if (!selectedOrder) {
-          selectedOrder = order;
-        }
+        if (!selectedOrder) selectedOrder = order;
         continue;
       }
 
@@ -300,8 +419,11 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
     }
 
     const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const currentHour = now.getUTCHours();
+    const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getUTCDay()];
 
-    // Get active orders
+    // Get active orders (include targeting column)
     const { data: orders, error } = await supabase
       .from('ads.ad_orders')
       .select(`
@@ -310,11 +432,13 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
         creative_url,
         target_url,
         duration,
+        targeting,
         impressions_ordered,
         impressions_delivered,
         schedule_type,
         start_date,
-        end_date
+        end_date,
+        time_windows
       `, {
         filter: [
           `placement=eq.${placement}`,
@@ -328,7 +452,16 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
       return jsonResponse({ ads: [], reason: 'no_ads_available' }, 200, corsHeaders);
     }
 
-    // Select ads to fill the time slot
+    // Get user profile for targeting
+    let userProfile = null;
+    if (userId) {
+      const { data: profiles } = await supabase
+        .from('ads.user_profiles')
+        .select('*', { filter: `user_id=eq.${userId}`, limit: 1 });
+      userProfile = profiles?.[0] || null;
+    }
+
+    // Select ads to fill the time slot (with targeting + frequency cap)
     const selectedAds = [];
     let remainingDuration = totalDuration;
     const usedOrderIds = new Set();
@@ -338,11 +471,32 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
       if (usedOrderIds.has(order.id)) continue;
       if (order.impressions_delivered >= order.impressions_ordered) continue;
 
-      // Check schedule for scheduled orders
+      // Schedule check
       if (order.schedule_type === 'scheduled') {
-        if (today < order.start_date || today > order.end_date) {
-          continue;
+        if (today < order.start_date || today > order.end_date) continue;
+        if (order.time_windows && order.time_windows.length > 0) {
+          const inTimeWindow = order.time_windows.some(w => {
+            if (w.day && w.day !== dayOfWeek) return false;
+            if (w.start && w.end) {
+              return currentHour >= parseInt(w.start.split(':')[0]) && currentHour < parseInt(w.end.split(':')[0]);
+            }
+            return true;
+          });
+          if (!inTimeWindow) continue;
         }
+      }
+
+      // Targeting check
+      if (order.targeting && Object.keys(order.targeting).length > 0 && userProfile) {
+        if (!matchTargeting(order.targeting, userProfile)) continue;
+      }
+
+      // Frequency cap
+      if (userId) {
+        const { data: recentImps } = await supabase
+          .from('ads.ad_impressions')
+          .select('id', { filter: `order_id=eq.${order.id}&user_id=eq.${userId}&created_at=gte.${today}` });
+        if (recentImps && recentImps.length >= FREQUENCY_CAP_PER_DAY) continue;
       }
 
       // Check if ad duration fits
@@ -465,17 +619,19 @@ export async function handleRecordImpression(request, env, corsHeaders) {
       return jsonResponse({ error: 'Failed to record impression' }, 500, corsHeaders);
     }
 
-    // SECURITY: Use atomic increment to prevent race conditions on delivery count.
-    // Two concurrent impressions doing read-modify-write would lose one count.
-    // We use raw PostgREST RPC or a SET expression to atomically increment.
-    const newDelivered = order.impressions_delivered + 1;
-    const newStatus = newDelivered >= order.impressions_ordered ? 'completed' : order.status;
+    // Update delivery count. The nonce uniqueness check above prevents true duplicates.
+    // Recount from source of truth (ad_impressions table) to prevent drift from race conditions.
+    const { count: actualDelivered } = await supabase
+      .from('ads.ad_impressions')
+      .select('id', { count: 'exact', head: true })
+      .eq('order_id', order_id);
 
-    // Use Supabase update — the nonce uniqueness check above prevents true duplicates,
-    // and the delivery count is a denormalized counter that can be recalculated if needed.
+    const delivered = (actualDelivered ?? order.impressions_delivered) + 1;
+    const newStatus = delivered >= order.impressions_ordered ? 'completed' : order.status;
+
     await supabase.from('ads.ad_orders').update(
       {
-        impressions_delivered: newDelivered,
+        impressions_delivered: delivered,
         status: newStatus,
         updated_at: new Date().toISOString(),
       },

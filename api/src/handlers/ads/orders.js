@@ -151,6 +151,8 @@ export async function handleCreateOrder(request, env, corsHeaders) {
       // For Philosify-created creative
       creative_brief,
       creative_assets_url,
+      // Targeting criteria (optional)
+      targeting,
     } = body;
 
     // Validate required fields
@@ -262,6 +264,7 @@ export async function handleCreateOrder(request, env, corsHeaders) {
         creative_brief: creative_type === 'philosify' ? creative_brief : null,
         creative_assets_url: creative_type === 'philosify' ? creative_assets_url : null,
         creative_fee_cents: creativeFeeCents,
+        targeting: targeting || {},
         schedule_type,
         start_date: schedule_type === 'scheduled' ? start_date : null,
         end_date: schedule_type === 'scheduled' ? end_date : null,

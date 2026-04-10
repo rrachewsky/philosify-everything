@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Header from '@components/Header';
 import ProtectedRoute from '@components/ProtectedRoute';
 import AdminProtectedRoute from '@components/AdminProtectedRoute';
+import AgencyProtectedRoute from '@components/AgencyProtectedRoute';
 import Landing from '@pages/Landing';
 import Login from '@pages/Login';
 import Signup from '@pages/Signup';
@@ -15,6 +16,12 @@ import Policy from '@pages/Policy';
 import Settings from '@pages/Settings';
 import AdminLogin from '@pages/admin/AdminLogin';
 import AdminDashboard from '@pages/admin/AdminDashboard';
+import AgencyLogin from '@pages/agency/AgencyLogin';
+import AgencySignup from '@pages/agency/AgencySignup';
+import AgencyDashboard from '@pages/agency/AgencyDashboard';
+import AgencyClients from '@pages/agency/AgencyClients';
+import AgencyClientCampaigns from '@pages/agency/AgencyClientCampaigns';
+import AgencyEarnings from '@pages/agency/AgencyEarnings';
 
 function AdvertiserLayout({ children }) {
   return (
@@ -35,6 +42,17 @@ function AdminLayout({ children }) {
         <main className="app-main">{children}</main>
       </div>
     </AdminProtectedRoute>
+  );
+}
+
+function AgencyLayout({ children }) {
+  return (
+    <AgencyProtectedRoute>
+      <div className="app-shell app-shell--agency">
+        <Header agency />
+        <main className="app-main">{children}</main>
+      </div>
+    </AgencyProtectedRoute>
   );
 }
 
@@ -103,6 +121,15 @@ function App() {
           </AdvertiserLayout>
         }
       />
+
+      {/* Agency Routes */}
+      <Route path="/agency/login" element={<AgencyLogin />} />
+      <Route path="/agency/signup" element={<AgencySignup />} />
+      <Route path="/agency" element={<AgencyLayout><AgencyDashboard /></AgencyLayout>} />
+      <Route path="/agency/clients" element={<AgencyLayout><AgencyClients /></AgencyLayout>} />
+      <Route path="/agency/clients/new" element={<AgencyLayout><AgencyClients /></AgencyLayout>} />
+      <Route path="/agency/clients/:clientId/campaigns" element={<AgencyLayout><AgencyClientCampaigns /></AgencyLayout>} />
+      <Route path="/agency/earnings" element={<AgencyLayout><AgencyEarnings /></AgencyLayout>} />
 
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route

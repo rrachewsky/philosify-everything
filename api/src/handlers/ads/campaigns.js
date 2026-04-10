@@ -1,5 +1,10 @@
 // ============================================================
-// ADS PLATFORM - CAMPAIGN HANDLERS
+// ADS PLATFORM - CAMPAIGN HANDLERS (LEGACY)
+// ============================================================
+// NOTE: This is the original campaign system based on ad_campaigns table.
+// The primary system is now orders.js + planner.js using ad_orders/ad_plans.
+// Ad serving uses ad_orders exclusively.
+// These endpoints are kept for backward compatibility with the frontend.
 // ============================================================
 
 import { getServiceSupabase } from '../../utils/supabase.js';

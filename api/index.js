@@ -4129,9 +4129,24 @@ export default {
         return handleAdsStatsOverview(request, env, corsHeaders);
       }
 
-      // Ads Creative Upload (authenticated advertisers)
+      // Analytics & Reporting
+      if (url.pathname === "/api/ads/analytics/overview" && request.method === "GET") {
+        const { handleAnalyticsOverview } = await import("./src/handlers/ads/analytics.js");
+        return handleAnalyticsOverview(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/analytics/export" && request.method === "GET") {
+        const { handleAnalyticsExport } = await import("./src/handlers/ads/analytics.js");
+        return handleAnalyticsExport(request, env, corsHeaders);
+      }
+
+      // Ads Creative Upload/Delete (authenticated advertisers)
       if (url.pathname === "/api/ads/creatives/upload" && request.method === "POST") {
         return handleAdsUploadCreative(request, env, corsHeaders);
+      }
+      const creativeDeleteMatch = url.pathname.match(/^\/api\/ads\/creatives\/(.+)$/);
+      if (creativeDeleteMatch && request.method === "DELETE") {
+        const { handleDeleteCreative } = await import("./src/handlers/ads/creatives.js");
+        return handleDeleteCreative(request, env, corsHeaders, creativeDeleteMatch[1]);
       }
 
       // Inventory Management (public for browsing, auth for quotes)

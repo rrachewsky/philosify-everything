@@ -106,6 +106,12 @@ export {
   handleAdminApprovePlan,
 } from './admin.js';
 
+// Analytics & Reporting
+export {
+  handleAnalyticsOverview,
+  handleAnalyticsExport,
+} from './analytics.js';
+
 // Agency
 export {
   handleAgencySignup,
