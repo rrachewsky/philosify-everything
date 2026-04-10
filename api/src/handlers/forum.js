@@ -617,7 +617,7 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
 
             sendPushNotification(env, parent.user_id, {
               title: commenterName,
-              body: "Replied to your comment in the debate",
+              phraseKey: 'repliedComment',
               url: `/debate/${threadId}`,
               tag: `colloquium-comment-${threadId}`,
               type: "colloquium",

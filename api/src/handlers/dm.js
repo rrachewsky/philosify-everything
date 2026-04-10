@@ -798,15 +798,10 @@ export async function handleSendConversationMessage(
       userMetadata?.display_name ||
       (email ? email.split("@")[0] : "Someone");
     // Never include message content in push — DMs are encrypted; just advise that a message was sent
-    const pushBody = "Sent you a message";
-
     for (const member of allMembers) {
       sendPushNotification(env, member.user_id, {
-        title:
-          conv.type === "group"
-            ? `${senderName} in ${conv.name || "Group"}`
-            : senderName,
-        body: pushBody,
+        title: senderName,
+        phraseKey: 'sentMessage',
         url: "/community?tab=messages",
         tag: `dm-${conversationId}`,
         type: "dm",

@@ -329,15 +329,57 @@ export async function handleUnsafeZone(request, env, origin) {
       // Release all reservations — user is not charged for AI failures
       await releaseAllReservations(env, reservationIds);
 
+      const FILTERED_MSG = {
+        en: 'The response was filtered. Please rephrase your question.',
+        pt: 'A resposta foi filtrada. Reformule sua pergunta.',
+        es: 'La respuesta fue filtrada. Reformula tu pregunta.',
+        fr: 'La reponse a ete filtree. Veuillez reformuler votre question.',
+        de: 'Die Antwort wurde gefiltert. Bitte formulieren Sie Ihre Frage um.',
+        it: 'La risposta e stata filtrata. Riformula la tua domanda.',
+        ru: 'Ответ был отфильтрован. Пожалуйста, переформулируйте ваш вопрос.',
+        hu: 'A valasz szuresre kerult. Kerlek, fogalmazd ujra a kerdesed.',
+        he: 'התשובה סוננה. אנא נסח מחדש את שאלתך.',
+        zh: '回复已被过滤。请重新表述您的问题。',
+        ja: '回答がフィルタリングされました。質問を言い換えてください。',
+        ko: '응답이 필터링되었습니다. 질문을 다시 표현해 주세요.',
+        ar: 'تمت تصفية الرد. يرجى إعادة صياغة سؤالك.',
+        hi: 'जवाब फ़िल्टर कर दिया गया। कृपया अपना प्रश्न दोबारा लिखें।',
+        fa: 'پاسخ فیلتر شد. لطفاً سوال خود را دوباره بنویسید.',
+        nl: 'Het antwoord is gefilterd. Herformuleer uw vraag.',
+        pl: 'Odpowiedz zostala przefiltrowana. Prosze przeformulowac pytanie.',
+        tr: 'Yanit filtrelendi. Lutfen sorunuzu yeniden ifade edin.',
+      };
+      const FAILED_MSG = {
+        en: 'Failed to process your question. Please try again.',
+        pt: 'Falha ao processar sua pergunta. Tente novamente.',
+        es: 'Error al procesar tu pregunta. Intentalo de nuevo.',
+        fr: 'Echec du traitement de votre question. Veuillez reessayer.',
+        de: 'Fehler bei der Verarbeitung Ihrer Frage. Bitte versuchen Sie es erneut.',
+        it: 'Impossibile elaborare la tua domanda. Riprova.',
+        ru: 'Не удалось обработать ваш вопрос. Пожалуйста, попробуйте снова.',
+        hu: 'Nem sikerult feldolgozni a kerdesed. Probald ujra.',
+        he: 'עיבוד השאלה נכשל. אנא נסה שוב.',
+        zh: '处理您的问题失败。请重试。',
+        ja: '質問の処理に失敗しました。もう一度お試しください。',
+        ko: '질문 처리에 실패했습니다. 다시 시도해 주세요.',
+        ar: 'فشل في معالجة سؤالك. يرجى المحاولة مرة أخرى.',
+        hi: 'आपके प्रश्न को संसाधित करने में विफल। कृपया पुनः प्रयास करें।',
+        fa: 'پردازش سوال شما ناموفق بود. لطفاً دوباره تلاش کنید.',
+        nl: 'Kan uw vraag niet verwerken. Probeer het opnieuw.',
+        pl: 'Nie udalo sie przetworzyc pytania. Sprobuj ponownie.',
+        tr: 'Sorunuz islenemedi. Lutfen tekrar deneyin.',
+      };
+      const targetLang = (lang || 'en').split('-')[0];
+
       const errMsg = aiError.message || aiError.error?.message || '';
       if (errMsg.includes('content') || errMsg.includes('blocked') || errMsg.includes('safety')) {
         return jsonResponse({
-          error: 'The response was filtered. Please rephrase your question.',
+          error: FILTERED_MSG[targetLang] || FILTERED_MSG.en,
         }, 400, origin, env);
       }
 
       return jsonResponse(
-        { error: 'Failed to process your question. Please try again.' },
+        { error: FAILED_MSG[targetLang] || FAILED_MSG.en },
         500, origin, env
       );
     }

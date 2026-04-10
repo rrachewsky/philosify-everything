@@ -1,7 +1,7 @@
 // ============================================================
 // LOCALIZED ERROR MESSAGES
 // ============================================================
-// User-facing error messages in all 12 supported languages
+// User-facing error messages in all 18 supported languages
 
 const ERROR_MESSAGES = {
   en: {
@@ -63,6 +63,36 @@ const ERROR_MESSAGES = {
     lyricsNotFound: (song, artist) => `מילות השיר "${song}" של "${artist}" לא נמצאו או אינן תקינות.`,
     lyricsTooShort: (song, artist) => `מילות השיר "${song}" של "${artist}" קצרות מדי או מכילות תוכן לא תקין.`,
     guideNotLoaded: () => `מערכת הניתוח אינה זמינה באופן זמני. אנא נסה שוב.`,
+  },
+  ar: {
+    lyricsNotFound: (song, artist) => `لم يتم العثور على كلمات "${song}" لـ "${artist}" أو أنها غير صالحة.`,
+    lyricsTooShort: (song, artist) => `كلمات "${song}" لـ "${artist}" قصيرة جدًا أو تحتوي على محتوى غير صالح.`,
+    guideNotLoaded: () => `نظام التحليل غير متاح مؤقتًا. يرجى المحاولة مرة أخرى.`,
+  },
+  hi: {
+    lyricsNotFound: (song, artist) => `"${song}" (${artist}) के बोल नहीं मिले या अमान्य हैं।`,
+    lyricsTooShort: (song, artist) => `"${song}" (${artist}) के बोल बहुत छोटे हैं या अमान्य सामग्री है।`,
+    guideNotLoaded: () => `विश्लेषण प्रणाली अस्थायी रूप से अनुपलब्ध है। कृपया पुनः प्रयास करें।`,
+  },
+  fa: {
+    lyricsNotFound: (song, artist) => `متن آهنگ "${song}" از "${artist}" پیدا نشد یا نامعتبر است.`,
+    lyricsTooShort: (song, artist) => `متن آهنگ "${song}" از "${artist}" بسیار کوتاه است یا محتوای نامعتبر دارد.`,
+    guideNotLoaded: () => `سیستم تحلیل موقتاً در دسترس نیست. لطفاً دوباره تلاش کنید.`,
+  },
+  nl: {
+    lyricsNotFound: (song, artist) => `De tekst van "${song}" door "${artist}" is niet gevonden of is ongeldig.`,
+    lyricsTooShort: (song, artist) => `De tekst van "${song}" door "${artist}" is te kort of bevat ongeldige inhoud.`,
+    guideNotLoaded: () => `Analysesysteem tijdelijk niet beschikbaar. Probeer het opnieuw.`,
+  },
+  pl: {
+    lyricsNotFound: (song, artist) => `Tekst "${song}" autorstwa "${artist}" nie zostal znaleziony lub jest nieprawidlowy.`,
+    lyricsTooShort: (song, artist) => `Tekst "${song}" autorstwa "${artist}" jest zbyt krotki lub zawiera nieprawidlowa tresc.`,
+    guideNotLoaded: () => `System analizy tymczasowo niedostepny. Sprobuj ponownie.`,
+  },
+  tr: {
+    lyricsNotFound: (song, artist) => `"${song}" - "${artist}" sarki sozleri bulunamadi veya gecersiz.`,
+    lyricsTooShort: (song, artist) => `"${song}" - "${artist}" sarki sozleri cok kisa veya gecersiz icerik iceriyor.`,
+    guideNotLoaded: () => `Analiz sistemi gecici olarak kullanilamiyor. Lutfen tekrar deneyin.`,
   },
 };
 

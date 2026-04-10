@@ -120,7 +120,7 @@ async function notifyColloquiumParticipants(env, threadId, payload) {
     if (userIds.length === 0) return;
 
     await Promise.allSettled(
-      userIds.map((userId) => sendPushNotification(env, userId, payload)),
+      userIds.map((userId) => sendPushNotification(env, userId, { ...payload })),
     );
   } catch (err) {
     console.warn(`[Colloquium] Push notification failed: ${err.message}`);
@@ -5089,7 +5089,8 @@ export async function generateImmediateFirstReply(env, threadId) {
   // Push notification: philosopher joined the debate
   notifyColloquiumParticipants(env, threadId, {
     title: "Philosify",
-    body: `${philosopher.name} has joined the debate`,
+    phraseKey: 'joinedDebate',
+    phraseArgs: [philosopher.name],
     url: `/debate/${threadId}`,
     tag: `colloquium-reply-${threadId}`,
     type: "colloquium",
@@ -5287,7 +5288,8 @@ export async function checkPendingUserProposedReplies(env) {
             // Push notification: philosopher joined the debate
             notifyColloquiumParticipants(env, thread.id, {
               title: "Philosify",
-              body: `${philosopher.name} has joined the debate`,
+              phraseKey: 'joinedDebate',
+              phraseArgs: [philosopher.name],
               url: `/debate/${thread.id}`,
               tag: `colloquium-reply-${thread.id}`,
               type: "colloquium",
@@ -5508,7 +5510,8 @@ export async function checkPendingUserProposedReplies(env) {
             // Push notification: philosopher joined the debate
             notifyColloquiumParticipants(env, thread.id, {
               title: "Philosify",
-              body: `${responder.name} has joined the debate`,
+              phraseKey: 'joinedDebate',
+              phraseArgs: [responder.name],
               url: `/debate/${thread.id}`,
               tag: `colloquium-reply-${thread.id}`,
               type: "colloquium",
@@ -5951,7 +5954,7 @@ IMPORTANT: This is a text response, NOT JSON. Write naturally with markdown form
   // Push notification: verdict is in
   notifyColloquiumParticipants(env, thread.id, {
     title: "Philosify",
-    body: "The verdict is in",
+    phraseKey: 'verdictIn',
     url: `/debate/${thread.id}`,
     tag: `colloquium-verdict-${thread.id}`,
     type: "colloquium",

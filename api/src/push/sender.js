@@ -204,6 +204,26 @@ export async function sendPushNotification(env, userId, payload, options = {}) {
     "Content-Type": "application/json",
   };
 
+  // Resolve localized push body if phraseKey is provided
+  if (payload.phraseKey && !payload.body) {
+    try {
+      const { getPushPhrase } = await import('./phrases.js');
+      // Fetch recipient's language from profile
+      const profileUrl = `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}&select=language`;
+      const profileRes = await fetch(profileUrl, { headers });
+      let lang = 'en';
+      if (profileRes.ok) {
+        const profiles = await profileRes.json();
+        if (profiles?.[0]?.language) lang = profiles[0].language.split('-')[0];
+      }
+      payload.body = getPushPhrase(lang, payload.phraseKey, ...(payload.phraseArgs || []));
+    } catch (e) {
+      console.warn('[Push] Failed to resolve localized phrase, using English fallback:', e.message);
+      const { getPushPhrase } = await import('./phrases.js');
+      payload.body = getPushPhrase('en', payload.phraseKey, ...(payload.phraseArgs || []));
+    }
+  }
+
   // 1. Check notification preferences (unless skipped)
   if (!options.skipPreferenceCheck && payload.type) {
     const prefUrl = `${supabaseUrl}/rest/v1/notification_preferences?user_id=eq.${userId}&select=dm_enabled,replies_enabled,collective_enabled,colloquium_enabled`;
@@ -272,7 +292,7 @@ export async function sendPushNotification(env, userId, payload, options = {}) {
           body: JSON.stringify({
             subscription_id: sub.id,
             title: payload.title || "Philosify",
-            body: payload.body || "You have a new message",
+            body: payload.body || "You have a new notification",
             url: payload.url || "/",
             tag: payload.tag || null,
             type: payload.type || null,
