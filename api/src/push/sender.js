@@ -206,7 +206,7 @@ export async function sendPushNotification(env, userId, payload, options = {}) {
 
   // 1. Check notification preferences (unless skipped)
   if (!options.skipPreferenceCheck && payload.type) {
-    const prefUrl = `${supabaseUrl}/rest/v1/notification_preferences?user_id=eq.${userId}&select=dm_enabled,replies_enabled,collective_enabled`;
+    const prefUrl = `${supabaseUrl}/rest/v1/notification_preferences?user_id=eq.${userId}&select=dm_enabled,replies_enabled,collective_enabled,colloquium_enabled`;
     const prefRes = await fetch(prefUrl, { headers });
 
     if (prefRes.ok) {
@@ -227,7 +227,10 @@ export async function sendPushNotification(env, userId, payload, options = {}) {
           );
           return { sent: 0, failed: 0, removed: 0 };
         }
-        // TODO: Add colloquium_enabled check once DB column is added
+        if (payload.type === "colloquium" && pref.colloquium_enabled === false) {
+          console.log(`[Push] Colloquium notifications disabled for user ${userId}`);
+          return { sent: 0, failed: 0, removed: 0 };
+        }
       }
     } else {
       console.error(

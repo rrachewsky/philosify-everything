@@ -455,6 +455,7 @@ export async function handleConstellationStats(request, env, origin) {
       pendingEdgesRes,
       mergedEdgesRes,
       pendingNodesRes,
+      promotedNodesRes,
       extractionLogsRes,
       topMentionedRes,
     ] = await Promise.all([
@@ -462,6 +463,7 @@ export async function handleConstellationStats(request, env, origin) {
       fetch(`${supabaseUrl}/rest/v1/constellation_edge_candidates?status=eq.pending&select=id`, { headers }),
       fetch(`${supabaseUrl}/rest/v1/constellation_edge_candidates?status=eq.merged&select=id`, { headers }),
       fetch(`${supabaseUrl}/rest/v1/constellation_node_candidates?status=eq.pending&select=id`, { headers }),
+      fetch(`${supabaseUrl}/rest/v1/constellation_node_candidates?status=eq.promoted&select=id`, { headers }),
       fetch(`${supabaseUrl}/rest/v1/constellation_extraction_log?select=analysis_type,extraction_tier,status`, { headers }),
       fetch(`${supabaseUrl}/rest/v1/constellation_analysis_links?select=node_id&limit=5000`, { headers }),
     ]);
@@ -502,11 +504,12 @@ export async function handleConstellationStats(request, env, origin) {
     const pendingEdges = pendingEdgesRes.ok ? (await pendingEdgesRes.json()).length : 0;
     const mergedEdges = mergedEdgesRes.ok ? (await mergedEdgesRes.json()).length : 0;
     const pendingNodes = pendingNodesRes.ok ? (await pendingNodesRes.json()).length : 0;
+    const promotedNodes = promotedNodesRes.ok ? (await promotedNodesRes.json()).length : 0;
     
     return jsonResponse({
       seed_nodes: SEED_NODES.length,
-      auto_promoted_nodes: 0, // TODO: track promoted nodes
-      total_nodes: SEED_NODES.length,
+      auto_promoted_nodes: promotedNodes,
+      total_nodes: SEED_NODES.length + promotedNodes,
       seed_edges: SEED_EDGES.length,
       auto_discovered_edges: mergedEdges,
       total_edges: SEED_EDGES.length + mergedEdges,
