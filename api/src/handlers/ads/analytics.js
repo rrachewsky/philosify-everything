@@ -203,11 +203,18 @@ export async function handleAnalyticsExport(request, env, corsHeaders) {
     const sortedRows = Object.values(rows).sort((a, b) => a.date.localeCompare(b.date));
 
     if (format === 'csv') {
+      // SECURITY: CSV injection protection — prefix formula-triggering characters with '
+      function csvSafe(val) {
+        let s = String(val).replace(/"/g, '""');
+        if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+        return `"${s}"`;
+      }
+
       let csv = 'Date,Order,Placement,Impressions,Clicks,CTR(%),Spent($)\n';
       for (const r of sortedRows) {
         const ctr = r.impressions > 0 ? (r.clicks / r.impressions * 100).toFixed(2) : '0.00';
         const spent = (r.spent_cents / 100).toFixed(2);
-        csv += `${r.date},"${r.order_name}",${r.placement},${r.impressions},${r.clicks},${ctr},${spent}\n`;
+        csv += `${csvSafe(r.date)},${csvSafe(r.order_name)},${csvSafe(r.placement)},${r.impressions},${r.clicks},${ctr},${spent}\n`;
       }
       return new Response(csv, {
         headers: {

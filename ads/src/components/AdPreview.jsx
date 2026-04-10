@@ -107,7 +107,10 @@ export default function AdPreview({
   showControls = true,
 }) {
   const [activePlacement, setActivePlacement] = useState(placement);
-  const imgSrc = creativeUrl || DEMO_CREATIVES[activePlacement].url;
+  // SECURITY: Validate URLs to prevent javascript: XSS
+  const safeCreativeUrl = creativeUrl && /^https?:\/\/|^data:image\//.test(creativeUrl) ? creativeUrl : null;
+  const safeTargetUrl = targetUrl && /^https?:\/\//.test(targetUrl) ? targetUrl : null;
+  const imgSrc = safeCreativeUrl || DEMO_CREATIVES[activePlacement].url;
 
   return (
     <div className="ad-preview">
@@ -133,11 +136,11 @@ export default function AdPreview({
 
       <PhilosifyShell placement={activePlacement}>
         <a
-          href={targetUrl || '#'}
+          href={safeTargetUrl || '#'}
           target="_blank"
           rel="noreferrer"
           className="ad-preview__creative"
-          onClick={(e) => { if (!targetUrl) e.preventDefault(); }}
+          onClick={(e) => { if (!safeTargetUrl) e.preventDefault(); }}
         >
           <img src={imgSrc} alt="Ad creative preview" />
         </a>

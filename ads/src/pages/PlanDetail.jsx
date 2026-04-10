@@ -66,7 +66,13 @@ function PlanDetail() {
     setActionLoading(true);
     try {
       const data = await api.post(`/ads/plans/${id}/checkout`);
-      window.location.href = data.checkoutUrl;
+      // SECURITY: Validate checkout URL to prevent open redirect
+      if (data.checkoutUrl && data.checkoutUrl.startsWith('https://checkout.stripe.com/')) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        setError('Invalid checkout URL received');
+        setActionLoading(false);
+      }
     } catch (err) {
       setError(err.message || 'Could not create checkout.');
       setActionLoading(false);

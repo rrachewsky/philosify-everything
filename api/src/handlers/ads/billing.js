@@ -176,6 +176,12 @@ export async function handleBillingWebhook(request, env, corsHeaders) {
 
       const advertiserId = session.metadata.advertiser_id;
       const amountCents = parseInt(session.metadata.amount_cents, 10);
+      
+      // SECURITY: Cross-check metadata amount against actual payment
+      if (session.amount_total && amountCents !== session.amount_total) {
+        console.error(`[Ads] Amount mismatch: metadata=${amountCents}, actual=${session.amount_total}`);
+        return jsonResponse({ error: 'Amount mismatch' }, 400, corsHeaders);
+      }
 
       if (!advertiserId || !amountCents) {
         console.error('[Ads] Webhook missing metadata:', session.metadata);

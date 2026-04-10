@@ -318,7 +318,7 @@ export async function handleServeAd(request, env, corsHeaders) {
         if (!matchTargeting(order.targeting, userProfile)) continue;
       }
 
-      // Frequency cap: max 3 impressions per order per user per day
+      // Frequency cap: max 3 impressions per order per user/IP per day
       if (userId) {
         const { data: recentImpressions } = await supabase
           .from('ads.ad_impressions')
@@ -330,6 +330,18 @@ export async function handleServeAd(request, env, corsHeaders) {
             ].join('&'),
           });
         if (recentImpressions && recentImpressions.length >= 3) continue;
+      } else {
+        // SECURITY: IP-based frequency cap for unauthenticated users
+        const { data: ipImpressions } = await supabase
+          .from('ads.ad_impressions')
+          .select('id', {
+            filter: [
+              `order_id=eq.${order.id}`,
+              `ip_address=eq.${ip}`,
+              `created_at=gte.${today}`,
+            ].join('&'),
+          });
+        if (ipImpressions && ipImpressions.length >= FREQUENCY_CAP_PER_DAY) continue;
       }
 
       // Advertiser status check
@@ -491,6 +503,11 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
           .from('ads.ad_impressions')
           .select('id', { filter: `order_id=eq.${order.id}&user_id=eq.${userId}&created_at=gte.${today}` });
         if (recentImps && recentImps.length >= FREQUENCY_CAP_PER_DAY) continue;
+      } else {
+        const { data: ipImps } = await supabase
+          .from('ads.ad_impressions')
+          .select('id', { filter: `order_id=eq.${order.id}&ip_address=eq.${ip}&created_at=gte.${today}` });
+        if (ipImps && ipImps.length >= FREQUENCY_CAP_PER_DAY) continue;
       }
 
       // Check if ad duration fits
@@ -615,12 +632,14 @@ export async function handleRecordImpression(request, env, corsHeaders) {
 
     // Update delivery count. The nonce uniqueness check above prevents true duplicates.
     // Recount from source of truth (ad_impressions table) to prevent drift from race conditions.
+    // Recount from source of truth. The INSERT above already added the new row,
+    // so actualDelivered already includes it — no +1 needed.
     const { count: actualDelivered } = await supabase
       .from('ads.ad_impressions')
       .select('id', { count: 'exact', head: true })
       .eq('order_id', order_id);
 
-    const delivered = (actualDelivered ?? order.impressions_delivered) + 1;
+    const delivered = actualDelivered ?? (order.impressions_delivered + 1);
     const newStatus = delivered >= order.impressions_ordered ? 'completed' : order.status;
 
     await supabase.from('ads.ad_orders').update(
@@ -706,7 +725,7 @@ export async function handleRecordImpression(request, env, corsHeaders) {
     return jsonResponse({
       success: true,
       impression_id: impression?.id,
-      remaining: order.impressions_ordered - newDelivered,
+      remaining: order.impressions_ordered - delivered,
       completed: newStatus === 'completed',
     }, 200, corsHeaders);
   } catch (err) {

@@ -343,17 +343,45 @@ export async function handleUpdateOrder(request, env, corsHeaders, orderId) {
     const body = await request.json();
     const updates = {};
 
-    // Editable fields
-    if (body.name !== undefined) updates.name = body.name;
+    // Editable fields — all validated
+    if (body.name !== undefined) {
+      if (typeof body.name !== 'string' || body.name.length < 1 || body.name.length > 200) {
+        return jsonResponse({ error: 'Name must be 1-200 characters' }, 400, corsHeaders);
+      }
+      updates.name = body.name;
+    }
     if (body.target_url !== undefined) {
       if (!isValidUrl(body.target_url)) {
         return jsonResponse({ error: 'Invalid target URL' }, 400, corsHeaders);
       }
       updates.target_url = body.target_url;
     }
-    if (body.creative_url !== undefined) updates.creative_url = body.creative_url;
-    if (body.creative_brief !== undefined) updates.creative_brief = body.creative_brief;
-    if (body.targeting !== undefined) updates.targeting = body.targeting;
+    if (body.creative_url !== undefined) {
+      if (!isValidUrl(body.creative_url)) {
+        return jsonResponse({ error: 'Invalid creative URL' }, 400, corsHeaders);
+      }
+      updates.creative_url = body.creative_url;
+    }
+    if (body.creative_brief !== undefined) {
+      if (typeof body.creative_brief !== 'string' || body.creative_brief.length > 5000) {
+        return jsonResponse({ error: 'Creative brief too long (max 5000 chars)' }, 400, corsHeaders);
+      }
+      updates.creative_brief = body.creative_brief;
+    }
+    if (body.targeting !== undefined) {
+      if (typeof body.targeting !== 'object' || Array.isArray(body.targeting)) {
+        return jsonResponse({ error: 'Invalid targeting format' }, 400, corsHeaders);
+      }
+      const allowedKeys = ['genres','philosophies','languages','engagement','countries','regions','us_states','br_states','content','cities','timezones'];
+      const keys = Object.keys(body.targeting);
+      if (keys.some(k => !allowedKeys.includes(k))) {
+        return jsonResponse({ error: 'Unknown targeting keys' }, 400, corsHeaders);
+      }
+      if (JSON.stringify(body.targeting).length > 10000) {
+        return jsonResponse({ error: 'Targeting too large' }, 400, corsHeaders);
+      }
+      updates.targeting = body.targeting;
+    }
 
     // Schedule can only be changed for draft orders
     if (order.status === 'draft') {

@@ -710,6 +710,9 @@ export async function handleAgencyPayout(request, env, corsHeaders) {
     const body = await request.json().catch(() => ({}));
     const requestedAmount = body.amount_cents || agency.balance_cents;
 
+    if (typeof requestedAmount !== 'number' || requestedAmount <= 0) {
+      return jsonResponse({ error: 'Invalid payout amount' }, 400, corsHeaders);
+    }
     if (requestedAmount > agency.balance_cents) {
       return jsonResponse({ error: 'Insufficient balance' }, 400, corsHeaders);
     }
@@ -717,7 +720,27 @@ export async function handleAgencyPayout(request, env, corsHeaders) {
       return jsonResponse({ error: 'Minimum payout is $100' }, 400, corsHeaders);
     }
 
-    // Create payout record — admin processes via Stripe dashboard or bank transfer
+    // SECURITY: Atomic conditional deduction to prevent double-withdrawal race condition.
+    // Two concurrent payout requests both reading balance=20000 would both succeed without this.
+    // We use a conditional UPDATE that only succeeds if balance is still sufficient.
+    const { data: updatedAgency, error: deductError } = await supabase
+      .from('ads.agencies')
+      .update(
+        {
+          balance_cents: agency.balance_cents - requestedAmount,
+          updated_at: new Date().toISOString(),
+        },
+        `id=eq.${agency.id}&balance_cents=gte.${requestedAmount}`
+      );
+
+    // If the update affected 0 rows, balance was already deducted by a concurrent request
+    if (deductError || !updatedAgency) {
+      return jsonResponse({ error: 'Payout failed — balance may have changed. Please try again.' }, 409, corsHeaders);
+    }
+
+    const newBalance = agency.balance_cents - requestedAmount;
+
+    // Create payout record after successful deduction
     const { data: payout, error } = await supabase
       .from('ads.agency_payouts')
       .insert({
@@ -729,16 +752,14 @@ export async function handleAgencyPayout(request, env, corsHeaders) {
       });
 
     if (error) {
-      console.error('[Agency] Payout request error:', error);
+      console.error('[Agency] Payout record error:', error);
+      // Balance already deducted — restore it
+      await supabase.from('ads.agencies').update(
+        { balance_cents: agency.balance_cents, updated_at: new Date().toISOString() },
+        `id=eq.${agency.id}`
+      );
       return jsonResponse({ error: 'Failed to request payout' }, 500, corsHeaders);
     }
-
-    // Deduct from balance
-    const newBalance = agency.balance_cents - requestedAmount;
-    await supabase.from('ads.agencies').update(
-      { balance_cents: newBalance, updated_at: new Date().toISOString() },
-      `id=eq.${agency.id}`
-    );
 
     // Record transaction
     await supabase.from('ads.agency_transactions').insert({

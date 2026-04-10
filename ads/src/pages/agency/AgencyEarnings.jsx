@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAgency } from '@contexts/AgencyContext';
 import { api } from '@services/api';
 
@@ -24,7 +24,13 @@ export default function AgencyEarnings() {
     load();
   }, []);
 
+  // SECURITY: Synchronous guard prevents double-click race condition
+  const payoutInFlight = useRef(false);
+
   async function handlePayout() {
+    if (payoutInFlight.current) return;
+    if (!confirm(`Request payout of $${balance.toFixed(2)}? This cannot be undone.`)) return;
+    payoutInFlight.current = true;
     setPayoutLoading(true);
     setError('');
     setPayoutResult(null);
@@ -41,6 +47,7 @@ export default function AgencyEarnings() {
       setError(err.message || 'Payout request failed');
     } finally {
       setPayoutLoading(false);
+      payoutInFlight.current = false;
     }
   }
 
