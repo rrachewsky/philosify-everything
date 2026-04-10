@@ -3,7 +3,7 @@
 // ============================================================
 // Public discussion threads with replies and voting. Free access.
 
-import { jsonResponse, getCorsHeaders } from "../utils/index.js";
+import { jsonResponse, getCorsHeaders, sanitizeMessage } from "../utils/index.js";
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
@@ -356,7 +356,7 @@ export async function handleCreateForumThread(request, env, origin) {
   try {
     const body = await request.json();
     const title = (body.title || "").trim();
-    const content = (body.content || "").trim();
+    const content = sanitizeMessage((body.content || "").trim());
     const category = body.category || "general";
 
     if (!title || title.length < 3 || title.length > MAX_TITLE_LENGTH) {
@@ -430,6 +430,12 @@ export async function handleCreateForumThread(request, env, origin) {
 // DELETE /api/forum/threads/:id - Delete own thread
 // ============================================================
 export async function handleDeleteForumThread(request, env, origin, threadId) {
+  // SECURITY: Validate threadId as UUID
+  const THREAD_UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!THREAD_UUID_RE.test(threadId)) {
+    return jsonResponse({ error: "Invalid thread ID" }, 400, origin, env);
+  }
+
   const auth = await getSupabaseForUser(request, env);
   if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
 
@@ -527,7 +533,7 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
     }
 
     const body = await request.json();
-    const content = (body.content || "").trim();
+    const content = sanitizeMessage((body.content || "").trim());
     const parentId = body.parent_id || null;
 
     if (!content || content.length > MAX_REPLY_LENGTH) {
@@ -777,7 +783,7 @@ export async function handleEditForumReply(request, env, origin, replyId) {
     }
 
     const body = await request.json();
-    const content = (body.content || "").trim();
+    const content = sanitizeMessage((body.content || "").trim());
 
     if (!content || content.length > MAX_REPLY_LENGTH) {
       return jsonResponse(
@@ -870,16 +876,9 @@ export async function handleForumVote(request, env, origin, replyId) {
       .eq("user_id", userId)
       .maybeSingle();
 
-    let newUpvotes = reply.upvotes;
-    let newDownvotes = reply.downvotes;
-
+    // SECURITY: Use atomic vote counting to prevent race conditions
+    // First, handle the vote record (insert/update/delete)
     if (existingVote) {
-      // Remove old vote from counts
-      if (existingVote.vote_type === "up")
-        newUpvotes = Math.max(0, newUpvotes - 1);
-      if (existingVote.vote_type === "down")
-        newDownvotes = Math.max(0, newDownvotes - 1);
-
       if (voteType === null) {
         // Just remove the vote
         await supabase.from("forum_votes").delete().eq("id", existingVote.id);
@@ -889,10 +888,6 @@ export async function handleForumVote(request, env, origin, replyId) {
           .from("forum_votes")
           .update({ vote_type: voteType })
           .eq("id", existingVote.id);
-
-        // Add new vote to counts
-        if (voteType === "up") newUpvotes += 1;
-        if (voteType === "down") newDownvotes += 1;
       }
     } else if (voteType !== null) {
       // Create new vote
@@ -901,13 +896,25 @@ export async function handleForumVote(request, env, origin, replyId) {
         user_id: userId,
         vote_type: voteType,
       });
-
-      // Add new vote to counts
-      if (voteType === "up") newUpvotes += 1;
-      if (voteType === "down") newDownvotes += 1;
     }
 
-    // Update reply counts
+    // Recount votes from the source of truth (forum_votes table) instead of
+    // doing read-modify-write which has a race condition
+    const { count: upCount } = await supabase
+      .from("forum_votes")
+      .select("id", { count: "exact", head: true })
+      .eq("reply_id", replyId)
+      .eq("vote_type", "up");
+    const { count: downCount } = await supabase
+      .from("forum_votes")
+      .select("id", { count: "exact", head: true })
+      .eq("reply_id", replyId)
+      .eq("vote_type", "down");
+
+    const newUpvotes = upCount ?? 0;
+    const newDownvotes = downCount ?? 0;
+
+    // Update reply counts from authoritative count
     await supabase
       .from("forum_replies")
       .update({ upvotes: newUpvotes, downvotes: newDownvotes })
@@ -1414,10 +1421,11 @@ const MAX_INVITE_BATCH = 20;
 export async function handleDebateInvite(request, env, origin, threadId) {
   try {
     // 1. Authenticate
-    const { client, userId, setCookieHeader } = await getSupabaseForUser(
-      request,
-      env,
-    );
+    const auth = await getSupabaseForUser(request, env);
+    if (!auth) {
+      return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    }
+    const { client, userId, setCookieHeader } = auth;
     if (!userId) {
       return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
     }

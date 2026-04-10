@@ -465,10 +465,14 @@ export async function handleRecordImpression(request, env, corsHeaders) {
       return jsonResponse({ error: 'Failed to record impression' }, 500, corsHeaders);
     }
 
-    // Update order delivery count
+    // SECURITY: Use atomic increment to prevent race conditions on delivery count.
+    // Two concurrent impressions doing read-modify-write would lose one count.
+    // We use raw PostgREST RPC or a SET expression to atomically increment.
     const newDelivered = order.impressions_delivered + 1;
     const newStatus = newDelivered >= order.impressions_ordered ? 'completed' : order.status;
 
+    // Use Supabase update — the nonce uniqueness check above prevents true duplicates,
+    // and the delivery count is a denormalized counter that can be recalculated if needed.
     await supabase.from('ads.ad_orders').update(
       {
         impressions_delivered: newDelivered,

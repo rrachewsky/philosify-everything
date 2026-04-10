@@ -20,8 +20,7 @@ export function jsonResponse(data, status = 200, originOrCors = 'https://philosi
     status,
     headers: {
       'Content-Type': 'application/json',
-      // HSTS (served over HTTPS only)
-      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      // HSTS is included via getCorsHeaders() spread below — no duplicate needed
       ...cors
     }
   });

@@ -241,7 +241,9 @@ async function handleSignIn(request, env, origin, isProd) {
 
   if (error) {
     console.error("[Auth Proxy] Sign in failed:", error.message);
-    return jsonResponse({ error: error.message }, 401, origin, env);
+    // SECURITY: Normalize all sign-in errors to prevent account enumeration
+    // Supabase may return "Email not confirmed" or other messages that reveal account existence
+    return jsonResponse({ error: "Invalid email or password" }, 401, origin, env);
   }
 
   // Build response with HttpOnly cookie
@@ -1018,7 +1020,8 @@ async function handleUpdatePassword(request, env, origin) {
 
   if (error) {
     console.error("[Auth Proxy] Update password failed:", error.message);
-    return jsonResponse({ error: error.message }, 400, origin, env);
+    // SECURITY: Normalize error to prevent leaking internal auth details
+    return jsonResponse({ error: "Password update failed. Please ensure your password meets the requirements." }, 400, origin, env);
   }
 
   console.log(`[Auth Proxy] Password updated for user: ${data.user?.id}`);

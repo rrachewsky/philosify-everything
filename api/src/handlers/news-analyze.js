@@ -387,7 +387,7 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
     console.error(`[NewsAnalyze] Error:`, err.message);
 
     if (err.message?.includes("Insufficient credits")) {
-      return jsonResponse({ error: err.message, needed: 1 }, 402, origin, env);
+      return jsonResponse({ error: "Insufficient credits", needed: 1 }, 402, origin, env);
     }
 
     // Sanitize error message to prevent leaking internal details

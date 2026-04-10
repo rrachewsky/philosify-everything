@@ -24,6 +24,7 @@ import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
 } from "../utils/supabase-user.js";
+import { getSupabaseCredentials } from "../utils/supabase.js";
 import { checkRateLimit } from "../rate-limit/index.js";
 import { getBlockedUserIds } from "./block.js";
 import { sendPushNotification } from "../push/sender.js";

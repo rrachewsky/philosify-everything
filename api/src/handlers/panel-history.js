@@ -52,6 +52,6 @@ export async function handlePanelHistory(request, env, origin) {
     );
   } catch (err) {
     console.error("[PanelHistory]", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    return jsonResponse({ error: "Failed to load panel history" }, 500, origin, env);
   }
 }

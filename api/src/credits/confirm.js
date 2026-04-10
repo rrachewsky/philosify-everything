@@ -11,7 +11,7 @@ import { getSupabaseCredentials } from "../utils/supabase.js";
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export async function confirmReservation(env, reservationId, analysisId) {
+export async function confirmReservation(env, reservationId, analysisId, userId) {
   // If analysisId is not a valid UUID, pass null to avoid PostgreSQL 22P02 error
   // (the analysis_id column in credit_reservations is typed as UUID)
   const safeAnalysisId =
@@ -43,9 +43,17 @@ export async function confirmReservation(env, reservationId, analysisId) {
       try {
         const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
         // Find and update the credit_history entry created by this confirmation
+        // SECURITY: Always scope to user_id to prevent cross-user data modification
+        const userFilter = userId ? `&user_id=eq.${userId}` : '';
         const filter = result.history_id
-          ? `id=eq.${result.history_id}`
-          : `type=eq.consume&order=created_at.desc&limit=1`;
+          ? `id=eq.${result.history_id}${userFilter}`
+          : userId
+            ? `user_id=eq.${userId}&type=eq.consume&order=created_at.desc&limit=1`
+            : null;
+        if (!filter) {
+          console.warn('[Credits] No history_id and no userId — skipping credit_history patch');
+          return;
+        }
         await fetch(`${sbUrl}/rest/v1/credit_history?${filter}`, {
           method: "PATCH",
           headers: {

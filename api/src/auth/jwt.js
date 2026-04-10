@@ -71,6 +71,13 @@ export async function getUserFromAuth(req, env) {
       return null;
     }
 
+    // SECURITY: Validate sub claim is a valid UUID format (defense-in-depth)
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(userId)) {
+      console.error("[Auth] JWT sub claim is not a valid UUID");
+      return null;
+    }
+
     return { userId, email, token, payload };
   } catch (error) {
     // Don't log expected errors (expired tokens, etc.)

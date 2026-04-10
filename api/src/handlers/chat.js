@@ -6,12 +6,13 @@
 // PATCH  /api/chat/:messageId - Edit own message
 // DELETE /api/chat/:messageId - Delete own message
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, sanitizeMessage } from "../utils/index.js";
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
 } from "../utils/supabase-user.js";
 import { checkRateLimit } from "../rate-limit/index.js";
+import { getBlockedUserIds } from "./block.js";
 
 const MAX_MESSAGE_LENGTH = 500;
 const PAGE_SIZE = 50;
@@ -19,6 +20,7 @@ const URL_PATTERN =
   /https?:\/\/|www\.|[a-z0-9-]+\.(com|org|net|io|co|xyz|me|app|dev|gg|tv|info|biz|link)/i;
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 
 /**
  * GET /api/chat - Fetch recent global chat messages
@@ -30,11 +32,19 @@ export async function handleGetMessages(request, env, origin) {
     return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
   }
 
-  const { client: supabase, setCookieHeader } = auth;
+  const { client: supabase, userId, setCookieHeader } = auth;
   const url = new URL(request.url);
   const before = url.searchParams.get("before");
 
   try {
+    // SECURITY: Filter out messages from blocked users
+    let blockedIds = [];
+    try {
+      blockedIds = await getBlockedUserIds(supabase, userId);
+    } catch (e) {
+      console.warn("[Chat] Failed to fetch blocked users:", e.message);
+    }
+
     let query = supabase
       .from("chat_messages")
       .select(
@@ -43,7 +53,17 @@ export async function handleGetMessages(request, env, origin) {
       .order("created_at", { ascending: false })
       .limit(PAGE_SIZE);
 
+    if (blockedIds.length > 0) {
+      // Supabase: filter out messages from blocked users
+      for (const blockedId of blockedIds) {
+        query = query.neq("user_id", blockedId);
+      }
+    }
+
     if (before) {
+      if (!ISO_TIMESTAMP_RE.test(before)) {
+        return jsonResponse({ error: "Invalid cursor format" }, 400, origin, env);
+      }
       query = query.lt("created_at", before);
     }
 
@@ -135,7 +155,7 @@ export async function handleSendMessage(request, env, origin) {
 
   try {
     const body = await request.json();
-    const message = (body.message || "").trim();
+    const message = sanitizeMessage((body.message || "").trim());
     const replyToId = body.reply_to_id || null;
 
     if (!message || message.length === 0) {

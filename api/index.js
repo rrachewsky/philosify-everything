@@ -2,7 +2,7 @@
 // Sistema de Análise Filosófica Musical Objetivista
 // Modular architecture with proper separation of concerns
 
-import { getCorsHeaders, jsonResponse } from "./src/utils/index.js";
+import { getCorsHeaders, jsonResponse, sanitizeErrorMessage } from "./src/utils/index.js";
 import { getUserFromAuth } from "./src/auth/index.js";
 import {
   reserveCredit,
@@ -483,6 +483,7 @@ export default {
           "reset-password",
           "google",
           "exchange-code",
+          "refresh",
         ];
         const isCritical = criticalPaths.some((p) => authPath.startsWith(p));
 
@@ -1647,12 +1648,24 @@ export default {
         return handleGetVapidKey(request, env, origin);
       }
       if (url.pathname === "/api/push/subscribe" && request.method === "POST") {
+        // SECURITY: Rate limit push subscribe to prevent subscription spam
+        const pushSubIp = request.headers.get("cf-connecting-ip") || "unknown";
+        const pushSubOk = await checkRateLimit(env, `push-sub:${pushSubIp}`, true);
+        if (!pushSubOk) {
+          return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+        }
         return handleSubscribe(request, env, origin);
       }
       if (
         url.pathname === "/api/push/unsubscribe" &&
         request.method === "POST"
       ) {
+        // SECURITY: Rate limit push unsubscribe
+        const pushUnsubIp = request.headers.get("cf-connecting-ip") || "unknown";
+        const pushUnsubOk = await checkRateLimit(env, `push-unsub:${pushUnsubIp}`, true);
+        if (!pushUnsubOk) {
+          return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+        }
         return handleUnsubscribe(request, env, origin);
       }
       if (
@@ -1844,9 +1857,12 @@ export default {
           return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
         }
 
-        // Force cleanup of ALL pending reservations for this user (age=0)
-        // This is only called when frontend explicitly detects a timeout
-        const result = await cleanupUserStaleReservations(env, user.userId, 0);
+        // SECURITY: Only release reservations older than 2 minutes to prevent
+        // the exploit where a user calls cleanup-timeout during an in-flight
+        // analysis to get a free analysis (reservation released but result still returned).
+        // 2 minutes is short enough to clean up genuine timeouts but long enough
+        // that in-flight analyses (typically 10-60s) are protected.
+        const result = await cleanupUserStaleReservations(env, user.userId, 2);
 
         console.log(
           `[Cleanup] Timeout cleanup for user ${user.userId}: released ${result.releasedCount}, new total: ${result.newTotal}`,
@@ -2228,6 +2244,13 @@ export default {
 
           if (event.type === "checkout.session.completed") {
             const session = event.data.object;
+
+            // SECURITY: Verify payment is actually completed (not pending for async payment methods)
+            if (session.payment_status !== "paid") {
+              console.warn(`[Stripe] Payment not completed (status: ${session.payment_status}), skipping credit grant`);
+              return jsonResponse({ received: true, skipped: true }, 200, origin, env);
+            }
+
             const userId =
               session.client_reference_id || session.metadata?.user_id;
 
@@ -3670,7 +3693,8 @@ export default {
           if (!raw) return jsonResponse({ error: "Panel not found or expired" }, 404, origin, env);
           return jsonResponse({ success: true, panel: JSON.parse(raw) }, 200, origin, env);
         } catch (e) {
-          return jsonResponse({ error: e.message }, 500, origin, env);
+          console.error("[Panel] KV fetch error:", e.message);
+          return jsonResponse({ error: "Failed to load panel" }, 500, origin, env);
         }
       }
 
@@ -3724,9 +3748,10 @@ export default {
 <meta http-equiv="refresh" content="1;url=https://philosify.org">
 </head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
 
-          return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
+           return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
         } catch (e) {
-          return jsonResponse({ error: e.message }, 500, origin, env);
+          console.error("[SharePreview] Debate error:", e.message);
+          return jsonResponse({ error: "Failed to load preview" }, 500, origin, env);
         }
       }
 
@@ -3763,11 +3788,13 @@ export default {
 <meta http-equiv="refresh" content="1;url=https://philosify.org">
 </head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
 
-          return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
+           return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
         } catch (e) {
-          return jsonResponse({ error: e.message }, 500, origin, env);
+          console.error("[SharePreview] Panel error:", e.message);
+          return jsonResponse({ error: "Failed to load preview" }, 500, origin, env);
         }
       }
+
 
       // Unified user history — all analyses, panels, debates
       if (url.pathname === "/api/user-history" && request.method === "GET") {
@@ -3948,6 +3975,10 @@ export default {
       if (url.pathname === "/api/quiz/profile" && request.method === "POST") {
         const { handleQuizSetProfile } = await import("./src/handlers/quiz.js");
         return handleQuizSetProfile(request, env);
+      }
+      if (url.pathname === "/api/admin/quiz/generate" && request.method === "POST") {
+        const { handleQuizBulkGenerate } = await import("./src/handlers/quiz.js");
+        return handleQuizBulkGenerate(request, env);
       }
 
       // ============================================================
@@ -4405,7 +4436,8 @@ export default {
             insert_test_result: insertErr.substring(0, 500),
           }, 200, origin, env);
         } catch (e) {
-          return jsonResponse({ error: e.message }, 500, origin, env);
+          console.error("[Admin] Diagnose-auth error:", e.message);
+          return jsonResponse({ error: "Diagnostic failed" }, 500, origin, env);
         }
       }
 

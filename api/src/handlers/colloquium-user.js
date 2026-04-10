@@ -1064,7 +1064,9 @@ export async function handleProposeColloquium(request, env, origin, ctx) {
     const title = (body.title || "").trim();
     const content = (body.content || "").trim();
     const visibility = body.visibility === "closed" ? "closed" : "open";
-    const lang = (body.lang || "en").trim();
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const rawLang = (body.lang || "en").trim().split("-")[0].toLowerCase();
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
 
     if (!title || title.length < 3 || title.length > 200) {
       return jsonResponse(
@@ -1570,7 +1572,9 @@ export async function handleProposeOpenDebate(request, env, origin, ctx) {
     const body = await request.json();
     const title = (body.title || "").trim();
     const content = (body.content || "").trim();
-    const lang = (body.lang || "en").trim();
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const rawLang = (body.lang || "en").trim().split("-")[0].toLowerCase();
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
 
     if (!title || title.length < 3 || title.length > 200) {
       return jsonResponse(
@@ -1914,7 +1918,9 @@ export async function handleColloquiumVerdict(
     }
 
     const triggeredBy = isAdmin ? "Admin" : "Proposer";
-    const langParam = url.searchParams.get("lang") || "en";
+    const VALID_LANGS_V = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const rawLangParam = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+    const langParam = VALID_LANGS_V.includes(rawLangParam) ? rawLangParam : "en";
     console.log(
       `[Colloquium] ${triggeredBy} triggering verdict for thread ${threadId} (lang=${langParam})`,
     );
@@ -2024,7 +2030,9 @@ export async function handleColloquiumVerdictAudio(
 
   // Parse requested language from query string
   const url = new URL(request.url);
-  const langCode = url.searchParams.get("lang") || "en";
+  const VALID_LANGS_A = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const rawLangCode = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const langCode = VALID_LANGS_A.includes(rawLangCode) ? rawLangCode : "en";
 
   // Verify user has access to this colloquium (or it's an open debate)
   const accessRecords = await pg(env, "GET", "colloquium_access", {

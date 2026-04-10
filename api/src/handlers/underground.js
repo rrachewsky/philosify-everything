@@ -8,7 +8,7 @@
 // - All unlocked users share the same room key
 // - Server cannot read encrypted posts (zero-knowledge)
 
-import { jsonResponse } from "../utils/index.js";
+import { jsonResponse, sanitizeMessage } from "../utils/index.js";
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
@@ -24,6 +24,7 @@ const UUID_REGEX =
 const URL_PATTERN =
   /https?:\/\/|www\.|[a-z0-9-]+\.(com|org|net|io|co|xyz|me|app|dev|gg|tv|info|biz|link)/i;
 const NICKNAME_REGEX = /^[a-zA-Z0-9]{3,12}$/;
+const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 
 // ============================================================
 // GET /api/underground - List anonymous posts
@@ -69,7 +70,12 @@ export async function handleGetUndergroundPosts(request, env, origin) {
       .order("created_at", { ascending: false })
       .limit(PAGE_SIZE);
 
-    if (before) query = query.lt("created_at", before);
+    if (before) {
+      if (!ISO_TIMESTAMP_RE.test(before)) {
+        return jsonResponse({ error: "Invalid cursor format" }, 400, origin, env);
+      }
+      query = query.lt("created_at", before);
+    }
 
     const { data: posts, error } = await query;
 
@@ -213,7 +219,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
     }
 
     const body = await request.json();
-    const content = (body.content || "").trim();
+    const content = sanitizeMessage((body.content || "").trim());
     const encryptedContent = body.encrypted_content || null;
     const nonce = body.nonce || null;
     const isEncrypted = !!(encryptedContent && nonce);
@@ -546,7 +552,7 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
     }
 
     const body = await request.json();
-    const content = (body.content || "").trim();
+    const content = sanitizeMessage((body.content || "").trim());
     const encryptedContent = body.encrypted_content || null;
     const nonce = body.nonce || null;
     const isEncrypted = !!(encryptedContent && nonce);

@@ -10,7 +10,7 @@
 // POST   /api/groups/:id/leave - Leave a group
 // DELETE /api/groups/:id/members/:userId - Kick a member (owner only)
 
-import { jsonResponse } from '../utils/index.js';
+import { jsonResponse, sanitizeMessage } from '../utils/index.js';
 import { getSupabaseForUser, addRefreshedCookieToResponse } from '../utils/supabase-user.js';
 import { checkRateLimit } from '../rate-limit/index.js';
 
@@ -18,6 +18,10 @@ const MAX_MESSAGE_LENGTH = 500;
 const MAX_GROUP_NAME_LENGTH = 100;
 const INVITE_CODE_LENGTH = 6;
 const PAGE_SIZE = 50;
+const URL_PATTERN =
+    /https?:\/\/|www\.|[a-z0-9-]+\.(com|org|net|io|co|xyz|me|app|dev|gg|tv|info|biz|link)/i;
+const UUID_RE =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
  * Generate a random invite code (A-Z, 0-9)
@@ -240,6 +244,11 @@ export async function handleJoinGroup(request, env, origin) {
  * Returns group info, analysis, members, and recent chat
  */
 export async function handleGetGroupDetail(request, env, origin, groupId) {
+    // SECURITY: Validate groupId as UUID
+    if (!UUID_RE.test(groupId)) {
+        return jsonResponse({ error: 'Invalid group ID' }, 400, origin, env);
+    }
+
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
         return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
@@ -325,6 +334,11 @@ export async function handleGetGroupDetail(request, env, origin, groupId) {
  * GET /api/groups/:id/chat - Fetch group chat messages (paginated)
  */
 export async function handleGetGroupChat(request, env, origin, groupId) {
+    // SECURITY: Validate groupId as UUID
+    if (!UUID_RE.test(groupId)) {
+        return jsonResponse({ error: 'Invalid group ID' }, 400, origin, env);
+    }
+
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
         return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
@@ -355,6 +369,10 @@ export async function handleGetGroupChat(request, env, origin, groupId) {
             .limit(PAGE_SIZE);
 
         if (before) {
+            const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+            if (!ISO_TIMESTAMP_RE.test(before)) {
+                return jsonResponse({ error: 'Invalid cursor format' }, 400, origin, env);
+            }
             query = query.lt('created_at', before);
         }
 
@@ -406,7 +424,7 @@ export async function handleSendGroupMessage(request, env, origin, groupId) {
         }
 
         const body = await request.json();
-        const message = (body.message || '').trim();
+        const message = sanitizeMessage((body.message || '').trim());
 
         if (!message || message.length === 0) {
             return jsonResponse({ error: 'Message cannot be empty' }, 400, origin, env);
@@ -414,6 +432,11 @@ export async function handleSendGroupMessage(request, env, origin, groupId) {
 
         if (message.length > MAX_MESSAGE_LENGTH) {
             return jsonResponse({ error: `Message too long (max ${MAX_MESSAGE_LENGTH} chars)` }, 400, origin, env);
+        }
+
+        // SECURITY: Block URLs in group chat (consistent with global chat)
+        if (URL_PATTERN.test(message)) {
+            return jsonResponse({ error: 'Links are not allowed in group chat.' }, 400, origin, env);
         }
 
         const displayName = email ? email.split('@')[0] : 'Anonymous';

@@ -29,10 +29,21 @@ export async function handleNewsSearch(request, env, origin, ctx = null) {
   try {
     const url = new URL(request.url);
     const query = (url.searchParams.get("q") || "").trim();
-    const lang = url.searchParams.get("lang") || "en";
+    const lang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
 
     if (!query || query.length < 2) {
       return jsonResponse({ error: "Query required (min 2 chars)" }, 400, origin, env);
+    }
+
+    // SECURITY: Limit query length to prevent abuse
+    if (query.length > 200) {
+      return jsonResponse({ error: "Query too long (max 200 chars)" }, 400, origin, env);
+    }
+
+    // SECURITY: Validate language code
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    if (!VALID_LANGS.includes(lang)) {
+      return jsonResponse({ error: "Invalid language" }, 400, origin, env);
     }
 
     // Get user preferences for source filtering
@@ -104,7 +115,8 @@ export async function handleNewsSearch(request, env, origin, ctx = null) {
   } catch (err) {
     console.error("[NewsSearch] Error:", err.message);
     return jsonResponse(
-      { error: "Search failed", message: err.message },
+      // SECURITY: Never expose raw error messages to the client
+      { error: "Search failed" },
       500,
       origin,
       env,
@@ -118,7 +130,10 @@ export async function handleNewsSearch(request, env, origin, ctx = null) {
 export async function handleBreakingNews(request, env, origin, ctx = null) {
   try {
     const url = new URL(request.url);
-    const lang = url.searchParams.get("lang") || "en";
+    // SECURITY: Validate language code against allowlist
+    const VALID_LANGS_BREAKING = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const rawLang = url.searchParams.get("lang") || "en";
+    const lang = VALID_LANGS_BREAKING.includes(rawLang) ? rawLang : "en";
 
     const cached = await getCachedBreakingNews(env, ctx, lang);
 
@@ -138,7 +153,7 @@ export async function handleBreakingNews(request, env, origin, ctx = null) {
   } catch (err) {
     console.error("[BreakingNews] Error:", err.message);
     return jsonResponse(
-      { error: "Failed to fetch breaking news", message: err.message },
+      { error: "Failed to fetch breaking news" },
       500,
       origin,
       env,

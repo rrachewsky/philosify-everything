@@ -297,7 +297,7 @@ export async function handleGetNewsPreferences(request, env, origin) {
     );
   } catch (err) {
     console.error("[NewsPreferences] Get error:", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    return jsonResponse({ error: "Failed to load news preferences" }, 500, origin, env);
   }
 }
 
@@ -398,7 +398,7 @@ export async function handleUnlockNewsPreferences(request, env, origin) {
     }
   } catch (err) {
     console.error("[NewsPreferences] Unlock error:", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    return jsonResponse({ error: "Failed to unlock news preferences" }, 500, origin, env);
   }
 }
 
@@ -500,7 +500,7 @@ export async function handleUpdateNewsPreferences(request, env, origin) {
     );
   } catch (err) {
     console.error("[NewsPreferences] Update error:", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    return jsonResponse({ error: "Failed to update news preferences" }, 500, origin, env);
   }
 }
 

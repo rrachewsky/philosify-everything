@@ -232,7 +232,7 @@ export async function handleAdsSignup(request, env, corsHeaders) {
     return response;
   } catch (err) {
     console.error('[Ads] Signup error:', err);
-    return jsonResponse({ error: err.message || 'Internal server error' }, 500, corsHeaders);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
   }
 }
 

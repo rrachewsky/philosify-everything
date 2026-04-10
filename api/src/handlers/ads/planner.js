@@ -8,6 +8,9 @@ import { getServiceSupabase } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
 import { getAdvertiserFromRequest } from './utils.js';
 
+// SECURITY: UUID validation for route parameters
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /**
  * POST /api/ads/planner/generate
  * Generate an ad plan based on budget and preferences
@@ -473,6 +476,10 @@ export async function handleGetPlan(request, env, corsHeaders, planId) {
       return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
     }
 
+    if (!UUID_RE.test(planId)) {
+      return jsonResponse({ error: 'Invalid plan ID' }, 400, corsHeaders);
+    }
+
     const { data: plans, error } = await supabase
       .from('ads.ad_plans')
       .select('*', {
@@ -538,6 +545,10 @@ export async function handlePlanCheckout(request, env, corsHeaders, planId) {
 
     if (!advertiser) {
       return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    if (!UUID_RE.test(planId)) {
+      return jsonResponse({ error: 'Invalid plan ID' }, 400, corsHeaders);
     }
 
     // Get plan
@@ -720,6 +731,9 @@ export async function handlePlanPaymentWebhook(env, session) {
  */
 export async function handleApprovePlanCreative(request, env, corsHeaders, planId) {
   try {
+    if (!UUID_RE.test(planId)) {
+      return jsonResponse({ error: 'Invalid plan ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
@@ -793,6 +807,9 @@ export async function handleApprovePlanCreative(request, env, corsHeaders, planI
  */
 export async function handleRequestPlanRevision(request, env, corsHeaders, planId) {
   try {
+    if (!UUID_RE.test(planId)) {
+      return jsonResponse({ error: 'Invalid plan ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 

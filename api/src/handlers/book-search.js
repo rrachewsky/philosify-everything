@@ -8,7 +8,12 @@ import { jsonResponse } from '../utils/index.js';
 export async function handleBookSearch(request, env) {
   const origin = request.headers.get('Origin') || '';
 
-  const body = await request.json();
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ error: 'Invalid request body' }, 400, origin, env);
+  }
   const { query } = body;
 
   if (!query || typeof query !== 'string' || query.trim().length < 2) {

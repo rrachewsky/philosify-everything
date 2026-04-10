@@ -15,7 +15,11 @@ export async function handleNewsTranslate(request, env, origin) {
       return jsonResponse({ error: "Authentication required" }, 401, origin, env);
     }
 
-    const { title, description, lang } = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body) {
+      return jsonResponse({ error: "Invalid request body" }, 400, origin, env);
+    }
+    const { title, description, lang } = body;
     if (!title || !lang) {
       return jsonResponse({ error: "title and lang required" }, 400, origin, env);
     }
@@ -69,6 +73,7 @@ Description: <user_input>${description || "No description available"}</user_inpu
     }, 200, origin, env);
   } catch (err) {
     console.error("[NewsTranslate] Error:", err.message);
-    return jsonResponse({ error: err.message }, 500, origin, env);
+    // SECURITY: Never expose raw error messages to the client
+    return jsonResponse({ error: "Translation failed" }, 500, origin, env);
   }
 }

@@ -894,6 +894,14 @@ async function verifyHookSignature(request, env, body) {
     return false;
   }
 
+  // SECURITY: Reject replayed webhooks — timestamp must be within 5 minutes
+  const now = Math.floor(Date.now() / 1000);
+  const ts = parseInt(webhookTimestamp, 10);
+  if (isNaN(ts) || Math.abs(now - ts) > 300) {
+    console.error("[AuthEmail] Webhook timestamp too old or invalid:", webhookTimestamp);
+    return false;
+  }
+
   const hookSecret = await getSecret(env.SUPABASE_AUTH_HOOK_SECRET);
   if (!hookSecret) {
     console.error("[AuthEmail] SUPABASE_AUTH_HOOK_SECRET not configured");
@@ -937,11 +945,38 @@ async function verifyHookSignature(request, env, body) {
     const expectedSignatures = webhookSignature.split(" ");
     console.log("[AuthEmail] Signature count:", expectedSignatures.length);
 
+    // SECURITY: Use constant-time comparison to prevent timing attacks
+    const encoder2 = new TextEncoder();
+    const computedBytes = encoder2.encode(computedSignature);
+
     for (const sig of expectedSignatures) {
       const sigValue = sig.replace(/^v1,/, "");
-      if (sigValue === computedSignature) {
-        console.log("[AuthEmail] Signature verified OK");
-        return true;
+      const sigBytes = encoder2.encode(sigValue);
+
+      if (sigBytes.length === computedBytes.length) {
+        // Import both as HMAC keys and compare via subtle crypto
+        const keyA = await crypto.subtle.importKey(
+          "raw", sigBytes, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+        );
+        const keyB = await crypto.subtle.importKey(
+          "raw", computedBytes, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+        );
+        // Sign the same data with both keys — if keys are identical, outputs match
+        const testData = encoder2.encode("timing-safe-check");
+        const [hashA, hashB] = await Promise.all([
+          crypto.subtle.sign("HMAC", keyA, testData),
+          crypto.subtle.sign("HMAC", keyB, testData),
+        ]);
+        const a = new Uint8Array(hashA);
+        const b = new Uint8Array(hashB);
+        let equal = a.length === b.length;
+        for (let i = 0; i < a.length; i++) {
+          equal = equal && (a[i] === b[i]);
+        }
+        if (equal) {
+          console.log("[AuthEmail] Signature verified OK");
+          return true;
+        }
       }
     }
 

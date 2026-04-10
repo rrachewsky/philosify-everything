@@ -176,7 +176,18 @@ export async function handleHistoryGraph(request, env, origin, ctx) {
  */
 export async function handleHistoryExtract(request, env, origin) {
   try {
-    const { analysisId, title, source, content, mediaType } = await request.json();
+    // SECURITY: Require authentication — this endpoint calls AI APIs and consumes resources
+    const { getUserFromAuth } = await import("../auth/jwt.js");
+    const user = await getUserFromAuth(request, env);
+    if (!user) {
+      return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    }
+
+    const body = await request.json().catch(() => null);
+    if (!body) {
+      return jsonResponse({ error: "Invalid request body" }, 400, origin, env);
+    }
+    const { analysisId, title, source, content, mediaType } = body;
 
     if (!analysisId || !content) {
       return jsonResponse({ error: 'Missing required fields' }, 400, origin, env);

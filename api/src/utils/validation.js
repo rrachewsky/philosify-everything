@@ -145,3 +145,27 @@ export function validateLanguage(lang) {
 
   return normalizedLang;
 }
+
+/**
+ * Checks if a language code is valid without throwing
+ * @param {string} lang - Language code
+ * @returns {boolean} - True if valid
+ */
+export function isValidLanguage(lang) {
+  if (!lang || typeof lang !== 'string') return false;
+  return VALID_LANGUAGES.includes(lang.toLowerCase().trim().split('-')[0]);
+}
+
+/**
+ * Safely parse JSON from a Request object.
+ * Returns null instead of throwing on invalid JSON.
+ * @param {Request} request - Incoming request
+ * @returns {Promise<Object|null>} - Parsed body or null
+ */
+export async function safeJsonParse(request) {
+  try {
+    return await request.json();
+  } catch {
+    return null;
+  }
+}

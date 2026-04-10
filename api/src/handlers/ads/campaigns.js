@@ -6,6 +6,9 @@ import { getServiceSupabase } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
 import { getAdvertiserFromRequest, getCpmCents, isValidUrl } from './utils.js';
 
+// SECURITY: UUID validation for route parameters
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /**
  * GET /api/ads/campaigns
  * List campaigns for current advertiser
@@ -23,8 +26,13 @@ export async function handleListCampaigns(request, env, corsHeaders) {
     const status = url.searchParams.get('status');
     const limit = Math.min(parseInt(url.searchParams.get('limit'), 10) || 50, 100);
 
+    // SECURITY: Validate status against allowlist to prevent PostgREST filter injection
+    const VALID_CAMPAIGN_STATUSES = ['draft', 'pending', 'active', 'paused', 'completed', 'rejected', 'cancelled', 'all'];
     let filter = `advertiser_id=eq.${advertiser.id}`;
     if (status && status !== 'all') {
+      if (!VALID_CAMPAIGN_STATUSES.includes(status)) {
+        return jsonResponse({ error: 'Invalid status filter' }, 400, corsHeaders);
+      }
       filter += `&status=eq.${status}`;
     }
 
@@ -50,6 +58,9 @@ export async function handleListCampaigns(request, env, corsHeaders) {
  */
 export async function handleGetCampaign(request, env, corsHeaders, campaignId) {
   try {
+    if (!UUID_RE.test(campaignId)) {
+      return jsonResponse({ error: 'Invalid campaign ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
@@ -158,6 +169,9 @@ export async function handleCreateCampaign(request, env, corsHeaders) {
  */
 export async function handleUpdateCampaign(request, env, corsHeaders, campaignId) {
   try {
+    if (!UUID_RE.test(campaignId)) {
+      return jsonResponse({ error: 'Invalid campaign ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
@@ -255,6 +269,9 @@ export async function handleUpdateCampaign(request, env, corsHeaders, campaignId
  */
 export async function handleDeleteCampaign(request, env, corsHeaders, campaignId) {
   try {
+    if (!UUID_RE.test(campaignId)) {
+      return jsonResponse({ error: 'Invalid campaign ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 

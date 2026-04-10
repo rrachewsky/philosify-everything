@@ -64,6 +64,12 @@ export async function handleApproveAdvertiser(request, env, corsHeaders, adverti
       return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
     }
 
+    // SECURITY: Validate advertiserId as UUID to prevent filter injection
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(advertiserId)) {
+      return jsonResponse({ error: 'Invalid advertiser ID' }, 400, corsHeaders);
+    }
+
     const body = await request.json().catch(() => ({}));
     const reason = body.reason || 'Manually approved by owner';
 
@@ -93,6 +99,12 @@ export async function handleRejectAdvertiser(request, env, corsHeaders, advertis
       return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
     }
 
+    // SECURITY: Validate advertiserId as UUID
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(advertiserId)) {
+      return jsonResponse({ error: 'Invalid advertiser ID' }, 400, corsHeaders);
+    }
+
     const body = await request.json().catch(() => ({}));
     const reason = body.reason || 'Rejected by owner';
 
@@ -120,6 +132,12 @@ export async function handleSuspendAdvertiser(request, env, corsHeaders, adverti
   try {
     if (!await verifyAdmin(request, env)) {
       return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    // SECURITY: Validate advertiserId as UUID
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(advertiserId)) {
+      return jsonResponse({ error: 'Invalid advertiser ID' }, 400, corsHeaders);
     }
 
     const body = await request.json().catch(() => ({}));
@@ -260,7 +278,12 @@ export async function handleAdminListPlans(request, env, corsHeaders) {
     const limit = Math.min(parseInt(url.searchParams.get('limit'), 10) || 100, 200);
     const filters = [];
 
+    // SECURITY: Validate status against allowlist to prevent PostgREST filter injection
+    const VALID_PLAN_STATUSES = ['draft', 'pending', 'active', 'paused', 'completed', 'rejected', 'cancelled'];
     if (status) {
+      if (!VALID_PLAN_STATUSES.includes(status)) {
+        return jsonResponse({ error: 'Invalid status filter' }, 400, corsHeaders);
+      }
       filters.push(`status=eq.${status}`);
     }
 
@@ -318,7 +341,12 @@ export async function handleAdminListCreativeRequests(request, env, corsHeaders)
     const limit = Math.min(parseInt(url.searchParams.get('limit'), 10) || 100, 200);
     const filters = [];
 
+    // SECURITY: Validate status against allowlist to prevent PostgREST filter injection
+    const VALID_CR_STATUSES = ['pending', 'in_progress', 'completed', 'rejected', 'cancelled'];
     if (status) {
+      if (!VALID_CR_STATUSES.includes(status)) {
+        return jsonResponse({ error: 'Invalid status filter' }, 400, corsHeaders);
+      }
       filters.push(`status=eq.${status}`);
     }
 
@@ -368,6 +396,12 @@ export async function handleAdminSubmitCreativeDraft(request, env, corsHeaders, 
   try {
     if (!await verifyAdmin(request, env)) {
       return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    // SECURITY: Validate requestId as UUID
+    const UUID_RE2 = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE2.test(requestId)) {
+      return jsonResponse({ error: 'Invalid request ID' }, 400, corsHeaders);
     }
 
     const body = await request.json().catch(() => ({}));
@@ -443,6 +477,12 @@ export async function handleAdminApprovePlan(request, env, corsHeaders, planId) 
   try {
     if (!await verifyAdmin(request, env)) {
       return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    // SECURITY: Validate planId as UUID
+    const UUID_RE3 = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE3.test(planId)) {
+      return jsonResponse({ error: 'Invalid plan ID' }, 400, corsHeaders);
     }
 
     const supabase = await getServiceSupabase(env);

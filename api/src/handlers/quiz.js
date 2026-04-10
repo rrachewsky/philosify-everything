@@ -416,7 +416,10 @@ async function getValidatedQuestion(supabase, env, userId, difficulty, lang, exc
 async function translateQuestionWithAI(question, lang, env) {
   try {
     const apiKey = await getSecret(env.GEMINI_API_KEY);
-    if (!apiKey) return null;
+    if (!apiKey) {
+      console.warn(`[Quiz Translation] No GEMINI_API_KEY — cannot translate to ${lang}`);
+      return null;
+    }
 
     const options = typeof question.options === 'string'
       ? JSON.parse(question.options) : question.options;
@@ -454,15 +457,32 @@ Rules:
       },
     );
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error(`[Quiz Translation] Gemini API returned ${res.status} for ${lang}`);
+      return null;
+    }
 
     const data = await res.json();
     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const jsonStr = raw.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    if (!jsonStr) {
+      console.error(`[Quiz Translation] Empty Gemini response for ${lang}`);
+      return null;
+    }
+
     const translated = JSON.parse(jsonStr);
 
-    if (!translated.question || !translated.options || !translated.explanation) return null;
-    if (!Array.isArray(translated.options) || translated.options.length !== 4) return null;
+    if (!translated.question || !translated.options || !translated.explanation) {
+      console.error(`[Quiz Translation] Incomplete translation for ${lang}: missing fields`);
+      return null;
+    }
+    if (!Array.isArray(translated.options) || translated.options.length !== 4) {
+      console.error(`[Quiz Translation] Invalid options count for ${lang}: ${translated.options?.length}`);
+      return null;
+    }
+
+    console.log(`[Quiz Translation] Successfully translated question ${question.id} to ${lang}`);
 
     // Normalize options: AI may return strings instead of {text: "..."} objects
     translated.options = translated.options.map(normalizeOption);
@@ -669,7 +689,9 @@ export async function handleQuizStart(request, env) {
         status: 'active',
         current_difficulty: 1,
         credits_spent: 1,
-      });
+      })
+      .select()
+      .single();
 
     if (sessionError || !session) {
       await releaseReservation(env, reservation.reservationId, 'quiz-session-creation-failed');
@@ -1705,5 +1727,102 @@ async function generateOneQuestion(env, lang) {
     }
   } catch (err) {
     console.error('[Quiz Gen] Single question generation error:', err);
+  }
+}
+
+// ============================================================
+// ADMIN: Bulk-generate quiz questions to fill the pool
+// POST /api/admin/quiz/generate
+// Requires X-Admin-Secret header
+// Body: { count: 30, lang: "en" } (optional)
+// ============================================================
+export async function handleQuizBulkGenerate(request, env) {
+  const origin = request.headers.get('Origin') || '';
+
+  try {
+    // In production, require admin secret. In development, allow unauthenticated access.
+    if (env.ENVIRONMENT !== 'development') {
+      const adminSecret = await getSecret(env.ADMIN_SECRET);
+      const providedSecret = request.headers.get('X-Admin-Secret');
+      if (!adminSecret || !providedSecret || providedSecret !== adminSecret) {
+        return errorResponse('Unauthorized', 401, origin, env);
+      }
+    }
+
+    let body = {};
+    try { body = await request.json(); } catch (e) {}
+    const count = Math.min(body.count || 30, 50);
+    const lang = body.lang || 'en';
+
+    // Get current pool stats
+    const supabase = await getServiceSupabase(env);
+    const { data: allQuestions } = await supabase
+      .from('quiz_questions')
+      .select('difficulty,category', { filter: 'active=eq.true' });
+
+    const diffCounts = {};
+    const catCounts = {};
+    if (Array.isArray(allQuestions)) {
+      allQuestions.forEach(q => {
+        diffCounts[q.difficulty] = (diffCounts[q.difficulty] || 0) + 1;
+        catCounts[q.category] = (catCounts[q.category] || 0) + 1;
+      });
+    }
+
+    console.log('[Quiz Admin] Pool before generation:', {
+      total: allQuestions?.length || 0,
+      byDifficulty: diffCounts,
+      byCategory: catCounts,
+    });
+
+    // Generate universal questions (fills weakest difficulties and categories)
+    try {
+      await generateQuizQuestions(env, count);
+    } catch (genErr) {
+      console.error('[Quiz Admin] generateQuizQuestions error:', genErr.message);
+    }
+
+    // Also generate regional questions for the given language
+    try {
+      const region = getRegionForLang(lang);
+      if (region) {
+        await generateRegionalQuestions(env, region, Math.ceil(count / 3));
+      }
+    } catch (regErr) {
+      console.error('[Quiz Admin] generateRegionalQuestions error:', regErr.message);
+    }
+
+    // Get updated pool stats
+    const { data: updatedQuestions } = await supabase
+      .from('quiz_questions')
+      .select('difficulty,category', { filter: 'active=eq.true' });
+
+    const newDiffCounts = {};
+    const newCatCounts = {};
+    if (Array.isArray(updatedQuestions)) {
+      updatedQuestions.forEach(q => {
+        newDiffCounts[q.difficulty] = (newDiffCounts[q.difficulty] || 0) + 1;
+        newCatCounts[q.category] = (newCatCounts[q.category] || 0) + 1;
+      });
+    }
+
+    const added = (updatedQuestions?.length || 0) - (allQuestions?.length || 0);
+
+    return jsonResponse({
+      success: true,
+      added,
+      pool: {
+        before: allQuestions?.length || 0,
+        after: updatedQuestions?.length || 0,
+        byDifficulty: newDiffCounts,
+        byCategory: newCatCounts,
+      },
+    }, 200, origin, env);
+  } catch (err) {
+    console.error('[Quiz Admin] Bulk generate error:', err?.message || err, err?.stack);
+    return jsonResponse({
+      error: 'Generation failed',
+      detail: String(err?.message || err).substring(0, 200),
+    }, 500, origin, env);
   }
 }

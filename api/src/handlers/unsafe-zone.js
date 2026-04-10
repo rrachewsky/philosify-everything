@@ -166,8 +166,17 @@ export async function handleUnsafeZone(request, env, origin) {
       return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
     }
 
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body) {
+      return jsonResponse({ error: 'Invalid request body' }, 400, origin, env);
+    }
     const { messages, lang, sessionId } = body;
+
+    // SECURITY: Validate language code against allowlist
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    if (lang && !VALID_LANGS.includes(lang.split('-')[0].toLowerCase())) {
+      return jsonResponse({ error: 'Invalid language' }, 400, origin, env);
+    }
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return jsonResponse({ error: 'Messages array is required' }, 400, origin, env);

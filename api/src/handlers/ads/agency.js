@@ -8,6 +8,9 @@
 import * as jose from 'jose';
 import { getServiceSupabase, getSupabaseCredentials } from '../../utils/supabase.js';
 import { jsonResponse, sanitizeErrorMessage } from '../../utils/index.js';
+
+// SECURITY: UUID validation for route parameters
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 import { getSecret } from '../../utils/secrets.js';
 import { isValidEmail, isValidUrl, getCpmCents } from './utils.js';
 import { vetAdvertiser } from './vetting.js';
@@ -613,6 +616,10 @@ export async function handleUpdateClientCommission(request, env, corsHeaders, cl
       return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
     }
 
+    if (!UUID_RE.test(clientId)) {
+      return jsonResponse({ error: 'Invalid client ID' }, 400, corsHeaders);
+    }
+
     const body = await request.json();
     const { commission_rate } = body;
 
@@ -744,6 +751,10 @@ export async function handleAgencyListClientCampaigns(request, env, corsHeaders,
       return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
     }
 
+    if (!UUID_RE.test(clientId)) {
+      return jsonResponse({ error: 'Invalid client ID' }, 400, corsHeaders);
+    }
+
     // Verify client belongs to agency
     const { data: clients } = await supabase
       .from('ads.agency_clients')
@@ -858,6 +869,9 @@ export async function handleAgencyCreateClientCampaign(request, env, corsHeaders
  */
 export async function handleAgencyUpdateClientCampaign(request, env, corsHeaders, clientId, campaignId) {
   try {
+    if (!UUID_RE.test(clientId) || !UUID_RE.test(campaignId)) {
+      return jsonResponse({ error: 'Invalid ID format' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const agency = await getAgencyFromRequest(env, request, supabase);
 
@@ -949,6 +963,9 @@ export async function handleAgencyUpdateClientCampaign(request, env, corsHeaders
  */
 export async function handleAgencyDeleteClientCampaign(request, env, corsHeaders, clientId, campaignId) {
   try {
+    if (!UUID_RE.test(clientId) || !UUID_RE.test(campaignId)) {
+      return jsonResponse({ error: 'Invalid ID format' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const agency = await getAgencyFromRequest(env, request, supabase);
 

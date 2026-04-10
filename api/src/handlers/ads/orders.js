@@ -9,6 +9,9 @@ import { jsonResponse } from '../../utils/index.js';
 import { getAdvertiserFromRequest, isValidUrl } from './utils.js';
 import { getSecret } from '../../utils/secrets.js';
 
+// SECURITY: UUID validation for route parameters
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /**
  * GET /api/ads/orders
  * List orders for the authenticated advertiser
@@ -28,8 +31,13 @@ export async function handleListOrders(request, env, corsHeaders) {
     const offset = parseInt(url.searchParams.get('offset')) || 0;
 
     // Build filter
+    // SECURITY: Validate status against allowlist to prevent PostgREST filter injection
+    const VALID_ORDER_STATUSES = ['pending', 'active', 'completed', 'cancelled', 'refunded', 'paused'];
     const filters = [`advertiser_id=eq.${advertiser.id}`];
     if (status) {
+      if (!VALID_ORDER_STATUSES.includes(status)) {
+        return jsonResponse({ error: 'Invalid status filter' }, 400, corsHeaders);
+      }
       filters.push(`status=eq.${status}`);
     }
 
@@ -60,6 +68,9 @@ export async function handleListOrders(request, env, corsHeaders) {
  */
 export async function handleGetOrder(request, env, corsHeaders, orderId) {
   try {
+    if (!UUID_RE.test(orderId)) {
+      return jsonResponse({ error: 'Invalid order ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
@@ -302,6 +313,9 @@ export async function handleCreateOrder(request, env, corsHeaders) {
  */
 export async function handleOrderCheckout(request, env, corsHeaders, orderId) {
   try {
+    if (!UUID_RE.test(orderId)) {
+      return jsonResponse({ error: 'Invalid order ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
@@ -396,6 +410,9 @@ export async function handleOrderCheckout(request, env, corsHeaders, orderId) {
  */
 export async function handlePauseOrder(request, env, corsHeaders, orderId) {
   try {
+    if (!UUID_RE.test(orderId)) {
+      return jsonResponse({ error: 'Invalid order ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
@@ -437,6 +454,9 @@ export async function handlePauseOrder(request, env, corsHeaders, orderId) {
  */
 export async function handleResumeOrder(request, env, corsHeaders, orderId) {
   try {
+    if (!UUID_RE.test(orderId)) {
+      return jsonResponse({ error: 'Invalid order ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
@@ -483,6 +503,9 @@ export async function handleResumeOrder(request, env, corsHeaders, orderId) {
  */
 export async function handleCancelOrder(request, env, corsHeaders, orderId) {
   try {
+    if (!UUID_RE.test(orderId)) {
+      return jsonResponse({ error: 'Invalid order ID' }, 400, corsHeaders);
+    }
     const supabase = await getServiceSupabase(env);
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 

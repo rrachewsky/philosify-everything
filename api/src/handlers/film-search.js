@@ -6,7 +6,10 @@ import { searchFilms } from "../films/index.js";
 
 export async function handleFilmSearch(request, env, origin) {
   try {
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body) {
+      return jsonResponse({ error: "Invalid request body" }, 400, origin, env);
+    }
     const query = (body.query || "").trim();
 
     if (!query || query.length < 2 || query.length > 200) {
@@ -18,7 +21,12 @@ export async function handleFilmSearch(request, env, origin) {
       );
     }
 
-    const lang = (body.lang || "en").split("-")[0];
+    // SECURITY: Validate language code against allowlist
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const lang = (body.lang || "en").split("-")[0].toLowerCase();
+    if (!VALID_LANGS.includes(lang)) {
+      return jsonResponse({ error: "Invalid language" }, 400, origin, env);
+    }
     const options = await searchFilms(query, env, lang);
 
     return jsonResponse(
