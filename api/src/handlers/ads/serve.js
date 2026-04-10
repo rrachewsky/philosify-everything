@@ -194,12 +194,6 @@ export async function handleServeAd(request, env, corsHeaders) {
       }
     }
 
-    // Get current time for schedule checking
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    const currentHour = now.getUTCHours();
-    const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getUTCDay()];
-
     // ============================================================
     // AD SELECTION WITH TARGETING + FREQUENCY CAPPING
     // ============================================================
