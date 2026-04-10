@@ -688,7 +688,7 @@ export async function handleRecordImpression(request, env, corsHeaders) {
       );
     }
 
-    // Handle agency commission if applicable
+    // Handle agency commission if applicable — uses atomic increment
     const { data: advertisers } = await supabase
       .from('ads.advertisers')
       .select('agency_id,agency_commission_pct', { filter: `id=eq.${order.advertiser_id}` });
@@ -698,27 +698,25 @@ export async function handleRecordImpression(request, env, corsHeaders) {
       const commissionCents = Math.ceil(costCents * (advertiser.agency_commission_pct / 100));
       
       if (commissionCents > 0) {
+        // SECURITY: Atomic increment prevents lost updates under concurrent impressions
+        await supabase.rpc('ads.increment_agency_balance', {
+          p_agency_id: advertiser.agency_id,
+          p_amount: commissionCents,
+        });
+
+        // Get updated balance for transaction record
         const { data: agencies } = await supabase
           .from('ads.agencies')
           .select('balance_cents', { filter: `id=eq.${advertiser.agency_id}` });
 
-        if (agencies && agencies.length > 0) {
-          const newBalance = agencies[0].balance_cents + commissionCents;
-          
-          await supabase.from('ads.agencies').update(
-            { balance_cents: newBalance, updated_at: new Date().toISOString() },
-            `id=eq.${advertiser.agency_id}`
-          );
-
-          await supabase.from('ads.agency_transactions').insert({
-            agency_id: advertiser.agency_id,
-            type: 'commission',
-            amount_cents: commissionCents,
-            balance_after_cents: newBalance,
-            description: `Commission from impression: ${order.name}`,
-            order_id: order_id,
-          });
-        }
+        await supabase.from('ads.agency_transactions').insert({
+          agency_id: advertiser.agency_id,
+          type: 'commission',
+          amount_cents: commissionCents,
+          balance_after_cents: agencies?.[0]?.balance_cents || 0,
+          description: `Commission from impression: ${order.name}`,
+          order_id: order_id,
+        });
       }
     }
 
