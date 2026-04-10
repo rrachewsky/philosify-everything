@@ -16,7 +16,9 @@ export default function InlineAdSlot({
   const [impressionId, setImpressionId] = useState(null);
   const [hasRecordedImpression, setHasRecordedImpression] = useState(false);
   const [hasTrackedClick, setHasTrackedClick] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const impressionTimerRef = useRef(null);
+  const adContainerRef = useRef(null);
 
   const recordImpression = useCallback(async () => {
     if (!ad?.impression_token || hasRecordedImpression) {
@@ -88,8 +90,22 @@ export default function InlineAdSlot({
     };
   }, [placement, refreshKey, userId]);
 
+  // Track viewport visibility with IntersectionObserver
   useEffect(() => {
-    if (!ad?.creative_url || hasRecordedImpression) {
+    if (!adContainerRef.current || !ad?.creative_url) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.5 } // at least 50% visible
+    );
+
+    observer.observe(adContainerRef.current);
+    return () => observer.disconnect();
+  }, [ad]);
+
+  // Only start impression timer when ad is visible
+  useEffect(() => {
+    if (!ad?.creative_url || hasRecordedImpression || !isVisible) {
       return undefined;
     }
 
@@ -102,7 +118,7 @@ export default function InlineAdSlot({
         clearTimeout(impressionTimerRef.current);
       }
     };
-  }, [ad, hasRecordedImpression, recordImpression]);
+  }, [ad, hasRecordedImpression, isVisible, recordImpression]);
 
   const handleClick = () => {
     if (!impressionId || hasTrackedClick) {
@@ -124,7 +140,7 @@ export default function InlineAdSlot({
   }
 
   return (
-    <aside className={`ad-slot ad-slot--${layout} ${className}`.trim()} aria-label="Sponsored message">
+    <aside ref={adContainerRef} className={`ad-slot ad-slot--${layout} ${className}`.trim()} aria-label="Sponsored message">
       <p className="ad-slot__label">{label}</p>
       <a
         className="ad-slot__card"

@@ -4177,6 +4177,10 @@ export default {
       if (orderIdMatch && request.method === "GET") {
         return handleGetOrder(request, env, corsHeaders, orderIdMatch[1]);
       }
+      if (orderIdMatch && request.method === "PUT") {
+        const { handleUpdateOrder } = await import("./src/handlers/ads/orders.js");
+        return handleUpdateOrder(request, env, corsHeaders, orderIdMatch[1]);
+      }
       const orderCheckoutMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/checkout$/i);
       if (orderCheckoutMatch && request.method === "POST") {
         return handleOrderCheckout(request, env, corsHeaders, orderCheckoutMatch[1]);

@@ -8,6 +8,15 @@ const PLACEMENTS = [
   { value: 'constellation', label: 'Constellation panel' },
 ];
 
+const TARGETING_OPTIONS = {
+  genres: ['Rock', 'Pop', 'Hip-Hop', 'Classical', 'Jazz', 'Electronic', 'R&B', 'Country', 'Latin', 'Metal', 'Folk', 'Blues', 'Indie', 'Punk', 'Reggae', 'Soul'],
+  philosophies: ['Objectivism', 'Stoicism', 'Existentialism', 'Nihilism', 'Marxism', 'Utilitarianism', 'Virtue Ethics', 'Pragmatism', 'Rationalism', 'Empiricism'],
+  languages: ['English', 'Portuguese', 'Spanish', 'French', 'German', 'Italian', 'Russian', 'Japanese', 'Korean', 'Chinese', 'Arabic', 'Hindi', 'Hebrew', 'Dutch', 'Polish', 'Turkish', 'Hungarian', 'Persian'],
+  engagement: ['Casual', 'Regular', 'Power User'],
+  countries: ['US', 'BR', 'GB', 'CA', 'DE', 'FR', 'AU', 'ES', 'IT', 'NL', 'JP', 'KR', 'IN', 'MX', 'AR', 'IL', 'PT', 'PL', 'TR', 'RU'],
+  content: ['Music Analysis', 'Book Analysis', 'Cinema Analysis', 'Colloquium', 'News', 'Quiz'],
+};
+
 const DURATIONS = [
   { value: 'mixed', label: 'Best fit' },
   { value: 5, label: '5 seconds' },
@@ -29,6 +38,14 @@ function CreateCampaign() {
     creative_brief: '',
     start_date: '',
     end_date: '',
+    targeting: {
+      genres: [],
+      philosophies: [],
+      languages: [],
+      engagement: [],
+      countries: [],
+      content: [],
+    },
   });
   const [creativeFile, setCreativeFile] = useState(null);
   const [generatedPlan, setGeneratedPlan] = useState(null);
@@ -51,11 +68,27 @@ function CreateCampaign() {
     }));
   };
 
+  const toggleTargeting = (category, value) => {
+    setForm((previous) => {
+      const current = previous.targeting[category] || [];
+      const next = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      return { ...previous, targeting: { ...previous.targeting, [category]: next } };
+    });
+  };
+
   const generatePlan = async () => {
     setError('');
     setLoadingPlan(true);
 
     try {
+      // Filter out empty targeting arrays
+      const targeting = {};
+      for (const [key, values] of Object.entries(form.targeting)) {
+        if (values.length > 0) targeting[key] = values;
+      }
+
       const data = await api.post('/ads/planner/generate', {
         budget_cents: Math.round(Number(form.budget || 0) * 100),
         goal: form.goal,
@@ -64,6 +97,7 @@ function CreateCampaign() {
         placement_preference: form.placement_preference,
         duration_preference:
           form.duration_preference === 'mixed' ? 'mixed' : Number(form.duration_preference),
+        targeting: Object.keys(targeting).length > 0 ? targeting : undefined,
       });
       setGeneratedPlan(data);
       return data.plan;
@@ -207,6 +241,32 @@ function CreateCampaign() {
                 ))}
               </select>
             </div>
+          </div>
+
+          {/* Audience Targeting */}
+          <div className="targeting-section">
+            <h3>Audience Targeting (optional)</h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              Leave empty to reach all users. Select options to narrow your audience.
+            </p>
+
+            {Object.entries(TARGETING_OPTIONS).map(([category, options]) => (
+              <div key={category} className="targeting-group">
+                <label>{category.charAt(0).toUpperCase() + category.slice(1)}</label>
+                <div className="chip-group">
+                  {options.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      className={`chip ${form.targeting[category]?.includes(option.toLowerCase()) ? 'selected' : ''}`}
+                      onClick={() => toggleTargeting(category, option.toLowerCase())}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
           <div className="field">

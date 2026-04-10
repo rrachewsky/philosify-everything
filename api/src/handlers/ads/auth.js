@@ -214,6 +214,17 @@ export async function handleAdsSignup(request, env, corsHeaders) {
       return jsonResponse({ error: 'Failed to create account' }, 500, corsHeaders);
     }
 
+    // Send notification emails
+    try {
+      if (advertiser.status === 'approved') {
+        const { sendApprovalEmail } = await import('./emails.js');
+        sendApprovalEmail(env, email, company_name).catch(() => {});
+      } else {
+        const { sendNewAdvertiserAdminEmail } = await import('./emails.js');
+        sendNewAdvertiserAdminEmail(env, company_name, email).catch(() => {});
+      }
+    } catch (e) { console.warn('[AdsAuth] Signup email failed:', e.message); }
+
     // Sign in to get session tokens
     const session = await supabaseSignIn(env, email.toLowerCase(), password);
 

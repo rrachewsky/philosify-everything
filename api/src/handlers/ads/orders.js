@@ -311,6 +311,79 @@ export async function handleCreateOrder(request, env, corsHeaders) {
 }
 
 /**
+ * PUT /api/ads/orders/:id
+ * Update an order (only allowed for draft/pending orders)
+ */
+export async function handleUpdateOrder(request, env, corsHeaders, orderId) {
+  try {
+    if (!UUID_RE.test(orderId)) {
+      return jsonResponse({ error: 'Invalid order ID' }, 400, corsHeaders);
+    }
+    const supabase = await getServiceSupabase(env);
+    const advertiser = await getAdvertiserFromRequest(env, request, supabase);
+
+    if (!advertiser) {
+      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    // Verify ownership and editable status
+    const { data: orders } = await supabase
+      .from('ads.ad_orders')
+      .select('*', { filter: `id=eq.${orderId}&advertiser_id=eq.${advertiser.id}` });
+
+    if (!orders || orders.length === 0) {
+      return jsonResponse({ error: 'Order not found' }, 404, corsHeaders);
+    }
+
+    const order = orders[0];
+    if (!['draft', 'pending_creative', 'pending_approval'].includes(order.status)) {
+      return jsonResponse({ error: 'Only draft or pending orders can be edited' }, 400, corsHeaders);
+    }
+
+    const body = await request.json();
+    const updates = {};
+
+    // Editable fields
+    if (body.name !== undefined) updates.name = body.name;
+    if (body.target_url !== undefined) {
+      if (!isValidUrl(body.target_url)) {
+        return jsonResponse({ error: 'Invalid target URL' }, 400, corsHeaders);
+      }
+      updates.target_url = body.target_url;
+    }
+    if (body.creative_url !== undefined) updates.creative_url = body.creative_url;
+    if (body.creative_brief !== undefined) updates.creative_brief = body.creative_brief;
+    if (body.targeting !== undefined) updates.targeting = body.targeting;
+
+    // Schedule can only be changed for draft orders
+    if (order.status === 'draft') {
+      if (body.schedule_type !== undefined) updates.schedule_type = body.schedule_type;
+      if (body.start_date !== undefined) updates.start_date = body.start_date;
+      if (body.end_date !== undefined) updates.end_date = body.end_date;
+      if (body.time_windows !== undefined) updates.time_windows = body.time_windows;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return jsonResponse({ error: 'No valid fields to update' }, 400, corsHeaders);
+    }
+
+    updates.updated_at = new Date().toISOString();
+
+    await supabase.from('ads.ad_orders').update(updates, `id=eq.${orderId}`);
+
+    // Return updated order
+    const { data: updated } = await supabase
+      .from('ads.ad_orders')
+      .select('*', { filter: `id=eq.${orderId}` });
+
+    return jsonResponse({ order: updated?.[0] || null }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads] Update order error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
  * POST /api/ads/orders/:id/checkout
  * Create Stripe checkout session for an order
  */
@@ -671,6 +744,20 @@ export async function handleOrderPaymentWebhook(env, session) {
     }
 
     console.log(`[Ads] Order ${order_id} paid, status: ${newStatus}`);
+
+    // Send emails
+    try {
+      const { data: adv } = await supabase
+        .from('ads.advertisers')
+        .select('email,company_name', { filter: `id=eq.${order.advertiser_id}`, limit: 1 });
+      if (adv?.[0]) {
+        const { sendPaymentConfirmationEmail, sendCreativeRequestAdminEmail } = await import('./emails.js');
+        sendPaymentConfirmationEmail(env, adv[0].email, order.name, order.total_cents).catch(() => {});
+        if (order.creative_type === 'philosify') {
+          sendCreativeRequestAdminEmail(env, adv[0].company_name, order.name).catch(() => {});
+        }
+      }
+    } catch (e) { console.warn('[AdsOrders] Payment email failed:', e.message); }
   } catch (err) {
     console.error('[Ads] Order payment webhook error:', err);
   }

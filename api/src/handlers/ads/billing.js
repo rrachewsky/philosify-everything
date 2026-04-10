@@ -225,6 +225,17 @@ export async function handleBillingWebhook(request, env, corsHeaders) {
       });
 
       console.log(`[Ads] Funded ${advertiserId}: +$${(amountCents / 100).toFixed(2)}`);
+
+      // Send deposit confirmation email
+      try {
+        const { data: adv } = await supabase
+          .from('ads.advertisers')
+          .select('email', { filter: `id=eq.${advertiserId}`, limit: 1 });
+        if (adv?.[0]) {
+          const { sendDepositConfirmationEmail } = await import('./emails.js');
+          sendDepositConfirmationEmail(env, adv[0].email, amountCents).catch(() => {});
+        }
+      } catch (e) { console.warn('[AdsBilling] Deposit email failed:', e.message); }
     }
 
     return jsonResponse({ received: true }, 200, corsHeaders);

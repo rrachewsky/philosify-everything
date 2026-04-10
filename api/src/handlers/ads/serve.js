@@ -632,6 +632,24 @@ export async function handleRecordImpression(request, env, corsHeaders) {
       `id=eq.${order_id}`
     );
 
+    // Send completion email when order finishes
+    if (newStatus === 'completed') {
+      try {
+        const { data: adv } = await supabase
+          .from('ads.advertisers')
+          .select('email', { filter: `id=eq.${order.advertiser_id}`, limit: 1 });
+        if (adv?.[0]) {
+          const clicks = await supabase
+            .from('ads.ad_impressions')
+            .select('id', { count: 'exact', head: true })
+            .eq('order_id', order_id)
+            .eq('clicked', true);
+          const { sendCampaignCompleteEmail } = await import('./emails.js');
+          sendCampaignCompleteEmail(env, adv[0].email, order.name || 'Campaign', delivered, clicks?.count || 0).catch(() => {});
+        }
+      } catch (e) { console.warn('[AdsServe] Completion email failed:', e.message); }
+    }
+
     // Keep daily actuals in sync for forecasting and reporting.
     const today = new Date().toISOString().split('T')[0];
     const { data: forecastRows } = await supabase

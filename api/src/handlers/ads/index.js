@@ -64,6 +64,7 @@ export {
   handleListOrders,
   handleGetOrder,
   handleCreateOrder,
+  handleUpdateOrder,
   handleOrderCheckout,
   handlePauseOrder,
   handleResumeOrder,

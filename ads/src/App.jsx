@@ -14,6 +14,7 @@ import Billing from '@pages/Billing';
 import Placements from '@pages/Placements';
 import Policy from '@pages/Policy';
 import Settings from '@pages/Settings';
+import Analytics from '@pages/Analytics';
 import AdminLogin from '@pages/admin/AdminLogin';
 import AdminDashboard from '@pages/admin/AdminDashboard';
 import AgencyLogin from '@pages/agency/AgencyLogin';
@@ -102,6 +103,14 @@ function App() {
         element={
           <AdvertiserLayout>
             <Billing />
+          </AdvertiserLayout>
+        }
+      />
+      <Route
+        path="/app/analytics"
+        element={
+          <AdvertiserLayout>
+            <Analytics />
           </AdvertiserLayout>
         }
       />

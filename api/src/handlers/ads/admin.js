@@ -82,6 +82,17 @@ export async function handleApproveAdvertiser(request, env, corsHeaders, adverti
       `advertiser_id=eq.${advertiserId}&status=eq.pending`
     );
 
+    // Send approval email
+    try {
+      const { data: adv } = await supabase
+        .from('ads.advertisers')
+        .select('email,company_name', { filter: `id=eq.${advertiserId}`, limit: 1 });
+      if (adv?.[0]) {
+        const { sendApprovalEmail } = await import('./emails.js');
+        sendApprovalEmail(env, adv[0].email, adv[0].company_name).catch(() => {});
+      }
+    } catch (e) { console.warn('[AdsAdmin] Approval email failed:', e.message); }
+
     return jsonResponse({ success: true, status: 'approved' }, 200, corsHeaders);
   } catch (err) {
     console.error('[Ads Admin] Approve error:', err);
@@ -116,6 +127,17 @@ export async function handleRejectAdvertiser(request, env, corsHeaders, advertis
       { status: 'rejected', updated_at: new Date().toISOString() },
       `advertiser_id=eq.${advertiserId}&status=eq.pending`
     );
+
+    // Send rejection email
+    try {
+      const { data: adv } = await supabase
+        .from('ads.advertisers')
+        .select('email,company_name', { filter: `id=eq.${advertiserId}`, limit: 1 });
+      if (adv?.[0]) {
+        const { sendRejectionEmail } = await import('./emails.js');
+        sendRejectionEmail(env, adv[0].email, adv[0].company_name, reason).catch(() => {});
+      }
+    } catch (e) { console.warn('[AdsAdmin] Rejection email failed:', e.message); }
 
     return jsonResponse({ success: true, status: 'rejected' }, 200, corsHeaders);
   } catch (err) {
@@ -461,6 +483,22 @@ export async function handleAdminSubmitCreativeDraft(request, env, corsHeaders, 
         `id=eq.${creativeRequest.order_id}`
       );
     }
+
+    // Notify advertiser that creative is ready for review
+    try {
+      const { data: order } = await supabase
+        .from('ads.ad_orders')
+        .select('advertiser_id,name', { filter: `id=eq.${creativeRequest.order_id}`, limit: 1 });
+      if (order?.[0]) {
+        const { data: adv } = await supabase
+          .from('ads.advertisers')
+          .select('email', { filter: `id=eq.${order[0].advertiser_id}`, limit: 1 });
+        if (adv?.[0]) {
+          const { sendCreativeReadyEmail } = await import('./emails.js');
+          sendCreativeReadyEmail(env, adv[0].email, order[0].name).catch(() => {});
+        }
+      }
+    } catch (e) { console.warn('[AdsAdmin] Creative ready email failed:', e.message); }
 
     return jsonResponse({ success: true, status: 'review' }, 200, corsHeaders);
   } catch (err) {
