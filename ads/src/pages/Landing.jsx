@@ -23,6 +23,9 @@ function Landing() {
           <Link to="/policy" className="btn btn--ghost">
             Policy
           </Link>
+          <Link to="/agency/login" className="btn btn--ghost">
+            Agencies
+          </Link>
           <Link to="/login" className="btn btn--ghost">
             Sign in
           </Link>
@@ -108,6 +111,17 @@ function Landing() {
               Every campaign passes through an approval flow so the experience stays premium for
               both audiences and partners.
             </p>
+          </article>
+          <article className="editorial-card">
+            <p className="eyebrow">Agency partners</p>
+            <h2>Manage campaigns for multiple clients from one dashboard.</h2>
+            <p>
+              Agencies get their own portal: add clients, run campaigns on their behalf, earn
+              commissions on every impression, and request payouts when your balance reaches $100.
+            </p>
+            <Link to="/agency/signup" className="btn btn--secondary" style={{ marginTop: '12px' }}>
+              Register as agency
+            </Link>
           </article>
         </section>
       </main>

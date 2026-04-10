@@ -8,6 +8,7 @@ export default function AgencyDashboard() {
   const [clients, setClients] = useState([]);
   const [earnings, setEarnings] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -19,7 +20,7 @@ export default function AgencyDashboard() {
         setClients(clientsData.clients || []);
         setEarnings(earningsData);
       } catch (err) {
-        console.error('Failed to load dashboard:', err);
+        setError(err.message || 'Failed to load dashboard');
       } finally {
         setLoading(false);
       }
@@ -35,6 +36,8 @@ export default function AgencyDashboard() {
         <h1>Agency Dashboard</h1>
         <p className="text-muted">Welcome, {agency?.company_name}</p>
       </div>
+
+      {error && <div className="auth-error">{error}</div>}
 
       <div className="stats-grid">
         <div className="stat-card">

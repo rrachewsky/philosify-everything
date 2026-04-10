@@ -73,6 +73,9 @@ function Dashboard() {
           <Link to="/app/campaigns" className="btn btn--secondary">
             Review pipeline
           </Link>
+          <Link to="/app/analytics" className="btn btn--secondary">
+            Analytics
+          </Link>
         </div>
       </section>
 

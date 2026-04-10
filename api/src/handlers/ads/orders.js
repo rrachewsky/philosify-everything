@@ -701,7 +701,13 @@ export async function handleOrderPaymentWebhook(env, session) {
     }
 
     // Update order status
-    const newStatus = order.creative_type === 'philosify' ? 'pending_creative' : 'pending_approval';
+    // Self-uploaded creatives with ready status go directly to active
+    // Philosify-created creatives need the creative production workflow
+    const newStatus = order.creative_type === 'self' && order.creative_status === 'ready'
+      ? 'active'
+      : order.creative_type === 'philosify'
+        ? 'pending_creative'
+        : 'pending_approval';
     
     await supabase.from('ads.ad_orders').update(
       {
@@ -753,6 +759,10 @@ export async function handleOrderPaymentWebhook(env, session) {
       if (adv?.[0]) {
         const { sendPaymentConfirmationEmail, sendCreativeRequestAdminEmail } = await import('./emails.js');
         sendPaymentConfirmationEmail(env, adv[0].email, order.name, order.total_cents).catch(() => {});
+        if (newStatus === 'active') {
+          const { sendCampaignLiveEmail } = await import('./emails.js');
+          sendCampaignLiveEmail(env, adv[0].email, order.name).catch(() => {});
+        }
         if (order.creative_type === 'philosify') {
           sendCreativeRequestAdminEmail(env, adv[0].company_name, order.name).catch(() => {});
         }

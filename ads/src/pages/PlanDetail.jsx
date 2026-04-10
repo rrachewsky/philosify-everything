@@ -231,6 +231,53 @@ function PlanDetail() {
                 <span>${(order.total_cents / 100).toFixed(2)}</span>
                 <span className={`status-chip status-chip--${order.status}`}>{order.status}</span>
               </div>
+              <div className="collection-row__actions" style={{ marginTop: '8px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {order.status === 'active' && (
+                  <button
+                    className="btn btn-sm"
+                    disabled={actionLoading}
+                    onClick={() => runAction(() => api.post(`/ads/orders/${order.id}/pause`))}
+                  >
+                    Pause
+                  </button>
+                )}
+                {order.status === 'paused' && (
+                  <button
+                    className="btn btn-sm btn--primary"
+                    disabled={actionLoading}
+                    onClick={() => runAction(() => api.post(`/ads/orders/${order.id}/resume`))}
+                  >
+                    Resume
+                  </button>
+                )}
+                {['active', 'paused', 'pending_creative', 'pending_approval'].includes(order.status) && (
+                  <button
+                    className="btn btn-sm btn--danger"
+                    disabled={actionLoading}
+                    onClick={() => {
+                      if (confirm('Cancel this order? Undelivered impressions will be refunded.')) {
+                        runAction(() => api.post(`/ads/orders/${order.id}/cancel`));
+                      }
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
+                {['draft', 'pending_creative', 'pending_approval'].includes(order.status) && (
+                  <button
+                    className="btn btn-sm"
+                    disabled={actionLoading}
+                    onClick={() => {
+                      const newUrl = prompt('New destination URL:', order.target_url);
+                      if (newUrl && newUrl !== order.target_url) {
+                        runAction(() => api.put(`/ads/orders/${order.id}`, { target_url: newUrl }));
+                      }
+                    }}
+                  >
+                    Edit URL
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>

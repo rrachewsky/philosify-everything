@@ -9,6 +9,7 @@ export default function AgencyClients() {
   const [showAdd, setShowAdd] = useState(false);
   const [newClient, setNewClient] = useState({ email: '', company_name: '' });
   const [error, setError] = useState('');
+  const [loadError, setLoadError] = useState('');
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function AgencyClients() {
       const data = await api.get('/ads/agency/clients');
       setClients(data.clients || []);
     } catch (err) {
-      console.error('Failed to load clients:', err);
+      setLoadError(err.message || 'Failed to load clients');
     } finally {
       setLoading(false);
     }
@@ -88,7 +89,9 @@ export default function AgencyClients() {
         </div>
       )}
 
-      {clients.length === 0 ? (
+      {loadError && <div className="auth-error">{loadError}</div>}
+
+      {clients.length === 0 && !loadError ? (
         <div className="empty-state">
           <p>No clients yet. Add your first client to start managing their ad campaigns on Philosify.</p>
         </div>
@@ -115,7 +118,27 @@ export default function AgencyClients() {
                       {client.status}
                     </span>
                   </td>
-                  <td>{client.commission_rate}%</td>
+                    <td>
+                      <input
+                        type="number"
+                        min="0"
+                        max="50"
+                        step="1"
+                        defaultValue={client.commission_rate}
+                        style={{ width: '60px', textAlign: 'center' }}
+                        onBlur={async (e) => {
+                          const newRate = parseInt(e.target.value, 10);
+                          if (newRate !== client.commission_rate && newRate >= 0 && newRate <= 50) {
+                            try {
+                              await api.put(`/ads/agency/clients/${client.id}/commission`, { commission_rate: newRate });
+                              loadClients();
+                            } catch (err) {
+                              setLoadError(err.message || 'Failed to update commission');
+                            }
+                          }
+                        }}
+                      />%
+                    </td>
                   <td>{new Date(client.created_at).toLocaleDateString()}</td>
                   <td>
                     <button
