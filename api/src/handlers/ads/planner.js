@@ -590,8 +590,8 @@ export async function handlePlanCheckout(request, env, corsHeaders, planId) {
 
     const params = new URLSearchParams();
     params.append('mode', 'payment');
-    params.append('success_url', `${frontendUrl}/plans/${planId}?payment=success`);
-    params.append('cancel_url', `${frontendUrl}/plans/${planId}?payment=cancelled`);
+    params.append('success_url', `${frontendUrl}/app/campaigns/${planId}?payment=success`);
+    params.append('cancel_url', `${frontendUrl}/app/campaigns/${planId}?payment=cancelled`);
     params.append('customer_email', advertiser.email);
     params.append('metadata[plan_id]', planId);
     params.append('metadata[advertiser_id]', advertiser.id);

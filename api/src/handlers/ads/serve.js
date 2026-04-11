@@ -192,6 +192,12 @@ export async function handleServeAd(request, env, corsHeaders) {
       if (isPremium) {
         return jsonResponse({ ad: null, reason: 'premium_user' }, 200, corsHeaders);
       }
+
+      // Update user geolocation profile for ad targeting (fire-and-forget)
+      try {
+        const { updateUserGeolocation } = await import('./targeting.js');
+        updateUserGeolocation(env, userId, request).catch(() => {});
+      } catch {}
     }
 
     // ============================================================

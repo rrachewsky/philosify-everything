@@ -450,8 +450,8 @@ export async function handleOrderCheckout(request, env, corsHeaders, orderId) {
     // Build form params for Stripe API
     const params = new URLSearchParams();
     params.append('mode', 'payment');
-    params.append('success_url', `${frontendUrl}/orders/${orderId}?payment=success`);
-    params.append('cancel_url', `${frontendUrl}/orders/${orderId}?payment=cancelled`);
+    params.append('success_url', `${frontendUrl}/app/campaigns/${orderId}?payment=success`);
+    params.append('cancel_url', `${frontendUrl}/app/campaigns/${orderId}?payment=cancelled`);
     params.append('customer_email', advertiser.email);
     params.append('metadata[order_id]', orderId);
     params.append('metadata[advertiser_id]', advertiser.id);
