@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAgency } from '@contexts/AgencyContext';
 import { api } from '@services/api';
 
 export default function AgencyEarnings() {
+  const { t } = useTranslation();
   const { agency } = useAgency();
   const [earnings, setEarnings] = useState(null);
   const [loading, setLoading] = useState(true);

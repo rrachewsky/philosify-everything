@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { api } from '@services/api';
 
 export default function AgencyClientCampaigns() {
+  const { t } = useTranslation();
   const { clientId } = useParams();
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);

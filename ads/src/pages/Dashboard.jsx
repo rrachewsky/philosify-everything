@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import { api } from '@services/api';
 
 function Dashboard() {
+  const { t } = useTranslation();
   const { advertiser } = useAuth();
   const [plans, setPlans] = useState([]);
   const [balance, setBalance] = useState(0);
@@ -49,7 +51,7 @@ function Dashboard() {
     return (
       <div className="status-shell">
         <div className="spinner" />
-        <p>Composing your dashboard...</p>
+        <p>{t('common.loading')}</p>
       </div>
     );
   }
@@ -60,47 +62,43 @@ function Dashboard() {
     <div className="page-stack">
       <section className="hero-strip">
         <div>
-          <p className="eyebrow">Advertiser workspace</p>
-          <h2>{advertiser?.company_name || 'Your atelier'} at a glance</h2>
-          <p className="lead">
-            Move from brief to approved launch with a dashboard built around the next useful action.
-          </p>
+          <p className="eyebrow">{t('dashboard.title')}</p>
+          <h2>{t('dashboard.welcome')}, {advertiser?.company_name || ''}</h2>
         </div>
         <div className="hero-strip__actions">
           <Link to="/app/new" className="btn btn--primary btn--large">
-            New campaign
+            {t('dashboard.newCampaign')}
           </Link>
           <Link to="/app/campaigns" className="btn btn--secondary">
-            Review pipeline
+            {t('dashboard.reviewPipeline')}
           </Link>
           <Link to="/app/analytics" className="btn btn--secondary">
-            Analytics
+            {t('dashboard.analytics')}
           </Link>
         </div>
       </section>
 
       {advertiser?.status === 'pending' ? (
         <div className="alert alert--warning">
-          Your account is still under review. You can compose campaigns now, but launch begins after
-          Philosify approves the account.
+          {t('dashboard.pendingReview')}
         </div>
       ) : null}
 
       <section className="stats-grid">
         <article className="stat-panel">
-          <span className="stat-panel__label">Available balance</span>
+          <span className="stat-panel__label">{t('dashboard.availableBalance')}</span>
           <strong className="stat-panel__value">${(balance / 100).toFixed(2)}</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Campaign investment</span>
+          <span className="stat-panel__label">{t('dashboard.campaignInvestment')}</span>
           <strong className="stat-panel__value">${(stats.totalBudget / 100).toFixed(2)}</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Awaiting payment</span>
+          <span className="stat-panel__label">{t('dashboard.awaitingPayment')}</span>
           <strong className="stat-panel__value">{stats.awaitingPayment}</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Awaiting creative or review</span>
+          <span className="stat-panel__label">{t('dashboard.awaitingCreative')}</span>
           <strong className="stat-panel__value">{stats.awaitingCreative + stats.awaitingApproval}</strong>
         </article>
       </section>
@@ -130,8 +128,8 @@ function Dashboard() {
       <section className="surface-card">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Recent campaigns</p>
-            <h3>Latest work in the atelier</h3>
+            <p className="eyebrow">{t('dashboard.recentCampaigns')}</p>
+            <h3>{t('dashboard.recentCampaigns')}</h3>
           </div>
           <Link to="/app/campaigns" className="btn btn--ghost">
             View all
@@ -140,10 +138,9 @@ function Dashboard() {
 
         {recentPlans.length === 0 ? (
           <div className="empty-state">
-            <h4>No campaigns yet</h4>
-            <p>Your first campaign starts with a brief, a budget, and a placement choice.</p>
+            <h4>{t('dashboard.noCampaigns')}</h4>
             <Link to="/app/new" className="btn btn--primary">
-              Start a campaign
+              {t('dashboard.newCampaign')}
             </Link>
           </div>
         ) : (
@@ -153,7 +150,7 @@ function Dashboard() {
                 <div>
                   <strong>{plan.name}</strong>
                   <p>
-                    {plan.goal} · {plan.creative_type === 'self' ? 'Uploaded creative' : 'Philosify mock'} ·{' '}
+                    {plan.goal} · {plan.creative_type === 'self' ? t('campaigns.uploaded') : t('campaigns.philosifyMock')} ·{' '}
                     ${(plan.total_cost_cents / 100).toFixed(2)}
                   </p>
                 </div>

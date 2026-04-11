@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@contexts/AuthContext';
 import { api } from '@services/api';
 
 function Settings() {
+  const { t } = useTranslation();
   const { advertiser, refreshAdvertiser, logout } = useAuth();
   
   const [form, setForm] = useState({
@@ -59,7 +61,7 @@ function Settings() {
       });
       
       await refreshAdvertiser();
-      setMessage({ type: 'success', text: 'Profile updated successfully' });
+      setMessage({ type: 'success', text: t('settings.profileUpdated') });
     } catch (err) {
       setMessage({ type: 'error', text: err.message || 'Failed to update profile' });
     } finally {
@@ -91,7 +93,7 @@ function Settings() {
         new_password: '',
         confirm_password: '',
       });
-      setPasswordMessage({ type: 'success', text: 'Password changed successfully' });
+      setPasswordMessage({ type: 'success', text: t('settings.passwordChanged') });
     } catch (err) {
       setPasswordMessage({ type: 'error', text: err.message || 'Failed to change password' });
     } finally {
@@ -118,27 +120,27 @@ function Settings() {
     <div className="page-stack">
       <section className="section-heading">
         <div>
-          <p className="eyebrow">Account atelier</p>
-          <h2>Profile and security</h2>
+          <p className="eyebrow">{t('settings.title')}</p>
+          <h2>{t('settings.title')}</h2>
         </div>
       </section>
 
       <div className="editorial-grid editorial-grid--settings">
         <section className="surface-card stack">
           <div>
-            <p className="eyebrow">Profile</p>
-            <h3>Company details</h3>
+            <p className="eyebrow">{t('settings.profile')}</p>
+            <h3>{t('settings.profile')}</h3>
           </div>
 
           {message.text ? <div className={`alert alert--${message.type}`}>{message.text}</div> : null}
 
           <form className="stack" onSubmit={handleSaveProfile}>
             <div className="field">
-              <label htmlFor="settings-email">Email address</label>
+              <label htmlFor="settings-email">{t('common.email')}</label>
               <input id="settings-email" type="email" value={advertiser?.email || ''} disabled />
             </div>
             <div className="field">
-              <label htmlFor="settings-company">Company name</label>
+              <label htmlFor="settings-company">{t('auth.companyName')}</label>
               <input
                 id="settings-company"
                 type="text"
@@ -148,7 +150,7 @@ function Settings() {
               />
             </div>
             <div className="field">
-              <label htmlFor="settings-website">Website</label>
+              <label htmlFor="settings-website">{t('common.website')}</label>
               <input
                 id="settings-website"
                 type="url"
@@ -158,7 +160,7 @@ function Settings() {
               />
             </div>
             <div className="field">
-              <label htmlFor="settings-contact">Contact email</label>
+              <label htmlFor="settings-contact">{t('auth.contactEmail')}</label>
               <input
                 id="settings-contact"
                 type="email"
@@ -168,22 +170,22 @@ function Settings() {
               />
             </div>
             <button type="submit" className="btn btn--primary" disabled={saving}>
-              {saving ? 'Saving...' : 'Save profile'}
+              {saving ? t('settings.updating') : t('settings.updateProfile')}
             </button>
           </form>
         </section>
 
         <section className="surface-card stack">
           <div>
-            <p className="eyebrow">Security</p>
-            <h3>Password</h3>
+            <p className="eyebrow">{t('settings.changePassword')}</p>
+            <h3>{t('settings.changePassword')}</h3>
           </div>
           {passwordMessage.text ? (
             <div className={`alert alert--${passwordMessage.type}`}>{passwordMessage.text}</div>
           ) : null}
           <form className="stack" onSubmit={handleChangePassword}>
             <div className="field">
-              <label htmlFor="new-password">New password</label>
+              <label htmlFor="new-password">{t('settings.newPassword')}</label>
               <input
                 id="new-password"
                 type="password"
@@ -194,7 +196,7 @@ function Settings() {
               />
             </div>
             <div className="field">
-              <label htmlFor="confirm-password">Confirm password</label>
+              <label htmlFor="confirm-password">{t('settings.confirmPassword')}</label>
               <input
                 id="confirm-password"
                 type="password"
@@ -204,14 +206,14 @@ function Settings() {
               />
             </div>
             <button type="submit" className="btn btn--secondary" disabled={savingPassword}>
-              {savingPassword ? 'Updating...' : 'Update password'}
+              {savingPassword ? t('settings.updating') : t('settings.changePassword')}
             </button>
           </form>
 
           <div>
             <p className="eyebrow">Status</p>
             <div className="detail-list">
-              <div><span>Account status</span><strong>{advertiser?.status || 'pending'}</strong></div>
+              <div><span>{t('settings.accountStatus')}</span><strong>{advertiser?.status || 'pending'}</strong></div>
               <div><span>Member since</span><strong>{advertiser?.created_at ? new Date(advertiser.created_at).toLocaleDateString() : 'Unknown'}</strong></div>
             </div>
           </div>
@@ -220,14 +222,14 @@ function Settings() {
 
       <section className="surface-card surface-card--danger stack">
         <div>
-          <p className="eyebrow">Danger zone</p>
-          <h3>Delete account</h3>
+          <p className="eyebrow">{t('settings.dangerZone')}</p>
+          <h3>{t('settings.deleteAccount')}</h3>
         </div>
         <p className="helper-text">
-          This permanently removes your advertiser profile and the campaigns attached to it.
+          {t('settings.deleteWarning')}
         </p>
         <button type="button" className="btn btn--danger" onClick={handleDeleteAccount}>
-          Delete account
+          {t('settings.deleteAccount')}
         </button>
       </section>
     </div>

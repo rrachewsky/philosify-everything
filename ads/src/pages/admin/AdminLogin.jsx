@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAdmin } from '@contexts/AdminContext';
 
 function AdminLogin() {
+  const { t } = useTranslation();
   const { login } = useAdmin();
   const navigate = useNavigate();
   const [secret, setSecret] = useState('');

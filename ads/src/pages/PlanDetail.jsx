@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { api } from '@services/api';
 
 function PlanDetail() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const [plan, setPlan] = useState(null);
@@ -83,7 +85,7 @@ function PlanDetail() {
     return (
       <div className="status-shell">
         <div className="spinner" />
-        <p>Loading campaign...</p>
+        <p>{t('common.loading')}</p>
       </div>
     );
   }
@@ -93,7 +95,7 @@ function PlanDetail() {
       <div className="status-shell">
         <div className="alert alert--error">{error || 'Campaign not found.'}</div>
         <Link to="/app/campaigns" className="btn btn--secondary">
-          Back to campaigns
+          {t('common.back')}
         </Link>
       </div>
     );
@@ -104,7 +106,7 @@ function PlanDetail() {
       <section className="section-heading">
         <div>
           <Link to="/app/campaigns" className="back-link">
-            Back to campaigns
+            {t('common.back')}
           </Link>
           <h2>{plan.name}</h2>
           <p className="lead">Stage: {stage}</p>
@@ -112,7 +114,7 @@ function PlanDetail() {
         <div className="button-row">
           {plan.status === 'draft' ? (
             <button type="button" className="btn btn--primary" onClick={handleCheckout} disabled={actionLoading}>
-              {actionLoading ? 'Preparing payment...' : `Pay $${(plan.total_cost_cents / 100).toFixed(2)}`}
+              {actionLoading ? t('common.loading') : `${t('detail.pay')} $${(plan.total_cost_cents / 100).toFixed(2)}`}
             </button>
           ) : null}
         </div>
@@ -130,21 +132,21 @@ function PlanDetail() {
 
       <section className="stats-grid">
         <article className="stat-panel">
-          <span className="stat-panel__label">Status</span>
+          <span className="stat-panel__label">{t('common.status')}</span>
           <strong className="stat-panel__value">{stage}</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Delivery</span>
+          <span className="stat-panel__label">{t('detail.delivery')}</span>
           <strong className="stat-panel__value">{stats?.deliveryPercent || 0}%</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Impressions</span>
+          <span className="stat-panel__label">{t('detail.impressions')}</span>
           <strong className="stat-panel__value">
             {stats?.totalDelivered?.toLocaleString() || 0} / {stats?.totalOrdered?.toLocaleString() || 0}
           </strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Budget</span>
+          <span className="stat-panel__label">{t('detail.budget')}</span>
           <strong className="stat-panel__value">${(plan.budget_cents / 100).toFixed(2)}</strong>
         </article>
       </section>
@@ -152,33 +154,33 @@ function PlanDetail() {
       <section className="editorial-grid editorial-grid--detail">
         <article className="surface-card stack">
           <div>
-            <p className="eyebrow">Campaign details</p>
-            <h3>Brief and launch settings</h3>
+            <p className="eyebrow">{t('detail.campaignDetails')}</p>
+            <h3>{t('detail.briefAndSettings')}</h3>
           </div>
           <div className="detail-list">
-            <div><span>Goal</span><strong>{plan.goal}</strong></div>
-            <div><span>Creative mode</span><strong>{plan.creative_type === 'self' ? 'Uploaded creative' : 'Philosify mock'}</strong></div>
-            <div><span>Schedule</span><strong>{plan.start_date ? `${new Date(plan.start_date).toLocaleDateString()} - ${new Date(plan.end_date).toLocaleDateString()}` : 'Flexible'}</strong></div>
+            <div><span>{t('create.goal')}</span><strong>{plan.goal}</strong></div>
+            <div><span>{t('create.creativeMode')}</span><strong>{plan.creative_type === 'self' ? t('campaigns.uploaded') : t('campaigns.philosifyMock')}</strong></div>
+            <div><span>{t('create.schedule')}</span><strong>{plan.start_date ? `${new Date(plan.start_date).toLocaleDateString()} - ${new Date(plan.end_date).toLocaleDateString()}` : t('campaigns.flexible')}</strong></div>
             <div><span>Destination</span><strong>{plan.target_url}</strong></div>
           </div>
         </article>
 
         <article className="surface-card stack">
           <div>
-            <p className="eyebrow">Creative desk</p>
-            <h3>Review and approvals</h3>
+            <p className="eyebrow">{t('detail.creativeDesk')}</p>
+            <h3>{t('detail.reviewAndApprovals')}</h3>
           </div>
           {plan.creative_type === 'philosify' ? (
             <>
               <p className="helper-text">
-                Current creative status: {creativeRequest?.status || plan.creative_status || 'pending'}
+                {t('detail.creativeStatus')}: {creativeRequest?.status || plan.creative_status || 'pending'}
               </p>
               {creativeRequest?.current_draft_url ? (
                 <img src={creativeRequest.current_draft_url} alt="Current creative draft" className="detail-preview" />
               ) : plan.creative_url ? (
                 <img src={plan.creative_url} alt="Campaign creative" className="detail-preview" />
               ) : (
-                <p className="helper-text">No draft has been delivered yet.</p>
+                <p className="helper-text">{t('detail.noDraft')}</p>
               )}
 
               {creativeRequest?.status === 'review' ? (
@@ -189,7 +191,7 @@ function PlanDetail() {
                     disabled={actionLoading}
                     onClick={() => runAction(() => api.post(`/ads/plans/${id}/creative/approve`))}
                   >
-                    Approve draft
+                    {t('detail.approveDraft')}
                   </button>
                   <button
                     type="button"
@@ -203,7 +205,7 @@ function PlanDetail() {
                       )
                     }
                   >
-                    Request revision
+                    {t('detail.requestRevision')}
                   </button>
                 </div>
               ) : null}
@@ -219,8 +221,8 @@ function PlanDetail() {
       <section className="surface-card">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Placement plan</p>
-            <h3>Orders inside this campaign</h3>
+            <p className="eyebrow">{t('detail.placementPlan')}</p>
+            <h3>{t('detail.ordersInside')}</h3>
           </div>
         </div>
         <div className="collection-list">
@@ -244,7 +246,7 @@ function PlanDetail() {
                     disabled={actionLoading}
                     onClick={() => runAction(() => api.post(`/ads/orders/${order.id}/pause`))}
                   >
-                    Pause
+                    {t('detail.pause')}
                   </button>
                 )}
                 {order.status === 'paused' && (
@@ -253,7 +255,7 @@ function PlanDetail() {
                     disabled={actionLoading}
                     onClick={() => runAction(() => api.post(`/ads/orders/${order.id}/resume`))}
                   >
-                    Resume
+                    {t('detail.resume')}
                   </button>
                 )}
                 {['active', 'paused', 'pending_creative', 'pending_approval'].includes(order.status) && (
@@ -261,12 +263,12 @@ function PlanDetail() {
                     className="btn btn-sm btn--danger"
                     disabled={actionLoading}
                     onClick={() => {
-                      if (confirm('Cancel this order? Undelivered impressions will be refunded.')) {
+                      if (confirm(t('detail.cancelConfirm'))) {
                         runAction(() => api.post(`/ads/orders/${order.id}/cancel`));
                       }
                     }}
                   >
-                    Cancel
+                    {t('detail.cancelOrder')}
                   </button>
                 )}
                 {['draft', 'pending_creative', 'pending_approval'].includes(order.status) && (
@@ -280,7 +282,7 @@ function PlanDetail() {
                       }
                     }}
                   >
-                    Edit URL
+                    {t('detail.editUrl')}
                   </button>
                 )}
               </div>

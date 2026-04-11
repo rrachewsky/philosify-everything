@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 function Policy() {
+  const { t } = useTranslation();
   return (
     <div className="landing-page">
       <header className="landing-topbar">
@@ -8,18 +10,18 @@ function Policy() {
           <img src="/logo.png" alt="Philosify" />
           <div>
             <p className="landing-topbar__eyebrow">Commercial Atelier</p>
-            <strong>Advertising Policy</strong>
+            <strong>{t('policy.title')}</strong>
           </div>
         </div>
         <div className="landing-topbar__actions">
           <Link to="/" className="btn btn--ghost">
-            Back home
+            {t('common.back')}
           </Link>
           <Link to="/placements" className="btn btn--ghost">
-            Placements
+            {t('landing.placements')}
           </Link>
           <Link to="/signup" className="btn btn--primary">
-            Start campaign
+            {t('landing.ctaCreate')}
           </Link>
         </div>
       </header>
@@ -28,8 +30,8 @@ function Policy() {
         <div className="page-stack">
           <section className="section-heading">
             <div>
-              <p className="eyebrow">Policy</p>
-              <h2>Advertising rules for Philosify Ads</h2>
+              <p className="eyebrow">{t('policy.title')}</p>
+              <h2>{t('policy.title')}</h2>
               <p className="lead">
                 These rules protect the Philosify audience, advertisers, agencies, and the platform.
                 All campaigns, creatives, landing pages, claims, and targeting choices must comply
@@ -40,8 +42,8 @@ function Policy() {
 
           <section className="surface-card stack">
             <div>
-              <p className="eyebrow">Responsibility</p>
-              <h3>Advertisers and agencies are fully responsible for every ad</h3>
+              <p className="eyebrow">{t('policy.responsibility')}</p>
+              <h3>{t('policy.responsibilityText')}</h3>
             </div>
             <p className="helper-text">
               The advertiser and, where applicable, the agency are fully and solely responsible for
@@ -71,8 +73,8 @@ function Policy() {
           <div className="editorial-grid">
             <section className="surface-card stack">
               <div>
-                <p className="eyebrow">Permitted</p>
-                <h3>What is generally allowed</h3>
+                <p className="eyebrow">{t('policy.permitted')}</p>
+                <h3>{t('policy.permitted')}</h3>
               </div>
               <ul className="bullet-list">
                 <li>Lawful products and services presented accurately and in good faith.</li>
@@ -86,8 +88,8 @@ function Policy() {
 
             <section className="surface-card stack">
               <div>
-                <p className="eyebrow">Prohibited</p>
-                <h3>What is not allowed</h3>
+                <p className="eyebrow">{t('policy.prohibited')}</p>
+                <h3>{t('policy.prohibited')}</h3>
               </div>
               <ul className="bullet-list">
                 <li>Illegal products, illegal services, or content promoting unlawful activity.</li>
@@ -106,8 +108,8 @@ function Policy() {
 
           <section className="surface-card stack">
             <div>
-              <p className="eyebrow">Operational rules</p>
-              <h3>Review, enforcement, and platform rights</h3>
+              <p className="eyebrow">{t('policy.operations')}</p>
+              <h3>{t('policy.operations')}</h3>
             </div>
             <ul className="bullet-list">
               <li>Submission does not guarantee approval, launch, continued delivery, or uninterrupted distribution.</li>
@@ -121,8 +123,8 @@ function Policy() {
 
           <section className="surface-card stack">
             <div>
-              <p className="eyebrow">Warranties</p>
-              <h3>What advertisers and agencies confirm by using the platform</h3>
+              <p className="eyebrow">{t('policy.warranties')}</p>
+              <h3>{t('policy.warranties')}</h3>
             </div>
             <ul className="bullet-list">
               <li>You have the rights, licenses, consents, and authority needed to publish the ad and destination content.</li>

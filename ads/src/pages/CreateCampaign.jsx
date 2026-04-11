@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '@services/api';
 
 const PLACEMENTS = [
-  { value: 'mixed', label: 'Balanced mix' },
-  { value: 'sidebar', label: 'Sidebar interstitial' },
-  { value: 'constellation', label: 'Constellation panel' },
+  { value: 'mixed', labelKey: 'create.placementMixed' },
+  { value: 'sidebar', labelKey: 'create.placementSidebar' },
+  { value: 'constellation', labelKey: 'create.placementConstellation' },
 ];
 
 const TARGETING_OPTIONS = {
@@ -18,14 +19,15 @@ const TARGETING_OPTIONS = {
 };
 
 const DURATIONS = [
-  { value: 'mixed', label: 'Best fit' },
-  { value: 5, label: '5 seconds' },
-  { value: 10, label: '10 seconds' },
-  { value: 15, label: '15 seconds' },
-  { value: 20, label: '20 seconds' },
+  { value: 'mixed', labelKey: 'create.durationBestFit' },
+  { value: 5, label: '5s' },
+  { value: 10, label: '10s' },
+  { value: 15, label: '15s' },
+  { value: 20, label: '20s' },
 ];
 
 function CreateCampaign() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: '',
@@ -161,8 +163,8 @@ function CreateCampaign() {
     <div className="page-stack">
       <section className="section-heading">
         <div>
-          <p className="eyebrow">Campaign composer</p>
-          <h2>Create a new campaign</h2>
+          <p className="eyebrow">{t('create.title')}</p>
+          <h2>{t('create.title')}</h2>
           <p className="lead">
             All campaigns are subject to the <Link to="/policy">Advertising Policy</Link>. The
             advertiser and any agency remain fully responsible for all ads, claims, assets, and
@@ -170,7 +172,7 @@ function CreateCampaign() {
           </p>
         </div>
         <Link to="/app/campaigns" className="btn btn--ghost">
-          Back to campaigns
+          {t('common.back')}
         </Link>
       </section>
 
@@ -179,27 +181,27 @@ function CreateCampaign() {
       <form className="editorial-grid editorial-grid--compose" onSubmit={handleSubmit}>
         <section className="surface-card stack">
           <div className="field">
-            <label htmlFor="campaign-name">Campaign name</label>
+            <label htmlFor="campaign-name">{t('create.campaignName')}</label>
             <input
               id="campaign-name"
               value={form.name}
               onChange={(event) => updateField('name', event.target.value)}
-              placeholder="Autumn atelier collection"
+              placeholder={t('create.campaignNamePlaceholder')}
               required
             />
           </div>
 
           <div className="field-grid">
             <div className="field">
-              <label htmlFor="goal">Goal</label>
+              <label htmlFor="goal">{t('create.goal')}</label>
               <select id="goal" value={form.goal} onChange={(event) => updateField('goal', event.target.value)}>
-                <option value="balanced">Balanced</option>
-                <option value="reach">Reach</option>
-                <option value="engagement">Engagement</option>
+                <option value="balanced">{t('create.goalBalanced')}</option>
+                <option value="reach">{t('create.goalReach')}</option>
+                <option value="engagement">{t('create.goalEngagement')}</option>
               </select>
             </div>
             <div className="field">
-              <label htmlFor="budget">Budget in USD</label>
+              <label htmlFor="budget">{t('create.budget')}</label>
               <input
                 id="budget"
                 type="number"
@@ -214,7 +216,7 @@ function CreateCampaign() {
 
           <div className="field-grid">
             <div className="field">
-              <label htmlFor="placement">Placement preference</label>
+              <label htmlFor="placement">{t('create.placementPref')}</label>
               <select
                 id="placement"
                 value={form.placement_preference}
@@ -222,13 +224,13 @@ function CreateCampaign() {
               >
                 {PLACEMENTS.map((placement) => (
                   <option key={placement.value} value={placement.value}>
-                    {placement.label}
+                    {t(placement.labelKey)}
                   </option>
                 ))}
               </select>
             </div>
             <div className="field">
-              <label htmlFor="duration">Duration preference</label>
+              <label htmlFor="duration">{t('create.durationPref')}</label>
               <select
                 id="duration"
                 value={form.duration_preference}
@@ -236,7 +238,7 @@ function CreateCampaign() {
               >
                 {DURATIONS.map((duration) => (
                   <option key={duration.value} value={duration.value}>
-                    {duration.label}
+                    {duration.labelKey ? t(duration.labelKey) : duration.label}
                   </option>
                 ))}
               </select>
@@ -245,9 +247,9 @@ function CreateCampaign() {
 
           {/* Audience Targeting */}
           <div className="targeting-section">
-            <h3>Audience Targeting (optional)</h3>
+            <h3>{t('create.targeting')}</h3>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              Leave empty to reach all users. Select options to narrow your audience.
+              {t('create.targetingOptional')}
             </p>
 
             {Object.entries(TARGETING_OPTIONS).map(([category, options]) => (
@@ -270,20 +272,20 @@ function CreateCampaign() {
           </div>
 
           <div className="field">
-            <label htmlFor="target-url">Destination URL</label>
+            <label htmlFor="target-url">{t('create.destinationUrl')}</label>
             <input
               id="target-url"
               type="url"
               value={form.target_url}
               onChange={(event) => updateField('target_url', event.target.value)}
-              placeholder="https://brand.example.com"
+              placeholder={t('create.destinationPlaceholder')}
               required
             />
           </div>
 
           <div className="field-grid">
             <div className="field">
-              <label htmlFor="start-date">Start date</label>
+              <label htmlFor="start-date">{t('create.startDate')}</label>
               <input
                 id="start-date"
                 type="date"
@@ -292,7 +294,7 @@ function CreateCampaign() {
               />
             </div>
             <div className="field">
-              <label htmlFor="end-date">End date</label>
+              <label htmlFor="end-date">{t('create.endDate')}</label>
               <input
                 id="end-date"
                 type="date"
@@ -303,28 +305,28 @@ function CreateCampaign() {
           </div>
 
           <div className="field">
-            <label>Creative mode</label>
+            <label>{t('create.creativeMode')}</label>
             <div className="choice-row">
               <button
                 type="button"
                 className={`choice-pill ${form.creative_type === 'self' ? 'choice-pill--active' : ''}`}
                 onClick={() => updateField('creative_type', 'self')}
               >
-                Upload my own creative
+                {t('create.uploadOwn')}
               </button>
               <button
                 type="button"
                 className={`choice-pill ${form.creative_type === 'philosify' ? 'choice-pill--active' : ''}`}
                 onClick={() => updateField('creative_type', 'philosify')}
               >
-                Philosify creates the mock
+                {t('create.philosifyCreates')}
               </button>
             </div>
           </div>
 
           {form.creative_type === 'self' ? (
             <div className="field">
-              <label htmlFor="creative-upload">Creative upload</label>
+              <label htmlFor="creative-upload">{t('create.uploadFile')}</label>
               <input
                 id="creative-upload"
                 type="file"
@@ -335,13 +337,13 @@ function CreateCampaign() {
             </div>
           ) : (
             <div className="field">
-              <label htmlFor="creative-brief">Creative brief</label>
+              <label htmlFor="creative-brief">{t('create.creativeBrief')}</label>
               <textarea
                 id="creative-brief"
                 rows="6"
                 value={form.creative_brief}
                 onChange={(event) => updateField('creative_brief', event.target.value)}
-                placeholder="Describe the style, message, product, and call to action."
+                placeholder={t('create.creativeBriefPlaceholder')}
               />
             </div>
           )}
@@ -349,26 +351,26 @@ function CreateCampaign() {
 
         <aside className="surface-card stack">
           <div>
-            <p className="eyebrow">Plan preview</p>
-            <h3>Estimate before creating</h3>
+            <p className="eyebrow">{t('create.planSummary')}</p>
+            <h3>{t('create.planSummary')}</h3>
           </div>
 
           <button type="button" className="btn btn--secondary" onClick={generatePlan} disabled={loadingPlan}>
-            {loadingPlan ? 'Generating plan...' : 'Generate plan'}
+            {loadingPlan ? t('create.generatingPlan') : t('create.generatePlan')}
           </button>
 
           {summary ? (
             <>
               <div className="stat-panel stat-panel--inline">
-                <span className="stat-panel__label">Estimated impressions</span>
+                <span className="stat-panel__label">{t('create.impressions')}</span>
                 <strong className="stat-panel__value">{summary.totalImpressions.toLocaleString()}</strong>
               </div>
               <div className="stat-panel stat-panel--inline">
-                <span className="stat-panel__label">Estimated clicks</span>
+                <span className="stat-panel__label">{t('create.estimatedClicks')}</span>
                 <strong className="stat-panel__value">{summary.estimatedClicks.toLocaleString()}</strong>
               </div>
               <div className="stat-panel stat-panel--inline">
-                <span className="stat-panel__label">Estimated total</span>
+                <span className="stat-panel__label">{t('create.totalCost')}</span>
                 <strong className="stat-panel__value">${(summary.totalCostCents / 100).toFixed(2)}</strong>
               </div>
 
@@ -391,7 +393,7 @@ function CreateCampaign() {
           )}
 
           <button type="submit" className="btn btn--primary btn--large" disabled={submitting || loadingPlan}>
-            {submitting ? 'Creating campaign...' : 'Create campaign'}
+            {submitting ? t('create.creating') : t('create.createCampaign')}
           </button>
         </aside>
       </form>

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useAgency } from '@contexts/AgencyContext';
 import { api } from '@services/api';
 
 export default function AgencyDashboard() {
+  const { t } = useTranslation();
   const { agency } = useAgency();
   const [clients, setClients] = useState([]);
   const [earnings, setEarnings] = useState(null);
@@ -33,23 +35,23 @@ export default function AgencyDashboard() {
   return (
     <div className="page-content">
       <div className="page-header">
-        <h1>Agency Dashboard</h1>
-        <p className="text-muted">Welcome, {agency?.company_name}</p>
+        <h1>{t('agency.dashboard')}</h1>
+        <p className="text-muted">{t('agency.welcome')}, {agency?.company_name}</p>
       </div>
 
       {error && <div className="auth-error">{error}</div>}
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-label">Balance</div>
+          <div className="stat-label">{t('agency.balance')}</div>
           <div className="stat-value">${((earnings?.balance_cents || 0) / 100).toFixed(2)}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Total Earned</div>
+          <div className="stat-label">{t('agency.totalEarned')}</div>
           <div className="stat-value">${((earnings?.total_earned_cents || 0) / 100).toFixed(2)}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Clients</div>
+          <div className="stat-label">{t('agency.clients')}</div>
           <div className="stat-value">{clients.length}</div>
         </div>
         <div className="stat-card">

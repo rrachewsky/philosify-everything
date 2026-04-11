@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAgency } from '@contexts/AgencyContext';
 
 
 export default function AgencyLogin() {
+  const { t } = useTranslation();
   const { login } = useAgency();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -28,12 +30,12 @@ export default function AgencyLogin() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1>Agency Login</h1>
-        <p className="auth-subtitle">Manage your clients on Philosify Ads</p>
+        <h1>{t('auth.agencyLoginTitle')}</h1>
+        <p className="auth-subtitle">{t('auth.agencyLoginSubtitle')}</p>
         {error && <div className="auth-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('common.email')}</label>
             <input
               id="email"
               type="email"
@@ -44,7 +46,7 @@ export default function AgencyLogin() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('common.password')}</label>
             <input
               id="password"
               type="password"
@@ -55,12 +57,12 @@ export default function AgencyLogin() {
             />
           </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('auth.signingIn') : t('common.signIn')}
           </button>
         </form>
         <div className="auth-links">
-          <Link to="/agency/signup">Create an agency account</Link>
-          <Link to="/login">Advertiser login</Link>
+          <Link to="/agency/signup">{t('auth.createAgencyAccount')}</Link>
+          <Link to="/login">{t('auth.advertiserLogin')}</Link>
         </div>
       </div>
     </div>

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { api } from '@services/api';
 
 function Plans() {
+  const { t } = useTranslation();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -26,7 +28,7 @@ function Plans() {
     return (
       <div className="status-shell">
         <div className="spinner" />
-        <p>Loading campaigns...</p>
+        <p>{t('common.loading')}</p>
       </div>
     );
   }
@@ -35,11 +37,11 @@ function Plans() {
     <div className="page-stack">
       <section className="section-heading">
         <div>
-          <p className="eyebrow">Campaign portfolio</p>
-          <h2>All campaigns</h2>
+          <p className="eyebrow">{t('campaigns.title')}</p>
+          <h2>{t('campaigns.title')}</h2>
         </div>
         <Link to="/app/new" className="btn btn--primary">
-          New campaign
+          {t('dashboard.newCampaign')}
         </Link>
       </section>
 
@@ -48,10 +50,9 @@ function Plans() {
       <section className="surface-card">
         {plans.length === 0 ? (
           <div className="empty-state">
-            <h4>No campaigns yet</h4>
-            <p>Create a campaign to start the budget, creative, and launch flow.</p>
+            <h4>{t('campaigns.noCampaigns')}</h4>
             <Link to="/app/new" className="btn btn--primary">
-              Create your first campaign
+              {t('create.createCampaign')}
             </Link>
           </div>
         ) : (
@@ -61,10 +62,10 @@ function Plans() {
                 <div className="collection-row__main">
                   <strong>{plan.name}</strong>
                   <p>
-                    {plan.goal} · {plan.creative_type === 'self' ? 'Uploaded creative' : 'Philosify-made mock'} ·{' '}
+                    {plan.goal} · {plan.creative_type === 'self' ? t('campaigns.uploaded') : t('campaigns.philosifyMock')} ·{' '}
                     {(plan.start_date && plan.end_date)
                       ? `${new Date(plan.start_date).toLocaleDateString()} - ${new Date(plan.end_date).toLocaleDateString()}`
-                      : 'Flexible schedule'}
+                      : t('campaigns.flexible')}
                   </p>
                 </div>
                 <div className="collection-row__meta">

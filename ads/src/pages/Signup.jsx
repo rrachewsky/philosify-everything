@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 
 const LOGO = '/logo.png';
 
 function Signup() {
+  const { t } = useTranslation();
   const { signup } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -56,19 +58,15 @@ function Signup() {
     <div className="auth-page">
       <div className="auth-card auth-card--wide">
         <img src={LOGO} alt="Philosify" className="auth-card__logo" />
-        <p className="eyebrow">Advertiser application</p>
-        <h1>Apply for a curated campaign workspace.</h1>
-        <p className="auth-card__lede">
-          We review accounts to keep the placement environment elegant, relevant, and safe for the
-          Philosify audience.
-        </p>
+        <p className="eyebrow">{t('auth.signupTitle')}</p>
+        <h1>{t('auth.signupSubtitle')}</h1>
 
         <form className="stack" onSubmit={handleSubmit}>
           {error ? <div className="alert alert--error">{error}</div> : null}
 
           <div className="field-grid">
             <div className="field">
-              <label htmlFor="signup-email">Email</label>
+              <label htmlFor="signup-email">{t('common.email')}</label>
               <input
                 id="signup-email"
                 type="email"
@@ -81,7 +79,7 @@ function Signup() {
             </div>
 
             <div className="field">
-              <label htmlFor="signup-company">Company</label>
+              <label htmlFor="signup-company">{t('auth.companyName')}</label>
               <input
                 id="signup-company"
                 type="text"
@@ -95,7 +93,7 @@ function Signup() {
           </div>
 
           <div className="field">
-            <label htmlFor="signup-website">Website</label>
+            <label htmlFor="signup-website">{t('common.website')}</label>
             <input
               id="signup-website"
               type="url"
@@ -108,7 +106,7 @@ function Signup() {
 
           <div className="field-grid">
             <div className="field field--password">
-              <label htmlFor="signup-password">Password</label>
+              <label htmlFor="signup-password">{t('common.password')}</label>
               <div className="field__password-row">
                 <input
                   id="signup-password"
@@ -131,7 +129,7 @@ function Signup() {
             </div>
 
             <div className="field field--password">
-              <label htmlFor="signup-confirm">Confirm password</label>
+              <label htmlFor="signup-confirm">{t('settings.confirmPassword')}</label>
               <div className="field__password-row">
                 <input
                   id="signup-confirm"
@@ -155,19 +153,17 @@ function Signup() {
           </div>
 
           <button type="submit" className="btn btn--primary btn--large" disabled={loading}>
-            {loading ? 'Creating atelier...' : 'Create account'}
+            {loading ? t('auth.creatingAccount') : t('common.signUp')}
           </button>
         </form>
 
         <p className="helper-text">
-          By creating an account, you agree to the{' '}
-          <Link to="/policy">Advertising Policy</Link>, including the rule that the advertiser and
-          any agency remain fully responsible for all ads posted, whether prepared by them or with
-          Philosify creative assistance.
+          {t('auth.agreePolicy')}{' '}
+          <Link to="/policy">{t('policy.title')}</Link>
         </p>
 
         <p className="auth-card__footer">
-          Already approved? <Link to="/login">Sign in instead</Link>
+          <Link to="/login">{t('auth.alreadyHaveAccount')}</Link>
         </p>
       </div>
     </div>

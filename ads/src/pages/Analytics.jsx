@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '@services/api';
 
 const PERIODS = [
-  { value: '7d', label: 'Last 7 days' },
-  { value: '14d', label: 'Last 14 days' },
-  { value: '30d', label: 'Last 30 days' },
+  { value: '7d', labelKey: 'analytics.last7' },
+  { value: '14d', labelKey: 'analytics.last14' },
+  { value: '30d', labelKey: 'analytics.last30' },
 ];
 
 export default function Analytics() {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState('7d');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,7 +62,7 @@ export default function Analytics() {
   return (
     <div className="page-content">
       <div className="page-header">
-        <h1>Analytics</h1>
+        <h1>{t('analytics.title')}</h1>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           <div className="period-selector">
             {PERIODS.map((p) => (
@@ -69,12 +71,12 @@ export default function Analytics() {
                 className={`btn btn-sm ${period === p.value ? 'btn-primary' : ''}`}
                 onClick={() => setPeriod(p.value)}
               >
-                {p.label}
+                {t(p.labelKey)}
               </button>
             ))}
           </div>
           <button className="btn btn-sm" onClick={handleExport} disabled={exporting}>
-            {exporting ? 'Exporting...' : 'Export CSV'}
+            {exporting ? t('analytics.exporting') : t('analytics.exportCsv')}
           </button>
         </div>
       </div>
@@ -86,19 +88,19 @@ export default function Analytics() {
           {/* Overview Stats */}
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-label">Impressions</div>
+              <div className="stat-label">{t('analytics.impressions')}</div>
               <div className="stat-value">{overview.total_impressions?.toLocaleString() || 0}</div>
             </div>
             <div className="stat-card">
-              <div className="stat-label">Clicks</div>
+              <div className="stat-label">{t('analytics.clicks')}</div>
               <div className="stat-value">{overview.total_clicks?.toLocaleString() || 0}</div>
             </div>
             <div className="stat-card">
-              <div className="stat-label">CTR</div>
+              <div className="stat-label">{t('analytics.ctr')}</div>
               <div className="stat-value">{overview.ctr || 0}%</div>
             </div>
             <div className="stat-card">
-              <div className="stat-label">Spent</div>
+              <div className="stat-label">{t('analytics.spent')}</div>
               <div className="stat-value">${((overview.total_spent_cents || 0) / 100).toFixed(2)}</div>
             </div>
           </div>
@@ -106,7 +108,7 @@ export default function Analytics() {
           {/* Daily Chart (CSS bar chart) */}
           {daily.length > 0 && (
             <div className="section" style={{ marginTop: '2rem' }}>
-              <h2>Daily Impressions</h2>
+              <h2>{t('analytics.dailyImpressions')}</h2>
               <div className="chart-container">
                 {daily.map((day) => (
                   <div key={day.date} className="chart-bar-wrapper">
@@ -127,19 +129,19 @@ export default function Analytics() {
           {/* Per-Order Breakdown */}
           {orders.length > 0 && (
             <div className="section" style={{ marginTop: '2rem' }}>
-              <h2>Campaign Performance</h2>
+              <h2>{t('analytics.campaignPerformance')}</h2>
               <div className="table-wrapper">
                 <table className="data-table">
                   <thead>
                     <tr>
-                      <th>Campaign</th>
-                      <th>Placement</th>
-                      <th>Status</th>
-                      <th>Impressions</th>
-                      <th>Delivery</th>
-                      <th>Clicks</th>
-                      <th>CTR</th>
-                      <th>Spent</th>
+                      <th>{t('campaigns.campaign')}</th>
+                      <th>{t('analytics.placement')}</th>
+                      <th>{t('common.status')}</th>
+                      <th>{t('analytics.impressions')}</th>
+                      <th>{t('analytics.deliveryPct')}</th>
+                      <th>{t('analytics.clicks')}</th>
+                      <th>{t('analytics.ctr')}</th>
+                      <th>{t('analytics.spent')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -172,7 +174,7 @@ export default function Analytics() {
 
           {orders.length === 0 && daily.every((d) => d.impressions === 0) && (
             <div className="empty-state" style={{ marginTop: '2rem' }}>
-              <p>No activity in this period. Launch a campaign to start seeing analytics.</p>
+              <p>{t('analytics.noActivity')}</p>
             </div>
           )}
         </>

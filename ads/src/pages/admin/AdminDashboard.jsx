@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAdmin } from '@contexts/AdminContext';
 import { api } from '@services/api';
 
 function AdminDashboard() {
+  const { t } = useTranslation();
   const { adminSecret } = useAdmin();
   const [overview, setOverview] = useState(null);
   const [advertisers, setAdvertisers] = useState([]);

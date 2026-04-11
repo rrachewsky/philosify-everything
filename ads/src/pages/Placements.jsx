@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 // Visual mockup of Philosify analysis page with sidebar ad
@@ -166,19 +167,19 @@ const PLACEMENTS = [
 ];
 
 function Placements({ publicView = false }) {
+  const { t } = useTranslation();
   return (
     <div className="page-stack">
       <section className="section-heading">
         <div>
-          <p className="eyebrow">Placement atlas</p>
-          <h2>Choose the context that fits your brand</h2>
+          <p className="eyebrow">{t('placements.title')}</p>
+          <h2>{t('placements.title')}</h2>
           <p className="lead">
-            These placements are designed to feel premium, contextual, and respectful inside the
-            Philosify experience.
+            {t('placements.subtitle')}
           </p>
         </div>
         <Link to={publicView ? '/signup' : '/app/new'} className="btn btn--primary">
-          {publicView ? 'Apply to advertise' : 'Create campaign'}
+          {publicView ? t('common.signUp') : t('create.createCampaign')}
         </Link>
       </section>
 

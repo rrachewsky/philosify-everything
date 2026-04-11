@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import { api } from '@services/api';
@@ -12,6 +13,7 @@ const FUNDING_OPTIONS = [
 ];
 
 function Billing() {
+  const { t } = useTranslation();
   const { advertiser } = useAuth();
   const [searchParams] = useSearchParams();
   const [balance, setBalance] = useState(0);
@@ -83,11 +85,11 @@ function Billing() {
   const getTransactionTypeLabel = (type) => {
     switch (type) {
       case 'deposit':
-        return 'Funds Added';
+        return t('billing.deposit');
       case 'campaign_spend':
-        return 'Campaign Spend';
+        return t('billing.spend');
       case 'refund':
-        return 'Refund';
+        return t('billing.refund');
       default:
         return type;
     }
@@ -97,7 +99,7 @@ function Billing() {
     return (
       <div className="status-shell">
         <div className="spinner" />
-        <p>Loading billing...</p>
+        <p>{t('common.loading')}</p>
       </div>
     );
   }
@@ -106,8 +108,8 @@ function Billing() {
     <div className="page-stack">
       <section className="section-heading">
         <div>
-          <p className="eyebrow">Billing atelier</p>
-          <h2>Funding and transaction history</h2>
+          <p className="eyebrow">{t('billing.title')}</p>
+          <h2>{t('billing.title')}</h2>
         </div>
       </section>
 
@@ -122,7 +124,7 @@ function Billing() {
       <div className="editorial-grid editorial-grid--billing">
         <section className="surface-card stack">
           <div className="stat-panel stat-panel--hero">
-            <span className="stat-panel__label">Available balance</span>
+            <span className="stat-panel__label">{t('billing.currentBalance')}</span>
             <strong className="stat-panel__value">${(balance / 100).toFixed(2)}</strong>
           </div>
 
@@ -143,7 +145,7 @@ function Billing() {
           </div>
 
           <div className="field">
-            <label htmlFor="custom-amount">Custom amount in USD</label>
+            <label htmlFor="custom-amount">{t('billing.customAmount')}</label>
             <input
               id="custom-amount"
               type="number"
@@ -160,7 +162,7 @@ function Billing() {
           </div>
 
           <button type="button" className="btn btn--primary btn--large" onClick={handleAddFunds} disabled={processing}>
-            {processing ? 'Preparing Stripe checkout...' : `Add $${customAmount || selectedAmount}`}
+            {processing ? t('billing.addingFunds') : `${t('billing.addFunds')} $${customAmount || selectedAmount}`}
           </button>
 
           <p className="helper-text">
@@ -192,15 +194,14 @@ function Billing() {
       <section className="surface-card">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Transactions</p>
-            <h3>Recent movement</h3>
+            <p className="eyebrow">{t('billing.transactionHistory')}</p>
+            <h3>{t('billing.transactionHistory')}</h3>
           </div>
         </div>
 
         {transactions.length === 0 ? (
           <div className="empty-state">
-            <h4>No transactions yet</h4>
-            <p>Once you add funds or launch spend, the ledger will appear here.</p>
+            <h4>{t('billing.noTransactions')}</h4>
           </div>
         ) : (
           <div className="collection-list">

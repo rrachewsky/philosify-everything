@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 
 const LOGO = '/logo.png';
 
 function Login() {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -32,17 +34,14 @@ function Login() {
     <div className="auth-page">
       <div className="auth-card">
         <img src={LOGO} alt="Philosify" className="auth-card__logo" />
-        <p className="eyebrow">Advertiser sign in</p>
-        <h1>Welcome back to the atelier.</h1>
-        <p className="auth-card__lede">
-          Review your campaigns, approve new creative drafts, and keep launches moving.
-        </p>
+        <p className="eyebrow">{t('auth.loginTitle')}</p>
+        <h1>{t('auth.loginSubtitle')}</h1>
 
         <form className="stack" onSubmit={handleSubmit}>
           {error ? <div className="alert alert--error">{error}</div> : null}
 
           <div className="field">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('common.email')}</label>
             <input
               id="email"
               type="email"
@@ -54,7 +53,7 @@ function Login() {
           </div>
 
           <div className="field field--password">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('common.password')}</label>
             <div className="field__password-row">
               <input
                 id="password"
@@ -76,12 +75,12 @@ function Login() {
           </div>
 
           <button type="submit" className="btn btn--primary btn--large" disabled={loading}>
-            {loading ? 'Opening atelier...' : 'Sign in'}
+            {loading ? t('auth.signingIn') : t('common.signIn')}
           </button>
         </form>
 
         <p className="auth-card__footer">
-          Need an account? <Link to="/signup">Apply as an advertiser</Link>
+          <Link to="/signup">{t('auth.noAccount')}</Link>
         </p>
       </div>
     </div>
