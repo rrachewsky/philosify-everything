@@ -1,52 +1,61 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@contexts/AuthContext';
 import { useAdmin } from '@contexts/AdminContext';
 import { useAgency } from '@contexts/AgencyContext';
+import LanguageSelector from './LanguageSelector';
 
 const BRAND = 'Philosify Ads Atelier';
 const LOGO = '/logo.png';
 
-const advertiserNav = [
-  { to: '/app', label: 'Overview', end: true },
-  { to: '/app/campaigns', label: 'Campaigns' },
-  { to: '/app/new', label: 'New Campaign' },
-  { to: '/app/analytics', label: 'Analytics' },
-  { to: '/app/billing', label: 'Billing' },
-  { to: '/app/placements', label: 'Placements' },
-  { to: '/app/settings', label: 'Settings' },
-];
+function getAdvertiserNav(t) {
+  return [
+    { to: '/app', label: t('header.overview'), end: true },
+    { to: '/app/campaigns', label: t('header.campaigns') },
+    { to: '/app/new', label: t('header.newCampaign') },
+    { to: '/app/analytics', label: t('header.analytics') },
+    { to: '/app/billing', label: t('header.billing') },
+    { to: '/app/placements', label: t('header.placements') },
+    { to: '/app/settings', label: t('header.settings') },
+  ];
+}
 
-const adminNav = [
-  { to: '/admin', label: 'Control Room', end: true },
-  { to: '/admin?focus=advertisers', label: 'Advertisers' },
-  { to: '/admin?focus=studio', label: 'Creative Studio' },
-  { to: '/admin?focus=launches', label: 'Launches' },
-];
+function getAdminNav(t) {
+  return [
+    { to: '/admin', label: t('header.controlRoom'), end: true },
+    { to: '/admin?focus=advertisers', label: t('header.advertisers') },
+    { to: '/admin?focus=studio', label: t('header.creativeStudio') },
+    { to: '/admin?focus=launches', label: t('header.launches') },
+  ];
+}
 
-const agencyNav = [
-  { to: '/agency', label: 'Dashboard', end: true },
-  { to: '/agency/clients', label: 'Clients' },
-  { to: '/agency/earnings', label: 'Earnings' },
-];
+function getAgencyNav(t) {
+  return [
+    { to: '/agency', label: t('header.dashboard'), end: true },
+    { to: '/agency/clients', label: t('header.clients') },
+    { to: '/agency/earnings', label: t('header.earnings') },
+  ];
+}
 
 function Header({ admin = false, agency = false }) {
+  const { t } = useTranslation();
   const { advertiser, logout: advertiserLogout } = useAuth();
   const { logout: adminLogout } = useAdmin();
   const { agency: agencyUser, logout: agencyLogout } = useAgency();
   const navigate = useNavigate();
 
-  const navItems = admin ? adminNav : agency ? agencyNav : advertiserNav;
+  const navItems = admin ? getAdminNav(t) : agency ? getAgencyNav(t) : getAdvertiserNav(t);
   const identity = admin
     ? 'Philosify Admin'
     : agency
       ? agencyUser?.company_name || agencyUser?.email || 'Agency'
       : advertiser?.company_name || advertiser?.email;
-  const badge = admin ? 'Admin' : agency ? 'Agency' : 'Advertiser';
+  const badge = admin ? t('common.admin') : agency ? t('common.agency') : t('common.advertiser');
   const eyebrow = admin
-    ? 'Operations Atelier'
+    ? t('header.operationsAtelier')
     : agency
-      ? 'Agency Atelier'
-      : 'Commercial Atelier';
+      ? t('header.agencyAtelier')
+      : t('header.commercialAtelier');
 
   const handleLogout = async () => {
     if (admin) {
@@ -93,8 +102,9 @@ function Header({ admin = false, agency = false }) {
           <span className="studio-header__badge">{badge}</span>
           <span>{identity}</span>
         </div>
+        <LanguageSelector compact />
         <button type="button" className="btn btn--ghost" onClick={handleLogout}>
-          {admin ? 'Lock atelier' : 'Sign out'}
+          {admin ? t('header.lockAtelier') : t('common.signOut')}
         </button>
       </div>
     </header>

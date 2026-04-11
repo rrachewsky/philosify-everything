@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@contexts/AuthContext';
+import LanguageSelector from '@components/LanguageSelector';
 
 const LOGO = '/logo.png';
 
 function Landing() {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
 
   return (
@@ -18,109 +21,73 @@ function Landing() {
         </div>
         <div className="landing-topbar__actions">
           <Link to="/placements" className="btn btn--ghost">
-            Placements
+            {t('landing.placements')}
           </Link>
           <Link to="/policy" className="btn btn--ghost">
-            Policy
+            {t('landing.policy')}
           </Link>
           <Link to="/agency/login" className="btn btn--ghost">
-            Agencies
+            {t('landing.agencies')}
           </Link>
           <Link to="/login" className="btn btn--ghost">
-            Sign in
+            {t('common.signIn')}
           </Link>
           <Link to={isAuthenticated ? '/app' : '/signup'} className="btn btn--primary">
-            {isAuthenticated ? 'Open atelier' : 'Apply now'}
+            {isAuthenticated ? t('landing.openAtelier') : t('landing.applyNow')}
           </Link>
         </div>
       </header>
 
       <main className="landing-main">
+        {/* Language Selector */}
+        <LanguageSelector />
+
         <section className="hero-panel">
           <div className="hero-panel__copy">
-            <p className="eyebrow">Curated advertising for a cultivated audience</p>
-            <h1>Launch campaigns with the pace of a studio and the taste of an atelier.</h1>
-            <p className="lead">
-              Philosify Ads is a premium placement program for brands that want to appear beside
-              reflective music analysis, discovery, and cultural exploration.
-            </p>
+            <p className="eyebrow">{t('landing.hero')}</p>
+            <h1>{t('landing.heroSub')}</h1>
             <div className="hero-panel__cta">
               <Link to={isAuthenticated ? '/app/new' : '/signup'} className="btn btn--primary btn--large">
-                {isAuthenticated ? 'Create a campaign' : 'Start your campaign'}
+                {t('landing.ctaCreate')}
               </Link>
               <Link to="/placements" className="btn btn--secondary btn--large">
-                Explore placements
+                {t('landing.ctaExplore')}
               </Link>
             </div>
             <div className="hero-metrics">
               <div className="metric-card">
                 <span className="metric-card__value">2</span>
-                <span className="metric-card__label">Placement formats in v1</span>
+                <span className="metric-card__label">{t('landing.metricsFormats')}</span>
               </div>
               <div className="metric-card">
-                <span className="metric-card__value">Self-serve</span>
-                <span className="metric-card__label">Creative upload and campaign setup</span>
+                <span className="metric-card__value">{t('landing.metricsSelfServe')}</span>
               </div>
               <div className="metric-card">
-                <span className="metric-card__value">Automated</span>
-                <span className="metric-card__label">Approval and launch workflow</span>
+                <span className="metric-card__value">{t('landing.metricsAutomated')}</span>
               </div>
-            </div>
-          </div>
-
-          <div className="hero-panel__art">
-            <div className="atelier-card">
-              <p className="atelier-card__eyebrow">Campaign journey</p>
-              <ol className="atelier-steps">
-                <li>Shape the brief and budget</li>
-                <li>Upload assets or request a mock</li>
-                <li>Review, approve, and launch</li>
-              </ol>
-            </div>
-            <div className="atelier-card atelier-card--accent">
-              <p className="atelier-card__eyebrow">Why brands choose this</p>
-              <p>
-                Thoughtful context, elegant presentation, clear approvals, and direct access to
-                Philosify’s team when the campaign needs polish.
-              </p>
             </div>
           </div>
         </section>
 
         <section className="editorial-grid">
           <article className="editorial-card">
-            <p className="eyebrow">How it works</p>
-            <h2>Simple for advertisers. Clear for operators.</h2>
-            <p>
-              Submit a brief, define your budget, pay securely, review the creative, and track the
-              campaign from a single dashboard.
-            </p>
+            <p className="eyebrow">{t('landing.howItWorks')}</p>
+            <h2>{t('landing.howItWorksTitle')}</h2>
+            <p>{t('landing.howItWorksDesc')}</p>
           </article>
           <article className="editorial-card">
-            <p className="eyebrow">Studio support</p>
-            <h2>Bring your own creative or commission one from Philosify.</h2>
-            <p>
-              Static creatives are supported today. If you want Philosify to craft the visual, the
-              mock enters a review loop before launch.
-            </p>
+            <h2>{t('landing.studioTitle')}</h2>
+            <p>{t('landing.studioDesc')}</p>
           </article>
           <article className="editorial-card">
-            <p className="eyebrow">Trust</p>
-            <h2>Reviewed, scheduled, and launched with care.</h2>
-            <p>
-              Every campaign passes through an approval flow so the experience stays premium for
-              both audiences and partners.
-            </p>
+            <h2>{t('landing.trustTitle')}</h2>
+            <p>{t('landing.trustDesc')}</p>
           </article>
           <article className="editorial-card">
-            <p className="eyebrow">Agency partners</p>
-            <h2>Manage campaigns for multiple clients from one dashboard.</h2>
-            <p>
-              Agencies get their own portal: add clients, run campaigns on their behalf, earn
-              commissions on every impression, and request payouts when your balance reaches $100.
-            </p>
+            <h2>{t('landing.agencyTitle')}</h2>
+            <p>{t('landing.agencyDesc')}</p>
             <Link to="/agency/signup" className="btn btn--secondary" style={{ marginTop: '12px' }}>
-              Register as agency
+              {t('landing.agencyRegister')}
             </Link>
           </article>
         </section>
