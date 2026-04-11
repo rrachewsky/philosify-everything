@@ -446,6 +446,8 @@ export default {
           "/api/stripe-webhook",
           "/api/supabase-webhook",
           "/auth/send-email",
+          "/api/ads/creatives/upload",
+          "/api/ads/billing/webhook",
         ];
         const isExcluded = excludedPaths.includes(url.pathname);
 
