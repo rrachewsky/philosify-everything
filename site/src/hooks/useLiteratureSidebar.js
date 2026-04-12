@@ -35,6 +35,11 @@ export function useLiteratureSidebar() {
   const startTimeRef = useRef(null);
   const lastAnalysisParamsRef = useRef(null);
   const activeAnalysisRunRef = useRef(0);
+  const adDurationRef = useRef(null);
+
+  const handleAdLoaded = useCallback(({ duration }) => {
+    adDurationRef.current = duration;
+  }, []);
 
   // Open the sidebar (resets state to fresh)
   const open = useCallback(() => {
@@ -225,7 +230,7 @@ export function useLiteratureSidebar() {
             throw new Error(data.error || 'Analysis failed');
           }
 
-          await waitForMinimumAnalysisWindow(startedAt);
+          await waitForMinimumAnalysisWindow(startedAt, adDurationRef.current);
 
           if (activeAnalysisRunRef.current !== runId || abortControllerRef.current?.signal?.aborted) {
             return { success: false, error: 'cancelled' };
@@ -332,6 +337,9 @@ export function useLiteratureSidebar() {
     // Auth/credits
     user,
     balance,
+
+    // Ad duration
+    handleAdLoaded,
   };
 }
 

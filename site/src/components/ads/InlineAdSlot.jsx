@@ -11,6 +11,7 @@ export default function InlineAdSlot({
   refreshKey = 'default',
   className = '',
   label = 'Sponsored',
+  onAdLoaded,
 }) {
   const [ad, setAd] = useState(null);
   const [impressionId, setImpressionId] = useState(null);
@@ -73,6 +74,10 @@ export default function InlineAdSlot({
         setImpressionId(null);
         setHasRecordedImpression(false);
         setHasTrackedClick(false);
+        // Report contracted duration to parent so analysis holds long enough
+        if (data.ad?.duration && onAdLoaded) {
+          onAdLoaded({ duration: data.ad.duration });
+        }
       } catch (error) {
         if (error.name !== 'AbortError') {
           setAd(null);
@@ -149,13 +154,21 @@ export default function InlineAdSlot({
         rel="noreferrer"
         onClick={handleClick}
       >
-        <img
-          className="ad-slot__image"
-          src={ad.creative_url}
-          alt="Sponsored creative"
-          loading="lazy"
-          onLoad={recordImpression}
-        />
+        <div className="ad-slot__creative">
+          <img
+            className="ad-slot__image"
+            src={ad.creative_url}
+            alt="Sponsored creative"
+            loading="lazy"
+            onLoad={recordImpression}
+          />
+          {ad.brand_name && (
+            <div className="ad-slot__overlay">
+              <span className="ad-slot__brand">{ad.brand_name}</span>
+              {ad.domain && <span className="ad-slot__domain">{ad.domain}</span>}
+            </div>
+          )}
+        </div>
       </a>
     </aside>
   );

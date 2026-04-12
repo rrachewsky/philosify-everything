@@ -329,6 +329,15 @@ export async function handleCreateFromPlan(request, env, corsHeaders) {
       return jsonResponse({ error: 'creative_brief required for Philosify-created creatives' }, 400, corsHeaders);
     }
 
+    // Moderate the brief before accepting the campaign
+    if (creative_type === 'philosify' && creative_brief) {
+      const { moderateBrief } = await import('./creatives.js');
+      const moderation = await moderateBrief(env, creative_brief, name);
+      if (!moderation.safe) {
+        return jsonResponse({ error: moderation.reason }, 400, corsHeaders);
+      }
+    }
+
     // Get creative fee if applicable
     let creativeFeeCents = 0;
     if (creative_type === 'philosify') {
@@ -535,6 +544,90 @@ export async function handleGetPlan(request, env, corsHeaders, planId) {
 }
 
 /**
+ * PUT /api/ads/plans/:id
+ * Update plan fields (target_url, start_date, end_date) before launch
+ */
+export async function handleUpdatePlan(request, env, corsHeaders, planId) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const advertiser = await getAdvertiserFromRequest(env, request, supabase);
+
+    if (!advertiser) {
+      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    if (!UUID_RE.test(planId)) {
+      return jsonResponse({ error: 'Invalid plan ID' }, 400, corsHeaders);
+    }
+
+    const { data: plans } = await supabase
+      .from('ads.ad_plans')
+      .select('id,status,advertiser_id', {
+        filter: `id=eq.${planId}&advertiser_id=eq.${advertiser.id}`,
+      });
+
+    const plan = plans?.[0];
+    if (!plan) {
+      return jsonResponse({ error: 'Plan not found' }, 404, corsHeaders);
+    }
+
+    // Only allow edits before launch
+    if (!['draft', 'pending_creative', 'pending_approval'].includes(plan.status)) {
+      return jsonResponse({ error: 'Cannot edit a launched campaign' }, 400, corsHeaders);
+    }
+
+    const body = await request.json();
+    const updates = {};
+
+    if (body.target_url) {
+      updates.target_url = body.target_url;
+    }
+    if (body.start_date) {
+      updates.start_date = body.start_date;
+    }
+    if (body.end_date) {
+      updates.end_date = body.end_date;
+    }
+    if (body.creative_url) {
+      updates.creative_url = body.creative_url;
+      updates.creative_status = 'ready';
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return jsonResponse({ error: 'No fields to update' }, 400, corsHeaders);
+    }
+
+    updates.updated_at = new Date().toISOString();
+
+    console.log('[Ads] Updating plan', planId, 'with:', JSON.stringify(updates));
+    const { error: updateErr } = await supabase.from('ads.ad_plans').update(updates, `id=eq.${planId}`);
+    if (updateErr) {
+      console.error('[Ads] Plan update failed:', JSON.stringify(updateErr));
+      return jsonResponse({ error: 'Failed to update plan' }, 500, corsHeaders);
+    }
+
+    // Also update orders if target_url or dates changed
+    if (body.target_url) {
+      await supabase.from('ads.ad_orders').update(
+        { target_url: body.target_url, updated_at: new Date().toISOString() },
+        `plan_id=eq.${planId}`
+      );
+    }
+    if (body.start_date || body.end_date) {
+      const orderDateUpdates = { updated_at: new Date().toISOString() };
+      if (body.start_date) orderDateUpdates.start_date = body.start_date;
+      if (body.end_date) orderDateUpdates.end_date = body.end_date;
+      await supabase.from('ads.ad_orders').update(orderDateUpdates, `plan_id=eq.${planId}`);
+    }
+
+    return jsonResponse({ success: true }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads] Update plan error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
  * POST /api/ads/plans/:id/checkout
  * Pay for all orders in a plan
  */
@@ -675,6 +768,69 @@ export async function handlePlanPaymentWebhook(env, session) {
     if (!planRecord || planRecord.paid_at) {
       return;
     }
+
+    // Get plan details for transaction record
+    const { data: planFull } = await supabase
+      .from('ads.ad_plans')
+      .select('advertiser_id,name,total_cost_cents,creative_fee_cents', {
+        filter: `id=eq.${plan_id}`,
+        limit: 1,
+      });
+    const planDetail = planFull?.[0];
+
+    // Balance accounting: deposit full payment, then deduct creative fee
+    if (planDetail?.advertiser_id && planDetail?.total_cost_cents) {
+      // Check for duplicate
+      const { data: existingTx } = await supabase
+        .from('ads.advertiser_transactions')
+        .select('id', { filter: `stripe_checkout_session_id=eq.${session.id}`, limit: 1 });
+
+      if (!existingTx || existingTx.length === 0) {
+        const advertiserId = planDetail.advertiser_id;
+        const totalPaid = planDetail.total_cost_cents;
+        const creativeFee = planDetail.creative_fee_cents || 0;
+
+        // Get current balance
+        const { data: advBal } = await supabase
+          .from('ads.advertisers')
+          .select('balance_cents', { filter: `id=eq.${advertiserId}`, limit: 1 });
+        let balance = advBal?.[0]?.balance_cents || 0;
+
+        // 1. Deposit full payment to balance
+        balance += totalPaid;
+        await supabase.from('ads.advertisers').update(
+          { balance_cents: balance, updated_at: new Date().toISOString() },
+          `id=eq.${advertiserId}`
+        );
+        await supabase.from('ads.advertiser_transactions').insert({
+          advertiser_id: advertiserId,
+          type: 'deposit',
+          amount_cents: totalPaid,
+          balance_after_cents: balance,
+          description: `${planDetail.name || 'Campaign'} — payment received`,
+          stripe_checkout_session_id: session.id,
+          stripe_payment_intent_id: session.payment_intent,
+        });
+
+        // 2. Deduct creative fee immediately (art is generated on payment)
+        if (creativeFee > 0) {
+          balance -= creativeFee;
+          await supabase.from('ads.advertisers').update(
+            { balance_cents: balance, updated_at: new Date().toISOString() },
+            `id=eq.${advertiserId}`
+          );
+          await supabase.from('ads.advertiser_transactions').insert({
+            advertiser_id: advertiserId,
+            type: 'campaign_spend',
+            amount_cents: -creativeFee,
+            balance_after_cents: balance,
+            description: `${planDetail.name || 'Campaign'} — creative fee`,
+          });
+        }
+
+        console.log(`[Ads] Balance: +$${(totalPaid / 100).toFixed(2)} deposit, -$${(creativeFee / 100).toFixed(2)} creative fee. Balance: $${(balance / 100).toFixed(2)}`);
+      }
+    }
     
     const planStatus = creativeType === 'philosify' ? 'pending_creative' : 'pending_approval';
     
@@ -715,11 +871,83 @@ export async function handlePlanPaymentWebhook(env, session) {
       });
 
       if (rpcError) {
-        console.error('[Ads] Reserve inventory error:', rpcError);
+        console.warn('[Ads] Reserve inventory error (function may not exist yet):', rpcError);
       }
     }
 
     console.log(`[Ads] Plan ${plan_id} paid, status: ${planStatus}`);
+
+    // Auto-generate AI creative for 'philosify' creative type
+    if (creativeType === 'philosify') {
+      try {
+        const { generateAICreative } = await import('./creatives.js');
+
+        // Get advertiser info for the prompt
+        const { data: advData } = await supabase
+          .from('ads.advertisers')
+          .select('company_name', { filter: `id=eq.${session.metadata.advertiser_id}`, limit: 1 });
+
+        // Get the plan's full details
+        const { data: planDetails } = await supabase
+          .from('ads.ad_plans')
+          .select('creative_brief,target_url', { filter: `id=eq.${plan_id}`, limit: 1 });
+
+        const brandName = advData?.[0]?.company_name || 'Brand';
+        const brief = planDetails?.[0]?.creative_brief || '';
+        const targetUrl = planDetails?.[0]?.target_url || '';
+        const placement = orders?.[0]?.placement || 'sidebar';
+
+        const result = await generateAICreative(env, {
+          advertiserId: session.metadata.advertiser_id,
+          brief,
+          brandName,
+          targetUrl,
+          placement,
+        });
+
+        if (result?.url) {
+          // Update plan with generated creative
+          await supabase.from('ads.ad_plans').update(
+            {
+              creative_url: result.url,
+              creative_status: 'review',
+              status: 'pending_approval',
+              updated_at: new Date().toISOString(),
+            },
+            `id=eq.${plan_id}`
+          );
+
+          // Update orders too
+          await supabase.from('ads.ad_orders').update(
+            {
+              creative_url: result.url,
+              creative_status: 'ready',
+              status: 'pending_approval',
+              updated_at: new Date().toISOString(),
+            },
+            `plan_id=eq.${plan_id}`
+          );
+
+          // Update creative request if it exists
+          await supabase.from('ads.creative_requests').update(
+            {
+              current_draft_url: result.url,
+              status: 'review',
+              drafts: JSON.stringify([{ url: result.url, generated_at: new Date().toISOString(), method: 'dall-e-3' }]),
+              updated_at: new Date().toISOString(),
+            },
+            `plan_id=eq.${plan_id}`
+          );
+
+          console.log(`[Ads AI] Auto-generated creative for plan ${plan_id}: ${result.url}`);
+        } else {
+          console.warn(`[Ads AI] Creative generation failed for plan ${plan_id}, remains in pending_creative`);
+        }
+      } catch (aiErr) {
+        console.error('[Ads AI] Auto-generation error:', aiErr.message);
+        // Plan stays in pending_creative — admin can generate manually
+      }
+    }
   } catch (err) {
     console.error('[Ads] Plan payment webhook error:', err);
   }

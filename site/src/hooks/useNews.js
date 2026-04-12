@@ -8,6 +8,7 @@ import { config } from '@/config';
 import { searchNews, fetchBreakingNews } from '../services/api/newsApi.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 import { getPendingAction, clearPendingAction } from '../utils/pendingAction.js';
+import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 
 export function useNews() {
   const { i18n } = useTranslation();
@@ -39,6 +40,11 @@ export function useNews() {
   const [panelError, setPanelError] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef(null);
+  const adDurationRef = useRef(null);
+
+  const handleAdLoaded = useCallback(({ duration }) => {
+    adDurationRef.current = duration;
+  }, []);
 
   // Load breaking news on sidebar open
   const loadBreaking = useCallback(async () => {
@@ -208,6 +214,7 @@ export function useNews() {
           throw new Error(data.error || `Analysis failed: ${response.status}`);
         }
 
+        await waitForMinimumAnalysisWindow(startTime, adDurationRef.current);
         setAnalysisResult(data);
         window.dispatchEvent(new CustomEvent('credits-changed'));
       } catch (err) {
@@ -340,5 +347,7 @@ export function useNews() {
     openWithResult,
     // Payment return
     openWithPendingAction,
+    // Ad duration
+    handleAdLoaded,
   };
 }

@@ -224,6 +224,7 @@ import {
   handleDeleteAccount as handleAdsDeleteAccount,
   handleStatsOverview as handleAdsStatsOverview,
   handleUploadCreative as handleAdsUploadCreative,
+  handleServeCreativeMedia as handleAdsServeCreativeMedia,
   handleServeAd,
   handleServeAdBatch,
   handleRecordImpression,
@@ -248,6 +249,7 @@ import {
   handleCreateFromPlan,
   handleListPlans,
   handleGetPlan,
+  handleUpdatePlan,
   handlePlanCheckout,
   handlePlanPaymentWebhook,
   handleApprovePlanCreative,
@@ -267,6 +269,9 @@ import {
   handleAdminListCreativeRequests as handleAdsAdminListCreativeRequests,
   handleAdminSubmitCreativeDraft as handleAdsAdminSubmitCreativeDraft,
   handleAdminApprovePlan as handleAdsAdminApprovePlan,
+  handleAdminGenerateCreative as handleAdsAdminGenerateCreative,
+  handleAdminBackfillTransactions as handleAdsAdminBackfillTransactions,
+  handleAdminFixBilling as handleAdsAdminFixBilling,
   // Agency
   handleAgencySignup,
   handleAgencyLogin,
@@ -4141,6 +4146,11 @@ export default {
         return handleAnalyticsExport(request, env, corsHeaders);
       }
 
+      // Ads Creative Media Proxy (serves R2 images without public bucket access)
+      if (url.pathname.startsWith("/api/ads/media/") && request.method === "GET") {
+        return handleAdsServeCreativeMedia(request, env, corsHeaders);
+      }
+
       // Ads Creative Upload/Delete (authenticated advertisers)
       if (url.pathname === "/api/ads/creatives/upload" && request.method === "POST") {
         return handleAdsUploadCreative(request, env, corsHeaders);
@@ -4213,6 +4223,9 @@ export default {
       const planIdMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)$/i);
       if (planIdMatch && request.method === "GET") {
         return handleGetPlan(request, env, corsHeaders, planIdMatch[1]);
+      }
+      if (planIdMatch && request.method === "PUT") {
+        return handleUpdatePlan(request, env, corsHeaders, planIdMatch[1]);
       }
       const planCheckoutMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)\/checkout$/i);
       if (planCheckoutMatch && request.method === "POST") {
@@ -4331,6 +4344,16 @@ export default {
       const adsAdminCreativeDraftMatch = url.pathname.match(/^\/api\/ads\/admin\/creative-requests\/([0-9a-f-]+)\/draft$/i);
       if (adsAdminCreativeDraftMatch && request.method === "POST") {
         return handleAdsAdminSubmitCreativeDraft(request, env, corsHeaders, adsAdminCreativeDraftMatch[1]);
+      }
+      const adsAdminGenerateCreativeMatch = url.pathname.match(/^\/api\/ads\/admin\/plans\/([0-9a-f-]+)\/generate-creative$/i);
+      if (adsAdminGenerateCreativeMatch && request.method === "POST") {
+        return handleAdsAdminGenerateCreative(request, env, corsHeaders, adsAdminGenerateCreativeMatch[1]);
+      }
+      if (url.pathname === "/api/ads/admin/backfill-transactions" && request.method === "POST") {
+        return handleAdsAdminBackfillTransactions(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/fix-billing" && request.method === "POST") {
+        return handleAdsAdminFixBilling(request, env, corsHeaders);
       }
 
       // Agency Auth (RATE LIMITED to prevent brute force)

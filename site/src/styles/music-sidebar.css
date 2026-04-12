@@ -233,6 +233,15 @@
   text-overflow: ellipsis;
 }
 
+.music-selected__cover {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(120, 100, 180, 0.2);
+  flex-shrink: 0;
+}
+
 .music-selected__clear {
   background: none;
   border: none;
@@ -245,6 +254,13 @@
 
 .music-selected__clear:hover {
   color: #ec4899;
+}
+
+.music-no-results {
+  text-align: center;
+  padding: 20px 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
 }
 
 /* ===== RESULTS ===== */
@@ -1112,30 +1128,144 @@
 }
 
 /* Panel analysis result (markdown) */
+/* Philosopher panel analysis — cards per section */
 .panel-analysis {
-  padding: 16px;
-  color: #e2e8f0;
-  font-size: 14px;
-  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
 }
 
-.panel-analysis h2,
-.panel-analysis strong {
+.panel-analysis__section {
+  background: rgba(10, 0, 32, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  animation: cyber-border-glow 4s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.panel-analysis__section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 240, 255, 0.4) 0%,
+    rgba(124, 58, 237, 0.4) 50%,
+    rgba(255, 0, 170, 0.4) 100%
+  );
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.panel-analysis__section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 60px rgba(124, 58, 237, 0.08),
+    inset 0 0 100px rgba(0, 240, 255, 0.04);
+  pointer-events: none;
+}
+
+.panel-analysis__section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: #00f0ff;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.panel-analysis__section-subtitle {
+  font-size: 11px;
   color: #c4b5fd;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  position: relative;
+  z-index: 1;
 }
 
-.panel-analysis em {
-  color: rgba(196, 181, 253, 0.8);
+.panel-analysis__section-body {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
 }
 
-.panel-analysis p {
+.panel-analysis__section-body p {
   margin: 8px 0;
 }
 
-.panel-analysis hr {
-  border: none;
-  border-top: 1px solid rgba(139, 92, 246, 0.2);
-  margin: 16px 0;
+.panel-analysis__section-body p:first-child {
+  margin-top: 0;
+}
+
+.panel-analysis__section-body p:last-child {
+  margin-bottom: 0;
+}
+
+.panel-analysis__section-body strong {
+  color: #c4b5fd;
+}
+
+.panel-analysis__section-body em {
+  color: rgba(196, 181, 253, 0.8);
+}
+
+/* Verdict card — distinct accent */
+.panel-analysis__section--verdict {
+  border-color: rgba(236, 72, 153, 0.3);
+}
+
+.panel-analysis__section--verdict .panel-analysis__section-title {
+  color: #ec4899;
+  text-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+}
+
+/* Provocation — subtle */
+.panel-analysis__section--provocation {
+  border-color: rgba(251, 191, 36, 0.2);
+  background: rgba(15, 8, 40, 0.5);
+}
+
+.panel-analysis__section--provocation .panel-analysis__section-title {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+}
+
+@media (max-width: 600px) {
+  .panel-analysis__section {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  .panel-analysis__section-title {
+    font-size: 11px;
+  }
+  .panel-analysis__section-body {
+    font-size: 13px;
+  }
 }
 
 /* ============================================================

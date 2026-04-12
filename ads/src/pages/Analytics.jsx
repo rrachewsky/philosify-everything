@@ -115,7 +115,7 @@ export default function Analytics() {
                     <div
                       className="chart-bar"
                       style={{ height: `${(day.impressions / maxImpressions) * 100}%` }}
-                      title={`${day.date}: ${day.impressions} impressions, ${day.clicks} clicks`}
+                      title={`${day.date}: ${day.impressions} ${t('common.impressions')}, ${day.clicks} ${t('common.clicks')}`}
                     />
                     <div className="chart-label">
                       {day.date.slice(5)}

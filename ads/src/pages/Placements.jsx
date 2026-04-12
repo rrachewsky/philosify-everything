@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 // Visual mockup of Philosify analysis page with sidebar ad
-function SidebarMockup() {
+function SidebarMockup({ t }) {
   return (
     <div className="mockup mockup--sidebar">
       {/* Browser chrome */}
@@ -38,7 +38,7 @@ function SidebarMockup() {
               <div className="mockup__progress-bar">
                 <div className="mockup__progress-fill"></div>
               </div>
-              <div className="mockup__progress-text">Analyzing philosophical themes...</div>
+              <div className="mockup__progress-text">{t('placements.mockupAnalyzing')}</div>
             </div>
             <div className="mockup__skeleton">
               <div className="mockup__skeleton-line"></div>
@@ -50,8 +50,8 @@ function SidebarMockup() {
           {/* Sidebar - AD PLACEMENT */}
           <div className="mockup__sidebar">
             <div className="mockup__ad-slot mockup__ad-slot--highlight">
-              <div className="mockup__ad-label">YOUR AD HERE</div>
-              <div className="mockup__ad-size">300x250 or 300x600</div>
+              <div className="mockup__ad-label">{t('placements.mockupYourAdHere')}</div>
+              <div className="mockup__ad-size">{t('placements.mockupAdSize300')}</div>
               <div className="mockup__ad-arrow"></div>
             </div>
           </div>
@@ -62,7 +62,7 @@ function SidebarMockup() {
 }
 
 // Visual mockup of Philosify constellation panel with ad
-function ConstellationMockup() {
+function ConstellationMockup({ t }) {
   return (
     <div className="mockup mockup--constellation">
       {/* Browser chrome */}
@@ -103,12 +103,12 @@ function ConstellationMockup() {
           
           {/* Side panel with ad */}
           <div className="mockup__panel">
-            <div className="mockup__panel-title">Discover</div>
+            <div className="mockup__panel-title">{t('placements.mockupDiscover')}</div>
             <div className="mockup__panel-item"></div>
             <div className="mockup__panel-item"></div>
             <div className="mockup__ad-slot mockup__ad-slot--highlight mockup__ad-slot--square">
-              <div className="mockup__ad-label">YOUR AD</div>
-              <div className="mockup__ad-size">250x250</div>
+              <div className="mockup__ad-label">{t('placements.mockupYourAd')}</div>
+              <div className="mockup__ad-size">{t('placements.mockupAdSize250')}</div>
             </div>
             <div className="mockup__panel-item"></div>
           </div>
@@ -118,56 +118,59 @@ function ConstellationMockup() {
   );
 }
 
-const PLACEMENTS = [
-  {
-    id: 'sidebar',
-    name: 'Sidebar Interstitial',
-    description: 'Displayed in the sidebar while users wait for their song analysis results. Analysis takes approximately 20 seconds, giving your ad prime attention during the wait.',
-    context: 'Users submit a song and watch as Philosify analyzes its philosophical themes. During this ~20 second wait, your ad appears in the sidebar - capturing undivided attention while they anticipate results.',
-    durations: [
-      { seconds: 5, cpm: 10 },
-      { seconds: 10, cpm: 20 },
-      { seconds: 15, cpm: 30 },
-      { seconds: 20, cpm: 40 },
-    ],
-    specs: {
-      dimensions: '300x250px or 300x600px',
-      formats: 'PNG, JPG, GIF',
-      maxSize: '2MB',
+function getPlacements(t) {
+  return [
+    {
+      id: 'sidebar',
+      name: t('placements.sidebarName'),
+      description: t('placements.sidebarFullDesc'),
+      context: t('placements.sidebarContext'),
+      durations: [
+        { seconds: 5, cpm: 10 },
+        { seconds: 10, cpm: 20 },
+        { seconds: 15, cpm: 30 },
+        { seconds: 20, cpm: 40 },
+      ],
+      specs: {
+        dimensions: t('placements.sidebarDimensions'),
+        formats: t('placements.sidebarFormats'),
+        maxSize: t('placements.sidebarMaxSize'),
+      },
+      features: [
+        t('placements.sidebarFeature1'),
+        t('placements.sidebarFeature2'),
+        t('placements.sidebarFeature3'),
+        t('placements.sidebarFeature4'),
+      ],
+      MockupComponent: SidebarMockup,
     },
-    features: [
-      'High visibility during analysis wait time',
-      'Multiple ads can rotate until results arrive',
-      'Users are actively engaged, waiting for results',
-      'Clickable - opens your URL in new tab',
-    ],
-    MockupComponent: SidebarMockup,
-  },
-  {
-    id: 'constellation',
-    name: 'Constellation Panel',
-    description: 'Featured in the Constellation discovery panel where users explore related songs and artists based on philosophical alignment.',
-    context: 'The Constellation is an interactive visualization where users discover songs that share philosophical DNA with their favorites. Your ad appears seamlessly in the discovery panel.',
-    durations: [
-      { seconds: 5, cpm: 8 },
-    ],
-    specs: {
-      dimensions: '250x250px',
-      formats: 'PNG, JPG, GIF',
-      maxSize: '2MB',
+    {
+      id: 'constellation',
+      name: t('placements.constellationName'),
+      description: t('placements.constellationFullDesc'),
+      context: t('placements.constellationContext'),
+      durations: [
+        { seconds: 5, cpm: 8 },
+      ],
+      specs: {
+        dimensions: t('placements.constellationDimensions'),
+        formats: t('placements.constellationFormats'),
+        maxSize: t('placements.constellationMaxSize'),
+      },
+      features: [
+        t('placements.constellationFeature1'),
+        t('placements.constellationFeature2'),
+        t('placements.constellationFeature3'),
+        t('placements.constellationFeature4'),
+      ],
+      MockupComponent: ConstellationMockup,
     },
-    features: [
-      'Discovery-focused placement',
-      'Clean, non-intrusive integration',
-      'Single ad per view (exclusive)',
-      'Clickable - opens your URL in new tab',
-    ],
-    MockupComponent: ConstellationMockup,
-  },
-];
+  ];
+}
 
 function Placements({ publicView = false }) {
   const { t } = useTranslation();
+  const PLACEMENTS = getPlacements(t);
   return (
     <div className="page-stack">
       <section className="section-heading">
@@ -187,16 +190,16 @@ function Placements({ publicView = false }) {
         {PLACEMENTS.map((placement) => (
           <section key={placement.id} className="placement-detail">
             <div className="placement-detail__mockup">
-              <placement.MockupComponent />
+              <placement.MockupComponent t={t} />
             </div>
             <div className="placement-detail__info">
-              <p className="eyebrow">Placement</p>
+              <p className="eyebrow">{t('placements.placementLabel')}</p>
               <h3>{placement.name}</h3>
               <p>{placement.description}</p>
               <div className="detail-list">
-                <div><span>Context</span><strong>{placement.context}</strong></div>
-                <div><span>Specs</span><strong>{placement.specs.dimensions} · {placement.specs.formats}</strong></div>
-                <div><span>Max asset</span><strong>{placement.specs.maxSize}</strong></div>
+                <div><span>{t('placements.contextLabel')}</span><strong>{placement.context}</strong></div>
+                <div><span>{t('placements.specsLabel')}</span><strong>{placement.specs.dimensions} · {placement.specs.formats}</strong></div>
+                <div><span>{t('placements.maxAssetLabel')}</span><strong>{placement.specs.maxSize}</strong></div>
               </div>
               <ul className="bullet-list">
                 {placement.features.map((feature) => (

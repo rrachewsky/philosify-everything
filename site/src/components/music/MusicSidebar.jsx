@@ -12,6 +12,7 @@ import { ShareButton } from '../sharing/ShareButton';
 import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
 import InlineAdSlot from '../ads/InlineAdSlot.jsx';
+import PanelAnalysisCards from '../results/PanelAnalysisCards.jsx';
 import TopTenTicker from '../TopTenTicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
@@ -39,6 +40,7 @@ export function MusicSidebar({
   user,
   balance,
   lang,
+  onAdLoaded,
 }) {
   const { t, i18n } = useTranslation();
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -428,6 +430,7 @@ export function MusicSidebar({
                     layout="card"
                     refreshKey={`music-analysis-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
                     className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
                   />
                 </>
               )}
@@ -449,6 +452,7 @@ export function MusicSidebar({
                     layout="card"
                     refreshKey={`music-panel-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
                     className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
                   />
                 </>
               )}
@@ -501,17 +505,7 @@ export function MusicSidebar({
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    panelResult.analysis
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/\n\n/g, '</p><p>')
-                      .replace(/\n/g, '<br/>')
-                      .replace(/^/, '<p>')
-                      .replace(/$/, '</p>')
-                  )
-                }} />
+                <PanelAnalysisCards analysis={panelResult.analysis} />
               </div>
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
@@ -583,17 +577,7 @@ export function MusicSidebar({
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    panelResult.analysis
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/\n\n/g, '</p><p>')
-                      .replace(/\n/g, '<br/>')
-                      .replace(/^/, '<p>')
-                      .replace(/$/, '</p>')
-                  )
-                }} />
+                <PanelAnalysisCards analysis={panelResult.analysis} />
               </div>
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>

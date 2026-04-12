@@ -162,35 +162,55 @@ export async function handleAdsSignup(request, env, corsHeaders) {
     const supabase = await getServiceSupabase(env);
 
     // Check if email already exists in advertisers
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from('ads.advertisers')
-      .select('id', { filter: `email=eq.${encodeURIComponent(email.toLowerCase())}` });
+      .select('id', { filter: `email=eq.${email.toLowerCase()}` });
+
+    if (existingError) {
+      console.error('[Ads] Signup - advertiser check failed:', existingError);
+    }
 
     if (existing && existing.length > 0) {
       // Generic message to prevent account enumeration
       return jsonResponse({ error: 'Unable to create account. Please try again or contact support.' }, 400, corsHeaders);
     }
 
-    // Create Supabase user
+    // Create Supabase user (or recover existing user without advertiser profile)
     let supabaseUser;
+    let existingSupabaseUser = false;
     try {
       supabaseUser = await supabaseAdminSignUp(env, email.toLowerCase(), password);
     } catch (err) {
-      // User might already exist in Supabase but not as advertiser
-      // Use generic message to prevent account enumeration
-      if (err.message.includes('already registered') || err.message.includes('already exists')) {
-        return jsonResponse({ error: 'Unable to create account. Please try again or contact support.' }, 400, corsHeaders);
+      // User exists in Supabase Auth but NOT in ads.advertisers (dead state)
+      // This happens when a previous signup failed after creating the auth user,
+      // or the user already has a main Philosify account.
+      // Recover by signing them in and creating the advertiser profile.
+      if (err.message.includes('already') && (err.message.includes('registered') || err.message.includes('exists'))) {
+        try {
+          const session = await supabaseSignIn(env, email.toLowerCase(), password);
+          supabaseUser = session.user;
+          existingSupabaseUser = true;
+        } catch (signInErr) {
+          // Password doesn't match existing Supabase user
+          return jsonResponse({ error: 'Unable to create account. Please try again or contact support.' }, 400, corsHeaders);
+        }
+      } else {
+        throw err;
       }
-      throw err;
     }
 
-    const createdUserId = getCreatedUserId(supabaseUser);
+    const createdUserId = existingSupabaseUser
+      ? (supabaseUser?.id || null)
+      : getCreatedUserId(supabaseUser);
     if (!createdUserId) {
+      console.error('[Ads] Signup - no user ID from:', JSON.stringify(supabaseUser).slice(0, 200));
       throw new Error('Failed to create advertiser auth user');
     }
+    console.log('[Ads] Signup - user ID:', createdUserId, 'existing:', existingSupabaseUser);
 
     // AI vetting
     const vetting = await vetAdvertiser(env, { email, company_name, website });
+    console.log('[Ads] Signup - vetting result:', vetting.score);
 
     // Create advertiser profile
     const { data: advertiser, error } = await supabase
@@ -210,9 +230,10 @@ export async function handleAdsSignup(request, env, corsHeaders) {
       });
 
     if (error) {
-      console.error('[Ads] Signup error:', error);
+      console.error('[Ads] Signup insert error:', JSON.stringify(error));
       return jsonResponse({ error: 'Failed to create account' }, 500, corsHeaders);
     }
+    console.log('[Ads] Signup - advertiser created:', advertiser?.id, advertiser?.status);
 
     // Send notification emails
     try {
@@ -226,7 +247,23 @@ export async function handleAdsSignup(request, env, corsHeaders) {
     } catch (e) { console.warn('[AdsAuth] Signup email failed:', e.message); }
 
     // Sign in to get session tokens
-    const session = await supabaseSignIn(env, email.toLowerCase(), password);
+    let session;
+    try {
+      session = await supabaseSignIn(env, email.toLowerCase(), password);
+    } catch (signInErr) {
+      console.error('[Ads] Signup - post-insert signIn failed:', signInErr.message);
+      // Account was created but sign-in failed — return success anyway
+      // User can sign in manually
+      return jsonResponse({
+        success: true,
+        advertiser: {
+          id: advertiser.id,
+          email: advertiser.email,
+          company_name: advertiser.company_name,
+          status: advertiser.status,
+        },
+      }, 201, corsHeaders);
+    }
 
     // Build response with HttpOnly cookie
     const response = jsonResponse({
@@ -265,6 +302,7 @@ export async function handleAdsLogin(request, env, corsHeaders) {
     try {
       session = await supabaseSignIn(env, email.toLowerCase(), password);
     } catch (err) {
+      console.log('[Ads] Login failed - Supabase auth rejected credentials for:', email.toLowerCase());
       return jsonResponse({ error: 'Invalid email or password' }, 401, corsHeaders);
     }
 
@@ -275,12 +313,21 @@ export async function handleAdsLogin(request, env, corsHeaders) {
       .from('ads.advertisers')
       .select('*', { filter: `user_id=eq.${session.user.id}` });
 
+    if (error) {
+      console.error('[Ads] Login - advertiser lookup by user_id failed:', error);
+    }
+
     // Also check by email (for accounts created before migration)
     let advertiser = advertisers?.[0];
     if (!advertiser) {
-      const { data: byEmail } = await supabase
+      const { data: byEmail, error: emailError } = await supabase
         .from('ads.advertisers')
         .select('*', { filter: `email=eq.${encodeURIComponent(email.toLowerCase())}` });
+
+      if (emailError) {
+        console.error('[Ads] Login - advertiser lookup by email failed:', emailError);
+      }
+
       advertiser = byEmail?.[0];
       
       // Link user_id if found by email
@@ -293,8 +340,10 @@ export async function handleAdsLogin(request, env, corsHeaders) {
     }
 
     if (!advertiser) {
-      // Generic message to prevent account enumeration
-      return jsonResponse({ error: 'Invalid email or password' }, 401, corsHeaders);
+      // User exists in Supabase Auth but has no advertiser profile
+      // Direct them to sign up (which will now recover gracefully)
+      console.log('[Ads] Login - no advertiser profile for user:', session.user.id);
+      return jsonResponse({ error: 'No advertiser account found. Please sign up first.' }, 401, corsHeaders);
     }
 
     // Check if account is suspended (still generic to prevent enumeration)

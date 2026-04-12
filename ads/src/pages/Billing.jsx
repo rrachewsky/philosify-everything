@@ -47,11 +47,11 @@ function Billing() {
     const amount = customAmount ? parseFloat(customAmount) : selectedAmount;
     
     if (!amount || amount < 10) {
-      setError('Minimum amount is $10');
+      setError(t('billing.minAmount'));
       return;
     }
     if (amount > 10000) {
-      setError('Maximum amount is $10,000');
+      setError(t('billing.maxAmount'));
       return;
     }
 
@@ -67,7 +67,7 @@ function Billing() {
       // Redirect to Stripe
       window.location.href = checkout_url;
     } catch (err) {
-      setError(err.message || 'Failed to process payment');
+      setError(err.message || t('billing.paymentFailed'));
       setProcessing(false);
     }
   };
@@ -114,10 +114,10 @@ function Billing() {
       </section>
 
       {searchParams.get('success') ? (
-        <div className="alert alert--success">Funding completed successfully.</div>
+        <div className="alert alert--success">{t('billing.fundingCompleted')}</div>
       ) : null}
       {searchParams.get('canceled') ? (
-        <div className="alert alert--warning">The Stripe checkout was cancelled.</div>
+        <div className="alert alert--warning">{t('billing.checkoutCancelled')}</div>
       ) : null}
       {error ? <div className="alert alert--error">{error}</div> : null}
 
@@ -166,26 +166,26 @@ function Billing() {
           </button>
 
           <p className="helper-text">
-            Payments are processed by Stripe. We do not store card details.
+            {t('billing.stripeNote')}
           </p>
         </section>
 
         <section className="surface-card stack">
           <div>
-            <p className="eyebrow">Billing identity</p>
-            <h3>Account details</h3>
+            <p className="eyebrow">{t('billing.billingIdentity')}</p>
+            <h3>{t('billing.accountDetails')}</h3>
           </div>
           <div className="detail-list">
-            <div><span>Email</span><strong>{advertiser?.email}</strong></div>
-            <div><span>Company</span><strong>{advertiser?.company_name || 'Not set'}</strong></div>
+            <div><span>{t('billing.emailLabel')}</span><strong>{advertiser?.email}</strong></div>
+            <div><span>{t('billing.companyLabel')}</span><strong>{advertiser?.company_name || t('common.notSet')}</strong></div>
           </div>
 
           <div>
-            <p className="eyebrow">FAQ</p>
+            <p className="eyebrow">{t('billing.faqTitle')}</p>
             <ul className="bullet-list">
-              <li>Funds are consumed as campaign delivery occurs.</li>
-              <li>If balance hits zero, new launches wait until funding returns.</li>
-              <li>Deposits are non-refundable unless required by support intervention.</li>
+              <li>{t('billing.faqFunds')}</li>
+              <li>{t('billing.faqBalance')}</li>
+              <li>{t('billing.faqRefund')}</li>
             </ul>
           </div>
         </section>
@@ -209,7 +209,7 @@ function Billing() {
               <div key={tx.id} className="collection-row collection-row--stacked">
                 <div className="collection-row__main">
                   <strong>{getTransactionTypeLabel(tx.type)}</strong>
-                  <p>{formatDate(tx.created_at)} · {tx.description || 'Ledger entry'}</p>
+                  <p>{formatDate(tx.created_at)} · {tx.description || t('billing.ledgerEntry')}</p>
                 </div>
                 <div className="collection-row__meta">
                   <span className={tx.amount_cents >= 0 ? 'amount-positive' : 'amount-negative'}>

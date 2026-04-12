@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { useModal } from '../../hooks';
 import { config } from '@/config';
+import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 import '../../styles/music-sidebar.css';
 import '../TopTenTicker.css';
 
@@ -778,6 +779,15 @@ export function QuizSidebar({
                 <span>⭐ {t('quiz.score', 'Score')}: {session?.score || 0}</span>
                 <span>✓ {session?.totalCorrect || 0} / ✗ {session?.totalWrong || 0}</span>
               </div>
+
+              <InlineAdSlot
+                key={`quiz-feedback-${session?.questionNumber || 0}`}
+                userId={user?.id}
+                placement="sidebar"
+                layout="card"
+                refreshKey={`quiz-q${session?.questionNumber || 0}`}
+                className="analysis-ad-slot"
+              />
 
               <button
                 className="music-analyze__button"

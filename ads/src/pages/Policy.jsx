@@ -33,9 +33,7 @@ function Policy() {
               <p className="eyebrow">{t('policy.title')}</p>
               <h2>{t('policy.title')}</h2>
               <p className="lead">
-                These rules protect the Philosify audience, advertisers, agencies, and the platform.
-                All campaigns, creatives, landing pages, claims, and targeting choices must comply
-                with this policy at all times.
+                {t('policy.policyLead')}
               </p>
             </div>
           </section>
@@ -46,26 +44,19 @@ function Policy() {
               <h3>{t('policy.responsibilityText')}</h3>
             </div>
             <p className="helper-text">
-              The advertiser and, where applicable, the agency are fully and solely responsible for
-              all ads posted through Philosify Ads, including creative assets, copy, claims,
-              disclosures, targeting inputs, landing pages, offers, products, services, and legal
-              compliance.
+              {t('policy.responsibilityFull')}
             </p>
             <p className="helper-text">
-              This responsibility applies whether the ad was created entirely by the advertiser or
-              agency, adapted with Philosify tools, or prepared with any creative assistance,
-              drafting, formatting, or mock production provided by Philosify. Philosify&apos;s creative
-              assistance does not transfer ownership, legal responsibility, or compliance
-              responsibility away from the advertiser or agency.
+              {t('policy.responsibilityCreative')}
             </p>
             <div className="detail-list">
               <div>
-                <span>You remain responsible for</span>
-                <strong>Accuracy, legality, permissions, rights, disclosures, and destination pages</strong>
+                <span>{t('policy.responsibleFor')}</span>
+                <strong>{t('policy.responsibleForValue')}</strong>
               </div>
               <div>
-                <span>Philosify may</span>
-                <strong>Reject, pause, limit, or remove any ad at any time</strong>
+                <span>{t('policy.philosifyMay')}</span>
+                <strong>{t('policy.philosifyMayValue')}</strong>
               </div>
             </div>
           </section>
@@ -77,12 +68,12 @@ function Policy() {
                 <h3>{t('policy.permitted')}</h3>
               </div>
               <ul className="bullet-list">
-                <li>Lawful products and services presented accurately and in good faith.</li>
-                <li>Educational, cultural, literary, artistic, and technology-related offers.</li>
-                <li>Apps, platforms, courses, books, events, subscriptions, and media brands.</li>
-                <li>Brand campaigns with clear identity, honest claims, and functional landing pages.</li>
-                <li>Comparative or persuasive messaging that is truthful, substantiated, and not deceptive.</li>
-                <li>Creative that respects intellectual property, privacy rights, and publicity rights.</li>
+                <li>{t('policy.permitted1')}</li>
+                <li>{t('policy.permitted2')}</li>
+                <li>{t('policy.permitted3')}</li>
+                <li>{t('policy.permitted4')}</li>
+                <li>{t('policy.permitted5')}</li>
+                <li>{t('policy.permitted6')}</li>
               </ul>
             </section>
 
@@ -92,16 +83,16 @@ function Policy() {
                 <h3>{t('policy.prohibited')}</h3>
               </div>
               <ul className="bullet-list">
-                <li>Illegal products, illegal services, or content promoting unlawful activity.</li>
-                <li>False, misleading, unverifiable, or deceptive claims, pricing, or offers.</li>
-                <li>Malware, phishing, spyware, credential harvesting, or unsafe downloads.</li>
-                <li>Hate speech, harassment, extremist propaganda, or incitement to violence.</li>
-                <li>Adult sexual content, sexual exploitation, or content inappropriate for a broad audience.</li>
-                <li>Counterfeit goods, intellectual-property infringement, or unauthorized use of third-party assets.</li>
-                <li>Fraud, scams, impersonation, fake endorsements, fake reviews, or fabricated urgency.</li>
-                <li>Weapons, human exploitation, or prohibited drug-related content.</li>
-                <li>Gambling, sweepstakes, financial, health, or legal claims that lack required approvals or disclosures.</li>
-                <li>Landing pages that are broken, unsafe, misleading, or materially inconsistent with the ad.</li>
+                <li>{t('policy.prohibited1')}</li>
+                <li>{t('policy.prohibited2')}</li>
+                <li>{t('policy.prohibited3')}</li>
+                <li>{t('policy.prohibited4')}</li>
+                <li>{t('policy.prohibited5')}</li>
+                <li>{t('policy.prohibited6')}</li>
+                <li>{t('policy.prohibited7')}</li>
+                <li>{t('policy.prohibited8')}</li>
+                <li>{t('policy.prohibited9')}</li>
+                <li>{t('policy.prohibited10')}</li>
               </ul>
             </section>
           </div>
@@ -112,12 +103,12 @@ function Policy() {
               <h3>{t('policy.operations')}</h3>
             </div>
             <ul className="bullet-list">
-              <li>Submission does not guarantee approval, launch, continued delivery, or uninterrupted distribution.</li>
-              <li>Philosify may request edits, supporting documentation, or additional disclosures before launch.</li>
-              <li>Philosify may reject, suspend, throttle, or remove ads for policy, security, quality, legal, or brand-safety reasons.</li>
-              <li>Philosify may act immediately where there is suspected abuse, fraud, impersonation, malware, or policy evasion.</li>
-              <li>Advertisers and agencies must maintain records and substantiation for objective claims when requested.</li>
-              <li>Repeated or serious violations may result in account suspension, campaign cancellation, or permanent bans.</li>
+              <li>{t('policy.operations1')}</li>
+              <li>{t('policy.operations2')}</li>
+              <li>{t('policy.operations3')}</li>
+              <li>{t('policy.operations4')}</li>
+              <li>{t('policy.operations5')}</li>
+              <li>{t('policy.operations6')}</li>
             </ul>
           </section>
 
@@ -127,10 +118,10 @@ function Policy() {
               <h3>{t('policy.warranties')}</h3>
             </div>
             <ul className="bullet-list">
-              <li>You have the rights, licenses, consents, and authority needed to publish the ad and destination content.</li>
-              <li>You will comply with all applicable laws, regulations, platform rules, and required disclosures.</li>
-              <li>You will not use Philosify Ads to evade enforcement, hide ownership, or misrepresent products or services.</li>
-              <li>You accept full responsibility for third-party claims, investigations, disputes, and liabilities arising from your ads.</li>
+              <li>{t('policy.warranties1')}</li>
+              <li>{t('policy.warranties2')}</li>
+              <li>{t('policy.warranties3')}</li>
+              <li>{t('policy.warranties4')}</li>
             </ul>
           </section>
         </div>

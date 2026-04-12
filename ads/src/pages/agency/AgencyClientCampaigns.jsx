@@ -16,7 +16,7 @@ export default function AgencyClientCampaigns() {
         const data = await api.get(`/ads/agency/clients/${clientId}/campaigns`);
         setCampaigns(data.campaigns || []);
       } catch (err) {
-        setError(err.message || 'Failed to load campaigns');
+        setError(err.message || t('agency.loadCampaignsError'));
       } finally {
         setLoading(false);
       }
@@ -31,9 +31,9 @@ export default function AgencyClientCampaigns() {
       <div className="page-header">
         <div>
           <Link to="/agency/clients" className="btn btn-sm" style={{ marginBottom: '0.5rem' }}>
-            &larr; Back to Clients
+            &larr; {t('agency.backToClients')}
           </Link>
-          <h1>Client Campaigns</h1>
+          <h1>{t('agency.clientCampaigns')}</h1>
         </div>
       </div>
 
@@ -41,19 +41,19 @@ export default function AgencyClientCampaigns() {
 
       {campaigns.length === 0 ? (
         <div className="empty-state">
-          <p>This client has no campaigns yet.</p>
+          <p>{t('agency.noCampaignsClient')}</p>
         </div>
       ) : (
         <div className="table-wrapper">
           <table className="data-table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Placement</th>
-                <th>Status</th>
-                <th>Impressions</th>
-                <th>Budget</th>
-                <th>Created</th>
+                <th>{t('common.name')}</th>
+                <th>{t('agency.placement')}</th>
+                <th>{t('common.status')}</th>
+                <th>{t('agency.impressions')}</th>
+                <th>{t('agency.budget')}</th>
+                <th>{t('agency.created')}</th>
               </tr>
             </thead>
             <tbody>

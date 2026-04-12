@@ -3,11 +3,15 @@
 :root {
   --bg: #07111f;
   --bg-panel: rgba(10, 18, 34, 0.82);
+  --bg-secondary: rgba(10, 18, 34, 0.92);
   --surface: rgba(133, 182, 255, 0.08);
   --text: #edf4ff;
+  --text-muted: #93a9c8;
   --muted: #93a9c8;
+  --border: rgba(125, 168, 255, 0.16);
   --line: rgba(125, 168, 255, 0.16);
   --line-strong: rgba(125, 168, 255, 0.3);
+  --gold: #c9a861;
   --accent: #67e8f9;
   --accent-strong: #8b5cf6;
   --success: #34d399;
@@ -1223,7 +1227,7 @@ textarea {
   border-radius: 10px;
   padding: 6px;
   z-index: 100;
-  min-width: 180px;
+  min-width: 200px;
   max-height: 320px;
   overflow-y: auto;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -1257,8 +1261,23 @@ textarea {
   font-weight: 600;
 }
 
-.lang-selector__flag {
-  font-size: 16px;
+.lang-selector__option.active .lang-selector__badge {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+.lang-selector__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: rgba(133, 182, 255, 0.12);
+  color: var(--text);
 }
 
 /* Landing page full grid */
@@ -1266,19 +1285,18 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   margin: 24px 0;
 }
 
 .lang-grid__item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 8px 10px;
+  justify-content: center;
+  padding: 5px 10px;
   border: 1px solid var(--border);
   background: transparent;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1293,14 +1311,15 @@ textarea {
   background: rgba(201, 168, 97, 0.1);
 }
 
-.lang-grid__flag {
-  font-size: 22px;
-}
-
 .lang-grid__code {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
   font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.lang-grid__item:hover .lang-grid__code {
+  color: var(--text);
 }
 
 .lang-grid__item.selected .lang-grid__code {

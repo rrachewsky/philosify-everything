@@ -30,7 +30,7 @@ export default function AgencySignup() {
       await signup(form);
       navigate('/agency');
     } catch (err) {
-      setError(err.message || 'Signup failed');
+      setError(err.message || t('agency.signupFailed'));
     } finally {
       setLoading(false);
     }

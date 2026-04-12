@@ -193,6 +193,21 @@ export function UnsafeZoneSidebar({ isOpen, onClose, pendingSessionId, onClearPe
           setInput(savedInput); // Restore input
           return;
         }
+        if (response.status === 400 && data.error?.includes('no longer active')) {
+          // Session expired or ended — reset to start fresh
+          setSessionId(null);
+          setMessages([]);
+          setTurn(0);
+          setTurnsRemaining(INITIAL_TURNS);
+          setInput(savedInput); // Restore input so user can resend
+          setError(null);
+          return;
+        }
+        if (response.status === 429) {
+          setMessages(messages);
+          setInput(savedInput);
+          throw new Error(data.message || 'Too many requests. Please wait a moment.');
+        }
         throw new Error(data.error || 'Failed to get response');
       }
 

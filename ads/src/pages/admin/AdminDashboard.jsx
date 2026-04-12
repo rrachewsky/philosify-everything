@@ -30,7 +30,7 @@ function AdminDashboard() {
       setPlans(plansData.plans || []);
       setCreativeRequests(requestsData.requests || []);
     } catch (err) {
-      setError(err.message || 'Could not load the admin dashboard.');
+      setError(err.message || t('admin.loadError'));
     } finally {
       setLoading(false);
     }
@@ -68,11 +68,39 @@ function AdminDashboard() {
     await loadData();
   };
 
+  const [backfilling, setBackfilling] = useState(false);
+  const [backfillResult, setBackfillResult] = useState(null);
+
+  const runBackfill = async () => {
+    setBackfilling(true);
+    try {
+      const result = await api.adminPost('/ads/admin/fix-billing', adminSecret, {});
+      setBackfillResult(result);
+    } catch (err) {
+      setError(err.message || 'Backfill failed');
+    } finally {
+      setBackfilling(false);
+    }
+  };
+
+  const [generating, setGenerating] = useState({});
+  const generateCreative = async (planId) => {
+    setGenerating((prev) => ({ ...prev, [planId]: true }));
+    try {
+      await api.adminPost(`/ads/admin/plans/${planId}/generate-creative`, adminSecret, {});
+      await loadData();
+    } catch (err) {
+      setError(err.message || t('admin.generateFailed'));
+    } finally {
+      setGenerating((prev) => ({ ...prev, [planId]: false }));
+    }
+  };
+
   if (loading) {
     return (
       <div className="status-shell">
         <div className="spinner" />
-        <p>Loading the control room...</p>
+        <p>{t('admin.loading')}</p>
       </div>
     );
   }
@@ -81,32 +109,43 @@ function AdminDashboard() {
     <div className="page-stack">
       <section className="hero-strip">
         <div>
-          <p className="eyebrow">Admin control room</p>
-          <h2>Follow the full atelier pipeline</h2>
+          <p className="eyebrow">{t('admin.controlRoom')}</p>
+          <h2>{t('admin.pipelineTitle')}</h2>
           <p className="lead">
-            Review new advertisers, ship creative drafts, and release approved campaigns into the
-            live environment.
+            {t('admin.pipelineDesc')}
           </p>
         </div>
       </section>
 
       {error ? <div className="alert alert--error">{error}</div> : null}
+      {backfillResult ? <div className="alert alert--success">Billing history synced: {backfillResult.results?.map((r) => `${r.plan}: ${r.status}`).join(', ')}</div> : null}
+
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+        <button
+          type="button"
+          className="btn btn--secondary"
+          disabled={backfilling}
+          onClick={runBackfill}
+        >
+          {backfilling ? 'Fixing...' : 'Fix billing'}
+        </button>
+      </div>
 
       <section className="stats-grid">
         <article className="stat-panel">
-          <span className="stat-panel__label">Pending advertisers</span>
+          <span className="stat-panel__label">{t('admin.pendingAdvertisers')}</span>
           <strong className="stat-panel__value">{overview?.pendingAdvertisers || 0}</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Creative in progress</span>
+          <span className="stat-panel__label">{t('admin.creativeInProgress')}</span>
           <strong className="stat-panel__value">{overview?.creativeInProgress || 0}</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Awaiting client approval</span>
+          <span className="stat-panel__label">{t('admin.awaitingClient')}</span>
           <strong className="stat-panel__value">{overview?.awaitingClientApproval || 0}</strong>
         </article>
         <article className="stat-panel">
-          <span className="stat-panel__label">Awaiting admin approval</span>
+          <span className="stat-panel__label">{t('admin.awaitingAdmin')}</span>
           <strong className="stat-panel__value">{overview?.awaitingAdminApproval || 0}</strong>
         </article>
       </section>
@@ -114,27 +153,27 @@ function AdminDashboard() {
       <section className="surface-card stack">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Advertiser applications</p>
-            <h3>Pending approval</h3>
+            <p className="eyebrow">{t('admin.applications')}</p>
+            <h3>{t('admin.pendingApproval')}</h3>
           </div>
         </div>
 
         {advertisers.length === 0 ? (
-          <p className="helper-text">No advertiser approvals are waiting.</p>
+          <p className="helper-text">{t('admin.noApprovals')}</p>
         ) : (
           <div className="collection-list">
             {advertisers.map((advertiser) => (
               <div key={advertiser.id} className="collection-row collection-row--stacked">
                 <div className="collection-row__main">
                   <strong>{advertiser.company_name}</strong>
-                  <p>{advertiser.email} · score {advertiser.vetting_score ?? 'n/a'}</p>
+                  <p>{advertiser.email} · {t('agency.score')} {advertiser.vetting_score ?? 'n/a'}</p>
                 </div>
                 <div className="button-row">
                   <button type="button" className="btn btn--secondary" onClick={() => approveAdvertiser(advertiser.id, false)}>
-                    Reject
+                    {t('admin.reject')}
                   </button>
                   <button type="button" className="btn btn--primary" onClick={() => approveAdvertiser(advertiser.id, true)}>
-                    Approve
+                    {t('admin.approve')}
                   </button>
                 </div>
               </div>
@@ -146,19 +185,19 @@ function AdminDashboard() {
       <section className="surface-card stack">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Creative studio</p>
-            <h3>Requests waiting for a draft</h3>
+            <p className="eyebrow">{t('admin.creativeStudio')}</p>
+            <h3>{t('admin.requestsWaiting')}</h3>
           </div>
         </div>
 
         {creativeRequests.length === 0 ? (
-          <p className="helper-text">No creative requests are active.</p>
+          <p className="helper-text">{t('admin.noCreativeRequests')}</p>
         ) : (
           <div className="collection-list">
             {creativeRequests.map((request) => (
               <div key={request.id} className="collection-row collection-row--stacked">
                 <div className="collection-row__main">
-                  <strong>{request.brand_name || request.advertiser?.company_name || 'Creative request'}</strong>
+                  <strong>{request.brand_name || request.advertiser?.company_name || t('admin.creativeRequest')}</strong>
                   <p>{request.status} · {request.placement} · {request.duration}s</p>
                   <p>{request.brief}</p>
                 </div>
@@ -172,7 +211,7 @@ function AdminDashboard() {
                     placeholder="https://draft-url.example.com/mock.png"
                   />
                   <button type="button" className="btn btn--secondary" onClick={() => submitDraft(request.id)}>
-                    Send draft to advertiser
+                    {t('admin.sendDraft')}
                   </button>
                 </div>
               </div>
@@ -184,13 +223,13 @@ function AdminDashboard() {
       <section className="surface-card stack">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Launch queue</p>
-            <h3>Plans moving toward release</h3>
+            <p className="eyebrow">{t('admin.launchQueue')}</p>
+            <h3>{t('admin.plansMoving')}</h3>
           </div>
         </div>
 
         {actionablePlans.length === 0 ? (
-          <p className="helper-text">No plans are currently in the launch queue.</p>
+          <p className="helper-text">{t('admin.noPlans')}</p>
         ) : (
           <div className="collection-list">
             {actionablePlans.map((plan) => (
@@ -198,14 +237,38 @@ function AdminDashboard() {
                 <div className="collection-row__main">
                   <strong>{plan.name}</strong>
                   <p>
-                    {plan.advertiser?.company_name || 'Unknown advertiser'} · ${(plan.total_cost_cents / 100).toFixed(2)}
+                    {plan.advertiser?.company_name || t('admin.unknownAdvertiser')} · ${(plan.total_cost_cents / 100).toFixed(2)}
                   </p>
+                  {plan.creative_url ? (
+                    <div style={{ marginTop: '8px' }}>
+                      <img
+                        src={plan.creative_url}
+                        alt="Creative"
+                        style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: '6px', border: '1px solid var(--line)' }}
+                      />
+                    </div>
+                  ) : null}
+                  {plan.creative_brief ? (
+                    <p style={{ marginTop: '6px', fontSize: '12px', color: 'var(--muted)' }}>
+                      <strong>{t('create.creativeBrief')}:</strong> {plan.creative_brief.slice(0, 150)}{plan.creative_brief.length > 150 ? '...' : ''}
+                    </p>
+                  ) : null}
                 </div>
                 <div className="button-row">
                   <span className={`status-chip status-chip--${plan.status}`}>{plan.status}</span>
+                  {plan.status === 'pending_creative' ? (
+                    <button
+                      type="button"
+                      className="btn btn--secondary"
+                      disabled={generating[plan.id]}
+                      onClick={() => generateCreative(plan.id)}
+                    >
+                      {generating[plan.id] ? t('admin.generating') : t('admin.generateCreative')}
+                    </button>
+                  ) : null}
                   {plan.status === 'pending_approval' ? (
                     <button type="button" className="btn btn--primary" onClick={() => approvePlan(plan.id)}>
-                      Approve launch
+                      {t('admin.approveLaunch')}
                     </button>
                   ) : null}
                 </div>

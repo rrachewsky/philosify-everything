@@ -23,7 +23,7 @@ export default function AgencyClients() {
       const data = await api.get('/ads/agency/clients');
       setClients(data.clients || []);
     } catch (err) {
-      setLoadError(err.message || 'Failed to load clients');
+      setLoadError(err.message || t('agency.loadClientsError'));
     } finally {
       setLoading(false);
     }
@@ -39,7 +39,7 @@ export default function AgencyClients() {
       setShowAdd(false);
       await loadClients();
     } catch (err) {
-      setError(err.message || 'Failed to add client');
+      setError(err.message || t('agency.addClientError'));
     } finally {
       setAdding(false);
     }
@@ -50,42 +50,42 @@ export default function AgencyClients() {
   return (
     <div className="page-content">
       <div className="page-header">
-        <h1>Client Management</h1>
+        <h1>{t('agency.clientManagement')}</h1>
         <button className="btn btn-primary" onClick={() => setShowAdd(!showAdd)}>
-          {showAdd ? 'Cancel' : 'Add Client'}
+          {showAdd ? t('common.cancel') : t('agency.addClient')}
         </button>
       </div>
 
       {showAdd && (
         <div className="card" style={{ marginBottom: '1.5rem' }}>
-          <h3>Add New Client</h3>
+          <h3>{t('agency.addNewClient')}</h3>
           {error && <div className="auth-error">{error}</div>}
           <form onSubmit={handleAddClient}>
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="client-email">Client Email</label>
+                <label htmlFor="client-email">{t('agency.clientEmail')}</label>
                 <input
                   id="client-email"
                   type="email"
                   value={newClient.email}
                   onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
                   required
-                  placeholder="client@company.com"
+                  placeholder={t('agency.clientEmailPlaceholder')}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="client-company">Company Name</label>
+                <label htmlFor="client-company">{t('agency.clientCompany')}</label>
                 <input
                   id="client-company"
                   type="text"
                   value={newClient.company_name}
                   onChange={(e) => setNewClient({ ...newClient, company_name: e.target.value })}
-                  placeholder="Company Inc."
+                  placeholder={t('agency.companyPlaceholder')}
                 />
               </div>
             </div>
             <button type="submit" className="btn btn-primary" disabled={adding}>
-              {adding ? 'Adding...' : 'Add Client'}
+              {adding ? t('agency.adding') : t('agency.addClient')}
             </button>
           </form>
         </div>
@@ -95,25 +95,25 @@ export default function AgencyClients() {
 
       {clients.length === 0 && !loadError ? (
         <div className="empty-state">
-          <p>No clients yet. Add your first client to start managing their ad campaigns on Philosify.</p>
+          <p>{t('agency.noClients')}</p>
         </div>
       ) : (
         <div className="table-wrapper">
           <table className="data-table">
             <thead>
               <tr>
-                <th>Company</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Commission</th>
-                <th>Joined</th>
-                <th>Actions</th>
+                <th>{t('agency.company')}</th>
+                <th>{t('common.email')}</th>
+                <th>{t('common.status')}</th>
+                <th>{t('agency.commission')}</th>
+                <th>{t('agency.joined')}</th>
+                <th>{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {clients.map((client) => (
                 <tr key={client.id}>
-                  <td><strong>{client.company_name || 'N/A'}</strong></td>
+                  <td><strong>{client.company_name || t('common.na')}</strong></td>
                   <td>{client.email}</td>
                   <td>
                     <span className={`badge badge-${client.status === 'approved' ? 'success' : client.status === 'pending' ? 'warning' : 'danger'}`}>
@@ -135,7 +135,7 @@ export default function AgencyClients() {
                               await api.put(`/ads/agency/clients/${client.id}/commission`, { commission_rate: newRate });
                               loadClients();
                             } catch (err) {
-                              setLoadError(err.message || 'Failed to update commission');
+                              setLoadError(err.message || t('agency.updateCommissionError'));
                             }
                           }
                         }}
@@ -147,7 +147,7 @@ export default function AgencyClients() {
                       className="btn btn-sm"
                       onClick={() => navigate(`/agency/clients/${client.advertiser_id}/campaigns`)}
                     >
-                      Campaigns
+                      {t('agency.campaigns')}
                     </button>
                   </td>
                 </tr>

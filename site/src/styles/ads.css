@@ -35,10 +35,41 @@
     0 0 18px rgba(236, 72, 153, 0.1);
 }
 
+.ad-slot__creative {
+  position: relative;
+  overflow: hidden;
+}
+
 .ad-slot__image {
   display: block;
   width: 100%;
   object-fit: cover;
+}
+
+.ad-slot__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+}
+
+.ad-slot__brand {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.ad-slot__domain {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .ad-slot--card .ad-slot__card {

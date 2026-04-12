@@ -485,6 +485,7 @@ export function Router() {
           formatTime={music.formatTime}
           user={music.user}
           balance={music.balance}
+          onAdLoaded={music.handleAdLoaded}
         />
 
         {/* Literature Sidebar (Books) */}
@@ -508,6 +509,7 @@ export function Router() {
           formatTime={literature.formatTime}
           user={literature.user}
           balance={literature.balance}
+          onAdLoaded={literature.handleAdLoaded}
         />
 
         {/* News Sidebar */}
@@ -516,6 +518,7 @@ export function Router() {
           onClose={news.close}
           news={news}
           balance={music.balance}
+          onAdLoaded={news.handleAdLoaded}
         />
 
         {/* Cinema Sidebar (Films) */}
@@ -543,6 +546,7 @@ export function Router() {
           analyzeWithPanel={cinema.analyzeWithPanel}
           user={cinema.user}
           balance={cinema.balance}
+          onAdLoaded={cinema.handleAdLoaded}
         />
 
         {/* Coming Soon Sidebar */}

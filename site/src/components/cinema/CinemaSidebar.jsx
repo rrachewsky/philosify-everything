@@ -4,14 +4,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import DOMPurify from 'dompurify';
 import { ResultsContainer } from '../results/ResultsContainer';
+import PanelAnalysisCards from '../results/PanelAnalysisCards.jsx';
 import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
 import { ShareButton } from '../sharing/ShareButton';
 import { ShareToDMButton } from '../sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../sharing/ShareToCommunityButton';
+import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
 import { config } from '@/config';
@@ -139,6 +140,7 @@ export function CinemaSidebar({
   analyzeWithPanel,
   user,
   balance,
+  onAdLoaded,
 }) {
   const { t, i18n } = useTranslation();
   const [showPicker, setShowPicker] = useState(false);
@@ -385,19 +387,30 @@ export function CinemaSidebar({
                   </div>
                 ) : null}
                 {(isAnalyzing || panelLoading) && (
-                  <div className="music-timer">
-                    <div className="music-timer__bar">
-                      <div className="music-timer__fill"></div>
+                  <>
+                    <div className="music-timer">
+                      <div className="music-timer__bar">
+                        <div className="music-timer__fill"></div>
+                      </div>
+                      <div className="music-timer__time">
+                        <span>&#9201;</span> {formatTime(elapsedTime)}
+                      </div>
+                      <div className="music-timer__label">
+                        {panelLoading
+                          ? t('philosopherPanel.generating', 'Philosophers are analyzing...')
+                          : t('analyzing', 'Analyzing...')}
+                      </div>
                     </div>
-                    <div className="music-timer__time">
-                      <span>&#9201;</span> {formatTime(elapsedTime)}
-                    </div>
-                    <div className="music-timer__label">
-                      {panelLoading
-                        ? t('philosopherPanel.generating', 'Philosophers are analyzing...')
-                        : t('analyzing', 'Analyzing...')}
-                    </div>
-                  </div>
+                    <InlineAdSlot
+                      key={`cinema-${isAnalyzing ? 'analysis' : 'panel'}-${selectedFilm?.id || 'unknown'}`}
+                      userId={user?.id}
+                      placement="sidebar"
+                      layout="card"
+                      refreshKey={`cinema-${selectedFilm?.id || 'unknown'}`}
+                      className="analysis-ad-slot"
+                      onAdLoaded={onAdLoaded}
+                    />
+                  </>
                 )}
                 {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
               </div>
@@ -466,17 +479,7 @@ export function CinemaSidebar({
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    panelResult.analysis
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/\n\n/g, '</p><p>')
-                      .replace(/\n/g, '<br/>')
-                      .replace(/^/, '<p>')
-                      .replace(/$/, '</p>')
-                  )
-                }} />
+                <PanelAnalysisCards analysis={panelResult.analysis} />
               </div>
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
@@ -567,17 +570,7 @@ export function CinemaSidebar({
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    panelResult.analysis
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/\n\n/g, '</p><p>')
-                      .replace(/\n/g, '<br/>')
-                      .replace(/^/, '<p>')
-                      .replace(/$/, '</p>')
-                  )
-                }} />
+                <PanelAnalysisCards analysis={panelResult.analysis} />
               </div>
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>

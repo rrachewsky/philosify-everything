@@ -1764,6 +1764,13 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                       />
                     )}
                     <div className="debate-wrapup__content">{localizedWrapup}</div>
+                    <InlineAdSlot
+                      key={`colloquium-verdict-${coll.activeColloquium?.id || 'unknown'}`}
+                      userId={user?.id}
+                      placement="constellation"
+                      layout="banner"
+                      refreshKey={`coll-verdict-${coll.activeColloquium?.id || 'unknown'}`}
+                    />
                     {/* Share verdict via WhatsApp, Telegram, etc. */}
                     <ShareButton
                       shareUrl={`${config.apiUrl}/api/share-preview/debate/${coll.activeColloquium?.id}?lang=${i18n.resolvedLanguage || i18n.language}`}

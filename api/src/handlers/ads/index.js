@@ -40,6 +40,9 @@ export {
 export {
   handleUploadCreative,
   handleDeleteCreative,
+  handleServeCreativeMedia,
+  generateAICreative,
+  moderateBrief,
 } from './creatives.js';
 
 // Ad Serving (for Philosify frontend)
@@ -78,6 +81,7 @@ export {
   handleCreateFromPlan,
   handleListPlans,
   handleGetPlan,
+  handleUpdatePlan,
   handlePlanCheckout,
   handlePlanPaymentWebhook,
   handleApprovePlanCreative,
@@ -105,6 +109,9 @@ export {
   handleAdminListCreativeRequests,
   handleAdminSubmitCreativeDraft,
   handleAdminApprovePlan,
+  handleAdminGenerateCreative,
+  handleAdminBackfillTransactions,
+  handleAdminFixBilling,
 } from './admin.js';
 
 // Analytics & Reporting

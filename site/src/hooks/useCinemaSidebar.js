@@ -34,6 +34,11 @@ export function useCinemaSidebar() {
   const timerRef = useRef(null);
   const abortRef = useRef(null);
   const activeAnalysisRunRef = useRef(0);
+  const adDurationRef = useRef(null);
+
+  const handleAdLoaded = useCallback(({ duration }) => {
+    adDurationRef.current = duration;
+  }, []);
 
   const startTimer = useCallback(() => {
     setElapsedTime(0);
@@ -181,7 +186,7 @@ export function useCinemaSidebar() {
 
         if (controller.signal.aborted) return;
 
-        await waitForMinimumAnalysisWindow(startedAt);
+        await waitForMinimumAnalysisWindow(startedAt, adDurationRef.current);
 
         if (controller.signal.aborted || activeAnalysisRunRef.current !== runId) {
           return;
@@ -295,5 +300,8 @@ export function useCinemaSidebar() {
     // Auth
     user,
     balance,
+
+    // Ads
+    handleAdLoaded,
   };
 }

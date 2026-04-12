@@ -43,8 +43,7 @@ export async function handleListPending(request, env, corsHeaders) {
       });
 
     if (error) {
-      console.error('[Ads Admin] List pending error:', error);
-      return jsonResponse({ error: 'Failed to load pending advertisers' }, 500, corsHeaders);
+      console.warn('[Ads Admin] List pending query error (table may not exist):', error.message || error);
     }
 
     return jsonResponse({ advertisers: advertisers || [] }, 200, corsHeaders);
@@ -318,8 +317,8 @@ export async function handleAdminListPlans(request, env, corsHeaders) {
       });
 
     if (error) {
-      console.error('[Ads Admin] List plans error:', error);
-      return jsonResponse({ error: 'Failed to load plans' }, 500, corsHeaders);
+      console.warn('[Ads Admin] List plans query error (table may not exist):', error.message || error);
+      return jsonResponse({ plans: [] }, 200, corsHeaders);
     }
 
     const advertiserIds = [...new Set((plans || []).map((plan) => plan.advertiser_id).filter(Boolean))];
@@ -381,8 +380,8 @@ export async function handleAdminListCreativeRequests(request, env, corsHeaders)
       });
 
     if (error) {
-      console.error('[Ads Admin] List creative requests error:', error);
-      return jsonResponse({ error: 'Failed to load creative requests' }, 500, corsHeaders);
+      console.warn('[Ads Admin] List creative requests query error (table may not exist):', error.message || error);
+      return jsonResponse({ requests: [] }, 200, corsHeaders);
     }
 
     const advertiserIds = [...new Set((requests || []).map((item) => item.advertiser_id).filter(Boolean))];
@@ -561,6 +560,334 @@ export async function handleAdminApprovePlan(request, env, corsHeaders, planId) 
     return jsonResponse({ success: true, status: nextStatus }, 200, corsHeaders);
   } catch (err) {
     console.error('[Ads Admin] Approve plan error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/plans/:id/generate-creative
+ * Trigger AI creative generation for a plan in pending_creative status
+ */
+export async function handleAdminGenerateCreative(request, env, corsHeaders, planId) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const UUID_RE3 = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE3.test(planId)) {
+      return jsonResponse({ error: 'Invalid plan ID' }, 400, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    // Get the plan
+    const { data: plans } = await supabase
+      .from('ads.ad_plans')
+      .select('*', { filter: `id=eq.${planId}`, limit: 1 });
+
+    const plan = plans?.[0];
+    if (!plan) {
+      return jsonResponse({ error: 'Plan not found' }, 404, corsHeaders);
+    }
+
+    if (plan.creative_type !== 'philosify') {
+      return jsonResponse({ error: 'Plan does not use Philosify creative' }, 400, corsHeaders);
+    }
+
+    // Get advertiser info
+    const { data: advData } = await supabase
+      .from('ads.advertisers')
+      .select('company_name', { filter: `id=eq.${plan.advertiser_id}`, limit: 1 });
+
+    // Get orders for placement info
+    const { data: orders } = await supabase
+      .from('ads.ad_orders')
+      .select('placement', { filter: `plan_id=eq.${planId}`, limit: 1 });
+
+    // Get revision feedback from creative request (if advertiser requested changes)
+    const { data: crRequests } = await supabase
+      .from('ads.creative_requests')
+      .select('drafts', { filter: `plan_id=eq.${planId}`, limit: 1 });
+
+    let revisionNotes = '';
+    const drafts = crRequests?.[0]?.drafts;
+    if (Array.isArray(drafts)) {
+      const feedbacks = drafts
+        .map((d) => d.feedback)
+        .filter(Boolean);
+      if (feedbacks.length > 0) {
+        revisionNotes = feedbacks.join('\n');
+      }
+    }
+
+    const { generateAICreative } = await import('./creatives.js');
+
+    const fullBrief = revisionNotes
+      ? `${plan.creative_brief || ''}\n\nREVISION REQUESTED BY ADVERTISER:\n${revisionNotes}`
+      : plan.creative_brief || '';
+
+    const result = await generateAICreative(env, {
+      advertiserId: plan.advertiser_id,
+      brief: fullBrief,
+      brandName: advData?.[0]?.company_name || 'Brand',
+      targetUrl: plan.target_url,
+      placement: orders?.[0]?.placement || 'sidebar',
+    });
+
+    if (!result?.url) {
+      return jsonResponse({ error: 'AI generation failed. Brief may have been rejected by content moderation.' }, 500, corsHeaders);
+    }
+
+    // Update plan
+    const { error: planErr } = await supabase.from('ads.ad_plans').update(
+      {
+        creative_url: result.url,
+        creative_status: 'review',
+        status: 'pending_approval',
+        updated_at: new Date().toISOString(),
+      },
+      `id=eq.${planId}`
+    );
+    if (planErr) console.error('[Ads Admin] Plan update error:', JSON.stringify(planErr));
+
+    // Update orders
+    const { error: orderErr } = await supabase.from('ads.ad_orders').update(
+      {
+        creative_url: result.url,
+        creative_status: 'ready',
+        status: 'pending_approval',
+        updated_at: new Date().toISOString(),
+      },
+      `plan_id=eq.${planId}`
+    );
+    if (orderErr) console.error('[Ads Admin] Order update error:', JSON.stringify(orderErr));
+
+    // Update creative request if exists
+    await supabase.from('ads.creative_requests').update(
+      {
+        current_draft_url: result.url,
+        status: 'review',
+        drafts: JSON.stringify([{ url: result.url, generated_at: new Date().toISOString(), method: 'dall-e-3' }]),
+        updated_at: new Date().toISOString(),
+      },
+      `plan_id=eq.${planId}`
+    );
+
+    return jsonResponse({ success: true, creative_url: result.url }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Generate creative error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/fix-billing
+ * One-time fix: clear duplicate transactions and rebuild from source of truth.
+ */
+export async function handleAdminFixBilling(request, env, corsHeaders) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    // Get all advertisers
+    const { data: advertisers } = await supabase
+      .from('ads.advertisers')
+      .select('id');
+
+    const results = [];
+
+    for (const adv of advertisers || []) {
+      // Delete ALL transactions for this advertiser
+      await supabase.from('ads.advertiser_transactions').delete(`advertiser_id=eq.${adv.id}`);
+
+      // Get all paid plans
+      const { data: plans } = await supabase
+        .from('ads.ad_plans')
+        .select('id,name,total_cost_cents,creative_fee_cents,paid_at', {
+          filter: `advertiser_id=eq.${adv.id}`,
+          order: 'paid_at.asc',
+        });
+
+      const paidPlans = (plans || []).filter((p) => p.paid_at);
+      let balance = 0;
+
+      for (const plan of paidPlans) {
+        const { data: orders } = await supabase
+          .from('ads.ad_orders')
+          .select('impressions_delivered,cpm_cents', { filter: `plan_id=eq.${plan.id}` });
+
+        let impressionSpend = 0;
+        let totalImpressions = 0;
+        for (const order of orders || []) {
+          impressionSpend += Math.ceil((order.impressions_delivered || 0) * (order.cpm_cents || 0) / 1000);
+          totalImpressions += order.impressions_delivered || 0;
+        }
+
+        // Deposit
+        balance += plan.total_cost_cents;
+        await supabase.from('ads.advertiser_transactions').insert({
+          advertiser_id: adv.id,
+          type: 'deposit',
+          amount_cents: plan.total_cost_cents,
+          balance_after_cents: balance,
+          description: `${plan.name} — payment received`,
+          created_at: plan.paid_at,
+        });
+
+        // Creative fee
+        const creativeFee = plan.creative_fee_cents || 0;
+        if (creativeFee > 0) {
+          balance -= creativeFee;
+          await supabase.from('ads.advertiser_transactions').insert({
+            advertiser_id: adv.id,
+            type: 'campaign_spend',
+            amount_cents: -creativeFee,
+            balance_after_cents: balance,
+            description: `${plan.name} — creative fee`,
+            created_at: plan.paid_at,
+          });
+        }
+
+        // Impression spend
+        if (impressionSpend > 0) {
+          balance -= impressionSpend;
+          await supabase.from('ads.advertiser_transactions').insert({
+            advertiser_id: adv.id,
+            type: 'campaign_spend',
+            amount_cents: -impressionSpend,
+            balance_after_cents: balance,
+            description: `${plan.name} — ${totalImpressions} impressions delivered`,
+          });
+        }
+      }
+
+      // Update balance
+      await supabase.from('ads.advertisers').update(
+        { balance_cents: balance, updated_at: new Date().toISOString() },
+        `id=eq.${adv.id}`
+      );
+
+      results.push({ advertiser: adv.id, balance, plans: paidPlans.length });
+    }
+
+    return jsonResponse({ success: true, results }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Fix billing error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/backfill-transactions
+ * @deprecated Use fix-billing instead
+ */
+export async function handleAdminBackfillTransactions(request, env, corsHeaders) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    // Get all paid plans
+    const { data: plans } = await supabase
+      .from('ads.ad_plans')
+      .select('id,advertiser_id,name,total_cost_cents,creative_fee_cents,paid_at');
+
+    const paidPlans = (plans || []).filter((p) => p.paid_at);
+    const results = [];
+
+    for (const plan of paidPlans) {
+      // Check if transactions already exist for this plan
+      const { data: existing } = await supabase
+        .from('ads.advertiser_transactions')
+        .select('id', { filter: `advertiser_id=eq.${plan.advertiser_id}&description=cs.${encodeURIComponent(plan.name)}`, limit: 1 });
+
+      if (existing && existing.length > 0) {
+        results.push({ plan: plan.name, status: 'skipped — transactions exist' });
+        continue;
+      }
+
+      // Get orders for impression data
+      const { data: orders } = await supabase
+        .from('ads.ad_orders')
+        .select('impressions_delivered,cpm_cents', { filter: `plan_id=eq.${plan.id}` });
+
+      let totalImpressionSpend = 0;
+      for (const order of orders || []) {
+        totalImpressionSpend += Math.ceil((order.impressions_delivered || 0) * (order.cpm_cents || 0) / 1000);
+      }
+
+      // Clear any partial transactions
+      // (none should exist since we checked above)
+
+      let balance = 0;
+
+      // Get current balance
+      const { data: advData } = await supabase
+        .from('ads.advertisers')
+        .select('balance_cents', { filter: `id=eq.${plan.advertiser_id}`, limit: 1 });
+      balance = advData?.[0]?.balance_cents || 0;
+
+      // 1. Deposit
+      balance += plan.total_cost_cents;
+      await supabase.from('ads.advertiser_transactions').insert({
+        advertiser_id: plan.advertiser_id,
+        type: 'deposit',
+        amount_cents: plan.total_cost_cents,
+        balance_after_cents: balance,
+        description: `${plan.name} — payment received`,
+      });
+
+      // 2. Creative fee
+      const creativeFee = plan.creative_fee_cents || 0;
+      if (creativeFee > 0) {
+        balance -= creativeFee;
+        await supabase.from('ads.advertiser_transactions').insert({
+          advertiser_id: plan.advertiser_id,
+          type: 'campaign_spend',
+          amount_cents: -creativeFee,
+          balance_after_cents: balance,
+          description: `${plan.name} — creative fee`,
+        });
+      }
+
+      // 3. Impression spend
+      if (totalImpressionSpend > 0) {
+        balance -= totalImpressionSpend;
+        const totalImpressions = (orders || []).reduce((sum, o) => sum + (o.impressions_delivered || 0), 0);
+        await supabase.from('ads.advertiser_transactions').insert({
+          advertiser_id: plan.advertiser_id,
+          type: 'campaign_spend',
+          amount_cents: -totalImpressionSpend,
+          balance_after_cents: balance,
+          description: `${plan.name} — ${totalImpressions} impressions delivered`,
+        });
+      }
+
+      // 4. Update advertiser balance
+      await supabase.from('ads.advertisers').update(
+        { balance_cents: balance, updated_at: new Date().toISOString() },
+        `id=eq.${plan.advertiser_id}`
+      );
+
+      results.push({
+        plan: plan.name,
+        status: 'backfilled',
+        deposit: plan.total_cost_cents,
+        creativeFee,
+        impressionSpend: totalImpressionSpend,
+        balance,
+      });
+    }
+
+    return jsonResponse({ success: true, results }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Backfill error:', err);
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
   }
 }

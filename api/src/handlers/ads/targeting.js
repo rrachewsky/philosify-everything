@@ -86,11 +86,7 @@ export async function handleEstimateReach(request, env, corsHeaders) {
     // Get total non-premium users
     const { data: totalData } = await supabase
       .from('ads.user_profiles')
-      .select('user_id', {
-        filter: 'is_premium=eq.false',
-        head: true,
-        count: 'exact',
-      });
+      .select('user_id', { filter: 'is_premium=eq.false' });
 
     const totalUsers = totalData?.length || 0;
 
@@ -105,8 +101,6 @@ export async function handleEstimateReach(request, env, corsHeaders) {
         .from('ads.user_profiles')
         .select('user_id', {
           filter: `is_premium=eq.false&top_genres=ov.{${targeting.genres.join(',')}}`,
-          head: true,
-          count: 'exact',
         });
       const genreMatch = data?.length || 0;
       reachBreakdown.genres = genreMatch;
@@ -118,8 +112,6 @@ export async function handleEstimateReach(request, env, corsHeaders) {
         .from('ads.user_profiles')
         .select('user_id', {
           filter: `is_premium=eq.false&country_code=in.(${targeting.countries.join(',')})`,
-          head: true,
-          count: 'exact',
         });
       const countryMatch = data?.length || 0;
       reachBreakdown.countries = countryMatch;
@@ -131,8 +123,6 @@ export async function handleEstimateReach(request, env, corsHeaders) {
         .from('ads.user_profiles')
         .select('user_id', {
           filter: `is_premium=eq.false&language=in.(${targeting.languages.join(',')})`,
-          head: true,
-          count: 'exact',
         });
       const langMatch = data?.length || 0;
       reachBreakdown.languages = langMatch;
@@ -144,8 +134,6 @@ export async function handleEstimateReach(request, env, corsHeaders) {
         .from('ads.user_profiles')
         .select('user_id', {
           filter: `is_premium=eq.false&engagement_level=in.(${targeting.engagement.join(',')})`,
-          head: true,
-          count: 'exact',
         });
       const engMatch = data?.length || 0;
       reachBreakdown.engagement = engMatch;
@@ -419,8 +407,8 @@ export async function updateUserGeolocation(env, userId, request) {
     // Determine geo_region
     const geoRegion = getGeoRegion(country);
 
-    await supabase.from('ads.user_profiles').upsert({
-      user_id: userId,
+    // Try update first, then insert if no row exists (custom client has no upsert)
+    const profileData = {
       country_code: country,
       country_name: getCountryName(country),
       region_code: region,
@@ -428,10 +416,19 @@ export async function updateUserGeolocation(env, userId, request) {
       timezone: timezone,
       geo_region: geoRegion,
       updated_at: new Date().toISOString(),
-    }, {
-      onConflict: 'user_id',
-      ignoreDuplicates: false,
-    });
+    };
+
+    const { data: updated } = await supabase.from('ads.user_profiles').update(
+      profileData,
+      `user_id=eq.${userId}`
+    );
+
+    if (!updated) {
+      await supabase.from('ads.user_profiles').insert({
+        user_id: userId,
+        ...profileData,
+      });
+    }
   } catch (err) {
     console.error('[Ads] Update user geolocation error:', err);
   }

@@ -47,7 +47,7 @@ function Settings() {
     setMessage({ type: '', text: '' });
 
     if (!form.company_name.trim()) {
-      setMessage({ type: 'error', text: 'Company name is required' });
+      setMessage({ type: 'error', text: t('settings.companyRequired') });
       return;
     }
 
@@ -63,7 +63,7 @@ function Settings() {
       await refreshAdvertiser();
       setMessage({ type: 'success', text: t('settings.profileUpdated') });
     } catch (err) {
-      setMessage({ type: 'error', text: err.message || 'Failed to update profile' });
+      setMessage({ type: 'error', text: err.message || t('settings.updateFailed') });
     } finally {
       setSaving(false);
     }
@@ -74,11 +74,11 @@ function Settings() {
     setPasswordMessage({ type: '', text: '' });
 
     if (passwordForm.new_password.length < 8) {
-      setPasswordMessage({ type: 'error', text: 'New password must be at least 8 characters' });
+      setPasswordMessage({ type: 'error', text: t('settings.passwordMinLength') });
       return;
     }
     if (passwordForm.new_password !== passwordForm.confirm_password) {
-      setPasswordMessage({ type: 'error', text: 'Passwords do not match' });
+      setPasswordMessage({ type: 'error', text: t('settings.passwordsMustMatch') });
       return;
     }
 
@@ -95,14 +95,14 @@ function Settings() {
       });
       setPasswordMessage({ type: 'success', text: t('settings.passwordChanged') });
     } catch (err) {
-      setPasswordMessage({ type: 'error', text: err.message || 'Failed to change password' });
+      setPasswordMessage({ type: 'error', text: err.message || t('settings.passwordFailed') });
     } finally {
       setSavingPassword(false);
     }
   };
 
   const handleDeleteAccount = async () => {
-    const confirmation = window.prompt('Type DELETE to permanently remove your advertiser account.');
+    const confirmation = window.prompt(t('settings.deletePrompt'));
 
     if (confirmation !== 'DELETE') {
       return;
@@ -112,7 +112,7 @@ function Settings() {
       await api.delete('/ads/account');
       logout();
     } catch (err) {
-      alert(err.message || 'Failed to delete account');
+      alert(err.message || t('settings.deleteFailed'));
     }
   };
 
@@ -211,10 +211,10 @@ function Settings() {
           </form>
 
           <div>
-            <p className="eyebrow">Status</p>
+            <p className="eyebrow">{t('settings.statusLabel')}</p>
             <div className="detail-list">
               <div><span>{t('settings.accountStatus')}</span><strong>{advertiser?.status || 'pending'}</strong></div>
-              <div><span>Member since</span><strong>{advertiser?.created_at ? new Date(advertiser.created_at).toLocaleDateString() : 'Unknown'}</strong></div>
+              <div><span>{t('settings.memberSince')}</span><strong>{advertiser?.created_at ? new Date(advertiser.created_at).toLocaleDateString() : t('settings.unknown')}</strong></div>
             </div>
           </div>
         </section>

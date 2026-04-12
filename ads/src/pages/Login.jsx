@@ -24,7 +24,7 @@ function Login() {
       await login(email, password);
       navigate('/app');
     } catch (err) {
-      setError(err.message || 'Sign in failed.');
+      setError(err.message || t('auth.signInFailed'));
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,7 @@ function Login() {
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@company.com"
+              placeholder={t('auth.emailPlaceholder')}
               required
             />
           </div>
@@ -60,16 +60,16 @@ function Login() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="Enter your password"
+                placeholder={t('auth.enterPassword')}
                 required
               />
               <button
                 type="button"
                 className="field__toggle"
                 onClick={() => setShowPassword((previous) => !previous)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
               >
-                {showPassword ? 'Hide' : 'Show'}
+                {showPassword ? t('common.hide') : t('common.show')}
               </button>
             </div>
           </div>

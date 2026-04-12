@@ -21,7 +21,7 @@ export default function AgencyLogin() {
       await login(email, password);
       navigate('/agency');
     } catch (err) {
-      setError(err.message || 'Login failed');
+      setError(err.message || t('agency.loginFailed'));
     } finally {
       setLoading(false);
     }

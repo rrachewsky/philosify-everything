@@ -490,7 +490,7 @@ export async function handleListClients(request, env, corsHeaders) {
 
     const { data: clients, error } = await supabase
       .from('ads.agency_clients')
-      .select('*, advertiser:ads.advertisers(*)', {
+      .select('*, advertiser:advertisers(*)', {
         filter: `agency_id=eq.${agency.id}`,
         order: 'created_at.desc',
       });
@@ -782,7 +782,7 @@ export async function handleAgencyPayout(request, env, corsHeaders) {
             from: 'Philosify Ads <ads@philosify.org>',
             to: ['admin@philosify.org'],
             subject: `Agency Payout Request: $${(requestedAmount / 100).toFixed(2)}`,
-            text: `Agency "${agency.company_name}" (${agency.email}) has requested a payout of $${(requestedAmount / 100).toFixed(2)}.
+            text: `Agency "${agency.agency_name}" (${agency.email}) has requested a payout of $${(requestedAmount / 100).toFixed(2)}.
 
 Method: ${body.payout_method || 'bank_transfer'}
 Agency ID: ${agency.id}

@@ -22,7 +22,7 @@ export default function AgencyDashboard() {
         setClients(clientsData.clients || []);
         setEarnings(earningsData);
       } catch (err) {
-        setError(err.message || 'Failed to load dashboard');
+        setError(err.message || t('agency.loadDashboardError'));
       } finally {
         setLoading(false);
       }
@@ -55,34 +55,34 @@ export default function AgencyDashboard() {
           <div className="stat-value">{clients.length}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Commission Rate</div>
+          <div className="stat-label">{t('agency.commissionRate')}</div>
           <div className="stat-value">{agency?.default_commission_pct || 10}%</div>
         </div>
       </div>
 
       <div className="section">
         <div className="section-header">
-          <h2>Clients</h2>
+          <h2>{t('agency.clients')}</h2>
           <Link to="/agency/clients/new" className="btn btn-primary btn-sm">
-            Add Client
+            {t('agency.addClient')}
           </Link>
         </div>
 
         {clients.length === 0 ? (
           <div className="empty-state">
-            <p>No clients yet. Add your first client to start managing their campaigns.</p>
-            <Link to="/agency/clients/new" className="btn btn-primary">Add Client</Link>
+            <p>{t('agency.noClients')}</p>
+            <Link to="/agency/clients/new" className="btn btn-primary">{t('agency.addClient')}</Link>
           </div>
         ) : (
           <div className="table-wrapper">
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Company</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Commission</th>
-                  <th>Actions</th>
+                  <th>{t('agency.company')}</th>
+                  <th>{t('common.email')}</th>
+                  <th>{t('common.status')}</th>
+                  <th>{t('agency.commission')}</th>
+                  <th>{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -98,7 +98,7 @@ export default function AgencyDashboard() {
                     <td>{client.commission_rate || agency?.default_commission_pct}%</td>
                     <td>
                       <Link to={`/agency/clients/${client.advertiser_id}/campaigns`} className="btn btn-sm">
-                        Campaigns
+                        {t('agency.campaigns')}
                       </Link>
                     </td>
                   </tr>
@@ -112,11 +112,11 @@ export default function AgencyDashboard() {
       {(earnings?.balance_cents || 0) >= 10000 && (
         <div className="section">
           <div className="section-header">
-            <h2>Payouts</h2>
+            <h2>{t('agency.requestPayout')}</h2>
           </div>
           <div className="payout-card">
-            <p>You have <strong>${((earnings?.balance_cents || 0) / 100).toFixed(2)}</strong> available for payout.</p>
-            <Link to="/agency/earnings" className="btn btn-primary">Request Payout</Link>
+            <p>{t('agency.payoutAvailable', { amount: ((earnings?.balance_cents || 0) / 100).toFixed(2) })}</p>
+            <Link to="/agency/earnings" className="btn btn-primary">{t('agency.requestPayout')}</Link>
           </div>
         </div>
       )}

@@ -33,6 +33,12 @@ export function useMusicSidebar() {
   const startTimeRef = useRef(null);
   const lastAnalysisParamsRef = useRef(null);
   const activeAnalysisRunRef = useRef(0);
+  const adDurationRef = useRef(null);
+
+  // Called by InlineAdSlot when an ad loads, reports contracted duration
+  const handleAdLoaded = useCallback(({ duration }) => {
+    adDurationRef.current = duration;
+  }, []);
 
   // Open the sidebar (resets state to fresh)
   const open = useCallback(() => {
@@ -223,7 +229,7 @@ export function useMusicSidebar() {
             throw new Error(data.error || 'Analysis failed');
           }
 
-          await waitForMinimumAnalysisWindow(startedAt);
+          await waitForMinimumAnalysisWindow(startedAt, adDurationRef.current);
 
           if (activeAnalysisRunRef.current !== runId || abortControllerRef.current?.signal?.aborted) {
             return { success: false, error: 'cancelled' };
@@ -329,6 +335,9 @@ export function useMusicSidebar() {
     // Auth/credits
     user,
     balance,
+
+    // Ads
+    handleAdLoaded,
   };
 }
 

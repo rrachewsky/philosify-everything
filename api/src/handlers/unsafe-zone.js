@@ -166,10 +166,14 @@ export async function handleUnsafeZone(request, env, origin) {
       return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
     }
 
-    const body = await request.json().catch(() => null);
+    const body = await request.json().catch((e) => {
+      console.error('[UnsafeZone] Body parse error:', e.message);
+      return null;
+    });
     if (!body) {
       return jsonResponse({ error: 'Invalid request body' }, 400, origin, env);
     }
+    console.log('[UnsafeZone] Request:', { msgCount: body.messages?.length, lang: body.lang, sessionId: body.sessionId ? 'present' : 'none' });
     const { messages, lang, sessionId } = body;
 
     // SECURITY: Validate language code against allowlist
@@ -183,8 +187,8 @@ export async function handleUnsafeZone(request, env, origin) {
     }
 
     // Input size limits
-    if (messages.length > 50) {
-      return jsonResponse({ error: 'Too many messages (max 50)' }, 400, origin, env);
+    if (messages.length > 200) {
+      return jsonResponse({ error: 'Too many messages (max 200)' }, 400, origin, env);
     }
 
     // Validate message format
@@ -221,6 +225,7 @@ export async function handleUnsafeZone(request, env, origin) {
         return jsonResponse({ error: 'Session not found' }, 404, origin, env);
       }
       if (session.status !== 'active') {
+        console.log('[UnsafeZone] Session not active:', session.id, session.status);
         return jsonResponse({ error: 'Session is no longer active' }, 400, origin, env);
       }
     } else {

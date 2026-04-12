@@ -5,6 +5,7 @@
 // Renders the ad creative inside a simulated Philosify UI shell.
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const DEMO_CREATIVES = {
   sidebar: {
@@ -16,7 +17,7 @@ const DEMO_CREATIVES = {
       <rect x="90" y="160" width="120" height="36" rx="8" fill="#c9a861"/>
       <text x="150" y="183" text-anchor="middle" fill="#0a0a0f" font-family="sans-serif" font-size="13" font-weight="bold">Learn More</text>
     </svg>`),
-    label: 'Sidebar Interstitial',
+    labelKey: 'sidebarInterstitial',
   },
   constellation: {
     url: 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="250" height="120" viewBox="0 0 250 120">
@@ -25,11 +26,12 @@ const DEMO_CREATIVES = {
       <text x="125" y="50" text-anchor="middle" fill="#c9a861" font-family="serif" font-size="16" font-weight="bold">Your Ad Here</text>
       <text x="125" y="75" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11">250 x 120 — Constellation</text>
     </svg>`),
-    label: 'Constellation Panel',
+    labelKey: 'constellationPanel',
   },
 };
 
 function PhilosifyShell({ placement, children }) {
+  const { t } = useTranslation();
   if (placement === 'sidebar') {
     return (
       <div className="preview-shell preview-shell--sidebar">
@@ -55,7 +57,7 @@ function PhilosifyShell({ placement, children }) {
           </div>
           <div className="preview-shell__sidebar">
             <div className="preview-shell__ad-slot">
-              <span className="preview-shell__sponsored">Sponsored</span>
+              <span className="preview-shell__sponsored">{t('common.sponsored')}</span>
               {children}
             </div>
           </div>
@@ -91,7 +93,7 @@ function PhilosifyShell({ placement, children }) {
           <div className="preview-shell__node" style={{ left: '45%', top: '65%' }}>Rand</div>
         </div>
         <div className="preview-shell__constellation-ad">
-          <span className="preview-shell__sponsored">Sponsored</span>
+          <span className="preview-shell__sponsored">{t('common.sponsored')}</span>
           {children}
         </div>
       </div>
@@ -106,6 +108,7 @@ export default function AdPreview({
   duration = 5,
   showControls = true,
 }) {
+  const { t } = useTranslation();
   const [activePlacement, setActivePlacement] = useState(placement);
   // SECURITY: Validate URLs to prevent javascript: XSS
   const safeCreativeUrl = creativeUrl && /^https?:\/\/|^data:image\//.test(creativeUrl) ? creativeUrl : null;
@@ -121,14 +124,14 @@ export default function AdPreview({
             className={`btn btn-sm ${activePlacement === 'sidebar' ? 'btn-primary' : ''}`}
             onClick={() => setActivePlacement('sidebar')}
           >
-            Sidebar
+            {t('adPreview.sidebar')}
           </button>
           <button
             type="button"
             className={`btn btn-sm ${activePlacement === 'constellation' ? 'btn-primary' : ''}`}
             onClick={() => setActivePlacement('constellation')}
           >
-            Constellation
+            {t('adPreview.constellation')}
           </button>
           <span className="ad-preview__duration">{duration}s</span>
         </div>
@@ -142,14 +145,14 @@ export default function AdPreview({
           className="ad-preview__creative"
           onClick={(e) => { if (!safeTargetUrl) e.preventDefault(); }}
         >
-          <img src={imgSrc} alt="Ad creative preview" />
+          <img src={imgSrc} alt={t('adPreview.adCreativePreview')} />
         </a>
       </PhilosifyShell>
 
       <p className="ad-preview__caption">
         {creativeUrl
-          ? 'Live preview of your creative in context'
-          : `Demo: ${DEMO_CREATIVES[activePlacement].label}`}
+          ? t('common.livePreview')
+          : `${t('common.demoLabel')} ${t(`adPreview.${DEMO_CREATIVES[activePlacement].labelKey}`)}`}
       </p>
     </div>
   );

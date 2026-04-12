@@ -212,8 +212,9 @@ export async function handleServeAd(request, env, corsHeaders) {
           p_placement: placement,
         });
         
-        if (!rpcError && rpcResult && rpcResult.length > 0) {
-          const match = rpcResult[0];
+        // rpc() returns the first element (not an array), so check if it's truthy
+        if (!rpcError && rpcResult) {
+          const match = rpcResult;
           // Frequency cap check: max 3 impressions per order per user per day
           const { data: recentImpressions } = await supabase
             .from('ads.ad_impressions')
@@ -230,6 +231,13 @@ export async function handleServeAd(request, env, corsHeaders) {
             if (!preferredDuration || match.duration === preferredDuration) {
               const selectedOrder = match;
               const impressionToken = await generateImpressionToken(env, selectedOrder.id, placement, selectedOrder.duration, ip);
+              // Get advertiser brand name for text overlay
+              const { data: advInfo } = await supabase
+                .from('ads.advertisers')
+                .select('company_name', { filter: `id=eq.${selectedOrder.advertiser_id}`, limit: 1 });
+              const brandName = advInfo?.[0]?.company_name || '';
+              let domain = '';
+              try { domain = new URL(selectedOrder.target_url).hostname; } catch {}
               return jsonResponse({
                 ad: {
                   order_id: selectedOrder.id,
@@ -238,6 +246,8 @@ export async function handleServeAd(request, env, corsHeaders) {
                   duration: selectedOrder.duration,
                   placement,
                   impression_token: impressionToken,
+                  brand_name: brandName,
+                  domain,
                 },
               }, 200, corsHeaders);
             }
@@ -379,6 +389,14 @@ export async function handleServeAd(request, env, corsHeaders) {
       ip
     );
 
+    // Get advertiser brand name for text overlay
+    const { data: advInfo2 } = await supabase
+      .from('ads.advertisers')
+      .select('company_name', { filter: `id=eq.${selectedOrder.advertiser_id}`, limit: 1 });
+    const brandName2 = advInfo2?.[0]?.company_name || '';
+    let domain2 = '';
+    try { domain2 = new URL(selectedOrder.target_url).hostname; } catch {}
+
     // Return ad info with signed token
     return jsonResponse({
       ad: {
@@ -388,6 +406,8 @@ export async function handleServeAd(request, env, corsHeaders) {
         duration: selectedOrder.duration,
         placement,
         impression_token: impressionToken, // REQUIRED for recording impression
+        brand_name: brandName2,
+        domain: domain2,
       },
     }, 200, corsHeaders);
   } catch (err) {
@@ -622,7 +642,7 @@ export async function handleRecordImpression(request, env, corsHeaders) {
       .from('ads.ad_impressions')
       .insert({
         order_id,
-        campaign_id: order_id, // For backward compatibility
+        campaign_id: null,
         user_id: user_id || null,
         placement,
         duration,
@@ -640,12 +660,11 @@ export async function handleRecordImpression(request, env, corsHeaders) {
     // Recount from source of truth (ad_impressions table) to prevent drift from race conditions.
     // Recount from source of truth. The INSERT above already added the new row,
     // so actualDelivered already includes it — no +1 needed.
-    const { count: actualDelivered } = await supabase
+    const { data: deliveredRows } = await supabase
       .from('ads.ad_impressions')
-      .select('id', { count: 'exact', head: true })
-      .eq('order_id', order_id);
+      .select('id', { filter: `order_id=eq.${order_id}` });
 
-    const delivered = actualDelivered ?? (order.impressions_delivered + 1);
+    const delivered = deliveredRows?.length ?? (order.impressions_delivered + 1);
     const newStatus = delivered >= order.impressions_ordered ? 'completed' : order.status;
 
     await supabase.from('ads.ad_orders').update(
@@ -657,6 +676,19 @@ export async function handleRecordImpression(request, env, corsHeaders) {
       `id=eq.${order_id}`
     );
 
+    // Deduct impression cost from advertiser balance
+    const { data: advBalance } = await supabase
+      .from('ads.advertisers')
+      .select('balance_cents', { filter: `id=eq.${order.advertiser_id}`, limit: 1 });
+
+    if (advBalance?.[0]) {
+      const newBalance = Math.max(0, (advBalance[0].balance_cents || 0) - costCents);
+      await supabase.from('ads.advertisers').update(
+        { balance_cents: newBalance, updated_at: new Date().toISOString() },
+        `id=eq.${order.advertiser_id}`
+      );
+    }
+
     // Send completion email when order finishes
     if (newStatus === 'completed') {
       try {
@@ -664,13 +696,11 @@ export async function handleRecordImpression(request, env, corsHeaders) {
           .from('ads.advertisers')
           .select('email', { filter: `id=eq.${order.advertiser_id}`, limit: 1 });
         if (adv?.[0]) {
-          const clicks = await supabase
+          const { data: clickRows } = await supabase
             .from('ads.ad_impressions')
-            .select('id', { count: 'exact', head: true })
-            .eq('order_id', order_id)
-            .eq('clicked', true);
+            .select('id', { filter: `order_id=eq.${order_id}&clicked=eq.true` });
           const { sendCampaignCompleteEmail } = await import('./emails.js');
-          sendCampaignCompleteEmail(env, adv[0].email, order.name || 'Campaign', delivered, clicks?.count || 0).catch(() => {});
+          sendCampaignCompleteEmail(env, adv[0].email, order.name || 'Campaign', delivered, clickRows?.length || 0).catch(() => {});
         }
       } catch (e) { console.warn('[AdsServe] Completion email failed:', e.message); }
     }

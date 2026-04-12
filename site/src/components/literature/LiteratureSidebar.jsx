@@ -4,8 +4,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import DOMPurify from 'dompurify';
 import { ResultsContainer } from '../results/ResultsContainer';
+import PanelAnalysisCards from '../results/PanelAnalysisCards.jsx';
 import { ListenButton } from '../results/ListenButton';
 import { LoginModal, SignupModal, ForgotPasswordModal, PaymentModal } from '../index';
 import { PhilosopherPicker } from '../common/PhilosopherPicker';
@@ -133,6 +133,7 @@ export function LiteratureSidebar({
   user,
   balance,
   lang,
+  onAdLoaded,
 }) {
   const { t, i18n } = useTranslation();
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -613,6 +614,7 @@ export function LiteratureSidebar({
                     layout="card"
                     refreshKey={`literature-analysis-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
                     className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
                   />
                 </>
               )}
@@ -634,6 +636,7 @@ export function LiteratureSidebar({
                     layout="card"
                     refreshKey={`literature-panel-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
                     className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
                   />
                 </>
               )}
@@ -689,17 +692,7 @@ export function LiteratureSidebar({
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    panelResult.analysis
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/\n\n/g, '</p><p>')
-                      .replace(/\n/g, '<br/>')
-                      .replace(/^/, '<p>')
-                      .replace(/$/, '</p>')
-                  )
-                }} />
+                <PanelAnalysisCards analysis={panelResult.analysis} />
               </div>
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
@@ -773,17 +766,7 @@ export function LiteratureSidebar({
                 }} />
               </div>
               <div className="music-analysis__results-wrapper">
-                <div className="panel-analysis" dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(
-                    panelResult.analysis
-                      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/\n\n/g, '</p><p>')
-                      .replace(/\n/g, '<br/>')
-                      .replace(/^/, '<p>')
-                      .replace(/$/, '</p>')
-                  )
-                }} />
+                <PanelAnalysisCards analysis={panelResult.analysis} />
               </div>
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>

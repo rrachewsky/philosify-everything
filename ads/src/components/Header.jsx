@@ -46,9 +46,9 @@ function Header({ admin = false, agency = false }) {
 
   const navItems = admin ? getAdminNav(t) : agency ? getAgencyNav(t) : getAdvertiserNav(t);
   const identity = admin
-    ? 'Philosify Admin'
+    ? t('header.adminIdentity')
     : agency
-      ? agencyUser?.company_name || agencyUser?.email || 'Agency'
+      ? agencyUser?.company_name || agencyUser?.email || t('header.agencyIdentity')
       : advertiser?.company_name || advertiser?.email;
   const badge = admin ? t('common.admin') : agency ? t('common.agency') : t('common.advertiser');
   const eyebrow = admin
@@ -78,11 +78,11 @@ function Header({ admin = false, agency = false }) {
         <img src={LOGO} alt="Philosify" className="studio-header__logo" />
         <div>
           <p className="studio-header__eyebrow">{eyebrow}</p>
-          <h1 className="studio-header__title">{BRAND}</h1>
+          <h1 className="studio-header__title">{t('header.brandName')}</h1>
         </div>
       </div>
 
-      <nav className="studio-header__nav" aria-label={`${badge} navigation`}>
+      <nav className="studio-header__nav" aria-label={t('header.navigation', { role: badge })}>
         {navItems.map((item) => (
           <NavLink
             key={item.label}

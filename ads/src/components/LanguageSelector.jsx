@@ -2,12 +2,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { changeLanguageWithPreload, SUPPORTED_LANGUAGES } from '../i18n/config';
 
-const LANGUAGE_FLAGS = {
-  en: '🇬🇧', pt: '🇧🇷', es: '🇪🇸', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹',
-  ru: '🇷🇺', hu: '🇭🇺', he: '🇮🇱', zh: '🇨🇳', ja: '🇯🇵', ko: '🇰🇷',
-  ar: '🇸🇦', hi: '🇮🇳', fa: '🇮🇷', nl: '🇳🇱', pl: '🇵🇱', tr: '🇹🇷',
-};
-
 export default function LanguageSelector({ compact = false }) {
   const { i18n, t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -24,9 +18,9 @@ export default function LanguageSelector({ compact = false }) {
           type="button"
           className="lang-selector__trigger"
           onClick={() => setOpen(!open)}
-          aria-label="Change language"
+          aria-label={t('common.changeLanguage')}
         >
-          {LANGUAGE_FLAGS[i18n.language] || '🌐'} {i18n.language.toUpperCase()}
+          <span className="lang-selector__badge">{i18n.language.toUpperCase()}</span>
         </button>
         {open && (
           <>
@@ -39,7 +33,7 @@ export default function LanguageSelector({ compact = false }) {
                   className={`lang-selector__option ${lang === i18n.language ? 'active' : ''}`}
                   onClick={() => handleChange(lang)}
                 >
-                  <span className="lang-selector__flag">{LANGUAGE_FLAGS[lang]}</span>
+                  <span className="lang-selector__badge">{lang.toUpperCase()}</span>
                   <span>{t(`languages.${lang}`)}</span>
                 </button>
               ))}
@@ -61,7 +55,6 @@ export default function LanguageSelector({ compact = false }) {
           onClick={() => handleChange(lang)}
           title={t(`languages.${lang}`)}
         >
-          <span className="lang-grid__flag">{LANGUAGE_FLAGS[lang]}</span>
           <span className="lang-grid__code">{lang.toUpperCase()}</span>
         </button>
       ))}

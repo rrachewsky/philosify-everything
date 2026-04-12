@@ -20,7 +20,7 @@ function AdminLogin() {
     setLoading(false);
 
     if (!ok) {
-      setError('Invalid admin secret.');
+      setError(t('admin.invalidSecret'));
       return;
     }
 
@@ -30,34 +30,34 @@ function AdminLogin() {
   return (
     <div className="auth-page auth-page--admin">
       <div className="auth-card">
-        <p className="eyebrow">Operations atelier</p>
-        <h1>Unlock the admin control room.</h1>
+        <p className="eyebrow">{t('admin.loginEyebrow')}</p>
+        <h1>{t('admin.loginTitle')}</h1>
         <p className="auth-card__lede">
-          This area follows advertiser approvals, creative requests, and campaign launches.
+          {t('admin.loginDesc')}
         </p>
 
         <form className="stack" onSubmit={handleSubmit}>
           {error ? <div className="alert alert--error">{error}</div> : null}
 
           <div className="field">
-            <label htmlFor="admin-secret">Admin secret</label>
+            <label htmlFor="admin-secret">{t('admin.secret')}</label>
             <input
               id="admin-secret"
               type="password"
               value={secret}
               onChange={(event) => setSecret(event.target.value)}
-              placeholder="Enter X-Admin-Secret"
+              placeholder={t('admin.secretPlaceholder')}
               required
             />
           </div>
 
           <button type="submit" className="btn btn--primary btn--large" disabled={loading}>
-            {loading ? 'Unlocking...' : 'Enter control room'}
+            {loading ? t('admin.unlocking') : t('admin.enterControlRoom')}
           </button>
         </form>
 
         <p className="auth-card__footer">
-          Return to the <Link to="/">public atelier</Link>.
+          {t('admin.returnTo')} <Link to="/">{t('admin.publicAtelier')}</Link>.
         </p>
       </div>
     </div>

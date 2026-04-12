@@ -105,22 +105,22 @@ function Dashboard() {
 
       <section className="editorial-grid editorial-grid--dashboard">
         <article className="editorial-card">
-          <p className="eyebrow">Action inbox</p>
-          <h3>What needs attention now</h3>
+          <p className="eyebrow">{t('dashboard.actionInbox')}</p>
+          <h3>{t('dashboard.whatNeedsAttention')}</h3>
           <ul className="bullet-list">
-            <li>{stats.awaitingPayment} draft campaigns are waiting for payment.</li>
-            <li>{stats.awaitingCreative} campaigns are in the studio.</li>
-            <li>{stats.awaitingApproval} campaigns are waiting for approval.</li>
-            <li>{stats.active} campaigns are approved or active.</li>
+            <li>{t('dashboard.draftsWaiting', { count: stats.awaitingPayment })}</li>
+            <li>{t('dashboard.inStudio', { count: stats.awaitingCreative })}</li>
+            <li>{t('dashboard.waitingApproval', { count: stats.awaitingApproval })}</li>
+            <li>{t('dashboard.approvedActive', { count: stats.active })}</li>
           </ul>
         </article>
         <article className="editorial-card">
-          <p className="eyebrow">Recommended flow</p>
-          <h3>Keep launches graceful.</h3>
+          <p className="eyebrow">{t('dashboard.recommendedFlow')}</p>
+          <h3>{t('dashboard.keepLaunches')}</h3>
           <ul className="bullet-list">
-            <li>Define the brief and destination URL clearly.</li>
-            <li>Upload assets or request a Philosify mock.</li>
-            <li>Approve the draft quickly once it is ready.</li>
+            <li>{t('dashboard.defineBrief')}</li>
+            <li>{t('dashboard.uploadAssets')}</li>
+            <li>{t('dashboard.approveDraft')}</li>
           </ul>
         </article>
       </section>
@@ -132,7 +132,7 @@ function Dashboard() {
             <h3>{t('dashboard.recentCampaigns')}</h3>
           </div>
           <Link to="/app/campaigns" className="btn btn--ghost">
-            View all
+            {t('dashboard.viewAll')}
           </Link>
         </div>
 

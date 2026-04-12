@@ -200,23 +200,22 @@ export async function handleBillingWebhook(request, env, corsHeaders) {
         return jsonResponse({ received: true }, 200, corsHeaders);
       }
 
-      // SECURITY: Atomic balance increment prevents race condition under concurrent webhooks
-      await supabase.rpc('ads.increment_advertiser_balance', {
-        p_advertiser_id: advertiserId,
-        p_amount: amountCents,
-      });
-
-      // Get updated balance for transaction record
+      // Get current balance and increment
       const { data: advertisers } = await supabase
         .from('ads.advertisers')
-        .select('balance_cents', { filter: `id=eq.${advertiserId}` });
+        .select('balance_cents', { filter: `id=eq.${advertiserId}`, limit: 1 });
 
       if (!advertisers || advertisers.length === 0) {
         console.error('[Ads] Advertiser not found:', advertiserId);
         return jsonResponse({ error: 'Advertiser not found' }, 400, corsHeaders);
       }
 
-      const newBalance = advertisers[0].balance_cents;
+      const newBalance = (advertisers[0].balance_cents || 0) + amountCents;
+
+      await supabase.from('ads.advertisers').update(
+        { balance_cents: newBalance, updated_at: new Date().toISOString() },
+        `id=eq.${advertiserId}`
+      );
 
       // Record transaction
       await supabase.from('ads.advertiser_transactions').insert({

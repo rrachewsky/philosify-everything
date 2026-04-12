@@ -18,7 +18,7 @@ export default function AgencyEarnings() {
         const data = await api.get('/ads/agency/earnings');
         setEarnings(data);
       } catch (err) {
-        setError(err.message || 'Failed to load earnings');
+        setError(err.message || t('agency.loadEarningsError'));
       } finally {
         setLoading(false);
       }
@@ -31,7 +31,7 @@ export default function AgencyEarnings() {
 
   async function handlePayout() {
     if (payoutInFlight.current) return;
-    if (!confirm(`Request payout of $${balance.toFixed(2)}? This cannot be undone.`)) return;
+    if (!confirm(t('agency.payoutConfirm', { amount: balance.toFixed(2) }))) return;
     payoutInFlight.current = true;
     setPayoutLoading(true);
     setError('');
@@ -46,7 +46,7 @@ export default function AgencyEarnings() {
       const updated = await api.get('/ads/agency/earnings');
       setEarnings(updated);
     } catch (err) {
-      setError(err.message || 'Payout request failed');
+      setError(err.message || t('agency.payoutError'));
     } finally {
       setPayoutLoading(false);
       payoutInFlight.current = false;
@@ -63,57 +63,56 @@ export default function AgencyEarnings() {
   return (
     <div className="page-content">
       <div className="page-header">
-        <h1>Earnings & Payouts</h1>
+        <h1>{t('agency.earningsTitle')}</h1>
       </div>
 
       {error && <div className="auth-error">{error}</div>}
       {payoutResult && (
         <div className="success-banner">
-          Payout of ${(payoutResult.amount_cents / 100).toFixed(2)} requested.
+          {t('agency.payoutRequested')} ${(payoutResult.amount_cents / 100).toFixed(2)}.
           {payoutResult.message}
         </div>
       )}
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-label">Available Balance</div>
+          <div className="stat-label">{t('agency.availableBalance')}</div>
           <div className="stat-value">${balance.toFixed(2)}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Total Earned</div>
+          <div className="stat-label">{t('agency.totalEarned')}</div>
           <div className="stat-value">${totalEarned.toFixed(2)}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Total Paid Out</div>
+          <div className="stat-label">{t('agency.totalPaidOut')}</div>
           <div className="stat-value">${totalPaid.toFixed(2)}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Commission Rate</div>
+          <div className="stat-label">{t('agency.commissionRate')}</div>
           <div className="stat-value">{agency?.default_commission_pct || 10}%</div>
         </div>
       </div>
 
       <div className="section" style={{ marginTop: '2rem' }}>
-        <h2>Request Payout</h2>
+        <h2>{t('agency.requestPayout')}</h2>
         {canPayout ? (
           <div className="payout-card">
             <p>
-              You have <strong>${balance.toFixed(2)}</strong> available.
-              Minimum payout is $100.00. Processing typically takes 3-5 business days.
+              {t('agency.payoutAvailable', { amount: balance.toFixed(2) })}
+              {' '}{t('agency.processingTime')}
             </p>
             <button
               className="btn btn-primary"
               onClick={handlePayout}
               disabled={payoutLoading}
             >
-              {payoutLoading ? 'Processing...' : `Request Payout ($${balance.toFixed(2)})`}
+              {payoutLoading ? t('agency.processing') : `${t('agency.requestPayout')} ($${balance.toFixed(2)})`}
             </button>
           </div>
         ) : (
           <div className="empty-state">
             <p>
-              Minimum payout is $100.00. Current balance: ${balance.toFixed(2)}.
-              Keep managing campaigns to earn more commissions.
+              {t('agency.payoutMinBalance', { amount: balance.toFixed(2) })}
             </p>
           </div>
         )}
@@ -121,16 +120,16 @@ export default function AgencyEarnings() {
 
       {earnings?.transactions?.length > 0 && (
         <div className="section" style={{ marginTop: '2rem' }}>
-          <h2>Transaction History</h2>
+          <h2>{t('agency.transactionHistory')}</h2>
           <div className="table-wrapper">
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Balance After</th>
-                  <th>Description</th>
+                  <th>{t('common.date')}</th>
+                  <th>{t('agency.type')}</th>
+                  <th>{t('common.amount')}</th>
+                  <th>{t('agency.balanceAfter')}</th>
+                  <th>{t('common.description')}</th>
                 </tr>
               </thead>
               <tbody>

@@ -104,7 +104,7 @@ function CreateCampaign() {
       setGeneratedPlan(data);
       return data.plan;
     } catch (err) {
-      setError(err.message || 'Could not generate a plan.');
+      setError(err.message || t('create.couldNotGenerate'));
       return null;
     } finally {
       setLoadingPlan(false);
@@ -125,7 +125,7 @@ function CreateCampaign() {
     }
 
     if (form.creative_type === 'philosify' && !form.creative_brief.trim()) {
-      setError('Please describe the creative you want Philosify to produce.');
+      setError(t('create.briefRequired'));
       return;
     }
 
@@ -135,7 +135,7 @@ function CreateCampaign() {
       let creativeUrl = null;
       if (form.creative_type === 'self') {
         if (!creativeFile) {
-          throw new Error('Upload a creative file before creating the campaign.');
+          throw new Error(t('create.uploadRequired'));
         }
 
         const upload = await api.uploadFile('/ads/creatives/upload', creativeFile);
@@ -153,7 +153,7 @@ function CreateCampaign() {
 
       navigate(`/app/campaigns/${created.plan.id}`);
     } catch (err) {
-      setError(err.message || 'Could not create campaign.');
+      setError(err.message || t('create.couldNotCreateCampaign'));
     } finally {
       setSubmitting(false);
     }
@@ -166,9 +166,7 @@ function CreateCampaign() {
           <p className="eyebrow">{t('create.title')}</p>
           <h2>{t('create.title')}</h2>
           <p className="lead">
-            All campaigns are subject to the <Link to="/policy">Advertising Policy</Link>. The
-            advertiser and any agency remain fully responsible for all ads, claims, assets, and
-            destination pages, even when Philosify assists with creative preparation.
+            {t('create.policyNotice')} <Link to="/policy">{t('create.policyLink')}</Link>. {t('create.policyResponsibility')}
           </p>
         </div>
         <Link to="/app/campaigns" className="btn btn--ghost">
@@ -254,7 +252,7 @@ function CreateCampaign() {
 
             {Object.entries(TARGETING_OPTIONS).map(([category, options]) => (
               <div key={category} className="targeting-group">
-                <label>{category.charAt(0).toUpperCase() + category.slice(1)}</label>
+                <label>{t(`create.targetingCategories.${category}`)}</label>
                 <div className="chip-group">
                   {options.map((option) => (
                     <button
@@ -333,7 +331,7 @@ function CreateCampaign() {
                 accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
                 onChange={(event) => setCreativeFile(event.target.files?.[0] || null)}
               />
-              <p className="helper-text">Static image only in v1. Max 2MB.</p>
+              <p className="helper-text">{t('create.staticImageNote')}</p>
             </div>
           ) : (
             <div className="field">
@@ -375,11 +373,11 @@ function CreateCampaign() {
               </div>
 
               <div className="timeline-panel">
-                <h4>Suggested placement mix</h4>
+                <h4>{t('create.suggestedMix')}</h4>
                 <ul className="bullet-list">
                   {(summary.placements || []).map((placement) => (
                     <li key={`${placement.placement}-${placement.duration}`}>
-                      {placement.placement} · {placement.duration}s · {placement.impressions.toLocaleString()} impressions
+                      {placement.placement} · {placement.duration}s · {placement.impressions.toLocaleString()} {t('common.impressions')}
                     </li>
                   ))}
                 </ul>
@@ -387,8 +385,7 @@ function CreateCampaign() {
             </>
           ) : (
             <p className="helper-text">
-              Generate a plan to preview placement mix, delivery estimate, and cost before you create
-              the campaign.
+              {t('create.generateNote')}
             </p>
           )}
 

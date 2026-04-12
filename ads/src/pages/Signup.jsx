@@ -33,7 +33,7 @@ function Signup() {
     setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords must match.');
+      setError(t('auth.passwordsMustMatch'));
       return;
     }
 
@@ -48,7 +48,7 @@ function Signup() {
       });
       navigate('/app');
     } catch (err) {
-      setError(err.message || 'Could not create account.');
+      setError(err.message || t('auth.couldNotCreate'));
     } finally {
       setLoading(false);
     }
@@ -73,7 +73,7 @@ function Signup() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="you@company.com"
+                placeholder={t('auth.emailPlaceholder')}
                 required
               />
             </div>
@@ -86,7 +86,7 @@ function Signup() {
                 name="company_name"
                 value={formData.company_name}
                 onChange={handleChange}
-                placeholder="Studio name"
+                placeholder={t('auth.companyName')}
                 required
               />
             </div>
@@ -100,7 +100,7 @@ function Signup() {
               name="website"
               value={formData.website}
               onChange={handleChange}
-              placeholder="https://example.com"
+              placeholder={t('auth.websitePlaceholder')}
             />
           </div>
 
@@ -114,16 +114,16 @@ function Signup() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="At least 8 characters"
+                  placeholder={t('auth.atLeast8Chars')}
                   required
                 />
                 <button
                   type="button"
                   className="field__toggle"
                   onClick={() => setShowPassword((previous) => !previous)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                 >
-                  {showPassword ? 'Hide' : 'Show'}
+                  {showPassword ? t('common.hide') : t('common.show')}
                 </button>
               </div>
             </div>
@@ -137,16 +137,16 @@ function Signup() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Repeat your password"
+                  placeholder={t('auth.repeatPassword')}
                   required
                 />
                 <button
                   type="button"
                   className="field__toggle"
                   onClick={() => setShowConfirmPassword((previous) => !previous)}
-                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                 >
-                  {showConfirmPassword ? 'Hide' : 'Show'}
+                  {showConfirmPassword ? t('common.hide') : t('common.show')}
                 </button>
               </div>
             </div>
