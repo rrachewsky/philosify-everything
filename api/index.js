@@ -373,13 +373,25 @@ export default {
       const isCreativeUpload = url.pathname === '/api/ads/creatives/upload';
       const maxAllowedSize = isCreativeUpload ? 50 * 1024 * 1024 : MAX_BODY_SIZE;
       
+      // Debug logging for creative uploads
+      if (isCreativeUpload) {
+        console.log(`[Upload] Creative upload request: ${contentLength} bytes (limit: ${maxAllowedSize} bytes)`);
+      }
+      
       if (contentLength > maxAllowedSize) {
+        console.log(`[Upload] Request too large: ${contentLength} > ${maxAllowedSize} (path: ${url.pathname})`);
         return jsonResponse(
           {
             error: "Request too large",
             message: isCreativeUpload 
-              ? "Creative file must be less than 50MB" 
+              ? `Creative file must be less than 50MB (received ${Math.round(contentLength / 1024 / 1024)}MB)` 
               : "Request body must be less than 1MB",
+            debug: {
+              contentLength,
+              maxAllowedSize,
+              pathname: url.pathname,
+              isCreativeUpload,
+            },
           },
           413,
           origin,

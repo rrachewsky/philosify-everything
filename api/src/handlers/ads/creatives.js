@@ -41,7 +41,14 @@ export async function handleUploadCreative(request, env, corsHeaders) {
     const advertiser = await getAdvertiserFromRequest(env, request, supabase);
 
     if (!advertiser) {
-      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+      console.log('[Ads] Creative upload failed: not authenticated', {
+        hasCookie: request.headers.get('Cookie')?.includes('ads-auth'),
+        origin: request.headers.get('Origin'),
+      });
+      return jsonResponse({ 
+        error: 'Not authenticated',
+        message: 'Please log in to upload creatives',
+      }, 401, corsHeaders);
     }
 
     // Parse multipart form data
