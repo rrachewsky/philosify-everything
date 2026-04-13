@@ -76,6 +76,7 @@ export default function InlineAdSlot({
         }
 
         const data = await response.json();
+        console.log('[Ad] Received ad data:', data);
         setAd(data.ad || null);
         setImpressionId(null);
         setHasRecordedImpression(false);
@@ -148,6 +149,7 @@ export default function InlineAdSlot({
   };
 
   if (!ad?.creative_url || !ad?.target_url) {
+    console.log('[Ad] Not rendering - missing data:', { creative_url: ad?.creative_url, target_url: ad?.target_url });
     return null;
   }
 

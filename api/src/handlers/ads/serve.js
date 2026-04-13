@@ -171,29 +171,33 @@ async function verifyImpressionToken(env, token, expectedIp) {
  * Ensures 100% fill rate (no empty ad slots)
  */
 function serveHouseAd(placement, preferredDuration, corsHeaders) {
-  // House ad creative URLs (stored in Cloudflare R2 or public CDN)
+  // TEMPORARY: Simple placeholder house ad using data URI
+  // TODO: Replace with actual creative images uploaded to R2
+  // For now, using a simple gradient placeholder that matches Philosify branding
+  const placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMmU7c3RvcC1vcGFjaXR5OjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMyZDJkNDQ7c3RvcC1vcGFjaXR5OjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNnKSIvPjx0ZXh0IHg9IjUwJSIgeT0iNDAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QaGlsb3NpZnk8L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI1NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2FhYWFhYSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RGlzY292ZXIgUGhpbG9zb3BoeSBpbiBNdXNpYzwvdGV4dD48dGV4dCB4PSI1MCUiIHk9IjY4JSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5VcGdyYWRlIHRvIFByZW1pdW08L3RleHQ+PC9zdmc+';
+  
   const houseAds = {
     sidebar: {
       5: {
-        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-5s.jpg',
+        creative_url: placeholderImage,
         target_url: 'https://philosify.org/premium',
         brand_name: 'Philosify',
         domain: 'philosify.org',
       },
       10: {
-        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-10s.jpg',
+        creative_url: placeholderImage,
         target_url: 'https://philosify.org/premium',
         brand_name: 'Philosify',
         domain: 'philosify.org',
       },
       15: {
-        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-15s.jpg',
+        creative_url: placeholderImage,
         target_url: 'https://philosify.org/premium',
         brand_name: 'Philosify',
         domain: 'philosify.org',
       },
       20: {
-        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-20s.jpg',
+        creative_url: placeholderImage,
         target_url: 'https://philosify.org/premium',
         brand_name: 'Philosify',
         domain: 'philosify.org',
@@ -201,7 +205,7 @@ function serveHouseAd(placement, preferredDuration, corsHeaders) {
     },
     constellation: {
       5: {
-        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-constellation-5s.jpg',
+        creative_url: placeholderImage,
         target_url: 'https://philosify.org/premium',
         brand_name: 'Philosify',
         domain: 'philosify.org',
@@ -218,6 +222,7 @@ function serveHouseAd(placement, preferredDuration, corsHeaders) {
   }
 
   // House ads don't need impression tokens (not billed)
+  console.log('[Ads] Serving house ad:', { placement, duration });
   return jsonResponse({
     ad: {
       order_id: null, // House ads are not tracked as orders
