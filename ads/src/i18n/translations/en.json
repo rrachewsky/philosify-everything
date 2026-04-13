@@ -538,10 +538,12 @@
     "generateCreative": "Generate AI Creative",
     "generating": "Generating...",
     "generateFailed": "AI creative generation failed",
-    "sendToAdvertiser": "Send to advertiser",
+    "generate": "Generate",
+    "getApproval": "Get Approval",
     "regenerate": "Regenerate",
-    "rejectAndClear": "Reject and clear",
-    "revisedBriefPlaceholder": "Optional: edit the brief for the next generation...",
+    "launch": "Launch",
+    "regenerateNow": "Regenerate now",
+    "regeneratePlaceholder": "What needs to change? Colors, composition, mood, duration...",
     "confirmDeleteMedia": "Delete this creative file permanently?"
   },
   "adPreview": {

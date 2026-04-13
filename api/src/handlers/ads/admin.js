@@ -627,9 +627,17 @@ export async function handleAdminGenerateCreative(request, env, corsHeaders, pla
 
     const { generateAICreative, generateAIVideo } = await import('./creatives.js');
 
-    const fullBrief = revisionNotes
-      ? `${plan.creative_brief || ''}\n\nREVISION REQUESTED BY ADVERTISER:\n${revisionNotes}`
-      : plan.creative_brief || '';
+    // Get admin notes from request body (for regeneration adjustments)
+    const body = await request.json().catch(() => ({}));
+    const adminNotes = body.admin_notes || '';
+
+    let fullBrief = plan.creative_brief || '';
+    if (revisionNotes) {
+      fullBrief += `\n\nREVISION REQUESTED BY ADVERTISER:\n${revisionNotes}`;
+    }
+    if (adminNotes) {
+      fullBrief += `\n\nADMIN DIRECTION:\n${adminNotes}`;
+    }
 
     // Check if plan requests video (targeting is stored as JSON string in DB)
     let targeting = {};
@@ -863,7 +871,64 @@ export async function handleAdminRejectCreative(request, env, corsHeaders, planI
       });
     }
 
-    return jsonResponse({ success: true }, 200, corsHeaders);
+    // Auto-regenerate with the rejection notes
+    try {
+      // Re-read the updated plan
+      const { data: updatedPlans } = await supabase
+        .from('ads.ad_plans')
+        .select('*', { filter: `id=eq.${planId}`, limit: 1 });
+      const updatedPlan = updatedPlans?.[0];
+
+      if (updatedPlan && updatedPlan.creative_type === 'philosify') {
+        const { data: advData } = await supabase
+          .from('ads.advertisers')
+          .select('company_name', { filter: `id=eq.${updatedPlan.advertiser_id}`, limit: 1 });
+        const { data: orders } = await supabase
+          .from('ads.ad_orders')
+          .select('placement,duration', { filter: `plan_id=eq.${planId}`, limit: 1 });
+
+        let targeting2 = {};
+        try { targeting2 = typeof updatedPlan.targeting === 'string' ? JSON.parse(updatedPlan.targeting) : (updatedPlan.targeting || {}); } catch {}
+        const isVideo2 = targeting2.media_format === 'video';
+
+        const brief = updatedPlan.creative_brief || '';
+        const adminDir = body.revised_brief ? `\n\nADMIN DIRECTION:\n${body.revised_brief}` : '';
+
+        const { generateAICreative, generateAIVideo } = await import('./creatives.js');
+        const result = isVideo2
+          ? await generateAIVideo(env, {
+              advertiserId: updatedPlan.advertiser_id,
+              brief: brief + adminDir,
+              brandName: advData?.[0]?.company_name || 'Brand',
+              targetUrl: updatedPlan.target_url,
+              placement: orders?.[0]?.placement || 'sidebar',
+              duration: orders?.[0]?.duration || 5,
+            })
+          : await generateAICreative(env, {
+              advertiserId: updatedPlan.advertiser_id,
+              brief: brief + adminDir,
+              brandName: advData?.[0]?.company_name || 'Brand',
+              targetUrl: updatedPlan.target_url,
+              placement: orders?.[0]?.placement || 'sidebar',
+            });
+
+        if (result?.url) {
+          await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`,
+              'Content-Type': 'application/json', 'Content-Profile': 'ads', 'Accept-Profile': 'ads',
+            },
+            body: JSON.stringify({ creative_url: result.url, creative_status: 'in_progress', updated_at: new Date().toISOString() }),
+          });
+          return jsonResponse({ success: true, regenerated: true, creative_url: result.url }, 200, corsHeaders);
+        }
+      }
+    } catch (regenErr) {
+      console.error('[Ads Admin] Auto-regeneration after reject failed:', regenErr.message);
+    }
+
+    return jsonResponse({ success: true, regenerated: false }, 200, corsHeaders);
   } catch (err) {
     console.error('[Ads Admin] Reject creative error:', err);
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);

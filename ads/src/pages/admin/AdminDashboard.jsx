@@ -260,86 +260,80 @@ function AdminDashboard() {
                     </p>
                   ) : null}
                 </div>
-                <div className="button-row" style={{ flexWrap: 'wrap', gap: '6px' }}>
-                  <span className={`status-chip status-chip--${plan.status}`}>{plan.status}</span>
+                {(() => {
+                  const hasCreative = !!plan.creative_url;
+                  const isPendingCreative = plan.status === 'pending_creative';
+                  const isPendingApproval = plan.status === 'pending_approval';
+                  const formOpen = showReject[plan.id];
 
-                  {/* No creative yet — generate */}
-                  {plan.status === 'pending_creative' && !plan.creative_url ? (
-                    <button
-                      type="button"
-                      className="btn btn--secondary"
-                      disabled={generating[plan.id]}
-                      onClick={() => generateCreative(plan.id)}
-                    >
-                      {generating[plan.id] ? t('admin.generating') : t('admin.generateCreative')}
-                    </button>
-                  ) : null}
+                  return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
 
-                  {/* Creative generated, admin reviews before sending to advertiser */}
-                  {plan.status === 'pending_creative' && plan.creative_url ? (
-                    <>
-                      <button
-                        type="button"
-                        className="btn btn--primary"
-                        onClick={async () => {
-                          await api.adminPost(`/ads/admin/plans/${plan.id}/approve-creative`, adminSecret, {});
-                          await loadData();
-                        }}
-                      >
-                        {t('admin.sendToAdvertiser')}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn--secondary"
-                        disabled={generating[plan.id]}
-                        onClick={() => generateCreative(plan.id)}
-                      >
-                        {generating[plan.id] ? t('admin.generating') : t('admin.regenerate')}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn--danger"
-                        onClick={() => setShowReject((prev) => ({ ...prev, [plan.id]: !prev[plan.id] }))}
-                      >
-                        {t('admin.reject')}
-                      </button>
-                    </>
-                  ) : null}
+                        {/* GENERATE — no creative yet */}
+                        {isPendingCreative && !hasCreative && (
+                          <button className="btn btn--primary" disabled={generating[plan.id]} onClick={() => generateCreative(plan.id)}>
+                            {generating[plan.id] ? t('admin.generating') : t('admin.generate')}
+                          </button>
+                        )}
 
-                  {/* Reject form — edit brief and clear creative */}
-                  {showReject[plan.id] ? (
-                    <div className="stack stack--tight" style={{ width: '100%', marginTop: '6px' }}>
-                      <textarea
-                        rows={3}
-                        placeholder={t('admin.revisedBriefPlaceholder')}
-                        value={rejectBrief[plan.id] || ''}
-                        onChange={(e) => setRejectBrief((prev) => ({ ...prev, [plan.id]: e.target.value }))}
-                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)' }}
-                      />
-                      <button
-                        type="button"
-                        className="btn btn--danger"
-                        onClick={async () => {
-                          await api.adminPost(`/ads/admin/plans/${plan.id}/reject-creative`, adminSecret, {
-                            revised_brief: rejectBrief[plan.id] || undefined,
-                          });
-                          setShowReject((prev) => ({ ...prev, [plan.id]: false }));
-                          setRejectBrief((prev) => ({ ...prev, [plan.id]: '' }));
-                          await loadData();
-                        }}
-                      >
-                        {t('admin.rejectAndClear')}
-                      </button>
+                        {/* GET APPROVAL — creative ready, send to advertiser */}
+                        {isPendingCreative && hasCreative && (
+                          <button className="btn btn--primary" onClick={async () => { await api.adminPost(`/ads/admin/plans/${plan.id}/approve-creative`, adminSecret, {}); await loadData(); }}>
+                            {t('admin.getApproval')}
+                          </button>
+                        )}
+
+                        {/* REGENERATE — creative exists but not good enough */}
+                        {isPendingCreative && hasCreative && (
+                          <button className="btn btn--secondary" onClick={() => setShowReject((prev) => ({ ...prev, [plan.id]: !prev[plan.id] }))}>
+                            {t('admin.regenerate')}
+                          </button>
+                        )}
+
+                        {/* LAUNCH — advertiser approved, go live */}
+                        {isPendingApproval && (
+                          <button className="btn btn--primary" onClick={() => approvePlan(plan.id)}>
+                            {t('admin.launch')}
+                          </button>
+                        )}
+
+                      </div>
+
+                      {/* Regenerate form */}
+                      {formOpen && isPendingCreative && (
+                        <div style={{ padding: '10px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--surface)' }}>
+                          <textarea
+                            rows={2}
+                            placeholder={t('admin.regeneratePlaceholder')}
+                            value={rejectBrief[plan.id] || ''}
+                            onChange={(e) => setRejectBrief((prev) => ({ ...prev, [plan.id]: e.target.value }))}
+                            style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid var(--line)', background: 'var(--bg)', color: 'var(--text)', marginBottom: '6px' }}
+                          />
+                          <button
+                            className="btn btn--primary"
+                            disabled={generating[plan.id]}
+                            onClick={async () => {
+                              setGenerating((prev) => ({ ...prev, [plan.id]: true }));
+                              try {
+                                await api.adminPost(`/ads/admin/plans/${plan.id}/reject-creative`, adminSecret, { revised_brief: rejectBrief[plan.id] || undefined });
+                                setShowReject((prev) => ({ ...prev, [plan.id]: false }));
+                                setRejectBrief((prev) => ({ ...prev, [plan.id]: '' }));
+                                await loadData();
+                              } catch (err) {
+                                setError(err.message);
+                              } finally {
+                                setGenerating((prev) => ({ ...prev, [plan.id]: false }));
+                              }
+                            }}
+                          >
+                            {generating[plan.id] ? t('admin.generating') : t('admin.regenerateNow')}
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  ) : null}
-
-                  {/* Admin approves launch (after advertiser approved) */}
-                  {plan.status === 'pending_approval' ? (
-                    <button type="button" className="btn btn--primary" onClick={() => approvePlan(plan.id)}>
-                      {t('admin.approveLaunch')}
-                    </button>
-                  ) : null}
-                </div>
+                  );
+                })()}
               </div>
             ))}
           </div>
