@@ -363,16 +363,23 @@ export default {
 
     // Top-level error handler to catch all unhandled exceptions
     try {
-      // Request size limit
+      // Request size limit (with exceptions for large file uploads)
       const contentLength = parseInt(
         request.headers.get("content-length") || "0",
         10,
       );
-      if (contentLength > MAX_BODY_SIZE) {
+      
+      // Exception: Ad creative uploads can be up to 50MB (videos)
+      const isCreativeUpload = url.pathname === '/api/ads/creatives/upload';
+      const maxAllowedSize = isCreativeUpload ? 50 * 1024 * 1024 : MAX_BODY_SIZE;
+      
+      if (contentLength > maxAllowedSize) {
         return jsonResponse(
           {
             error: "Request too large",
-            message: "Request body must be less than 1MB",
+            message: isCreativeUpload 
+              ? "Creative file must be less than 50MB" 
+              : "Request body must be less than 1MB",
           },
           413,
           origin,
