@@ -23,9 +23,6 @@ function getAdvertiserNav(t) {
 function getAdminNav(t) {
   return [
     { to: '/admin', label: t('header.controlRoom'), end: true },
-    { to: '/admin?focus=advertisers', label: t('header.advertisers') },
-    { to: '/admin?focus=studio', label: t('header.creativeStudio') },
-    { to: '/admin?focus=launches', label: t('header.launches') },
   ];
 }
 

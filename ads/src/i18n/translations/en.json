@@ -544,6 +544,15 @@
     "launch": "Launch",
     "regenerateNow": "Regenerate now",
     "regeneratePlaceholder": "What needs to change? Colors, composition, mood, duration...",
+    "pause": "Pause",
+    "resume": "Resume",
+    "cancel": "Cancel",
+    "activeCampaigns": "Active campaigns",
+    "liveDelivery": "Live delivery",
+    "noActiveCampaigns": "No campaigns are currently running.",
+    "showAll": "Show all",
+    "advertiserFeedback": "Advertiser feedback",
+    "confirmCancel": "Cancel this campaign? Unused impressions will be refunded to the advertiser.",
     "confirmDeleteMedia": "Delete this creative file permanently?"
   },
   "adPreview": {

@@ -668,8 +668,18 @@ export async function handleQuizStart(request, env) {
       .from('quiz_sessions')
       .select('id', { filter: `user_id=eq.${user.userId}&status=eq.active`, limit: 1 });
 
+    // Close any stale active sessions before starting a new one
     if (existingSessions && existingSessions.length > 0) {
-      return errorResponse('You already have an active quiz session', 400, origin, env);
+      try {
+        for (const stale of existingSessions) {
+          await supabase.from('quiz_sessions').update(
+            { status: 'ended', updated_at: new Date().toISOString() },
+            `id=eq.${stale.id}`
+          );
+        }
+      } catch (closeErr) {
+        console.warn('[Quiz] Failed to close stale session:', closeErr.message);
+      }
     }
 
     let reservation;
@@ -689,11 +699,10 @@ export async function handleQuizStart(request, env) {
         status: 'active',
         current_difficulty: 1,
         credits_spent: 1,
-      })
-      .select()
-      .single();
+      });
 
     if (sessionError || !session) {
+      console.error('[Quiz] Session insert failed:', sessionError);
       await releaseReservation(env, reservation.reservationId, 'quiz-session-creation-failed');
       return errorResponse('Failed to start quiz', 500, origin, env);
     }

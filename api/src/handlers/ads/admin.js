@@ -334,10 +334,30 @@ export async function handleAdminListPlans(request, env, corsHeaders) {
       advertiserMap = Object.fromEntries((advertisers || []).map((advertiser) => [advertiser.id, advertiser]));
     }
 
+    // Get impression totals for each plan from orders
+    const planIds = (plans || []).map((p) => p.id).filter(Boolean);
+    let orderStats = {};
+    if (planIds.length > 0) {
+      const { data: orders } = await supabase
+        .from('ads.ad_orders')
+        .select('plan_id,impressions_ordered,impressions_delivered', {
+          filter: `plan_id=in.(${planIds.join(',')})`,
+        });
+      for (const order of orders || []) {
+        if (!orderStats[order.plan_id]) {
+          orderStats[order.plan_id] = { ordered: 0, delivered: 0 };
+        }
+        orderStats[order.plan_id].ordered += order.impressions_ordered || 0;
+        orderStats[order.plan_id].delivered += order.impressions_delivered || 0;
+      }
+    }
+
     return jsonResponse({
       plans: (plans || []).map((plan) => ({
         ...plan,
         advertiser: advertiserMap[plan.advertiser_id] || null,
+        impressions_ordered: orderStats[plan.id]?.ordered || 0,
+        impressions_delivered: orderStats[plan.id]?.delivered || 0,
       })),
     }, 200, corsHeaders);
   } catch (err) {
@@ -363,13 +383,17 @@ export async function handleAdminListCreativeRequests(request, env, corsHeaders)
     const filters = [];
 
     // SECURITY: Validate status against allowlist to prevent PostgREST filter injection
-    const VALID_CR_STATUSES = ['pending', 'in_progress', 'completed', 'rejected', 'cancelled'];
-    if (status) {
+    const VALID_CR_STATUSES = ['pending', 'in_progress', 'review', 'revision', 'completed', 'approved', 'rejected', 'cancelled'];
+    if (status && status !== 'all') {
       if (!VALID_CR_STATUSES.includes(status)) {
         return jsonResponse({ error: 'Invalid status filter' }, 400, corsHeaders);
       }
       filters.push(`status=eq.${status}`);
+    } else if (!status) {
+      // Default: only show actionable requests
+      filters.push(`status=in.(pending,in_progress,review,revision)`);
     }
+    // status=all → no filter, returns everything
 
     const { data: requests, error } = await supabase
       .from('ads.creative_requests')
@@ -871,66 +895,127 @@ export async function handleAdminRejectCreative(request, env, corsHeaders, planI
       });
     }
 
-    // Auto-regenerate with the rejection notes
-    try {
-      // Re-read the updated plan
-      const { data: updatedPlans } = await supabase
-        .from('ads.ad_plans')
-        .select('*', { filter: `id=eq.${planId}`, limit: 1 });
-      const updatedPlan = updatedPlans?.[0];
-
-      if (updatedPlan && updatedPlan.creative_type === 'philosify') {
-        const { data: advData } = await supabase
-          .from('ads.advertisers')
-          .select('company_name', { filter: `id=eq.${updatedPlan.advertiser_id}`, limit: 1 });
-        const { data: orders } = await supabase
-          .from('ads.ad_orders')
-          .select('placement,duration', { filter: `plan_id=eq.${planId}`, limit: 1 });
-
-        let targeting2 = {};
-        try { targeting2 = typeof updatedPlan.targeting === 'string' ? JSON.parse(updatedPlan.targeting) : (updatedPlan.targeting || {}); } catch {}
-        const isVideo2 = targeting2.media_format === 'video';
-
-        const brief = updatedPlan.creative_brief || '';
-        const adminDir = body.revised_brief ? `\n\nADMIN DIRECTION:\n${body.revised_brief}` : '';
-
-        const { generateAICreative, generateAIVideo } = await import('./creatives.js');
-        const result = isVideo2
-          ? await generateAIVideo(env, {
-              advertiserId: updatedPlan.advertiser_id,
-              brief: brief + adminDir,
-              brandName: advData?.[0]?.company_name || 'Brand',
-              targetUrl: updatedPlan.target_url,
-              placement: orders?.[0]?.placement || 'sidebar',
-              duration: orders?.[0]?.duration || 5,
-            })
-          : await generateAICreative(env, {
-              advertiserId: updatedPlan.advertiser_id,
-              brief: brief + adminDir,
-              brandName: advData?.[0]?.company_name || 'Brand',
-              targetUrl: updatedPlan.target_url,
-              placement: orders?.[0]?.placement || 'sidebar',
-            });
-
-        if (result?.url) {
-          await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, {
-            method: 'PATCH',
-            headers: {
-              'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`,
-              'Content-Type': 'application/json', 'Content-Profile': 'ads', 'Accept-Profile': 'ads',
-            },
-            body: JSON.stringify({ creative_url: result.url, creative_status: 'in_progress', updated_at: new Date().toISOString() }),
-          });
-          return jsonResponse({ success: true, regenerated: true, creative_url: result.url }, 200, corsHeaders);
-        }
-      }
-    } catch (regenErr) {
-      console.error('[Ads Admin] Auto-regeneration after reject failed:', regenErr.message);
-    }
-
-    return jsonResponse({ success: true, regenerated: false }, 200, corsHeaders);
+    return jsonResponse({ success: true }, 200, corsHeaders);
   } catch (err) {
     console.error('[Ads Admin] Reject creative error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/plans/:id/pause
+ */
+export async function handleAdminPausePlan(request, env, corsHeaders, planId) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+    const { url: supabaseUrl, key: supabaseKey } = await getSupabaseCredentials(env);
+    const patchHeaders = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json', 'Content-Profile': 'ads', 'Accept-Profile': 'ads' };
+
+    const { data: plans } = await supabase.from('ads.ad_plans').select('id,status', { filter: `id=eq.${planId}`, limit: 1 });
+    const plan = plans?.[0];
+
+    if (!plan) return jsonResponse({ error: 'Plan not found' }, 404, corsHeaders);
+    if (plan.status !== 'active') return jsonResponse({ error: 'Only active campaigns can be paused' }, 400, corsHeaders);
+
+    await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, { method: 'PATCH', headers: patchHeaders, body: JSON.stringify({ status: 'paused', updated_at: new Date().toISOString() }) });
+    await fetch(`${supabaseUrl}/rest/v1/ad_orders?plan_id=eq.${planId}`, { method: 'PATCH', headers: patchHeaders, body: JSON.stringify({ status: 'paused', updated_at: new Date().toISOString() }) });
+
+    return jsonResponse({ success: true }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Pause plan error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/plans/:id/resume
+ */
+export async function handleAdminResumePlan(request, env, corsHeaders, planId) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+    const { url: supabaseUrl, key: supabaseKey } = await getSupabaseCredentials(env);
+    const patchHeaders = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json', 'Content-Profile': 'ads', 'Accept-Profile': 'ads' };
+
+    const { data: plans } = await supabase.from('ads.ad_plans').select('id,status', { filter: `id=eq.${planId}`, limit: 1 });
+    const plan = plans?.[0];
+
+    if (!plan) return jsonResponse({ error: 'Plan not found' }, 404, corsHeaders);
+    if (plan.status !== 'paused') return jsonResponse({ error: 'Only paused campaigns can be resumed' }, 400, corsHeaders);
+
+    await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, { method: 'PATCH', headers: patchHeaders, body: JSON.stringify({ status: 'active', updated_at: new Date().toISOString() }) });
+    await fetch(`${supabaseUrl}/rest/v1/ad_orders?plan_id=eq.${planId}`, { method: 'PATCH', headers: patchHeaders, body: JSON.stringify({ status: 'active', updated_at: new Date().toISOString() }) });
+
+    return jsonResponse({ success: true }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Resume plan error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/plans/:id/cancel
+ */
+export async function handleAdminCancelPlan(request, env, corsHeaders, planId) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+    const { url: supabaseUrl, key: supabaseKey } = await getSupabaseCredentials(env);
+    const patchHeaders = { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}`, 'Content-Type': 'application/json', 'Content-Profile': 'ads', 'Accept-Profile': 'ads' };
+
+    const { data: plans } = await supabase.from('ads.ad_plans').select('id,status,advertiser_id,total_cost_cents,creative_fee_cents', { filter: `id=eq.${planId}`, limit: 1 });
+    const plan = plans?.[0];
+
+    if (!plan) return jsonResponse({ error: 'Plan not found' }, 404, corsHeaders);
+    if (!['active', 'paused', 'pending_approval'].includes(plan.status)) {
+      return jsonResponse({ error: 'This campaign cannot be cancelled' }, 400, corsHeaders);
+    }
+
+    // Calculate refund: total paid minus creative fee minus impressions already delivered
+    const { data: orders } = await supabase.from('ads.ad_orders').select('impressions_delivered,cpm_cents', { filter: `plan_id=eq.${planId}` });
+    let impressionSpend = 0;
+    for (const order of orders || []) {
+      impressionSpend += Math.ceil((order.impressions_delivered || 0) * (order.cpm_cents || 0) / 1000);
+    }
+
+    const creativeFee = plan.creative_fee_cents || 0;
+    const totalPaid = plan.total_cost_cents || 0;
+    const refundCents = Math.max(0, totalPaid - creativeFee - impressionSpend);
+
+    // Cancel plan and orders
+    await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, { method: 'PATCH', headers: patchHeaders, body: JSON.stringify({ status: 'cancelled', updated_at: new Date().toISOString() }) });
+    await fetch(`${supabaseUrl}/rest/v1/ad_orders?plan_id=eq.${planId}`, { method: 'PATCH', headers: patchHeaders, body: JSON.stringify({ status: 'cancelled', updated_at: new Date().toISOString() }) });
+
+    // Refund remaining balance to advertiser
+    if (refundCents > 0 && plan.advertiser_id) {
+      const { data: advData } = await supabase.from('ads.advertisers').select('balance_cents', { filter: `id=eq.${plan.advertiser_id}`, limit: 1 });
+      const currentBalance = advData?.[0]?.balance_cents || 0;
+      const newBalance = currentBalance + refundCents;
+
+      await fetch(`${supabaseUrl}/rest/v1/advertisers?id=eq.${plan.advertiser_id}`, { method: 'PATCH', headers: patchHeaders, body: JSON.stringify({ balance_cents: newBalance, updated_at: new Date().toISOString() }) });
+
+      await supabase.from('ads.advertiser_transactions').insert({
+        advertiser_id: plan.advertiser_id,
+        type: 'refund',
+        amount_cents: refundCents,
+        balance_after_cents: newBalance,
+        description: 'Campaign cancelled — unused impressions refund',
+      });
+    }
+
+    return jsonResponse({ success: true, refunded_cents: refundCents }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Cancel plan error:', err);
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
   }
 }

@@ -33,9 +33,10 @@ export async function pg(
   const params = [];
   if (select) params.push(`select=${encodeURIComponent(select)}`);
   if (filter) {
-    // Reject filter values containing suspicious PostgREST operators that could
-    // be injected via unsanitized user input (e.g., chained &or=, &not. etc.)
-    const DANGEROUS_PATTERN = /[&?]|(^|\.)or\(|(^|\.)not\./;
+    // Reject filter values containing suspicious PostgREST operator injections
+    // Allow standard & for combining conditions (key=op.value&key2=op.value2)
+    // Block: or(), not., select=, ?
+    const DANGEROUS_PATTERN = /\?|(^|&|\.)or\(|(^|&|\.)not\.|&select=|&order=|&limit=/;
     if (DANGEROUS_PATTERN.test(filter)) {
       console.error(`[DB] Rejected suspicious filter: ${filter.substring(0, 100)}`);
       return null;

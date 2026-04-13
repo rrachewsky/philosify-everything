@@ -16,8 +16,11 @@ import { getSecret } from '../../utils/secrets.js';
 
 // Token expiration (5 minutes - enough time for ad to display)
 const TOKEN_EXPIRY_MS = 5 * 60 * 1000;
-// Frequency cap: max impressions per order per user per day
-const FREQUENCY_CAP_PER_DAY = 3;
+// PROPORTIONAL FILL-RATE SYSTEM:
+// - Soft frequency cap: After 3 impressions of same order, rotate to next
+// - Budget-weighted: Orders with bigger total_cents get proportionally more impressions
+// - 100% fill rate: NO empty ad slots (fallback to house ads)
+const SOFT_FREQUENCY_CAP = 3;
 
 /**
  * Client-side targeting match (mirrors ads.user_matches_targeting DB function)
@@ -162,6 +165,235 @@ async function verifyImpressionToken(env, token, expectedIp) {
 }
 
 /**
+ * HOUSE AD FALLBACK
+ * ============================================================
+ * When no paid campaigns are active, show Philosify promotional content
+ * Ensures 100% fill rate (no empty ad slots)
+ */
+function serveHouseAd(placement, preferredDuration, corsHeaders) {
+  // House ad creative URLs (stored in Cloudflare R2 or public CDN)
+  const houseAds = {
+    sidebar: {
+      5: {
+        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-5s.jpg',
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+      10: {
+        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-10s.jpg',
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+      15: {
+        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-15s.jpg',
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+      20: {
+        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-sidebar-20s.jpg',
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+    },
+    constellation: {
+      5: {
+        creative_url: 'https://pub-8c2b3eb5b7844c2385d3c09bb63c0fa5.r2.dev/house-ads/philosify-constellation-5s.jpg',
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+    },
+  };
+
+  const duration = preferredDuration || (placement === 'constellation' ? 5 : 10);
+  const houseAd = houseAds[placement]?.[duration] || houseAds[placement]?.[5];
+
+  if (!houseAd) {
+    // Ultimate fallback: no ad at all (should never happen)
+    return jsonResponse({ ad: null, reason: 'no_campaigns_no_house_ads' }, 200, corsHeaders);
+  }
+
+  // House ads don't need impression tokens (not billed)
+  return jsonResponse({
+    ad: {
+      order_id: null, // House ads are not tracked as orders
+      creative_url: houseAd.creative_url,
+      target_url: houseAd.target_url,
+      duration,
+      placement,
+      impression_token: null, // No billing for house ads
+      media_type: 'image',
+      brand_name: houseAd.brand_name,
+      domain: houseAd.domain,
+      is_house_ad: true, // Flag so frontend knows not to track impression
+    },
+  }, 200, corsHeaders);
+}
+
+/**
+ * PROPORTIONAL AD SELECTION ALGORITHM
+ * ============================================================
+ * Selects ad order based on budget-weighted proportional distribution
+ * with soft frequency capping and weighted hybrid targeting.
+ * 
+ * Algorithm:
+ * 1. Calculate each order's target proportion (budget / total_budget)
+ * 2. Calculate each order's actual proportion today (impressions_today / total_impressions_today)
+ * 3. Find order most "behind" its target (prefer targeted campaigns for this user)
+ * 4. Apply soft frequency cap: after 3 impressions/user/day of same order, rotate
+ * 5. ALWAYS return an ad (fallback to untargeted if all targeted are capped)
+ */
+async function selectProportionalAd(supabase, placement, userId, ip, userProfile, preferredDuration) {
+  const today = new Date().toISOString().split('T')[0];
+  
+  // Get all active orders with budget (total_cents) and impressions
+  const { data: orders, error } = await supabase
+    .from('ads.ad_orders')
+    .select(`
+      id,
+      advertiser_id,
+      creative_url,
+      target_url,
+      duration,
+      targeting,
+      impressions_ordered,
+      impressions_delivered,
+      total_cents,
+      schedule_type
+    `, {
+      filter: [
+        `placement=eq.${placement}`,
+        'status=eq.active',
+        'creative_status=eq.ready',
+        'schedule_type=eq.asap', // REQUIREMENT 5: Always-on campaigns only (no scheduling)
+      ].join('&'),
+    });
+
+  if (error || !orders || orders.length === 0) {
+    return null; // No active campaigns
+  }
+
+  // Filter out exhausted campaigns
+  const activeOrders = orders.filter(o => o.impressions_delivered < o.impressions_ordered);
+  if (activeOrders.length === 0) {
+    return null; // All campaigns exhausted
+  }
+
+  // Calculate total budget across all active campaigns
+  const totalBudget = activeOrders.reduce((sum, o) => sum + (o.total_cents || 0), 0);
+  if (totalBudget === 0) {
+    // Fallback: equal weight if no budget data
+    return activeOrders[0];
+  }
+
+  // Get today's impression counts per order (global, not per-user)
+  const { data: todayImpressions } = await supabase
+    .from('ads.ad_impressions')
+    .select('order_id', {
+      filter: `created_at=gte.${today}&placement=eq.${placement}`,
+    });
+
+  const impressionCounts = {};
+  let totalImpressionsToday = 0;
+  for (const imp of todayImpressions || []) {
+    impressionCounts[imp.order_id] = (impressionCounts[imp.order_id] || 0) + 1;
+    totalImpressionsToday++;
+  }
+
+  // Calculate proportions for each order
+  const orderScores = [];
+  for (const order of activeOrders) {
+    const targetProportion = order.total_cents / totalBudget;
+    const actualImpressions = impressionCounts[order.id] || 0;
+    const actualProportion = totalImpressionsToday > 0 ? actualImpressions / totalImpressionsToday : 0;
+    
+    // "Deficit" = how far behind target this order is (positive = needs more impressions)
+    const deficit = targetProportion - actualProportion;
+
+    // Targeting match (weighted hybrid: prefer targeted, allow untargeted as fallback)
+    let parsedTargeting = order.targeting;
+    if (typeof parsedTargeting === 'string') {
+      try { parsedTargeting = JSON.parse(parsedTargeting); } catch { parsedTargeting = {}; }
+    }
+    const hasTargeting = parsedTargeting && typeof parsedTargeting === 'object' && Object.keys(parsedTargeting).length > 0;
+    const matchesTarget = !hasTargeting || !userProfile || matchTargeting(parsedTargeting, userProfile);
+    
+    // Targeting bonus: targeted campaigns that match get +0.1 to deficit (preference)
+    const targetingBonus = hasTargeting && matchesTarget ? 0.1 : 0;
+
+    orderScores.push({
+      order,
+      deficit: deficit + targetingBonus,
+      matchesTarget,
+      hasTargeting,
+    });
+  }
+
+  // Get user's impression counts today (for soft frequency cap)
+  let userImpressionCounts = {};
+  if (userId) {
+    const { data: userImps } = await supabase
+      .from('ads.ad_impressions')
+      .select('order_id', {
+        filter: `user_id=eq.${userId}&created_at=gte.${today}&placement=eq.${placement}`,
+      });
+    for (const imp of userImps || []) {
+      userImpressionCounts[imp.order_id] = (userImpressionCounts[imp.order_id] || 0) + 1;
+    }
+  } else {
+    // IP-based soft cap for anonymous users
+    const { data: ipImps } = await supabase
+      .from('ads.ad_impressions')
+      .select('order_id', {
+        filter: `ip_address=eq.${ip}&created_at=gte.${today}&placement=eq.${placement}`,
+      });
+    for (const imp of ipImps || []) {
+      userImpressionCounts[imp.order_id] = (userImpressionCounts[imp.order_id] || 0) + 1;
+    }
+  }
+
+  // SOFT FREQUENCY CAP: Remove orders user has seen 3+ times today
+  const eligibleOrders = orderScores.filter(
+    s => (userImpressionCounts[s.order.id] || 0) < SOFT_FREQUENCY_CAP
+  );
+
+  // If all orders are soft-capped for this user, reset to least-recently-shown
+  let candidateOrders = eligibleOrders.length > 0 ? eligibleOrders : orderScores;
+
+  // WEIGHTED HYBRID TARGETING: Prefer targeted+matching, fallback to untargeted
+  // First try: targeted campaigns that match user profile
+  let targetedMatches = candidateOrders.filter(s => s.hasTargeting && s.matchesTarget);
+  if (targetedMatches.length > 0) {
+    candidateOrders = targetedMatches;
+  } else {
+    // Second try: untargeted campaigns (no targeting restrictions)
+    let untargeted = candidateOrders.filter(s => !s.hasTargeting);
+    if (untargeted.length > 0) {
+      candidateOrders = untargeted;
+    }
+    // Else: show any campaign (all are targeted but user doesn't match - rare edge case)
+  }
+
+  // Duration preference (optional)
+  if (preferredDuration) {
+    const matchingDuration = candidateOrders.filter(s => s.order.duration === preferredDuration);
+    if (matchingDuration.length > 0) {
+      candidateOrders = matchingDuration;
+    }
+  }
+
+  // Sort by deficit (highest first = most behind target proportion)
+  candidateOrders.sort((a, b) => b.deficit - a.deficit);
+
+  // Return the order most behind its proportional target
+  return candidateOrders[0]?.order || null;
+}
+
+/**
  * GET /api/ads/serve?placement=sidebar&user_id=xxx
  * Get next ad to display (called by Philosify frontend)
  * 
@@ -171,6 +403,8 @@ async function verifyImpressionToken(env, token, expectedIp) {
  * - duration: preferred duration in seconds (optional, for sidebar only)
  * 
  * Returns ad creative, tracking info, and signed impression token
+ * 
+ * GUARANTEE: 100% fill rate - always returns an ad (or house ad if zero campaigns)
  */
 export async function handleServeAd(request, env, corsHeaders) {
   try {
@@ -201,103 +435,8 @@ export async function handleServeAd(request, env, corsHeaders) {
     }
 
     // ============================================================
-    // AD SELECTION WITH TARGETING + FREQUENCY CAPPING
+    // PROPORTIONAL AD SELECTION - 100% FILL RATE GUARANTEE
     // ============================================================
-
-    // Try the database targeting function first (uses user profile for matching)
-    if (userId) {
-      try {
-        const { data: rpcResult, error: rpcError } = await supabase.rpc('ads.get_next_ad_for_user', {
-          p_user_id: userId,
-          p_placement: placement,
-        });
-        
-        // rpc() returns the first element (not an array), so check if it's truthy
-        if (!rpcError && rpcResult) {
-          const match = rpcResult;
-          // Frequency cap check: max 3 impressions per order per user per day
-          const { data: recentImpressions } = await supabase
-            .from('ads.ad_impressions')
-            .select('id', {
-              filter: [
-                `order_id=eq.${match.id}`,
-                `user_id=eq.${userId}`,
-                `created_at=gte.${new Date().toISOString().split('T')[0]}`,
-              ].join('&'),
-            });
-
-          if (!recentImpressions || recentImpressions.length < 3) {
-            // Duration match check
-            if (!preferredDuration || match.duration === preferredDuration) {
-              const selectedOrder = match;
-              const impressionToken = await generateImpressionToken(env, selectedOrder.id, placement, selectedOrder.duration, ip);
-              // Get advertiser brand name for text overlay
-              const { data: advInfo } = await supabase
-                .from('ads.advertisers')
-                .select('company_name', { filter: `id=eq.${selectedOrder.advertiser_id}`, limit: 1 });
-              const brandName = advInfo?.[0]?.company_name || '';
-              let domain = '';
-              try { domain = new URL(selectedOrder.target_url).hostname; } catch {}
-              return jsonResponse({
-                ad: {
-                  order_id: selectedOrder.id,
-                  creative_url: selectedOrder.creative_url,
-                  target_url: selectedOrder.target_url,
-                  duration: selectedOrder.duration,
-                  placement,
-                  impression_token: impressionToken,
-                  media_type: /\.(mp4|webm)$/i.test(selectedOrder.creative_url) ? 'video' : 'image',
-                  brand_name: brandName,
-                  domain,
-                },
-              }, 200, corsHeaders);
-            }
-          }
-        }
-      } catch (rpcErr) {
-        console.warn('[Ads] RPC targeting failed, falling back to manual:', rpcErr.message);
-      }
-    }
-
-    // Fallback: manual query (for unauthenticated users or when RPC fails)
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    const currentHour = now.getUTCHours();
-    const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getUTCDay()];
-
-    const { data: orders, error } = await supabase
-      .from('ads.ad_orders')
-      .select(`
-        id,
-        advertiser_id,
-        creative_url,
-        target_url,
-        duration,
-        placement,
-        targeting,
-        schedule_type,
-        start_date,
-        end_date,
-        time_windows,
-        impressions_ordered,
-        impressions_delivered
-      `, {
-        filter: [
-          `placement=eq.${placement}`,
-          'status=eq.active',
-          'creative_status=eq.ready',
-        ].join('&'),
-        order: 'schedule_type.asc,created_at.asc',
-      });
-
-    if (error) {
-      console.error('[Ads] Serve ad error:', error);
-      return jsonResponse({ ad: null, reason: 'error' }, 200, corsHeaders);
-    }
-
-    if (!orders || orders.length === 0) {
-      return jsonResponse({ ad: null, reason: 'no_ads_available' }, 200, corsHeaders);
-    }
 
     // Get user profile for targeting (if userId provided)
     let userProfile = null;
@@ -308,81 +447,19 @@ export async function handleServeAd(request, env, corsHeaders) {
       userProfile = profiles?.[0] || null;
     }
 
-    // Find first eligible order with targeting + frequency cap
-    let selectedOrder = null;
-    for (const order of orders) {
-      if (order.impressions_delivered >= order.impressions_ordered) continue;
+    // Select ad using proportional algorithm
+    const selectedOrder = await selectProportionalAd(
+      supabase,
+      placement,
+      userId,
+      ip,
+      userProfile,
+      preferredDuration
+    );
 
-      // Schedule check
-      if (order.schedule_type === 'scheduled') {
-        if (today < order.start_date || today > order.end_date) continue;
-        let timeWindows = order.time_windows;
-        if (typeof timeWindows === 'string') { try { timeWindows = JSON.parse(timeWindows); } catch { timeWindows = []; } }
-        if (Array.isArray(timeWindows) && timeWindows.length > 0) {
-          const inTimeWindow = timeWindows.some(window => {
-            if (window.day && window.day !== dayOfWeek) return false;
-            if (window.start && window.end) {
-              const startHour = parseInt(window.start.split(':')[0]);
-              const endHour = parseInt(window.end.split(':')[0]);
-              return currentHour >= startHour && currentHour < endHour;
-            }
-            return true;
-          });
-          if (!inTimeWindow) continue;
-        }
-      }
-
-      // Targeting check: if order has targeting AND we have a user profile, match them
-      let parsedTargeting = order.targeting;
-      if (typeof parsedTargeting === 'string') { try { parsedTargeting = JSON.parse(parsedTargeting); } catch { parsedTargeting = {}; } }
-      if (parsedTargeting && typeof parsedTargeting === 'object' && Object.keys(parsedTargeting).length > 0 && userProfile) {
-        if (!matchTargeting(parsedTargeting, userProfile)) continue;
-      }
-
-      // Frequency cap: max 3 impressions per order per user/IP per day
-      if (userId) {
-        const { data: recentImpressions } = await supabase
-          .from('ads.ad_impressions')
-          .select('id', {
-            filter: [
-              `order_id=eq.${order.id}`,
-              `user_id=eq.${userId}`,
-              `created_at=gte.${today}`,
-            ].join('&'),
-          });
-        if (recentImpressions && recentImpressions.length >= 3) continue;
-      } else {
-        // SECURITY: IP-based frequency cap for unauthenticated users
-        const { data: ipImpressions } = await supabase
-          .from('ads.ad_impressions')
-          .select('id', {
-            filter: [
-              `order_id=eq.${order.id}`,
-              `ip_address=eq.${ip}`,
-              `created_at=gte.${today}`,
-            ].join('&'),
-          });
-        if (ipImpressions && ipImpressions.length >= FREQUENCY_CAP_PER_DAY) continue;
-      }
-
-      // Advertiser status check
-      const { data: advertisers } = await supabase
-        .from('ads.advertisers')
-        .select('status', { filter: `id=eq.${order.advertiser_id}` });
-      if (!advertisers || advertisers.length === 0 || advertisers[0].status !== 'approved') continue;
-
-      // Duration preference
-      if (preferredDuration && order.duration !== preferredDuration) {
-        if (!selectedOrder) selectedOrder = order;
-        continue;
-      }
-
-      selectedOrder = order;
-      break;
-    }
-
+    // 100% FILL RATE: If no paid campaigns, show house ad
     if (!selectedOrder) {
-      return jsonResponse({ ad: null, reason: 'no_eligible_ads' }, 200, corsHeaders);
+      return serveHouseAd(placement, preferredDuration, corsHeaders);
     }
 
     // Generate signed impression token
@@ -426,6 +503,7 @@ export async function handleServeAd(request, env, corsHeaders) {
  * GET /api/ads/serve/batch?placement=sidebar&count=3&user_id=xxx
  * Get multiple ads for a session (e.g., fill 20 second wait time)
  * 
+ * Uses proportional algorithm to select each ad in sequence
  * Returns array of ads to show sequentially, each with its own token
  */
 export async function handleServeAdBatch(request, env, corsHeaders) {
@@ -456,40 +534,6 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
       }
     }
 
-    const today = new Date().toISOString().split('T')[0];
-    const now = new Date();
-    const currentHour = now.getUTCHours();
-    const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][now.getUTCDay()];
-
-    // Get active orders (include targeting column)
-    const { data: orders, error } = await supabase
-      .from('ads.ad_orders')
-      .select(`
-        id,
-        advertiser_id,
-        creative_url,
-        target_url,
-        duration,
-        targeting,
-        impressions_ordered,
-        impressions_delivered,
-        schedule_type,
-        start_date,
-        end_date,
-        time_windows
-      `, {
-        filter: [
-          `placement=eq.${placement}`,
-          'status=eq.active',
-          'creative_status=eq.ready',
-        ].join('&'),
-        order: 'schedule_type.asc,created_at.asc',
-      });
-
-    if (error || !orders || orders.length === 0) {
-      return jsonResponse({ ads: [], reason: 'no_ads_available' }, 200, corsHeaders);
-    }
-
     // Get user profile for targeting
     let userProfile = null;
     if (userId) {
@@ -499,76 +543,67 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
       userProfile = profiles?.[0] || null;
     }
 
-    // Select ads to fill the time slot (with targeting + frequency cap)
+    // Fill batch using proportional algorithm
     const selectedAds = [];
     let remainingDuration = totalDuration;
     const usedOrderIds = new Set();
 
-    for (const order of orders) {
-      if (remainingDuration <= 0) break;
-      if (usedOrderIds.has(order.id)) continue;
-      if (order.impressions_delivered >= order.impressions_ordered) continue;
+    for (let i = 0; i < count && remainingDuration > 0; i++) {
+      // Select next ad proportionally (avoiding duplicates in same batch)
+      const selectedOrder = await selectProportionalAd(
+        supabase,
+        placement,
+        userId,
+        ip,
+        userProfile,
+        null // No duration preference for batch (fit what we can)
+      );
 
-      // Schedule check
-      if (order.schedule_type === 'scheduled') {
-        if (today < order.start_date || today > order.end_date) continue;
-        let timeWindows = order.time_windows;
-        if (typeof timeWindows === 'string') { try { timeWindows = JSON.parse(timeWindows); } catch { timeWindows = []; } }
-        if (Array.isArray(timeWindows) && timeWindows.length > 0) {
-          const inTimeWindow = timeWindows.some(w => {
-            if (w.day && w.day !== dayOfWeek) return false;
-            if (w.start && w.end) {
-              return currentHour >= parseInt(w.start.split(':')[0]) && currentHour < parseInt(w.end.split(':')[0]);
-            }
-            return true;
-          });
-          if (!inTimeWindow) continue;
-        }
+      if (!selectedOrder) {
+        break; // No more ads available
       }
 
-      // Targeting check
-      let parsedTargeting = order.targeting;
-      if (typeof parsedTargeting === 'string') { try { parsedTargeting = JSON.parse(parsedTargeting); } catch { parsedTargeting = {}; } }
-      if (parsedTargeting && typeof parsedTargeting === 'object' && Object.keys(parsedTargeting).length > 0 && userProfile) {
-        if (!matchTargeting(parsedTargeting, userProfile)) continue;
+      // Skip if we've already selected this order in this batch
+      if (usedOrderIds.has(selectedOrder.id)) {
+        break; // Avoid infinite loop if only one campaign exists
       }
 
-      // Frequency cap
-      if (userId) {
-        const { data: recentImps } = await supabase
-          .from('ads.ad_impressions')
-          .select('id', { filter: `order_id=eq.${order.id}&user_id=eq.${userId}&created_at=gte.${today}` });
-        if (recentImps && recentImps.length >= FREQUENCY_CAP_PER_DAY) continue;
-      } else {
-        const { data: ipImps } = await supabase
-          .from('ads.ad_impressions')
-          .select('id', { filter: `order_id=eq.${order.id}&ip_address=eq.${ip}&created_at=gte.${today}` });
-        if (ipImps && ipImps.length >= FREQUENCY_CAP_PER_DAY) continue;
+      // Check if ad duration fits remaining time
+      if (selectedOrder.duration > remainingDuration) {
+        break; // Can't fit this ad
       }
 
-      // Check if ad duration fits
-      if (order.duration <= remainingDuration) {
-        // Generate token for each ad
-        const impressionToken = await generateImpressionToken(
-          env,
-          order.id,
-          placement,
-          order.duration,
-          ip
-        );
-        
-        selectedAds.push({
-          order_id: order.id,
-          creative_url: order.creative_url,
-          target_url: order.target_url,
-          duration: order.duration,
-          placement,
-          impression_token: impressionToken,
-          media_type: /\.(mp4|webm)$/i.test(order.creative_url) ? 'video' : 'image',
-        });
-        remainingDuration -= order.duration;
-        usedOrderIds.add(order.id);
-      }
+      // Generate token
+      const impressionToken = await generateImpressionToken(
+        env,
+        selectedOrder.id,
+        placement,
+        selectedOrder.duration,
+        ip
+      );
+
+      // Get advertiser brand name
+      const { data: advInfo } = await supabase
+        .from('ads.advertisers')
+        .select('company_name', { filter: `id=eq.${selectedOrder.advertiser_id}`, limit: 1 });
+      const brandName = advInfo?.[0]?.company_name || '';
+      let domain = '';
+      try { domain = new URL(selectedOrder.target_url).hostname; } catch {}
+
+      selectedAds.push({
+        order_id: selectedOrder.id,
+        creative_url: selectedOrder.creative_url,
+        target_url: selectedOrder.target_url,
+        duration: selectedOrder.duration,
+        placement,
+        impression_token: impressionToken,
+        media_type: /\.(mp4|webm)$/i.test(selectedOrder.creative_url) ? 'video' : 'image',
+        brand_name: brandName,
+        domain,
+      });
+
+      remainingDuration -= selectedOrder.duration;
+      usedOrderIds.add(selectedOrder.id);
     }
 
     return jsonResponse({

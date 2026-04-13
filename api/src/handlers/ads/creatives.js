@@ -406,8 +406,8 @@ export async function generateAICreative(env, options) {
 // AI VIDEO GENERATION (SORA)
 // ============================================================
 
-// Sora account limits: max 10s, 720p
-const VIDEO_DURATIONS = { 5: '4', 10: '10', 15: '10', 20: '10' };
+// Sora accepts: 4, 8, or 12 seconds only
+const VIDEO_DURATIONS = { 5: '4', 10: '8', 15: '12', 20: '12' };
 
 export async function generateAIVideo(env, options) {
   const { advertiserId, brief, brandName, targetUrl, placement, duration } = options;

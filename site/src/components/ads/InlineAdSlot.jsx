@@ -22,6 +22,12 @@ export default function InlineAdSlot({
   const adContainerRef = useRef(null);
 
   const recordImpression = useCallback(async () => {
+    // Skip tracking for house ads (Philosify promotional content, not billed)
+    if (ad?.is_house_ad) {
+      setHasRecordedImpression(true);
+      return;
+    }
+
     if (!ad?.impression_token || hasRecordedImpression) {
       return;
     }
@@ -126,7 +132,8 @@ export default function InlineAdSlot({
   }, [ad, hasRecordedImpression, isVisible, recordImpression]);
 
   const handleClick = () => {
-    if (!impressionId || hasTrackedClick) {
+    // Skip click tracking for house ads
+    if (ad?.is_house_ad || !impressionId || hasTrackedClick) {
       return;
     }
 

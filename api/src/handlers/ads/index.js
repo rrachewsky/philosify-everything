@@ -118,6 +118,9 @@ export {
   handleAdminApproveCreative,
   handleAdminRejectCreative,
   handleAdminDeleteMedia,
+  handleAdminPausePlan,
+  handleAdminResumePlan,
+  handleAdminCancelPlan,
   handleAdminBackfillTransactions,
   handleAdminFixBilling,
 } from './admin.js';

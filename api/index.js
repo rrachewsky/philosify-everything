@@ -278,6 +278,9 @@ import {
   handleAdminApproveCreative as handleAdsAdminApproveCreative,
   handleAdminRejectCreative as handleAdsAdminRejectCreative,
   handleAdminDeleteMedia as handleAdsAdminDeleteMedia,
+  handleAdminPausePlan as handleAdsAdminPausePlan,
+  handleAdminResumePlan as handleAdsAdminResumePlan,
+  handleAdminCancelPlan as handleAdsAdminCancelPlan,
   handleAdminBackfillTransactions as handleAdsAdminBackfillTransactions,
   handleAdminFixBilling as handleAdsAdminFixBilling,
   attachRefreshedCookie,
@@ -4393,6 +4396,18 @@ export default {
       }
       if (url.pathname.startsWith("/api/ads/admin/media/") && request.method === "DELETE") {
         return handleAdsAdminDeleteMedia(request, env, corsHeaders);
+      }
+      const adsAdminPauseMatch = url.pathname.match(/^\/api\/ads\/admin\/plans\/([0-9a-f-]+)\/pause$/i);
+      if (adsAdminPauseMatch && request.method === "POST") {
+        return handleAdsAdminPausePlan(request, env, corsHeaders, adsAdminPauseMatch[1]);
+      }
+      const adsAdminResumeMatch = url.pathname.match(/^\/api\/ads\/admin\/plans\/([0-9a-f-]+)\/resume$/i);
+      if (adsAdminResumeMatch && request.method === "POST") {
+        return handleAdsAdminResumePlan(request, env, corsHeaders, adsAdminResumeMatch[1]);
+      }
+      const adsAdminCancelMatch = url.pathname.match(/^\/api\/ads\/admin\/plans\/([0-9a-f-]+)\/cancel$/i);
+      if (adsAdminCancelMatch && request.method === "POST") {
+        return handleAdsAdminCancelPlan(request, env, corsHeaders, adsAdminCancelMatch[1]);
       }
       if (url.pathname === "/api/ads/admin/fix-billing" && request.method === "POST") {
         return handleAdsAdminFixBilling(request, env, corsHeaders);
