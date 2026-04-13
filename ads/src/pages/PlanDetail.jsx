@@ -287,14 +287,22 @@ function PlanDetail() {
                 {t('detail.creativeStatus')}: {creativeRequest?.status || plan.creative_status || 'pending'}
               </p>
               {creativeRequest?.current_draft_url ? (
-                <img src={creativeRequest.current_draft_url} alt={t('detail.currentDraft')} className="detail-preview" />
+                /\.(mp4|webm)$/i.test(creativeRequest.current_draft_url) ? (
+                  <video src={creativeRequest.current_draft_url} controls muted className="detail-preview" style={{ maxWidth: '100%', borderRadius: '8px' }} />
+                ) : (
+                  <img src={creativeRequest.current_draft_url} alt={t('detail.currentDraft')} className="detail-preview" />
+                )
               ) : plan.creative_url ? (
-                <img src={plan.creative_url} alt={t('detail.campaignCreative')} className="detail-preview" />
+                /\.(mp4|webm)$/i.test(plan.creative_url) ? (
+                  <video src={plan.creative_url} controls muted className="detail-preview" style={{ maxWidth: '100%', borderRadius: '8px' }} />
+                ) : (
+                  <img src={plan.creative_url} alt={t('detail.campaignCreative')} className="detail-preview" />
+                )
               ) : (
                 <p className="helper-text">{t('detail.noDraft')}</p>
               )}
 
-              {creativeRequest?.status === 'review' ? (
+              {(creativeRequest?.status === 'review' || (plan.creative_status === 'ready' && plan.status === 'pending_approval')) ? (
                 <div className="stack stack--tight">
                   <div className="button-row" style={{ flexWrap: 'wrap' }}>
                     <button

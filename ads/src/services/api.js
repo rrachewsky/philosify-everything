@@ -95,6 +95,15 @@ class ApiService {
       },
     });
   }
+
+  adminDelete(endpoint, adminSecret) {
+    return this.request(endpoint, {
+      method: 'DELETE',
+      headers: {
+        'X-Admin-Secret': adminSecret,
+      },
+    });
+  }
 }
 
 export const api = new ApiService();

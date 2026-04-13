@@ -95,7 +95,41 @@ export async function getAdvertiserFromRequest(env, request, supabase) {
     return null;
   }
 
-  const payload = await verifySupabaseToken(env, session.access_token);
+  let payload = await verifySupabaseToken(env, session.access_token);
+
+  // If access token expired, try refreshing with the refresh token
+  if (!payload && session.refresh_token) {
+    try {
+      const supabaseUrl = await getSecret(env.SUPABASE_URL);
+      const supabaseAnonKey = await getSecret(env.SUPABASE_ANON_KEY);
+
+      const refreshRes = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=refresh_token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseAnonKey,
+        },
+        body: JSON.stringify({ refresh_token: session.refresh_token }),
+      });
+
+      if (refreshRes.ok) {
+        const newSession = await refreshRes.json();
+        if (newSession.access_token) {
+          payload = await verifySupabaseToken(env, newSession.access_token);
+          // Store refreshed session so the response can update the cookie
+          if (payload) {
+            request._refreshedSession = {
+              access_token: newSession.access_token,
+              refresh_token: newSession.refresh_token,
+              expires_at: newSession.expires_at,
+            };
+          }
+        }
+      }
+    } catch (err) {
+      console.error('[Ads] Token refresh failed:', err.message);
+    }
+  }
 
   if (!payload?.sub) {
     return null;
@@ -130,6 +164,22 @@ export async function getAdvertiserFromRequest(env, request, supabase) {
   }
 
   return advertisers[0];
+}
+
+/**
+ * If the token was refreshed during this request, update the cookie on the response.
+ * Call this on any response from authenticated handlers.
+ */
+export function attachRefreshedCookie(request, response, env) {
+  if (request._refreshedSession) {
+    const session = request._refreshedSession;
+    const isProduction = env.ENVIRONMENT === 'production';
+    const cookieValue = encodeURIComponent(JSON.stringify(session));
+    const maxAge = 60 * 60 * 24 * 7; // 7 days
+    const cookie = `${COOKIE_NAME}=${cookieValue}; HttpOnly; Secure; SameSite=${isProduction ? 'None' : 'Lax'}; Path=/; Max-Age=${maxAge}${isProduction ? '; Domain=.philosify.org' : ''}`;
+    response.headers.append('Set-Cookie', cookie);
+  }
+  return response;
 }
 
 /**

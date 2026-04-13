@@ -155,13 +155,25 @@ export default function InlineAdSlot({
         onClick={handleClick}
       >
         <div className="ad-slot__creative">
-          <img
-            className="ad-slot__image"
-            src={ad.creative_url}
-            alt="Sponsored creative"
-            loading="lazy"
-            onLoad={recordImpression}
-          />
+          {ad.media_type === 'video' ? (
+            <video
+              className="ad-slot__video"
+              src={ad.creative_url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              onLoadedData={recordImpression}
+            />
+          ) : (
+            <img
+              className="ad-slot__image"
+              src={ad.creative_url}
+              alt="Sponsored creative"
+              loading="lazy"
+              onLoad={recordImpression}
+            />
+          )}
           {ad.brand_name && (
             <div className="ad-slot__overlay">
               <span className="ad-slot__brand">{ad.brand_name}</span>

@@ -605,6 +605,96 @@ export async function handleCreateClient(request, env, corsHeaders) {
 }
 
 /**
+ * POST /api/ads/agency/clients/invite
+ * Invite an existing advertiser to join as agency client
+ */
+export async function handleInviteClient(request, env, corsHeaders) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const agency = await getAgencyFromRequest(env, request, supabase);
+
+    if (!agency) {
+      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    if (agency.status !== 'approved') {
+      return jsonResponse({ error: 'Agency must be approved to invite clients' }, 403, corsHeaders);
+    }
+
+    const body = await request.json();
+    const { email, commission_rate } = body;
+
+    if (!email || !isValidEmail(email)) {
+      return jsonResponse({ error: 'Valid email is required' }, 400, corsHeaders);
+    }
+
+    // Find existing advertiser
+    const { data: advertisers } = await supabase
+      .from('ads.advertisers')
+      .select('id,email,company_name,status,agency_id', { filter: `email=eq.${email.toLowerCase()}`, limit: 1 });
+
+    const advertiser = advertisers?.[0];
+    if (!advertiser) {
+      return jsonResponse({ error: 'No advertiser found with this email. Use "Add Client" to create a new account.' }, 404, corsHeaders);
+    }
+
+    if (advertiser.agency_id && advertiser.agency_id !== agency.id) {
+      return jsonResponse({ error: 'This advertiser is already managed by another agency' }, 409, corsHeaders);
+    }
+
+    if (advertiser.agency_id === agency.id) {
+      return jsonResponse({ error: 'This advertiser is already your client' }, 409, corsHeaders);
+    }
+
+    // Check for existing invitation
+    const { data: existingLink } = await supabase
+      .from('ads.agency_clients')
+      .select('id,status', { filter: `agency_id=eq.${agency.id}&advertiser_id=eq.${advertiser.id}`, limit: 1 });
+
+    if (existingLink?.[0]) {
+      if (existingLink[0].status === 'pending') {
+        return jsonResponse({ error: 'Invitation already sent' }, 409, corsHeaders);
+      }
+      if (existingLink[0].status === 'active') {
+        return jsonResponse({ error: 'This advertiser is already your client' }, 409, corsHeaders);
+      }
+    }
+
+    const clientCommission = commission_rate !== undefined
+      ? Math.min(Math.max(commission_rate, 0), 50)
+      : agency.default_commission_pct || 15;
+
+    // Create pending invitation
+    const { data: invitation, error: invError } = await supabase
+      .from('ads.agency_clients')
+      .insert({
+        agency_id: agency.id,
+        advertiser_id: advertiser.id,
+        commission_rate: clientCommission,
+        status: 'pending',
+      });
+
+    if (invError) {
+      console.error('[Agency] Invite client error:', invError);
+      return jsonResponse({ error: 'Failed to send invitation' }, 500, corsHeaders);
+    }
+
+    return jsonResponse({
+      success: true,
+      invitation: {
+        id: invitation?.id,
+        advertiser_email: advertiser.email,
+        company_name: advertiser.company_name,
+        status: 'pending',
+      },
+    }, 201, corsHeaders);
+  } catch (err) {
+    console.error('[Agency] Invite client error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
  * PUT /api/ads/agency/clients/:id/commission
  */
 export async function handleUpdateClientCommission(request, env, corsHeaders, clientId) {

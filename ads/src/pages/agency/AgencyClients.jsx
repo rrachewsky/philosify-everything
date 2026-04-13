@@ -9,6 +9,9 @@ export default function AgencyClients() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviting, setInviting] = useState(false);
   const [newClient, setNewClient] = useState({ email: '', company_name: '' });
   const [error, setError] = useState('');
   const [loadError, setLoadError] = useState('');
@@ -51,10 +54,51 @@ export default function AgencyClients() {
     <div className="page-content">
       <div className="page-header">
         <h1>{t('agency.clientManagement')}</h1>
-        <button className="btn btn-primary" onClick={() => setShowAdd(!showAdd)}>
-          {showAdd ? t('common.cancel') : t('agency.addClient')}
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button className="btn btn-primary" onClick={() => { setShowAdd(!showAdd); setShowInvite(false); }}>
+            {showAdd ? t('common.cancel') : t('agency.addClient')}
+          </button>
+          <button className="btn btn-secondary" onClick={() => { setShowInvite(!showInvite); setShowAdd(false); }}>
+            {showInvite ? t('common.cancel') : t('agency.inviteExisting')}
+          </button>
+        </div>
       </div>
+
+      {showInvite && (
+        <div className="card" style={{ marginBottom: '1.5rem' }}>
+          <h3>{t('agency.inviteExistingClient')}</h3>
+          {error && <div className="auth-error">{error}</div>}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input
+              type="email"
+              placeholder={t('agency.clientEmailPlaceholder')}
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              style={{ flex: 1 }}
+            />
+            <button
+              className="btn btn-primary"
+              disabled={inviting || !inviteEmail}
+              onClick={async () => {
+                setInviting(true);
+                setError('');
+                try {
+                  await api.post('/ads/agency/clients/invite', { email: inviteEmail });
+                  setInviteEmail('');
+                  setShowInvite(false);
+                  await loadClients();
+                } catch (err) {
+                  setError(err.message);
+                } finally {
+                  setInviting(false);
+                }
+              }}
+            >
+              {inviting ? t('agency.adding') : t('agency.sendInvite')}
+            </button>
+          </div>
+        </div>
+      )}
 
       {showAdd && (
         <div className="card" style={{ marginBottom: '1.5rem' }}>

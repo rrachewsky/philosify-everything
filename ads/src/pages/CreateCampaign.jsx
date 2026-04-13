@@ -37,6 +37,7 @@ function CreateCampaign() {
     duration_preference: 'mixed',
     target_url: '',
     creative_type: 'self',
+    media_format: 'image',
     creative_brief: '',
     start_date: '',
     end_date: '',
@@ -147,6 +148,7 @@ function CreateCampaign() {
         name: form.name,
         target_url: form.target_url,
         creative_type: form.creative_type,
+        media_format: form.media_format,
         creative_url: creativeUrl,
         creative_brief: form.creative_type === 'philosify' ? form.creative_brief : undefined,
       });
@@ -303,6 +305,26 @@ function CreateCampaign() {
           </div>
 
           <div className="field">
+            <label>{t('create.mediaFormat')}</label>
+            <div className="choice-row">
+              <button
+                type="button"
+                className={`choice-pill ${form.media_format === 'image' ? 'choice-pill--active' : ''}`}
+                onClick={() => updateField('media_format', 'image')}
+              >
+                {t('create.image')}
+              </button>
+              <button
+                type="button"
+                className={`choice-pill ${form.media_format === 'video' ? 'choice-pill--active' : ''}`}
+                onClick={() => updateField('media_format', 'video')}
+              >
+                {t('create.video')}
+              </button>
+            </div>
+          </div>
+
+          <div className="field">
             <label>{t('create.creativeMode')}</label>
             <div className="choice-row">
               <button
@@ -328,10 +350,16 @@ function CreateCampaign() {
               <input
                 id="creative-upload"
                 type="file"
-                accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                accept={form.media_format === 'video'
+                  ? 'video/mp4,video/webm'
+                  : 'image/png,image/jpeg,image/jpg,image/gif,image/webp'}
                 onChange={(event) => setCreativeFile(event.target.files?.[0] || null)}
               />
-              <p className="helper-text">{t('create.staticImageNote')}</p>
+              <p className="helper-text">
+                {form.media_format === 'video'
+                  ? t('create.videoNote')
+                  : t('create.staticImageNote')}
+              </p>
             </div>
           ) : (
             <div className="field">

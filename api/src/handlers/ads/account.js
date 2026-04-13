@@ -203,3 +203,226 @@ export async function handleStatsOverview(request, env, corsHeaders) {
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
   }
 }
+
+// ============================================================
+// AGENCY INVITATIONS (advertiser side)
+// ============================================================
+
+/**
+ * GET /api/ads/account/invitations
+ * List pending agency invitations for this advertiser
+ */
+export async function handleListInvitations(request, env, corsHeaders) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const advertiser = await getAdvertiserFromRequest(env, request, supabase);
+
+    if (!advertiser) {
+      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    const { data: invitations } = await supabase
+      .from('ads.agency_clients')
+      .select('id,agency_id,commission_rate,status,created_at', {
+        filter: `advertiser_id=eq.${advertiser.id}`,
+        order: 'created_at.desc',
+      });
+
+    // Get agency names for each invitation
+    const agencyIds = [...new Set((invitations || []).map((i) => i.agency_id).filter(Boolean))];
+    let agencyMap = {};
+
+    if (agencyIds.length > 0) {
+      const { data: agencies } = await supabase
+        .from('ads.agencies')
+        .select('id,agency_name,email,website', {
+          filter: `id=in.(${agencyIds.join(',')})`,
+        });
+      agencyMap = Object.fromEntries((agencies || []).map((a) => [a.id, a]));
+    }
+
+    return jsonResponse({
+      invitations: (invitations || []).map((inv) => ({
+        ...inv,
+        agency: agencyMap[inv.agency_id] || null,
+      })),
+    }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads] List invitations error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/account/invitations/:id/accept
+ * Advertiser accepts an agency invitation
+ */
+export async function handleAcceptInvitation(request, env, corsHeaders, invitationId) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const advertiser = await getAdvertiserFromRequest(env, request, supabase);
+
+    if (!advertiser) {
+      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(invitationId)) {
+      return jsonResponse({ error: 'Invalid invitation ID' }, 400, corsHeaders);
+    }
+
+    // Verify invitation belongs to this advertiser and is pending
+    const { data: invitations } = await supabase
+      .from('ads.agency_clients')
+      .select('id,agency_id,commission_rate,status', {
+        filter: `id=eq.${invitationId}&advertiser_id=eq.${advertiser.id}`,
+        limit: 1,
+      });
+
+    const invitation = invitations?.[0];
+    if (!invitation) {
+      return jsonResponse({ error: 'Invitation not found' }, 404, corsHeaders);
+    }
+
+    if (invitation.status !== 'pending') {
+      return jsonResponse({ error: 'Invitation is no longer pending' }, 400, corsHeaders);
+    }
+
+    // Accept: update agency_clients status and link advertiser to agency
+    await supabase.from('ads.agency_clients').update(
+      { status: 'active', updated_at: new Date().toISOString() },
+      `id=eq.${invitationId}`
+    );
+
+    await supabase.from('ads.advertisers').update(
+      {
+        agency_id: invitation.agency_id,
+        agency_commission_pct: invitation.commission_rate,
+        updated_at: new Date().toISOString(),
+      },
+      `id=eq.${advertiser.id}`
+    );
+
+    return jsonResponse({ success: true }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads] Accept invitation error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/account/invitations/:id/decline
+ * Advertiser declines an agency invitation
+ */
+export async function handleDeclineInvitation(request, env, corsHeaders, invitationId) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const advertiser = await getAdvertiserFromRequest(env, request, supabase);
+
+    if (!advertiser) {
+      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!UUID_RE.test(invitationId)) {
+      return jsonResponse({ error: 'Invalid invitation ID' }, 400, corsHeaders);
+    }
+
+    const { data: invitations } = await supabase
+      .from('ads.agency_clients')
+      .select('id,status', {
+        filter: `id=eq.${invitationId}&advertiser_id=eq.${advertiser.id}`,
+        limit: 1,
+      });
+
+    if (!invitations?.[0] || invitations[0].status !== 'pending') {
+      return jsonResponse({ error: 'Invitation not found or not pending' }, 404, corsHeaders);
+    }
+
+    await supabase.from('ads.agency_clients').update(
+      { status: 'removed', updated_at: new Date().toISOString() },
+      `id=eq.${invitationId}`
+    );
+
+    return jsonResponse({ success: true }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads] Decline invitation error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/account/request-agency
+ * Advertiser requests to join an agency (by agency email)
+ */
+export async function handleRequestAgency(request, env, corsHeaders) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const advertiser = await getAdvertiserFromRequest(env, request, supabase);
+
+    if (!advertiser) {
+      return jsonResponse({ error: 'Not authenticated' }, 401, corsHeaders);
+    }
+
+    if (advertiser.agency_id) {
+      return jsonResponse({ error: 'Already managed by an agency' }, 409, corsHeaders);
+    }
+
+    const body = await request.json();
+    const { agency_email } = body;
+
+    if (!agency_email) {
+      return jsonResponse({ error: 'Agency email is required' }, 400, corsHeaders);
+    }
+
+    // Find the agency
+    const { data: agencies } = await supabase
+      .from('ads.agencies')
+      .select('id,agency_name,email,status', {
+        filter: `email=eq.${agency_email.toLowerCase()}`,
+        limit: 1,
+      });
+
+    const agency = agencies?.[0];
+    if (!agency) {
+      return jsonResponse({ error: 'No agency found with this email' }, 404, corsHeaders);
+    }
+
+    if (agency.status !== 'approved') {
+      return jsonResponse({ error: 'This agency is not active' }, 400, corsHeaders);
+    }
+
+    // Check for existing link
+    const { data: existing } = await supabase
+      .from('ads.agency_clients')
+      .select('id,status', {
+        filter: `agency_id=eq.${agency.id}&advertiser_id=eq.${advertiser.id}`,
+        limit: 1,
+      });
+
+    if (existing?.[0]) {
+      if (existing[0].status === 'pending') {
+        return jsonResponse({ error: 'Request already pending' }, 409, corsHeaders);
+      }
+      if (existing[0].status === 'active') {
+        return jsonResponse({ error: 'Already a client of this agency' }, 409, corsHeaders);
+      }
+    }
+
+    // Create pending request (agency will see it in their client list)
+    await supabase.from('ads.agency_clients').insert({
+      agency_id: agency.id,
+      advertiser_id: advertiser.id,
+      commission_rate: agency.default_commission_pct || 15,
+      status: 'pending',
+    });
+
+    return jsonResponse({
+      success: true,
+      agency_name: agency.agency_name,
+    }, 201, corsHeaders);
+  } catch (err) {
+    console.error('[Ads] Request agency error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}

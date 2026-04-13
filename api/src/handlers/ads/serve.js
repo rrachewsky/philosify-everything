@@ -246,6 +246,7 @@ export async function handleServeAd(request, env, corsHeaders) {
                   duration: selectedOrder.duration,
                   placement,
                   impression_token: impressionToken,
+                  media_type: /\.(mp4|webm)$/i.test(selectedOrder.creative_url) ? 'video' : 'image',
                   brand_name: brandName,
                   domain,
                 },
@@ -315,8 +316,10 @@ export async function handleServeAd(request, env, corsHeaders) {
       // Schedule check
       if (order.schedule_type === 'scheduled') {
         if (today < order.start_date || today > order.end_date) continue;
-        if (order.time_windows && order.time_windows.length > 0) {
-          const inTimeWindow = order.time_windows.some(window => {
+        let timeWindows = order.time_windows;
+        if (typeof timeWindows === 'string') { try { timeWindows = JSON.parse(timeWindows); } catch { timeWindows = []; } }
+        if (Array.isArray(timeWindows) && timeWindows.length > 0) {
+          const inTimeWindow = timeWindows.some(window => {
             if (window.day && window.day !== dayOfWeek) return false;
             if (window.start && window.end) {
               const startHour = parseInt(window.start.split(':')[0]);
@@ -330,8 +333,10 @@ export async function handleServeAd(request, env, corsHeaders) {
       }
 
       // Targeting check: if order has targeting AND we have a user profile, match them
-      if (order.targeting && Object.keys(order.targeting).length > 0 && userProfile) {
-        if (!matchTargeting(order.targeting, userProfile)) continue;
+      let parsedTargeting = order.targeting;
+      if (typeof parsedTargeting === 'string') { try { parsedTargeting = JSON.parse(parsedTargeting); } catch { parsedTargeting = {}; } }
+      if (parsedTargeting && typeof parsedTargeting === 'object' && Object.keys(parsedTargeting).length > 0 && userProfile) {
+        if (!matchTargeting(parsedTargeting, userProfile)) continue;
       }
 
       // Frequency cap: max 3 impressions per order per user/IP per day
@@ -406,6 +411,7 @@ export async function handleServeAd(request, env, corsHeaders) {
         duration: selectedOrder.duration,
         placement,
         impression_token: impressionToken, // REQUIRED for recording impression
+        media_type: /\.(mp4|webm)$/i.test(selectedOrder.creative_url) ? 'video' : 'image',
         brand_name: brandName2,
         domain: domain2,
       },
@@ -506,8 +512,10 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
       // Schedule check
       if (order.schedule_type === 'scheduled') {
         if (today < order.start_date || today > order.end_date) continue;
-        if (order.time_windows && order.time_windows.length > 0) {
-          const inTimeWindow = order.time_windows.some(w => {
+        let timeWindows = order.time_windows;
+        if (typeof timeWindows === 'string') { try { timeWindows = JSON.parse(timeWindows); } catch { timeWindows = []; } }
+        if (Array.isArray(timeWindows) && timeWindows.length > 0) {
+          const inTimeWindow = timeWindows.some(w => {
             if (w.day && w.day !== dayOfWeek) return false;
             if (w.start && w.end) {
               return currentHour >= parseInt(w.start.split(':')[0]) && currentHour < parseInt(w.end.split(':')[0]);
@@ -519,8 +527,10 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
       }
 
       // Targeting check
-      if (order.targeting && Object.keys(order.targeting).length > 0 && userProfile) {
-        if (!matchTargeting(order.targeting, userProfile)) continue;
+      let parsedTargeting = order.targeting;
+      if (typeof parsedTargeting === 'string') { try { parsedTargeting = JSON.parse(parsedTargeting); } catch { parsedTargeting = {}; } }
+      if (parsedTargeting && typeof parsedTargeting === 'object' && Object.keys(parsedTargeting).length > 0 && userProfile) {
+        if (!matchTargeting(parsedTargeting, userProfile)) continue;
       }
 
       // Frequency cap
@@ -554,6 +564,7 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
           duration: order.duration,
           placement,
           impression_token: impressionToken,
+          media_type: /\.(mp4|webm)$/i.test(order.creative_url) ? 'video' : 'image',
         });
         remainingDuration -= order.duration;
         usedOrderIds.add(order.id);

@@ -3,7 +3,7 @@
 // ============================================================
 // Owner-only endpoints for vetting and management
 
-import { getServiceSupabase } from '../../utils/supabase.js';
+import { getServiceSupabase, getSupabaseCredentials } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
 import { getSecret } from '../../utils/secrets.js';
 import { safeEq } from '../../payments/crypto.js';
@@ -446,7 +446,9 @@ export async function handleAdminSubmitCreativeDraft(request, env, corsHeaders, 
       return jsonResponse({ error: 'Creative request not found' }, 404, corsHeaders);
     }
 
-    const drafts = Array.isArray(creativeRequest.drafts) ? [...creativeRequest.drafts] : [];
+    let rawDrafts = creativeRequest.drafts;
+    if (typeof rawDrafts === 'string') { try { rawDrafts = JSON.parse(rawDrafts); } catch { rawDrafts = []; } }
+    const drafts = Array.isArray(rawDrafts) ? [...rawDrafts] : [];
     drafts.push({
       url: draftUrl,
       note,
@@ -603,7 +605,7 @@ export async function handleAdminGenerateCreative(request, env, corsHeaders, pla
     // Get orders for placement info
     const { data: orders } = await supabase
       .from('ads.ad_orders')
-      .select('placement', { filter: `plan_id=eq.${planId}`, limit: 1 });
+      .select('placement,duration', { filter: `plan_id=eq.${planId}`, limit: 1 });
 
     // Get revision feedback from creative request (if advertiser requested changes)
     const { data: crRequests } = await supabase
@@ -611,8 +613,10 @@ export async function handleAdminGenerateCreative(request, env, corsHeaders, pla
       .select('drafts', { filter: `plan_id=eq.${planId}`, limit: 1 });
 
     let revisionNotes = '';
-    const drafts = crRequests?.[0]?.drafts;
-    if (Array.isArray(drafts)) {
+    let rawDrafts2 = crRequests?.[0]?.drafts;
+    if (typeof rawDrafts2 === 'string') { try { rawDrafts2 = JSON.parse(rawDrafts2); } catch { rawDrafts2 = []; } }
+    const drafts = Array.isArray(rawDrafts2) ? rawDrafts2 : [];
+    if (drafts.length > 0) {
       const feedbacks = drafts
         .map((d) => d.feedback)
         .filter(Boolean);
@@ -621,62 +625,247 @@ export async function handleAdminGenerateCreative(request, env, corsHeaders, pla
       }
     }
 
-    const { generateAICreative } = await import('./creatives.js');
+    const { generateAICreative, generateAIVideo } = await import('./creatives.js');
 
     const fullBrief = revisionNotes
       ? `${plan.creative_brief || ''}\n\nREVISION REQUESTED BY ADVERTISER:\n${revisionNotes}`
       : plan.creative_brief || '';
 
-    const result = await generateAICreative(env, {
-      advertiserId: plan.advertiser_id,
-      brief: fullBrief,
-      brandName: advData?.[0]?.company_name || 'Brand',
-      targetUrl: plan.target_url,
-      placement: orders?.[0]?.placement || 'sidebar',
-    });
+    // Check if plan requests video (targeting is stored as JSON string in DB)
+    let targeting = {};
+    try { targeting = typeof plan.targeting === 'string' ? JSON.parse(plan.targeting) : (plan.targeting || {}); } catch {}
+    const isVideo = targeting.media_format === 'video';
+
+    const result = isVideo
+      ? await generateAIVideo(env, {
+          advertiserId: plan.advertiser_id,
+          brief: fullBrief,
+          brandName: advData?.[0]?.company_name || 'Brand',
+          targetUrl: plan.target_url,
+          placement: orders?.[0]?.placement || 'sidebar',
+          duration: orders?.[0]?.duration || 5,
+        })
+      : await generateAICreative(env, {
+          advertiserId: plan.advertiser_id,
+          brief: fullBrief,
+          brandName: advData?.[0]?.company_name || 'Brand',
+          targetUrl: plan.target_url,
+          placement: orders?.[0]?.placement || 'sidebar',
+        });
 
     if (!result?.url) {
-      return jsonResponse({ error: 'AI generation failed. Brief may have been rejected by content moderation.' }, 500, corsHeaders);
+      return jsonResponse({ error: `AI ${isVideo ? 'video' : 'image'} generation failed.${result?.error ? ' ' + result.error : ''}` }, 500, corsHeaders);
     }
 
-    // Update plan
-    const { error: planErr } = await supabase.from('ads.ad_plans').update(
-      {
-        creative_url: result.url,
-        creative_status: 'review',
-        status: 'pending_approval',
-        updated_at: new Date().toISOString(),
+    // Update plan — bypass Supabase client, use raw fetch to debug
+    const { url: supabaseUrl, key: supabaseKey } = await getSupabaseCredentials(env);
+    
+    const patchUrl = `${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`;
+    // Keep plan in pending_creative — admin must review before sending to advertiser
+    const patchBody = {
+      creative_url: result.url,
+      creative_status: 'in_progress',
+      updated_at: new Date().toISOString(),
+    };
+    
+    const patchRes = await fetch(patchUrl, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Content-Profile': 'ads',
+        'Accept-Profile': 'ads',
+        'Prefer': 'return=representation',
       },
-      `id=eq.${planId}`
-    );
-    if (planErr) console.error('[Ads Admin] Plan update error:', JSON.stringify(planErr));
+      body: JSON.stringify(patchBody),
+    });
+    
+    const patchText = await patchRes.text();
+    console.log(`[Ads Admin] Raw PATCH ${patchRes.status}: ${patchText.slice(0, 200)}`);
+    
+    if (!patchRes.ok) {
+      return jsonResponse({ error: `Plan update failed: ${patchText}` }, 500, corsHeaders);
+    }
 
-    // Update orders
-    const { error: orderErr } = await supabase.from('ads.ad_orders').update(
-      {
-        creative_url: result.url,
-        creative_status: 'ready',
-        status: 'pending_approval',
-        updated_at: new Date().toISOString(),
-      },
-      `plan_id=eq.${planId}`
-    );
-    if (orderErr) console.error('[Ads Admin] Order update error:', JSON.stringify(orderErr));
-
-    // Update creative request if exists
-    await supabase.from('ads.creative_requests').update(
-      {
-        current_draft_url: result.url,
-        status: 'review',
-        drafts: JSON.stringify([{ url: result.url, generated_at: new Date().toISOString(), method: 'dall-e-3' }]),
-        updated_at: new Date().toISOString(),
-      },
-      `plan_id=eq.${planId}`
-    );
+    // Don't update orders/creative request yet — admin reviews first
 
     return jsonResponse({ success: true, creative_url: result.url }, 200, corsHeaders);
   } catch (err) {
-    console.error('[Ads Admin] Generate creative error:', err);
+    console.error('[Ads Admin] Generate creative error:', err.message, err.stack?.slice(0, 300));
+    return jsonResponse({ error: err.message || 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * DELETE /api/ads/admin/media/:path
+ * Delete a creative file from R2 (authenticated admin only)
+ */
+export async function handleAdminDeleteMedia(request, env, corsHeaders) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const url = new URL(request.url);
+    const mediaPath = url.pathname.replace(/^\/api\/ads\/admin\/media\//, '');
+
+    if (!mediaPath || !mediaPath.startsWith('ads/')) {
+      return jsonResponse({ error: 'Invalid path' }, 400, corsHeaders);
+    }
+
+    if (mediaPath.includes('..') || mediaPath.includes('//')) {
+      return jsonResponse({ error: 'Forbidden' }, 403, corsHeaders);
+    }
+
+    const object = await env.TTS_CACHE.head(mediaPath);
+    if (!object) {
+      return jsonResponse({ error: 'File not found' }, 404, corsHeaders);
+    }
+
+    await env.TTS_CACHE.delete(mediaPath);
+
+    console.log(`[Ads Admin] Deleted media: ${mediaPath}`);
+    return jsonResponse({ success: true, deleted: mediaPath }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Delete media error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/plans/:id/approve-creative
+ * Admin approves the generated creative and sends it to the advertiser for review
+ */
+export async function handleAdminApproveCreative(request, env, corsHeaders, planId) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+    const { url: supabaseUrl, key: supabaseKey } = await getSupabaseCredentials(env);
+
+    const { data: plans } = await supabase
+      .from('ads.ad_plans')
+      .select('id,creative_url,status', { filter: `id=eq.${planId}`, limit: 1 });
+
+    const plan = plans?.[0];
+    if (!plan || !plan.creative_url) {
+      return jsonResponse({ error: 'Plan not found or no creative generated' }, 404, corsHeaders);
+    }
+
+    // Update plan: send to advertiser for review
+    await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Content-Profile': 'ads',
+        'Accept-Profile': 'ads',
+      },
+      body: JSON.stringify({
+        creative_status: 'ready',
+        status: 'pending_approval',
+        updated_at: new Date().toISOString(),
+      }),
+    });
+
+    // Update orders
+    await fetch(`${supabaseUrl}/rest/v1/ad_orders?plan_id=eq.${planId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Content-Profile': 'ads',
+        'Accept-Profile': 'ads',
+      },
+      body: JSON.stringify({
+        creative_url: plan.creative_url,
+        creative_status: 'ready',
+        status: 'pending_approval',
+        updated_at: new Date().toISOString(),
+      }),
+    });
+
+    // Update creative request
+    await fetch(`${supabaseUrl}/rest/v1/creative_requests?plan_id=eq.${planId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Content-Profile': 'ads',
+        'Accept-Profile': 'ads',
+      },
+      body: JSON.stringify({
+        current_draft_url: plan.creative_url,
+        status: 'review',
+        updated_at: new Date().toISOString(),
+      }),
+    });
+
+    return jsonResponse({ success: true }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Approve creative error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
+ * POST /api/ads/admin/plans/:id/reject-creative
+ * Admin rejects the generated creative — clears it so it can be regenerated
+ */
+export async function handleAdminRejectCreative(request, env, corsHeaders, planId) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+    const { url: supabaseUrl, key: supabaseKey } = await getSupabaseCredentials(env);
+
+    // Read optional admin notes for the regeneration
+    const body = await request.json().catch(() => ({}));
+
+    // Clear creative URL, keep plan in pending_creative
+    await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Content-Profile': 'ads',
+        'Accept-Profile': 'ads',
+      },
+      body: JSON.stringify({
+        creative_url: null,
+        creative_status: 'pending',
+        status: 'pending_creative',
+        updated_at: new Date().toISOString(),
+      }),
+    });
+
+    // If admin provided a revised brief, update it
+    if (body.revised_brief) {
+      await fetch(`${supabaseUrl}/rest/v1/ad_plans?id=eq.${planId}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json',
+          'Content-Profile': 'ads',
+          'Accept-Profile': 'ads',
+        },
+        body: JSON.stringify({ creative_brief: body.revised_brief }),
+      });
+    }
+
+    return jsonResponse({ success: true }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Reject creative error:', err);
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
   }
 }

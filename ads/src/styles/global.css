@@ -412,6 +412,16 @@ textarea {
   color: var(--text);
 }
 
+select {
+  background-color: #0a1224;
+  color: var(--text);
+}
+
+select option {
+  background: #0a1224;
+  color: #edf4ff;
+}
+
 .field__password-row input {
   padding-right: 82px;
 }

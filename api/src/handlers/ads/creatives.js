@@ -7,25 +7,28 @@ import { jsonResponse } from '../../utils/index.js';
 import { getSecret } from '../../utils/secrets.js';
 import { getAdvertiserFromRequest } from './utils.js';
 
-// Max file size: 2MB
-const MAX_FILE_SIZE = 2 * 1024 * 1024;
+// Max file size: 2MB for images, 50MB for video
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024;
 
 // Allowed MIME types
-const ALLOWED_TYPES = [
-  'image/png',
-  'image/jpeg',
-  'image/jpg',
-  'image/gif',
-  'image/webp',
+const ALLOWED_IMAGE_TYPES = [
+  'image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp',
 ];
+const ALLOWED_VIDEO_TYPES = [
+  'video/mp4', 'video/webm',
+];
+const ALLOWED_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES];
 
 // Magic byte signatures for file type verification
 const MAGIC_BYTES = {
-  'image/png':  [0x89, 0x50, 0x4E, 0x47],  // .PNG
-  'image/jpeg': [0xFF, 0xD8, 0xFF],          // JFIF
-  'image/jpg':  [0xFF, 0xD8, 0xFF],          // JFIF (alias)
-  'image/gif':  [0x47, 0x49, 0x46],          // GIF
-  'image/webp': [0x52, 0x49, 0x46, 0x46],    // RIFF (WebP)
+  'image/png':  [0x89, 0x50, 0x4E, 0x47],
+  'image/jpeg': [0xFF, 0xD8, 0xFF],
+  'image/jpg':  [0xFF, 0xD8, 0xFF],
+  'image/gif':  [0x47, 0x49, 0x46],
+  'image/webp': [0x52, 0x49, 0x46, 0x46],
+  'video/mp4':  [0x00, 0x00, 0x00],  // ftyp box (offset varies)
+  'video/webm': [0x1A, 0x45, 0xDF, 0xA3],  // EBML header
 };
 
 /**
@@ -55,15 +58,17 @@ export async function handleUploadCreative(request, env, corsHeaders) {
     }
 
     // Validate file type
+    const isVideo = ALLOWED_VIDEO_TYPES.includes(file.type);
     if (!ALLOWED_TYPES.includes(file.type)) {
       return jsonResponse({ 
-        error: 'Invalid file type. Allowed: PNG, JPG, GIF, WebP' 
+        error: 'Invalid file type. Allowed: PNG, JPG, GIF, WebP, MP4, WebM' 
       }, 400, corsHeaders);
     }
 
     // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-      return jsonResponse({ error: 'File too large. Maximum size is 2MB' }, 400, corsHeaders);
+    const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+    if (file.size > maxSize) {
+      return jsonResponse({ error: `File too large. Maximum: ${isVideo ? '50MB' : '2MB'}` }, 400, corsHeaders);
     }
 
     // Magic byte validation: verify file content matches declared MIME type
@@ -106,6 +111,7 @@ export async function handleUploadCreative(request, env, corsHeaders) {
       filename,
       size: file.size,
       type: file.type,
+      media_type: isVideo ? 'video' : 'image',
     }, 200, corsHeaders);
   } catch (err) {
     console.error('[Ads] Upload creative error:', err);
@@ -224,7 +230,7 @@ const POLICY_RESTRICTED = [
   'political propaganda', 'election interference', 'misinformation',
   'gambling', 'casino', 'betting', 'lottery',
   'tobacco', 'vaping', 'e-cigarette',
-  'cryptocurrency pump', 'token sale', 'ico',
+  'cryptocurrency pump', 'token sale', 'ico offering',
 ];
 
 /**
@@ -235,8 +241,10 @@ export async function moderateBrief(env, brief, brandName = '') {
   const combined = `${brief} ${brandName}`.toLowerCase();
 
   // Layer 1: Keyword blocklist (instant, no API call)
+  // Use word boundary matching to avoid false positives (e.g. "ico" inside "filosófico")
   for (const term of BLOCKED_KEYWORDS) {
-    if (combined.includes(term.toLowerCase())) {
+    const regex = new RegExp(`\\b${term.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    if (regex.test(combined)) {
       console.warn(`[Ads Moderation] Blocked keyword: "${term}" in brief`);
       return { safe: false, reason: `Content violates advertising policy. Prohibited term detected.` };
     }
@@ -244,7 +252,8 @@ export async function moderateBrief(env, brief, brandName = '') {
 
   // Layer 1b: Policy-restricted categories
   for (const term of POLICY_RESTRICTED) {
-    if (combined.includes(term.toLowerCase())) {
+    const regex = new RegExp(`\\b${term.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    if (regex.test(combined)) {
       console.warn(`[Ads Moderation] Policy-restricted: "${term}" in brief`);
       return { safe: false, reason: `Content is restricted under Philosify advertising policy.` };
     }
@@ -390,6 +399,97 @@ export async function generateAICreative(env, options) {
   } catch (err) {
     console.error('[Ads AI] Generation error:', err);
     return null;
+  }
+}
+
+// ============================================================
+// AI VIDEO GENERATION (SORA)
+// ============================================================
+
+// Sora account limits: max 10s, 720p
+const VIDEO_DURATIONS = { 5: '4', 10: '10', 15: '10', 20: '10' };
+
+export async function generateAIVideo(env, options) {
+  const { advertiserId, brief, brandName, targetUrl, placement, duration } = options;
+
+  try {
+    const moderation = await moderateBrief(env, brief || '', brandName || '');
+    if (!moderation.safe) {
+      console.warn(`[Ads Video] Brief rejected: ${moderation.reason}`);
+      return null;
+    }
+
+    const openaiKey = await getSecret(env.OPENAI_API_KEY);
+    const videoDuration = VIDEO_DURATIONS[duration] || '4';
+    const size = '1280x720'; // 720p landscape (account max)
+
+    const shortBrief = (brief || 'Create a visually striking brand awareness video.').slice(0, 800);
+
+    const prompt = `Professional advertisement video for "${brandName}". ${shortBrief}. No text, words, or logos in the video. Pure visual — cinematic, premium, dark background. Smooth motion, elegant transitions.`;
+
+    console.log(`[Ads Video] Creating Sora job for ${advertiserId}, ${videoDuration}s, ${size}`);
+
+    const createRes = await fetch('https://api.openai.com/v1/videos', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openaiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ model: 'sora-2', prompt, seconds: videoDuration, size }),
+    });
+
+    if (!createRes.ok) {
+      const errText = await createRes.text();
+      console.error('[Ads Video] Sora create error:', errText);
+      return { error: errText };
+    }
+
+    const job = await createRes.json();
+    console.log(`[Ads Video] Job created: ${job.id}`);
+
+    // Poll until complete (max 5 minutes)
+    const start = Date.now();
+    while (Date.now() - start < 300_000) {
+      await new Promise((r) => setTimeout(r, 5000));
+
+      const pollRes = await fetch(`https://api.openai.com/v1/videos/${job.id}`, {
+        headers: { 'Authorization': `Bearer ${openaiKey}` },
+      });
+      if (!pollRes.ok) continue;
+
+      const status = await pollRes.json();
+
+      if (status.status === 'completed') {
+        const contentRes = await fetch(`https://api.openai.com/v1/videos/${job.id}/content`, {
+          headers: { 'Authorization': `Bearer ${openaiKey}` },
+        });
+        if (!contentRes.ok) return null;
+
+        const videoBuffer = await contentRes.arrayBuffer();
+        const filename = `ads/${advertiserId}/video-${crypto.randomUUID()}.mp4`;
+
+        await env.TTS_CACHE.put(filename, videoBuffer, {
+          httpMetadata: { contentType: 'video/mp4', cacheControl: 'public, max-age=31536000' },
+          customMetadata: { advertiserId, generatedBy: 'sora-2', placement, createdAt: new Date().toISOString() },
+        });
+
+        const apiBase = env.API_BASE_URL || 'https://api.philosify.org';
+        const proxyUrl = `${apiBase}/api/ads/media/${filename}`;
+        console.log(`[Ads Video] Generated: ${proxyUrl}`);
+        return { url: proxyUrl, filename, mediaType: 'video' };
+      }
+
+      if (status.status === 'failed') {
+        console.error('[Ads Video] Failed:', JSON.stringify(status.error));
+        return { error: status.error?.message || 'Sora generation failed' };
+      }
+    }
+
+    console.error('[Ads Video] Timeout');
+    return { error: 'Video generation timed out (5 min limit)' };
+  } catch (err) {
+    console.error('[Ads Video] Error:', err);
+    return { error: err.message };
   }
 }
 

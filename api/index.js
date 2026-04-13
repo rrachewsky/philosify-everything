@@ -223,6 +223,11 @@ import {
   handleChangePassword as handleAdsChangePassword,
   handleDeleteAccount as handleAdsDeleteAccount,
   handleStatsOverview as handleAdsStatsOverview,
+  handleListInvitations as handleAdsListInvitations,
+  handleAcceptInvitation as handleAdsAcceptInvitation,
+  handleDeclineInvitation as handleAdsDeclineInvitation,
+  handleRequestAgency as handleAdsRequestAgency,
+  handleInviteClient as handleAdsInviteClient,
   handleUploadCreative as handleAdsUploadCreative,
   handleServeCreativeMedia as handleAdsServeCreativeMedia,
   handleServeAd,
@@ -270,8 +275,12 @@ import {
   handleAdminSubmitCreativeDraft as handleAdsAdminSubmitCreativeDraft,
   handleAdminApprovePlan as handleAdsAdminApprovePlan,
   handleAdminGenerateCreative as handleAdsAdminGenerateCreative,
+  handleAdminApproveCreative as handleAdsAdminApproveCreative,
+  handleAdminRejectCreative as handleAdsAdminRejectCreative,
+  handleAdminDeleteMedia as handleAdsAdminDeleteMedia,
   handleAdminBackfillTransactions as handleAdsAdminBackfillTransactions,
   handleAdminFixBilling as handleAdsAdminFixBilling,
+  attachRefreshedCookie,
   // Agency
   handleAgencySignup,
   handleAgencyLogin,
@@ -4055,6 +4064,12 @@ export default {
       // ADS PLATFORM ROUTES
       // ============================================================
 
+      // Helper: wrap ads responses with refreshed cookie if token was renewed
+      const adsResponse = async (handler) => {
+        const res = await handler;
+        return attachRefreshedCookie(request, res, env);
+      };
+
       // Ads Auth (public - RATE LIMITED to prevent brute force)
       if (url.pathname === "/api/ads/auth/signup" && request.method === "POST") {
         const ip = request.headers.get("cf-connecting-ip") || "unknown";
@@ -4084,39 +4099,39 @@ export default {
         return handleAdsRefresh(request, env, corsHeaders);
       }
       if (url.pathname === "/api/ads/auth/me" && request.method === "GET") {
-        return handleAdsMe(request, env, corsHeaders);
+        return adsResponse(handleAdsMe(request, env, corsHeaders));
       }
 
       // Ads Campaigns (authenticated advertisers)
       if (url.pathname === "/api/ads/campaigns" && request.method === "GET") {
-        return handleAdsListCampaigns(request, env, corsHeaders);
+        return adsResponse(handleAdsListCampaigns(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/campaigns" && request.method === "POST") {
-        return handleAdsCreateCampaign(request, env, corsHeaders);
+        return adsResponse(handleAdsCreateCampaign(request, env, corsHeaders));
       }
       const campaignMatch = url.pathname.match(/^\/api\/ads\/campaigns\/([0-9a-f-]+)$/i);
       if (campaignMatch) {
         const campaignId = campaignMatch[1];
         if (request.method === "GET") {
-          return handleAdsGetCampaign(request, env, corsHeaders, campaignId);
+          return adsResponse(handleAdsGetCampaign(request, env, corsHeaders, campaignId));
         }
         if (request.method === "PUT") {
-          return handleAdsUpdateCampaign(request, env, corsHeaders, campaignId);
+          return adsResponse(handleAdsUpdateCampaign(request, env, corsHeaders, campaignId));
         }
         if (request.method === "DELETE") {
-          return handleAdsDeleteCampaign(request, env, corsHeaders, campaignId);
+          return adsResponse(handleAdsDeleteCampaign(request, env, corsHeaders, campaignId));
         }
       }
 
       // Ads Billing (authenticated advertisers)
       if (url.pathname === "/api/ads/billing/balance" && request.method === "GET") {
-        return handleAdsGetBalance(request, env, corsHeaders);
+        return adsResponse(handleAdsGetBalance(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/billing/transactions" && request.method === "GET") {
-        return handleAdsGetTransactions(request, env, corsHeaders);
+        return adsResponse(handleAdsGetTransactions(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/billing/checkout" && request.method === "POST") {
-        return handleAdsCreateCheckout(request, env, corsHeaders);
+        return adsResponse(handleAdsCreateCheckout(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/billing/webhook" && request.method === "POST") {
         return handleAdsBillingWebhook(request, env, corsHeaders);
@@ -4124,26 +4139,42 @@ export default {
 
       // Ads Account (authenticated advertisers)
       if (url.pathname === "/api/ads/account/profile" && request.method === "PUT") {
-        return handleAdsUpdateProfile(request, env, corsHeaders);
+        return adsResponse(handleAdsUpdateProfile(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/account/password" && request.method === "PUT") {
-        return handleAdsChangePassword(request, env, corsHeaders);
+        return adsResponse(handleAdsChangePassword(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/account" && request.method === "DELETE") {
-        return handleAdsDeleteAccount(request, env, corsHeaders);
+        return adsResponse(handleAdsDeleteAccount(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/stats/overview" && request.method === "GET") {
-        return handleAdsStatsOverview(request, env, corsHeaders);
+        return adsResponse(handleAdsStatsOverview(request, env, corsHeaders));
+      }
+
+      // Agency invitations (advertiser side)
+      if (url.pathname === "/api/ads/account/invitations" && request.method === "GET") {
+        return adsResponse(handleAdsListInvitations(request, env, corsHeaders));
+      }
+      if (url.pathname === "/api/ads/account/request-agency" && request.method === "POST") {
+        return adsResponse(handleAdsRequestAgency(request, env, corsHeaders));
+      }
+      const invitationAcceptMatch = url.pathname.match(/^\/api\/ads\/account\/invitations\/([0-9a-f-]+)\/accept$/i);
+      if (invitationAcceptMatch && request.method === "POST") {
+        return adsResponse(handleAdsAcceptInvitation(request, env, corsHeaders, invitationAcceptMatch[1]));
+      }
+      const invitationDeclineMatch = url.pathname.match(/^\/api\/ads\/account\/invitations\/([0-9a-f-]+)\/decline$/i);
+      if (invitationDeclineMatch && request.method === "POST") {
+        return adsResponse(handleAdsDeclineInvitation(request, env, corsHeaders, invitationDeclineMatch[1]));
       }
 
       // Analytics & Reporting
       if (url.pathname === "/api/ads/analytics/overview" && request.method === "GET") {
         const { handleAnalyticsOverview } = await import("./src/handlers/ads/analytics.js");
-        return handleAnalyticsOverview(request, env, corsHeaders);
+        return adsResponse(handleAnalyticsOverview(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/analytics/export" && request.method === "GET") {
         const { handleAnalyticsExport } = await import("./src/handlers/ads/analytics.js");
-        return handleAnalyticsExport(request, env, corsHeaders);
+        return adsResponse(handleAnalyticsExport(request, env, corsHeaders));
       }
 
       // Ads Creative Media Proxy (serves R2 images without public bucket access)
@@ -4153,105 +4184,105 @@ export default {
 
       // Ads Creative Upload/Delete (authenticated advertisers)
       if (url.pathname === "/api/ads/creatives/upload" && request.method === "POST") {
-        return handleAdsUploadCreative(request, env, corsHeaders);
+        return adsResponse(handleAdsUploadCreative(request, env, corsHeaders));
       }
       const creativeDeleteMatch = url.pathname.match(/^\/api\/ads\/creatives\/(.+)$/);
       if (creativeDeleteMatch && request.method === "DELETE") {
         const { handleDeleteCreative } = await import("./src/handlers/ads/creatives.js");
-        return handleDeleteCreative(request, env, corsHeaders, creativeDeleteMatch[1]);
+        return adsResponse(handleDeleteCreative(request, env, corsHeaders, creativeDeleteMatch[1]));
       }
 
       // Inventory Management (public for browsing, auth for quotes)
       if (url.pathname === "/api/ads/inventory" && request.method === "GET") {
-        return handleGetInventory(request, env, corsHeaders);
+        return adsResponse(handleGetInventory(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/inventory/check" && request.method === "POST") {
-        return handleCheckAvailability(request, env, corsHeaders);
+        return adsResponse(handleCheckAvailability(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/pricing" && request.method === "GET") {
-        return handleGetPricing(request, env, corsHeaders);
+        return adsResponse(handleGetPricing(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/inventory/quote" && request.method === "POST") {
-        return handleGetQuote(request, env, corsHeaders);
+        return adsResponse(handleGetQuote(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/inventory/calculate" && request.method === "POST") {
-        return handleCalculateCart(request, env, corsHeaders);
+        return adsResponse(handleCalculateCart(request, env, corsHeaders));
       }
 
       // Orders (authenticated advertisers)
       if (url.pathname === "/api/ads/orders" && request.method === "GET") {
-        return handleListOrders(request, env, corsHeaders);
+        return adsResponse(handleListOrders(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/orders" && request.method === "POST") {
-        return handleCreateOrder(request, env, corsHeaders);
+        return adsResponse(handleCreateOrder(request, env, corsHeaders));
       }
       const orderIdMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)$/i);
       if (orderIdMatch && request.method === "GET") {
-        return handleGetOrder(request, env, corsHeaders, orderIdMatch[1]);
+        return adsResponse(handleGetOrder(request, env, corsHeaders, orderIdMatch[1]));
       }
       if (orderIdMatch && request.method === "PUT") {
         const { handleUpdateOrder } = await import("./src/handlers/ads/orders.js");
-        return handleUpdateOrder(request, env, corsHeaders, orderIdMatch[1]);
+        return adsResponse(handleUpdateOrder(request, env, corsHeaders, orderIdMatch[1]));
       }
       const orderCheckoutMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/checkout$/i);
       if (orderCheckoutMatch && request.method === "POST") {
-        return handleOrderCheckout(request, env, corsHeaders, orderCheckoutMatch[1]);
+        return adsResponse(handleOrderCheckout(request, env, corsHeaders, orderCheckoutMatch[1]));
       }
       const orderPauseMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/pause$/i);
       if (orderPauseMatch && request.method === "POST") {
-        return handlePauseOrder(request, env, corsHeaders, orderPauseMatch[1]);
+        return adsResponse(handlePauseOrder(request, env, corsHeaders, orderPauseMatch[1]));
       }
       const orderResumeMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/resume$/i);
       if (orderResumeMatch && request.method === "POST") {
-        return handleResumeOrder(request, env, corsHeaders, orderResumeMatch[1]);
+        return adsResponse(handleResumeOrder(request, env, corsHeaders, orderResumeMatch[1]));
       }
       const orderCancelMatch = url.pathname.match(/^\/api\/ads\/orders\/([0-9a-f-]+)\/cancel$/i);
       if (orderCancelMatch && request.method === "POST") {
-        return handleCancelOrder(request, env, corsHeaders, orderCancelMatch[1]);
+        return adsResponse(handleCancelOrder(request, env, corsHeaders, orderCancelMatch[1]));
       }
 
       // Budget Planner (authenticated advertisers)
       if (url.pathname === "/api/ads/planner/generate" && request.method === "POST") {
-        return handleGeneratePlan(request, env, corsHeaders);
+        return adsResponse(handleGeneratePlan(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/planner/create" && request.method === "POST") {
-        return handleCreateFromPlan(request, env, corsHeaders);
+        return adsResponse(handleCreateFromPlan(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/plans" && request.method === "GET") {
-        return handleListPlans(request, env, corsHeaders);
+        return adsResponse(handleListPlans(request, env, corsHeaders));
       }
       const planIdMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)$/i);
       if (planIdMatch && request.method === "GET") {
-        return handleGetPlan(request, env, corsHeaders, planIdMatch[1]);
+        return adsResponse(handleGetPlan(request, env, corsHeaders, planIdMatch[1]));
       }
       if (planIdMatch && request.method === "PUT") {
-        return handleUpdatePlan(request, env, corsHeaders, planIdMatch[1]);
+        return adsResponse(handleUpdatePlan(request, env, corsHeaders, planIdMatch[1]));
       }
       const planCheckoutMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)\/checkout$/i);
       if (planCheckoutMatch && request.method === "POST") {
-        return handlePlanCheckout(request, env, corsHeaders, planCheckoutMatch[1]);
+        return adsResponse(handlePlanCheckout(request, env, corsHeaders, planCheckoutMatch[1]));
       }
       const planCreativeApproveMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)\/creative\/approve$/i);
       if (planCreativeApproveMatch && request.method === "POST") {
-        return handleApprovePlanCreative(request, env, corsHeaders, planCreativeApproveMatch[1]);
+        return adsResponse(handleApprovePlanCreative(request, env, corsHeaders, planCreativeApproveMatch[1]));
       }
       const planCreativeRevisionMatch = url.pathname.match(/^\/api\/ads\/plans\/([0-9a-f-]+)\/creative\/revision$/i);
       if (planCreativeRevisionMatch && request.method === "POST") {
-        return handleRequestPlanRevision(request, env, corsHeaders, planCreativeRevisionMatch[1]);
+        return adsResponse(handleRequestPlanRevision(request, env, corsHeaders, planCreativeRevisionMatch[1]));
       }
 
       // Audience Targeting (public browsing, auth for detailed estimates)
       if (url.pathname === "/api/ads/targeting/options" && request.method === "GET") {
-        return handleGetTargetingOptions(request, env, corsHeaders);
+        return adsResponse(handleGetTargetingOptions(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/targeting/estimate" && request.method === "POST") {
-        return handleEstimateReach(request, env, corsHeaders);
+        return adsResponse(handleEstimateReach(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/targeting/suggestions" && request.method === "GET") {
-        return handleTargetingSuggestions(request, env, corsHeaders);
+        return adsResponse(handleTargetingSuggestions(request, env, corsHeaders));
       }
       if (url.pathname === "/api/ads/targeting/validate" && request.method === "POST") {
-        return handleValidateTargeting(request, env, corsHeaders);
+        return adsResponse(handleValidateTargeting(request, env, corsHeaders));
       }
 
       // Ad Serving (called by Philosify frontend)
@@ -4352,6 +4383,17 @@ export default {
       if (url.pathname === "/api/ads/admin/backfill-transactions" && request.method === "POST") {
         return handleAdsAdminBackfillTransactions(request, env, corsHeaders);
       }
+      const adsAdminApproveCreativeMatch = url.pathname.match(/^\/api\/ads\/admin\/plans\/([0-9a-f-]+)\/approve-creative$/i);
+      if (adsAdminApproveCreativeMatch && request.method === "POST") {
+        return handleAdsAdminApproveCreative(request, env, corsHeaders, adsAdminApproveCreativeMatch[1]);
+      }
+      const adsAdminRejectCreativeMatch = url.pathname.match(/^\/api\/ads\/admin\/plans\/([0-9a-f-]+)\/reject-creative$/i);
+      if (adsAdminRejectCreativeMatch && request.method === "POST") {
+        return handleAdsAdminRejectCreative(request, env, corsHeaders, adsAdminRejectCreativeMatch[1]);
+      }
+      if (url.pathname.startsWith("/api/ads/admin/media/") && request.method === "DELETE") {
+        return handleAdsAdminDeleteMedia(request, env, corsHeaders);
+      }
       if (url.pathname === "/api/ads/admin/fix-billing" && request.method === "POST") {
         return handleAdsAdminFixBilling(request, env, corsHeaders);
       }
@@ -4386,6 +4428,9 @@ export default {
       }
       if (url.pathname === "/api/ads/agency/clients" && request.method === "POST") {
         return handleCreateClient(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/agency/clients/invite" && request.method === "POST") {
+        return handleAdsInviteClient(request, env, corsHeaders);
       }
       const agencyClientCommissionMatch = url.pathname.match(/^\/api\/ads\/agency\/clients\/([0-9a-f-]+)\/commission$/i);
       if (agencyClientCommissionMatch && request.method === "PUT") {

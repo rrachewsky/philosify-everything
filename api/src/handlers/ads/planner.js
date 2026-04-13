@@ -310,15 +310,16 @@ export async function handleCreateFromPlan(request, env, corsHeaders) {
       creative_type,
       creative_url,
       creative_brief,
+      media_format,
     } = body;
 
     // Validate
     if (!plan || !plan.placements || plan.placements.length === 0) {
-      return jsonResponse({ error: 'Invalid plan' }, 400, corsHeaders);
+      return jsonResponse({ error: `Invalid plan: ${!plan ? 'plan is null' : !plan.placements ? 'no placements array' : 'placements is empty'}` }, 400, corsHeaders);
     }
 
     if (!name || !target_url || !creative_type) {
-      return jsonResponse({ error: 'Missing required fields' }, 400, corsHeaders);
+      return jsonResponse({ error: `Missing required fields: ${[!name && 'name', !target_url && 'target_url', !creative_type && 'creative_type'].filter(Boolean).join(', ')}` }, 400, corsHeaders);
     }
 
     if (creative_type === 'self' && !creative_url) {
@@ -369,6 +370,7 @@ export async function handleCreateFromPlan(request, env, corsHeaders) {
         start_date: plan.startDate,
         end_date: plan.endDate,
         goal: plan.goal || 'balanced',
+        targeting: { ...(body.targeting || {}), media_format: media_format || 'image' },
         status: 'draft',
       });
 
@@ -435,7 +437,7 @@ export async function handleCreateFromPlan(request, env, corsHeaders) {
       totalCost: `$${((plan.totalCostCents + creativeFeeCents) / 100).toFixed(2)}`,
     }, 201, corsHeaders);
   } catch (err) {
-    console.error('[Ads] Create from plan error:', err);
+    console.error('[Ads] Create from plan error:', err.message);
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
   }
 }
@@ -910,7 +912,7 @@ export async function handlePlanPaymentWebhook(env, session) {
           await supabase.from('ads.ad_plans').update(
             {
               creative_url: result.url,
-              creative_status: 'review',
+              creative_status: 'ready',
               status: 'pending_approval',
               updated_at: new Date().toISOString(),
             },
@@ -933,7 +935,7 @@ export async function handlePlanPaymentWebhook(env, session) {
             {
               current_draft_url: result.url,
               status: 'review',
-              drafts: JSON.stringify([{ url: result.url, generated_at: new Date().toISOString(), method: 'dall-e-3' }]),
+              drafts: [{ url: result.url, generated_at: new Date().toISOString(), method: 'dall-e-3' }],
               updated_at: new Date().toISOString(),
             },
             `plan_id=eq.${plan_id}`
@@ -1071,7 +1073,9 @@ export async function handleRequestPlanRevision(request, env, corsHeaders, planI
       return jsonResponse({ error: 'Creative request not found' }, 404, corsHeaders);
     }
 
-    const drafts = Array.isArray(creativeRequest.drafts) ? [...creativeRequest.drafts] : [];
+    let rawDrafts = creativeRequest.drafts;
+    if (typeof rawDrafts === 'string') { try { rawDrafts = JSON.parse(rawDrafts); } catch { rawDrafts = []; } }
+    const drafts = Array.isArray(rawDrafts) ? [...rawDrafts] : [];
     if (drafts.length > 0) {
       drafts[drafts.length - 1] = {
         ...drafts[drafts.length - 1],

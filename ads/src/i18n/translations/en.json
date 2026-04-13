@@ -4,6 +4,8 @@
     "error": "Something went wrong",
     "save": "Save",
     "cancel": "Cancel",
+    "accept": "Accept",
+    "decline": "Decline",
     "confirm": "Confirm",
     "delete": "Delete",
     "edit": "Edit",
@@ -149,7 +151,13 @@
     "defineBrief": "Define the brief and destination URL clearly.",
     "uploadAssets": "Upload assets or request a Philosify mock.",
     "approveDraft": "Approve the draft quickly once it is ready.",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "agencyInvitations": "Agency invitations",
+    "pendingInvitations": "Pending invitations",
+    "joinAgency": "Join an agency",
+    "agencyEmailPlaceholder": "agency@company.com",
+    "requestJoin": "Request to join",
+    "requestSent": "Request sent to {{agency}}"
   },
   "campaigns": {
     "title": "Campaigns",
@@ -208,7 +216,11 @@
     "policyNotice": "All campaigns are subject to the",
     "policyLink": "Advertising Policy",
     "policyResponsibility": "The advertiser and any agency remain fully responsible for all ads, claims, assets, and destination pages, even when Philosify assists with creative preparation.",
-    "staticImageNote": "Static image only in v1. Max 2MB.",
+    "mediaFormat": "Media format",
+    "image": "Image",
+    "video": "Video",
+    "videoNote": "MP4 or WebM. Max 50MB.",
+    "staticImageNote": "PNG, JPG, GIF, or WebP. Max 2MB.",
     "suggestedMix": "Suggested placement mix",
     "generateNote": "Generate a plan to preview placement mix, delivery estimate, and cost before you create the campaign.",
     "couldNotGenerate": "Could not generate a plan.",
@@ -483,7 +495,10 @@
     "noCampaignsClient": "This client has no campaigns yet.",
     "clientEmailPlaceholder": "client@company.com",
     "companyPlaceholder": "Company Inc.",
-    "score": "score"
+    "score": "score",
+    "inviteExisting": "Invite existing",
+    "inviteExistingClient": "Invite an existing advertiser",
+    "sendInvite": "Send invitation"
   },
   "admin": {
     "loginEyebrow": "Operations atelier",
@@ -522,7 +537,12 @@
     "approveLaunch": "Approve launch",
     "generateCreative": "Generate AI Creative",
     "generating": "Generating...",
-    "generateFailed": "AI creative generation failed"
+    "generateFailed": "AI creative generation failed",
+    "sendToAdvertiser": "Send to advertiser",
+    "regenerate": "Regenerate",
+    "rejectAndClear": "Reject and clear",
+    "revisedBriefPlaceholder": "Optional: edit the brief for the next generation...",
+    "confirmDeleteMedia": "Delete this creative file permanently?"
   },
   "adPreview": {
     "sidebar": "Sidebar",

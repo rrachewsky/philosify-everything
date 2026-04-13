@@ -10,17 +10,22 @@ function Dashboard() {
   const [plans, setPlans] = useState([]);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [invitations, setInvitations] = useState([]);
+  const [agencyEmail, setAgencyEmail] = useState('');
+  const [requestResult, setRequestResult] = useState(null);
 
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        const [plansData, balanceData] = await Promise.all([
+        const [plansData, balanceData, invData] = await Promise.all([
           api.get('/ads/plans'),
           api.get('/ads/billing/balance'),
+          api.get('/ads/account/invitations').catch(() => ({ invitations: [] })),
         ]);
 
         setPlans(plansData.plans || []);
         setBalance(balanceData.balance_cents || 0);
+        setInvitations((invData.invitations || []).filter((i) => i.status === 'pending'));
       } catch (error) {
         console.error('Failed to load dashboard', error);
       } finally {
@@ -83,6 +88,82 @@ function Dashboard() {
           {t('dashboard.pendingReview')}
         </div>
       ) : null}
+
+      {invitations.length > 0 && (
+        <section className="surface-card stack">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">{t('dashboard.agencyInvitations')}</p>
+              <h3>{t('dashboard.pendingInvitations')}</h3>
+            </div>
+          </div>
+          <div className="collection-list">
+            {invitations.map((inv) => (
+              <div key={inv.id} className="collection-row collection-row--stacked">
+                <div className="collection-row__main">
+                  <strong>{inv.agency?.agency_name || t('common.na')}</strong>
+                  <p>{inv.agency?.email} · {t('agency.commission')}: {inv.commission_rate}%</p>
+                </div>
+                <div className="button-row">
+                  <button
+                    type="button"
+                    className="btn btn--primary"
+                    onClick={async () => {
+                      await api.post(`/ads/account/invitations/${inv.id}/accept`);
+                      setInvitations((prev) => prev.filter((i) => i.id !== inv.id));
+                    }}
+                  >
+                    {t('common.accept')}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn--secondary"
+                    onClick={async () => {
+                      await api.post(`/ads/account/invitations/${inv.id}/decline`);
+                      setInvitations((prev) => prev.filter((i) => i.id !== inv.id));
+                    }}
+                  >
+                    {t('common.decline')}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {!advertiser?.agency_id && (
+        <section className="surface-card stack" style={{ padding: '16px 20px' }}>
+          <p className="eyebrow">{t('dashboard.joinAgency')}</p>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <input
+              type="email"
+              placeholder={t('dashboard.agencyEmailPlaceholder')}
+              value={agencyEmail}
+              onChange={(e) => setAgencyEmail(e.target.value)}
+              style={{ flex: 1, minWidth: '200px' }}
+            />
+            <button
+              type="button"
+              className="btn btn--secondary"
+              disabled={!agencyEmail}
+              onClick={async () => {
+                try {
+                  const result = await api.post('/ads/account/request-agency', { agency_email: agencyEmail });
+                  setRequestResult(result.agency_name);
+                  setAgencyEmail('');
+                } catch (err) {
+                  setRequestResult(null);
+                  alert(err.message);
+                }
+              }}
+            >
+              {t('dashboard.requestJoin')}
+            </button>
+          </div>
+          {requestResult && <p className="helper-text" style={{ color: 'var(--success)' }}>{t('dashboard.requestSent', { agency: requestResult })}</p>}
+        </section>
+      )}
 
       <section className="stats-grid">
         <article className="stat-panel">

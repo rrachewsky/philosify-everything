@@ -35,7 +35,10 @@ function Billing() {
         api.get('/ads/billing/transactions'),
       ]);
       setBalance(balanceData.balance_cents || 0);
-      setTransactions(transactionsData.transactions || []);
+      const sorted = (transactionsData.transactions || []).sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+      setTransactions(sorted);
     } catch (err) {
       console.error('Failed to load billing data:', err);
     } finally {

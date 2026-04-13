@@ -68,22 +68,9 @@ function AdminDashboard() {
     await loadData();
   };
 
-  const [backfilling, setBackfilling] = useState(false);
-  const [backfillResult, setBackfillResult] = useState(null);
-
-  const runBackfill = async () => {
-    setBackfilling(true);
-    try {
-      const result = await api.adminPost('/ads/admin/fix-billing', adminSecret, {});
-      setBackfillResult(result);
-    } catch (err) {
-      setError(err.message || 'Backfill failed');
-    } finally {
-      setBackfilling(false);
-    }
-  };
-
   const [generating, setGenerating] = useState({});
+  const [rejectBrief, setRejectBrief] = useState({});
+  const [showReject, setShowReject] = useState({});
   const generateCreative = async (planId) => {
     setGenerating((prev) => ({ ...prev, [planId]: true }));
     try {
@@ -118,18 +105,6 @@ function AdminDashboard() {
       </section>
 
       {error ? <div className="alert alert--error">{error}</div> : null}
-      {backfillResult ? <div className="alert alert--success">Billing history synced: {backfillResult.results?.map((r) => `${r.plan}: ${r.status}`).join(', ')}</div> : null}
-
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-        <button
-          type="button"
-          className="btn btn--secondary"
-          disabled={backfilling}
-          onClick={runBackfill}
-        >
-          {backfilling ? 'Fixing...' : 'Fix billing'}
-        </button>
-      </div>
 
       <section className="stats-grid">
         <article className="stat-panel">
@@ -240,12 +215,43 @@ function AdminDashboard() {
                     {plan.advertiser?.company_name || t('admin.unknownAdvertiser')} · ${(plan.total_cost_cents / 100).toFixed(2)}
                   </p>
                   {plan.creative_url ? (
-                    <div style={{ marginTop: '8px' }}>
-                      <img
-                        src={plan.creative_url}
-                        alt="Creative"
-                        style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: '6px', border: '1px solid var(--line)' }}
-                      />
+                    <div style={{ marginTop: '8px', position: 'relative', display: 'inline-block' }}>
+                      {/\.(mp4|webm)$/i.test(plan.creative_url) ? (
+                        <video
+                          src={plan.creative_url}
+                          controls
+                          muted
+                          style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '6px', border: '1px solid var(--line)' }}
+                        />
+                      ) : (
+                        <img
+                          src={plan.creative_url}
+                          alt="Creative"
+                          style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: '6px', border: '1px solid var(--line)' }}
+                        />
+                      )}
+                      <button
+                        type="button"
+                        style={{
+                          position: 'absolute', top: '4px', right: '4px',
+                          background: 'rgba(239,68,68,0.9)', color: '#fff',
+                          border: 'none', borderRadius: '4px', padding: '2px 6px',
+                          fontSize: '11px', cursor: 'pointer',
+                        }}
+                        title={t('common.delete')}
+                        onClick={async () => {
+                          if (!confirm(t('admin.confirmDeleteMedia'))) return;
+                          const path = plan.creative_url.replace(/.*\/api\/ads\/media\//, '');
+                          try {
+                            await api.adminDelete(`/ads/admin/media/${path}`, adminSecret);
+                            await loadData();
+                          } catch (err) {
+                            setError(err.message);
+                          }
+                        }}
+                      >
+                        ✕
+                      </button>
                     </div>
                   ) : null}
                   {plan.creative_brief ? (
@@ -254,9 +260,11 @@ function AdminDashboard() {
                     </p>
                   ) : null}
                 </div>
-                <div className="button-row">
+                <div className="button-row" style={{ flexWrap: 'wrap', gap: '6px' }}>
                   <span className={`status-chip status-chip--${plan.status}`}>{plan.status}</span>
-                  {plan.status === 'pending_creative' ? (
+
+                  {/* No creative yet — generate */}
+                  {plan.status === 'pending_creative' && !plan.creative_url ? (
                     <button
                       type="button"
                       className="btn btn--secondary"
@@ -266,6 +274,66 @@ function AdminDashboard() {
                       {generating[plan.id] ? t('admin.generating') : t('admin.generateCreative')}
                     </button>
                   ) : null}
+
+                  {/* Creative generated, admin reviews before sending to advertiser */}
+                  {plan.status === 'pending_creative' && plan.creative_url ? (
+                    <>
+                      <button
+                        type="button"
+                        className="btn btn--primary"
+                        onClick={async () => {
+                          await api.adminPost(`/ads/admin/plans/${plan.id}/approve-creative`, adminSecret, {});
+                          await loadData();
+                        }}
+                      >
+                        {t('admin.sendToAdvertiser')}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn--secondary"
+                        disabled={generating[plan.id]}
+                        onClick={() => generateCreative(plan.id)}
+                      >
+                        {generating[plan.id] ? t('admin.generating') : t('admin.regenerate')}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn--danger"
+                        onClick={() => setShowReject((prev) => ({ ...prev, [plan.id]: !prev[plan.id] }))}
+                      >
+                        {t('admin.reject')}
+                      </button>
+                    </>
+                  ) : null}
+
+                  {/* Reject form — edit brief and clear creative */}
+                  {showReject[plan.id] ? (
+                    <div className="stack stack--tight" style={{ width: '100%', marginTop: '6px' }}>
+                      <textarea
+                        rows={3}
+                        placeholder={t('admin.revisedBriefPlaceholder')}
+                        value={rejectBrief[plan.id] || ''}
+                        onChange={(e) => setRejectBrief((prev) => ({ ...prev, [plan.id]: e.target.value }))}
+                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)' }}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn--danger"
+                        onClick={async () => {
+                          await api.adminPost(`/ads/admin/plans/${plan.id}/reject-creative`, adminSecret, {
+                            revised_brief: rejectBrief[plan.id] || undefined,
+                          });
+                          setShowReject((prev) => ({ ...prev, [plan.id]: false }));
+                          setRejectBrief((prev) => ({ ...prev, [plan.id]: '' }));
+                          await loadData();
+                        }}
+                      >
+                        {t('admin.rejectAndClear')}
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {/* Admin approves launch (after advertiser approved) */}
                   {plan.status === 'pending_approval' ? (
                     <button type="button" className="btn btn--primary" onClick={() => approvePlan(plan.id)}>
                       {t('admin.approveLaunch')}
