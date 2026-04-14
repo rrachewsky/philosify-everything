@@ -194,7 +194,9 @@ async function selectProportionalAd(supabase, placement, userId, ip, userProfile
       impressions_ordered,
       impressions_delivered,
       total_cents,
-      schedule_type
+      schedule_type,
+      status,
+      creative_status
     `, {
       filter: [
         `placement=eq.${placement}`,
@@ -204,7 +206,22 @@ async function selectProportionalAd(supabase, placement, userId, ip, userProfile
       ].join('&'),
     });
 
+  console.log('[Ads] Query result:', {
+    placement,
+    error: error?.message,
+    ordersCount: orders?.length || 0,
+    orders: orders?.map(o => ({
+      id: o.id,
+      status: o.status,
+      creative_status: o.creative_status,
+      schedule_type: o.schedule_type,
+      impressions: `${o.impressions_delivered}/${o.impressions_ordered}`,
+      budget: o.total_cents,
+    })),
+  });
+
   if (error || !orders || orders.length === 0) {
+    console.log('[Ads] No orders found:', { error: error?.message, placement });
     return null; // No active campaigns
   }
 
