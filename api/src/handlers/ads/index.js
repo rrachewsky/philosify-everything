@@ -110,6 +110,7 @@ export {
   handleSuspendAdvertiser,
   handleAdminStats,
   handleAdminOverview,
+  handleAdminDistribution,
   handleAdminListPlans,
   handleAdminListCreativeRequests,
   handleAdminSubmitCreativeDraft,

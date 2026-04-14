@@ -239,6 +239,139 @@ export async function handleAdminStats(request, env, corsHeaders) {
 }
 
 /**
+ * GET /api/ads/admin/distribution
+ * Show current proportional distribution of active campaigns
+ */
+export async function handleAdminDistribution(request, env, corsHeaders) {
+  try {
+    if (!await verifyAdmin(request, env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, corsHeaders);
+    }
+
+    const supabase = await getServiceSupabase(env);
+    
+    // Get active campaigns eligible for proportional distribution
+    const { data: activeOrders, error } = await supabase
+      .from('ads.ad_orders')
+      .select(`
+        id,
+        name,
+        advertiser_id,
+        placement,
+        total_cents,
+        impressions_ordered,
+        impressions_delivered,
+        creative_url,
+        target_url,
+        status,
+        creative_status,
+        schedule_type,
+        created_at
+      `, {
+        filter: [
+          'status=eq.active',
+          'creative_status=eq.ready',
+          'schedule_type=eq.asap',
+        ].join('&'),
+        order: 'placement,total_cents.desc',
+      });
+
+    if (error) {
+      console.error('[Ads Admin] Distribution error:', error);
+      return jsonResponse({ error: 'Database error' }, 500, corsHeaders);
+    }
+
+    // Filter out exhausted campaigns
+    const eligibleOrders = (activeOrders || []).filter(
+      o => o.impressions_delivered < o.impressions_ordered
+    );
+
+    // Get advertiser names
+    const advertiserIds = [...new Set(eligibleOrders.map(o => o.advertiser_id))];
+    const { data: advertisers } = await supabase
+      .from('ads.advertisers')
+      .select('id,company_name', {
+        filter: `id=in.(${advertiserIds.join(',')})`,
+      });
+    const advertiserMap = Object.fromEntries((advertisers || []).map(a => [a.id, a.company_name]));
+
+    // Get today's impressions for actual distribution
+    const today = new Date().toISOString().split('T')[0];
+    const { data: todayImpressions } = await supabase
+      .from('ads.ad_impressions')
+      .select('order_id,placement', {
+        filter: `created_at=gte.${today}`,
+      });
+
+    // Calculate distribution by placement
+    const byPlacement = {};
+    
+    for (const order of eligibleOrders) {
+      if (!byPlacement[order.placement]) {
+        byPlacement[order.placement] = {
+          campaigns: [],
+          totalBudget: 0,
+          totalImpressionsToday: 0,
+        };
+      }
+      
+      byPlacement[order.placement].totalBudget += order.total_cents;
+      byPlacement[order.placement].campaigns.push(order);
+    }
+
+    // Count impressions by placement and order
+    for (const imp of todayImpressions || []) {
+      if (byPlacement[imp.placement]) {
+        byPlacement[imp.placement].totalImpressionsToday++;
+        const campaign = byPlacement[imp.placement].campaigns.find(c => c.id === imp.order_id);
+        if (campaign) {
+          campaign.impressions_today = (campaign.impressions_today || 0) + 1;
+        }
+      }
+    }
+
+    // Calculate proportions
+    const distribution = {};
+    for (const [placement, data] of Object.entries(byPlacement)) {
+      distribution[placement] = {
+        totalBudget: data.totalBudget / 100, // dollars
+        totalImpressionsToday: data.totalImpressionsToday,
+        campaigns: data.campaigns.map(c => ({
+          id: c.id,
+          name: c.name,
+          advertiser: advertiserMap[c.advertiser_id] || 'Unknown',
+          budgetDollars: c.total_cents / 100,
+          targetPercentage: ((c.total_cents / data.totalBudget) * 100).toFixed(2),
+          impressionsToday: c.impressions_today || 0,
+          actualPercentage: data.totalImpressionsToday > 0 
+            ? (((c.impressions_today || 0) / data.totalImpressionsToday) * 100).toFixed(2)
+            : '0.00',
+          deficit: data.totalImpressionsToday > 0
+            ? (((c.total_cents / data.totalBudget) - ((c.impressions_today || 0) / data.totalImpressionsToday)) * 100).toFixed(2)
+            : ((c.total_cents / data.totalBudget) * 100).toFixed(2),
+          impressionsRemaining: c.impressions_ordered - c.impressions_delivered,
+          creativeUrl: c.creative_url,
+          targetUrl: c.target_url,
+          createdAt: c.created_at,
+        })),
+      };
+    }
+
+    return jsonResponse({
+      distribution,
+      summary: {
+        totalActiveCampaigns: eligibleOrders.length,
+        placements: Object.keys(distribution),
+        timestamp: new Date().toISOString(),
+      },
+    }, 200, corsHeaders);
+  } catch (err) {
+    console.error('[Ads Admin] Distribution error:', err);
+    return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
+  }
+}
+
+/**
  * GET /api/ads/admin/overview
  * Unified queue-oriented admin overview for Ads v1
  */

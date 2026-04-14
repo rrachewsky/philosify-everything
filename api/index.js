@@ -270,6 +270,7 @@ import {
   handleSuspendAdvertiser,
   handleAdminStats as handleAdsAdminStats,
   handleAdminOverview as handleAdsAdminOverview,
+  handleAdminDistribution as handleAdsAdminDistribution,
   handleAdminListPlans as handleAdsAdminListPlans,
   handleAdminListCreativeRequests as handleAdsAdminListCreativeRequests,
   handleAdminSubmitCreativeDraft as handleAdsAdminSubmitCreativeDraft,
@@ -4383,6 +4384,9 @@ export default {
       }
       if (url.pathname === "/api/ads/admin/overview" && request.method === "GET") {
         return handleAdsAdminOverview(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/distribution" && request.method === "GET") {
+        return handleAdsAdminDistribution(request, env, corsHeaders);
       }
       if (url.pathname === "/api/ads/admin/plans" && request.method === "GET") {
         return handleAdsAdminListPlans(request, env, corsHeaders);
