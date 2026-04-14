@@ -132,8 +132,9 @@
     0 0 20px rgba(0, 240, 255, 0.08);
 }
 
-.ad-slot--card .ad-slot__image {
-  aspect-ratio: 4 / 5;
+.ad-slot--card .ad-slot__image,
+.ad-slot--card .ad-slot__video {
+  aspect-ratio: 16 / 9;
 }
 
 .ad-slot--banner .ad-slot__card {
@@ -143,8 +144,9 @@
     0 0 14px rgba(0, 240, 255, 0.06);
 }
 
-.ad-slot--banner .ad-slot__image {
-  aspect-ratio: 21 / 6;
+.ad-slot--banner .ad-slot__image,
+.ad-slot--banner .ad-slot__video {
+  aspect-ratio: 4 / 1;
 }
 
 .analysis-ad-slot {
@@ -161,11 +163,13 @@
 }
 
 @media (max-width: 768px) {
-  .ad-slot--card .ad-slot__image {
-    aspect-ratio: 21 / 9;
+  .ad-slot--card .ad-slot__image,
+  .ad-slot--card .ad-slot__video {
+    aspect-ratio: 16 / 9;
   }
 
-  .ad-slot--banner .ad-slot__image {
-    aspect-ratio: 3 / 1;
+  .ad-slot--banner .ad-slot__image,
+  .ad-slot--banner .ad-slot__video {
+    aspect-ratio: 4 / 1;
   }
 }
