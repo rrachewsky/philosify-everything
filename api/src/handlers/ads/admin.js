@@ -271,7 +271,7 @@ export async function handleAdminDistribution(request, env, corsHeaders) {
         filter: [
           'status=eq.active',
           'creative_status=eq.ready',
-          'schedule_type=eq.asap',
+          // Include ALL campaigns (asap and scheduled) in proportional distribution
         ].join('&'),
         order: 'placement,total_cents.desc',
       });

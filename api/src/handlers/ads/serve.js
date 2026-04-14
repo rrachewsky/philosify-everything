@@ -20,6 +20,7 @@ const TOKEN_EXPIRY_MS = 5 * 60 * 1000;
 // - Soft frequency cap: After 3 impressions of same order, rotate to next
 // - Budget-weighted: Orders with bigger total_cents get proportionally more impressions
 // - ADVERTISER CONTENT ONLY: All slots filled by actual paid campaigns (no placeholders)
+// - ALL ACTIVE CAMPAIGNS: Includes both asap and scheduled campaigns
 const SOFT_FREQUENCY_CAP = 3;
 
 /**
@@ -199,7 +200,7 @@ async function selectProportionalAd(supabase, placement, userId, ip, userProfile
         `placement=eq.${placement}`,
         'status=eq.active',
         'creative_status=eq.ready',
-        'schedule_type=eq.asap', // REQUIREMENT 5: Always-on campaigns only (no scheduling)
+        // Include ALL campaigns (asap and scheduled) in proportional distribution
       ].join('&'),
     });
 
