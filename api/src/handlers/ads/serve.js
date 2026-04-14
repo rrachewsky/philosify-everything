@@ -165,6 +165,91 @@ async function verifyImpressionToken(env, token, expectedIp) {
 }
 
 /**
+ * HOUSE AD FALLBACK
+ * ============================================================
+ * When no paid campaigns are available, show Philosify promotional content
+ * Ensures 100% fill rate (NO EMPTY AD SLOTS EVER)
+ */
+function serveHouseAd(placement, preferredDuration, corsHeaders) {
+  // Simple SVG placeholder promoting Philosify Premium
+  const placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMmU7c3RvcC1vcGFjaXR5OjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMyZDJkNDQ7c3RvcC1vcGFjaXR5OjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNnKSIvPjx0ZXh0IHg9IjUwJSIgeT0iNDAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QaGlsb3NpZnk8L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI1NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2FhYWFhYSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RGlzY292ZXIgUGhpbG9zb3BoeSBpbiBNdXNpYzwvdGV4dD48dGV4dCB4PSI1MCUiIHk9IjY4JSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5VcGdyYWRlIHRvIFByZW1pdW08L3RleHQ+PC9zdmc+';
+  
+  const houseAds = {
+    sidebar: {
+      5: {
+        creative_url: placeholderImage,
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+      10: {
+        creative_url: placeholderImage,
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+      15: {
+        creative_url: placeholderImage,
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+      20: {
+        creative_url: placeholderImage,
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+    },
+    constellation: {
+      5: {
+        creative_url: placeholderImage,
+        target_url: 'https://philosify.org/premium',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+      },
+    },
+  };
+
+  const duration = preferredDuration || (placement === 'constellation' ? 5 : 10);
+  const houseAd = houseAds[placement]?.[duration] || houseAds[placement]?.[5];
+
+  if (!houseAd) {
+    // This should never happen, but ensure we never return null
+    console.error('[Ads] CRITICAL: No house ad found for placement:', placement);
+    return jsonResponse({ 
+      ad: {
+        creative_url: placeholderImage,
+        target_url: 'https://philosify.org',
+        duration: 10,
+        placement,
+        impression_token: null,
+        media_type: 'image',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+        is_house_ad: true,
+      }
+    }, 200, corsHeaders);
+  }
+
+  console.log('[Ads] Serving house ad (no paid campaigns available):', { placement, duration });
+  return jsonResponse({
+    ad: {
+      order_id: null, // House ads are not tracked as orders
+      creative_url: houseAd.creative_url,
+      target_url: houseAd.target_url,
+      duration,
+      placement,
+      impression_token: null, // No billing for house ads
+      media_type: 'image',
+      brand_name: houseAd.brand_name,
+      domain: houseAd.domain,
+      is_house_ad: true, // Flag so frontend knows not to track impression
+    },
+  }, 200, corsHeaders);
+}
+
+/**
  * PROPORTIONAL AD SELECTION ALGORITHM
  * ============================================================
  * Selects ad order based on budget-weighted proportional distribution
@@ -353,7 +438,9 @@ async function selectProportionalAd(supabase, placement, userId, ip, userProfile
  * 
  * Returns ad creative, tracking info, and signed impression token
  * 
- * GUARANTEE: 100% fill rate - always returns an ad (or house ad if zero campaigns)
+ * GUARANTEE: 100% fill rate - NO EMPTY SLOTS EVER
+ * - If paid campaigns exist → proportional distribution by budget
+ * - If no paid campaigns OR user hit soft cap on all → house ad (Philosify promo)
  */
 export async function handleServeAd(request, env, corsHeaders) {
   try {
@@ -406,10 +493,10 @@ export async function handleServeAd(request, env, corsHeaders) {
       preferredDuration
     );
 
-    // If no eligible ads found, return null (no ad)
+    // 100% FILL RATE GUARANTEE: If no paid campaigns available, show house ad
     if (!selectedOrder) {
-      console.log('[Ads] No eligible ads found for proportional distribution', { placement, userId });
-      return jsonResponse({ ad: null, reason: 'no_eligible_ads' }, 200, corsHeaders);
+      console.log('[Ads] No paid campaigns available, serving house ad', { placement, userId });
+      return serveHouseAd(placement, preferredDuration, corsHeaders);
     }
 
     // Generate signed impression token
@@ -554,6 +641,24 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
 
       remainingDuration -= selectedOrder.duration;
       usedOrderIds.add(selectedOrder.id);
+    }
+
+    // 100% FILL RATE: If we got no ads (no campaigns or all exhausted), add house ad
+    if (selectedAds.length === 0 && remainingDuration >= 5) {
+      console.log('[Ads] Batch: No paid ads available, adding house ad');
+      selectedAds.push({
+        order_id: null,
+        creative_url: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMmU7c3RvcC1vcGFjaXR5OjEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMyZDJkNDQ7c3RvcC1vcGFjaXR5OjEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0idXJsKCNnKSIvPjx0ZXh0IHg9IjUwJSIgeT0iNDAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZmZmZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QaGlsb3NpZnk8L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI1NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2FhYWFhYSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RGlzY292ZXIgUGhpbG9zb3BoeSBpbiBNdXNpYzwvdGV4dD48dGV4dCB4PSI1MCUiIHk9IjY4JSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmaWxsPSIjNmI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5VcGdyYWRlIHRvIFByZW1pdW08L3RleHQ+PC9zdmc+',
+        target_url: 'https://philosify.org/premium',
+        duration: Math.min(10, remainingDuration),
+        placement,
+        impression_token: null,
+        media_type: 'image',
+        brand_name: 'Philosify',
+        domain: 'philosify.org',
+        is_house_ad: true,
+      });
+      remainingDuration -= Math.min(10, remainingDuration);
     }
 
     return jsonResponse({
