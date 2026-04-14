@@ -181,10 +181,20 @@ async function supabaseSignIn(env, email, password) {
 
 export async function getAgencyFromRequest(env, request, supabase) {
   const session = getSessionFromCookie(request);
-  if (!session?.access_token) return null;
+  console.log('[Agency Auth] Session from cookie:', session ? 'Found' : 'Not found');
+  
+  if (!session?.access_token) {
+    console.log('[Agency Auth] No access_token in session');
+    return null;
+  }
 
   const payload = await verifySupabaseToken(env, session.access_token);
-  if (!payload?.sub) return null;
+  console.log('[Agency Auth] Token verification:', payload ? `Success (user: ${payload.sub})` : 'Failed');
+  
+  if (!payload?.sub) {
+    console.log('[Agency Auth] No user ID in token payload');
+    return null;
+  }
 
   const userId = payload.sub;
 
@@ -192,14 +202,22 @@ export async function getAgencyFromRequest(env, request, supabase) {
     .from('ads.agencies')
     .select('*', { filter: `user_id=eq.${userId}` });
 
+  console.log('[Agency Auth] Database query:', { 
+    userId, 
+    found: agencies?.length || 0, 
+    error: error?.message 
+  });
+
   if (error || !agencies || agencies.length === 0) {
     // Try by email for legacy accounts
     if (payload.email) {
+      console.log('[Agency Auth] Trying email fallback:', payload.email);
       const { data: byEmail } = await supabase
         .from('ads.agencies')
         .select('*', { filter: `email=eq.${payload.email}` });
       
       if (byEmail?.[0]) {
+        console.log('[Agency Auth] Found agency by email, updating user_id');
         if (!byEmail[0].user_id) {
           await supabase.from('ads.agencies').update(
             { user_id: userId },
@@ -209,9 +227,11 @@ export async function getAgencyFromRequest(env, request, supabase) {
         return byEmail[0];
       }
     }
+    console.log('[Agency Auth] No agency found');
     return null;
   }
 
+  console.log('[Agency Auth] Agency found:', agencies[0].id);
   return agencies[0];
 }
 
