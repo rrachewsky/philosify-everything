@@ -20,6 +20,7 @@ export default function InlineAdSlot({
   const [hasTrackedClick, setHasTrackedClick] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const impressionTimerRef = useRef(null);
   const adContainerRef = useRef(null);
   const videoRef = useRef(null);
@@ -93,6 +94,7 @@ export default function InlineAdSlot({
         setHasRecordedImpression(false);
         setHasTrackedClick(false);
         setIsClosed(false);
+        setIsMuted(true); // Reset to muted for new ad
         // Report contracted duration to parent so analysis holds long enough
         if (data.ad?.duration && onAdLoaded) {
           onAdLoaded({ duration: data.ad.duration, mediaType: data.ad.media_type });
@@ -173,6 +175,15 @@ export default function InlineAdSlot({
     }
   };
 
+  const toggleMute = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+    }
+  };
+
   if (!ad?.creative_url || !ad?.target_url || isClosed) {
     console.log('[Ad] Not rendering - missing data or closed:', { 
       creative_url: ad?.creative_url, 
@@ -204,17 +215,27 @@ export default function InlineAdSlot({
       >
         <div className="ad-slot__creative">
           {ad.media_type === 'video' ? (
-            <video
-              ref={videoRef}
-              className="ad-slot__video"
-              src={ad.creative_url}
-              autoPlay
-              muted
-              loop={placement !== 'constellation'} // Constellation videos don't loop
-              playsInline
-              onLoadedData={recordImpression}
-              onEnded={handleVideoEnded}
-            />
+            <>
+              <video
+                ref={videoRef}
+                className="ad-slot__video"
+                src={ad.creative_url}
+                autoPlay
+                muted={isMuted}
+                loop={placement !== 'constellation'} // Constellation videos don't loop
+                playsInline
+                onLoadedData={recordImpression}
+                onEnded={handleVideoEnded}
+              />
+              <button
+                className="ad-slot__mute"
+                onClick={toggleMute}
+                aria-label={isMuted ? 'Unmute ad' : 'Mute ad'}
+                title={isMuted ? 'Unmute' : 'Mute'}
+              >
+                {isMuted ? '🔇' : '🔊'}
+              </button>
+            </>
           ) : (
             <img
               className="ad-slot__image"
