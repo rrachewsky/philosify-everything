@@ -286,15 +286,36 @@ function PlanDetail() {
               <p className="helper-text">
                 {t('detail.creativeStatus')}: {creativeRequest?.status || plan.creative_status || 'pending'}
               </p>
+              {/* Debug: Show what URLs we have */}
+              {(import.meta.env.DEV || true) && (
+                <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px', wordBreak: 'break-all' }}>
+                  <div>Draft URL: {creativeRequest?.current_draft_url || 'none'}</div>
+                  <div>Plan URL: {plan.creative_url || 'none'}</div>
+                </div>
+              )}
               {creativeRequest?.current_draft_url ? (
                 /\.(mp4|webm)$/i.test(creativeRequest.current_draft_url) ? (
-                  <video src={creativeRequest.current_draft_url} controls muted className="detail-preview" style={{ maxWidth: '100%', borderRadius: '8px' }} />
+                  <video 
+                    src={creativeRequest.current_draft_url} 
+                    controls 
+                    muted 
+                    className="detail-preview" 
+                    style={{ maxWidth: '100%', borderRadius: '8px', display: 'block' }}
+                    onError={(e) => console.error('[Video Error]', e.target.src, e)}
+                  />
                 ) : (
                   <img src={creativeRequest.current_draft_url} alt={t('detail.currentDraft')} className="detail-preview" />
                 )
               ) : plan.creative_url ? (
                 /\.(mp4|webm)$/i.test(plan.creative_url) ? (
-                  <video src={plan.creative_url} controls muted className="detail-preview" style={{ maxWidth: '100%', borderRadius: '8px' }} />
+                  <video 
+                    src={plan.creative_url} 
+                    controls 
+                    muted 
+                    className="detail-preview" 
+                    style={{ maxWidth: '100%', borderRadius: '8px', display: 'block' }}
+                    onError={(e) => console.error('[Video Error]', e.target.src, e)}
+                  />
                 ) : (
                   <img src={plan.creative_url} alt={t('detail.campaignCreative')} className="detail-preview" />
                 )
@@ -388,7 +409,18 @@ function PlanDetail() {
               ) : null}
             </>
           ) : plan.creative_url ? (
-            <img src={plan.creative_url} alt={t('detail.campaignCreative')} className="detail-preview" />
+            /\.(mp4|webm)$/i.test(plan.creative_url) ? (
+              <video 
+                src={plan.creative_url} 
+                controls 
+                muted 
+                className="detail-preview" 
+                style={{ maxWidth: '100%', borderRadius: '8px', display: 'block' }}
+                onError={(e) => console.error('[Video Error - Self]', e.target.src, e)}
+              />
+            ) : (
+              <img src={plan.creative_url} alt={t('detail.campaignCreative')} className="detail-preview" />
+            )
           ) : (
             <p className="helper-text">{t('detail.creativeAttached')}</p>
           )}
