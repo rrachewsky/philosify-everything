@@ -162,6 +162,22 @@
   flex-shrink: 0;
 }
 
+.constellation-top-ad {
+  flex-shrink: 0;
+}
+
+.constellation-top-ad .ad-slot__card {
+  width: 227px; /* 6cm at 96 DPI */
+  height: 302px; /* 8cm at 96 DPI */
+  margin: 0 auto;
+}
+
+.constellation-top-ad .ad-slot__video {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 3 / 4; /* Portrait video 6:8 ratio */
+}
+
 @media (max-width: 768px) {
   .ad-slot--card .ad-slot__image,
   .ad-slot--card .ad-slot__video {

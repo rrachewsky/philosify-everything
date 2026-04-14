@@ -119,7 +119,7 @@ const getTranslatedName = (node, t) => {
   return translatedName || node.name;
 };
 
-function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear, t }) {
+function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear, t, userId }) {
   const connections = getNodeConnections(node.id);
   const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
   const [imageError, setImageError] = React.useState(false);
@@ -137,6 +137,18 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
 
   return (
     <div ref={contentRef} style={styles.content}>
+      {/* Ad positioned at top - video only, 6cm × 8cm, centered, 2cm from top */}
+      <div style={styles.topAd}>
+        <InlineAdSlot
+          key={`constellation-panel-${node.id}`}
+          userId={userId}
+          placement="constellation"
+          layout="video"
+          refreshKey={`constellation-panel-${node.id}`}
+          className="constellation-top-ad"
+        />
+      </div>
+      
       {/* Portrait + Header (compact layout) */}
       <div style={styles.headerWithPortrait}>
         {/* Portrait */}
@@ -413,6 +425,7 @@ export function ConstellationInfoPanel({
           onNodeSelect={onNodeSelect}
           formatYear={formatYear}
           t={t}
+          userId={userId}
         />
       )}
 
@@ -426,18 +439,7 @@ export function ConstellationInfoPanel({
         />
       )}
 
-      {selectedNode && (
-        <div style={styles.footerAd}>
-          <InlineAdSlot
-            key={`constellation-panel-${selectedNode.id}`}
-            userId={userId}
-            placement="constellation"
-            layout="banner"
-            refreshKey={`constellation-panel-${selectedNode.id}`}
-            className="constellation-panel-ad"
-          />
-        </div>
-      )}
+
     </div>
   );
 }
@@ -535,7 +537,10 @@ const styles = {
     WebkitOverflowScrolling: 'touch',
   },
 
-  footerAd: {
+  topAd: {
+    width: 227, // 6cm
+    height: 302, // 8cm
+    margin: '76px auto 20px', // 2cm from top, centered horizontally
     flexShrink: 0,
   },
 
