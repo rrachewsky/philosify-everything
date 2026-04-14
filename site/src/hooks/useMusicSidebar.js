@@ -34,10 +34,12 @@ export function useMusicSidebar() {
   const lastAnalysisParamsRef = useRef(null);
   const activeAnalysisRunRef = useRef(0);
   const adDurationRef = useRef(null);
+  const adMediaTypeRef = useRef(null);
 
-  // Called by InlineAdSlot when an ad loads, reports contracted duration
-  const handleAdLoaded = useCallback(({ duration }) => {
+  // Called by InlineAdSlot when an ad loads, reports contracted duration and media type
+  const handleAdLoaded = useCallback(({ duration, mediaType }) => {
     adDurationRef.current = duration;
+    adMediaTypeRef.current = mediaType;
   }, []);
 
   // Open the sidebar (resets state to fresh)
@@ -338,6 +340,7 @@ export function useMusicSidebar() {
 
     // Ads
     handleAdLoaded,
+    currentAdMediaType: adMediaTypeRef.current,
   };
 }
 

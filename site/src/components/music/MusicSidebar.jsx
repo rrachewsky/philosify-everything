@@ -41,6 +41,7 @@ export function MusicSidebar({
   balance,
   lang,
   onAdLoaded,
+  currentAdMediaType,
 }) {
   const { t, i18n } = useTranslation();
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -453,6 +454,7 @@ export function MusicSidebar({
                     refreshKey={`music-panel-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
                     className="analysis-ad-slot"
                     onAdLoaded={onAdLoaded}
+                    mediaType={currentAdMediaType}
                   />
                 </>
               )}

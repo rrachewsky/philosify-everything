@@ -12,14 +12,17 @@ export default function InlineAdSlot({
   className = '',
   label = 'Sponsored',
   onAdLoaded,
+  mediaType = null, // For sidebar: filter by 'video' or 'image' to maintain consistency
 }) {
   const [ad, setAd] = useState(null);
   const [impressionId, setImpressionId] = useState(null);
   const [hasRecordedImpression, setHasRecordedImpression] = useState(false);
   const [hasTrackedClick, setHasTrackedClick] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
   const impressionTimerRef = useRef(null);
   const adContainerRef = useRef(null);
+  const videoRef = useRef(null);
 
   const recordImpression = useCallback(async () => {
     // Skip tracking for house ads (Philosify promotional content, not billed)
@@ -77,13 +80,22 @@ export default function InlineAdSlot({
 
         const data = await response.json();
         console.log('[Ad] Received ad data:', data);
+        
+        // For sidebar: filter by media type to maintain consistency (video→video, image→image)
+        if (mediaType && data.ad && data.ad.media_type !== mediaType) {
+          console.log(`[Ad] Skipping ${data.ad.media_type} ad, waiting for ${mediaType}`);
+          setAd(null);
+          return;
+        }
+        
         setAd(data.ad || null);
         setImpressionId(null);
         setHasRecordedImpression(false);
         setHasTrackedClick(false);
+        setIsClosed(false);
         // Report contracted duration to parent so analysis holds long enough
         if (data.ad?.duration && onAdLoaded) {
-          onAdLoaded({ duration: data.ad.duration });
+          onAdLoaded({ duration: data.ad.duration, mediaType: data.ad.media_type });
         }
       } catch (error) {
         if (error.name !== 'AbortError') {
@@ -100,7 +112,7 @@ export default function InlineAdSlot({
         clearTimeout(impressionTimerRef.current);
       }
     };
-  }, [placement, refreshKey, userId]);
+  }, [placement, refreshKey, userId, mediaType, onAdLoaded]);
 
   // Track viewport visibility with IntersectionObserver
   useEffect(() => {
@@ -148,14 +160,41 @@ export default function InlineAdSlot({
     });
   };
 
-  if (!ad?.creative_url || !ad?.target_url) {
-    console.log('[Ad] Not rendering - missing data:', { creative_url: ad?.creative_url, target_url: ad?.target_url });
+  const handleClose = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsClosed(true);
+  };
+
+  const handleVideoEnded = () => {
+    // Constellation videos auto-close when finished
+    if (placement === 'constellation') {
+      setIsClosed(true);
+    }
+  };
+
+  if (!ad?.creative_url || !ad?.target_url || isClosed) {
+    console.log('[Ad] Not rendering - missing data or closed:', { 
+      creative_url: ad?.creative_url, 
+      target_url: ad?.target_url,
+      isClosed,
+    });
     return null;
   }
 
   return (
     <aside ref={adContainerRef} className={`ad-slot ad-slot--${layout} ${className}`.trim()} aria-label="Sponsored message">
       <p className="ad-slot__label">{label}</p>
+      {placement === 'constellation' && (
+        <button
+          className="ad-slot__close"
+          onClick={handleClose}
+          aria-label="Close ad"
+          title="Close ad"
+        >
+          ✕
+        </button>
+      )}
       <a
         className="ad-slot__card"
         href={ad.target_url}
@@ -166,13 +205,15 @@ export default function InlineAdSlot({
         <div className="ad-slot__creative">
           {ad.media_type === 'video' ? (
             <video
+              ref={videoRef}
               className="ad-slot__video"
               src={ad.creative_url}
               autoPlay
               muted
-              loop
+              loop={placement !== 'constellation'} // Constellation videos don't loop
               playsInline
               onLoadedData={recordImpression}
+              onEnded={handleVideoEnded}
             />
           ) : (
             <img

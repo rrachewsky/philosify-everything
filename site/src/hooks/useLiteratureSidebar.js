@@ -36,9 +36,11 @@ export function useLiteratureSidebar() {
   const lastAnalysisParamsRef = useRef(null);
   const activeAnalysisRunRef = useRef(0);
   const adDurationRef = useRef(null);
+  const adMediaTypeRef = useRef(null);
 
-  const handleAdLoaded = useCallback(({ duration }) => {
+  const handleAdLoaded = useCallback(({ duration, mediaType }) => {
     adDurationRef.current = duration;
+    adMediaTypeRef.current = mediaType;
   }, []);
 
   // Open the sidebar (resets state to fresh)
@@ -338,8 +340,9 @@ export function useLiteratureSidebar() {
     user,
     balance,
 
-    // Ad duration
+    // Ads
     handleAdLoaded,
+    currentAdMediaType: adMediaTypeRef.current,
   };
 }
 

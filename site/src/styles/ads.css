@@ -1,4 +1,5 @@
 .ad-slot {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -12,6 +13,33 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(0, 240, 255, 0.8);
+}
+
+.ad-slot__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ad-slot__close:hover {
+  background: rgba(236, 72, 153, 0.9);
+  color: #fff;
+  transform: scale(1.1);
 }
 
 .ad-slot__card {

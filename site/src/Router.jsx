@@ -486,6 +486,7 @@ export function Router() {
           user={music.user}
           balance={music.balance}
           onAdLoaded={music.handleAdLoaded}
+          currentAdMediaType={music.currentAdMediaType}
         />
 
         {/* Literature Sidebar (Books) */}
