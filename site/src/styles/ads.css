@@ -178,6 +178,24 @@
   aspect-ratio: 3 / 4; /* Portrait video 6:8 ratio */
 }
 
+.sidebar-top-ad {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.sidebar-top-ad .ad-slot__card {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.sidebar-top-ad .ad-slot__video,
+.sidebar-top-ad .ad-slot__image {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Don't crop - show full video/image */
+}
+
 @media (max-width: 768px) {
   .ad-slot--card .ad-slot__image,
   .ad-slot--card .ad-slot__video {

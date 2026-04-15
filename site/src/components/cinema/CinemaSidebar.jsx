@@ -283,6 +283,17 @@ export function CinemaSidebar({
         )}
 
         <div ref={contentRef} className="music-sidebar__content">
+          {/* Ad at top of sidebar - always visible */}
+          <InlineAdSlot
+            key="cinema-sidebar-top"
+            userId={user?.id}
+            placement="sidebar"
+            layout="card"
+            refreshKey="cinema-sidebar-top"
+            className="sidebar-top-ad"
+            onAdLoaded={onAdLoaded}
+          />
+          
           {/* Search input — hidden once a film is selected */}
           {!panelResult && !selectedFilm && (
             <div className="music-search">
@@ -401,15 +412,6 @@ export function CinemaSidebar({
                           : t('analyzing', 'Analyzing...')}
                       </div>
                     </div>
-                    <InlineAdSlot
-                      key={`cinema-${isAnalyzing ? 'analysis' : 'panel'}-${selectedFilm?.id || 'unknown'}`}
-                      userId={user?.id}
-                      placement="sidebar"
-                      layout="card"
-                      refreshKey={`cinema-${selectedFilm?.id || 'unknown'}`}
-                      className="analysis-ad-slot"
-                      onAdLoaded={onAdLoaded}
-                    />
                   </>
                 )}
                 {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}
