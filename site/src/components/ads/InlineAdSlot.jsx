@@ -167,6 +167,10 @@ export default function InlineAdSlot({
     e.preventDefault();
     e.stopPropagation();
     setIsClosed(true);
+    // Constellation: auto-scroll panel content to top when user closes video
+    if (placement === 'constellation' && onVideoEnded) {
+      onVideoEnded();
+    }
   };
 
   const handleVideoEnded = () => {
