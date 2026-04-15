@@ -355,7 +355,7 @@ export async function fetchBreakingNews(env) {
 
   console.log(`[News] Fetching breaking news...`);
 
-  // Fetch major stories — no source filter (let isBlockedSource clean up after).
+  // Fetch REAL breaking news — wars, innovation, business success, heroic acts, major events
   // Using keyword OR gives broad coverage; source filter was too restrictive with keywords.
   // NewsAPI.ai uses "keyword" as array + "keywordOper" for OR logic
   const res = await fetch(`${NEWSAPI_BASE}/article/getArticles`, {
@@ -363,11 +363,28 @@ export async function fetchBreakingNews(env) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       action: "getArticles",
-      keyword: ["war", "election", "recession", "earthquake", "pandemic", "breakthrough", "assassination", "sanctions", "treaty", "summit"],
+      keyword: [
+        // Wars & Conflicts
+        "war", "invasion", "attack", "conflict", "ceasefire", "airstrike", "offensive",
+        // Politics & Diplomacy
+        "election", "president", "prime minister", "coup", "sanctions", "treaty", "summit", "assassination",
+        // Economics & Business
+        "recession", "inflation", "crash", "IPO", "merger", "acquisition", "bankruptcy", "deal", "CEO",
+        // Natural Disasters & Emergencies
+        "earthquake", "tsunami", "hurricane", "wildfire", "flood", "volcano", "disaster",
+        // Health & Science
+        "pandemic", "outbreak", "cure", "vaccine", "breakthrough", "discovery", "Nobel", "space",
+        // Innovation & Technology
+        "innovation", "AI", "launch", "revealed", "unveiled", "invention", "record-breaking",
+        // Heroic Acts & Human Interest
+        "rescue", "hero", "saved", "survived", "bravery", "miracle",
+        // Major Incidents
+        "explosion", "crash", "collapse", "tragedy", "emergency"
+      ],
       keywordOper: "or",
       lang: ["eng"],
       articlesPage: 1,
-      articlesCount: 20,
+      articlesCount: 30,
       articlesSortBy: "date",
       articlesSortByAsc: false,
       dataType: ["news"],
