@@ -117,6 +117,18 @@ export function useCinemaSidebar() {
     filmSearch.clearSelection();
   }, [filmSearch]);
 
+  // Cancel ongoing analysis
+  const cancelAnalysis = useCallback(() => {
+    activeAnalysisRunRef.current += 1;
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+    setIsAnalyzing(false);
+    setAnalysisError(null);
+    stopTimer();
+  }, [stopTimer]);
+
   // Open with pre-populated result (from history)
   const openWithResult = useCallback((analysisData) => {
     filmSearch.clearAll();
@@ -338,11 +350,7 @@ export function useCinemaSidebar() {
     analysisResult,
     analysisError,
     analyze,
-    cancelAnalysis: () => {
-      if (abortRef.current) abortRef.current.abort();
-      setIsAnalyzing(false);
-      stopTimer();
-    },
+    cancelAnalysis,
 
     // Panel
     panelLoading,
