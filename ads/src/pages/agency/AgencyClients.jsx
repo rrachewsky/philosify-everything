@@ -51,62 +51,64 @@ export default function AgencyClients() {
   if (loading) return <div className="loading-screen"><div className="spinner" /></div>;
 
   return (
-    <div className="page-content">
-      <div className="page-header">
-        <h1>{t('agency.clientManagement')}</h1>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button className="btn btn-primary" onClick={() => { setShowAdd(!showAdd); setShowInvite(false); }}>
-            {showAdd ? t('common.cancel') : t('agency.addClient')}
+    <div className="page-stack">
+      <section className="hero-strip">
+        <div>
+          <p className="eyebrow">{t('agency.clientManagement')}</p>
+          <h2>{t('agency.clients')}</h2>
+        </div>
+        <div className="hero-strip__actions">
+          <button className="btn btn--primary" onClick={() => { setShowAdd(!showAdd); setShowInvite(false); }}>
+            {showAdd ? t('common.cancel') : '+ ' + t('agency.addClient')}
           </button>
-          <button className="btn btn-secondary" onClick={() => { setShowInvite(!showInvite); setShowAdd(false); }}>
+          <button className="btn btn--secondary" onClick={() => { setShowInvite(!showInvite); setShowAdd(false); }}>
             {showInvite ? t('common.cancel') : t('agency.inviteExisting')}
           </button>
         </div>
-      </div>
+      </section>
 
       {showInvite && (
-        <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <section className="surface-card">
           <h3>{t('agency.inviteExistingClient')}</h3>
-          {error && <div className="auth-error">{error}</div>}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {error && <div className="alert alert--error">{error}</div>}
+          <div className="field">
             <input
               type="email"
               placeholder={t('agency.clientEmailPlaceholder')}
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
-              style={{ flex: 1 }}
             />
-            <button
-              className="btn btn-primary"
-              disabled={inviting || !inviteEmail}
-              onClick={async () => {
-                setInviting(true);
-                setError('');
-                try {
-                  await api.post('/ads/agency/clients/invite', { email: inviteEmail });
-                  setInviteEmail('');
-                  setShowInvite(false);
-                  await loadClients();
-                } catch (err) {
-                  setError(err.message);
-                } finally {
-                  setInviting(false);
-                }
-              }}
-            >
-              {inviting ? t('agency.adding') : t('agency.sendInvite')}
-            </button>
           </div>
-        </div>
+          <button
+            className="btn btn--primary"
+            disabled={inviting || !inviteEmail}
+            onClick={async () => {
+              setInviting(true);
+              setError('');
+              try {
+                await api.post('/ads/agency/clients/invite', { email: inviteEmail });
+                setInviteEmail('');
+                setShowInvite(false);
+                await loadClients();
+              } catch (err) {
+                setError(err.message);
+              } finally {
+                setInviting(false);
+              }
+            }}
+          >
+            {inviting ? t('agency.adding') : t('agency.sendInvite')}
+          </button>
+        </section>
       )}
 
       {showAdd && (
-        <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <section className="surface-card">
           <h3>{t('agency.addNewClient')}</h3>
-          {error && <div className="auth-error">{error}</div>}
-          <form onSubmit={handleAddClient}>
-            <div className="form-row">
-              <div className="form-group">
+          {error && <div className="alert alert--error">{error}</div>}
+          <form onSubmit={handleAddClient} className="stack">
+            <div className="field-grid">
+              <div className="field">
                 <label htmlFor="client-email">{t('agency.clientEmail')}</label>
                 <input
                   id="client-email"
@@ -117,7 +119,7 @@ export default function AgencyClients() {
                   placeholder={t('agency.clientEmailPlaceholder')}
                 />
               </div>
-              <div className="form-group">
+              <div className="field">
                 <label htmlFor="client-company">{t('agency.clientCompany')}</label>
                 <input
                   id="client-company"
@@ -128,78 +130,64 @@ export default function AgencyClients() {
                 />
               </div>
             </div>
-            <button type="submit" className="btn btn-primary" disabled={adding}>
+            <button type="submit" className="btn btn--primary" disabled={adding}>
               {adding ? t('agency.adding') : t('agency.addClient')}
             </button>
           </form>
-        </div>
+        </section>
       )}
 
-      {loadError && <div className="auth-error">{loadError}</div>}
+      {loadError && <div className="alert alert--error">{loadError}</div>}
 
-      {clients.length === 0 && !loadError ? (
-        <div className="empty-state">
-          <p>{t('agency.noClients')}</p>
-        </div>
-      ) : (
-        <div className="table-wrapper">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>{t('agency.company')}</th>
-                <th>{t('common.email')}</th>
-                <th>{t('common.status')}</th>
-                <th>{t('agency.commission')}</th>
-                <th>{t('agency.joined')}</th>
-                <th>{t('common.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clients.map((client) => (
-                <tr key={client.id}>
-                  <td><strong>{client.company_name || t('common.na')}</strong></td>
-                  <td>{client.email}</td>
-                  <td>
-                    <span className={`badge badge-${client.status === 'approved' ? 'success' : client.status === 'pending' ? 'warning' : 'danger'}`}>
-                      {client.status}
-                    </span>
-                  </td>
-                    <td>
-                      <input
-                        type="number"
-                        min="0"
-                        max="50"
-                        step="1"
-                        defaultValue={client.commission_rate}
-                        style={{ width: '60px', textAlign: 'center' }}
-                        onBlur={async (e) => {
-                          const newRate = parseInt(e.target.value, 10);
-                          if (newRate !== client.commission_rate && newRate >= 0 && newRate <= 50) {
-                            try {
-                              await api.put(`/ads/agency/clients/${client.id}/commission`, { commission_rate: newRate });
-                              loadClients();
-                            } catch (err) {
-                              setLoadError(err.message || t('agency.updateCommissionError'));
-                            }
+      <section className="surface-card">
+        {clients.length === 0 && !loadError ? (
+          <div className="empty-state">
+            <h4>{t('agency.noClients')}</h4>
+            <p>{t('agency.noClientsMessage')}</p>
+          </div>
+        ) : (
+          <div className="collection-list">
+            {clients.map((client) => (
+              <div key={client.id} className="collection-row collection-row--stacked">
+                <div className="collection-row__main">
+                  <strong>{client.company_name || t('common.na')}</strong>
+                  <p>{client.email} · {t('agency.joined')}: {new Date(client.created_at).toLocaleDateString()}</p>
+                </div>
+                <div className="collection-row__meta">
+                  <span className={`status-chip status-chip--${client.status}`}>{client.status}</span>
+                  <div className="commission-control">
+                    <input
+                      type="number"
+                      min="0"
+                      max="50"
+                      step="1"
+                      defaultValue={client.commission_rate}
+                      onBlur={async (e) => {
+                        const newRate = parseInt(e.target.value, 10);
+                        if (newRate !== client.commission_rate && newRate >= 0 && newRate <= 50) {
+                          try {
+                            await api.put(`/ads/agency/clients/${client.id}/commission`, { commission_rate: newRate });
+                            loadClients();
+                          } catch (err) {
+                            setLoadError(err.message || t('agency.updateCommissionError'));
                           }
-                        }}
-                      />%
-                    </td>
-                  <td>{new Date(client.created_at).toLocaleDateString()}</td>
-                  <td>
-                    <button
-                      className="btn btn-sm"
-                      onClick={() => navigate(`/agency/clients/${client.advertiser_id}/campaigns`)}
-                    >
-                      {t('agency.campaigns')}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                        }
+                      }}
+                    />
+                    <span>%</span>
+                  </div>
+                  <button
+                    className="btn btn--secondary btn--small"
+                    onClick={() => navigate(`/agency/clients/${client.advertiser_id}/campaigns`)}
+                  >
+                    {t('agency.campaigns')}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

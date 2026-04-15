@@ -61,97 +61,113 @@ export default function AgencyEarnings() {
   const canPayout = (earnings?.balance_cents || 0) >= 10000;
 
   return (
-    <div className="page-content">
-      <div className="page-header">
-        <h1>{t('agency.earningsTitle')}</h1>
-      </div>
+    <div className="page-stack">
+      <section className="hero-strip">
+        <div>
+          <p className="eyebrow">{t('agency.earningsTitle')}</p>
+          <h2>{t('agency.earnings')}</h2>
+        </div>
+      </section>
 
-      {error && <div className="auth-error">{error}</div>}
+      {error && <div className="alert alert--error">{error}</div>}
       {payoutResult && (
-        <div className="success-banner">
+        <div className="alert alert--success">
           {t('agency.payoutRequested')} ${(payoutResult.amount_cents / 100).toFixed(2)}.
           {payoutResult.message}
         </div>
       )}
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.availableBalance')}</div>
-          <div className="stat-value">${balance.toFixed(2)}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.totalEarned')}</div>
-          <div className="stat-value">${totalEarned.toFixed(2)}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.totalPaidOut')}</div>
-          <div className="stat-value">${totalPaid.toFixed(2)}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.commissionRate')}</div>
-          <div className="stat-value">{agency?.default_commission_pct || 10}%</div>
-        </div>
-      </div>
+      <section className="stats-grid stats-grid--prominent">
+        <article className="stat-card stat-card--primary">
+          <div className="stat-card__icon">💰</div>
+          <div>
+            <span className="stat-card__label">{t('agency.availableBalance')}</span>
+            <strong className="stat-card__value">${balance.toFixed(2)}</strong>
+          </div>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">📈</div>
+          <div>
+            <span className="stat-card__label">{t('agency.totalEarned')}</span>
+            <strong className="stat-card__value">${totalEarned.toFixed(2)}</strong>
+          </div>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">💵</div>
+          <div>
+            <span className="stat-card__label">{t('agency.totalPaidOut')}</span>
+            <strong className="stat-card__value">${totalPaid.toFixed(2)}</strong>
+          </div>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">📊</div>
+          <div>
+            <span className="stat-card__label">{t('agency.commissionRate')}</span>
+            <strong className="stat-card__value">{agency?.default_commission_pct || 10}%</strong>
+          </div>
+        </article>
+      </section>
 
-      <div className="section" style={{ marginTop: '2rem' }}>
-        <h2>{t('agency.requestPayout')}</h2>
-        {canPayout ? (
-          <div className="payout-card">
-            <p>
-              {t('agency.payoutAvailable', { amount: balance.toFixed(2) })}
-              {' '}{t('agency.processingTime')}
-            </p>
-            <button
-              className="btn btn-primary"
-              onClick={handlePayout}
-              disabled={payoutLoading}
-            >
-              {payoutLoading ? t('agency.processing') : `${t('agency.requestPayout')} ($${balance.toFixed(2)})`}
-            </button>
-          </div>
-        ) : (
-          <div className="empty-state">
-            <p>
-              {t('agency.payoutMinBalance', { amount: balance.toFixed(2) })}
-            </p>
-          </div>
-        )}
-      </div>
+      <section className="surface-card">
+        <header className="surface-card__header">
+          <h2 className="surface-card__title">{t('agency.requestPayout')}</h2>
+        </header>
+        <div className="surface-card__content">
+          {canPayout ? (
+            <div className="payout-ready">
+              <p className="payout-ready__message">
+                {t('agency.payoutAvailable', { amount: balance.toFixed(2) })}
+                {' '}{t('agency.processingTime')}
+              </p>
+              <button
+                className="btn btn--primary btn--large"
+                onClick={handlePayout}
+                disabled={payoutLoading}
+              >
+                {payoutLoading ? t('agency.processing') : `${t('agency.requestPayout')} ($${balance.toFixed(2)})`}
+              </button>
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p className="empty-state__message">
+                {t('agency.payoutMinBalance', { amount: balance.toFixed(2) })}
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
 
       {earnings?.transactions?.length > 0 && (
-        <div className="section" style={{ marginTop: '2rem' }}>
-          <h2>{t('agency.transactionHistory')}</h2>
-          <div className="table-wrapper">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>{t('common.date')}</th>
-                  <th>{t('agency.type')}</th>
-                  <th>{t('common.amount')}</th>
-                  <th>{t('agency.balanceAfter')}</th>
-                  <th>{t('common.description')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {earnings.transactions.map((tx) => (
-                  <tr key={tx.id}>
-                    <td>{new Date(tx.created_at).toLocaleDateString()}</td>
-                    <td>
-                      <span className={`badge badge-${tx.type === 'commission' ? 'success' : 'info'}`}>
-                        {tx.type}
-                      </span>
-                    </td>
-                    <td className={tx.amount_cents >= 0 ? 'text-success' : 'text-danger'}>
-                      {tx.amount_cents >= 0 ? '+' : ''}${(tx.amount_cents / 100).toFixed(2)}
-                    </td>
-                    <td>${(tx.balance_after_cents / 100).toFixed(2)}</td>
-                    <td>{tx.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <section className="surface-card">
+          <header className="surface-card__header">
+            <h2 className="surface-card__title">{t('agency.transactionHistory')}</h2>
+          </header>
+          <div className="collection-list">
+            {earnings.transactions.map((tx) => (
+              <article key={tx.id} className="transaction-item">
+                <div className="transaction-item__main">
+                  <div className="transaction-item__header">
+                    <span className="transaction-item__date">
+                      {new Date(tx.created_at).toLocaleDateString()}
+                    </span>
+                    <span className={`badge badge--${tx.type === 'commission' ? 'success' : 'info'}`}>
+                      {tx.type}
+                    </span>
+                  </div>
+                  <p className="transaction-item__description">{tx.description}</p>
+                </div>
+                <div className="transaction-item__amounts">
+                  <div className={`transaction-item__amount ${tx.amount_cents >= 0 ? 'transaction-item__amount--positive' : 'transaction-item__amount--negative'}`}>
+                    {tx.amount_cents >= 0 ? '+' : ''}${(tx.amount_cents / 100).toFixed(2)}
+                  </div>
+                  <div className="transaction-item__balance">
+                    {t('agency.balanceAfter')}: ${(tx.balance_after_cents / 100).toFixed(2)}
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );

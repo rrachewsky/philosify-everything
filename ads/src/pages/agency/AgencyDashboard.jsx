@@ -33,93 +33,82 @@ export default function AgencyDashboard() {
   if (loading) return <div className="loading-screen"><div className="spinner" /></div>;
 
   return (
-    <div className="page-content">
-      <div className="page-header">
-        <h1>{t('agency.dashboard')}</h1>
-        <p className="text-muted">{t('agency.welcome')}, {agency?.company_name}</p>
-      </div>
+    <div className="page-stack">
+      <section className="dashboard-hero">
+        <div className="dashboard-hero__content">
+          <p className="eyebrow">{t('agency.dashboard')}</p>
+          <h2>{agency?.company_name || t('agency.welcome')}</h2>
+          <p className="dashboard-hero__subtitle">{t('agency.manageClients')}</p>
+        </div>
+        <Link to="/agency/clients/new" className="btn btn--primary btn--large btn--cta">
+          + {t('agency.addClient')}
+        </Link>
+      </section>
 
-      {error && <div className="auth-error">{error}</div>}
+      {error && <div className="alert alert--error">{error}</div>}
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.balance')}</div>
-          <div className="stat-value">${((earnings?.balance_cents || 0) / 100).toFixed(2)}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.totalEarned')}</div>
-          <div className="stat-value">${((earnings?.total_earned_cents || 0) / 100).toFixed(2)}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.clients')}</div>
-          <div className="stat-value">{clients.length}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">{t('agency.commissionRate')}</div>
-          <div className="stat-value">{agency?.default_commission_pct || 10}%</div>
-        </div>
-      </div>
+      <section className="stats-grid stats-grid--prominent">
+        <article className="stat-card stat-card--primary">
+          <div className="stat-card__icon">💰</div>
+          <div>
+            <span className="stat-card__label">{t('agency.balance')}</span>
+            <strong className="stat-card__value">${((earnings?.balance_cents || 0) / 100).toFixed(2)}</strong>
+          </div>
+          <Link to="/agency/earnings" className="stat-card__action">{t('agency.requestPayout')}</Link>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">📈</div>
+          <div>
+            <span className="stat-card__label">{t('agency.totalEarned')}</span>
+            <strong className="stat-card__value">${((earnings?.total_earned_cents || 0) / 100).toFixed(2)}</strong>
+          </div>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">👥</div>
+          <div>
+            <span className="stat-card__label">{t('agency.clients')}</span>
+            <strong className="stat-card__value">{clients.length}</strong>
+          </div>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">💵</div>
+          <div>
+            <span className="stat-card__label">{t('agency.commissionRate')}</span>
+            <strong className="stat-card__value">{agency?.default_commission_pct || 10}%</strong>
+          </div>
+        </article>
+      </section>
 
-      <div className="section">
-        <div className="section-header">
-          <h2>{t('agency.clients')}</h2>
-          <Link to="/agency/clients/new" className="btn btn-primary btn-sm">
-            {t('agency.addClient')}
+      <section className="surface-card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">{t('agency.recentClients')}</p>
+            <h3>{t('agency.clients')}</h3>
+          </div>
+          <Link to="/agency/clients" className="btn btn--ghost">
+            {t('common.viewAll')}
           </Link>
         </div>
 
         {clients.length === 0 ? (
           <div className="empty-state">
-            <p>{t('agency.noClients')}</p>
-            <Link to="/agency/clients/new" className="btn btn-primary">{t('agency.addClient')}</Link>
+            <h4>{t('agency.noClients')}</h4>
+            <Link to="/agency/clients/new" className="btn btn--primary">{t('agency.addClient')}</Link>
           </div>
         ) : (
-          <div className="table-wrapper">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>{t('agency.company')}</th>
-                  <th>{t('common.email')}</th>
-                  <th>{t('common.status')}</th>
-                  <th>{t('agency.commission')}</th>
-                  <th>{t('common.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clients.map((client) => (
-                  <tr key={client.id}>
-                    <td>{client.company_name || client.email}</td>
-                    <td>{client.email}</td>
-                    <td>
-                      <span className={`badge badge-${client.status === 'approved' ? 'success' : 'warning'}`}>
-                        {client.status}
-                      </span>
-                    </td>
-                    <td>{client.commission_rate || agency?.default_commission_pct}%</td>
-                    <td>
-                      <Link to={`/agency/clients/${client.advertiser_id}/campaigns`} className="btn btn-sm">
-                        {t('agency.campaigns')}
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="collection-list">
+            {clients.slice(0, 5).map((client) => (
+              <Link key={client.id} to={`/agency/clients/${client.advertiser_id}/campaigns`} className="collection-row">
+                <div>
+                  <strong>{client.company_name || client.email}</strong>
+                  <p>{client.email} · {t('agency.commission')}: {client.commission_rate || agency?.default_commission_pct}%</p>
+                </div>
+                <span className={`status-chip status-chip--${client.status}`}>{client.status}</span>
+              </Link>
+            ))}
           </div>
         )}
-      </div>
-
-      {(earnings?.balance_cents || 0) >= 10000 && (
-        <div className="section">
-          <div className="section-header">
-            <h2>{t('agency.requestPayout')}</h2>
-          </div>
-          <div className="payout-card">
-            <p>{t('agency.payoutAvailable', { amount: ((earnings?.balance_cents || 0) / 100).toFixed(2) })}</p>
-            <Link to="/agency/earnings" className="btn btn-primary">{t('agency.requestPayout')}</Link>
-          </div>
-        </div>
-      )}
+      </section>
     </div>
   );
 }
