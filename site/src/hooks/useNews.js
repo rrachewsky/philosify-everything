@@ -39,11 +39,15 @@ export function useNews() {
   const [panelResult, setPanelResult] = useState(null);
   const [panelError, setPanelError] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [panelElapsed, setPanelElapsed] = useState(0);
   const timerRef = useRef(null);
+  const panelTimerRef = useRef(null);
   const adDurationRef = useRef(null);
+  const [currentAdMediaType, setCurrentAdMediaType] = useState(null);
 
-  const handleAdLoaded = useCallback(({ duration }) => {
+  const handleAdLoaded = useCallback(({ duration, mediaType }) => {
     adDurationRef.current = duration;
+    if (mediaType) setCurrentAdMediaType(mediaType);
   }, []);
 
   // Load breaking news on sidebar open
@@ -231,6 +235,16 @@ export function useNews() {
     [selectedArticle],
   );
 
+  // Cancel analysis
+  const cancelAnalysis = useCallback(() => {
+    setIsAnalyzing(false);
+    setAnalysisError(null);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
   // Philosopher panel analysis (3 credits) — UNCHANGED from useNewsSidebar
   const analyzeWithPanel = useCallback(
     async (chosenPhilosophers, lang = 'en') => {
@@ -238,10 +252,10 @@ export function useNews() {
 
       setPanelLoading(true);
       setPanelError(null);
-      setElapsedTime(0);
+      setPanelElapsed(0);
       const startTime = Date.now();
-      timerRef.current = setInterval(() => {
-        setElapsedTime(Date.now() - startTime);
+      panelTimerRef.current = setInterval(() => {
+        setPanelElapsed(Date.now() - startTime);
       }, 100);
 
       try {
@@ -262,9 +276,9 @@ export function useNews() {
         throw err;
       } finally {
         setPanelLoading(false);
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-          timerRef.current = null;
+        if (panelTimerRef.current) {
+          clearInterval(panelTimerRef.current);
+          panelTimerRef.current = null;
         }
       }
     },
@@ -302,6 +316,9 @@ export function useNews() {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      if (panelTimerRef.current) {
+        clearInterval(panelTimerRef.current);
+      }
     };
   }, []);
 
@@ -335,6 +352,7 @@ export function useNews() {
     analysisResult,
     analysisError,
     analyzeArticle,
+    cancelAnalysis,
     // Philosopher panel
     panelLoading,
     panelResult,
@@ -342,7 +360,9 @@ export function useNews() {
     analyzeWithPanel,
     // Timer
     elapsedTime,
+    panelElapsed,
     formatTime,
+    currentAdMediaType,
     // History
     openWithResult,
     // Payment return

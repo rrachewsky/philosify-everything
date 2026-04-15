@@ -134,6 +134,7 @@ export function LiteratureSidebar({
   balance,
   lang,
   onAdLoaded,
+  currentAdMediaType,
 }) {
   const { t, i18n } = useTranslation();
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -637,6 +638,7 @@ export function LiteratureSidebar({
                     refreshKey={`literature-panel-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
                     className="analysis-ad-slot"
                     onAdLoaded={onAdLoaded}
+                    mediaType={currentAdMediaType}
                   />
                 </>
               )}

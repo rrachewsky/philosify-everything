@@ -132,15 +132,18 @@ export function CinemaSidebar({
   analysisResult,
   analysisError,
   analyze,
+  cancelAnalysis,
   panelLoading,
   panelResult,
   panelError,
   elapsedTime,
+  panelElapsed,
   formatTime,
   analyzeWithPanel,
   user,
   balance,
   onAdLoaded,
+  currentAdMediaType,
 }) {
   const { t, i18n } = useTranslation();
   const [showPicker, setShowPicker] = useState(false);
@@ -336,13 +339,6 @@ export function CinemaSidebar({
           {selectedFilm && !panelResult && !analysisResult && (
             <>
               <div className="music-selected">
-                {selectedFilm.poster_url && (
-                  <img
-                    className="music-selected__cover"
-                    src={selectedFilm.poster_url}
-                    alt=""
-                  />
-                )}
                 <div className="music-selected__info">
                   <div className="music-selected__song">{selectedFilm.title}</div>
                   <div className="music-selected__artist">
@@ -378,6 +374,7 @@ export function CinemaSidebar({
                     <button
                       className="music-analyze__button music-analyze__button--panel"
                       onClick={handleOpenPanel}
+                      disabled={isAnalyzing}
                     >
                       {t('philosopherPanel.button', "Philosopher's Panel")}
                       <span className="music-analyze__cost">
@@ -385,6 +382,13 @@ export function CinemaSidebar({
                       </span>
                     </button>
                   </div>
+                ) : isAnalyzing ? (
+                  <button
+                    className="music-analyze__button music-analyze__button--cancel"
+                    onClick={cancelAnalysis}
+                  >
+                    {t('listen.cancel')}
+                  </button>
                 ) : null}
                 {isAnalyzing && (
                   <>
@@ -415,7 +419,7 @@ export function CinemaSidebar({
                         <div className="music-timer__fill"></div>
                       </div>
                       <div className="music-timer__time">
-                        <span>&#9201;</span> {formatTime(elapsedTime)}
+                        <span>&#9201;</span> {formatTime(panelElapsed)}
                       </div>
                       <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
                     </div>
@@ -427,6 +431,7 @@ export function CinemaSidebar({
                       refreshKey={`cinema-panel-${selectedFilm?.id || 'unknown'}`}
                       className="analysis-ad-slot"
                       onAdLoaded={onAdLoaded}
+                      mediaType={currentAdMediaType}
                     />
                   </>
                 )}
@@ -470,9 +475,6 @@ export function CinemaSidebar({
               {/* Film title + synopsis */}
               {selectedFilm && (
                 <div className="music-selected" style={{ marginBottom: 0 }}>
-                  {selectedFilm.poster_url && (
-                    <img className="music-selected__cover" src={selectedFilm.poster_url} alt="" />
-                  )}
                   <div className="music-selected__info">
                     <div className="music-selected__song">{selectedFilm.title}</div>
                     <div className="music-selected__artist">
@@ -566,9 +568,6 @@ export function CinemaSidebar({
               {/* Film title + synopsis */}
               {selectedFilm && (
                 <div className="music-selected" style={{ marginBottom: 0 }}>
-                  {selectedFilm.poster_url && (
-                    <img className="music-selected__cover" src={selectedFilm.poster_url} alt="" />
-                  )}
                   <div className="music-selected__info">
                     <div className="music-selected__song">{selectedFilm.title}</div>
                     <div className="music-selected__artist">

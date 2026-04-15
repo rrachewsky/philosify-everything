@@ -24,16 +24,23 @@ import '../../styles/music-sidebar.css';
 // Breaking News Ticker — uses EXACT same classes as Music TopTenTicker
 // Only differences: label text + item content
 // ============================================================
-function BreakingTicker({ articles, onSelect }) {
+function BreakingTicker({ articles, onSelect, loading }) {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeftState, setScrollLeftState] = useState(0);
   const trackRef = useRef(null);
 
-  if (articles.length === 0) return null;
+  // Show loading placeholder or articles
+  const displayArticles = articles.length > 0 
+    ? articles 
+    : loading 
+    ? [{ title: 'Loading breaking news...', source: '', url: null }]
+    : [];
 
-  const duplicated = [...articles, ...articles, ...articles];
-  const count = articles.length;
+  if (displayArticles.length === 0) return null;
+
+  const duplicated = [...displayArticles, ...displayArticles, ...displayArticles];
+  const count = displayArticles.length;
   const animationDuration = count * 16; // 16 seconds per item — double Music's 8s for readable headlines
 
   const handleMouseDown = (e) => {
@@ -210,12 +217,15 @@ export default function NewsSidebar({
     analysisResult,
     analysisError,
     analyzeArticle,
+    cancelAnalysis,
     panelLoading,
     panelResult,
     panelError,
     analyzeWithPanel,
     elapsedTime,
+    panelElapsed,
     formatTime,
+    currentAdMediaType,
   } = news;
 
   // Handle analyze with auth/balance check (same pattern as Music)
@@ -377,23 +387,10 @@ export default function NewsSidebar({
       <div className={`music-sidebar ${isOpen ? 'music-sidebar--open' : ''}`}>
       {/* Header */}
       <div className="music-sidebar__header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span className="music-sidebar__title">
-            <span className="music-sidebar__icon">&#128240;</span>
-            {t('home.categories.news.title', 'News')}
-          </span>
-          <button
-            className={`news-filter-btn ${sourcesUnlocked ? 'news-filter-btn--unlocked' : ''}`}
-            onClick={() => {
-              refreshPreferences();
-              setShowSourcePicker(true);
-            }}
-            title={t('news.sources', 'Sources')}
-          >
-            <span style={{ fontSize: '13px', marginRight: '4px' }}>&#9881;</span>
-            <span style={{ fontSize: '11px' }}>{t('news.sources', 'Sources')}</span>
-          </button>
-        </div>
+        <span className="music-sidebar__title">
+          <span className="music-sidebar__icon">&#128240;</span>
+          {t('home.categories.news.title', 'News')}
+        </span>
         <button className="music-sidebar__close" onClick={onClose}>&times;</button>
       </div>
 
@@ -403,6 +400,7 @@ export default function NewsSidebar({
           <BreakingTicker
             articles={breakingNews}
             onSelect={selectArticle}
+            loading={breakingLoading}
           />
         </div>
       )}
@@ -486,7 +484,7 @@ export default function NewsSidebar({
         {selectedArticle && !analysisResult && !isAnalyzing && !panelResult && !panelLoading && (
           <div>
             {/* Selected article — same pattern as Music, white title, no truncation */}
-            <div className="music-selected news-selected-title">
+            <div className="music-selected">
               <div className="music-selected__info">
                 <div className="music-selected__song">{selectedArticle.title}</div>
                 <div className="music-selected__artist">
@@ -508,24 +506,33 @@ export default function NewsSidebar({
             )}
 
             {/* Buttons — identical layout to Music/Cinema/Literature */}
-            <div className="music-analyze__buttons-row">
+            {!isAnalyzing && !panelLoading ? (
+              <div className="music-analyze__buttons-row">
+                <button
+                  className="music-analyze__button"
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing || panelLoading}
+                >
+                  {t('home.categories.news.analyzeButton', 'Analyze Article')}
+                  <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
+                </button>
+                <button
+                  className="music-analyze__button music-analyze__button--panel"
+                  onClick={handleOpenPanel}
+                  disabled={isAnalyzing || panelLoading}
+                >
+                  {t('philosopherPanel.button', 'Philosopher Panel')}
+                  <span className="music-analyze__cost">3 {t('philosopherPanel.credits', 'credits')}</span>
+                </button>
+              </div>
+            ) : isAnalyzing ? (
               <button
-                className="music-analyze__button"
-                onClick={handleAnalyze}
-                disabled={isAnalyzing || panelLoading}
+                className="music-analyze__button music-analyze__button--cancel"
+                onClick={cancelAnalysis}
               >
-                {t('home.categories.news.analyzeButton', 'Analyze Article')}
-                <span className="music-analyze__cost">1 {t('philosopherPanel.credit', 'credit')}</span>
+                {t('listen.cancel')}
               </button>
-              <button
-                className="music-analyze__button music-analyze__button--panel"
-                onClick={handleOpenPanel}
-                disabled={isAnalyzing || panelLoading}
-              >
-                {t('philosopherPanel.button', 'Philosopher Panel')}
-                <span className="music-analyze__cost">3 {t('philosopherPanel.credits', 'credits')}</span>
-              </button>
-            </div>
+            ) : null}
 
             {(analysisError || panelError) && (
               <div className="music-error">{analysisError || panelError}</div>
@@ -547,6 +554,7 @@ export default function NewsSidebar({
             </div>
             <InlineAdSlot
               key={`news-analysis-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              userId={user?.id}
               placement="sidebar"
               layout="card"
               refreshKey={`news-analysis-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
@@ -562,17 +570,19 @@ export default function NewsSidebar({
                 <div className="music-timer__fill"></div>
               </div>
               <div className="music-timer__time">
-                <span>&#9201;</span> {formatTime(elapsedTime)}
+                <span>&#9201;</span> {formatTime(panelElapsed)}
               </div>
               <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
             </div>
             <InlineAdSlot
               key={`news-panel-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              userId={user?.id}
               placement="sidebar"
               layout="card"
               refreshKey={`news-panel-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
               className="analysis-ad-slot"
               onAdLoaded={onAdLoaded}
+              mediaType={currentAdMediaType}
             />
           </>
         )}
