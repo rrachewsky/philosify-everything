@@ -167,17 +167,10 @@ export default function InlineAdSlot({
     e.preventDefault();
     e.stopPropagation();
     setIsClosed(true);
-    // Constellation: auto-scroll panel content to top when user closes video
-    if (placement === 'constellation' && onVideoEnded) {
-      onVideoEnded();
-    }
   };
 
   const handleVideoEnded = () => {
-    // Constellation: auto-scroll panel content to top when video ends
-    if (placement === 'constellation' && onVideoEnded) {
-      onVideoEnded();
-    }
+    // Videos loop, no action needed
   };
 
   const toggleMute = (e) => {
@@ -201,16 +194,6 @@ export default function InlineAdSlot({
   return (
     <aside ref={adContainerRef} className={`ad-slot ad-slot--${layout} ${className}`.trim()} aria-label="Sponsored message">
       <p className="ad-slot__label">{label}</p>
-      {placement === 'constellation' && (
-        <button
-          className="ad-slot__close"
-          onClick={handleClose}
-          aria-label="Close ad"
-          title="Close ad"
-        >
-          ✕
-        </button>
-      )}
       <a
         className="ad-slot__card"
         href={ad.target_url}
@@ -227,7 +210,7 @@ export default function InlineAdSlot({
                 src={ad.creative_url}
                 autoPlay
                 muted={isMuted}
-                loop={placement !== 'constellation'} // Constellation videos don't loop
+                loop // All videos loop (including constellation)
                 playsInline
                 onLoadedData={recordImpression}
                 onEnded={handleVideoEnded}
