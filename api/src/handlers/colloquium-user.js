@@ -1144,7 +1144,7 @@ export async function handleProposeColloquium(request, env, origin, ctx) {
     console.error("[Colloquium] Propose error:", err.message);
     const body = await request.json().catch(() => ({}));
     const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
-    const rawLang = (body.lang || "en").trim().split("-"-")[0].toLowerCase();
+    const rawLang = (body.lang || "en").trim().split("-")[0].toLowerCase();
     const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
     return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
