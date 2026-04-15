@@ -481,7 +481,7 @@ export default function NewsSidebar({
         )}
 
         {/* ── STATE 2: Article selected (not yet analyzed) ── */}
-        {selectedArticle && !analysisResult && !isAnalyzing && !panelResult && !panelLoading && (
+        {selectedArticle && !analysisResult && !panelResult && (
           <div>
             {/* Selected article — same pattern as Music, white title, no truncation */}
             <div className="music-selected">
