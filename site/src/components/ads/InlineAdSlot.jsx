@@ -12,6 +12,7 @@ export default function InlineAdSlot({
   className = '',
   label = 'Sponsored',
   onAdLoaded,
+  onVideoEnded, // Callback when video ends (for constellation auto-scroll)
   mediaType = null, // For sidebar: filter by 'video' or 'image' to maintain consistency
 }) {
   const [ad, setAd] = useState(null);
@@ -169,9 +170,9 @@ export default function InlineAdSlot({
   };
 
   const handleVideoEnded = () => {
-    // Constellation videos auto-close when finished
-    if (placement === 'constellation') {
-      setIsClosed(true);
+    // Constellation: auto-scroll panel content to top when video ends
+    if (placement === 'constellation' && onVideoEnded) {
+      onVideoEnded();
     }
   };
 

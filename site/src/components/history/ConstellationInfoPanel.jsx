@@ -135,9 +135,16 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
     }
   }, [node.id]);
 
+  // Scroll to top when constellation video ends
+  const handleVideoEnded = React.useCallback(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, []);
+
   return (
     <div ref={contentRef} style={styles.content}>
-      {/* Ad positioned at top - video only, 6cm × 8cm, centered, 2cm from top */}
+      {/* Ad positioned at top - video only, 6cm × 8cm, centered, 1cm from top */}
       <div style={styles.topAd}>
         <InlineAdSlot
           key={`constellation-panel-${node.id}`}
@@ -146,6 +153,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
           layout="video"
           refreshKey={`constellation-panel-${node.id}`}
           className="constellation-top-ad"
+          onVideoEnded={handleVideoEnded}
         />
       </div>
       
@@ -540,7 +548,7 @@ const styles = {
   topAd: {
     width: 227, // 6cm
     height: 302, // 8cm
-    margin: '76px auto 20px', // 2cm from top, centered horizontally
+    margin: '38px auto 20px', // 1cm from top, centered horizontally
     flexShrink: 0,
   },
 
