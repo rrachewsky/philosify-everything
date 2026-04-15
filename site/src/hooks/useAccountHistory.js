@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { config } from '@/config';
 import { logger } from '@/utils';
+import { authService } from '@/services/auth';
 
 // Only show credit additions/adjustments — consumption entries are already
 // represented by the unified history items (analyses, panels, debates, etc.)
@@ -37,14 +38,34 @@ export function useAccountHistory(user) {
     try {
       // Unified history — one call for all types
       try {
-        const historyRes = await fetch(`${config.apiUrl}/api/user-history`, {
+        let historyRes = await fetch(`${config.apiUrl}/api/user-history`, {
           method: 'GET',
           credentials: 'include',
         });
 
+        // Handle 401 - token expired, trigger refresh and retry once
         if (historyRes.status === 401) {
-          setError('Session expired — please sign out and sign back in.');
-          return;
+          console.log('[AccountHistory] Token expired, refreshing session...');
+          try {
+            await authService.getSession(); // Triggers backend auto-refresh
+            console.log('[AccountHistory] Session refreshed, retrying request...');
+            await new Promise((resolve) => setTimeout(resolve, 500)); // Brief delay
+            
+            // Retry the request
+            historyRes = await fetch(`${config.apiUrl}/api/user-history`, {
+              method: 'GET',
+              credentials: 'include',
+            });
+
+            if (historyRes.status === 401) {
+              setError('Session expired — please sign out and sign back in.');
+              return;
+            }
+          } catch (refreshError) {
+            console.error('[AccountHistory] Session refresh failed:', refreshError);
+            setError('Session expired — please sign out and sign back in.');
+            return;
+          }
         }
         if (historyRes.ok) {
           const historyData = await historyRes.json();

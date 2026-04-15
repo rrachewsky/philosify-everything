@@ -10,6 +10,7 @@ import { config } from '@/config';
 import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
 import { getPendingAction, clearPendingAction } from '../utils/pendingAction.js';
+import { authService } from '@/services/auth';
 
 export function useCinemaSidebar() {
   const { i18n } = useTranslation();
@@ -149,7 +150,7 @@ export function useCinemaSidebar() {
       abortRef.current = controller;
 
       try {
-        const response = await fetch(`${config.apiUrl}/api/cinema-analyze`, {
+        let response = await fetch(`${config.apiUrl}/api/cinema-analyze`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
@@ -169,8 +170,42 @@ export function useCinemaSidebar() {
           signal: controller.signal,
         });
 
+        // Handle 401 - token expired, trigger refresh and retry once
         if (response.status === 401) {
-          throw new Error('Session expired — please sign out and sign back in.');
+          console.log('[CinemaAnalyze] Token expired, refreshing session...');
+          try {
+            await authService.getSession(); // Triggers backend auto-refresh
+            console.log('[CinemaAnalyze] Session refreshed, retrying request...');
+            await new Promise((resolve) => setTimeout(resolve, 500)); // Brief delay
+            
+            // Retry the request
+            response = await fetch(`${config.apiUrl}/api/cinema-analyze`, {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: selectedFilm.title,
+                original_title: selectedFilm.original_title || null,
+                director: selectedFilm.director || '',
+                tmdb_id: selectedFilm.tmdb_id,
+                overview: selectedFilm.overview || '',
+                genres: selectedFilm.genres || [],
+                countries: selectedFilm.countries || [],
+                year: selectedFilm.year,
+                poster_url: selectedFilm.poster_url,
+                model,
+                lang: lang || i18n.resolvedLanguage || i18n.language || 'en',
+              }),
+              signal: controller.signal,
+            });
+
+            if (response.status === 401) {
+              throw new Error('Session expired — please sign out and sign back in.');
+            }
+          } catch (refreshError) {
+            console.error('[CinemaAnalyze] Session refresh failed:', refreshError);
+            throw new Error('Session expired — please sign out and sign back in.');
+          }
         }
 
         const data = await response.json();

@@ -408,17 +408,6 @@ export default function NewsSidebar({
       )}
 
       <div ref={contentRef} className="music-sidebar__content">
-        {/* Ad at top of sidebar - always visible */}
-        <InlineAdSlot
-          key="news-sidebar-top"
-          userId={user?.id}
-          placement="sidebar"
-          layout="card"
-          refreshKey="news-sidebar-top"
-          className="sidebar-top-ad"
-          onAdLoaded={onAdLoaded}
-        />
-
         {/* ── STATE 1: Search home (no article selected, no result) ── */}
         {!selectedArticle && !panelResult && !panelLoading && !analysisResult && (
           <>
@@ -560,6 +549,14 @@ export default function NewsSidebar({
                   : t('news.analyzing', { defaultValue: 'Analyzing article...' })}
               </div>
             </div>
+            <InlineAdSlot
+              key={`news-${panelLoading ? 'panel' : 'analysis'}-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              placement="sidebar"
+              layout="card"
+              refreshKey={`news-${panelLoading ? 'panel' : 'analysis'}-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              className="analysis-ad-slot"
+              onAdLoaded={onAdLoaded}
+            />
           </>
         )}
 

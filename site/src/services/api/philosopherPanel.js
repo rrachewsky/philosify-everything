@@ -1,5 +1,6 @@
 // API service for Philosopher Panel feature
 import { config } from '@/config';
+import { authService } from '@/services/auth';
 
 /**
  * Fetch the full philosopher roster (name, era, school, price)
@@ -40,7 +41,7 @@ export async function requestPhilosopherPanel({
   philosophers,
   lang = 'en',
 }) {
-  const response = await fetch(`${config.apiUrl}/api/philosopher-panel`, {
+  let response = await fetch(`${config.apiUrl}/api/philosopher-panel`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
@@ -56,8 +57,38 @@ export async function requestPhilosopherPanel({
     }),
   });
 
+  // Handle 401 - token expired, trigger refresh and retry once
   if (response.status === 401) {
-    throw new Error('Session expired — please sign out and sign back in.');
+    console.log('[PhilosopherPanel] Token expired, refreshing session...');
+    try {
+      await authService.getSession(); // Triggers backend auto-refresh
+      console.log('[PhilosopherPanel] Session refreshed, retrying request...');
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Brief delay
+      
+      // Retry the request
+      response = await fetch(`${config.apiUrl}/api/philosopher-panel`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mediaType,
+          title,
+          artist,
+          lyrics,
+          description,
+          categories,
+          philosophers,
+          lang,
+        }),
+      });
+
+      if (response.status === 401) {
+        throw new Error('Session expired — please sign out and sign back in.');
+      }
+    } catch (refreshError) {
+      console.error('[PhilosopherPanel] Session refresh failed:', refreshError);
+      throw new Error('Session expired — please sign out and sign back in.');
+    }
   }
 
   const data = await response.json();

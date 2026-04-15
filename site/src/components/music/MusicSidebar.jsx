@@ -324,18 +324,6 @@ export function MusicSidebar({
         )}
 
         <div ref={contentRef} className="music-sidebar__content">
-          {/* Ad at top of sidebar - always visible */}
-          <InlineAdSlot
-            key="music-sidebar-top"
-            userId={user?.id}
-            placement="sidebar"
-            layout="card"
-            refreshKey="music-sidebar-top"
-            className="sidebar-top-ad"
-            onAdLoaded={onAdLoaded}
-            mediaType={currentAdMediaType}
-          />
-          
           <div className="music-search">
             <div className="music-search__input-wrapper">
               <input
@@ -436,6 +424,15 @@ export function MusicSidebar({
                     </div>
                     <div className="music-timer__label">{t('landing.analyzingContent')}</div>
                   </div>
+                  <InlineAdSlot
+                    key={`music-analysis-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`music-analysis-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
+                  />
                 </>
               )}
               {panelLoading && (
@@ -449,6 +446,16 @@ export function MusicSidebar({
                     </div>
                     <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
                   </div>
+                  <InlineAdSlot
+                    key={`music-panel-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`music-panel-${selectedTrack?.spotify_id || selectedTrack?.song || 'unknown'}`}
+                    className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
+                    mediaType={currentAdMediaType}
+                  />
                 </>
               )}
               {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}

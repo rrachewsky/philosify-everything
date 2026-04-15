@@ -8,6 +8,7 @@ import { config } from '@/config';
 import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 import { fetchNewsHeadlines } from '../services/api/newsApi.js';
 import { requestPhilosopherPanel } from '../services/api/philosopherPanel.js';
+import { authService } from '@/services/auth';
 
 export function useNewsSidebar() {
   const { i18n } = useTranslation();
@@ -114,7 +115,7 @@ export function useNewsSidebar() {
       }, 100);
 
       try {
-        const response = await fetch(`${config.apiUrl}/api/news-analyze`, {
+        let response = await fetch(`${config.apiUrl}/api/news-analyze`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
@@ -130,8 +131,38 @@ export function useNewsSidebar() {
           }),
         });
 
+        // Handle 401 - token expired, trigger refresh and retry once
         if (response.status === 401) {
-          throw new Error('Session expired — please sign out and sign back in.');
+          console.log('[NewsAnalyze] Token expired, refreshing session...');
+          try {
+            await authService.getSession(); // Triggers backend auto-refresh
+            console.log('[NewsAnalyze] Session refreshed, retrying request...');
+            await new Promise((resolve) => setTimeout(resolve, 500)); // Brief delay
+            
+            // Retry the request
+            response = await fetch(`${config.apiUrl}/api/news-analyze`, {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: selectedArticle.title,
+                source: selectedArticle.source || '',
+                description: selectedArticle.description || selectedArticle.aiSummary || '',
+                topic: selectedArticle.topic || '',
+                publishedAt: selectedArticle.publishedAt || null,
+                aiSummary: selectedArticle.aiSummary || '',
+                model,
+                lang,
+              }),
+            });
+
+            if (response.status === 401) {
+              throw new Error('Session expired — please sign out and sign back in.');
+            }
+          } catch (refreshError) {
+            console.error('[NewsAnalyze] Session refresh failed:', refreshError);
+            throw new Error('Session expired — please sign out and sign back in.');
+          }
         }
 
         const data = await response.json();

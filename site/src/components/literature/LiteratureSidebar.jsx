@@ -439,17 +439,6 @@ export function LiteratureSidebar({
         )}
 
         <div ref={contentRef} className="music-sidebar__content">
-          {/* Ad at top of sidebar - always visible */}
-          <InlineAdSlot
-            key="literature-sidebar-top"
-            userId={user?.id}
-            placement="sidebar"
-            layout="card"
-            refreshKey="literature-sidebar-top"
-            className="sidebar-top-ad"
-            onAdLoaded={onAdLoaded}
-          />
-          
           <div className="music-search">
             <div className="music-search__input-wrapper">
               <input
@@ -618,6 +607,15 @@ export function LiteratureSidebar({
                     </div>
                     <div className="music-timer__label">{t('landing.analyzingContent')}</div>
                   </div>
+                  <InlineAdSlot
+                    key={`literature-analysis-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`literature-analysis-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
+                  />
                 </>
               )}
               {panelLoading && (
@@ -631,6 +629,15 @@ export function LiteratureSidebar({
                     </div>
                     <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
                   </div>
+                  <InlineAdSlot
+                    key={`literature-panel-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    userId={user?.id}
+                    placement="sidebar"
+                    layout="card"
+                    refreshKey={`literature-panel-${selectedBook?.google_books_id || selectedBook?.title || 'unknown'}`}
+                    className="analysis-ad-slot"
+                    onAdLoaded={onAdLoaded}
+                  />
                 </>
               )}
               {(analysisError || panelError) && <div className="music-error">{analysisError || panelError}</div>}

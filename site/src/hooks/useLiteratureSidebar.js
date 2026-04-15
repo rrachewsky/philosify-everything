@@ -13,6 +13,7 @@ import { config } from '@/config';
 import { getPendingAction, clearPendingAction } from '@/utils/pendingAction.js';
 import { waitForMinimumAnalysisWindow } from '@/utils/analysisDelay.js';
 import { logger } from '@/utils';
+import { authService } from '@/services/auth';
 
 /**
  * Literature sidebar state management hook.
@@ -220,6 +221,20 @@ export function useLiteratureSidebar() {
             );
             await new Promise((resolve) => setTimeout(resolve, retryDelay));
             continue;
+          }
+
+          // Handle 401 - token expired, trigger refresh and retry once
+          if (response.status === 401 && attempt === 0) {
+            console.log('[BookAnalyze] Token expired, refreshing session...');
+            try {
+              await authService.getSession(); // Triggers backend auto-refresh
+              console.log('[BookAnalyze] Session refreshed, retrying request...');
+              await new Promise((resolve) => setTimeout(resolve, 500)); // Brief delay
+              continue; // Retry with refreshed token
+            } catch (refreshError) {
+              console.error('[BookAnalyze] Session refresh failed:', refreshError);
+              throw new Error('Session expired — please sign out and sign back in.');
+            }
           }
 
           if (response.status === 401) {
