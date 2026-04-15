@@ -539,15 +539,18 @@ export function Router() {
           analysisResult={cinema.analysisResult}
           analysisError={cinema.analysisError}
           analyze={cinema.analyze}
+          cancelAnalysis={cinema.cancelAnalysis}
           panelLoading={cinema.panelLoading}
           panelResult={cinema.panelResult}
           panelError={cinema.panelError}
           elapsedTime={cinema.elapsedTime}
+          panelElapsed={cinema.panelElapsed}
           formatTime={cinema.formatTime}
           analyzeWithPanel={cinema.analyzeWithPanel}
           user={cinema.user}
           balance={cinema.balance}
           onAdLoaded={cinema.handleAdLoaded}
+          currentAdMediaType={cinema.currentAdMediaType}
         />
 
         {/* Coming Soon Sidebar */}
