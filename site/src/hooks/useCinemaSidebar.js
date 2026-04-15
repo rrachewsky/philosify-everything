@@ -30,15 +30,19 @@ export function useCinemaSidebar() {
   const [panelResult, setPanelResult] = useState(null);
   const [panelError, setPanelError] = useState(null);
 
-  // Timer
+  // Timers (separate for analysis and panel)
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [panelElapsed, setPanelElapsed] = useState(0);
   const timerRef = useRef(null);
+  const panelTimerRef = useRef(null);
   const abortRef = useRef(null);
   const activeAnalysisRunRef = useRef(0);
   const adDurationRef = useRef(null);
+  const [currentAdMediaType, setCurrentAdMediaType] = useState(null);
 
-  const handleAdLoaded = useCallback(({ duration }) => {
+  const handleAdLoaded = useCallback(({ duration, mediaType }) => {
     adDurationRef.current = duration;
+    if (mediaType) setCurrentAdMediaType(mediaType);
   }, []);
 
   const startTimer = useCallback(() => {
@@ -56,10 +60,11 @@ export function useCinemaSidebar() {
   }, []);
 
   const formatTime = useCallback((ms) => {
-    const secs = Math.floor(ms / 1000);
-    const mins = Math.floor(secs / 60);
-    const rem = secs % 60;
-    return `${mins}:${rem.toString().padStart(2, '0')}`;
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const millis = Math.floor((ms % 1000) / 10);
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(millis).padStart(2, '0')}`;
   }, []);
 
   // Open sidebar (fresh)
@@ -73,6 +78,7 @@ export function useCinemaSidebar() {
     setPanelResult(null);
     setPanelError(null);
     setElapsedTime(0);
+    setPanelElapsed(0);
     setIsOpen(true);
   }, [filmSearch]);
 
@@ -81,6 +87,10 @@ export function useCinemaSidebar() {
     activeAnalysisRunRef.current += 1;
     if (abortRef.current) abortRef.current.abort();
     stopTimer();
+    if (panelTimerRef.current) {
+      clearInterval(panelTimerRef.current);
+      panelTimerRef.current = null;
+    }
     setIsOpen(false);
     window.dispatchEvent(new Event('stopAllAudio'));
   }, [stopTimer]);
@@ -253,7 +263,10 @@ export function useCinemaSidebar() {
       setAnalysisError(null);
       setPanelLoading(true);
       setPanelError(null);
-      startTimer();
+      setPanelElapsed(0);
+      if (panelTimerRef.current) clearInterval(panelTimerRef.current);
+      const startTime = Date.now();
+      panelTimerRef.current = setInterval(() => setPanelElapsed(Date.now() - startTime), 100);
 
       const controller = new AbortController();
       abortRef.current = controller;
@@ -279,17 +292,21 @@ export function useCinemaSidebar() {
           if (err.code === 'INSUFFICIENT_CREDITS') throw err;
         }
       } finally {
-        stopTimer();
+        if (panelTimerRef.current) {
+          clearInterval(panelTimerRef.current);
+          panelTimerRef.current = null;
+        }
         setPanelLoading(false);
       }
     },
-    [selectedFilm, startTimer, stopTimer, i18n, refreshBalance],
+    [selectedFilm, i18n, refreshBalance],
   );
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      if (panelTimerRef.current) clearInterval(panelTimerRef.current);
       if (abortRef.current) abortRef.current.abort();
     };
   }, []);
@@ -321,6 +338,11 @@ export function useCinemaSidebar() {
     analysisResult,
     analysisError,
     analyze,
+    cancelAnalysis: () => {
+      if (abortRef.current) abortRef.current.abort();
+      setIsAnalyzing(false);
+      stopTimer();
+    },
 
     // Panel
     panelLoading,
@@ -330,6 +352,7 @@ export function useCinemaSidebar() {
 
     // Timer
     elapsedTime,
+    panelElapsed,
     formatTime,
 
     // Auth
@@ -338,5 +361,6 @@ export function useCinemaSidebar() {
 
     // Ads
     handleAdLoaded,
+    currentAdMediaType,
   };
 }
