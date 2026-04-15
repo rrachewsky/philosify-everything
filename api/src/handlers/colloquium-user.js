@@ -11,6 +11,8 @@
 //   - Philosopher roster (with pricing)
 
 import { jsonResponse, sanitizeErrorMessage } from "../utils/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 
 // SECURITY: Validates ISO 8601 timestamps for PostgREST filter parameters
 const ISO_TIMESTAMP_RE =
@@ -62,10 +64,14 @@ import { sendPushNotification } from "../push/sender.js";
 // the storefront display (title, philosophers, type, reply count).
 export async function handleGetColloquiums(request, env, origin) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
   const { userId, setCookieHeader } = auth;
-  const url = new URL(request.url);
   const before = url.searchParams.get("before");
 
   try {
@@ -73,7 +79,7 @@ export async function handleGetColloquiums(request, env, origin) {
     let filter = "category=eq.colloquium";
     if (before) {
       if (!ISO_TIMESTAMP_RE.test(before)) {
-        return jsonResponse({ error: "Invalid timestamp format" }, 400, origin, env);
+        return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Invalid timestamp format' });
       }
       filter += `&last_reply_at=lt.${before}`;
     }
@@ -187,12 +193,7 @@ export async function handleGetColloquiums(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Colloquium] List error:", err.message);
-    return jsonResponse(
-      { error: "Failed to load colloquiums" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -201,7 +202,12 @@ export async function handleGetColloquiums(request, env, origin) {
 // ============================================================
 export async function handleGetColloquium(request, env, origin, threadId) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  const reqUrl = new URL(request.url);
+  const rawLang = (reqUrl.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -216,12 +222,7 @@ export async function handleGetColloquium(request, env, origin, threadId) {
       console.error(
         `[Colloquium] Failed to query colloquium_access for user=${userId} thread=${threadId}`,
       );
-      return jsonResponse(
-        { error: "Failed to check access" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'DATABASE_ERROR', lang);
     }
 
     const accessTypes = (accessRecords || []).map((r) => r.access_type);
@@ -243,12 +244,7 @@ export async function handleGetColloquium(request, env, origin, threadId) {
       accessTypes.includes("invite");
 
     if (!hasAccess) {
-      return jsonResponse(
-        { error: "Access required", code: "ACCESS_REQUIRED" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang, { code: "ACCESS_REQUIRED" });
     }
 
     // Fetch full thread
@@ -261,13 +257,12 @@ export async function handleGetColloquium(request, env, origin, threadId) {
       .single();
 
     if (threadError || !thread) {
-      return jsonResponse({ error: "Thread not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // On-demand wrapup translation: if verdict exists but user's language
     // translation is missing, translate now and cache for future requests.
-    const reqUrl = new URL(request.url);
-    const reqLang = (reqUrl.searchParams.get("lang") || "en").split("-")[0];
+    const reqLang = lang;
     if (
       thread.wrapup &&
       reqLang !== "en" &&
@@ -569,12 +564,7 @@ export async function handleGetColloquium(request, env, origin, threadId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Colloquium] Get thread error:", err.message);
-    return jsonResponse(
-      { error: "Failed to load colloquium" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -583,7 +573,12 @@ export async function handleGetColloquium(request, env, origin, threadId) {
 // ============================================================
 export async function handleColloquiumAccess(request, env, origin, threadId) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
   const { userId, setCookieHeader } = auth;
 
@@ -611,16 +606,9 @@ export async function handleColloquiumAccess(request, env, origin, threadId) {
     // Reserve 1 credit
     const reservation = await reserveCredit(env, userId);
     if (!reservation.success) {
-      return jsonResponse(
-        {
-          error: "Insufficient credits",
-          code: "INSUFFICIENT_CREDITS",
-          credits: 0,
-        },
-        402,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
+        credits: 0,
+      });
     }
 
     try {
@@ -678,7 +666,7 @@ export async function handleColloquiumAccess(request, env, origin, threadId) {
     }
   } catch (err) {
     console.error("[Colloquium] Access error:", err.message);
-    return jsonResponse({ error: "Failed to unlock access" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -694,7 +682,12 @@ export async function handleColloquiumParticipate(
   threadId,
 ) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
   const { userId, setCookieHeader } = auth;
 
@@ -735,12 +728,7 @@ export async function handleColloquiumParticipate(
       });
 
       if (!accessCheck || accessCheck.length === 0) {
-        return jsonResponse(
-          { error: "You must unlock access first", code: "ACCESS_REQUIRED" },
-          403,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ACCESS_DENIED', lang, { code: "ACCESS_REQUIRED" });
       }
     }
 
@@ -765,16 +753,9 @@ export async function handleColloquiumParticipate(
             );
           }
         }
-        return jsonResponse(
-          {
-            error: "Insufficient credits",
-            code: "INSUFFICIENT_CREDITS",
-            needed: cost,
-          },
-          402,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
+          needed: cost,
+        });
       }
       reservations.push(reservation);
     }
@@ -832,12 +813,7 @@ export async function handleColloquiumParticipate(
     }
   } catch (err) {
     console.error("[Colloquium] Participate error:", err.message);
-    return jsonResponse(
-      { error: "Failed to unlock participation" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -853,7 +829,13 @@ export async function handleAddPhilosopher(
 ) {
   try {
     const auth = await getSupabaseForUser(request, env);
-    if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    const body = await request.json();
+    const url = new URL(request.url);
+    const rawLang = (url.searchParams.get("lang") || body.lang || "en").split("-")[0].toLowerCase();
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+    if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
     const { userId, setCookieHeader } = auth;
 
@@ -861,29 +843,18 @@ export async function handleAddPhilosopher(
     const ip = request.headers.get("cf-connecting-ip") || "unknown";
     const rl = await checkRateLimit(env, `add-philosopher:${userId}:${ip}`);
     if (!rl) {
-      return jsonResponse(
-        { error: "Too many requests. Please slow down." },
-        429,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
     }
 
-    const body = await request.json();
     const philosopherName = body.philosopher_name;
 
     if (!philosopherName) {
-      return jsonResponse(
-        { error: "philosopher_name is required" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'philosopher_name is required' });
     }
 
     const philosopher = findPhilosopher(philosopherName);
     if (!philosopher) {
-      return jsonResponse({ error: "Philosopher not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Philosopher not found' });
     }
 
     // Check if user has participation access
@@ -894,15 +865,7 @@ export async function handleAddPhilosopher(
     });
 
     if (!accessCheck || accessCheck.length === 0) {
-      return jsonResponse(
-        {
-          error: "Participation access required",
-          code: "PARTICIPATE_REQUIRED",
-        },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang, { code: "PARTICIPATE_REQUIRED" });
     }
 
     // Check if philosopher already in this colloquium
@@ -913,27 +876,17 @@ export async function handleAddPhilosopher(
     });
 
     if (!threads || threads.length === 0) {
-      return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
     }
 
     const thread = threads[0];
     if (thread.wrapup) {
-      return jsonResponse(
-        { error: "Colloquium already has a verdict" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Colloquium already has a verdict' });
     }
 
     const existingPhilosophers = thread.metadata?.philosophers || [];
     if (existingPhilosophers.includes(philosopher.name)) {
-      return jsonResponse(
-        { error: "This philosopher is already in the debate" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'This philosopher is already in the debate' });
     }
 
     // Determine cost
@@ -956,16 +909,9 @@ export async function handleAddPhilosopher(
             );
           }
         }
-        return jsonResponse(
-          {
-            error: "Insufficient credits",
-            code: "INSUFFICIENT_CREDITS",
-            needed: cost,
-          },
-          402,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
+          needed: cost,
+        });
       }
       reservations.push(reservation);
     }
@@ -1025,13 +971,13 @@ export async function handleAddPhilosopher(
     }
   } catch (err) {
     console.error("[Colloquium] Add philosopher error:", err.message);
-    // Sanitize error message to prevent leaking internal details
-    return jsonResponse(
-      { error: sanitizeErrorMessage(err.message, "Failed to add philosopher") },
-      500,
-      origin,
-      env,
-    );
+    const url = new URL(request.url);
+    const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang, {
+      message: sanitizeErrorMessage(err.message, getLocalizedError('INTERNAL_ERROR', lang))
+    });
   }
 }
 
@@ -1043,46 +989,33 @@ export async function handleAddPhilosopher(
 // in parallel, then marks rebuttals_complete so the verdict button appears.
 export async function handleProposeColloquium(request, env, origin, ctx) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
-
-  const { userId, setCookieHeader } = auth;
-
-  // Rate limit
-  const ip = request.headers.get("cf-connecting-ip") || "unknown";
-  const rl = await checkRateLimit(env, `colloquium-propose:${userId}:${ip}`);
-  if (!rl) {
-    return jsonResponse(
-      { error: "Too many proposals. Please slow down." },
-      429,
-      origin,
-      env,
-    );
-  }
-
+  
   try {
     const body = await request.json();
-    const title = (body.title || "").trim();
-    const content = (body.content || "").trim();
-    const visibility = body.visibility === "closed" ? "closed" : "open";
     const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
     const rawLang = (body.lang || "en").trim().split("-")[0].toLowerCase();
     const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
 
+    if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
+
+    const { userId, setCookieHeader } = auth;
+
+    // Rate limit
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const rl = await checkRateLimit(env, `colloquium-propose:${userId}:${ip}`);
+    if (!rl) {
+      return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
+    }
+
+    const title = (body.title || "").trim();
+    const content = (body.content || "").trim();
+    const visibility = body.visibility === "closed" ? "closed" : "open";
+
     if (!title || title.length < 3 || title.length > 200) {
-      return jsonResponse(
-        { error: "Title required (3-200 chars)" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Title required (3-200 chars)' });
     }
     if (!content || content.length < 10 || content.length > 5000) {
-      return jsonResponse(
-        { error: "Content required (10-5000 chars)" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Content required (10-5000 chars)' });
     }
 
     // Reserve 5 credits
@@ -1099,16 +1032,9 @@ export async function handleProposeColloquium(request, env, origin, ctx) {
             );
           }
         }
-        return jsonResponse(
-          {
-            error: "Insufficient credits",
-            code: "INSUFFICIENT_CREDITS",
-            needed: 5,
-          },
-          402,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
+          needed: 5,
+        });
       }
       reservations.push(reservation);
     }
@@ -1140,12 +1066,7 @@ export async function handleProposeColloquium(request, env, origin, ctx) {
             );
           }
         }
-        return jsonResponse(
-          { error: result.reason || "Failed to create colloquium" },
-          500,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INTERNAL_ERROR', lang, { message: result.reason });
       }
 
       // Confirm all 5 credits
@@ -1221,12 +1142,11 @@ export async function handleProposeColloquium(request, env, origin, ctx) {
     }
   } catch (err) {
     console.error("[Colloquium] Propose error:", err.message);
-    return jsonResponse(
-      { error: "Failed to create colloquium" },
-      500,
-      origin,
-      env,
-    );
+    const body = await request.json().catch(() => ({}));
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const rawLang = (body.lang || "en").trim().split("-"-")[0].toLowerCase();
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1238,7 +1158,12 @@ export async function handleProposeColloquium(request, env, origin, ctx) {
 // - AI daily: any participant (user with access) can invite.
 export async function handleColloquiumInvite(request, env, origin, threadId) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
   const { userId, setCookieHeader } = auth;
 
@@ -1249,12 +1174,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
       `colloquium-invite:${userId}`,
     );
     if (!rateLimitOk) {
-      return jsonResponse(
-        { error: "Too many invitations, slow down" },
-        429,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
     }
 
     // Fetch thread to determine colloquium type and title
@@ -1264,7 +1184,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
       limit: 1,
     });
     if (!threads || threads.length === 0) {
-      return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
     }
     const colloquiumType =
       threads[0].metadata?.colloquium_type ||
@@ -1279,12 +1199,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
         limit: 1,
       });
       if (!accessCheck || accessCheck.length === 0) {
-        return jsonResponse(
-          { error: "You must have access to this colloquium to invite others" },
-          403,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ACCESS_DENIED', lang, { message: 'You must have access to this colloquium to invite others' });
       }
     } else {
       const proposerCheck = await pg(env, "GET", "colloquium_access", {
@@ -1293,12 +1208,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
         limit: 1,
       });
       if (!proposerCheck || proposerCheck.length === 0) {
-        return jsonResponse(
-          { error: "Only the proposer can invite users" },
-          403,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ACCESS_DENIED', lang, { message: 'Only the proposer can invite users' });
       }
     }
 
@@ -1313,12 +1223,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
         (id) => typeof id === "string" && UUID_RE.test(id) && id !== userId,
       );
       if (userIds.length > MAX_INVITE_BATCH) {
-        return jsonResponse(
-          { error: `Maximum ${MAX_INVITE_BATCH} invitations per request` },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: `Maximum ${MAX_INVITE_BATCH} invitations per request` });
       }
     } else if (
       body.user_id &&
@@ -1329,12 +1234,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
     }
 
     if (userIds.length === 0) {
-      return jsonResponse(
-        { error: "user_id or user_ids array is required" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'user_id or user_ids array is required' });
     }
 
     let invited = 0;
@@ -1461,7 +1361,8 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
               targetUserId,
               {
                 title: inviterName,
-                body: "Invited you to a colloquium",
+                phraseKey: 'invitedColloquium',
+                phraseArgs: [inviterName, threadTitle],
                 url: `${siteUrl}/debate/${threadId}`,
                 tag: `dm-${conversationId}`,
                 type: "dm",
@@ -1523,7 +1424,7 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Colloquium] Invite error:", err.message);
-    return jsonResponse({ error: "Failed to invite user" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1532,7 +1433,12 @@ export async function handleColloquiumInvite(request, env, origin, threadId) {
 // ============================================================
 export async function handleGetRoster(request, env, origin) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
   const { setCookieHeader } = auth;
   const roster = getPhilosopherRoster();
@@ -1552,45 +1458,32 @@ export async function handleGetRoster(request, env, origin) {
 //   - Proposer triggers verdict manually; auto-verdict after 59min as safety net
 export async function handleProposeOpenDebate(request, env, origin, ctx) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
-
-  const { userId, setCookieHeader } = auth;
-
-  // Rate limit
-  const ip = request.headers.get("cf-connecting-ip") || "unknown";
-  const rl = await checkRateLimit(env, `open-debate-propose:${userId}:${ip}`);
-  if (!rl) {
-    return jsonResponse(
-      { error: "Too many proposals. Please slow down." },
-      429,
-      origin,
-      env,
-    );
-  }
 
   try {
     const body = await request.json();
-    const title = (body.title || "").trim();
-    const content = (body.content || "").trim();
     const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
     const rawLang = (body.lang || "en").trim().split("-")[0].toLowerCase();
     const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
 
+    if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
+
+    const { userId, setCookieHeader } = auth;
+
+    // Rate limit
+    const ip = request.headers.get("cf-connecting-ip") || "unknown";
+    const rl = await checkRateLimit(env, `open-debate-propose:${userId}:${ip}`);
+    if (!rl) {
+      return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
+    }
+
+    const title = (body.title || "").trim();
+    const content = (body.content || "").trim();
+
     if (!title || title.length < 3 || title.length > 200) {
-      return jsonResponse(
-        { error: "Title required (3-200 chars)" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Title required (3-200 chars)' });
     }
     if (!content || content.length < 10 || content.length > 5000) {
-      return jsonResponse(
-        { error: "Content required (10-5000 chars)" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Content required (10-5000 chars)' });
     }
 
     // Reserve 3 credits
@@ -1607,16 +1500,9 @@ export async function handleProposeOpenDebate(request, env, origin, ctx) {
             );
           }
         }
-        return jsonResponse(
-          {
-            error: "Insufficient credits",
-            code: "INSUFFICIENT_CREDITS",
-            needed: 3,
-          },
-          402,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
+          needed: 3,
+        });
       }
       reservations.push(reservation);
     }
@@ -1673,12 +1559,7 @@ export async function handleProposeOpenDebate(request, env, origin, ctx) {
             );
           }
         }
-        return jsonResponse(
-          { error: "Failed to create open debate" },
-          500,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
       }
 
       console.log(`[OpenDebate] Created thread: ${thread.id}`);
@@ -1704,12 +1585,7 @@ export async function handleProposeOpenDebate(request, env, origin, ctx) {
             );
           }
         }
-        return jsonResponse(
-          { error: "Failed to create open debate" },
-          500,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
       }
 
       // Confirm all 3 credits
@@ -1767,12 +1643,11 @@ export async function handleProposeOpenDebate(request, env, origin, ctx) {
     }
   } catch (err) {
     console.error("[OpenDebate] Propose error:", err.message);
-    return jsonResponse(
-      { error: "Failed to create open debate" },
-      500,
-      origin,
-      env,
-    );
+    const body = await request.json().catch(() => ({}));
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const rawLang = (body.lang || "en").trim().split("-")[0].toLowerCase();
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1786,16 +1661,16 @@ export async function handleColloquiumVerdict(
   threadId,
   ctx,
 ) {
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS_V = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS_V.includes(rawLang) ? rawLang : "en";
+
   // Rate limit AI calls
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const rl = await checkRateLimit(env, `colloquium-verdict:${ip}`);
   if (!rl) {
-    return jsonResponse(
-      { error: "Too many requests. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   // Check admin auth first
@@ -1810,7 +1685,7 @@ export async function handleColloquiumVerdict(
   if (!isAdmin) {
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
-      return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+      return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
     }
     setCookieHeader = auth.setCookieHeader;
 
@@ -1822,7 +1697,7 @@ export async function handleColloquiumVerdict(
     });
 
     if (!threads || threads.length === 0) {
-      return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
     }
 
     const metadata = threads[0].metadata || {};
@@ -1834,12 +1709,11 @@ export async function handleColloquiumVerdict(
     }
 
     if (!isProposerAllowed) {
-      return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+      return errorResponse(env, origin, 'FORBIDDEN', lang);
     }
   }
 
   // Parse URL for ?force=true query param (admin-only)
-  const url = new URL(request.url);
   const force = isAdmin && url.searchParams.get("force") === "true";
 
   try {
@@ -1851,19 +1725,14 @@ export async function handleColloquiumVerdict(
     });
 
     if (!threads || threads.length === 0) {
-      return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
     }
 
     const thread = threads[0];
 
     // Allow admin to force-regenerate by clearing existing wrapup
     if (thread.wrapup && !force) {
-      return jsonResponse(
-        { error: "Verdict already exists. Use ?force=true to regenerate." },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Verdict already exists. Use ?force=true to regenerate.' });
     }
     if (thread.wrapup && force) {
       console.log(
@@ -1902,25 +1771,17 @@ export async function handleColloquiumVerdict(
           console.log(
             `[Colloquium] Verdict blocked — philosophers still pending: ${missingReply.join(", ")}`,
           );
-          return jsonResponse(
-            {
-              error:
-                "All philosophers must present their views before the verdict.",
-              code: "DISCUSSION_INCOMPLETE",
-              missing_reply: missingReply,
-            },
-            400,
-            origin,
-            env,
-          );
+          return errorResponse(env, origin, 'INVALID_INPUT', lang, {
+            message: 'All philosophers must present their views before the verdict.',
+            code: 'DISCUSSION_INCOMPLETE',
+            missing_reply: missingReply,
+          });
         }
       }
     }
 
     const triggeredBy = isAdmin ? "Admin" : "Proposer";
-    const VALID_LANGS_V = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
-    const rawLangParam = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
-    const langParam = VALID_LANGS_V.includes(rawLangParam) ? rawLangParam : "en";
+    const langParam = lang;
     console.log(
       `[Colloquium] ${triggeredBy} triggering verdict for thread ${threadId} (lang=${langParam})`,
     );
@@ -1955,13 +1816,9 @@ export async function handleColloquiumVerdict(
     return response;
   } catch (err) {
     console.error("[Colloquium] Verdict error:", err.message);
-    // Sanitize error message to prevent leaking internal details
-    return jsonResponse(
-      { error: sanitizeErrorMessage(err.message, "Verdict generation failed") },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang, {
+      message: sanitizeErrorMessage(err.message, getLocalizedError('INTERNAL_ERROR', lang))
+    });
   }
 }
 
@@ -2024,15 +1881,14 @@ export async function handleColloquiumVerdictAudio(
   threadId,
 ) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
-
-  const { userId, setCookieHeader } = auth;
-
-  // Parse requested language from query string
   const url = new URL(request.url);
   const VALID_LANGS_A = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
   const rawLangCode = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
-  const langCode = VALID_LANGS_A.includes(rawLangCode) ? rawLangCode : "en";
+  const lang = VALID_LANGS_A.includes(rawLangCode) ? rawLangCode : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
+
+  const { userId, setCookieHeader } = auth;
 
   // Verify user has access to this colloquium (or it's an open debate)
   const accessRecords = await pg(env, "GET", "colloquium_access", {
@@ -2048,7 +1904,7 @@ export async function handleColloquiumVerdictAudio(
   });
 
   if (!threadRows || threadRows.length === 0) {
-    return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+    return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
   }
 
   const thread = threadRows[0];
@@ -2065,35 +1921,26 @@ export async function handleColloquiumVerdictAudio(
   const hasAccessOnly = !hasAudioAccess && accessTypes.includes("access");
 
   if (!hasAudioAccess && !hasAccessOnly) {
-    return jsonResponse(
-      { error: "Access required", code: "ACCESS_REQUIRED" },
-      403,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'ACCESS_DENIED', lang, { code: "ACCESS_REQUIRED" });
   }
 
   if (!thread.wrapup) {
-    return jsonResponse({ error: "No verdict yet" }, 404, origin, env);
+    return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'No verdict yet' });
   }
 
   // Access-only users must upgrade to participate to unlock audio
   if (hasAccessOnly) {
     const colloquiumType = thread.metadata?.colloquium_type || "daily";
     const cost = colloquiumType === "user_proposed" ? 2 : 1;
-    return jsonResponse(
-      {
-        error: "Participation required to listen",
-        code: "PARTICIPATE_REQUIRED",
-        cost,
-      },
-      402,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'ACCESS_DENIED', lang, {
+      message: 'Participation required to listen',
+      code: 'PARTICIPATE_REQUIRED',
+      cost,
+    }, 402);
   }
 
   // R2 cache key per thread+language
+  const langCode = lang;
   const r2Key = `tts_wrapup_${threadId}_${langCode}.wav`;
 
   try {
@@ -2217,13 +2064,7 @@ export async function handleColloquiumVerdictAudio(
       err.message,
       err.stack,
     );
-    // Don't expose error details to client
-    return jsonResponse(
-      { error: "Failed to generate audio" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -2234,6 +2075,11 @@ export async function handleColloquiumVerdictAudio(
 // Cleans up: forum_replies, forum_votes, colloquium_access, R2 audio cache,
 // and finally the forum_threads row itself.
 export async function handleDeleteColloquium(request, env, origin, threadId) {
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
   // Check admin auth first
   const adminSecret = request.headers.get("X-Admin-Secret");
   const expectedSecret = await getSecret(env.ADMIN_SECRET);
@@ -2246,7 +2092,7 @@ export async function handleDeleteColloquium(request, env, origin, threadId) {
     // Not admin — check if the user is the proposer
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
-      return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+      return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
     }
     setCookieHeader = auth.setCookieHeader;
 
@@ -2258,17 +2104,12 @@ export async function handleDeleteColloquium(request, env, origin, threadId) {
     });
 
     if (!threads || threads.length === 0) {
-      return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
     }
 
     const metadata = threads[0].metadata || {};
     if (metadata.proposer_id !== auth.userId) {
-      return jsonResponse(
-        { error: "Only the proposer or admin can delete a colloquium" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FORBIDDEN', lang, { message: 'Only the proposer or admin can delete a colloquium' });
     }
   } else {
     // Admin: verify the thread exists
@@ -2279,7 +2120,7 @@ export async function handleDeleteColloquium(request, env, origin, threadId) {
     });
 
     if (!threads || threads.length === 0) {
-      return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
     }
   }
 
@@ -2346,12 +2187,7 @@ export async function handleDeleteColloquium(request, env, origin, threadId) {
 
     if (result === null) {
       console.error("[Colloquium] Failed to delete thread row:", threadId);
-      return jsonResponse(
-        { error: "Failed to delete colloquium" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     console.log(`[Colloquium] Successfully deleted colloquium ${threadId}`);
@@ -2360,12 +2196,7 @@ export async function handleDeleteColloquium(request, env, origin, threadId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Colloquium] Delete error:", err.message);
-    return jsonResponse(
-      { error: "Failed to delete colloquium" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -2479,7 +2310,12 @@ export async function handleRetryGeneration(
   ctx,
 ) {
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  const url = new URL(request.url);
+  const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+  const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+  if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
   const { userId, setCookieHeader } = auth;
 
@@ -2487,12 +2323,7 @@ export async function handleRetryGeneration(
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const rl = await checkRateLimit(env, `colloquium-retry:${userId}:${ip}`);
   if (!rl) {
-    return jsonResponse(
-      { error: "Too many retries. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
@@ -2504,7 +2335,7 @@ export async function handleRetryGeneration(
     });
 
     if (!threads || threads.length === 0) {
-      return jsonResponse({ error: "Thread not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Thread not found' });
     }
 
     const thread = threads[0];
@@ -2512,43 +2343,23 @@ export async function handleRetryGeneration(
 
     // Only proposer can retry
     if (metadata.proposer_id !== userId) {
-      return jsonResponse(
-        { error: "Only the proposer can retry generation" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FORBIDDEN', lang, { message: 'Only the proposer can retry generation' });
     }
 
     // Only retry for user_proposed / open_debate colloquiums
     const collType = metadata.colloquium_type;
     if (collType !== "user_proposed" && collType !== "open_debate") {
-      return jsonResponse(
-        { error: "Retry not applicable for this type" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Retry not applicable for this type' });
     }
 
     // Don't retry if verdict already exists
     if (thread.wrapup) {
-      return jsonResponse(
-        { error: "Colloquium already has a verdict" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Colloquium already has a verdict' });
     }
 
     const philosophers = metadata.philosophers || [];
     if (philosophers.length === 0) {
-      return jsonResponse(
-        { error: "No philosophers assigned" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'No philosophers assigned' });
     }
 
     // Check if all philosophers have already spoken — no retry needed
@@ -2567,12 +2378,7 @@ export async function handleRetryGeneration(
     );
 
     if (allSpoken) {
-      return jsonResponse(
-        { error: "All philosophers have already spoken" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'All philosophers have already spoken' });
     }
 
     // Clear failure flag and schedule next philosopher via cron
@@ -2597,12 +2403,7 @@ export async function handleRetryGeneration(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Colloquium] Retry generation error:", err.message);
-    return jsonResponse(
-      { error: "Failed to retry generation" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -2614,7 +2415,12 @@ export async function handleRetryGeneration(
 export async function handlePollVote(request, env, origin, threadId) {
   try {
     const auth = await getSupabaseForUser(request, env);
-    if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    const url = new URL(request.url);
+    const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+
+    if (!auth) return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
 
     const { userId, setCookieHeader } = auth;
 
@@ -2622,12 +2428,7 @@ export async function handlePollVote(request, env, origin, threadId) {
     const philosopherName = body.philosopher_name;
 
     if (!philosopherName) {
-      return jsonResponse(
-        { error: "philosopher_name is required" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'philosopher_name is required' });
     }
 
     // Verify user has access to this colloquium
@@ -2644,7 +2445,7 @@ export async function handlePollVote(request, env, origin, threadId) {
     });
 
     if (!threadRows || threadRows.length === 0) {
-      return jsonResponse({ error: "Colloquium not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang, { message: 'Colloquium not found' });
     }
 
     const metadata = threadRows[0].metadata || {};
@@ -2658,23 +2459,13 @@ export async function handlePollVote(request, env, origin, threadId) {
       accessTypes.includes("invite");
 
     if (!hasAccess) {
-      return jsonResponse(
-        { error: "Access required", code: "ACCESS_REQUIRED" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang, { code: "ACCESS_REQUIRED" });
     }
 
     // Verify philosopher is on the panel
     const philosophers = metadata.philosophers || [];
     if (!philosophers.includes(philosopherName)) {
-      return jsonResponse(
-        { error: "Philosopher is not on this panel" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: 'Philosopher is not on this panel' });
     }
 
     // Update vote (read-modify-write on metadata.poll_votes)
@@ -2717,6 +2508,10 @@ export async function handlePollVote(request, env, origin, threadId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Colloquium] Poll vote error:", err.message);
-    return jsonResponse({ error: "Failed to cast vote" }, 500, origin, env);
+    const url = new URL(request.url);
+    const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }

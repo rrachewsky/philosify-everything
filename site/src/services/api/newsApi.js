@@ -23,11 +23,34 @@ export async function searchNews(query, lang = 'en') {
 }
 
 /**
- * Fetch breaking news for ticker
+ * Fetch breaking news for ticker (with frontend caching)
  * @param {string} [lang='en'] - Language code
- * @returns {Promise<{articles: Array, count: number, fetchedAt: string}>}
+ * @returns {Promise<{articles: Array, count: number, fetchedAt: string, fromCache?: boolean}>}
  */
 export async function fetchBreakingNews(lang = 'en') {
+  const CACHE_KEY = `philosify:breaking-news:${lang}`;
+  const CACHE_MAX_AGE = 15 * 60 * 1000; // 15 minutes (matches backend stale threshold)
+
+  // Check cache first
+  try {
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const data = JSON.parse(cached);
+      const age = Date.now() - new Date(data.cachedAt).getTime();
+      
+      // Cache hit and fresh → return immediately
+      if (age < CACHE_MAX_AGE) {
+        console.log(`[News] Using cached breaking news (age: ${Math.floor(age / 1000)}s)`);
+        return { ...data, fromCache: true };
+      }
+      
+      console.log(`[News] Cache stale (age: ${Math.floor(age / 1000)}s), fetching fresh...`);
+    }
+  } catch (err) {
+    console.warn('[News] Cache read failed:', err.message);
+  }
+
+  // Fetch from API
   const response = await fetch(`${config.apiUrl}/api/news/breaking?lang=${lang}`, {
     method: 'GET',
     credentials: 'include',
@@ -37,7 +60,20 @@ export async function fetchBreakingNews(lang = 'en') {
     throw new Error(`Failed to fetch breaking news: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+
+  // Cache the result
+  try {
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+      ...data,
+      cachedAt: new Date().toISOString(),
+    }));
+    console.log(`[News] Cached ${data.articles?.length || 0} breaking news articles`);
+  } catch (err) {
+    console.warn('[News] Cache write failed:', err.message);
+  }
+
+  return data;
 }
 
 /**

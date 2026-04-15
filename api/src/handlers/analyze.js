@@ -9,6 +9,7 @@ import {
   jsonResponse,
 } from "../utils/index.js";
 import { getMessage } from "../utils/messages.js";
+import { errorResponse } from "../utils/errorResponse.js";
 import { getLyrics } from "../lyrics/index.js";
 import { sanitizeLyrics, validateLyricsFormat } from "../lyrics/sanitize.js";
 import {
@@ -55,9 +56,11 @@ export async function handleAnalyze(
   origin = "https://philosify.org",
   ctx = null,
 ) {
+  let lang = "en"; // Hoist for error handling
   try {
     const body = await request.json();
-    let { song, artist, spotify_id, model = "claude", lang = "en" } = body;
+    let { song, artist, spotify_id, model = "claude" } = body;
+    lang = body.lang || "en";
 
     // Extract user ID from JWT token (for audit trail)
     // RLS Note: We don't enforce auth here - anonymous analyses allowed
@@ -83,12 +86,7 @@ export async function handleAnalyze(
       // Validate language (with default fallback)
       lang = validateLanguage(lang);
     } catch (error) {
-      return jsonResponse(
-        { error: "Invalid input", message: error.message },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: error.message });
     }
 
     console.log(`[Philosify] ========== NEW ANALYSIS ==========`);
@@ -537,17 +535,11 @@ export async function handleAnalyze(
     if (!validateLyricsFormat(rawLyrics)) {
       console.error(`[Philosify] ✗✗✗ FATAL ERROR ✗✗✗`);
       console.error(`[Philosify] Lyrics invalid or not found`);
-      return jsonResponse(
-        {
-          error: "Lyrics not found or invalid",
-          message: getMessage(lang, "lyricsNotFound", song, artist),
-          song,
-          artist,
-        },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'LYRICS_NOT_FOUND', lang, {
+        message: getMessage(lang, "lyricsNotFound", song, artist),
+        song,
+        artist,
+      });
     }
 
     // Sanitize lyrics (remove HTML, injection patterns, enforce limits)
@@ -555,17 +547,11 @@ export async function handleAnalyze(
     if (!lyrics || lyrics.length < 50) {
       console.error(`[Philosify] ✗✗✗ FATAL ERROR ✗✗✗`);
       console.error(`[Philosify] Lyrics too short after sanitization`);
-      return jsonResponse(
-        {
-          error: "Lyrics too short after sanitization",
-          message: getMessage(lang, "lyricsTooShort", song, artist),
-          song,
-          artist,
-        },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'LYRICS_NOT_FOUND', lang, {
+        message: getMessage(lang, "lyricsTooShort", song, artist),
+        song,
+        artist,
+      });
     }
     console.log(
       `[Philosify] ✓ Lyrics found and sanitized (${lyrics.length} chars)`,
@@ -608,15 +594,9 @@ export async function handleAnalyze(
     console.log(`[Philosify] Loading guide from KV for language: ${lang}`);
     const guide = await getGuideForLanguage(env, lang);
     if (!guide) {
-      return jsonResponse(
-        {
-          error: "Guide not loaded",
-          message: getMessage(lang, "guideNotLoaded"),
-        },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'GUIDE_NOT_LOADED', lang, {
+        message: getMessage(lang, "guideNotLoaded"),
+      });
     }
     console.log(`[Philosify] ✓ Guide loaded: ${guide.length} characters`);
 
@@ -879,14 +859,8 @@ export async function handleAnalyze(
       error.isTimeout = true;
     }
 
-    return jsonResponse(
-      {
-        error: "Analysis failed. Please try again.",
-        timeout: error.isTimeout || false,
-      },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'ANALYSIS_FAILED', lang, {
+      timeout: error.isTimeout || false,
+    });
   }
 }

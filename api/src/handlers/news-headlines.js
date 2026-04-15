@@ -15,6 +15,7 @@ import {
 import { getUserFromAuth } from "../auth/index.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 import { DEFAULT_SOURCE_IDS, sourcesToUris } from "./news-preferences.js";
+import { errorResponse } from "../utils/errorResponse.js";
 
 async function hashCacheKey(str) {
   const data = new TextEncoder().encode(str.toLowerCase());
@@ -29,21 +30,23 @@ export async function handleNewsSearch(request, env, origin, ctx = null) {
   try {
     const url = new URL(request.url);
     const query = (url.searchParams.get("q") || "").trim();
-    const lang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+    const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+
+    // SECURITY: Validate language code
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
 
     if (!query || query.length < 2) {
-      return jsonResponse({ error: "Query required (min 2 chars)" }, 400, origin, env);
+      return errorResponse(env, origin, 'NEWS_QUERY_REQUIRED', lang);
     }
 
     // SECURITY: Limit query length to prevent abuse
     if (query.length > 200) {
-      return jsonResponse({ error: "Query too long (max 200 chars)" }, 400, origin, env);
+      return errorResponse(env, origin, 'NEWS_QUERY_TOO_LONG', lang);
     }
 
-    // SECURITY: Validate language code
-    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
-    if (!VALID_LANGS.includes(lang)) {
-      return jsonResponse({ error: "Invalid language" }, 400, origin, env);
+    if (!VALID_LANGS.includes(rawLang)) {
+      return errorResponse(env, origin, 'NEWS_INVALID_LANGUAGE', lang);
     }
 
     // Get user preferences for source filtering
@@ -114,13 +117,11 @@ export async function handleNewsSearch(request, env, origin, ctx = null) {
     return jsonResponse(result, 200, origin, env);
   } catch (err) {
     console.error("[NewsSearch] Error:", err.message);
-    return jsonResponse(
-      // SECURITY: Never expose raw error messages to the client
-      { error: "Search failed" },
-      500,
-      origin,
-      env,
-    );
+    const url = new URL(request.url);
+    const rawLang = (url.searchParams.get("lang") || "en").split("-")[0].toLowerCase();
+    const VALID_LANGS = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const lang = VALID_LANGS.includes(rawLang) ? rawLang : "en";
+    return errorResponse(env, origin, 'NEWS_SEARCH_FAILED', lang);
   }
 }
 
@@ -152,11 +153,10 @@ export async function handleBreakingNews(request, env, origin, ctx = null) {
     );
   } catch (err) {
     console.error("[BreakingNews] Error:", err.message);
-    return jsonResponse(
-      { error: "Failed to fetch breaking news" },
-      500,
-      origin,
-      env,
-    );
+    const url = new URL(request.url);
+    const VALID_LANGS_BREAKING = ["en","pt","es","fr","de","it","ru","hu","he","zh","ja","ko","ar","hi","fa","nl","pl","tr"];
+    const rawLang = url.searchParams.get("lang") || "en";
+    const lang = VALID_LANGS_BREAKING.includes(rawLang) ? rawLang : "en";
+    return errorResponse(env, origin, 'NEWS_BREAKING_FETCH_FAILED', lang);
   }
 }

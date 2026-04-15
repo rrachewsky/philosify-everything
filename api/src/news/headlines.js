@@ -177,8 +177,28 @@ export const BLOCKED_WORDS = [
 // BREAKING NEWS — Tier A sources + event keywords
 // ============================================================
 const BREAKING_NEWS_SOURCES_TIER_A = [
+  // Wire services & major international news
   "reuters.com", "apnews.com", "afp.com", "efe.com",
-  "bbc.co.uk", "npr.org", "pbs.org", "swissinfo.ch", "abc.net.au",
+  "bbc.co.uk", "bbc.com", "npr.org", "pbs.org", "swissinfo.ch", "abc.net.au",
+  // Premium business & analysis
+  "bloomberg.com", "wsj.com", "ft.com", "economist.com",
+];
+
+const BREAKING_NEWS_SOURCES_TIER_B = [
+  // Quality opinion & analysis
+  "reason.com", "nationalreview.com", "thefreepress.com", "city-journal.org",
+  "foreignaffairs.com", "quillette.com",
+  // International quality sources
+  "telegraph.co.uk", "thetimes.co.uk", "spectator.co.uk",
+  "nzz.ch", "welt.de", "lefigaro.fr",
+  "timesofisrael.com", "jpost.com", "i24news.tv",
+  "gazetadopovo.com.br", "crusoe.com.br", "piaui.folha.uol.com.br",
+  "poder360.com.br", "jovempan.com.br", "oantagonista.com.br",
+  // Tech & Science
+  "techcrunch.com", "wired.com", "arstechnica.com",
+  "technologyreview.com", "nature.com", "scientificamerican.com",
+  // Business
+  "forbes.com", "fortune.com", "cnbc.com",
 ];
 
 const BREAKING_NEWS_KEYWORDS = [
@@ -349,15 +369,10 @@ export async function searchNewsArticles(env, query, lang = "en", sourceUris = [
 // NEWSAPI.AI — breaking news fetch (Tier A sources + keywords)
 // ============================================================
 
-export async function fetchBreakingNews(env) {
-  const apiKey = await getSecret(env.NEWSAPI_AI_KEY);
-  if (!apiKey) throw new Error("NEWSAPI_AI_KEY not configured");
-
-  console.log(`[News] Fetching breaking news...`);
-
-  // Fetch REAL breaking news — wars, innovation, business success, heroic acts, major events
-  // Using keyword OR gives broad coverage; source filter was too restrictive with keywords.
-  // NewsAPI.ai uses "keyword" as array + "keywordOper" for OR logic
+/**
+ * Helper: Fetch breaking news from specific sources
+ */
+async function fetchBreakingNewsFromSources(env, sourceUris, apiKey) {
   const res = await fetch(`${NEWSAPI_BASE}/article/getArticles`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -382,6 +397,7 @@ export async function fetchBreakingNews(env) {
         "explosion", "crash", "collapse", "tragedy", "emergency"
       ],
       keywordOper: "or",
+      sourceUri: sourceUris.length > 0 ? sourceUris : undefined, // Omit if empty (all sources)
       lang: ["eng"],
       articlesPage: 1,
       articlesCount: 30,
@@ -396,22 +412,66 @@ export async function fetchBreakingNews(env) {
 
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
-    console.error(`[News] Breaking news API error: ${res.status} ${errText.substring(0, 200)}`);
-    throw new Error(`Breaking news fetch failed: ${res.status}`);
+    throw new Error(`NewsAPI.ai error: ${res.status} ${errText.substring(0, 200)}`);
   }
 
   const data = await res.json();
   const results = data.articles?.results ?? [];
-  console.log(`[News] Breaking news API returned ${results.length} raw articles`);
+  return results.map(normalizeNewsApiArticle);
+}
 
-  const normalized = results.map(normalizeNewsApiArticle);
-  const notBlocked = normalized.filter((a) => !isBlockedSource(a.source));
-  const clean = notBlocked.filter(isCleanArticle);
+/**
+ * Fetch breaking news with tiered fallback:
+ * 1. Try Tier A sources (Reuters, Bloomberg, WSJ, etc.)
+ * 2. If <10 results, add Tier B (Reason, Telegraph, TechCrunch, etc.)
+ * 3. If still <10, allow all sources (minus blocked tabloids)
+ */
+export async function fetchBreakingNews(env) {
+  const apiKey = await getSecret(env.NEWSAPI_AI_KEY);
+  if (!apiKey) throw new Error("NEWSAPI_AI_KEY not configured");
 
-  const deduped = deduplicateArticles(clean);
-  const sorted = sortArticles(deduped);
+  const MIN_ARTICLES = 10;
 
-  console.log(`[News] ${sorted.length} breaking news after curation`);
+  // ═══ TIER A: Premium sources ═══
+  console.log(`[News] Fetching breaking news from ${BREAKING_NEWS_SOURCES_TIER_A.length} Tier A sources...`);
+  let articles = await fetchBreakingNewsFromSources(env, BREAKING_NEWS_SOURCES_TIER_A, apiKey);
+  let notBlocked = articles.filter((a) => !isBlockedSource(a.source));
+  let clean = notBlocked.filter(isCleanArticle);
+  let deduped = deduplicateArticles(clean);
+  let sorted = sortArticles(deduped);
+
+  console.log(`[News] Tier A: ${sorted.length} articles after curation`);
+
+  if (sorted.length >= MIN_ARTICLES) {
+    console.log(`[News] ✓ Tier A sufficient (${sorted.length} articles)`);
+    return sorted;
+  }
+
+  // ═══ TIER A+B: Add quality sources ═══
+  console.log(`[News] Tier A insufficient (${sorted.length}). Adding ${BREAKING_NEWS_SOURCES_TIER_B.length} Tier B sources...`);
+  const tierAB = [...BREAKING_NEWS_SOURCES_TIER_A, ...BREAKING_NEWS_SOURCES_TIER_B];
+  articles = await fetchBreakingNewsFromSources(env, tierAB, apiKey);
+  notBlocked = articles.filter((a) => !isBlockedSource(a.source));
+  clean = notBlocked.filter(isCleanArticle);
+  deduped = deduplicateArticles(clean);
+  sorted = sortArticles(deduped);
+
+  console.log(`[News] Tier A+B: ${sorted.length} articles after curation`);
+
+  if (sorted.length >= MIN_ARTICLES) {
+    console.log(`[News] ✓ Tier A+B sufficient (${sorted.length} articles)`);
+    return sorted;
+  }
+
+  // ═══ ALL SOURCES (minus blocked) ═══
+  console.log(`[News] Tier A+B insufficient (${sorted.length}). Using all sources (minus blocked)...`);
+  articles = await fetchBreakingNewsFromSources(env, [], apiKey); // Empty array = all sources
+  notBlocked = articles.filter((a) => !isBlockedSource(a.source));
+  clean = notBlocked.filter(isCleanArticle);
+  deduped = deduplicateArticles(clean);
+  sorted = sortArticles(deduped);
+
+  console.log(`[News] All sources: ${sorted.length} articles after curation`);
   return sorted;
 }
 

@@ -7,7 +7,8 @@
 //
 // Response shape matches analyze.js cache hit response exactly
 
-import { jsonResponse } from "../utils/response.js";
+import { jsonResponse, errorResponse } from "../utils/response.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
@@ -40,37 +41,24 @@ function normalizeSchoolsHtml(value) {
  * RLS enforced - user must have requested this analysis before
  */
 export async function handleAnalysisDetail(request, env, origin, analysisId) {
+  const lang = 'en';
+  
   if (request.method !== "GET") {
-    return jsonResponse(
-      { success: false, error: "Method not allowed" },
-      405,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'METHOD_NOT_ALLOWED', lang);
   }
 
   // Validate UUID format
   const uuidRegex =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!analysisId || !uuidRegex.test(analysisId)) {
-    return jsonResponse(
-      { success: false, error: "Invalid analysis ID" },
-      400,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   try {
     // Get Supabase client authenticated as user (RLS enforced)
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
-      return jsonResponse(
-        { success: false, error: "Unauthorized" },
-        401,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'UNAUTHORIZED', lang);
     }
 
     const { client: supabase, userId, setCookieHeader } = auth;
@@ -92,24 +80,14 @@ export async function handleAnalysisDetail(request, env, origin, analysisId) {
         "[Analysis Detail] Access check failed:",
         accessErr.message,
       );
-      return jsonResponse(
-        { success: false, error: "Access check failed" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     if (!accessCheck) {
       console.log(
         `[Analysis Detail] User ${userId} has no access to analysis ${analysisId}`,
       );
-      return jsonResponse(
-        { success: false, error: "Analysis not found" },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Fetch full analysis with song details
@@ -135,24 +113,14 @@ export async function handleAnalysisDetail(request, env, origin, analysisId) {
         "[Analysis Detail] Analysis fetch failed:",
         analysisErr?.message,
       );
-      return jsonResponse(
-        { success: false, error: "Analysis not found" },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Extract song info
     const song = analysis.songs;
     if (!song) {
       console.error("[Analysis Detail] Analysis has no linked song");
-      return jsonResponse(
-        { success: false, error: "Analysis data incomplete" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     // Compute derived fields (same logic as analyze.js cache hit)
@@ -335,11 +303,6 @@ export async function handleAnalysisDetail(request, env, origin, analysisId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (error) {
     console.error("[Analysis Detail] Error:", error);
-    return jsonResponse(
-      { success: false, error: "Internal server error" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }

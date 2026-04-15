@@ -4,6 +4,8 @@
 // Public discussion threads with replies and voting. Free access.
 
 import { jsonResponse, getCorsHeaders, sanitizeMessage } from "../utils/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
@@ -166,8 +168,10 @@ const VALID_CATEGORIES = [
 // GET /api/forum/threads - List threads
 // ============================================================
 export async function handleGetForumThreads(request, env, origin) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, setCookieHeader } = auth;
   const url = new URL(request.url);
@@ -190,7 +194,7 @@ export async function handleGetForumThreads(request, env, origin) {
 
     if (before) {
       if (!ISO_TIMESTAMP_RE.test(before)) {
-        return jsonResponse({ error: "Invalid timestamp format" }, 400, origin, env);
+        return errorResponse(env, origin, 'INVALID_TIMESTAMP', lang);
       }
       query = query.lt("last_reply_at", before);
     }
@@ -204,12 +208,7 @@ export async function handleGetForumThreads(request, env, origin) {
         error.code,
         error.details,
       );
-      return jsonResponse(
-        { error: "Failed to load threads. Please try again." },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_LOAD_THREADS', lang);
     }
 
     // Fetch display names for thread authors
@@ -231,7 +230,7 @@ export async function handleGetForumThreads(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] List threads exception:", err.message);
-    return jsonResponse({ error: "Failed to load threads" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_LOAD_THREADS', lang);
   }
 }
 
@@ -239,8 +238,10 @@ export async function handleGetForumThreads(request, env, origin) {
 // GET /api/forum/threads/:id - Get thread with replies
 // ============================================================
 export async function handleGetForumThread(request, env, origin, threadId) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -255,7 +256,7 @@ export async function handleGetForumThread(request, env, origin, threadId) {
       .single();
 
     if (threadError || !thread) {
-      return jsonResponse({ error: "Thread not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'THREAD_NOT_FOUND', lang);
     }
 
     // Get replies
@@ -324,7 +325,7 @@ export async function handleGetForumThread(request, env, origin, threadId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Get thread exception:", err.message);
-    return jsonResponse({ error: "Failed to load thread" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_LOAD_THREAD', lang);
   }
 }
 
@@ -332,8 +333,10 @@ export async function handleGetForumThread(request, env, origin, threadId) {
 // POST /api/forum/threads - Create thread
 // ============================================================
 export async function handleCreateForumThread(request, env, origin) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -345,12 +348,7 @@ export async function handleCreateForumThread(request, env, origin) {
     true,
   );
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many threads. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
@@ -360,12 +358,7 @@ export async function handleCreateForumThread(request, env, origin) {
     const category = body.category || "general";
 
     if (!title || title.length < 3 || title.length > MAX_TITLE_LENGTH) {
-      return jsonResponse(
-        { error: `Title required (3-${MAX_TITLE_LENGTH} chars)` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'TITLE_REQUIRED', lang);
     }
 
     if (
@@ -373,16 +366,11 @@ export async function handleCreateForumThread(request, env, origin) {
       content.length < 10 ||
       content.length > MAX_CONTENT_LENGTH
     ) {
-      return jsonResponse(
-        { error: `Content required (10-${MAX_CONTENT_LENGTH} chars)` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CONTENT_REQUIRED', lang);
     }
 
     if (!VALID_CATEGORIES.includes(category)) {
-      return jsonResponse({ error: "Invalid category" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_CATEGORY', lang);
     }
 
     const { data: thread, error } = await supabase
@@ -405,12 +393,7 @@ export async function handleCreateForumThread(request, env, origin) {
         error.code,
         error.details,
       );
-      return jsonResponse(
-        { error: "Failed to create thread. Please try again." },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_CREATE_THREAD', lang);
     }
 
     let response = jsonResponse(
@@ -422,7 +405,7 @@ export async function handleCreateForumThread(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Create thread exception:", err.message);
-    return jsonResponse({ error: "Failed to create thread" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_CREATE_THREAD', lang);
   }
 }
 
@@ -430,14 +413,16 @@ export async function handleCreateForumThread(request, env, origin) {
 // DELETE /api/forum/threads/:id - Delete own thread
 // ============================================================
 export async function handleDeleteForumThread(request, env, origin, threadId) {
+  let lang = "en"; // Hoist for error handling
+  
   // SECURITY: Validate threadId as UUID
   const THREAD_UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!THREAD_UUID_RE.test(threadId)) {
-    return jsonResponse({ error: "Invalid thread ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_THREAD_ID', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -450,16 +435,11 @@ export async function handleDeleteForumThread(request, env, origin, threadId) {
       .single();
 
     if (!thread) {
-      return jsonResponse({ error: "Thread not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'THREAD_NOT_FOUND', lang);
     }
 
     if (thread.user_id !== userId) {
-      return jsonResponse(
-        { error: "Cannot delete others' threads" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CANNOT_DELETE_OTHERS_THREADS', lang);
     }
 
     const { error } = await supabase
@@ -469,19 +449,14 @@ export async function handleDeleteForumThread(request, env, origin, threadId) {
 
     if (error) {
       console.error("[Forum] Delete thread failed:", error.message);
-      return jsonResponse(
-        { error: "Failed to delete thread" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_DELETE_THREAD', lang);
     }
 
     let response = jsonResponse({ success: true }, 200, origin, env);
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Delete thread exception:", err.message);
-    return jsonResponse({ error: "Failed to delete thread" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_DELETE_THREAD', lang);
   }
 }
 
@@ -489,8 +464,10 @@ export async function handleDeleteForumThread(request, env, origin, threadId) {
 // POST /api/forum/threads/:id/replies - Create reply
 // ============================================================
 export async function handleCreateForumReply(request, env, origin, threadId) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -502,12 +479,7 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
     true,
   );
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many replies. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
@@ -519,17 +491,12 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
       .single();
 
     if (!thread) {
-      return jsonResponse({ error: "Thread not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'THREAD_NOT_FOUND', lang);
     }
 
     // Lock replies after wrap-up is generated
     if (thread.wrapup) {
-      return jsonResponse(
-        { error: "This debate has been wrapped up. No more replies allowed." },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'DEBATE_WRAPPED_UP', lang);
     }
 
     const body = await request.json();
@@ -537,12 +504,7 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
     const parentId = body.parent_id || null;
 
     if (!content || content.length > MAX_REPLY_LENGTH) {
-      return jsonResponse(
-        { error: `Content required (max ${MAX_REPLY_LENGTH} chars)` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'REPLY_CONTENT_REQUIRED', lang);
     }
 
     // Verify parent reply exists if provided
@@ -555,12 +517,7 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
         .single();
 
       if (!parent) {
-        return jsonResponse(
-          { error: "Parent reply not found" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'PARENT_REPLY_NOT_FOUND', lang);
       }
     }
 
@@ -582,12 +539,7 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
         error.code,
         error.details,
       );
-      return jsonResponse(
-        { error: "Failed to create reply. Please try again." },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_CREATE_REPLY', lang);
     }
 
     // For colloquium threads: broadcast user comment and notify on replies
@@ -650,7 +602,7 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Create reply exception:", err.message);
-    return jsonResponse({ error: "Failed to create reply" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_CREATE_REPLY', lang);
   }
 }
 
@@ -659,8 +611,10 @@ export async function handleCreateForumReply(request, env, origin, threadId) {
 // ============================================================
 // For colloquium threads, deletion is blocked after verdict (wrapup).
 export async function handleDeleteForumReply(request, env, origin, replyId) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -673,16 +627,11 @@ export async function handleDeleteForumReply(request, env, origin, replyId) {
       .single();
 
     if (!reply) {
-      return jsonResponse({ error: "Reply not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'REPLY_NOT_FOUND', lang);
     }
 
     if (reply.user_id !== userId) {
-      return jsonResponse(
-        { error: "Cannot delete others' replies" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CANNOT_DELETE_OTHERS_REPLIES', lang);
     }
 
     // Block deletion after verdict (wrapup) on the parent thread
@@ -693,14 +642,7 @@ export async function handleDeleteForumReply(request, env, origin, replyId) {
       .single();
 
     if (thread?.wrapup) {
-      return jsonResponse(
-        {
-          error: "Cannot delete comments after the verdict has been published.",
-        },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CANNOT_DELETE_AFTER_VERDICT', lang);
     }
 
     const { error } = await supabase
@@ -710,19 +652,14 @@ export async function handleDeleteForumReply(request, env, origin, replyId) {
 
     if (error) {
       console.error("[Forum] Delete reply failed:", error.message);
-      return jsonResponse(
-        { error: "Failed to delete reply" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_DELETE_REPLY', lang);
     }
 
     let response = jsonResponse({ success: true }, 200, origin, env);
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Delete reply exception:", err.message);
-    return jsonResponse({ error: "Failed to delete reply" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_DELETE_REPLY', lang);
   }
 }
 
@@ -731,8 +668,10 @@ export async function handleDeleteForumReply(request, env, origin, replyId) {
 // ============================================================
 // Users can edit their own (non-philosopher) replies before verdict.
 export async function handleEditForumReply(request, env, origin, replyId) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -745,25 +684,15 @@ export async function handleEditForumReply(request, env, origin, replyId) {
       .single();
 
     if (!reply) {
-      return jsonResponse({ error: "Reply not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'REPLY_NOT_FOUND', lang);
     }
 
     if (reply.user_id !== userId) {
-      return jsonResponse(
-        { error: "Cannot edit others' replies" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CANNOT_EDIT_OTHERS_REPLIES', lang);
     }
 
     if (reply.is_philosopher) {
-      return jsonResponse(
-        { error: "Cannot edit philosopher replies" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CANNOT_EDIT_PHILOSOPHER_REPLIES', lang);
     }
 
     // Block editing after verdict (wrapup)
@@ -774,24 +703,14 @@ export async function handleEditForumReply(request, env, origin, replyId) {
       .single();
 
     if (thread?.wrapup) {
-      return jsonResponse(
-        { error: "Cannot edit comments after the verdict has been published." },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CANNOT_EDIT_AFTER_VERDICT', lang);
     }
 
     const body = await request.json();
     const content = sanitizeMessage((body.content || "").trim());
 
     if (!content || content.length > MAX_REPLY_LENGTH) {
-      return jsonResponse(
-        { error: `Content required (max ${MAX_REPLY_LENGTH} chars)` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'REPLY_CONTENT_REQUIRED', lang);
     }
 
     const { data: updated, error } = await supabase
@@ -803,7 +722,7 @@ export async function handleEditForumReply(request, env, origin, replyId) {
 
     if (error) {
       console.error("[Forum] Edit reply failed:", error.message);
-      return jsonResponse({ error: "Failed to edit reply" }, 500, origin, env);
+      return errorResponse(env, origin, 'FAILED_TO_EDIT_REPLY', lang);
     }
 
     let response = jsonResponse(
@@ -815,7 +734,7 @@ export async function handleEditForumReply(request, env, origin, replyId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Edit reply exception:", err.message);
-    return jsonResponse({ error: "Failed to edit reply" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_EDIT_REPLY', lang);
   }
 }
 
@@ -823,8 +742,10 @@ export async function handleEditForumReply(request, env, origin, replyId) {
 // POST /api/forum/replies/:id/vote - Upvote/downvote
 // ============================================================
 export async function handleForumVote(request, env, origin, replyId) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -836,12 +757,7 @@ export async function handleForumVote(request, env, origin, replyId) {
     true,
   );
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many votes. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
@@ -849,12 +765,7 @@ export async function handleForumVote(request, env, origin, replyId) {
     const voteType = body.vote_type; // 'up', 'down', or null to remove
 
     if (voteType !== null && voteType !== "up" && voteType !== "down") {
-      return jsonResponse(
-        { error: "Invalid vote type (up, down, or null)" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_VOTE_TYPE', lang);
     }
 
     // Get reply
@@ -865,7 +776,7 @@ export async function handleForumVote(request, env, origin, replyId) {
       .single();
 
     if (!reply) {
-      return jsonResponse({ error: "Reply not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'REPLY_NOT_FOUND', lang);
     }
 
     // Check existing vote
@@ -934,7 +845,7 @@ export async function handleForumVote(request, env, origin, replyId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Vote exception:", err.message);
-    return jsonResponse({ error: "Failed to process vote" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_PROCESS_VOTE', lang);
   }
 }
 
@@ -945,20 +856,17 @@ export async function handleForumVote(request, env, origin, replyId) {
 // Uses Gemini Flash + the philosophical guide to produce a
 // structured summary and philosophical verdict.
 export async function handleDebateWrapup(request, env, origin, threadId) {
+  let lang = "en"; // Hoist for error handling
+  
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
   // Rate limit: 5 wrap-ups per hour per user
   const rl = await checkRateLimit(env, `wrapup:${userId}`, true);
   if (!rl) {
-    return jsonResponse(
-      { error: "Rate limit exceeded. Try again later." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
@@ -972,23 +880,13 @@ export async function handleDebateWrapup(request, env, origin, threadId) {
       .single();
 
     if (threadErr || !thread) {
-      return jsonResponse({ error: "Thread not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'THREAD_NOT_FOUND', lang);
     }
     if (thread.category !== "debate" && thread.category !== "colloquium") {
-      return jsonResponse(
-        { error: "Wrap-up is only available for debates" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'WRAPUP_ONLY_FOR_DEBATES', lang);
     }
     if (thread.user_id !== userId) {
-      return jsonResponse(
-        { error: "Only the debate creator can request a wrap-up" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ONLY_CREATOR_CAN_REQUEST_WRAPUP', lang);
     }
 
     // 2. If wrap-up already exists, return it (retry TTS if audio is missing)
@@ -1069,12 +967,7 @@ export async function handleDebateWrapup(request, env, origin, threadId) {
         "[Forum] Wrapup - failed to load replies:",
         repliesErr.message,
       );
-      return jsonResponse(
-        { error: "Failed to load debate data" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_LOAD_DEBATE_DATA', lang);
     }
 
     // Read language from request body (sent by frontend), fallback to user metadata
@@ -1138,23 +1031,13 @@ export async function handleDebateWrapup(request, env, origin, threadId) {
       console.error(
         `[Forum] ABORTING wrapup for thread ${threadId}: guide_text is empty`,
       );
-      return jsonResponse(
-        { error: "Philosophical guide unavailable — cannot generate verdict." },
-        503,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'GUIDE_UNAVAILABLE', lang);
     }
     if (!aestheticGuide) {
       console.error(
         `[Forum] ABORTING wrapup for thread ${threadId}: aesthetic guide is empty`,
       );
-      return jsonResponse(
-        { error: "Aesthetic guide unavailable — cannot generate verdict." },
-        503,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'AESTHETIC_GUIDE_UNAVAILABLE', lang);
     }
 
     // 5. Build the wrap-up prompt
@@ -1228,22 +1111,12 @@ IMPORTANT: This is a text response, NOT JSON. Write naturally with markdown form
       wrapupText = await callGrok(prompt, proposerLanguage, env);
     } catch (grokErr) {
       console.error(`[Forum] Wrapup - Grok error:`, grokErr.message);
-      return jsonResponse(
-        { error: "AI analysis failed. Please try again." },
-        502,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'AI_ANALYSIS_FAILED', lang);
     }
 
     if (!wrapupText) {
       console.error("[Forum] Wrapup - no text in Grok response");
-      return jsonResponse(
-        { error: "AI returned an empty response. Please try again." },
-        502,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'AI_EMPTY_RESPONSE', lang);
     }
 
     console.log(`[Forum] Wrapup - received ${wrapupText.length} chars`);
@@ -1360,12 +1233,7 @@ IMPORTANT: This is a text response, NOT JSON. Write naturally with markdown form
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Forum] Wrapup exception:", err.message);
-    return jsonResponse(
-      { error: "Failed to generate wrap-up" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'FAILED_TO_GENERATE_WRAPUP', lang);
   }
 }
 
@@ -1376,10 +1244,12 @@ IMPORTANT: This is a text response, NOT JSON. Write naturally with markdown form
 // Proxies the cached WAV file from R2 (public bucket may not be accessible).
 
 export async function handleWrapupAudio(request, env, origin, threadId) {
+  let lang = "en"; // Hoist for error handling
+  
   // SECURITY: Require authentication to access wrapup audio (matches other forum endpoints)
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   }
 
   const r2Key = `tts_wrapup_${threadId}.wav`;
@@ -1388,7 +1258,7 @@ export async function handleWrapupAudio(request, env, origin, threadId) {
     const audioBuffer = await getFromR2Cache(env, r2Key);
 
     if (!audioBuffer) {
-      return jsonResponse({ error: "Audio not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'AUDIO_NOT_FOUND', lang);
     }
 
     let response = new Response(audioBuffer, {
@@ -1403,7 +1273,7 @@ export async function handleWrapupAudio(request, env, origin, threadId) {
     return addRefreshedCookieToResponse(response, auth.setCookieHeader);
   } catch (err) {
     console.error("[Forum] Wrapup audio error:", err.message);
-    return jsonResponse({ error: "Failed to load audio" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_LOAD_AUDIO', lang);
   }
 }
 
@@ -1419,57 +1289,39 @@ const UUID_RE =
 const MAX_INVITE_BATCH = 20;
 
 export async function handleDebateInvite(request, env, origin, threadId) {
+  let lang = "en"; // Hoist for error handling
+  
   try {
     // 1. Authenticate
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
-      return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+      return errorResponse(env, origin, 'UNAUTHORIZED', lang);
     }
     const { client, userId, setCookieHeader } = auth;
     if (!userId) {
-      return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+      return errorResponse(env, origin, 'UNAUTHORIZED', lang);
     }
 
     // 2. Rate limit (10 invite requests per minute)
     const rateLimitOk = await checkRateLimit(env, `invite:${userId}`);
     if (!rateLimitOk) {
-      return jsonResponse(
-        { error: "Too many invitations, slow down" },
-        429,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
     }
 
     // 3. Parse + validate body
     const body = await request.json().catch(() => null);
     if (!body || !Array.isArray(body.user_ids) || body.user_ids.length === 0) {
-      return jsonResponse(
-        { error: "user_ids array is required" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'USER_IDS_ARRAY_REQUIRED', lang);
     }
 
     const userIds = body.user_ids.filter(
       (id) => typeof id === "string" && UUID_RE.test(id) && id !== userId,
     );
     if (userIds.length === 0) {
-      return jsonResponse(
-        { error: "No valid user IDs provided" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'NO_VALID_USER_IDS', lang);
     }
     if (userIds.length > MAX_INVITE_BATCH) {
-      return jsonResponse(
-        { error: `Maximum ${MAX_INVITE_BATCH} invitations per request` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'MAX_INVITATIONS_EXCEEDED', lang);
     }
 
     // 4. Verify the debate thread exists
@@ -1480,15 +1332,10 @@ export async function handleDebateInvite(request, env, origin, threadId) {
       .single();
 
     if (threadErr || !thread) {
-      return jsonResponse({ error: "Debate not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'DEBATE_NOT_FOUND', lang);
     }
     if (thread.category !== "debate") {
-      return jsonResponse(
-        { error: "Thread is not a debate" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'THREAD_NOT_A_DEBATE', lang);
     }
 
     // 5. Get inviter's display name
@@ -1593,7 +1440,8 @@ export async function handleDebateInvite(request, env, origin, threadId) {
             targetUserId,
             {
               title: inviterName,
-              body: "Invited you to a debate",
+              phraseKey: 'invitedDebate',
+              phraseArgs: [inviterName, thread.title],
               url: `${debateUrl}`,
               tag: `dm-${conversationId}`,
               type: "dm",
@@ -1629,11 +1477,6 @@ export async function handleDebateInvite(request, env, origin, threadId) {
     return resp;
   } catch (err) {
     console.error("[Forum] Invite exception:", err.message);
-    return jsonResponse(
-      { error: "Failed to send invitations" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'FAILED_TO_SEND_INVITATIONS', lang);
   }
 }

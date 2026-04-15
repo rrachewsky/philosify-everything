@@ -6,6 +6,7 @@
 // ============================================================
 
 import { jsonResponse } from "../utils/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
@@ -258,10 +259,11 @@ export const DEFAULT_SOURCE_IDS = [
  * Returns user's news preferences and unlock status.
  */
 export async function handleGetNewsPreferences(request, env, origin) {
+  const lang = 'en'; // News preferences don't have lang parameter
   try {
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) {
-      return jsonResponse({ error: "Authentication required" }, 401, origin, env);
+      return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
     }
 
     const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
@@ -297,7 +299,7 @@ export async function handleGetNewsPreferences(request, env, origin) {
     );
   } catch (err) {
     console.error("[NewsPreferences] Get error:", err.message);
-    return jsonResponse({ error: "Failed to load news preferences" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -306,10 +308,11 @@ export async function handleGetNewsPreferences(request, env, origin) {
  * Unlocks custom source selection for 1 credit.
  */
 export async function handleUnlockNewsPreferences(request, env, origin) {
+  const lang = 'en'; // News preferences don't have lang parameter
   try {
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) {
-      return jsonResponse({ error: "Authentication required" }, 401, origin, env);
+      return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
     }
 
     const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
@@ -338,12 +341,7 @@ export async function handleUnlockNewsPreferences(request, env, origin) {
     // Reserve 1 credit
     const reservation = await reserveCredit(env, user.userId);
     if (!reservation.success) {
-      return jsonResponse(
-        { error: "Insufficient credits", code: "INSUFFICIENT_CREDITS" },
-        402,
-        origin,
-        env
-      );
+      return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang);
     }
 
     try {
@@ -398,7 +396,7 @@ export async function handleUnlockNewsPreferences(request, env, origin) {
     }
   } catch (err) {
     console.error("[NewsPreferences] Unlock error:", err.message);
-    return jsonResponse({ error: "Failed to unlock news preferences" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -408,10 +406,11 @@ export async function handleUnlockNewsPreferences(request, env, origin) {
  * Body: { sources: ["reuters", "bloomberg", ...] }
  */
 export async function handleUpdateNewsPreferences(request, env, origin) {
+  const lang = 'en'; // News preferences don't have lang parameter
   try {
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) {
-      return jsonResponse({ error: "Authentication required" }, 401, origin, env);
+      return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
     }
 
     const body = await request.json();
@@ -419,18 +418,17 @@ export async function handleUpdateNewsPreferences(request, env, origin) {
 
     // Validate sources array
     if (!Array.isArray(sources)) {
-      return jsonResponse({ error: "sources must be an array" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { 
+        message: "sources must be an array" 
+      });
     }
 
     // Validate all source IDs exist
     const invalidSources = sources.filter((s) => !ALL_SOURCE_IDS.includes(s));
     if (invalidSources.length > 0) {
-      return jsonResponse(
-        { error: `Invalid sources: ${invalidSources.join(", ")}` },
-        400,
-        origin,
-        env
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { 
+        message: `Invalid sources: ${invalidSources.join(", ")}` 
+      });
     }
 
     const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
@@ -448,12 +446,10 @@ export async function handleUpdateNewsPreferences(request, env, origin) {
 
     const existing = await checkRes.json();
     if (!existing[0]?.unlocked) {
-      return jsonResponse(
-        { error: "Source customization not unlocked. Pay 1 credit to unlock.", code: "NOT_UNLOCKED" },
-        403,
-        origin,
-        env
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang, { 
+        message: "Source customization not unlocked. Pay 1 credit to unlock.",
+        code: "NOT_UNLOCKED"
+      });
     }
 
     // Update sources
@@ -500,7 +496,7 @@ export async function handleUpdateNewsPreferences(request, env, origin) {
     );
   } catch (err) {
     console.error("[NewsPreferences] Update error:", err.message);
-    return jsonResponse({ error: "Failed to update news preferences" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 

@@ -17,6 +17,7 @@ import {
 import { getSupabaseCredentials } from "../utils/supabase.js";
 import { checkRateLimit } from "../rate-limit/index.js";
 import { sendPushNotification } from "../push/sender.js";
+import { errorResponse } from "../utils/errorResponse.js";
 
 const MAX_COMMENT_LENGTH = 2000;
 const MAX_ENCRYPTED_LENGTH = 8000;
@@ -32,8 +33,9 @@ export async function handleGetComments(
   origin,
   collectiveAnalysisId,
 ) {
+  const lang = 'en'; // TODO: Extract from request headers/params
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -48,7 +50,7 @@ export async function handleGetComments(
       .single();
 
     if (analysisError || !analysis) {
-      return jsonResponse({ error: "Analysis not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'ANALYSIS_NOT_FOUND', lang);
     }
 
     // Verify user is a member of this collective
@@ -60,12 +62,7 @@ export async function handleGetComments(
       .maybeSingle();
 
     if (!membership) {
-      return jsonResponse(
-        { error: "Join the collective to view comments" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'COLLECTIVE_MEMBERSHIP_REQUIRED', lang);
     }
 
     // Fetch all comments (we'll structure them client-side for 2-level threading)
@@ -79,12 +76,7 @@ export async function handleGetComments(
 
     if (commentsError) {
       console.error("[Comments] Fetch failed:", commentsError.message);
-      return jsonResponse(
-        { error: "Failed to load comments" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_LOAD_COMMENTS', lang);
     }
 
     // Mark which comments are by the current user and include encryption info
@@ -113,7 +105,7 @@ export async function handleGetComments(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Comments] Get exception:", err.message);
-    return jsonResponse({ error: "Failed to load comments" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_LOAD_COMMENTS', lang);
   }
 }
 
@@ -126,8 +118,9 @@ export async function handleAddComment(
   origin,
   collectiveAnalysisId,
 ) {
+  const lang = 'en'; // TODO: Extract from request headers/params
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const {
     client: supabase,
@@ -145,12 +138,7 @@ export async function handleAddComment(
     true,
   );
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many comments. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'TOO_MANY_COMMENTS', lang);
   }
 
   try {
@@ -162,7 +150,7 @@ export async function handleAddComment(
       .single();
 
     if (analysisError || !analysis) {
-      return jsonResponse({ error: "Analysis not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'ANALYSIS_NOT_FOUND', lang);
     }
 
     // Verify user is a member
@@ -174,12 +162,7 @@ export async function handleAddComment(
       .maybeSingle();
 
     if (!membership) {
-      return jsonResponse(
-        { error: "Join the collective to comment" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'COLLECTIVE_COMMENT_MEMBERSHIP_REQUIRED', lang);
     }
 
     const body = await request.json();
@@ -192,30 +175,15 @@ export async function handleAddComment(
     // Validate: either plaintext or encrypted
     if (isEncrypted) {
       if (encryptedContent.length > MAX_ENCRYPTED_LENGTH) {
-        return jsonResponse(
-          { error: "Encrypted content too large" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ENCRYPTED_CONTENT_TOO_LARGE', lang);
       }
     } else {
       if (!content || content.length > MAX_COMMENT_LENGTH) {
-        return jsonResponse(
-          { error: `Comment required (max ${MAX_COMMENT_LENGTH} chars)` },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'COMMENT_TOO_LONG', lang);
       }
       // Block URLs in plaintext
       if (URL_PATTERN.test(content)) {
-        return jsonResponse(
-          { error: "Links are not allowed in comments." },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'LINKS_NOT_ALLOWED', lang);
       }
     }
 
@@ -229,22 +197,12 @@ export async function handleAddComment(
         .single();
 
       if (parentError || !parentComment) {
-        return jsonResponse(
-          { error: "Parent comment not found" },
-          404,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'PARENT_COMMENT_NOT_FOUND', lang);
       }
 
       // Only allow reply to top-level comments (parent_id is null)
       if (parentComment.parent_id !== null) {
-        return jsonResponse(
-          { error: "Can only reply to top-level comments" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'REPLY_DEPTH_EXCEEDED', lang);
       }
     }
 
@@ -274,7 +232,7 @@ export async function handleAddComment(
 
     if (insertError) {
       console.error("[Comments] Insert failed:", insertError.message);
-      return jsonResponse({ error: "Failed to add comment" }, 500, origin, env);
+      return errorResponse(env, origin, 'FAILED_TO_ADD_COMMENT', lang);
     }
 
     // Increment comment count
@@ -334,7 +292,7 @@ export async function handleAddComment(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Comments] Add exception:", err.message);
-    return jsonResponse({ error: "Failed to add comment" }, 500, origin, env);
+    return errorResponse(env, origin, 'FAILED_TO_ADD_COMMENT', lang);
   }
 }
 
@@ -342,8 +300,9 @@ export async function handleAddComment(
 // DELETE /api/collective/comments/:id - Delete own comment
 // ============================================================
 export async function handleDeleteComment(request, env, origin, commentId) {
+  const lang = 'en'; // TODO: Extract from request headers/params
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -361,16 +320,11 @@ export async function handleDeleteComment(request, env, origin, commentId) {
     const comment = Array.isArray(comments) ? comments[0] : null;
 
     if (!comment) {
-      return jsonResponse({ error: "Comment not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'COMMENT_NOT_FOUND', lang);
     }
 
     if (comment.user_id !== userId) {
-      return jsonResponse(
-        { error: "Cannot delete others' comments" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CANNOT_DELETE_OTHERS_COMMENTS', lang);
     }
 
     // Delete using service role to bypass RLS (ownership already verified above)
@@ -389,12 +343,7 @@ export async function handleDeleteComment(request, env, origin, commentId) {
     if (!deleteRes.ok) {
       const errText = await deleteRes.text().catch(() => "");
       console.error("[Comments] Delete failed:", errText);
-      return jsonResponse(
-        { error: "Failed to delete comment" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'FAILED_TO_DELETE_COMMENT', lang);
     }
 
     // Decrement comment count
@@ -406,12 +355,7 @@ export async function handleDeleteComment(request, env, origin, commentId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Comments] Delete exception:", err.message);
-    return jsonResponse(
-      { error: "Failed to delete comment" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'FAILED_TO_DELETE_COMMENT', lang);
   }
 }
 
@@ -452,8 +396,8 @@ async function createReplyNotification(
         user_id: parent.user_id,
         type: "comment_reply",
         reference_id: replyCommentId,
-        title: "New reply to your comment",
-        body: `${replyUserName} replied to your comment`,
+        title: "newReplyComment",
+        body: `${replyUserName}`,
       }),
     });
 
@@ -467,8 +411,9 @@ async function createReplyNotification(
 
     // Send push notification for the reply
     await sendPushNotification(env, parent.user_id, {
-      title: "Reply to your comment",
-      body: `${replyUserName} replied to your comment`,
+      title: replyUserName,
+      phraseKey: 'repliedYourComment',
+      phraseArgs: [replyUserName],
       url: "/community?tab=collective",
       tag: `reply-${parentCommentId}`,
       type: "reply",
@@ -523,8 +468,9 @@ async function notifyCollectiveMembers(
     await Promise.allSettled(
       members.map((m) =>
         sendPushNotification(env, m.user_id, {
-          title: "New in your Collective",
-          body: `${commenterName} commented on a discussion`,
+          title: commenterName,
+          phraseKey: 'newInCollective',
+          phraseArgs: [commenterName],
           url: "/community?tab=collective",
           tag: `collective-${groupId}`,
           type: "collective",

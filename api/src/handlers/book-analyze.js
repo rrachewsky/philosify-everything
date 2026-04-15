@@ -6,6 +6,8 @@
 // ============================================================
 
 import { validateModel, validateLanguage, jsonResponse } from "../utils/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 import { getBookMetadataById, getBookMetadata } from "../books/index.js";
 import { getDebateAestheticGuide } from "../guides/index.js";
 import { generateGuideProofWithSignature } from "../guides/loader.js";
@@ -33,6 +35,7 @@ export async function handleBookAnalyze(
   origin = "https://philosify.org",
   ctx = null,
 ) {
+  let lang = "en"; // Hoist for error handling
   try {
     const body = await request.json();
     let {
@@ -40,8 +43,8 @@ export async function handleBookAnalyze(
       author,
       google_books_id,
       model = "claude",
-      lang = "en",
     } = body;
+    lang = body.lang || "en";
 
     // Extract user ID from JWT token
     const user = await getUserFromAuth(request, env);
@@ -68,10 +71,7 @@ export async function handleBookAnalyze(
       model = validateModel(model);
       lang = validateLanguage(lang);
     } catch (error) {
-      return jsonResponse(
-        { error: "Invalid input", message: error.message },
-        400, origin, env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: error.message });
     }
 
     console.log(`[BookAnalysis] ========== NEW BOOK ANALYSIS ==========`);
@@ -296,10 +296,9 @@ export async function handleBookAnalyze(
     console.log(`[BookAnalysis] Loading literature guide from KV`);
     const guide = await getDebateAestheticGuide(env);
     if (!guide) {
-      return jsonResponse(
-        { error: "Guide not loaded", message: "Literature guide not available" },
-        500, origin, env,
-      );
+      return errorResponse(env, origin, 'GUIDE_NOT_LOADED', lang, { 
+        message: "Literature guide not available" 
+      });
     }
     console.log(`[BookAnalysis] Guide loaded: ${guide.length} characters`);
 
@@ -438,14 +437,8 @@ export async function handleBookAnalyze(
       error.isTimeout = true;
     }
 
-    return jsonResponse(
-      {
-        error: error.isTimeout ? "Analysis timeout" : "Analysis failed. Please try again.",
-        timeout: error.isTimeout || false,
-      },
-      error.isTimeout ? 504 : 500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'ANALYSIS_FAILED', lang, {
+      timeout: error.isTimeout || false,
+    }, error.isTimeout ? 504 : 500);
   }
 }

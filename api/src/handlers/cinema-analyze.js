@@ -21,8 +21,10 @@ import {
   checkUserFilmAccess,
 } from "../ai/cinema-storage.js";
 import { getSecret } from "../utils/secrets.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 
 export async function handleCinemaAnalyze(request, env, origin, ctx) {
+  let lang = 'en'; // Default language for error messages
   try {
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) {
@@ -42,7 +44,8 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
     } catch {
       return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
     }
-    const { title, director, tmdb_id, overview, genres, original_title, model = "claude", lang = "en" } = body;
+    const { title, director, tmdb_id, overview, genres, original_title, model = "claude" } = body;
+    lang = body.lang || 'en'; // Extract lang for error handling
 
     if (!title || title.length < 1 || title.length > 300) {
       return jsonResponse({ error: "Title required (1-300 chars)" }, 400, origin, env);
@@ -105,7 +108,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
               const reservation = await reserveCredit(env, userId);
               if (!reservation.success) {
                 return jsonResponse({
-                  error: "Insufficient credits",
+                  error: getLocalizedError('INSUFFICIENT_CREDITS', lang),
                   needed: 1,
                   balance: reservation.newTotal || 0,
                 }, 402, origin, env);
@@ -148,7 +151,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
         const reservation = await reserveCredit(env, userId);
         if (!reservation.success) {
           return jsonResponse({
-            error: "Insufficient credits",
+            error: getLocalizedError('INSUFFICIENT_CREDITS', lang),
             needed: 1,
             balance: reservation.newTotal || 0,
           }, 402, origin, env);
@@ -251,7 +254,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
     if (!reservation.success) {
       return jsonResponse({
-        error: "Insufficient credits",
+        error: getLocalizedError('INSUFFICIENT_CREDITS', lang),
         needed: 1,
         balance: reservation.newTotal || 0,
       }, 402, origin, env);
@@ -437,12 +440,15 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
     console.error(`[CinemaAnalyze] Error:`, err.message);
 
     if (err.message?.includes("Insufficient credits")) {
-      return jsonResponse({ error: "Insufficient credits", needed: 1 }, 402, origin, env);
+      return jsonResponse({ 
+        error: getLocalizedError('INSUFFICIENT_CREDITS', lang), 
+        needed: 1 
+      }, 402, origin, env);
     }
 
     // Sanitize error message to prevent leaking internal details
     return jsonResponse(
-      { error: sanitizeErrorMessage(err.message, "Analysis failed") },
+      { error: sanitizeErrorMessage(err.message, getLocalizedError('ANALYSIS_FAILED', lang)) },
       500,
       origin,
       env,

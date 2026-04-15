@@ -26,6 +26,146 @@ This includes but is not limited to:
 
 All user data must be stored in Supabase with Row Level Security (RLS) policies enforced. The API (service role) handles reads/writes. The frontend never touches Supabase directly for sensitive data.
 
+## Error Response Policy (MANDATORY — NEVER VIOLATE)
+
+**All API error responses MUST use the centralized i18n error system. Never return hardcoded English error messages.**
+
+### Why This Matters
+
+Philosify serves users in 110+ countries speaking 18+ languages. Error messages must be localized.
+
+### The Rule
+
+**NEVER** write hardcoded error messages:
+
+```javascript
+// ❌ WRONG - English only
+return jsonResponse({ error: "Insufficient credits" }, 402, origin, env);
+return jsonResponse({ error: "Invalid input" }, 400, origin, env);
+return jsonResponse({ error: "Not found" }, 404, origin, env);
+```
+
+**ALWAYS** use `errorResponse()` with error keys:
+
+```javascript
+// ✅ CORRECT - Automatic i18n (18 languages)
+import { errorResponse } from "../utils/errorResponse.js";
+
+return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, { needed: 1 });
+return errorResponse(env, origin, 'INVALID_INPUT', lang);
+return errorResponse(env, origin, 'NOT_FOUND', lang);
+```
+
+### Pattern for All Handlers
+
+```javascript
+import { errorResponse } from "../utils/errorResponse.js";
+
+export async function handleSomething(request, env, origin) {
+  let lang = 'en'; // Hoist for error handling
+  try {
+    const body = await request.json();
+    lang = body.lang || 'en'; // Extract from request
+    
+    // Validation
+    if (!valid) {
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
+    }
+    
+    // Success...
+  } catch (err) {
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
+  }
+}
+```
+
+### Available Error Keys
+
+See `api/src/utils/i18n-errors.js` for the full list (100+ error keys):
+
+**Common:**
+- `INSUFFICIENT_CREDITS` - User has no credits
+- `UNAUTHORIZED` / `AUTHENTICATION_REQUIRED` - Not logged in
+- `RATE_LIMIT_EXCEEDED` - Too many requests
+- `INVALID_INPUT` / `INVALID_JSON` - Bad request data
+- `NOT_FOUND` - Resource not found
+- `METHOD_NOT_ALLOWED` - Wrong HTTP method
+- `ACCESS_DENIED` - Forbidden
+- `GUIDE_NOT_LOADED` - Philosophical guide missing
+- `ANALYSIS_FAILED` - AI analysis error
+- `INTERNAL_ERROR` - Server error
+
+**Domain-Specific:**
+- `LYRICS_NOT_FOUND`
+- `CHAT_MESSAGE_EMPTY`
+- `COLLOQUIUM_INVALID_PHILOSOPHER`
+- `NEWS_QUERY_REQUIRED`
+- ... and 90+ more
+
+### Adding New Error Keys
+
+If you need a new error type:
+
+1. **Add to `api/src/utils/i18n-errors.js`** with translations for all 18 languages:
+   ```javascript
+   MY_NEW_ERROR: {
+     en: 'Something went wrong',
+     pt: 'Algo deu errado',
+     es: 'Algo salió mal',
+     fr: 'Quelque chose s\'est mal passé',
+     de: 'Etwas ist schief gelaufen',
+     it: 'Qualcosa è andato storto',
+     nl: 'Er is iets misgegaan',
+     ru: 'Что-то пошло не так',
+     zh: '出了点问题',
+     ar: 'حدث خطأ ما',
+     he: 'משהו השתבש',
+     ja: '何かが間違っていました',
+     ko: '문제가 발생했습니다',
+     tr: 'Bir şeyler yanlış gitti',
+     pl: 'Coś poszło nie tak',
+     hu: 'Valami hiba történt',
+     hi: 'कुछ गलत हो गया',
+     fa: 'مشکلی پیش آمد',
+   },
+   ```
+
+2. **Update `api/src/utils/errorResponse.js`** status code mapping if needed:
+   ```javascript
+   const statusMap = {
+     // ... existing mappings
+     MY_NEW_ERROR: 400,
+   };
+   ```
+
+3. **Use in handler:**
+   ```javascript
+   return errorResponse(env, origin, 'MY_NEW_ERROR', lang);
+   ```
+
+### Testing
+
+```bash
+cd api
+npm test -- i18n-errors.test.js  # Run i18n tests
+```
+
+### Why We Have This Policy
+
+**The Problem:** Before this system, 600+ error messages were hardcoded in English across 50+ handler files. Users in Brazil, Spain, France, Germany, Japan, etc. saw confusing English errors even when using the app in their native language.
+
+**The Solution:** Centralized i18n error system supporting 18 languages. One change updates all errors globally.
+
+**The Result:** Better UX for users in 110+ countries. Maintainable, testable, consistent error handling.
+
+### Enforcement
+
+- ✅ All critical user-facing endpoints (music, cinema, books, news, quiz, colloquium, philosopher panel) use this system
+- ✅ Automated tests verify all error keys have translations in all 18 languages
+- ⚠️ Code reviews MUST reject PRs with hardcoded error messages
+
+**Full documentation:** See `api/docs/I18N_MIGRATION_REPORT.md` and `api/docs/ERROR_I18N_MIGRATION.md`
+
 ## Build/Lint/Test Commands
 
 ### Backend (api/)

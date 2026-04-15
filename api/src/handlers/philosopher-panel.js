@@ -7,6 +7,8 @@
 // ============================================================
 
 import { jsonResponse, sanitizeErrorMessage } from "../utils/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { checkRateLimit } from "../rate-limit/index.js";
 import { getDebateAestheticGuide } from "../guides/index.js";
@@ -39,12 +41,13 @@ export async function handlePhilosopherPanel(
   origin = "https://philosify.org",
   ctx = null,
 ) {
+  let lang = "en"; // Hoist for error handling
   try {
     let body;
     try {
       body = await request.json();
     } catch {
-      return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_JSON', lang);
     }
     const {
       mediaType,
@@ -54,13 +57,13 @@ export async function handlePhilosopherPanel(
       description,
       categories,
       philosophers: userPicks,
-      lang = "en",
     } = body;
+    lang = body.lang || "en";
 
     // ── Auth ──
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) {
-      return jsonResponse({ error: "Authentication required" }, 401, origin, env);
+      return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
     }
     const userId = user.userId;
 
@@ -68,28 +71,28 @@ export async function handlePhilosopherPanel(
     const ip = request.headers.get("cf-connecting-ip") || "unknown";
     const rateLimitOk = await checkRateLimit(env, `philosopher-panel:${userId}:${ip}`, true);
     if (!rateLimitOk) {
-      return jsonResponse({ error: "Too many requests. Please wait." }, 429, origin, env);
+      return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
     }
 
     // ── Validate inputs ──
     if (!title) {
-      return jsonResponse({ error: "Title is required" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "Title is required" });
     }
     if (mediaType !== "news" && mediaType !== "cinema" && !artist) {
-      return jsonResponse({ error: "Artist/author is required" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "Artist/author is required" });
     }
     if (!mediaType || !["music", "literature", "news", "cinema"].includes(mediaType)) {
-      return jsonResponse({ error: "mediaType must be 'music', 'literature', 'news', or 'cinema'" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "mediaType must be 'music', 'literature', 'news', or 'cinema'" });
     }
     if (!Array.isArray(userPicks) || userPicks.length !== 3) {
-      return jsonResponse({ error: "Exactly 3 philosophers must be chosen" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "Exactly 3 philosophers must be chosen" });
     }
 
     // ── Resolve philosopher profiles ──
     // Validate user picks exist in roster and are not duplicates
     const uniqueNames = [...new Set(userPicks)];
     if (uniqueNames.length < 3) {
-      return jsonResponse({ error: "Duplicate philosophers are not allowed" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "Duplicate philosophers are not allowed" });
     }
 
     const philosopherProfiles = [];
@@ -156,16 +159,9 @@ export async function handlePhilosopherPanel(
             console.error(`[PhilosopherPanel] Rollback release failed: ${releaseErr.message}`);
           }
         }
-        return jsonResponse(
-          {
-            error: "Insufficient credits",
-            code: "INSUFFICIENT_CREDITS",
-            needed: PANEL_COST,
-          },
-          402,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
+          needed: PANEL_COST,
+        });
       }
       reservations.push(reservation);
     }
@@ -315,21 +311,15 @@ export async function handlePhilosopherPanel(
         }
       }
       // Sanitize error message to prevent leaking internal details
-      return jsonResponse(
-        { error: sanitizeErrorMessage(err.message, "Panel analysis failed") },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ANALYSIS_FAILED', lang, {
+        message: sanitizeErrorMessage(err.message, getLocalizedError('ANALYSIS_FAILED', lang))
+      });
     }
   } catch (err) {
     console.error(`[PhilosopherPanel] Request error: ${err.message}`);
     // Sanitize error message to prevent leaking internal details
-    return jsonResponse(
-      { error: sanitizeErrorMessage(err.message, "Request failed") },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang, {
+      message: sanitizeErrorMessage(err.message, getLocalizedError('INTERNAL_ERROR', lang))
+    });
   }
 }

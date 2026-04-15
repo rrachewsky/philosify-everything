@@ -7,6 +7,7 @@
 // DELETE /api/chat/:messageId - Delete own message
 
 import { jsonResponse, sanitizeMessage } from "../utils/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
@@ -29,7 +30,7 @@ const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{
 export async function handleGetMessages(request, env, origin) {
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en');
   }
 
   const { client: supabase, userId, setCookieHeader } = auth;
@@ -62,7 +63,7 @@ export async function handleGetMessages(request, env, origin) {
 
     if (before) {
       if (!ISO_TIMESTAMP_RE.test(before)) {
-        return jsonResponse({ error: "Invalid cursor format" }, 400, origin, env);
+        return errorResponse(env, origin, 'CHAT_INVALID_CURSOR', 'en');
       }
       query = query.lt("created_at", before);
     }
@@ -71,12 +72,7 @@ export async function handleGetMessages(request, env, origin) {
 
     if (error) {
       console.error("[Chat] Failed to fetch messages:", error.message);
-      return jsonResponse(
-        { error: "Failed to load messages" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_LOAD_FAILED', 'en');
     }
 
     // Fetch reply previews for messages that are replies
@@ -119,7 +115,7 @@ export async function handleGetMessages(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Chat] Exception:", err.message);
-    return jsonResponse({ error: "Failed to load messages" }, 500, origin, env);
+    return errorResponse(env, origin, 'CHAT_LOAD_FAILED', 'en');
   }
 }
 
@@ -130,7 +126,7 @@ export async function handleGetMessages(request, env, origin) {
 export async function handleSendMessage(request, env, origin) {
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en');
   }
 
   const {
@@ -145,12 +141,7 @@ export async function handleSendMessage(request, env, origin) {
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const rateLimitOk = await checkRateLimit(env, `chat:${userId}:${ip}`, true);
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many messages. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', 'en');
   }
 
   try {
@@ -159,40 +150,22 @@ export async function handleSendMessage(request, env, origin) {
     const replyToId = body.reply_to_id || null;
 
     if (!message || message.length === 0) {
-      return jsonResponse(
-        { error: "Message cannot be empty" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_MESSAGE_EMPTY', 'en');
     }
 
     if (message.length > MAX_MESSAGE_LENGTH) {
-      return jsonResponse(
-        { error: `Message too long (max ${MAX_MESSAGE_LENGTH} chars)` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_MESSAGE_TOO_LONG', 'en');
     }
 
     // Block URLs - only Share Analysis feature is allowed
     if (URL_PATTERN.test(message)) {
-      return jsonResponse(
-        {
-          error:
-            "Links are not allowed. Use the Share Analysis button to share your analysis.",
-        },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_LINKS_NOT_ALLOWED', 'en');
     }
 
     // Validate reply_to_id if provided
     if (replyToId) {
       if (!UUID_RE.test(replyToId)) {
-        return jsonResponse({ error: "Invalid reply_to_id" }, 400, origin, env);
+        return errorResponse(env, origin, 'CHAT_REPLY_INVALID_ID', 'en');
       }
       const { data: replyMsg } = await supabase
         .from("chat_messages")
@@ -200,12 +173,7 @@ export async function handleSendMessage(request, env, origin) {
         .eq("id", replyToId)
         .single();
       if (!replyMsg) {
-        return jsonResponse(
-          { error: "Reply target not found" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'CHAT_REPLY_NOT_FOUND', 'en');
       }
     }
 
@@ -228,12 +196,7 @@ export async function handleSendMessage(request, env, origin) {
 
     if (error) {
       console.error("[Chat] Failed to send message:", error.message);
-      return jsonResponse(
-        { error: "Failed to send message" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_SEND_FAILED', 'en');
     }
 
     let response = jsonResponse(
@@ -245,7 +208,7 @@ export async function handleSendMessage(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Chat] Exception:", err.message);
-    return jsonResponse({ error: "Failed to send message" }, 500, origin, env);
+    return errorResponse(env, origin, 'CHAT_SEND_FAILED', 'en');
   }
 }
 
@@ -256,7 +219,7 @@ export async function handleSendMessage(request, env, origin) {
 export async function handleDeleteChatMessage(request, env, origin, messageId) {
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en');
   }
 
   const { client: supabase, userId, setCookieHeader } = auth;
@@ -270,16 +233,11 @@ export async function handleDeleteChatMessage(request, env, origin, messageId) {
       .single();
 
     if (fetchError || !msg) {
-      return jsonResponse({ error: "Message not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'CHAT_MESSAGE_NOT_FOUND', 'en');
     }
 
     if (msg.user_id !== userId) {
-      return jsonResponse(
-        { error: "Can only delete your own messages" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_DELETE_OWN_ONLY', 'en');
     }
 
     // Hard delete
@@ -290,24 +248,14 @@ export async function handleDeleteChatMessage(request, env, origin, messageId) {
 
     if (deleteError) {
       console.error("[Chat] Delete failed:", deleteError.message);
-      return jsonResponse(
-        { error: "Failed to delete message" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_DELETE_FAILED', 'en');
     }
 
     let response = jsonResponse({ success: true }, 200, origin, env);
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Chat] Delete exception:", err.message);
-    return jsonResponse(
-      { error: "Failed to delete message" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'CHAT_DELETE_FAILED', 'en');
   }
 }
 
@@ -317,12 +265,12 @@ export async function handleDeleteChatMessage(request, env, origin, messageId) {
  */
 export async function handleEditChatMessage(request, env, origin, messageId) {
   if (!messageId || !UUID_RE.test(messageId)) {
-    return jsonResponse({ error: "Invalid message ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'CHAT_INVALID_MESSAGE_ID', 'en');
   }
 
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en');
   }
 
   const { client: supabase, userId, setCookieHeader } = auth;
@@ -336,46 +284,26 @@ export async function handleEditChatMessage(request, env, origin, messageId) {
       .single();
 
     if (fetchError || !msg) {
-      return jsonResponse({ error: "Message not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'CHAT_MESSAGE_NOT_FOUND', 'en');
     }
 
     if (msg.user_id !== userId) {
-      return jsonResponse(
-        { error: "Can only edit your own messages" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_EDIT_OWN_ONLY', 'en');
     }
 
     const body = await request.json();
     const newMessage = (body.message || "").trim();
 
     if (!newMessage || newMessage.length === 0) {
-      return jsonResponse(
-        { error: "Message cannot be empty" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_MESSAGE_EMPTY', 'en');
     }
 
     if (newMessage.length > MAX_MESSAGE_LENGTH) {
-      return jsonResponse(
-        { error: `Message too long (max ${MAX_MESSAGE_LENGTH} chars)` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_MESSAGE_TOO_LONG', 'en');
     }
 
     if (URL_PATTERN.test(newMessage)) {
-      return jsonResponse(
-        { error: "Links are not allowed." },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_LINKS_NOT_ALLOWED', 'en');
     }
 
     const { data: updated, error: updateError } = await supabase
@@ -392,12 +320,7 @@ export async function handleEditChatMessage(request, env, origin, messageId) {
 
     if (updateError || !updated) {
       console.error("[Chat] Edit failed:", updateError?.message);
-      return jsonResponse(
-        { error: "Failed to edit message" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'CHAT_EDIT_FAILED', 'en');
     }
 
     console.log("[Chat] Message edited:", messageId);
@@ -411,6 +334,6 @@ export async function handleEditChatMessage(request, env, origin, messageId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Chat] Edit exception:", err.message);
-    return jsonResponse({ error: "Failed to edit message" }, 500, origin, env);
+    return errorResponse(env, origin, 'CHAT_EDIT_FAILED', 'en');
   }
 }

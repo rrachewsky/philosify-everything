@@ -20,6 +20,8 @@
 // POST   /api/dm/conversations/:id/key                    - Set group keys
 
 import { jsonResponse } from "../utils/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 import {
   getSupabaseForUser,
   addRefreshedCookieToResponse,
@@ -165,8 +167,9 @@ async function enrichConversations(env, conversations, userId) {
 // GET /api/dm/conversations
 // ============================================================
 export async function handleGetConversations(request, env, origin) {
+  const lang = 'en';
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
@@ -196,12 +199,7 @@ export async function handleGetConversations(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Get conversations error:", err.message);
-    return jsonResponse(
-      { error: "Failed to load conversations" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -209,71 +207,48 @@ export async function handleGetConversations(request, env, origin) {
 // POST /api/dm/conversations
 // ============================================================
 export async function handleCreateConversation(request, env, origin) {
+  let lang = 'en';
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   const rateLimitOk = await checkRateLimit(env, `dm-create:${userId}:${ip}`, true);
-  if (!rateLimitOk) return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+  if (!rateLimitOk) return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
 
   try {
     const body = await request.json();
+    lang = body.lang || 'en';
     const { type, memberIds, name } = body;
 
     if (!type || !["direct", "group"].includes(type)) {
-      return jsonResponse(
-        { error: "Invalid type: must be direct or group" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
     if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
-      return jsonResponse({ error: "memberIds required" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
     if (memberIds.some((id) => !UUID_RE.test(id))) {
-      return jsonResponse({ error: "Invalid member ID" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
     if (memberIds.includes(userId)) {
-      return jsonResponse(
-        { error: "Do not include yourself in memberIds" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     // Block checks
     const blockedByMe = await getBlockedUserIds(env, userId);
     for (const mid of memberIds) {
       if (blockedByMe.has(mid)) {
-        return jsonResponse(
-          { error: "Cannot create conversation with a blocked user" },
-          403,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ACCESS_DENIED', lang);
       }
       const blockedByThem = await getBlockedUserIds(env, mid);
       if (blockedByThem.has(userId)) {
-        return jsonResponse(
-          { error: "You cannot message this user" },
-          403,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ACCESS_DENIED', lang);
       }
     }
 
     // For direct: check if conversation already exists
     if (type === "direct") {
       if (memberIds.length !== 1) {
-        return jsonResponse(
-          { error: "Direct conversations require exactly 1 member" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
       const partnerId = memberIds[0];
       const existingId = await rpc(env, "find_direct_conversation", {
@@ -303,20 +278,10 @@ export async function handleCreateConversation(request, env, origin) {
 
     if (type === "group") {
       if (memberIds.length < 1) {
-        return jsonResponse(
-          { error: "Groups require at least 1 other member" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
       if (memberIds.length + 1 > MAX_GROUP_MEMBERS) {
-        return jsonResponse(
-          { error: `Groups limited to ${MAX_GROUP_MEMBERS} members` },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
     }
 
@@ -326,12 +291,7 @@ export async function handleCreateConversation(request, env, origin) {
       select: "id",
     });
     if (!profiles || profiles.length !== memberIds.length) {
-      return jsonResponse(
-        { error: "One or more users not found" },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Create conversation
@@ -344,12 +304,7 @@ export async function handleCreateConversation(request, env, origin) {
       single: true,
     });
     if (!conv) {
-      return jsonResponse(
-        { error: "Failed to create conversation" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     // Add members: creator is admin, others are admin (direct) or member (group)
@@ -383,12 +338,7 @@ export async function handleCreateConversation(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Create conversation error:", err.message);
-    return jsonResponse(
-      { error: "Failed to create conversation" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -401,24 +351,20 @@ export async function handleGetConversationMessages(
   origin,
   conversationId,
 ) {
+  const lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     // Verify membership
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse(
-        { error: "Not a member of this conversation" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     const url = new URL(request.url);
@@ -428,12 +374,7 @@ export async function handleGetConversationMessages(
     // SECURITY: Validate timestamp format before injecting into PostgREST filter
     if (before) {
       if (!ISO_TIMESTAMP_RE.test(before)) {
-        return jsonResponse(
-          { error: "Invalid timestamp format" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
       filter += `&created_at=lt.${before}`;
     }
@@ -581,7 +522,7 @@ export async function handleGetConversationMessages(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Get messages error:", err.message);
-    return jsonResponse({ error: "Failed to load messages" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -594,36 +535,27 @@ export async function handleSendConversationMessage(
   origin,
   conversationId,
 ) {
+  let lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, email, userMetadata, setCookieHeader } = auth;
 
   // Rate limit
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const rateLimitOk = await checkRateLimit(env, `dm:${userId}:${ip}`, true);
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many messages. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
     // Verify membership
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse(
-        { error: "Not a member of this conversation" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     // Get conversation for type + members
@@ -632,12 +564,7 @@ export async function handleSendConversationMessage(
       single: true,
     });
     if (!conv) {
-      return jsonResponse(
-        { error: "Conversation not found" },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Block check for direct conversations
@@ -651,26 +578,17 @@ export async function handleSendConversationMessage(
       if (partnerId) {
         const blockedByMe = await getBlockedUserIds(env, userId);
         if (blockedByMe.has(partnerId)) {
-          return jsonResponse(
-            { error: "You have blocked this user" },
-            403,
-            origin,
-            env,
-          );
+          return errorResponse(env, origin, 'ACCESS_DENIED', lang);
         }
         const blockedByThem = await getBlockedUserIds(env, partnerId);
         if (blockedByThem.has(userId)) {
-          return jsonResponse(
-            { error: "You cannot message this user" },
-            403,
-            origin,
-            env,
-          );
+          return errorResponse(env, origin, 'ACCESS_DENIED', lang);
         }
       }
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const message = (body.message || "").trim();
     const encryptedContent = body.encrypted_content || null;
     const nonce = body.nonce || null;
@@ -681,47 +599,27 @@ export async function handleSendConversationMessage(
     // Validate reply_to_id if provided
     if (replyToId) {
       if (!UUID_RE.test(replyToId)) {
-        return jsonResponse({ error: "Invalid reply_to_id" }, 400, origin, env);
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
       const replyMsg = await pg(env, "GET", "direct_messages", {
         filter: `id=eq.${replyToId}&conversation_id=eq.${conversationId}`,
         single: true,
       });
       if (!replyMsg) {
-        return jsonResponse(
-          { error: "Reply target not found in this conversation" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
     }
 
     if (isEncrypted) {
       if (encryptedContent.length > MAX_ENCRYPTED_LENGTH) {
-        return jsonResponse(
-          { error: "Encrypted content too large" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
     } else {
       if (!message || message.length > MAX_MESSAGE_LENGTH) {
-        return jsonResponse(
-          { error: `Message required (max ${MAX_MESSAGE_LENGTH} chars)` },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
       if (URL_PATTERN.test(message)) {
-        return jsonResponse(
-          { error: "Links are not allowed." },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
     }
 
@@ -753,12 +651,7 @@ export async function handleSendConversationMessage(
       single: true,
     });
     if (!dm) {
-      return jsonResponse(
-        { error: "Failed to send message" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     // Update conversation metadata
@@ -835,7 +728,7 @@ export async function handleSendConversationMessage(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Send message error:", err.message);
-    return jsonResponse({ error: "Failed to send message" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -843,33 +736,30 @@ export async function handleSendConversationMessage(
 // POST /api/dm/conversations/:id/members
 // ============================================================
 export async function handleAddMembers(request, env, origin, conversationId) {
+  let lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     // Verify admin role
     const membership = await getMembership(env, conversationId, userId);
     if (!membership || membership.role !== "admin") {
-      return jsonResponse(
-        { error: "Only admins can add members" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const { memberIds } = body;
     if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
-      return jsonResponse({ error: "memberIds required" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
     if (memberIds.some((id) => !UUID_RE.test(id))) {
-      return jsonResponse({ error: "Invalid member ID" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     // Check current member count
@@ -879,36 +769,21 @@ export async function handleAddMembers(request, env, origin, conversationId) {
         select: "user_id",
       })) || [];
     if (currentMembers.length + memberIds.length > MAX_GROUP_MEMBERS) {
-      return jsonResponse(
-        { error: `Groups limited to ${MAX_GROUP_MEMBERS} members` },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     // Filter out already-members
     const existingIds = new Set(currentMembers.map((m) => m.user_id));
     const newIds = memberIds.filter((id) => !existingIds.has(id));
     if (newIds.length === 0) {
-      return jsonResponse(
-        { error: "All users are already members" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     // Block checks
     const blockedByMe = await getBlockedUserIds(env, userId);
     for (const mid of newIds) {
       if (blockedByMe.has(mid)) {
-        return jsonResponse(
-          { error: "Cannot add a blocked user" },
-          403,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ACCESS_DENIED', lang);
       }
     }
 
@@ -918,12 +793,7 @@ export async function handleAddMembers(request, env, origin, conversationId) {
       select: "id",
     });
     if (!profiles || profiles.length !== newIds.length) {
-      return jsonResponse(
-        { error: "One or more users not found" },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // If conversation is 'direct', promote to 'group'
@@ -974,7 +844,7 @@ export async function handleAddMembers(request, env, origin, conversationId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Add members error:", err.message);
-    return jsonResponse({ error: "Failed to add members" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -988,29 +858,25 @@ export async function handleRemoveMember(
   conversationId,
   targetUserId,
 ) {
+  const lang = 'en';
   if (!UUID_RE.test(conversationId) || !UUID_RE.test(targetUserId)) {
-    return jsonResponse({ error: "Invalid ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse({ error: "Not a member" }, 403, origin, env);
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     // Can remove self (leave) or admins can remove non-admins
     const isSelf = targetUserId === userId;
     if (!isSelf && membership.role !== "admin") {
-      return jsonResponse(
-        { error: "Only admins can remove members" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     // Don't let admins remove other admins
@@ -1021,20 +887,10 @@ export async function handleRemoveMember(
         targetUserId,
       );
       if (!targetMembership) {
-        return jsonResponse(
-          { error: "User is not a member" },
-          404,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'NOT_FOUND', lang);
       }
       if (targetMembership.role === "admin") {
-        return jsonResponse(
-          { error: "Cannot remove another admin" },
-          403,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'ACCESS_DENIED', lang);
       }
     }
 
@@ -1072,7 +928,7 @@ export async function handleRemoveMember(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Remove member error:", err.message);
-    return jsonResponse({ error: "Failed to remove member" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1085,32 +941,29 @@ export async function handleUpdateConversation(
   origin,
   conversationId,
 ) {
+  let lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     const membership = await getMembership(env, conversationId, userId);
     if (!membership || membership.role !== "admin") {
-      return jsonResponse(
-        { error: "Only admins can update conversations" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const updates = {};
     if (body.name !== undefined)
       updates.name = body.name ? body.name.trim().slice(0, 50) : null;
 
     if (Object.keys(updates).length === 0) {
-      return jsonResponse({ error: "Nothing to update" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     await pg(env, "PATCH", "dm_conversations", {
@@ -1122,12 +975,7 @@ export async function handleUpdateConversation(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Update conversation error:", err.message);
-    return jsonResponse(
-      { error: "Failed to update conversation" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1140,18 +988,19 @@ export async function handleLeaveConversation(
   origin,
   conversationId,
 ) {
+  const lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse({ error: "Not a member" }, 403, origin, env);
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     const conv = await pg(env, "GET", "dm_conversations", {
@@ -1208,12 +1057,7 @@ export async function handleLeaveConversation(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Leave conversation error:", err.message);
-    return jsonResponse(
-      { error: "Failed to leave conversation" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1227,12 +1071,13 @@ export async function handleDeleteConversationMessage(
   conversationId,
   messageId,
 ) {
+  const lang = 'en';
   if (!UUID_RE.test(conversationId) || !UUID_RE.test(messageId)) {
-    return jsonResponse({ error: "Invalid ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
@@ -1243,15 +1088,10 @@ export async function handleDeleteConversationMessage(
       single: true,
     });
     if (!msg) {
-      return jsonResponse({ error: "Message not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
     if (msg.sender_id !== userId) {
-      return jsonResponse(
-        { error: "Can only delete your own messages" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     // 2. Get all conversation members BEFORE delete (for backup broadcast)
@@ -1276,12 +1116,7 @@ export async function handleDeleteConversationMessage(
 
     if (verifyDeleted) {
       console.error("[DM] Delete failed - message still exists:", messageId);
-      return jsonResponse(
-        { error: "Failed to delete message" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     console.log("[DM] Message deleted successfully:", messageId);
@@ -1321,12 +1156,7 @@ export async function handleDeleteConversationMessage(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Delete message error:", err.message);
-    return jsonResponse(
-      { error: "Failed to delete message" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1340,12 +1170,13 @@ export async function handleEditConversationMessage(
   conversationId,
   messageId,
 ) {
+  let lang = 'en';
   if (!UUID_RE.test(conversationId) || !UUID_RE.test(messageId)) {
-    return jsonResponse({ error: "Invalid ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
@@ -1356,19 +1187,15 @@ export async function handleEditConversationMessage(
       single: true,
     });
     if (!msg) {
-      return jsonResponse({ error: "Message not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
     if (msg.sender_id !== userId) {
-      return jsonResponse(
-        { error: "Can only edit your own messages" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     // 2. Parse and validate new message content
     const body = await request.json();
+    lang = body.lang || 'en';
     const newMessage = (body.message || "").trim();
     const encryptedContent = body.encrypted_content || null;
     const nonce = body.nonce || null;
@@ -1376,29 +1203,14 @@ export async function handleEditConversationMessage(
 
     if (isEncrypted) {
       if (encryptedContent.length > MAX_ENCRYPTED_LENGTH) {
-        return jsonResponse(
-          { error: "Encrypted content too large" },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
     } else {
       if (!newMessage || newMessage.length > MAX_MESSAGE_LENGTH) {
-        return jsonResponse(
-          { error: `Message required (max ${MAX_MESSAGE_LENGTH} chars)` },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
       if (URL_PATTERN.test(newMessage)) {
-        return jsonResponse(
-          { error: "Links are not allowed." },
-          400,
-          origin,
-          env,
-        );
+        return errorResponse(env, origin, 'INVALID_INPUT', lang);
       }
     }
 
@@ -1418,12 +1230,7 @@ export async function handleEditConversationMessage(
     });
 
     if (!updated) {
-      return jsonResponse(
-        { error: "Failed to update message" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     console.log("[DM] Message edited:", messageId);
@@ -1491,7 +1298,7 @@ export async function handleEditConversationMessage(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Edit message error:", err.message);
-    return jsonResponse({ error: "Failed to edit message" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1499,18 +1306,19 @@ export async function handleEditConversationMessage(
 // POST /api/dm/conversations/:id/read
 // ============================================================
 export async function handleMarkRead(request, env, origin, conversationId) {
+  const lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse({ error: "Not a member" }, 403, origin, env);
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     await pg(env, "POST", "dm_read_receipts", {
@@ -1526,7 +1334,7 @@ export async function handleMarkRead(request, env, origin, conversationId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Mark read error:", err.message);
-    return jsonResponse({ error: "Failed to mark read" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1534,12 +1342,13 @@ export async function handleMarkRead(request, env, origin, conversationId) {
 // GET /api/dm/user/:userId - Get user profile
 // ============================================================
 export async function handleGetUserProfile(request, env, origin, targetUserId) {
+  const lang = 'en';
   if (!targetUserId || !UUID_RE.test(targetUserId)) {
-    return jsonResponse({ error: "Invalid user ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { setCookieHeader } = auth;
 
   try {
@@ -1549,7 +1358,7 @@ export async function handleGetUserProfile(request, env, origin, targetUserId) {
       single: true,
     });
     if (!profile) {
-      return jsonResponse({ error: "User not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     let response = jsonResponse(
@@ -1563,7 +1372,7 @@ export async function handleGetUserProfile(request, env, origin, targetUserId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Profile error:", err.message);
-    return jsonResponse({ error: "Failed to load user" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1576,18 +1385,19 @@ export async function handleGetConversationKey(
   origin,
   conversationId,
 ) {
+  const lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse({ error: "Not a member" }, 403, origin, env);
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     const keyRow = await pg(env, "GET", "dm_group_keys", {
@@ -1608,7 +1418,7 @@ export async function handleGetConversationKey(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Get key error:", err.message);
-    return jsonResponse({ error: "Failed to get key" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1621,29 +1431,26 @@ export async function handleSetConversationKeys(
   origin,
   conversationId,
 ) {
+  let lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   try {
     const membership = await getMembership(env, conversationId, userId);
     if (!membership || membership.role !== "admin") {
-      return jsonResponse(
-        { error: "Only admins can set keys" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const { memberKeys } = body;
     if (!memberKeys || !Array.isArray(memberKeys)) {
-      return jsonResponse({ error: "memberKeys required" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     // Get current max version
@@ -1679,7 +1486,7 @@ export async function handleSetConversationKeys(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Set keys error:", err.message);
-    return jsonResponse({ error: "Failed to set keys" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1693,12 +1500,13 @@ export async function handleToggleReaction(
   conversationId,
   messageId,
 ) {
+  let lang = 'en';
   if (!UUID_RE.test(conversationId) || !UUID_RE.test(messageId)) {
-    return jsonResponse({ error: "Invalid ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, setCookieHeader } = auth;
 
   // Rate limit
@@ -1709,24 +1517,14 @@ export async function handleToggleReaction(
     true,
   );
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many reactions. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
     // Verify membership
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse(
-        { error: "Not a member of this conversation" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     // Verify message exists in this conversation
@@ -1736,21 +1534,15 @@ export async function handleToggleReaction(
       single: true,
     });
     if (!msg) {
-      return jsonResponse({ error: "Message not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Parse and validate reaction type
     const body = await request.json();
+    lang = body.lang || 'en';
     const { type } = body;
     if (!type || !VALID_REACTIONS.includes(type)) {
-      return jsonResponse(
-        {
-          error: `Invalid reaction type. Must be one of: ${VALID_REACTIONS.join(", ")}`,
-        },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     // Check if reaction already exists (toggle logic)
@@ -1829,12 +1621,7 @@ export async function handleToggleReaction(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Toggle reaction error:", err.message);
-    return jsonResponse(
-      { error: "Failed to toggle reaction" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }
 
@@ -1849,36 +1636,27 @@ export async function handleShareAnalysis(
   origin,
   conversationId,
 ) {
+  let lang = 'en';
   if (!UUID_RE.test(conversationId)) {
-    return jsonResponse({ error: "Invalid conversation ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) return errorResponse(env, origin, 'UNAUTHORIZED', lang);
   const { userId, email, userMetadata, setCookieHeader } = auth;
 
   // Rate limit (same as regular messages)
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const rateLimitOk = await checkRateLimit(env, `dm:${userId}:${ip}`, true);
   if (!rateLimitOk) {
-    return jsonResponse(
-      { error: "Too many messages. Please slow down." },
-      429,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
   }
 
   try {
     // Verify membership
     const membership = await getMembership(env, conversationId, userId);
     if (!membership) {
-      return jsonResponse(
-        { error: "Not a member of this conversation" },
-        403,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     // Get conversation
@@ -1887,12 +1665,7 @@ export async function handleShareAnalysis(
       single: true,
     });
     if (!conv) {
-      return jsonResponse(
-        { error: "Conversation not found" },
-        404,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Block check for direct conversations
@@ -1906,26 +1679,17 @@ export async function handleShareAnalysis(
       if (partnerId) {
         const blockedByMe = await getBlockedUserIds(env, userId);
         if (blockedByMe.has(partnerId)) {
-          return jsonResponse(
-            { error: "You have blocked this user" },
-            403,
-            origin,
-            env,
-          );
+          return errorResponse(env, origin, 'ACCESS_DENIED', lang);
         }
         const blockedByThem = await getBlockedUserIds(env, partnerId);
         if (blockedByThem.has(userId)) {
-          return jsonResponse(
-            { error: "You cannot message this user" },
-            403,
-            origin,
-            env,
-          );
+          return errorResponse(env, origin, 'ACCESS_DENIED', lang);
         }
       }
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const {
       analysisId,
       songName,
@@ -1937,28 +1701,13 @@ export async function handleShareAnalysis(
 
     // Validate required fields
     if (!analysisId || !UUID_RE.test(analysisId)) {
-      return jsonResponse(
-        { error: "Valid analysisId required" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
     if (!songName || typeof songName !== "string" || songName.length > 200) {
-      return jsonResponse(
-        { error: "Valid songName required (max 200 chars)" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
     if (!artist || typeof artist !== "string" || artist.length > 200) {
-      return jsonResponse(
-        { error: "Valid artist required (max 200 chars)" },
-        400,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
 
     // Build display message (plaintext fallback for notifications/previews)
@@ -2001,12 +1750,7 @@ export async function handleShareAnalysis(
       single: true,
     });
     if (!dm) {
-      return jsonResponse(
-        { error: "Failed to share analysis" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     // Update conversation metadata
@@ -2078,11 +1822,6 @@ export async function handleShareAnalysis(
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[DM] Share analysis error:", err.message);
-    return jsonResponse(
-      { error: "Failed to share analysis" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }

@@ -14,6 +14,7 @@ import {
   addRefreshedCookieToResponse,
 } from "../utils/supabase-user.js";
 import { checkRateLimit } from "../rate-limit/index.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 
 const MAX_POST_LENGTH = 1000;
 const MAX_ENCRYPTED_LENGTH = 4000;
@@ -30,12 +31,21 @@ const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{
 // GET /api/underground - List anonymous posts
 // ============================================================
 export async function handleGetUndergroundPosts(request, env, origin) {
+  let lang = 'en';
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) {
+    return jsonResponse(
+      { error: getLocalizedError('UNAUTHORIZED', lang) },
+      401,
+      origin,
+      env,
+    );
+  }
 
   const { client: supabase, userId, setCookieHeader } = auth;
   const url = new URL(request.url);
   const before = url.searchParams.get("before");
+  lang = url.searchParams.get("lang") || 'en';
 
   try {
     // Check access and nickname
@@ -48,7 +58,7 @@ export async function handleGetUndergroundPosts(request, env, origin) {
 
     if (!access) {
       return jsonResponse(
-        { error: "Access required. Unlock Underground first." },
+        { error: getLocalizedError('UNDERGROUND_ACCESS_REQUIRED', lang) },
         403,
         origin,
         env,
@@ -72,7 +82,12 @@ export async function handleGetUndergroundPosts(request, env, origin) {
 
     if (before) {
       if (!ISO_TIMESTAMP_RE.test(before)) {
-        return jsonResponse({ error: "Invalid cursor format" }, 400, origin, env);
+        return jsonResponse(
+          { error: getLocalizedError('INVALID_CURSOR', lang) },
+          400,
+          origin,
+          env,
+        );
       }
       query = query.lt("created_at", before);
     }
@@ -81,7 +96,12 @@ export async function handleGetUndergroundPosts(request, env, origin) {
 
     if (error) {
       console.error("[Underground] Failed to fetch posts:", error.message);
-      return jsonResponse({ error: "Failed to load posts" }, 500, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('FAILED_TO_LOAD_POSTS', lang) },
+        500,
+        origin,
+        env,
+      );
     }
 
     // Get user's reactions for these posts
@@ -162,7 +182,12 @@ export async function handleGetUndergroundPosts(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Underground] List exception:", err.message);
-    return jsonResponse({ error: "Failed to load posts" }, 500, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('FAILED_TO_LOAD_POSTS', lang) },
+      500,
+      origin,
+      env,
+    );
   }
 }
 
@@ -170,8 +195,16 @@ export async function handleGetUndergroundPosts(request, env, origin) {
 // POST /api/underground - Create anonymous post
 // ============================================================
 export async function handleCreateUndergroundPost(request, env, origin) {
+  let lang = 'en';
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) {
+    return jsonResponse(
+      { error: getLocalizedError('UNAUTHORIZED', lang) },
+      401,
+      origin,
+      env,
+    );
+  }
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -184,7 +217,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
   );
   if (!rateLimitOk) {
     return jsonResponse(
-      { error: "Too many posts. Please slow down." },
+      { error: getLocalizedError('TOO_MANY_POSTS', lang) },
       429,
       origin,
       env,
@@ -202,7 +235,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
 
     if (!access) {
       return jsonResponse(
-        { error: "Access required. Unlock Underground first." },
+        { error: getLocalizedError('UNDERGROUND_ACCESS_REQUIRED', lang) },
         403,
         origin,
         env,
@@ -211,7 +244,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
 
     if (!access.nickname) {
       return jsonResponse(
-        { error: "Set your Underground nickname first." },
+        { error: getLocalizedError('UNDERGROUND_SET_NICKNAME_FIRST', lang) },
         400,
         origin,
         env,
@@ -219,6 +252,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const content = sanitizeMessage((body.content || "").trim());
     const encryptedContent = body.encrypted_content || null;
     const nonce = body.nonce || null;
@@ -229,7 +263,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
     if (isEncrypted) {
       if (encryptedContent.length > MAX_ENCRYPTED_LENGTH) {
         return jsonResponse(
-          { error: "Encrypted content too large" },
+          { error: getLocalizedError('UNDERGROUND_ENCRYPTED_CONTENT_TOO_LARGE', lang) },
           400,
           origin,
           env,
@@ -238,7 +272,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
     } else {
       if (!content || content.length > MAX_POST_LENGTH) {
         return jsonResponse(
-          { error: `Content required (max ${MAX_POST_LENGTH} chars)` },
+          { error: getLocalizedError('UNDERGROUND_CONTENT_REQUIRED', lang) },
           400,
           origin,
           env,
@@ -247,7 +281,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
       // Block URLs in plaintext
       if (URL_PATTERN.test(content)) {
         return jsonResponse(
-          { error: "Links are not allowed." },
+          { error: getLocalizedError('UNDERGROUND_LINKS_NOT_ALLOWED', lang) },
           400,
           origin,
           env,
@@ -258,7 +292,12 @@ export async function handleCreateUndergroundPost(request, env, origin) {
     // Validate reply_to_id if provided
     if (replyToId) {
       if (!UUID_REGEX.test(replyToId)) {
-        return jsonResponse({ error: "Invalid reply_to_id" }, 400, origin, env);
+        return jsonResponse(
+          { error: getLocalizedError('INVALID_POST_ID', lang) },
+          400,
+          origin,
+          env,
+        );
       }
       const { data: replyTarget } = await supabase
         .from("underground_posts")
@@ -267,7 +306,7 @@ export async function handleCreateUndergroundPost(request, env, origin) {
         .single();
       if (!replyTarget) {
         return jsonResponse(
-          { error: "Reply target not found" },
+          { error: getLocalizedError('CHAT_REPLY_NOT_FOUND', lang) },
           400,
           origin,
           env,
@@ -295,7 +334,12 @@ export async function handleCreateUndergroundPost(request, env, origin) {
 
     if (error) {
       console.error("[Underground] Create failed:", error.message);
-      return jsonResponse({ error: "Failed to create post" }, 500, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('FAILED_TO_CREATE_POST', lang) },
+        500,
+        origin,
+        env,
+      );
     }
 
     let response = jsonResponse(
@@ -326,7 +370,12 @@ export async function handleCreateUndergroundPost(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Underground] Create exception:", err.message);
-    return jsonResponse({ error: "Failed to create post" }, 500, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('FAILED_TO_CREATE_POST', lang) },
+      500,
+      origin,
+      env,
+    );
   }
 }
 
@@ -334,14 +383,27 @@ export async function handleCreateUndergroundPost(request, env, origin) {
 // POST /api/underground/:id/react - Toggle reaction
 // ============================================================
 export async function handleUndergroundReaction(request, env, origin, postId) {
+  let lang = 'en';
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) {
+    return jsonResponse(
+      { error: getLocalizedError('UNAUTHORIZED', lang) },
+      401,
+      origin,
+      env,
+    );
+  }
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
   // Validate postId is a valid UUID
   if (!postId || !UUID_REGEX.test(postId)) {
-    return jsonResponse({ error: "Invalid post ID" }, 400, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('INVALID_POST_ID', lang) },
+      400,
+      origin,
+      env,
+    );
   }
 
   // Rate limit reactions to prevent spam/manipulation
@@ -353,7 +415,7 @@ export async function handleUndergroundReaction(request, env, origin, postId) {
   );
   if (!rateLimitOk) {
     return jsonResponse(
-      { error: "Too many reactions. Please slow down." },
+      { error: getLocalizedError('TOO_MANY_REACTIONS', lang) },
       429,
       origin,
       env,
@@ -370,14 +432,25 @@ export async function handleUndergroundReaction(request, env, origin, postId) {
       .maybeSingle();
 
     if (!access) {
-      return jsonResponse({ error: "Access required" }, 403, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('ACCESS_REQUIRED', lang) },
+        403,
+        origin,
+        env,
+      );
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const reaction = (body.reaction || "").toLowerCase();
 
     if (!VALID_REACTIONS.includes(reaction)) {
-      return jsonResponse({ error: "Invalid reaction" }, 400, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('INVALID_REACTION', lang) },
+        400,
+        origin,
+        env,
+      );
     }
 
     // Check if reaction exists
@@ -427,7 +500,7 @@ export async function handleUndergroundReaction(request, env, origin, postId) {
           insertError.message,
         );
         return jsonResponse(
-          { error: "Failed to add reaction" },
+          { error: getLocalizedError('FAILED_TO_ADD_REACTION', lang) },
           500,
           origin,
           env,
@@ -451,7 +524,7 @@ export async function handleUndergroundReaction(request, env, origin, postId) {
   } catch (err) {
     console.error("[Underground] Reaction exception:", err.message);
     return jsonResponse(
-      { error: "Failed to process reaction" },
+      { error: getLocalizedError('FAILED_TO_PROCESS_REACTION', lang) },
       500,
       origin,
       env,
@@ -468,13 +541,26 @@ export async function handleDeleteUndergroundPost(
   origin,
   postId,
 ) {
+  let lang = 'en';
   // Validate postId is a valid UUID
   if (!postId || !UUID_REGEX.test(postId)) {
-    return jsonResponse({ error: "Invalid post ID" }, 400, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('INVALID_POST_ID', lang) },
+      400,
+      origin,
+      env,
+    );
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) {
+    return jsonResponse(
+      { error: getLocalizedError('UNAUTHORIZED', lang) },
+      401,
+      origin,
+      env,
+    );
+  }
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -487,12 +573,17 @@ export async function handleDeleteUndergroundPost(
       .single();
 
     if (!post) {
-      return jsonResponse({ error: "Post not found" }, 404, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('POST_NOT_FOUND', lang) },
+        404,
+        origin,
+        env,
+      );
     }
 
     if (post.user_id !== userId) {
       return jsonResponse(
-        { error: "Cannot delete others' posts" },
+        { error: getLocalizedError('CHAT_DELETE_OWN_ONLY', lang) },
         403,
         origin,
         env,
@@ -506,14 +597,24 @@ export async function handleDeleteUndergroundPost(
 
     if (error) {
       console.error("[Underground] Delete failed:", error.message);
-      return jsonResponse({ error: "Failed to delete post" }, 500, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('CHAT_DELETE_FAILED', lang) },
+        500,
+        origin,
+        env,
+      );
     }
 
     let response = jsonResponse({ success: true }, 200, origin, env);
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Underground] Delete exception:", err.message);
-    return jsonResponse({ error: "Failed to delete post" }, 500, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('CHAT_DELETE_FAILED', lang) },
+      500,
+      origin,
+      env,
+    );
   }
 }
 
@@ -521,12 +622,25 @@ export async function handleDeleteUndergroundPost(
 // PATCH /api/underground/:id - Edit own post
 // ============================================================
 export async function handleEditUndergroundPost(request, env, origin, postId) {
+  let lang = 'en';
   if (!postId || !UUID_REGEX.test(postId)) {
-    return jsonResponse({ error: "Invalid post ID" }, 400, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('INVALID_POST_ID', lang) },
+      400,
+      origin,
+      env,
+    );
   }
 
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) {
+    return jsonResponse(
+      { error: getLocalizedError('UNAUTHORIZED', lang) },
+      401,
+      origin,
+      env,
+    );
+  }
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -539,12 +653,17 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
       .single();
 
     if (!post) {
-      return jsonResponse({ error: "Post not found" }, 404, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('POST_NOT_FOUND', lang) },
+        404,
+        origin,
+        env,
+      );
     }
 
     if (post.user_id !== userId) {
       return jsonResponse(
-        { error: "Can only edit your own posts" },
+        { error: getLocalizedError('CHAT_EDIT_OWN_ONLY', lang) },
         403,
         origin,
         env,
@@ -552,6 +671,7 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const content = sanitizeMessage((body.content || "").trim());
     const encryptedContent = body.encrypted_content || null;
     const nonce = body.nonce || null;
@@ -560,7 +680,7 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
     if (isEncrypted) {
       if (encryptedContent.length > MAX_ENCRYPTED_LENGTH) {
         return jsonResponse(
-          { error: "Encrypted content too large" },
+          { error: getLocalizedError('UNDERGROUND_ENCRYPTED_CONTENT_TOO_LARGE', lang) },
           400,
           origin,
           env,
@@ -569,7 +689,7 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
     } else {
       if (!content || content.length > MAX_POST_LENGTH) {
         return jsonResponse(
-          { error: `Content required (max ${MAX_POST_LENGTH} chars)` },
+          { error: getLocalizedError('UNDERGROUND_CONTENT_REQUIRED', lang) },
           400,
           origin,
           env,
@@ -577,7 +697,7 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
       }
       if (URL_PATTERN.test(content)) {
         return jsonResponse(
-          { error: "Links are not allowed." },
+          { error: getLocalizedError('UNDERGROUND_LINKS_NOT_ALLOWED', lang) },
           400,
           origin,
           env,
@@ -604,7 +724,12 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
 
     if (error || !updated) {
       console.error("[Underground] Edit failed:", error?.message);
-      return jsonResponse({ error: "Failed to edit post" }, 500, origin, env);
+      return jsonResponse(
+        { error: getLocalizedError('CHAT_EDIT_FAILED', lang) },
+        500,
+        origin,
+        env,
+      );
     }
 
     console.log("[Underground] Post edited:", postId);
@@ -632,7 +757,12 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Underground] Edit exception:", err.message);
-    return jsonResponse({ error: "Failed to edit post" }, 500, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('CHAT_EDIT_FAILED', lang) },
+      500,
+      origin,
+      env,
+    );
   }
 }
 
@@ -640,8 +770,16 @@ export async function handleEditUndergroundPost(request, env, origin, postId) {
 // POST /api/underground/nickname - Set Underground nickname
 // ============================================================
 export async function handleSetUndergroundNickname(request, env, origin) {
+  let lang = 'en';
   const auth = await getSupabaseForUser(request, env);
-  if (!auth) return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+  if (!auth) {
+    return jsonResponse(
+      { error: getLocalizedError('UNAUTHORIZED', lang) },
+      401,
+      origin,
+      env,
+    );
+  }
 
   const { client: supabase, userId, setCookieHeader } = auth;
 
@@ -656,7 +794,7 @@ export async function handleSetUndergroundNickname(request, env, origin) {
 
     if (!access) {
       return jsonResponse(
-        { error: "Access required. Unlock Underground first." },
+        { error: getLocalizedError('UNDERGROUND_ACCESS_REQUIRED', lang) },
         403,
         origin,
         env,
@@ -664,15 +802,13 @@ export async function handleSetUndergroundNickname(request, env, origin) {
     }
 
     const body = await request.json();
+    lang = body.lang || 'en';
     const nickname = (body.nickname || "").trim();
 
-    // Validate nickname format: 3-20 chars, alphanumeric, underscore, hyphen
+    // Validate nickname format: 3-12 chars, alphanumeric only
     if (!nickname || !NICKNAME_REGEX.test(nickname)) {
       return jsonResponse(
-        {
-          error:
-            "Nickname must be 3-20 characters (letters, numbers, underscore, hyphen only)",
-        },
+        { error: getLocalizedError('UNDERGROUND_INVALID_NICKNAME', lang) },
         400,
         origin,
         env,
@@ -690,7 +826,7 @@ export async function handleSetUndergroundNickname(request, env, origin) {
 
     if (existing) {
       return jsonResponse(
-        { error: "Nickname already taken. Choose another." },
+        { error: getLocalizedError('UNDERGROUND_NICKNAME_TAKEN', lang) },
         409,
         origin,
         env,
@@ -706,7 +842,7 @@ export async function handleSetUndergroundNickname(request, env, origin) {
     if (error) {
       console.error("[Underground] Set nickname failed:", error.message);
       return jsonResponse(
-        { error: "Failed to set nickname" },
+        { error: getLocalizedError('UNDERGROUND_NICKNAME_SET_FAILED', lang) },
         500,
         origin,
         env,
@@ -719,6 +855,11 @@ export async function handleSetUndergroundNickname(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Underground] Set nickname exception:", err.message);
-    return jsonResponse({ error: "Failed to set nickname" }, 500, origin, env);
+    return jsonResponse(
+      { error: getLocalizedError('UNDERGROUND_NICKNAME_SET_FAILED', lang) },
+      500,
+      origin,
+      env,
+    );
   }
 }

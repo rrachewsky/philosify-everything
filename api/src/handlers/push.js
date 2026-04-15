@@ -9,6 +9,7 @@
 //   PATCH /api/push/preferences   - Update notification preferences
 
 import { getUserFromAuth } from "../auth/index.js";
+import { errorResponse } from "../utils/errorResponse.js";
 import { jsonResponse } from "../utils/response.js";
 import { getSecret } from "../utils/secrets.js";
 import { safeEq } from "../payments/crypto.js";
@@ -28,7 +29,7 @@ export async function handleGetVapidKey(request, env, origin) {
 
   if (!publicKey) {
     console.error("[Push] VAPID_PUBLIC_KEY not configured");
-    return jsonResponse({ error: "Push not configured" }, 500, origin, env);
+    return errorResponse(env, origin, 'PUSH_NOT_CONFIGURED', 'en', {}, 500);
   }
 
   return jsonResponse({ publicKey }, 200, origin, env);
@@ -42,55 +43,40 @@ export async function handleGetVapidKey(request, env, origin) {
 export async function handleSubscribe(request, env, origin) {
   const user = await getUserFromAuth(request, env);
   if (!user) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en', {}, 401);
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return jsonResponse({ error: "Invalid JSON body" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_JSON', 'en', {}, 400);
   }
 
   const { endpoint, keys } = body;
 
   if (!endpoint || !keys?.p256dh || !keys?.auth) {
-    return jsonResponse(
-      { error: "Missing required fields: endpoint, keys.p256dh, keys.auth" },
-      400,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'MISSING_PUSH_FIELDS', 'en', {}, 400);
   }
 
   // Validate endpoint is a valid URL
   try {
     new URL(endpoint);
   } catch {
-    return jsonResponse({ error: "Invalid endpoint URL" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_ENDPOINT_URL', 'en', {}, 400);
   }
 
   // SECURITY: SSRF protection - only allow trusted push service endpoints
   if (!isAllowedPushEndpoint(endpoint)) {
     console.warn(`[Push] Rejected untrusted endpoint: ${endpoint.substring(0, 100)}`);
-    return jsonResponse(
-      { error: "Endpoint must be from a trusted push service" },
-      400,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'UNTRUSTED_PUSH_ENDPOINT', 'en', {}, 400);
   }
 
   const supabaseUrl = await getSecret(env.SUPABASE_URL);
   const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
   if (!supabaseUrl || !supabaseKey) {
-    return jsonResponse(
-      { error: "Server configuration error" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'SERVER_CONFIG_ERROR', 'en', {}, 500);
   }
 
   const headers = {
@@ -119,12 +105,7 @@ export async function handleSubscribe(request, env, origin) {
   if (!res.ok) {
     const error = await res.text();
     console.error(`[Push] Subscribe failed: ${res.status} - ${error}`);
-    return jsonResponse(
-      { error: "Failed to save subscription" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'SAVE_SUBSCRIPTION_FAILED', 'en', {}, 500);
   }
 
   // Cleanup: Remove old subscriptions for this user from the same browser/UA
@@ -168,37 +149,27 @@ export async function handleSubscribe(request, env, origin) {
 export async function handleUnsubscribe(request, env, origin) {
   const user = await getUserFromAuth(request, env);
   if (!user) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en', {}, 401);
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return jsonResponse({ error: "Invalid JSON body" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_JSON', 'en', {}, 400);
   }
 
   const { endpoint } = body;
 
   if (!endpoint) {
-    return jsonResponse(
-      { error: "Missing required field: endpoint" },
-      400,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'MISSING_ENDPOINT', 'en', {}, 400);
   }
 
   const supabaseUrl = await getSecret(env.SUPABASE_URL);
   const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
   if (!supabaseUrl || !supabaseKey) {
-    return jsonResponse(
-      { error: "Server configuration error" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'SERVER_CONFIG_ERROR', 'en', {}, 500);
   }
 
   const headers = {
@@ -219,12 +190,7 @@ export async function handleUnsubscribe(request, env, origin) {
   if (!res.ok) {
     const error = await res.text();
     console.error(`[Push] Unsubscribe failed: ${res.status} - ${error}`);
-    return jsonResponse(
-      { error: "Failed to remove subscription" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'REMOVE_SUBSCRIPTION_FAILED', 'en', {}, 500);
   }
 
   console.log(`[Push] Subscription removed for user ${user.userId}`);
@@ -239,7 +205,7 @@ export async function handleUnsubscribe(request, env, origin) {
 export async function handleGetPreferences(request, env, origin) {
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en', {}, 401);
   }
 
   const { client: supabase, userId, setCookieHeader } = auth;
@@ -253,12 +219,7 @@ export async function handleGetPreferences(request, env, origin) {
 
     if (error) {
       console.error("[Push] Get preferences failed:", error.message);
-      return jsonResponse(
-        { error: "Failed to load preferences" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'LOAD_PREFERENCES_FAILED', 'en', {}, 500);
     }
 
     // Return defaults if no preferences exist yet
@@ -272,12 +233,7 @@ export async function handleGetPreferences(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Push] Get preferences exception:", err.message);
-    return jsonResponse(
-      { error: "Failed to load preferences" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'LOAD_PREFERENCES_FAILED', 'en', {}, 500);
   }
 }
 
@@ -290,7 +246,7 @@ export async function handleGetPreferences(request, env, origin) {
 export async function handleUpdatePreferences(request, env, origin) {
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en', {}, 401);
   }
 
   const { client: supabase, userId, setCookieHeader } = auth;
@@ -299,7 +255,7 @@ export async function handleUpdatePreferences(request, env, origin) {
   try {
     body = await request.json();
   } catch {
-    return jsonResponse({ error: "Invalid JSON body" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_JSON', 'en', {}, 400);
   }
 
   // Only allow boolean fields
@@ -312,12 +268,7 @@ export async function handleUpdatePreferences(request, env, origin) {
     updates.collective_enabled = body.collective_enabled;
 
   if (Object.keys(updates).length === 0) {
-    return jsonResponse(
-      { error: "No valid preferences to update" },
-      400,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'NO_VALID_PREFERENCES', 'en', {}, 400);
   }
 
   try {
@@ -330,12 +281,7 @@ export async function handleUpdatePreferences(request, env, origin) {
 
     if (error) {
       console.error("[Push] Update preferences failed:", error.message);
-      return jsonResponse(
-        { error: "Failed to update preferences" },
-        500,
-        origin,
-        env,
-      );
+      return errorResponse(env, origin, 'UPDATE_PREFERENCES_FAILED', 'en', {}, 500);
     }
 
     console.log(`[Push] Preferences updated for user ${userId}:`, updates);
@@ -348,12 +294,7 @@ export async function handleUpdatePreferences(request, env, origin) {
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (err) {
     console.error("[Push] Update preferences exception:", err.message);
-    return jsonResponse(
-      { error: "Failed to update preferences" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'UPDATE_PREFERENCES_FAILED', 'en', {}, 500);
   }
 }
 
@@ -366,7 +307,7 @@ export async function handleUpdatePreferences(request, env, origin) {
 export async function handleTestPush(request, env, origin) {
   const user = await getUserFromAuth(request, env);
   if (!user) {
-    return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
+    return errorResponse(env, origin, 'UNAUTHORIZED', 'en', {}, 401);
   }
 
   return _runPushDiagnostic(env, origin, user.userId);
@@ -382,11 +323,11 @@ export async function handlePushDiagnose(request, env, origin, targetUserId) {
   const expectedSecret = await getSecret(env.ADMIN_SECRET);
 
   if (!adminSecret || !expectedSecret || !safeEq(adminSecret, expectedSecret)) {
-    return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+    return errorResponse(env, origin, 'FORBIDDEN', 'en', {}, 403);
   }
 
   if (!targetUserId || !/^[0-9a-f-]{36}$/i.test(targetUserId)) {
-    return jsonResponse({ error: "Invalid user ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_USER_ID', 'en', {}, 400);
   }
 
   return _runPushDiagnostic(env, origin, targetUserId, {
@@ -487,8 +428,8 @@ async function _runPushDiagnostic(env, origin, userId, options = {}) {
         env,
         userId,
         {
-          title: "Philosify Test",
-          body: "If you see this, push notifications are working!",
+          title: "Philosify",
+          phraseKey: 'pushTestBody',
           url: "/community",
           tag: "push-test",
           type: "dm",
@@ -532,25 +473,20 @@ export async function handleGetPending(request, env, origin) {
   try {
     body = await request.json();
   } catch {
-    return jsonResponse({ error: "Invalid JSON body" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_JSON', 'en', {}, 400);
   }
 
   const { endpoint } = body;
 
   if (!endpoint || typeof endpoint !== "string") {
-    return jsonResponse({ error: "Missing endpoint" }, 400, origin, env);
+    return errorResponse(env, origin, 'MISSING_ENDPOINT', 'en', {}, 400);
   }
 
   const supabaseUrl = await getSecret(env.SUPABASE_URL);
   const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
   if (!supabaseUrl || !supabaseKey) {
-    return jsonResponse(
-      { error: "Server configuration error" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'SERVER_CONFIG_ERROR', 'en', {}, 500);
   }
 
   const headers = {
@@ -567,7 +503,7 @@ export async function handleGetPending(request, env, origin) {
 
   if (!subRes.ok) {
     console.error("[Push] Failed to find subscription:", await subRes.text());
-    return jsonResponse({ error: "Subscription not found" }, 404, origin, env);
+    return errorResponse(env, origin, 'SUBSCRIPTION_NOT_FOUND', 'en', {}, 404);
   }
 
   const subs = await subRes.json();
@@ -587,12 +523,7 @@ export async function handleGetPending(request, env, origin) {
 
   if (!queueRes.ok) {
     console.error("[Push] Failed to fetch queue:", await queueRes.text());
-    return jsonResponse(
-      { error: "Failed to fetch notifications" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'FETCH_NOTIFICATIONS_FAILED', 'en', {}, 500);
   }
 
   const notifications = await queueRes.json();
@@ -616,46 +547,31 @@ export async function handleAckNotifications(request, env, origin) {
   try {
     body = await request.json();
   } catch {
-    return jsonResponse({ error: "Invalid JSON body" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_JSON', 'en', {}, 400);
   }
 
   const { ids, endpoint } = body;
 
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
-    return jsonResponse(
-      { error: "Missing or invalid ids array" },
-      400,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INVALID_IDS_ARRAY', 'en', {}, 400);
   }
 
   if (!endpoint || typeof endpoint !== "string") {
-    return jsonResponse({ error: "Missing endpoint" }, 400, origin, env);
+    return errorResponse(env, origin, 'MISSING_ENDPOINT', 'en', {}, 400);
   }
 
   // Validate all IDs are proper UUIDs to prevent PostgREST filter injection
   const UUID_RE =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!ids.every((id) => typeof id === "string" && UUID_RE.test(id))) {
-    return jsonResponse(
-      { error: "Invalid notification ID format" },
-      400,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'INVALID_NOTIFICATION_ID', 'en', {}, 400);
   }
 
   const supabaseUrl = await getSecret(env.SUPABASE_URL);
   const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
   if (!supabaseUrl || !supabaseKey) {
-    return jsonResponse(
-      { error: "Server configuration error" },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'SERVER_CONFIG_ERROR', 'en', {}, 500);
   }
 
   const headers = {
@@ -672,7 +588,7 @@ export async function handleAckNotifications(request, env, origin) {
   );
   const subs = subRes.ok ? await subRes.json() : [];
   if (subs.length === 0) {
-    return jsonResponse({ error: "Subscription not found" }, 404, origin, env);
+    return errorResponse(env, origin, 'SUBSCRIPTION_NOT_FOUND', 'en', {}, 404);
   }
   const subIds = subs.map((s) => `"${s.id}"`).join(",");
 
@@ -694,7 +610,7 @@ export async function handleAckNotifications(request, env, origin) {
       "[Push] Failed to ack notifications:",
       await updateRes.text(),
     );
-    return jsonResponse({ error: "Failed to acknowledge" }, 500, origin, env);
+    return errorResponse(env, origin, 'ACK_FAILED', 'en', {}, 500);
   }
 
   console.log(`[Push] Acknowledged ${ids.length} notification(s)`);

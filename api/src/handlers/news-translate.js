@@ -7,36 +7,39 @@
 import { jsonResponse } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getSecret } from "../utils/secrets.js";
+import { errorResponse } from "../utils/errorResponse.js";
 
 export async function handleNewsTranslate(request, env, origin) {
   try {
     const user = await getUserFromAuth(request, env);
+    const lang = user?.language || 'en';
+
     if (!user?.userId) {
-      return jsonResponse({ error: "Authentication required" }, 401, origin, env);
+      return errorResponse(env, origin, 'UNAUTHORIZED', lang);
     }
 
     const body = await request.json().catch(() => null);
     if (!body) {
-      return jsonResponse({ error: "Invalid request body" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_INPUT', lang);
     }
-    const { title, description, lang } = body;
-    if (!title || !lang) {
-      return jsonResponse({ error: "title and lang required" }, 400, origin, env);
+    const { title, description, lang: targetLang } = body;
+    if (!title || !targetLang) {
+      return errorResponse(env, origin, 'NEWS_TITLE_REQUIRED', lang);
     }
 
     if (title.length > 500) {
-      return jsonResponse({ error: "Title too long (max 500 chars)" }, 400, origin, env);
+      return errorResponse(env, origin, 'NEWS_TITLE_TOO_LONG', lang);
     }
     if (description && description.length > 5000) {
-      return jsonResponse({ error: "Description too long (max 5000 chars)" }, 400, origin, env);
+      return errorResponse(env, origin, 'NEWS_DESCRIPTION_TOO_LONG', lang);
     }
 
     const apiKey = await getSecret(env.GEMINI_API_KEY);
     if (!apiKey) {
-      return jsonResponse({ error: "Translation service unavailable" }, 503, origin, env);
+      return errorResponse(env, origin, 'NEWS_SERVICE_UNAVAILABLE', lang);
     }
 
-    const prompt = `Translate the following news headline and description into the language with ISO code "${lang}".
+    const prompt = `Translate the following news headline and description into the language with ISO code "${targetLang}".
 Return ONLY a valid JSON object: {"title":"translated title","summary":"translated description as ~40 word summary"}
 No markdown fences, no explanation, ONLY the JSON object.
 
@@ -73,7 +76,8 @@ Description: <user_input>${description || "No description available"}</user_inpu
     }, 200, origin, env);
   } catch (err) {
     console.error("[NewsTranslate] Error:", err.message);
-    // SECURITY: Never expose raw error messages to the client
-    return jsonResponse({ error: "Translation failed" }, 500, origin, env);
+    const user = await getUserFromAuth(request, env).catch(() => null);
+    const lang = user?.language || 'en';
+    return errorResponse(env, origin, 'NEWS_TRANSLATION_FAILED', lang);
   }
 }

@@ -52,6 +52,27 @@ export function useNews() {
 
   // Load breaking news on sidebar open
   const loadBreaking = useCallback(async () => {
+    // Check cache synchronously first to avoid loading flash
+    const CACHE_KEY = `philosify:breaking-news:${userLang}`;
+    const CACHE_MAX_AGE = 15 * 60 * 1000; // 15 minutes
+    
+    try {
+      const cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const data = JSON.parse(cached);
+        const age = Date.now() - new Date(data.cachedAt).getTime();
+        if (age < CACHE_MAX_AGE) {
+          // Fresh cache → show immediately, no loading state
+          setBreakingNews(data.articles || []);
+          console.log(`[useNews] Loaded breaking news from cache (${Math.floor(age / 1000)}s old)`);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('[useNews] Cache check failed:', err.message);
+    }
+
+    // Cache miss or stale → show loading and fetch
     setBreakingLoading(true);
     try {
       const data = await fetchBreakingNews(userLang);

@@ -13,6 +13,7 @@ import { getGuide, getWrapupSource } from "../guides/index.js";
 import { analyzeNewsPhilosophy } from "../ai/news-orchestrator.js";
 import { getSecret } from "../utils/secrets.js";
 import { logUserAnalysisRequest } from "../ai/storage.js";
+import { errorResponse } from "../utils/errorResponse.js";
 
 async function hashKey(str) {
   const encoder = new TextEncoder();
@@ -23,29 +24,34 @@ async function hashKey(str) {
 }
 
 export async function handleNewsAnalyze(request, env, origin, ctx) {
+  let lang = 'en'; // Default language for error messages
   try {
     const user = await getUserFromAuth(request, env);
     if (!user?.userId) {
-      return jsonResponse({ error: "Authentication required" }, 401, origin, env);
+      return errorResponse(env, origin, 'AUTHENTICATION_REQUIRED', lang);
     }
 
     // Rate limit - FAIL CLOSED for expensive AI calls
     const ip = request.headers.get("cf-connecting-ip") || "unknown";
     const rateLimitOk = await checkRateLimit(env, `news-analyze:${user.userId}:${ip}`, true);
     if (!rateLimitOk) {
-      return jsonResponse({ error: "Too many requests. Please wait." }, 429, origin, env);
+      return errorResponse(env, origin, 'RATE_LIMIT_EXCEEDED', lang);
     }
 
     let body;
     try {
       body = await request.json();
+      lang = body.lang || 'en'; // Extract lang for error handling
     } catch {
-      return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
+      return errorResponse(env, origin, 'INVALID_JSON', lang);
     }
-    const { title, source, description, topic, publishedAt, model = "grok", lang = "en" } = body;
+    const { title, source, description, topic, publishedAt, model = "grok" } = body;
 
-    if (!title || title.length < 1 || title.length > 500) {
-      return jsonResponse({ error: "Title required (1-500 chars)" }, 400, origin, env);
+    if (!title || title.length < 1) {
+      return errorResponse(env, origin, 'NEWS_TITLE_REQUIRED', lang);
+    }
+    if (title.length > 500) {
+      return errorResponse(env, origin, 'NEWS_TITLE_TOO_LONG', lang);
     }
 
     // Check KV cache
@@ -83,11 +89,10 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
               const { reserveCredit, confirmReservation } = await import("../credits/index.js");
               const reservation = await reserveCredit(env, user.userId);
               if (!reservation.success) {
-                return jsonResponse({
-                  error: "Insufficient credits",
+                return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
                   needed: 1,
                   balance: reservation.newTotal || 0,
-                }, 402, origin, env);
+                });
               }
               await confirmReservation(env, reservation.reservationId, result.id);
               console.log(`[NewsAnalyze] Charged 1 credit for first-time cached view: ${user.userId}`);
@@ -118,11 +123,10 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
     const reservation = await reserveCredit(env, user.userId);
 
     if (!reservation.success) {
-      return jsonResponse({
-        error: "Insufficient credits",
+      return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
         needed: 1,
         balance: reservation.newTotal || 0,
-      }, 402, origin, env);
+      });
     }
 
     try {
@@ -387,15 +391,9 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
     console.error(`[NewsAnalyze] Error:`, err.message);
 
     if (err.message?.includes("Insufficient credits")) {
-      return jsonResponse({ error: "Insufficient credits", needed: 1 }, 402, origin, env);
+      return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, { needed: 1 });
     }
 
-    // Sanitize error message to prevent leaking internal details
-    return jsonResponse(
-      { error: sanitizeErrorMessage(err.message, "Analysis failed") },
-      500,
-      origin,
-      env,
-    );
+    return errorResponse(env, origin, 'ANALYSIS_FAILED', lang);
   }
 }

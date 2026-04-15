@@ -5,7 +5,8 @@
 // Returns full film analysis details for authenticated user.
 // Mirrors book-analysis-detail.js for cinema.
 
-import { jsonResponse } from "../utils/response.js";
+import { jsonResponse, errorResponse } from "../utils/response.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 import { getSupabaseForUser, addRefreshedCookieToResponse } from "../utils/supabase-user.js";
 import { normalizeClassification, splitTrailingSchoolsParagraph } from "../ai/parser.js";
 import { localizeClassification } from "../ai/classification-i18n.js";
@@ -22,19 +23,21 @@ function normalizeSchoolsHtml(value) {
 }
 
 export async function handleCinemaAnalysisDetail(request, env, origin, analysisId) {
+  const lang = 'en';
+  
   if (request.method !== "GET") {
-    return jsonResponse({ success: false, error: "Method not allowed" }, 405, origin, env);
+    return errorResponse(env, origin, 'METHOD_NOT_ALLOWED', lang);
   }
 
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!analysisId || !uuidRegex.test(analysisId)) {
-    return jsonResponse({ success: false, error: "Invalid analysis ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   try {
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
-      return jsonResponse({ success: false, error: "Unauthorized" }, 401, origin, env);
+      return errorResponse(env, origin, 'UNAUTHORIZED', lang);
     }
 
     const { client: supabase, userId, setCookieHeader } = auth;
@@ -50,11 +53,11 @@ export async function handleCinemaAnalysisDetail(request, env, origin, analysisI
 
     if (accessErr) {
       console.error("[CinemaDetail] Access check failed:", accessErr.message);
-      return jsonResponse({ success: false, error: "Access check failed" }, 500, origin, env);
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     if (!accessCheck) {
-      return jsonResponse({ success: false, error: "Analysis not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Fetch full film analysis with film details
@@ -83,13 +86,13 @@ export async function handleCinemaAnalysisDetail(request, env, origin, analysisI
 
     if (analysisErr || !analysis) {
       console.error("[CinemaDetail] Analysis fetch failed:", analysisErr?.message);
-      return jsonResponse({ success: false, error: "Analysis not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     const film = analysis.films;
     if (!film) {
       console.error("[CinemaDetail] Analysis has no linked film");
-      return jsonResponse({ success: false, error: "Film data missing" }, 500, origin, env);
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     // Recompute weighted score
@@ -196,6 +199,6 @@ export async function handleCinemaAnalysisDetail(request, env, origin, analysisI
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (error) {
     console.error("[CinemaDetail] Error:", error);
-    return jsonResponse({ success: false, error: "Internal server error" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }

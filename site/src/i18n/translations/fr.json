@@ -126,18 +126,18 @@
     "installed": "Application installee avec succes !"
   },
   "philosopherPanel": {
-    "button": "Panel de Philosophes",
-    "credit": "credit",
-    "credits": "credits",
+    "button": "Panneau de Philosophes",
+    "credit": "crédit",
+    "credits": "crédits",
     "pickTitle": "Choisissez 2 Philosophes",
-    "autoNote": "Philosify assignera egalement Ayn Rand ou Leonard Peikoff au panel",
-    "searchPlaceholder": "Rechercher par nom, epoque ou ecole...",
-    "selected": "selectionnes",
-    "noMatch": "Aucun philosophe ne correspond a votre recherche",
-    "confirm": "Demarrer l'analyse du panel (3 credits)",
+    "autoNote": "Philosify assignera également Ayn Rand ou Leonard Peikoff au panneau",
+    "searchPlaceholder": "Rechercher par nom, époque ou école...",
+    "selected": "sélectionnés",
+    "noMatch": "Aucun philosophe ne correspond à votre recherche",
+    "confirm": "Démarrer l'analyse du panneau (3 crédits)",
     "analyzing": "Analyse en cours...",
     "generating": "Les philosophes analysent...",
-    "complete": "Panel de Philosophes Termine"
+    "complete": "Panneau de Philosophes Terminé"
   },
   "news": {
     "highlights": "A la Une",

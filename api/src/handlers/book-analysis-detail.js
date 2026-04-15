@@ -5,7 +5,8 @@
 // Returns full book analysis details for authenticated user.
 // Mirrors analysis-detail.js for literature.
 
-import { jsonResponse } from "../utils/response.js";
+import { jsonResponse, errorResponse } from "../utils/response.js";
+import { getLocalizedError } from "../utils/i18n-errors.js";
 import { getSupabaseForUser, addRefreshedCookieToResponse } from "../utils/supabase-user.js";
 import { normalizeClassification, splitTrailingSchoolsParagraph } from "../ai/parser.js";
 import { localizeClassification } from "../ai/classification-i18n.js";
@@ -22,19 +23,21 @@ function normalizeSchoolsHtml(value) {
 }
 
 export async function handleBookAnalysisDetail(request, env, origin, analysisId) {
+  const lang = 'en';
+  
   if (request.method !== "GET") {
-    return jsonResponse({ success: false, error: "Method not allowed" }, 405, origin, env);
+    return errorResponse(env, origin, 'METHOD_NOT_ALLOWED', lang);
   }
 
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!analysisId || !uuidRegex.test(analysisId)) {
-    return jsonResponse({ success: false, error: "Invalid analysis ID" }, 400, origin, env);
+    return errorResponse(env, origin, 'INVALID_INPUT', lang);
   }
 
   try {
     const auth = await getSupabaseForUser(request, env);
     if (!auth) {
-      return jsonResponse({ success: false, error: "Unauthorized" }, 401, origin, env);
+      return errorResponse(env, origin, 'UNAUTHORIZED', lang);
     }
 
     const { client: supabase, userId, setCookieHeader } = auth;
@@ -50,11 +53,11 @@ export async function handleBookAnalysisDetail(request, env, origin, analysisId)
 
     if (accessErr) {
       console.error("[BookDetail] Access check failed:", accessErr.message);
-      return jsonResponse({ success: false, error: "Access check failed" }, 500, origin, env);
+      return errorResponse(env, origin, 'ACCESS_DENIED', lang);
     }
 
     if (!accessCheck) {
-      return jsonResponse({ success: false, error: "Analysis not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     // Fetch full book analysis with book details
@@ -79,13 +82,13 @@ export async function handleBookAnalysisDetail(request, env, origin, analysisId)
 
     if (analysisErr || !analysis) {
       console.error("[BookDetail] Analysis fetch failed:", analysisErr?.message);
-      return jsonResponse({ success: false, error: "Analysis not found" }, 404, origin, env);
+      return errorResponse(env, origin, 'NOT_FOUND', lang);
     }
 
     const book = analysis.books;
     if (!book) {
       console.error("[BookDetail] Analysis has no linked book");
-      return jsonResponse({ success: false, error: "Book data missing" }, 500, origin, env);
+      return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
     }
 
     // Recompute weighted score
@@ -189,6 +192,6 @@ export async function handleBookAnalysisDetail(request, env, origin, analysisId)
     return addRefreshedCookieToResponse(response, setCookieHeader);
   } catch (error) {
     console.error("[BookDetail] Error:", error);
-    return jsonResponse({ success: false, error: "Internal server error" }, 500, origin, env);
+    return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
   }
 }

@@ -7,6 +7,7 @@
 import { jsonResponse, getCorsHeaders, sanitizeErrorMessage } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getSecret } from "../utils/secrets.js";
+import { errorResponse } from "../utils/errorResponse.js";
 
 // Supported TTS language codes for validation
 const SUPPORTED_LANGS = new Set([
@@ -265,13 +266,15 @@ export async function handleNewsTTS(request, env, origin) {
 
   try {
     const user = await getUserFromAuth(request, env);
-    if (!user?.userId) return jsonResponse({ error: "Auth" }, 401, origin, env);
+    const userLang = user?.language || 'en';
+
+    if (!user?.userId) return errorResponse(env, origin, 'UNAUTHORIZED', userLang);
 
     const { text, title, lang: rawLang } = await request.json();
-    if (!text) return jsonResponse({ error: "No text" }, 400, origin, env);
+    if (!text) return errorResponse(env, origin, 'NEWS_TEXT_REQUIRED', userLang);
 
     if (text.length > 50000) {
-      return jsonResponse({ error: "Text too long (max 50000 chars)" }, 400, origin, env);
+      return errorResponse(env, origin, 'NEWS_TEXT_TOO_LONG', userLang);
     }
 
     // Validate language code to prevent injection
@@ -356,12 +359,8 @@ export async function handleNewsTTS(request, env, origin) {
     });
   } catch (err) {
     console.error("[NewsTTS]", err.message);
-    // Sanitize error message to prevent leaking internal details
-    return jsonResponse(
-      { error: sanitizeErrorMessage(err.message, "TTS generation failed") },
-      500,
-      origin,
-      env,
-    );
+    const user = await getUserFromAuth(request, env).catch(() => null);
+    const userLang = user?.language || 'en';
+    return errorResponse(env, origin, 'NEWS_TTS_FAILED', userLang);
   }
 }
