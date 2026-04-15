@@ -386,7 +386,7 @@ export function CinemaSidebar({
                     </button>
                   </div>
                 ) : null}
-                {(isAnalyzing || panelLoading) && (
+                {isAnalyzing && (
                   <>
                     <div className="music-timer">
                       <div className="music-timer__bar">
@@ -395,18 +395,36 @@ export function CinemaSidebar({
                       <div className="music-timer__time">
                         <span>&#9201;</span> {formatTime(elapsedTime)}
                       </div>
-                      <div className="music-timer__label">
-                        {panelLoading
-                          ? t('philosopherPanel.generating', 'Philosophers are analyzing...')
-                          : t('analyzing', 'Analyzing...')}
-                      </div>
+                      <div className="music-timer__label">{t('landing.analyzingContent')}</div>
                     </div>
                     <InlineAdSlot
-                      key={`cinema-${isAnalyzing ? 'analysis' : 'panel'}-${selectedFilm?.id || 'unknown'}`}
+                      key={`cinema-analysis-${selectedFilm?.id || 'unknown'}`}
                       userId={user?.id}
                       placement="sidebar"
                       layout="card"
-                      refreshKey={`cinema-${selectedFilm?.id || 'unknown'}`}
+                      refreshKey={`cinema-analysis-${selectedFilm?.id || 'unknown'}`}
+                      className="analysis-ad-slot"
+                      onAdLoaded={onAdLoaded}
+                    />
+                  </>
+                )}
+                {panelLoading && (
+                  <>
+                    <div className="music-timer">
+                      <div className="music-timer__bar">
+                        <div className="music-timer__fill"></div>
+                      </div>
+                      <div className="music-timer__time">
+                        <span>&#9201;</span> {formatTime(elapsedTime)}
+                      </div>
+                      <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
+                    </div>
+                    <InlineAdSlot
+                      key={`cinema-panel-${selectedFilm?.id || 'unknown'}`}
+                      userId={user?.id}
+                      placement="sidebar"
+                      layout="card"
+                      refreshKey={`cinema-panel-${selectedFilm?.id || 'unknown'}`}
                       className="analysis-ad-slot"
                       onAdLoaded={onAdLoaded}
                     />

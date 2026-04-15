@@ -534,7 +534,7 @@ export default function NewsSidebar({
         )}
 
         {/* ── STATE 3: Analyzing or Panel loading — same timer as Music ── */}
-        {(isAnalyzing || panelLoading) && (
+        {isAnalyzing && (
           <>
             <div className="music-timer">
               <div className="music-timer__bar">
@@ -543,17 +543,34 @@ export default function NewsSidebar({
               <div className="music-timer__time">
                 <span>&#9201;</span> {formatTime(elapsedTime)}
               </div>
-              <div className="music-timer__label">
-                {panelLoading
-                  ? t('philosopherPanel.generating', 'Philosophers are analyzing...')
-                  : t('news.analyzing', { defaultValue: 'Analyzing article...' })}
-              </div>
+              <div className="music-timer__label">{t('landing.analyzingContent')}</div>
             </div>
             <InlineAdSlot
-              key={`news-${panelLoading ? 'panel' : 'analysis'}-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              key={`news-analysis-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
               placement="sidebar"
               layout="card"
-              refreshKey={`news-${panelLoading ? 'panel' : 'analysis'}-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              refreshKey={`news-analysis-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              className="analysis-ad-slot"
+              onAdLoaded={onAdLoaded}
+            />
+          </>
+        )}
+        {panelLoading && (
+          <>
+            <div className="music-timer">
+              <div className="music-timer__bar">
+                <div className="music-timer__fill"></div>
+              </div>
+              <div className="music-timer__time">
+                <span>&#9201;</span> {formatTime(elapsedTime)}
+              </div>
+              <div className="music-timer__label">{t('philosopherPanel.generating', { defaultValue: 'Philosophers are analyzing...' })}</div>
+            </div>
+            <InlineAdSlot
+              key={`news-panel-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
+              placement="sidebar"
+              layout="card"
+              refreshKey={`news-panel-${selectedArticle?.url || selectedArticle?.title || 'unknown'}`}
               className="analysis-ad-slot"
               onAdLoaded={onAdLoaded}
             />
