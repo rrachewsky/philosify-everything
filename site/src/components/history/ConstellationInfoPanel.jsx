@@ -548,7 +548,7 @@ const styles = {
   topAd: {
     width: 227, // 6cm
     height: 302, // 8cm
-    margin: '38px auto 8px', // 1cm from top, small bottom margin for content peek
+    margin: '38px auto 20px', // 1cm from top, centered horizontally
     flexShrink: 0,
   },
 
