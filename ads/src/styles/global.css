@@ -34,10 +34,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(103, 232, 249, 0.16), transparent 28%),
-    radial-gradient(circle at top right, rgba(139, 92, 246, 0.2), transparent 30%),
-    linear-gradient(180deg, #0b1426 0%, #09111f 45%, #060c16 100%);
+  background: linear-gradient(180deg, #0b1426 0%, #09111f 50%, #060c16 100%);
   color: var(--text);
   font-family: 'Manrope', sans-serif;
   line-height: 1.6;
@@ -50,10 +47,10 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 36px 36px;
-  opacity: 0.18;
+    linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.12;
 }
 
 #root {
@@ -107,7 +104,6 @@ textarea {
 .atelier-card {
   border: 1px solid var(--line);
   background: var(--bg-panel);
-  backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
 }
 
@@ -260,6 +256,273 @@ textarea {
 
 .studio-header__badge {
   color: var(--accent);
+}
+
+.studio-header__dropdown {
+  position: relative;
+}
+
+.studio-header__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.studio-header__menu-item {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.92rem;
+  transition: background 120ms ease;
+}
+
+.studio-header__menu-item:hover {
+  background: rgba(133, 182, 255, 0.1);
+}
+
+/* Dashboard Hero */
+.dashboard-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 32px 0;
+  flex-wrap: wrap;
+}
+
+.dashboard-hero__content h2 {
+  margin: 8px 0;
+}
+
+.dashboard-hero__subtitle {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.btn--cta {
+  font-size: 1.1rem;
+  padding: 0 32px;
+  min-height: 56px;
+  font-weight: 600;
+  box-shadow: 0 16px 40px rgba(103, 232, 249, 0.18);
+}
+
+/* Stat Cards */
+.stats-grid--prominent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(133, 182, 255, 0.04);
+  transition: all 180ms ease;
+}
+
+.stat-card:hover {
+  border-color: var(--line-strong);
+  background: rgba(133, 182, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.stat-card--primary {
+  background: rgba(103, 232, 249, 0.08);
+  border-color: rgba(103, 232, 249, 0.3);
+}
+
+.stat-card__icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.stat-card__label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.stat-card__value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stat-card__action {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: underline;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.stat-card:hover .stat-card__action {
+  opacity: 1;
+}
+
+/* Quick Actions */
+.quick-actions h3 {
+  margin: 0 0 16px;
+  font-size: 1.3rem;
+}
+
+.quick-actions__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.quick-action-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--warning);
+  border-radius: 16px;
+  background: rgba(251, 191, 36, 0.08);
+  color: var(--text);
+  transition: all 180ms ease;
+}
+
+.quick-action-card:hover {
+  background: rgba(251, 191, 36, 0.14);
+  transform: translateX(4px);
+}
+
+.quick-action-card__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--warning);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Wizard Steps */
+.wizard-steps {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(133, 182, 255, 0.04);
+  color: var(--muted);
+  transition: all 180ms ease;
+  cursor: pointer;
+}
+
+.wizard-step:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wizard-step--active {
+  border-color: var(--accent);
+  background: rgba(103, 232, 249, 0.1);
+  color: var(--accent);
+}
+
+.wizard-step--complete {
+  border-color: var(--success);
+  background: rgba(52, 211, 153, 0.1);
+  color: var(--success);
+}
+
+.wizard-step__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: currentColor;
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.wizard-step--complete .wizard-step__number::before {
+  content: '✓';
+}
+
+.wizard-step__label {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.wizard-nav {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: var(--bg);
+  box-shadow: 0 16px 48px rgba(103, 232, 249, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 99;
+}
+
+.fab:hover {
+  transform: scale(1.1) translateY(-4px);
+  box-shadow: 0 20px 56px rgba(103, 232, 249, 0.5), 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .fab {
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+  }
 }
 
 .btn {

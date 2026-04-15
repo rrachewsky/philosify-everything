@@ -29,6 +29,7 @@ const DURATIONS = [
 function CreateCampaign() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(1);
   const [form, setForm] = useState({
     name: '',
     goal: 'balanced',
@@ -55,6 +56,7 @@ function CreateCampaign() {
   const [loadingPlan, setLoadingPlan] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [showAdvancedTargeting, setShowAdvancedTargeting] = useState(false);
 
   const summary = useMemo(() => {
     if (!generatedPlan?.plan) {
@@ -178,7 +180,38 @@ function CreateCampaign() {
 
       {error ? <div className="alert alert--error">{error}</div> : null}
 
+      {/* Step Progress */}
+      <div className="wizard-steps">
+        <button
+          type="button"
+          className={`wizard-step ${currentStep >= 1 ? 'wizard-step--active' : ''} ${currentStep > 1 ? 'wizard-step--complete' : ''}`}
+          onClick={() => setCurrentStep(1)}
+        >
+          <span className="wizard-step__number">1</span>
+          <span className="wizard-step__label">{t('create.step1')}</span>
+        </button>
+        <button
+          type="button"
+          className={`wizard-step ${currentStep >= 2 ? 'wizard-step--active' : ''} ${currentStep > 2 ? 'wizard-step--complete' : ''}`}
+          onClick={() => currentStep > 1 && setCurrentStep(2)}
+          disabled={currentStep < 2}
+        >
+          <span className="wizard-step__number">2</span>
+          <span className="wizard-step__label">{t('create.step2')}</span>
+        </button>
+        <button
+          type="button"
+          className={`wizard-step ${currentStep >= 3 ? 'wizard-step--active' : ''} ${currentStep > 3 ? 'wizard-step--complete' : ''}`}
+          onClick={() => currentStep > 2 && setCurrentStep(3)}
+          disabled={currentStep < 3}
+        >
+          <span className="wizard-step__number">3</span>
+          <span className="wizard-step__label">{t('create.step3')}</span>
+        </button>
+      </div>
+
       <form className="editorial-grid editorial-grid--compose" onSubmit={handleSubmit}>
+        {currentStep === 1 && (
         <section className="surface-card stack">
           <div className="field">
             <label htmlFor="campaign-name">{t('create.campaignName')}</label>
@@ -245,6 +278,16 @@ function CreateCampaign() {
             </div>
           </div>
 
+          <div className="wizard-nav">
+            <button type="button" className="btn btn--primary" onClick={() => setCurrentStep(2)}>
+              {t('common.next')}
+            </button>
+          </div>
+        </section>
+        )}
+
+        {currentStep === 2 && (
+        <section className="surface-card stack">
           {/* Audience Targeting */}
           <div className="targeting-section">
             <h3>{t('create.targeting')}</h3>
@@ -252,11 +295,19 @@ function CreateCampaign() {
               {t('create.targetingOptional')}
             </p>
 
-            {Object.entries(TARGETING_OPTIONS).map(([category, options]) => (
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={() => setShowAdvancedTargeting(!showAdvancedTargeting)}
+            >
+              {showAdvancedTargeting ? t('create.hideAdvanced') : t('create.showAdvanced')}
+            </button>
+
+            {showAdvancedTargeting && Object.entries(TARGETING_OPTIONS).map(([category, options]) => (
               <div key={category} className="targeting-group">
                 <label>{t(`create.targetingCategories.${category}`)}</label>
                 <div className="chip-group">
-                  {options.map((option) => (
+                  {options.slice(0, 8).map((option) => (
                     <button
                       key={option}
                       type="button"
@@ -304,6 +355,19 @@ function CreateCampaign() {
             </div>
           </div>
 
+          <div className="wizard-nav">
+            <button type="button" className="btn btn--ghost" onClick={() => setCurrentStep(1)}>
+              {t('common.back')}
+            </button>
+            <button type="button" className="btn btn--primary" onClick={() => setCurrentStep(3)}>
+              {t('common.next')}
+            </button>
+          </div>
+        </section>
+        )}
+
+        {currentStep === 3 && (
+        <section className="surface-card stack">
           <div className="field">
             <label>{t('create.mediaFormat')}</label>
             <div className="choice-row">
@@ -373,7 +437,14 @@ function CreateCampaign() {
               />
             </div>
           )}
+
+          <div className="wizard-nav">
+            <button type="button" className="btn btn--ghost" onClick={() => setCurrentStep(2)}>
+              {t('common.back')}
+            </button>
+          </div>
         </section>
+        )}
 
         <aside className="surface-card stack">
           <div>

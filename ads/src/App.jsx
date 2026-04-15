@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Header from '@components/Header';
+import FloatingActionButton from '@components/FloatingActionButton';
 import ProtectedRoute from '@components/ProtectedRoute';
 import AdminProtectedRoute from '@components/AdminProtectedRoute';
 import AgencyProtectedRoute from '@components/AgencyProtectedRoute';
@@ -30,6 +31,7 @@ function AdvertiserLayout({ children }) {
       <div className="app-shell">
         <Header />
         <main className="app-main">{children}</main>
+        <FloatingActionButton />
       </div>
     </ProtectedRoute>
   );

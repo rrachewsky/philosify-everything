@@ -11,8 +11,6 @@ function Dashboard() {
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [invitations, setInvitations] = useState([]);
-  const [agencyEmail, setAgencyEmail] = useState('');
-  const [requestResult, setRequestResult] = useState(null);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -65,22 +63,15 @@ function Dashboard() {
 
   return (
     <div className="page-stack">
-      <section className="hero-strip">
-        <div>
+      <section className="dashboard-hero">
+        <div className="dashboard-hero__content">
           <p className="eyebrow">{t('dashboard.title')}</p>
-          <h2>{t('dashboard.welcome')}, {advertiser?.company_name || ''}</h2>
+          <h2>{advertiser?.company_name || t('dashboard.welcome')}</h2>
+          <p className="dashboard-hero__subtitle">{t('dashboard.subtitle')}</p>
         </div>
-        <div className="hero-strip__actions">
-          <Link to="/app/new" className="btn btn--primary btn--large">
-            {t('dashboard.newCampaign')}
-          </Link>
-          <Link to="/app/campaigns" className="btn btn--secondary">
-            {t('dashboard.reviewPipeline')}
-          </Link>
-          <Link to="/app/analytics" className="btn btn--secondary">
-            {t('dashboard.analytics')}
-          </Link>
-        </div>
+        <Link to="/app/new" className="btn btn--primary btn--large btn--cta">
+          + {t('dashboard.newCampaign')}
+        </Link>
       </section>
 
       {advertiser?.status === 'pending' ? (
@@ -90,121 +81,69 @@ function Dashboard() {
       ) : null}
 
       {invitations.length > 0 && (
-        <section className="surface-card stack">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">{t('dashboard.agencyInvitations')}</p>
-              <h3>{t('dashboard.pendingInvitations')}</h3>
-            </div>
-          </div>
-          <div className="collection-list">
-            {invitations.map((inv) => (
-              <div key={inv.id} className="collection-row collection-row--stacked">
-                <div className="collection-row__main">
-                  <strong>{inv.agency?.agency_name || t('common.na')}</strong>
-                  <p>{inv.agency?.email} · {t('agency.commission')}: {inv.commission_rate}%</p>
-                </div>
-                <div className="button-row">
-                  <button
-                    type="button"
-                    className="btn btn--primary"
-                    onClick={async () => {
-                      await api.post(`/ads/account/invitations/${inv.id}/accept`);
-                      setInvitations((prev) => prev.filter((i) => i.id !== inv.id));
-                    }}
-                  >
-                    {t('common.accept')}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn--secondary"
-                    onClick={async () => {
-                      await api.post(`/ads/account/invitations/${inv.id}/decline`);
-                      setInvitations((prev) => prev.filter((i) => i.id !== inv.id));
-                    }}
-                  >
-                    {t('common.decline')}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+        <section className="alert alert--info">
+          <strong>{t('dashboard.agencyInvitations')}</strong>: {invitations.length} {t('dashboard.pendingInvitationsCount')}
+          <Link to="/app/settings" className="btn btn--ghost btn--small">{t('common.review')}</Link>
         </section>
       )}
 
-      {!advertiser?.agency_id && (
-        <section className="surface-card stack" style={{ padding: '16px 20px' }}>
-          <p className="eyebrow">{t('dashboard.joinAgency')}</p>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <input
-              type="email"
-              placeholder={t('dashboard.agencyEmailPlaceholder')}
-              value={agencyEmail}
-              onChange={(e) => setAgencyEmail(e.target.value)}
-              style={{ flex: 1, minWidth: '200px' }}
-            />
-            <button
-              type="button"
-              className="btn btn--secondary"
-              disabled={!agencyEmail}
-              onClick={async () => {
-                try {
-                  const result = await api.post('/ads/account/request-agency', { agency_email: agencyEmail });
-                  setRequestResult(result.agency_name);
-                  setAgencyEmail('');
-                } catch (err) {
-                  setRequestResult(null);
-                  alert(err.message);
-                }
-              }}
-            >
-              {t('dashboard.requestJoin')}
-            </button>
+      <section className="stats-grid stats-grid--prominent">
+        <article className="stat-card stat-card--primary">
+          <div className="stat-card__icon">💰</div>
+          <div>
+            <span className="stat-card__label">{t('dashboard.availableBalance')}</span>
+            <strong className="stat-card__value">${(balance / 100).toFixed(2)}</strong>
           </div>
-          {requestResult && <p className="helper-text" style={{ color: 'var(--success)' }}>{t('dashboard.requestSent', { agency: requestResult })}</p>}
+          <Link to="/app/billing" className="stat-card__action">{t('dashboard.addFunds')}</Link>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">📊</div>
+          <div>
+            <span className="stat-card__label">{t('dashboard.activeCampaigns')}</span>
+            <strong className="stat-card__value">{stats.active}</strong>
+          </div>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">⏳</div>
+          <div>
+            <span className="stat-card__label">{t('dashboard.pending')}</span>
+            <strong className="stat-card__value">{stats.awaitingPayment + stats.awaitingCreative + stats.awaitingApproval}</strong>
+          </div>
+        </article>
+        <article className="stat-card">
+          <div className="stat-card__icon">💵</div>
+          <div>
+            <span className="stat-card__label">{t('dashboard.totalInvestment')}</span>
+            <strong className="stat-card__value">${(stats.totalBudget / 100).toFixed(2)}</strong>
+          </div>
+        </article>
+      </section>
+
+      {stats.awaitingPayment + stats.awaitingCreative + stats.awaitingApproval > 0 && (
+        <section className="quick-actions">
+          <h3>{t('dashboard.quickActions')}</h3>
+          <div className="quick-actions__grid">
+            {stats.awaitingPayment > 0 && (
+              <Link to="/app/campaigns?status=draft" className="quick-action-card">
+                <span className="quick-action-card__badge">{stats.awaitingPayment}</span>
+                <span>{t('dashboard.completeDrafts')}</span>
+              </Link>
+            )}
+            {stats.awaitingCreative > 0 && (
+              <Link to="/app/campaigns?status=pending_creative" className="quick-action-card">
+                <span className="quick-action-card__badge">{stats.awaitingCreative}</span>
+                <span>{t('dashboard.uploadCreatives')}</span>
+              </Link>
+            )}
+            {stats.awaitingApproval > 0 && (
+              <Link to="/app/campaigns?status=pending_approval" className="quick-action-card">
+                <span className="quick-action-card__badge">{stats.awaitingApproval}</span>
+                <span>{t('dashboard.reviewApprovals')}</span>
+              </Link>
+            )}
+          </div>
         </section>
       )}
-
-      <section className="stats-grid">
-        <article className="stat-panel">
-          <span className="stat-panel__label">{t('dashboard.availableBalance')}</span>
-          <strong className="stat-panel__value">${(balance / 100).toFixed(2)}</strong>
-        </article>
-        <article className="stat-panel">
-          <span className="stat-panel__label">{t('dashboard.campaignInvestment')}</span>
-          <strong className="stat-panel__value">${(stats.totalBudget / 100).toFixed(2)}</strong>
-        </article>
-        <article className="stat-panel">
-          <span className="stat-panel__label">{t('dashboard.awaitingPayment')}</span>
-          <strong className="stat-panel__value">{stats.awaitingPayment}</strong>
-        </article>
-        <article className="stat-panel">
-          <span className="stat-panel__label">{t('dashboard.awaitingCreative')}</span>
-          <strong className="stat-panel__value">{stats.awaitingCreative + stats.awaitingApproval}</strong>
-        </article>
-      </section>
-
-      <section className="editorial-grid editorial-grid--dashboard">
-        <article className="editorial-card">
-          <p className="eyebrow">{t('dashboard.actionInbox')}</p>
-          <h3>{t('dashboard.whatNeedsAttention')}</h3>
-          <ul className="bullet-list">
-            <li>{t('dashboard.draftsWaiting', { count: stats.awaitingPayment })}</li>
-            <li>{t('dashboard.inStudio', { count: stats.awaitingCreative })}</li>
-            <li>{t('dashboard.waitingApproval', { count: stats.awaitingApproval })}</li>
-            <li>{t('dashboard.approvedActive', { count: stats.active })}</li>
-          </ul>
-        </article>
-        <article className="editorial-card">
-          <p className="eyebrow">{t('dashboard.recommendedFlow')}</p>
-          <h3>{t('dashboard.keepLaunches')}</h3>
-          <ul className="bullet-list">
-            <li>{t('dashboard.defineBrief')}</li>
-            <li>{t('dashboard.uploadAssets')}</li>
-            <li>{t('dashboard.approveDraft')}</li>
-          </ul>
-        </article>
-      </section>
 
       <section className="surface-card">
         <div className="section-heading">

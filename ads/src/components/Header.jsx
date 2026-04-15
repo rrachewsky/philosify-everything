@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@contexts/AuthContext';
 import { useAdmin } from '@contexts/AdminContext';
 import { useAgency } from '@contexts/AgencyContext';
@@ -12,11 +13,8 @@ function getAdvertiserNav(t) {
   return [
     { to: '/app', label: t('header.overview'), end: true },
     { to: '/app/campaigns', label: t('header.campaigns') },
-    { to: '/app/new', label: t('header.newCampaign') },
     { to: '/app/analytics', label: t('header.analytics') },
     { to: '/app/billing', label: t('header.billing') },
-    { to: '/app/placements', label: t('header.placements') },
-    { to: '/app/settings', label: t('header.settings') },
   ];
 }
 
@@ -40,6 +38,8 @@ function Header({ admin = false, agency = false }) {
   const { logout: adminLogout } = useAdmin();
   const { agency: agencyUser, logout: agencyLogout } = useAgency();
   const navigate = useNavigate();
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const moreMenuRef = useRef(null);
 
   const navItems = admin ? getAdminNav(t) : agency ? getAgencyNav(t) : getAdvertiserNav(t);
   const identity = admin
@@ -69,6 +69,17 @@ function Header({ admin = false, agency = false }) {
     navigate('/');
   };
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target)) {
+        setMoreMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <header className="studio-header">
       <div className="studio-header__brand">
@@ -92,6 +103,36 @@ function Header({ admin = false, agency = false }) {
             {item.label}
           </NavLink>
         ))}
+        {!admin && !agency && (
+          <div className="studio-header__dropdown" ref={moreMenuRef}>
+            <button
+              type="button"
+              className="studio-header__link"
+              onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+              aria-expanded={moreMenuOpen}
+            >
+              {t('header.more')} ▾
+            </button>
+            {moreMenuOpen && (
+              <div className="studio-header__menu">
+                <NavLink
+                  to="/app/placements"
+                  className="studio-header__menu-item"
+                  onClick={() => setMoreMenuOpen(false)}
+                >
+                  {t('header.placements')}
+                </NavLink>
+                <NavLink
+                  to="/app/settings"
+                  className="studio-header__menu-item"
+                  onClick={() => setMoreMenuOpen(false)}
+                >
+                  {t('header.settings')}
+                </NavLink>
+              </div>
+            )}
+          </div>
+        )}
       </nav>
 
       <div className="studio-header__actions">

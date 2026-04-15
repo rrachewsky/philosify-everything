@@ -43,7 +43,8 @@
     "impressions": "impressions",
     "clicks": "clicks",
     "livePreview": "Live preview of your creative in context",
-    "demoLabel": "Demo:"
+    "demoLabel": "Demo:",
+    "review": "Review"
   },
   "landing": {
     "hero": "Reach an audience that thinks deeply.",
@@ -125,7 +126,9 @@
     "lockAtelier": "Lock atelier",
     "brandName": "Philosify Ads Atelier",
     "adminIdentity": "Philosify Admin",
-    "agencyIdentity": "Agency"
+    "agencyIdentity": "Agency",
+    "more": "More",
+    "navigation": "{{role}} navigation"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -154,10 +157,20 @@
     "viewAll": "View all",
     "agencyInvitations": "Agency invitations",
     "pendingInvitations": "Pending invitations",
+    "pendingInvitationsCount": "pending invitation(s)",
     "joinAgency": "Join an agency",
     "agencyEmailPlaceholder": "agency@company.com",
     "requestJoin": "Request to join",
-    "requestSent": "Request sent to {{agency}}"
+    "requestSent": "Request sent to {{agency}}",
+    "subtitle": "Create and manage your advertising campaigns",
+    "addFunds": "Add funds",
+    "activeCampaigns": "Active campaigns",
+    "pending": "Pending",
+    "totalInvestment": "Total investment",
+    "quickActions": "Quick actions",
+    "completeDrafts": "Complete {{count}} draft(s)",
+    "uploadCreatives": "Upload creative for {{count}} campaign(s)",
+    "reviewApprovals": "Review {{count}} approval(s)"
   },
   "campaigns": {
     "title": "Campaigns",
@@ -213,6 +226,11 @@
     "engagement": "Engagement",
     "countries": "Countries",
     "content": "Content",
+    "step1": "Basics",
+    "step2": "Targeting",
+    "step3": "Creative",
+    "showAdvanced": "Show advanced targeting",
+    "hideAdvanced": "Hide advanced targeting",
     "policyNotice": "All campaigns are subject to the",
     "policyLink": "Advertising Policy",
     "policyResponsibility": "The advertiser and any agency remain fully responsible for all ads, claims, assets, and destination pages, even when Philosify assists with creative preparation.",
