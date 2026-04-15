@@ -398,7 +398,7 @@ export default function NewsSidebar({
       </div>
 
       {/* Ticker — between header and content, same as Music's TopTenTicker position */}
-      {!selectedArticle && !analysisResult && !panelResult && breakingNews.length > 0 && (
+      {!selectedArticle && !analysisResult && !panelResult && (
         <div className="music-sidebar__ticker">
           <BreakingTicker
             articles={breakingNews}
