@@ -230,6 +230,26 @@ export async function handleAdminLogin(request, env, corsHeaders) {
     // Verify against stored admin secret
     const adminSecret = await getSecret(env.ADMIN_SECRET);
     
+    // Enhanced logging for debugging (safe - no actual secrets logged)
+    const providedHex = Array.from(secret).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('-');
+    const storedHex = adminSecret ? Array.from(adminSecret).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('-') : null;
+    const hexMatch = providedHex === storedHex;
+    const safeEqResult = adminSecret ? safeEq(secret, adminSecret) : false;
+    
+    console.log('[Admin Auth] Login attempt:', {
+      providedLength: secret.length,
+      storedLength: adminSecret ? adminSecret.length : 0,
+      providedPreview: `${secret.substring(0, 4)}...${secret.substring(secret.length - 4)}`,
+      storedPreview: adminSecret ? `${adminSecret.substring(0, 4)}...${adminSecret.substring(adminSecret.length - 4)}` : null,
+      providedTrimmedLength: secret.trim().length,
+      storedTrimmedLength: adminSecret ? adminSecret.trim().length : 0,
+      providedHex: providedHex.substring(0, 60) + '...', // First 60 chars of hex
+      storedHex: storedHex ? storedHex.substring(0, 60) + '...' : null,
+      hexMatch: hexMatch,
+      safeEqResult: safeEqResult,
+      stringEqualityTest: secret === adminSecret,
+    });
+    
     if (!adminSecret || !safeEq(secret, adminSecret)) {
       // Add small delay to prevent timing attacks
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -245,6 +265,7 @@ export async function handleAdminLogin(request, env, corsHeaders) {
     // Return success with HTTPOnly cookie containing JWT
     const headers = {
       ...corsHeaders,
+      'Content-Type': 'application/json',
       'Set-Cookie': buildAdminCookie(jwt, isProduction),
     };
     
@@ -270,6 +291,7 @@ export async function handleAdminLogout(request, env, corsHeaders) {
   
   const headers = {
     ...corsHeaders,
+    'Content-Type': 'application/json',
     'Set-Cookie': buildClearAdminCookie(isProduction),
   };
   
@@ -306,6 +328,72 @@ export async function handleAdminVerify(request, env, corsHeaders) {
     authenticated: true,
     expiresIn,
   }, 200, corsHeaders);
+}
+
+/**
+ * GET /api/ads/admin/auth/diagnose
+ * Diagnostic endpoint to troubleshoot ADMIN_SECRET issues
+ * Returns masked info about secret configuration (not the secret itself)
+ */
+export async function handleAdminDiagnose(request, env, corsHeaders) {
+  try {
+    const diagnostics = {
+      timestamp: new Date().toISOString(),
+      checks: {}
+    };
+    
+    // Check 1: Is ADMIN_SECRET bound in env?
+    diagnostics.checks.secretBound = typeof env.ADMIN_SECRET !== 'undefined';
+    
+    // Check 2: Can we retrieve the secret?
+    let adminSecret = null;
+    try {
+      adminSecret = await getSecret(env.ADMIN_SECRET);
+      diagnostics.checks.secretRetrievable = true;
+      diagnostics.checks.secretExists = !!adminSecret;
+      diagnostics.checks.secretLength = adminSecret ? adminSecret.length : 0;
+      diagnostics.checks.secretPreview = adminSecret 
+        ? `${adminSecret.substring(0, 4)}...${adminSecret.substring(adminSecret.length - 4)}`
+        : null;
+      // Enhanced preview (first 8, last 8)
+      diagnostics.checks.secretPreviewExtended = adminSecret && adminSecret.length >= 16
+        ? `${adminSecret.substring(0, 8)}...${adminSecret.substring(adminSecret.length - 8)}`
+        : diagnostics.checks.secretPreview;
+      // Character-by-character hex encoding (for debugging encoding issues)
+      diagnostics.checks.secretHexPreview = adminSecret
+        ? Array.from(adminSecret.substring(0, Math.min(21, adminSecret.length)))
+            .map(c => c.charCodeAt(0).toString(16).padStart(2, '0'))
+            .join('-')
+        : null;
+    } catch (error) {
+      diagnostics.checks.secretRetrievable = false;
+      diagnostics.checks.secretError = error.message;
+    }
+    
+    // Check 3: Is production environment?
+    diagnostics.checks.isProduction = !env.ALLOWED_ORIGINS?.includes('localhost');
+    diagnostics.checks.environment = env.ENVIRONMENT || 'unknown';
+    
+    // Check 4: Can we generate JWT?
+    if (adminSecret) {
+      try {
+        const testJWT = await generateAdminJWT(adminSecret);
+        diagnostics.checks.jwtGenerationWorks = !!testJWT;
+        diagnostics.checks.jwtFormat = testJWT ? `${testJWT.substring(0, 20)}...` : null;
+      } catch (error) {
+        diagnostics.checks.jwtGenerationWorks = false;
+        diagnostics.checks.jwtError = error.message;
+      }
+    }
+    
+    return jsonResponse(diagnostics, 200, corsHeaders);
+  } catch (error) {
+    console.error('[Admin Auth] Diagnose error:', error);
+    return jsonResponse({ 
+      error: 'Diagnostic failed',
+      message: error.message 
+    }, 500, corsHeaders);
+  }
 }
 
 /**
