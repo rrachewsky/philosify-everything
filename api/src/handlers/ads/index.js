@@ -126,6 +126,14 @@ export {
   handleAdminFixBilling,
 } from './admin.js';
 
+// Admin Auth (HTTPOnly cookie-based authentication)
+export {
+  handleAdminLogin,
+  handleAdminLogout,
+  handleAdminVerify,
+  verifyAdminCookie,
+} from './admin-auth.js';
+
 // Analytics & Reporting
 export {
   handleAnalyticsOverview,

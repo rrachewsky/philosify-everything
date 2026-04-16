@@ -5,22 +5,15 @@
 
 import { getServiceSupabase, getSupabaseCredentials } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
-import { getSecret } from '../../utils/secrets.js';
-import { safeEq } from '../../payments/crypto.js';
 import { manualVet } from './vetting.js';
+import { verifyAdminCookie } from './admin-auth.js';
 
 /**
- * Verify admin access via X-Admin-Secret header
+ * Verify admin access via HTTPOnly cookie
+ * SECURITY FIX (CVE-2026-001): Replaced X-Admin-Secret header with cookie-based auth
  */
 async function verifyAdmin(request, env) {
-  const adminSecret = await getSecret(env.ADMIN_SECRET);
-  const providedSecret = request.headers.get('X-Admin-Secret');
-  
-  if (!providedSecret || !adminSecret) {
-    return false;
-  }
-  
-  return safeEq(providedSecret, adminSecret);
+  return await verifyAdminCookie(request);
 }
 
 /**

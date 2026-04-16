@@ -284,6 +284,10 @@ import {
   handleAdminCancelPlan as handleAdsAdminCancelPlan,
   handleAdminBackfillTransactions as handleAdsAdminBackfillTransactions,
   handleAdminFixBilling as handleAdsAdminFixBilling,
+  // Admin Auth
+  handleAdminLogin as handleAdsAdminLogin,
+  handleAdminLogout as handleAdsAdminLogout,
+  handleAdminVerify as handleAdsAdminVerify,
   attachRefreshedCookie,
   // Agency
   handleAgencySignup,
@@ -4363,7 +4367,23 @@ export default {
         return handleRecordClick(request, env, corsHeaders);
       }
 
-      // Ads Admin (owner only, requires X-Admin-Secret)
+      // Ads Admin Auth (HTTPOnly cookie-based authentication)
+      if (url.pathname === "/api/ads/admin/auth/login" && request.method === "POST") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `admin-login:${ip}`, true);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests. Please try again later." }, 429, corsHeaders);
+        }
+        return handleAdsAdminLogin(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/auth/logout" && request.method === "POST") {
+        return handleAdsAdminLogout(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/auth/verify" && request.method === "GET") {
+        return handleAdsAdminVerify(request, env, corsHeaders);
+      }
+
+      // Ads Admin (owner only, requires admin auth cookie)
       if (url.pathname === "/api/ads/admin/pending" && request.method === "GET") {
         return handleAdsListPending(request, env, corsHeaders);
       }
