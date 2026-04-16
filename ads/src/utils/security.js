@@ -5,20 +5,48 @@
  * Prevents XSS, injection attacks, and other security vulnerabilities
  */
 
+import DOMPurify from 'dompurify';
+
 /**
  * Sanitize HTML to prevent XSS attacks
- * Uses a whitelist approach - only allows safe characters
+ * Uses DOMPurify for comprehensive XSS protection
  */
 export function sanitizeHTML(input) {
   if (typeof input !== 'string') return '';
   
-  return input
+  // Fallback basic sanitization if DOMPurify not available
+  const basicSanitize = (str) => str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
     .replace(/\//g, '&#x2F;');
+  
+  try {
+    // Use DOMPurify for comprehensive sanitization
+    return DOMPurify.sanitize(input, {
+      ALLOWED_TAGS: [], // Strip all HTML tags
+      KEEP_CONTENT: true,
+    });
+  } catch (error) {
+    // Fallback to basic sanitization
+    return basicSanitize(input);
+  }
+}
+
+/**
+ * Sanitize rich HTML (allows some safe tags)
+ * Use for content that needs basic formatting
+ */
+export function sanitizeRichHTML(input) {
+  if (typeof input !== 'string') return '';
+  
+  return DOMPurify.sanitize(input, {
+    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'a'],
+    ALLOWED_ATTR: ['href', 'title'],
+    ALLOWED_URI_REGEXP: /^https?:\/\//,
+  });
 }
 
 /**

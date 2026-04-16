@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { sanitizeFeedback } from '@utils/security';
 
 export default function FeedbackButton() {
   const { t } = useTranslation();
@@ -13,6 +14,9 @@ export default function FeedbackButton() {
     e.preventDefault();
     if (!feedback.trim()) return;
 
+    // Sanitize feedback before sending
+    const sanitized = sanitizeFeedback(feedback);
+
     setSending(true);
     try {
       // Send feedback to a simple endpoint (you can implement this later)
@@ -21,7 +25,7 @@ export default function FeedbackButton() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type,
-          message: feedback,
+          message: sanitized,
           timestamp: new Date().toISOString(),
           userAgent: navigator.userAgent,
           url: window.location.href,
