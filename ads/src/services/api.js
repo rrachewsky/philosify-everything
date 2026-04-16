@@ -80,30 +80,9 @@ class ApiService {
     });
   }
 
-  adminGet(endpoint, adminSecret) {
-    return this.get(endpoint, {
-      headers: {
-        'X-Admin-Secret': adminSecret,
-      },
-    });
-  }
-
-  adminPost(endpoint, adminSecret, body) {
-    return this.post(endpoint, body, {
-      headers: {
-        'X-Admin-Secret': adminSecret,
-      },
-    });
-  }
-
-  adminDelete(endpoint, adminSecret) {
-    return this.request(endpoint, {
-      method: 'DELETE',
-      headers: {
-        'X-Admin-Secret': adminSecret,
-      },
-    });
-  }
+  // SECURITY NOTE: Old adminGet/adminPost/adminDelete methods removed
+  // Admin authentication now uses HTTPOnly cookies (CVE-2026-001 fix)
+  // Use regular api.get/post/delete - cookies are sent automatically
 }
 
 export const api = new ApiService();

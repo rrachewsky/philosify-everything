@@ -7,7 +7,7 @@ import PendingAdvertisers from '@components/admin/PendingAdvertisers';
 
 function AdminDashboard() {
   const { t } = useTranslation();
-  const { adminSecret } = useAdmin();
+  // SECURITY FIX: No adminSecret - using HTTPOnly cookies for authentication
   const [overview, setOverview] = useState(null);
   const [advertisers, setAdvertisers] = useState([]);
   const [plans, setPlans] = useState([]);
@@ -21,10 +21,10 @@ function AdminDashboard() {
     setError('');
     try {
       const [overviewData, pendingData, plansData, requestsData] = await Promise.all([
-        api.adminGet('/ads/admin/overview', adminSecret),
-        api.adminGet('/ads/admin/pending', adminSecret),
-        api.adminGet('/ads/admin/plans', adminSecret),
-        api.adminGet('/ads/admin/creative-requests', adminSecret),
+        api.get('/ads/admin/overview'),
+        api.get('/ads/admin/pending'),
+        api.get('/ads/admin/plans'),
+        api.get('/ads/admin/creative-requests'),
       ]);
 
       setOverview(overviewData.counts || null);
@@ -36,7 +36,7 @@ function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [adminSecret]);
+  }, [t]);
 
   useEffect(() => {
     loadData();
@@ -54,7 +54,7 @@ function AdminDashboard() {
 
   const approveAdvertiser = async (advertiserId, approved) => {
     const endpoint = approved ? `/ads/admin/approve/${advertiserId}` : `/ads/admin/reject/${advertiserId}`;
-    await api.adminPost(endpoint, adminSecret, {});
+    await api.post(endpoint, {});
     await loadData();
   };
 
@@ -64,14 +64,14 @@ function AdminDashboard() {
       return;
     }
 
-    await api.adminPost(`/ads/admin/creative-requests/${requestId}/draft`, adminSecret, {
+    await api.post(`/ads/admin/creative-requests/${requestId}/draft`, {
       draft_url: draftUrl,
     });
     await loadData();
   };
 
   const approvePlan = async (planId) => {
-    await api.adminPost(`/ads/admin/plans/${planId}/approve`, adminSecret, {});
+    await api.post(`/ads/admin/plans/${planId}/approve`, {});
     await loadData();
   };
 
@@ -81,7 +81,7 @@ function AdminDashboard() {
   const generateCreative = async (planId) => {
     setGenerating((prev) => ({ ...prev, [planId]: true }));
     try {
-      await api.adminPost(`/ads/admin/plans/${planId}/generate-creative`, adminSecret, {});
+      await api.post(`/ads/admin/plans/${planId}/generate-creative`, {});
       await loadData();
     } catch (err) {
       setError(err.message || t('admin.generateFailed'));
@@ -131,7 +131,7 @@ function AdminDashboard() {
             className="btn btn--secondary"
             style={{ fontSize: '11px', padding: '4px 10px' }}
             onClick={async () => {
-              const all = await api.adminGet('/ads/admin/creative-requests?status=all', adminSecret);
+              const all = await api.get('/ads/admin/creative-requests?status=all');
               setCreativeRequests(all.requests || []);
             }}
           >
@@ -217,7 +217,7 @@ function AdminDashboard() {
                           if (!confirm(t('admin.confirmDeleteMedia'))) return;
                           const path = plan.creative_url.replace(/.*\/api\/ads\/media\//, '');
                           try {
-                            await api.adminDelete(`/ads/admin/media/${path}`, adminSecret);
+                            await api.delete(`/ads/admin/media/${path}`);
                             await loadData();
                           } catch (err) {
                             setError(err.message);
@@ -291,7 +291,7 @@ function AdminDashboard() {
 
                         {/* GET APPROVAL — creative ready, send to advertiser */}
                         {isPendingCreative && hasCreative && (
-                          <button className="btn btn--primary" onClick={async () => { await api.adminPost(`/ads/admin/plans/${plan.id}/approve-creative`, adminSecret, {}); await loadData(); }}>
+                          <button className="btn btn--primary" onClick={async () => { await api.post(`/ads/admin/plans/${plan.id}/approve-creative`, {}); await loadData(); }}>
                             {t('admin.getApproval')}
                           </button>
                         )}
@@ -313,10 +313,10 @@ function AdminDashboard() {
                         {/* PAUSE — active campaign */}
                         {plan.status === 'active' && (
                           <>
-                            <button className="btn btn--secondary" onClick={async () => { await api.adminPost(`/ads/admin/plans/${plan.id}/pause`, adminSecret, {}); await loadData(); }}>
+                            <button className="btn btn--secondary" onClick={async () => { await api.post(`/ads/admin/plans/${plan.id}/pause`, {}); await loadData(); }}>
                               {t('admin.pause')}
                             </button>
-                            <button className="btn btn--danger" onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.adminPost(`/ads/admin/plans/${plan.id}/cancel`, adminSecret, {}); await loadData(); }}>
+                            <button className="btn btn--danger" onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.post(`/ads/admin/plans/${plan.id}/cancel`, {}); await loadData(); }}>
                               {t('admin.cancel')}
                             </button>
                           </>
@@ -325,10 +325,10 @@ function AdminDashboard() {
                         {/* RESUME — paused campaign */}
                         {plan.status === 'paused' && (
                           <>
-                            <button className="btn btn--primary" onClick={async () => { await api.adminPost(`/ads/admin/plans/${plan.id}/resume`, adminSecret, {}); await loadData(); }}>
+                            <button className="btn btn--primary" onClick={async () => { await api.post(`/ads/admin/plans/${plan.id}/resume`, {}); await loadData(); }}>
                               {t('admin.resume')}
                             </button>
-                            <button className="btn btn--danger" onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.adminPost(`/ads/admin/plans/${plan.id}/cancel`, adminSecret, {}); await loadData(); }}>
+                            <button className="btn btn--danger" onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.post(`/ads/admin/plans/${plan.id}/cancel`, {}); await loadData(); }}>
                               {t('admin.cancel')}
                             </button>
                           </>
@@ -353,9 +353,9 @@ function AdminDashboard() {
                               setGenerating((prev) => ({ ...prev, [plan.id]: true }));
                               try {
                                 // Step 1: Clear old creative and update brief
-                                await api.adminPost(`/ads/admin/plans/${plan.id}/reject-creative`, adminSecret, { revised_brief: rejectBrief[plan.id] || undefined });
+                                await api.post(`/ads/admin/plans/${plan.id}/reject-creative`, { revised_brief: rejectBrief[plan.id] || undefined });
                                 // Step 2: Generate new creative with updated brief
-                                await api.adminPost(`/ads/admin/plans/${plan.id}/generate-creative`, adminSecret, { admin_notes: rejectBrief[plan.id] || undefined });
+                                await api.post(`/ads/admin/plans/${plan.id}/generate-creative`, { admin_notes: rejectBrief[plan.id] || undefined });
                                 setShowReject((prev) => ({ ...prev, [plan.id]: false }));
                                 setRejectBrief((prev) => ({ ...prev, [plan.id]: '' }));
                                 await loadData();
@@ -434,20 +434,20 @@ function AdminDashboard() {
                     <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
                       {plan.status === 'active' && (
                         <>
-                          <button className="btn btn--secondary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { await api.adminPost(`/ads/admin/plans/${plan.id}/pause`, adminSecret, {}); await loadData(); }}>
+                          <button className="btn btn--secondary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { await api.post(`/ads/admin/plans/${plan.id}/pause`, {}); await loadData(); }}>
                             {t('admin.pause')}
                           </button>
-                          <button className="btn btn--danger" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.adminPost(`/ads/admin/plans/${plan.id}/cancel`, adminSecret, {}); await loadData(); }}>
+                          <button className="btn btn--danger" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.post(`/ads/admin/plans/${plan.id}/cancel`, {}); await loadData(); }}>
                             {t('admin.cancel')}
                           </button>
                         </>
                       )}
                       {plan.status === 'paused' && (
                         <>
-                          <button className="btn btn--primary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { await api.adminPost(`/ads/admin/plans/${plan.id}/resume`, adminSecret, {}); await loadData(); }}>
+                          <button className="btn btn--primary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { await api.post(`/ads/admin/plans/${plan.id}/resume`, {}); await loadData(); }}>
                             {t('admin.resume')}
                           </button>
-                          <button className="btn btn--danger" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.adminPost(`/ads/admin/plans/${plan.id}/cancel`, adminSecret, {}); await loadData(); }}>
+                          <button className="btn btn--danger" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={async () => { if (!confirm(t('admin.confirmCancel'))) return; await api.post(`/ads/admin/plans/${plan.id}/cancel`, {}); await loadData(); }}>
                             {t('admin.cancel')}
                           </button>
                         </>
