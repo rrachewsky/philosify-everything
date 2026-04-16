@@ -11,9 +11,10 @@ import { verifyAdminCookie } from './admin-auth.js';
 /**
  * Verify admin access via HTTPOnly cookie
  * SECURITY FIX (CVE-2026-001): Replaced X-Admin-Secret header with cookie-based auth
+ * ARCHITECTURE FIX: Uses stateless JWT instead of in-memory sessions (Cloudflare Workers compatible)
  */
 async function verifyAdmin(request, env) {
-  return await verifyAdminCookie(request);
+  return await verifyAdminCookie(request, env);
 }
 
 /**
