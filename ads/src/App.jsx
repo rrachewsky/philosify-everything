@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Header from '@components/Header';
 import FloatingActionButton from '@components/FloatingActionButton';
+import FeedbackButton from '@components/FeedbackButton';
 import ProtectedRoute from '@components/ProtectedRoute';
 import AdminProtectedRoute from '@components/AdminProtectedRoute';
 import AgencyProtectedRoute from '@components/AgencyProtectedRoute';
@@ -32,6 +33,7 @@ function AdvertiserLayout({ children }) {
         <Header />
         <main className="app-main">{children}</main>
         <FloatingActionButton />
+        <FeedbackButton />
       </div>
     </ProtectedRoute>
   );
@@ -43,6 +45,7 @@ function AdminLayout({ children }) {
       <div className="app-shell app-shell--admin">
         <Header admin />
         <main className="app-main">{children}</main>
+        <FeedbackButton />
       </div>
     </AdminProtectedRoute>
   );
@@ -54,6 +57,7 @@ function AgencyLayout({ children }) {
       <div className="app-shell app-shell--agency">
         <Header agency />
         <main className="app-main">{children}</main>
+        <FeedbackButton />
       </div>
     </AgencyProtectedRoute>
   );

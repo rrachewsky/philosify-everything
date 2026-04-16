@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAdmin } from '@contexts/AdminContext';
 import { api } from '@services/api';
+import AdminStats from '@components/admin/AdminStats';
+import PendingAdvertisers from '@components/admin/PendingAdvertisers';
 
 function AdminDashboard() {
   const { t } = useTranslation();
@@ -111,68 +113,13 @@ function AdminDashboard() {
 
       {error ? <div className="alert alert--error">{error}</div> : null}
 
-      <section className="stats-grid stats-grid--prominent">
-        <article className="stat-card stat-card--primary">
-          <div className="stat-card__icon">⏳</div>
-          <div>
-            <span className="stat-card__label">{t('admin.pendingAdvertisers')}</span>
-            <strong className="stat-card__value">{overview?.pendingAdvertisers || 0}</strong>
-          </div>
-        </article>
-        <article className="stat-card">
-          <div className="stat-card__icon">🎨</div>
-          <div>
-            <span className="stat-card__label">{t('admin.creativeInProgress')}</span>
-            <strong className="stat-card__value">{overview?.creativeInProgress || 0}</strong>
-          </div>
-        </article>
-        <article className="stat-card">
-          <div className="stat-card__icon">👤</div>
-          <div>
-            <span className="stat-card__label">{t('admin.awaitingClient')}</span>
-            <strong className="stat-card__value">{overview?.awaitingClientApproval || 0}</strong>
-          </div>
-        </article>
-        <article className="stat-card">
-          <div className="stat-card__icon">✅</div>
-          <div>
-            <span className="stat-card__label">{t('admin.awaitingAdmin')}</span>
-            <strong className="stat-card__value">{overview?.awaitingAdminApproval || 0}</strong>
-          </div>
-        </article>
-      </section>
+      <AdminStats overview={overview} />
 
-      <section className="surface-card stack">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">{t('admin.applications')}</p>
-            <h3>{t('admin.pendingApproval')}</h3>
-          </div>
-        </div>
-
-        {advertisers.length === 0 ? (
-          <p className="helper-text">{t('admin.noApprovals')}</p>
-        ) : (
-          <div className="collection-list">
-            {advertisers.map((advertiser) => (
-              <div key={advertiser.id} className="collection-row collection-row--stacked">
-                <div className="collection-row__main">
-                  <strong>{advertiser.company_name}</strong>
-                  <p>{advertiser.email} · {t('agency.score')} {advertiser.vetting_score ?? 'n/a'}</p>
-                </div>
-                <div className="button-row">
-                  <button type="button" className="btn btn--secondary" onClick={() => approveAdvertiser(advertiser.id, false)}>
-                    {t('admin.reject')}
-                  </button>
-                  <button type="button" className="btn btn--primary" onClick={() => approveAdvertiser(advertiser.id, true)}>
-                    {t('admin.approve')}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      <PendingAdvertisers
+        advertisers={advertisers}
+        onApprove={(id) => approveAdvertiser(id, true)}
+        onReject={(id) => approveAdvertiser(id, false)}
+      />
 
       <section className="surface-card stack">
         <div className="section-heading">

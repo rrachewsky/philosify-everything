@@ -607,5 +607,20 @@
     "nl": "Dutch",
     "pl": "Polish",
     "tr": "Turkish"
+  },
+  "feedback": {
+    "openFeedback": "Give feedback",
+    "title": "Share Your Feedback",
+    "typeLabel": "Feedback Type",
+    "typeGeneral": "General Feedback",
+    "typeBug": "Bug Report",
+    "typeFeature": "Feature Request",
+    "typeUX": "UX Improvement",
+    "messageLabel": "Your Message",
+    "messagePlaceholder": "Tell us what you think, report a bug, or suggest an improvement...",
+    "submit": "Submit Feedback",
+    "sending": "Sending...",
+    "thankYou": "Thank you for your feedback!",
+    "error": "Failed to send feedback. Please try again."
   }
 }
