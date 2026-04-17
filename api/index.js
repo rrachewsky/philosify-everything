@@ -288,6 +288,7 @@ import {
   handleAdminLogin as handleAdsAdminLogin,
   handleAdminLogout as handleAdsAdminLogout,
   handleAdminVerify as handleAdsAdminVerify,
+  handleAdminDiagnose as handleAdsAdminDiagnose,
   attachRefreshedCookie,
   // Agency
   handleAgencySignup,
@@ -2292,6 +2293,19 @@ export default {
             if (session.payment_status !== "paid") {
               console.warn(`[Stripe] Payment not completed (status: ${session.payment_status}), skipping credit grant`);
               return jsonResponse({ received: true, skipped: true }, 200, origin, env);
+            }
+
+            // ROUTING: Check if this is an ads platform payment (handled by dedicated webhook)
+            // Ads payments have metadata.type="ad_plan" and are already processed by /api/ads/billing/webhook
+            if (session.metadata?.type === "ad_plan") {
+              console.log(
+                `[Stripe] Ads payment detected (plan_id: ${session.metadata?.plan_id || 'unknown'}), ` +
+                `already handled by /api/ads/billing/webhook, acknowledging receipt`
+              );
+              return jsonResponse({ 
+                received: true, 
+                note: "Ads payment processed by dedicated webhook" 
+              }, 200, origin, env);
             }
 
             const userId =
@@ -4381,6 +4395,9 @@ export default {
       }
       if (url.pathname === "/api/ads/admin/auth/verify" && request.method === "GET") {
         return handleAdsAdminVerify(request, env, corsHeaders);
+      }
+      if (url.pathname === "/api/ads/admin/auth/diagnose" && request.method === "GET") {
+        return handleAdsAdminDiagnose(request, env, corsHeaders);
       }
 
       // Ads Admin (owner only, requires admin auth cookie)
