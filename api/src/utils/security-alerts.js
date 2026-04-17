@@ -236,7 +236,7 @@ export async function sendPaymentReceiptEmail(env, { userEmail, credits, newBala
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, #0a2a3a 0%, #0d3d4d 100%); padding: 30px 40px; text-align: center;">
-              <img src="https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/newlogocircuitsrounded.png" alt="Philosify" style="max-width: 120px; height: auto; margin-bottom: 10px;" />
+              <img src="https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/logo-everything.jpg" alt="Philosify" style="max-width: 120px; height: auto; margin-bottom: 10px;" />
               <p style="margin: 0; color: rgba(0,200,200,0.9); font-size: 14px; font-style: italic;">Discover the philosophy in music</p>
             </td>
           </tr>

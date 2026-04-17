@@ -8,7 +8,7 @@ import { jsonResponse } from "../utils/index.js";
 
 // New logo URL on R2
 const LOGO_URL =
-  "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/newlogocircuitsrounded.png";
+  "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/logo-everything.jpg";
 
 // Email translations for all 18 supported languages
 const EMAIL_TRANSLATIONS = {
