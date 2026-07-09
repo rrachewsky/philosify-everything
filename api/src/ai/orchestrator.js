@@ -13,7 +13,6 @@ import {
   callOpenAI,
   callGemini,
   callGrok,
-  callDeepSeek,
 } from "./models/index.js";
 import {
   extractJSON,
@@ -35,7 +34,7 @@ function normalizeSchoolsHtml(value) {
   return s;
 }
 
-// Valid model aliases: claude, anthropic, gpt4, openai, o1*, o3*, gpt-*, gemini*, grok*, deepseek*
+// Valid model aliases: claude, anthropic, gpt4, openai, o1*, o3*, gpt-*, gemini*, grok*
 function normalizeModelKey(model) {
   const m = String(model || "").toLowerCase();
   if (m.includes("claude") || m === "anthropic") return "claude";
@@ -49,9 +48,8 @@ function normalizeModelKey(model) {
     return "openai";
   if (m.includes("gemini")) return "gemini";
   if (m.includes("grok")) return "grok";
-  if (m.includes("deepseek")) return "deepseek";
   throw new Error(
-    `Unrecognized model key: "${model}". Valid keys: claude, openai, gemini, grok, deepseek`,
+    `Unrecognized model key: "${model}". Valid keys: claude, openai, gemini, grok`,
   );
 }
 
@@ -196,15 +194,13 @@ export async function analyzePhilosophy(
     openai: () => callOpenAI(prompt, targetLanguage, env),
     gemini: () => callGemini(prompt, targetLanguage, env),
     grok: () => callGrok(prompt, targetLanguage, env),
-    deepseek: () => callDeepSeek(prompt, targetLanguage, env),
   };
 
   const fallbacksByKey = {
-    claude: ["openai", "gemini", "grok", "deepseek"],
-    openai: ["claude", "gemini", "grok", "deepseek"],
-    gemini: ["claude", "openai", "grok", "deepseek"],
-    grok: ["claude", "openai", "gemini", "deepseek"],
-    deepseek: ["claude", "openai", "gemini", "grok"],
+    claude: ["openai", "gemini", "grok"],
+    openai: ["claude", "gemini", "grok"],
+    gemini: ["claude", "openai", "grok"],
+    grok: ["claude", "openai", "gemini"],
   };
 
   const candidates = [

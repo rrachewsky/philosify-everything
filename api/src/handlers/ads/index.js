@@ -131,6 +131,7 @@ export {
   handleAdminLogin,
   handleAdminLogout,
   handleAdminVerify,
+  handleAdminDiagnose,
   verifyAdminCookie,
 } from './admin-auth.js';
 

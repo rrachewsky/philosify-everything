@@ -17,12 +17,11 @@ globs = ["**/*.txt"]
 [vars]
 ENVIRONMENT = "development"
 
-# AI Models - Latest Reasoning Versions (Dec 2025)
-CLAUDE_MODEL = "claude-opus-4-5-20251101"  # Claude Opus 4.5 (or claude-sonnet-4-5-20251022 for cheaper)
-OPENAI_MODEL = "gpt-4.1"
-GEMINI_MODEL = "gemini-2.0-flash"  # Gemini 2.0 Flash
-GROK_MODEL = "grok-4-1-fast-reasoning"  # Grok 4.1 Fast (95% cheaper than Grok 3)
-DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
+# AI Models - Current generation, cost-tuned (Jul 2026)
+CLAUDE_MODEL = "claude-opus-4-8"  # Claude Opus 4.8 (Fable 5 / Haiku 4.5 as alternatives)
+OPENAI_MODEL = "gpt-5.5"
+GEMINI_MODEL = "gemini-3.5-flash"  # Gemini 3.5 Flash (GA)
+GROK_MODEL = "grok-4.5"  # Grok 4.5 — single analysis model (public 2026-07-09)
 
 # Localhost origins for local dev
 VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
@@ -76,12 +75,11 @@ zone_name = "philosify.org"
 [env.production.vars]
 ENVIRONMENT = "production"
 
-# AI Models - Latest Reasoning Versions (Dec 2025)
-CLAUDE_MODEL = "claude-opus-4-5-20251101"  # Claude Opus 4.5 (or claude-sonnet-4-5-20251022 for cheaper)
-OPENAI_MODEL = "gpt-4.1"
-GEMINI_MODEL = "gemini-2.0-flash"  # Gemini 2.0 Flash
-GROK_MODEL = "grok-4-1-fast-reasoning"  # Grok 4.1 Fast (95% cheaper than Grok 3)
-DEEPSEEK_MODEL = "deepseek-reasoner"  # DeepSeek V3.2 Reasoner
+# AI Models - Current generation, cost-tuned (Jul 2026)
+CLAUDE_MODEL = "claude-opus-4-8"  # Claude Opus 4.8 (Fable 5 / Haiku 4.5 as alternatives)
+OPENAI_MODEL = "gpt-5.5"
+GEMINI_MODEL = "gemini-3.5-flash"  # Gemini 3.5 Flash (GA)
+GROK_MODEL = "grok-4.5"  # Grok 4.5 — single analysis model (public 2026-07-09)
 VAPID_PUBLIC_KEY = "BM_IIs3K4u0vBZR40kEDjQrsC4oBiZsK3EGGbkaP461xeCVnPIlshnCZqIeMxcDmFxXwxOoYjXDxKkJE2D5e0DY"
 ALLOWED_ORIGINS = "https://philosify.org https://www.philosify.org https://ads.philosify.org https://philosify-ads.pages.dev"
 CHECKOUT_SUCCESS_URL = "https://philosify.org/payment/success"
@@ -195,11 +193,6 @@ secret_name = "STRIPE_PRICE_ID_20"
 binding = "STRIPE_PRICE_ID_50"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "STRIPE_PRICE_ID_50"
-
-[[env.production.secrets_store_secrets]]
-binding = "DEEPSEEK_API_KEY"
-store_id = "aa556a30980842c785cb0e1cbb0bb933"
-secret_name = "DEEPSEEK_API_KEY"
 
 [[env.production.secrets_store_secrets]]
 binding = "RESEND_API_KEY"

@@ -57,11 +57,6 @@ GEMINI_API_KEY=your-gemini-api-key-here
 # Model: grok-3 (most reliable Grok version)
 GROK_API_KEY=xai-your-grok-api-key-here
 
-# 5. DEEPSEEK - DeepSeek R1 (Best value reasoning model)
-# Get from: https://platform.deepseek.com/api_keys
-# Model: deepseek-reasoner (R1 - most reliable version)
-DEEPSEEK_API_KEY=sk-your-deepseek-api-key-here
-
 # ============================================================
 # STRIPE - Payment Processing
 # ============================================================

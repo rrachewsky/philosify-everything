@@ -12,7 +12,6 @@ import {
   callOpenAI,
   callGemini,
   callGrok,
-  callDeepSeek,
 } from "./models/index.js";
 import {
   extractJSON,
@@ -47,7 +46,6 @@ function normalizeModelKey(model) {
   if (m === "gpt4" || m === "openai" || m.startsWith("o1") || m.startsWith("o3") || m.startsWith("gpt-")) return "openai";
   if (m.includes("gemini")) return "gemini";
   if (m.includes("grok")) return "grok";
-  if (m.includes("deepseek")) return "deepseek";
   throw new Error(`Unrecognized model key: "${model}"`);
 }
 
@@ -108,15 +106,13 @@ export async function analyzeBookPhilosophy(
     openai: () => callOpenAI(prompt, targetLanguage, env),
     gemini: () => callGemini(prompt, targetLanguage, env),
     grok: () => callGrok(prompt, targetLanguage, env),
-    deepseek: () => callDeepSeek(prompt, targetLanguage, env),
   };
 
   const fallbacksByKey = {
-    claude: ["openai", "gemini", "grok", "deepseek"],
-    openai: ["claude", "gemini", "grok", "deepseek"],
-    gemini: ["claude", "openai", "grok", "deepseek"],
-    grok: ["claude", "openai", "gemini", "deepseek"],
-    deepseek: ["claude", "openai", "gemini", "grok"],
+    claude: ["openai", "gemini", "grok"],
+    openai: ["claude", "gemini", "grok"],
+    gemini: ["claude", "openai", "grok"],
+    grok: ["claude", "openai", "gemini"],
   };
 
   const candidates = [

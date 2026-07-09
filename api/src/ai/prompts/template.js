@@ -982,7 +982,7 @@ If NO → scores must be NEGATIVE, regardless of artistic merit.
 🚨 CRITICAL - THESE FIELDS ARE MANDATORY FOR ALL AI MODELS 🚨
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ THIS APPLIES TO: Claude, GPT, Gemini, Grok, DeepSeek, and ALL other AI models ⚠️
+⚠️ THIS APPLIES TO: Claude, GPT, Gemini, Grok, and ALL other AI models ⚠️
 ⚠️ THIS APPLIES TO: English, Portuguese, Spanish, and ALL other languages ⚠️
 ⚠️ NO EXCEPTIONS - ALL MODELS MUST FOLLOW THESE REQUIREMENTS ⚠️
 ⚠️ NO EXCEPTIONS - ALL LANGUAGES MUST FOLLOW THESE REQUIREMENTS ⚠️
@@ -1123,7 +1123,7 @@ highly positive content aligned with the guide's framework, then:
 - Classification should be "Revolutionary" or "Extremely Revolutionary" (not "Ambivalent/Mixed"!)
 
 🚨 YOUR SCORES MUST REFLECT YOUR INTEGRATED ANALYSIS 🚨
-🚨 THIS APPLIES TO ALL AI MODELS: Claude, GPT, Gemini, Grok, DeepSeek, and any other model 🚨
+🚨 THIS APPLIES TO ALL AI MODELS: Claude, GPT, Gemini, Grok, and any other model 🚨
 🚨 THIS APPLIES TO ALL LANGUAGES: English, Portuguese, Spanish, and all other languages 🚨
 🚨 NO EXCEPTIONS - ALL MODELS MUST PROVIDE COMPLETE SCORECARD WITH SCORES AND JUSTIFICATIONS 🚨
 🚨 THE SCORECARD IS MANDATORY REGARDLESS OF THE LANGUAGE OF THE ANALYSIS 🚨

@@ -1,9 +1,11 @@
 // ============================================================
-// AI MODEL - CLAUDE OPUS 4.5 (Anthropic SDK)
+// AI MODEL - CLAUDE OPUS 4.8 (Anthropic SDK)
 // ============================================================
 // Using official Anthropic SDK for better reliability and features
-// Default: Opus 4.5 with extended thinking (32K budget)
-// Alternative: Sonnet 4.5 (set CLAUDE_MODEL env var)
+// Default: Opus 4.8 with adaptive thinking (medium effort)
+// Alternative: Fable 5 / Haiku 4.5 (set CLAUDE_MODEL env var)
+// NOTE: Opus 4.7+ and Fable 5 removed `temperature` and `budget_tokens`
+//       (both now return HTTP 400). Use adaptive thinking + output_config.effort.
 
 import Anthropic from '@anthropic-ai/sdk';
 import { getSecret } from '../../utils/secrets.js';
@@ -14,12 +16,12 @@ export async function callClaude(prompt, targetLanguage, env) {
     throw new Error('ANTHROPIC_API_KEY not configured');
   }
 
-  // Model configuration (Opus 4.5 default, Sonnet 4.5 as alternative)
-  const model = env.CLAUDE_MODEL || 'claude-opus-4-5-20251101';
-  const thinkingBudget = 4000;
+  // Model configuration (Opus 4.8 default, Fable 5 / Haiku 4.5 as alternatives)
+  const model = env.CLAUDE_MODEL || 'claude-opus-4-8';
+  const effort = env.CLAUDE_EFFORT || 'medium';
   const maxTokens = 16000;
 
-  console.log(`[Claude] Using model: ${model}, thinking: ${thinkingBudget}, max: ${maxTokens}`);
+  console.log(`[Claude] Using model: ${model}, effort: ${effort}, max: ${maxTokens}`);
 
   const client = new Anthropic({ apiKey });
 
@@ -56,11 +58,8 @@ WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.`;
     const response = await client.messages.create({
       model: model,
       max_tokens: maxTokens,
-      temperature: 1,  // Required for extended thinking
-      thinking: {
-        type: 'enabled',
-        budget_tokens: thinkingBudget
-      },
+      thinking: { type: 'adaptive' },
+      output_config: { effort },
       system: systemPrompt,
       messages: [{
         role: 'user',
@@ -80,12 +79,12 @@ WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.`;
 
   } catch (error) {
     console.error(`[Claude] API error:`, error);
-    
+
     // Check if it's a content filtering error
     // Claude returns errors in format: {type: "error", error: {type: "invalid_request_error", message: "..."}}
     const errorMessage = error.message || error.error?.message || JSON.stringify(error);
     const errorType = error.type || error.error?.type || '';
-    
+
     if (
       errorMessage.includes('content filtering') ||
       errorMessage.includes('Output blocked') ||
@@ -100,7 +99,7 @@ WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.`;
       };
       throw errorObj;
     }
-    
+
     throw new Error(`Claude API error: ${errorMessage}`);
   }
 }

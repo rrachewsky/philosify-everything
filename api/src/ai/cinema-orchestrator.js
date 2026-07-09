@@ -10,7 +10,6 @@ import {
   callOpenAI,
   callGemini,
   callGrok,
-  callDeepSeek,
 } from "./models/index.js";
 import {
   extractJSON,
@@ -42,7 +41,6 @@ function normalizeModelKey(model) {
   if (m === "gpt4" || m === "openai" || m.startsWith("o1") || m.startsWith("o3") || m.startsWith("gpt-")) return "openai";
   if (m.includes("gemini")) return "gemini";
   if (m.includes("grok")) return "grok";
-  if (m.includes("deepseek")) return "deepseek";
   throw new Error(`Unrecognized model key: "${model}"`);
 }
 
@@ -79,14 +77,13 @@ export async function analyzeFilmPhilosophy(title, director, synopsis, filmMetad
     openai: () => callOpenAI(prompt, targetLanguage, env),
     gemini: () => callGemini(prompt, targetLanguage, env),
     grok: () => callGrok(prompt, targetLanguage, env),
-    deepseek: () => callDeepSeek(prompt, targetLanguage, env),
   };
 
   const fallbacksByKey = {
-    claude: ["grok", "gemini", "deepseek"],
-    gemini: ["claude", "grok", "deepseek"],
-    grok: ["claude", "gemini", "deepseek"],
-    deepseek: ["claude", "grok", "gemini"],
+    claude: ["grok", "gemini", "openai"],
+    openai: ["claude", "grok", "gemini"],
+    gemini: ["claude", "grok", "openai"],
+    grok: ["claude", "gemini", "openai"],
   };
 
   const modelChain = [requestedKey, ...(fallbacksByKey[requestedKey] || [])];

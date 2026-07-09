@@ -1,8 +1,8 @@
 // ============================================================
-// AI MODEL - OpenAI (SDK)
+// AI MODEL - OpenAI GPT-5.5 (SDK)
 // ============================================================
 // Using official OpenAI SDK for better reliability and features
-// Supports: gpt-4o-mini, gpt-5.1, o1, o3, etc.
+// Default: gpt-5.5 (reasoning). Also: gpt-5.5-mini, gpt-4.1, o-series.
 
 import OpenAI from 'openai';
 import { getSecret } from '../../utils/secrets.js';
@@ -13,15 +13,15 @@ export async function callOpenAI(prompt, targetLanguage, env) {
     throw new Error('OPENAI_API_KEY not configured');
   }
 
-  const model = env.OPENAI_MODEL || 'gpt-4o-mini';
+  const model = env.OPENAI_MODEL || 'gpt-5.5';
   const isReasoningModel = model.startsWith('gpt-5') || model.startsWith('o1') || model.startsWith('o3');
 
   console.log(`[OpenAI] Using model: ${model}, reasoning: ${isReasoningModel}`);
 
   // All models get 120s timeout to match progress bar
   const timeoutMs = 120000;
-  
-  const client = new OpenAI({ 
+
+  const client = new OpenAI({
     apiKey,
     timeout: timeoutMs,
     maxRetries: 0
@@ -46,7 +46,8 @@ Distinguish between artistic critique and philosophical messaging.`;
 
   try {
     if (isReasoningModel) {
-      // GPT-5.x, o1, o3 models with reasoning
+      // GPT-5.x, o1, o3 reasoning models. These reject `temperature` and use
+      // `max_completion_tokens`; keep a bounded cap and force JSON output.
       const response = await client.chat.completions.create({
         model: model,
         messages: [
@@ -55,7 +56,9 @@ Distinguish between artistic critique and philosophical messaging.`;
             content: `${systemPrompt}\n\n${prompt}`
           }
         ],
-        reasoning_effort: 'high'
+        reasoning_effort: 'medium',
+        response_format: { type: 'json_object' },
+        max_completion_tokens: 16000
       });
 
       const u = response.usage;
@@ -63,7 +66,7 @@ Distinguish between artistic critique and philosophical messaging.`;
       return response.choices[0].message.content;
     }
 
-    // gpt-4o, gpt-4o-mini, etc.
+    // gpt-4o, gpt-4o-mini, gpt-4.1, etc.
     const response = await client.chat.completions.create({
       model: model,
       messages: [
@@ -88,12 +91,12 @@ Distinguish between artistic critique and philosophical messaging.`;
   } catch (error) {
     // SECURITY: Log detailed error server-side, return generic message to client
     console.error(`[OpenAI] API error:`, error.message);
-    
+
     if (error.message?.includes('timeout') || error.message?.includes('Timeout') || error.name === 'AbortError') {
       console.error(`[OpenAI] ⚠️ Request timeout after ${timeoutMs}ms`);
       throw new Error(`Analysis service timeout. Your credit has been refunded.`);
     }
-    
+
     throw new Error(`Analysis service temporarily unavailable. Please try again.`);
   }
 }

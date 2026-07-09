@@ -345,44 +345,29 @@ export async function handleAdminDiagnose(request, env, corsHeaders) {
     // Check 1: Is ADMIN_SECRET bound in env?
     diagnostics.checks.secretBound = typeof env.ADMIN_SECRET !== 'undefined';
     
-    // Check 2: Can we retrieve the secret?
+    // Check 2: Can we retrieve the secret? (booleans only — never expose
+    // length, previews, or any bytes of the secret material.)
     let adminSecret = null;
     try {
       adminSecret = await getSecret(env.ADMIN_SECRET);
       diagnostics.checks.secretRetrievable = true;
       diagnostics.checks.secretExists = !!adminSecret;
-      diagnostics.checks.secretLength = adminSecret ? adminSecret.length : 0;
-      diagnostics.checks.secretPreview = adminSecret 
-        ? `${adminSecret.substring(0, 4)}...${adminSecret.substring(adminSecret.length - 4)}`
-        : null;
-      // Enhanced preview (first 8, last 8)
-      diagnostics.checks.secretPreviewExtended = adminSecret && adminSecret.length >= 16
-        ? `${adminSecret.substring(0, 8)}...${adminSecret.substring(adminSecret.length - 8)}`
-        : diagnostics.checks.secretPreview;
-      // Character-by-character hex encoding (for debugging encoding issues)
-      diagnostics.checks.secretHexPreview = adminSecret
-        ? Array.from(adminSecret.substring(0, Math.min(21, adminSecret.length)))
-            .map(c => c.charCodeAt(0).toString(16).padStart(2, '0'))
-            .join('-')
-        : null;
     } catch (error) {
       diagnostics.checks.secretRetrievable = false;
-      diagnostics.checks.secretError = error.message;
     }
-    
+
     // Check 3: Is production environment?
     diagnostics.checks.isProduction = !env.ALLOWED_ORIGINS?.includes('localhost');
     diagnostics.checks.environment = env.ENVIRONMENT || 'unknown';
-    
-    // Check 4: Can we generate JWT?
+
+    // Check 4: Can we generate a JWT? (boolean only — do not return any part
+    // of a signed token.)
     if (adminSecret) {
       try {
         const testJWT = await generateAdminJWT(adminSecret);
         diagnostics.checks.jwtGenerationWorks = !!testJWT;
-        diagnostics.checks.jwtFormat = testJWT ? `${testJWT.substring(0, 20)}...` : null;
       } catch (error) {
         diagnostics.checks.jwtGenerationWorks = false;
-        diagnostics.checks.jwtError = error.message;
       }
     }
     

@@ -15,9 +15,6 @@ const VALID_MODELS = [
   "claude",
   "anthropic", // Claude (Sonnet 4 with extended thinking)
   "grok", // Grok
-  "deepseek",
-  "deepseek-r1",
-  "deepseek-reasoner", // DeepSeek R1 reasoning
 ];
 
 // Valid languages (18 supported - must match frontend i18n/config.js)

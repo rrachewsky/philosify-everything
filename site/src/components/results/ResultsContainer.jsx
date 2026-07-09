@@ -74,16 +74,13 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
 
     // Map short names to full display names
     const modelDisplayNames = {
-      claude: 'Claude Sonnet 4.5',
-      'claude-sonnet': 'Claude Sonnet 4.5',
-      openai: 'GPT-4.1',
-      gpt4: 'GPT-4.1',
-      'gpt-4': 'GPT-4.1',
-      gemini: 'Gemini 3 Flash',
-      grok: 'Grok 4.1 Fast',
-      deepseek: 'DeepSeek Reasoner',
-      'deepseek-r1': 'DeepSeek Reasoner',
-      'deepseek-reasoner': 'DeepSeek Reasoner',
+      claude: 'Claude Opus 4.8',
+      'claude-sonnet': 'Claude Opus 4.8',
+      openai: 'GPT-5.5',
+      gpt4: 'GPT-5.5',
+      'gpt-4': 'GPT-5.5',
+      gemini: 'Gemini 3.5 Flash',
+      grok: 'Grok 4.5',
     };
 
     // Return formatted name or capitalize the original if not found

@@ -1,45 +1,46 @@
 // ============================================================
-// AI MODEL - GEMINI 2.0 FLASH
+// AI MODEL - GEMINI 3.5 FLASH
 // ============================================================
 // Using raw fetch (Gemini SDK has Workers compatibility issues)
-// Default: Gemini 2.0 Flash (gemini-2.0-flash)
-// Alternative: gemini-2.5-pro, gemini-1.5-pro (set GEMINI_MODEL env var)
+// Default: Gemini 3.5 Flash (gemini-3.5-flash, GA)
+// Alternative: gemini-3.1-flash-lite, gemini-2.5-pro (set GEMINI_MODEL env var)
 
 import { fetchWithTimeout } from "../../utils/timeout.js";
 import { getSecret } from "../../utils/secrets.js";
 
-// Map legacy/invalid model IDs to the current default
+// Map only genuinely retired experimental IDs onto the nearest current model.
+// (Do NOT downgrade current 3.x IDs — that was the old bug.)
 const LEGACY_MODEL_MAP = {
-  "gemini-2.0-flash-thinking-exp-01-21": "gemini-2.0-flash",
-  "gemini-2.0-flash-exp-01-21": "gemini-2.0-flash",
-  "gemini-2.5-flash-thinking-exp-01-21": "gemini-2.0-flash",
-  "gemini-3-pro-preview-11-2025-thinking": "gemini-2.0-flash",
-  "gemini-3.0-flash": "gemini-2.0-flash",
-  "gemini-3-flash": "gemini-2.0-flash",
-  "gemini-3-flash-preview": "gemini-2.0-flash",
-  "gemini-3.1-flash": "gemini-2.0-flash",
-  "gemini-2.5-flash": "gemini-2.0-flash",
+  "gemini-2.0-flash-thinking-exp-01-21": "gemini-2.5-flash",
+  "gemini-2.0-flash-exp-01-21": "gemini-2.5-flash",
+  "gemini-2.5-flash-thinking-exp-01-21": "gemini-2.5-flash",
+  "gemini-3.0-flash": "gemini-3.5-flash",
+  "gemini-3-flash": "gemini-3.5-flash",
 };
 
-// Supported models for generateContent (v1beta)
+// Supported models for generateContent. Current generation first.
 const SUPPORTED_MODELS = new Set([
-  "gemini-1.5-pro",
-  "gemini-1.5-flash",
-  "gemini-2.0-flash",
+  "gemini-3.5-flash",
+  "gemini-3.1-flash-lite",
+  "gemini-3-flash-preview",
+  "gemini-3.1-pro-preview",
   "gemini-2.5-pro",
-  "gemini-2.0-flash-exp",
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
+  "gemini-2.0-flash",
+  "gemini-1.5-pro",
 ]);
 
 function resolveModel(envModel) {
-  const requested = envModel || "gemini-2.0-flash";
+  const requested = envModel || "gemini-3.5-flash";
   const mapped = LEGACY_MODEL_MAP[requested] || requested;
   if (SUPPORTED_MODELS.has(mapped)) {
     return mapped;
   }
   console.warn(
-    `[Gemini] Model "${requested}" not supported for generateContent v1beta. Falling back to gemini-1.5-pro.`,
+    `[Gemini] Model "${requested}" not in allowlist. Falling back to gemini-2.5-flash.`,
   );
-  return "gemini-1.5-pro";
+  return "gemini-2.5-flash";
 }
 
 export async function callGemini(prompt, targetLanguage, env) {

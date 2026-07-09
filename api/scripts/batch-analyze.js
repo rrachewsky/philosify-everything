@@ -36,7 +36,6 @@ const CONFIG = {
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   GROK_API_KEY: process.env.GROK_API_KEY,
-  DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
 
   // Genius (for lyrics)
   GENIUS_ACCESS_TOKEN: process.env.GENIUS_ACCESS_TOKEN,
@@ -60,7 +59,7 @@ if (missing.length) {
   process.exit(1);
 }
 
-const MODELS = ["claude", "openai", "gemini", "grok", "deepseek"];
+const MODELS = ["claude", "openai", "gemini", "grok"];
 
 const LANG_NAMES = {
   en: "English",
@@ -1263,31 +1262,6 @@ async function callGrok(prompt, lang) {
   return data.choices?.[0]?.message?.content || "";
 }
 
-async function callDeepSeek(prompt, lang) {
-  const targetLanguage = LANG_NAMES[lang] || "English";
-
-  const response = await fetch("https://api.deepseek.com/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${CONFIG.DEEPSEEK_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: "deepseek-reasoner",
-      messages: [
-        {
-          role: "system",
-          content: `You are a philosophical analyst. Write EVERYTHING in ${targetLanguage}.`,
-        },
-        { role: "user", content: prompt },
-      ],
-    }),
-  });
-
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content || "";
-}
-
 async function analyzeWithModel(song, artist, lyrics, guide, lang, model) {
   const prompt = buildAnalysisPrompt(song, artist, lyrics, guide, lang);
 
@@ -1306,9 +1280,6 @@ async function analyzeWithModel(song, artist, lyrics, guide, lang, model) {
       break;
     case "grok":
       response = await callGrok(prompt, lang);
-      break;
-    case "deepseek":
-      response = await callDeepSeek(prompt, lang);
       break;
     default:
       throw new Error(`Unknown model: ${model}`);

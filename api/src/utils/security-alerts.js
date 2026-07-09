@@ -46,8 +46,10 @@ export async function sendSecurityAlertEmail(env, details) {
     const method = details?.method || '';
     const url = details?.url || '';
 
-    const throttleKey = `sec_alert:${ip}:${pathname}`;
-    const okToSend = await shouldSendAlert(env, throttleKey, 300);
+    // At most one security alert email per UTC day, regardless of IP/path.
+    const day = new Date().toISOString().slice(0, 10);
+    const throttleKey = `sec_alert:daily:${day}`;
+    const okToSend = await shouldSendAlert(env, throttleKey, 86400);
     if (!okToSend) return false;
 
     const subject = `Philosify Security Alert: blocked probe (${ip})`;

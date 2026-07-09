@@ -1,5 +1,5 @@
 // ============================================================
-// GEMINI TTS - TEXT-TO-SPEECH USING GEMINI 2.5 FLASH TTS
+// GEMINI TTS - TEXT-TO-SPEECH USING GEMINI 3.1 FLASH TTS
 // ============================================================
 // v3.0 - 4-Voice Parallel TTS for ~65% faster generation
 //
@@ -1334,7 +1334,7 @@ OUTPUT JSON only (no markdown):
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1519,7 +1519,7 @@ ${text}`;
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1961,7 +1961,7 @@ async function generateChunkTTS(
       }
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-tts-preview:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -2019,7 +2019,7 @@ async function generateChunkTTS(
 // ============================================================
 
 /**
- * Generate TTS audio using Gemini 2.5 Flash TTS
+ * Generate TTS audio using Gemini 3.1 Flash TTS
  * v3.0 - 4 parallel TTS calls with different expert voices per chunk
  */
 export async function generateGeminiTTS(
@@ -3007,8 +3007,8 @@ export async function generateWrapupTTS(
 
   if (scriptChunks.length === 1) {
     // Single chunk — same as before
-    // NOTE: Do NOT pass systemInstruction — gemini-2.5-flash-preview-tts does not support it.
-    // Pronunciation rules are embedded in the script header text instead.
+    // NOTE: Do NOT pass systemInstruction on this wrap-up path — pronunciation
+    // rules are embedded in the script header text instead (kept for safety).
     const pcmBuffer = await generateChunkTTS(
       scriptChunks[0],
       voiceConfigs,

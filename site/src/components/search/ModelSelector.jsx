@@ -5,11 +5,10 @@ import { AI_MODELS, AI_MODEL_DISPLAY_NAMES } from '@/utils/constants';
 
 // Full version names for tooltip display
 const AI_MODEL_VERSIONS = {
-  [AI_MODELS.CLAUDE]: 'Claude Opus 4.5',
-  [AI_MODELS.OPENAI]: 'GPT-4.1',
-  [AI_MODELS.GEMINI]: 'Gemini 3 Flash',
-  [AI_MODELS.GROK]: 'Grok 4.1 Fast',
-  [AI_MODELS.DEEPSEEK]: 'DeepSeek V3.2',
+  [AI_MODELS.CLAUDE]: 'Claude Opus 4.8',
+  [AI_MODELS.OPENAI]: 'GPT-5.5',
+  [AI_MODELS.GEMINI]: 'Gemini 3.5 Flash',
+  [AI_MODELS.GROK]: 'Grok 4.5',
 };
 
 export function ModelSelector({ value, onChange }) {

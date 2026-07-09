@@ -127,14 +127,11 @@ function getFullModelName(model, env) {
 
   // Map model identifiers to full names
   const modelNames = {
-    gemini: env.GEMINI_MODEL || "gemini-2.0-flash",
-    claude: env.CLAUDE_MODEL || "claude-opus-4-5-20251101",
-    openai: env.OPENAI_MODEL || "gpt-4.1",
-    gpt4: env.OPENAI_MODEL || "gpt-4.1",
-    grok: env.GROK_MODEL || "grok-4-1-fast-reasoning",
-    deepseek: env.DEEPSEEK_MODEL || "deepseek-reasoner",
-    "deepseek-r1": env.DEEPSEEK_MODEL || "deepseek-reasoner",
-    "deepseek-reasoner": env.DEEPSEEK_MODEL || "deepseek-reasoner",
+    gemini: env.GEMINI_MODEL || "gemini-3.5-flash",
+    claude: env.CLAUDE_MODEL || "claude-opus-4-8",
+    openai: env.OPENAI_MODEL || "gpt-5.5",
+    gpt4: env.OPENAI_MODEL || "gpt-5.5",
+    grok: env.GROK_MODEL || "grok-4.5",
   };
 
   // Get the actual model name from env or use default

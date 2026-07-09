@@ -289,6 +289,7 @@ import {
   handleAdminLogout as handleAdsAdminLogout,
   handleAdminVerify as handleAdsAdminVerify,
   handleAdminDiagnose as handleAdsAdminDiagnose,
+  verifyAdminCookie as verifyAdsAdminCookie,
   attachRefreshedCookie,
   // Agency
   handleAgencySignup,
@@ -4397,6 +4398,9 @@ export default {
         return handleAdsAdminVerify(request, env, corsHeaders);
       }
       if (url.pathname === "/api/ads/admin/auth/diagnose" && request.method === "GET") {
+        if (!(await verifyAdsAdminCookie(request, env))) {
+          return jsonResponse({ error: "Unauthorized" }, 401, corsHeaders);
+        }
         return handleAdsAdminDiagnose(request, env, corsHeaders);
       }
 

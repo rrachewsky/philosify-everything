@@ -233,7 +233,7 @@ The Book Reviews and Debate Sessions modules should integrate with the existing 
 - Same Supabase database with new tables for book analyses and debate sessions
 - Same weighted scoring formula: Ethics 40%, Metaphysics 20%, Epistemology 20%, Politics 10%, Aesthetics 10%
 - Same classification scale: Extremamente Revolucionaria (+8.1 to +10) through Conformista Doutrinaria (-10 to -8.1)
-- Same multi-model approach: Claude, GPT, Gemini, Grok, DeepSeek can each produce analyses for comparison
+- Same multi-model approach: Claude, GPT, Gemini, Grok can each produce analyses for comparison
 - Same 15-language support for analysis output
 - New KV storage keys for book-specific and debate-specific guide versions
 - Aesthetics dimension expanded from 1 criterion to 8 sub-criteria for books

@@ -3,11 +3,10 @@
 // AI Models - Keys match backend orchestrator routing
 // Actual model versions configured in backend env vars
 export const AI_MODELS = {
-  CLAUDE: 'claude', // → claude-opus-4-5-20251101
-  OPENAI: 'openai', // → gpt-4.1
-  GEMINI: 'gemini', // → gemini-3.1-flash
-  GROK: 'grok', // → grok-4-1-fast-reasoning
-  DEEPSEEK: 'deepseek', // → deepseek-reasoner
+  CLAUDE: 'claude', // → claude-opus-4-8
+  OPENAI: 'openai', // → gpt-5.5
+  GEMINI: 'gemini', // → gemini-3.5-flash
+  GROK: 'grok', // → grok-4.5
 };
 
 export const AI_MODEL_NAMES = {
@@ -15,21 +14,18 @@ export const AI_MODEL_NAMES = {
   [AI_MODELS.OPENAI]: 'ChatGPT',
   [AI_MODELS.GEMINI]: 'Gemini',
   [AI_MODELS.GROK]: 'Grok',
-  [AI_MODELS.DEEPSEEK]: 'DeepSeek',
 };
 
 // Model descriptions (for UI tooltips)
 export const AI_MODEL_DESCRIPTIONS = {
-  [AI_MODELS.CLAUDE]: 'Claude Opus 4.5 - Extended thinking (32K reasoning tokens)',
-  [AI_MODELS.OPENAI]: 'GPT-4.1 - High capability model for accurate analysis',
-  [AI_MODELS.GEMINI]: 'Gemini 3 Flash - Fast and efficient analysis',
-  [AI_MODELS.GROK]: 'Grok 4.1 Fast - Reasoning model',
-  [AI_MODELS.DEEPSEEK]: 'DeepSeek Reasoner - Best value reasoning model',
+  [AI_MODELS.CLAUDE]: 'Claude Opus 4.8 - Adaptive thinking',
+  [AI_MODELS.OPENAI]: 'GPT-5.5 - High capability reasoning model',
+  [AI_MODELS.GEMINI]: 'Gemini 3.5 Flash - Fast and efficient analysis',
+  [AI_MODELS.GROK]: 'Grok 4.5 - Opus-class reasoning model',
 };
 
 // Model pricing (cost per analysis in USD)
 export const AI_MODEL_PRICES = {
-  [AI_MODELS.DEEPSEEK]: 0.022,
   [AI_MODELS.GROK]: 0.003,
   [AI_MODELS.GEMINI]: 0.08,
   [AI_MODELS.CLAUDE]: 0.35,
@@ -41,7 +37,6 @@ export const AI_MODEL_DISPLAY_NAMES = {
   [AI_MODELS.OPENAI]: 'ChatGPT',
   [AI_MODELS.GEMINI]: 'Gemini',
   [AI_MODELS.GROK]: 'Grok',
-  [AI_MODELS.DEEPSEEK]: 'DeepSeek',
 };
 
 // Languages — must match site/src/i18n/config.js SUPPORTED_LANGUAGES
