@@ -493,6 +493,7 @@ export async function summarizeArticles(articles, lang, env) {
 
 The articles may be in ANY language (English, Chinese, Arabic, Hebrew, Japanese, etc.).
 You MUST translate EVERY title and summary into "${lang}". No exceptions.
+Use the natural, traditional register of "${lang}" — no activist neologisms (in Portuguese, "American" is "americano" or "norte-americano", NEVER "estadunidense"; no invented gender-neutral forms like "todes").
 
 Return ONLY a valid JSON array:
 [{"id":0,"title":"translated title in ${lang}","summary":"summary in ${lang}"},{"id":1,"title":"...","summary":"..."},...]

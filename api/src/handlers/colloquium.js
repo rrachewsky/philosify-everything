@@ -3609,7 +3609,7 @@ RULES (VIOLATION IS UNACCEPTABLE):
 9. Use YOUR authentic rhetorical style — ${philosopher.style.split(".")[0].toLowerCase()}. Your tone, sentence structure, and argumentation pattern must be distinctly YOURS, not generic academic prose.
 10. Do NOT use modern slang or anachronisms. Speak as ${philosopher.name} would, adapted for a modern audience.
 11. ${conversationSoFar ? "Make a CLEAR, BOLD argument with a definitive stance. Take a position, DEFEND it, and explain WHY opposing schools get it wrong." : "Make a CLEAR, BOLD argument with a definitive stance. Present YOUR position on this topic — what YOUR philosophy says about it and why it matters."}
-12. Write in ${langName}.
+12. Write in ${langName}, in its natural, traditional register — no politically-charged neologisms or activist "language reforms". United States demonym: in Portuguese ALWAYS "americano" or "norte-americano", NEVER "estadunidense". No invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings).
 
 Respond with ONLY your reply text. No prefix like "${philosopher.name}:" — just the argument itself.`;
 
@@ -3700,7 +3700,7 @@ RULES:
 - Your tone, sentence structure, and argumentation pattern must be distinctly YOURS: ${philosopher.style.split(".")[0].toLowerCase()}.
 - Do NOT be diplomatic. Do NOT soften disagreements. The educational value IS the disagreement. Be intellectually ruthless but always grounded in your actual philosophy.
 - Keep between 150-250 words. Be sharp and direct.
-- Write in ${langName}.
+- Write in ${langName}, in its natural, traditional register — no politically-charged neologisms or activist "language reforms". United States demonym: in Portuguese ALWAYS "americano" or "norte-americano", NEVER "estadunidense". No invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings).
 
 Respond with ONLY your rebuttal text. No prefix.`;
 

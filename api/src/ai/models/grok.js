@@ -43,6 +43,10 @@ You MUST write your ENTIRE response in ${targetLanguage}.
 EVERY SINGLE WORD must be in ${targetLanguage}.
 ALL justifications, analysis, context, classifications - EVERYTHING in ${targetLanguage}.
 
+Use the natural, traditional register of ${targetLanguage} — no politically-charged neologisms or activist "language reforms".
+United States demonym: in Portuguese ALWAYS "americano" or "norte-americano", NEVER "estadunidense" (ideological corruption of the language).
+No invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings).
+
 This is MANDATORY. If you write even ONE word in another language, you FAIL.
 The user is paying for analysis in ${targetLanguage} and cannot read other languages.
 

@@ -710,6 +710,12 @@ ALLOWED EXCEPTIONS (VERY LIMITED):
 - Do NOT leave standalone words/phrases in any other language in your prose.
   If it is not ${targetLanguage}, either translate it into ${targetLanguage} or put it inside a lyric quote and immediately translate.
 
+🚨 NATURAL LANGUAGE & DEMONYMS (MANDATORY):
+- Write in the natural, traditional register of ${targetLanguage}. Do NOT adopt politically-charged neologisms or activist "language reforms".
+- People/things from the United States: use the standard traditional demonym — "American" in English; "americano" or "norte-americano" in Portuguese.
+- In Portuguese, the word "estadunidense" is FORBIDDEN — it is an ideologically motivated corruption of the language. Always write "americano" or "norte-americano".
+- Do NOT use invented gender-neutral inflections ("todes", "amigues", "elu", "Latinx", "x"/"@" word endings). Use standard grammar.
+
 If you write even ONE WORD in English (or any other language besides ${targetLanguage}),
 your response will be COMPLETELY REJECTED and you will FAIL this task.
 
@@ -859,6 +865,8 @@ ${L.analyzeFollowing}
    - "Florescimento pessoal" em vez de "egoísmo"
    - "Virtude" quando apropriado
    - "Prosperidade" em contexto positivo
+   - "Americano" ou "norte-americano" para pessoas/coisas dos EUA — NUNCA "estadunidense" (corrupção ideológica do idioma)
+   - Linguagem natural e tradicional — NUNCA neologismos ativistas ("todes", "amigues", "elu", terminações em "x"/"@")
 
 7. EVITE VIÉS EXCESSIVAMENTE CRÍTICO
    - Nem tudo é crítica social

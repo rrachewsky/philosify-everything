@@ -47,6 +47,8 @@ SPELLING AND TRANSLATION REQUIREMENTS:
   * "recreação" (recreation/play) vs "recriação" (re-creation) — use the correct one based on context
   * "autointeresse" NOT "auto-interesse" or "auto interesse"
   * "metafísica", "epistemologia", "estética" — correct accents required
+  * "americano" or "norte-americano" NOT "estadunidense" — "estadunidense" is FORBIDDEN (ideological corruption of the language)
+- Use the natural, traditional register of ${targetLanguage} — no politically-charged neologisms or activist "language reforms", no invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings)
 - Do NOT leave English words untranslated unless they are proper nouns (names, titles)
 
 This is MANDATORY. If you write even ONE word in another language, you FAIL.

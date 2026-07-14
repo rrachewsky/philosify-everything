@@ -28,6 +28,9 @@
 // This is enforced via:
 // 1. Phonetic spelling "Filosifai" in PODCAST_PHRASES (18 languages)
 // 2. Phonetic spelling "Filosifai" in script headers
+// 3. applyPronunciationLock() inside generateChunkTTS — central choke point
+//    that respells any raw "Philosify" left in dynamic content on EVERY path
+// 4. PRONUNCIATION: instruction line in every script header (all builders)
 //
 // DO NOT REMOVE OR MODIFY pronunciation logic without approval.
 // See: docs/PRONUNCIATION.md for full 24-language reference.
@@ -1513,6 +1516,7 @@ Rules:
 3. Preserve numerical scores exactly
 4. Sound natural and native in ${targetLangName}
 5. Output ONLY the translation, no commentary
+6. Use the natural, traditional register of ${targetLangName} — no politically-charged neologisms or activist "language reforms". "American" translates to Portuguese as "americano" or "norte-americano" — NEVER "estadunidense". No invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings)
 
 Text:
 ${text}`;
@@ -1731,6 +1735,7 @@ Voices:
 - ${hostVoice} (${names.host}): Warm, engaging female host.
 - ${historianVoice} (${names.historian}): Knowledgeable male historian.
 
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy" or "Philosofy". "Peekoff" = PEEK-off. "Ine Rand" = Ayn rhymes with "mine".
 PACING: Natural conversational flow. Brief pauses between speakers.
 LANGUAGE: Speak ONLY in ${langName}.
 
@@ -1790,6 +1795,7 @@ Voices:
 - ${hostVoice} (${names.host}): Warm, engaging female host.
 - ${criticVoice} (${names.critic}): ${criticRole}
 
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy" or "Philosofy". "Peekoff" = PEEK-off. "Ine Rand" = Ayn rhymes with "mine".
 PACING: Natural conversational flow. Brief pauses between speakers.
 LANGUAGE: Speak ONLY in ${langName}.
 
@@ -1834,6 +1840,7 @@ Voices:
 - ${hostVoice} (${names.host}): Warm, engaging female host.
 - ${philosopherVoice} (${names.philosopher}): Thoughtful male philosopher.
 
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy" or "Philosofy". "Peekoff" = PEEK-off. "Ine Rand" = Ayn rhymes with "mine".
 PACING: Natural conversational flow. Brief pauses between speakers.
 LANGUAGE: Speak ONLY in ${langName}.
 
@@ -1880,6 +1887,7 @@ Voices:
 - ${hostVoice} (${names.host}): Warm, engaging female host.
 - ${philosopherVoice} (${names.philosopher}): Thoughtful male philosopher.
 
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy" or "Philosofy". "Peekoff" = PEEK-off. "Ine Rand" = Ayn rhymes with "mine".
 PACING: Natural conversational flow. Brief pauses between speakers.
 LANGUAGE: Speak ONLY in ${langName}.
 
@@ -1934,6 +1942,10 @@ async function generateChunkTTS(
   apiKey,
   systemInstruction,
 ) {
+  // ⚠️ PRONUNCIATION LOCK: single choke point for ALL TTS paths — any raw
+  // "Philosify"/"Peikoff"/"Ayn" left in dynamic content is respelled here.
+  script = applyPronunciationLock(script);
+
   const startTime = Date.now();
   // Retry with exponential backoff: 1s, 2s, 4s delays (max 3 attempts)
   const MAX_RETRIES = 3;
@@ -2092,7 +2104,7 @@ Voices:
 - ${hostVoice} (${names.host}): Warm, engaging female host — introduces, transitions, reads verdict.
 - ${philoVoiceA}: First philosopher voice — deep, authoritative.
 - ${philoVoiceB}: Second philosopher voice — measured, analytical.
-PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy". "Peekoff" = PEEK-off.
+PRONUNCIATION: "Filosifai" (rhymes with Spotify). NEVER say "Philosophy" or "Philosofy". "Peekoff" = PEEK-off. "Ine Rand" = Ayn rhymes with "mine".
 PACING: Natural conversational flow. Brief pauses between speakers.
 LANGUAGE: Speak ONLY in ${langName}.
 
@@ -2821,26 +2833,34 @@ const WRAPUP_PHRASES = {
 };
 
 /**
+ * ⚠️ PRONUNCIATION LOCK — applied to EVERY script sent to TTS (enforced
+ * centrally inside generateChunkTTS, so no path can bypass it).
+ * "Philosify" = /fəˈlɒsɪfaɪ/ (phi-LOS-i-fy, rhymes with Spotify) — NEVER "Philosophy".
+ */
+function applyPronunciationLock(text) {
+  return (
+    text
+      // "Philosify" → phonetic "Filosifai" (ending like Spotify, never "Philosophy")
+      .replace(/Philosify/gi, "Filosifai")
+      // Peikoff: /ˈpiːkɒf/ (PEEK-off), NOT "PIE-koff"
+      .replace(/\bPeikoff\b/g, "Peekoff")
+      // Ayn: /aɪn/ (rhymes with "mine"), NOT "ain" or "ann"
+      .replace(/\bAyn\b/g, "Ine")
+  );
+}
+
+/**
  * Clean verdict/panel text for TTS: strip markdown, apply pronunciation locks.
  */
 function cleanVerdictForTTS(wrapupText) {
-  let clean = wrapupText
+  const clean = wrapupText
     .replace(/\*\*([^*]+)\*\*/g, "$1") // bold
     .replace(/\*([^*]+)\*/g, "$1") // italic
     .replace(/#{1,4}\s*/g, "") // headings
     .replace(/\n{3,}/g, "\n\n") // excess newlines
     .trim();
 
-  // ⚠️ PRONUNCIATION LOCK: Replace "Philosify" with phonetic "Filosifai"
-  clean = clean.replace(/Philosify/gi, "Filosifai");
-
-  // ⚠️ PHILOSOPHER NAME PRONUNCIATION FIXES
-  // Peikoff: /ˈpiːkɒf/ (PEEK-off), NOT "PIE-koff"
-  clean = clean.replace(/\bPeikoff\b/g, "Peekoff");
-  // Ayn: /aɪn/ (rhymes with "mine"), NOT "ain" or "ann"
-  clean = clean.replace(/\bAyn\b/g, "Ine");
-
-  return clean;
+  return applyPronunciationLock(clean);
 }
 
 // ⚠️ PRONUNCIATION SYSTEM INSTRUCTION — passed to Gemini TTS for voice enforcement

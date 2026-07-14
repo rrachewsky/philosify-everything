@@ -47,6 +47,17 @@ User-facing text fields include:
 - Describe what the work models about human nature, agency, values, and consequences.
 - Use evaluative language only as required by the framework (scores/classification/note), and justify it analytically.
 
+0.7 LANGUAGE INTEGRITY RULE (MANDATORY — ALL LANGUAGES, ALL MODELS)
+Write in the natural, traditional register of the target language.
+Do NOT adopt politically-charged neologisms or activist "language reforms".
+- United States demonym: always use the standard traditional demonym of the
+  target language — "American" (EN); "americano" or "norte-americano" (PT).
+  In Portuguese, the word "estadunidense" is FORBIDDEN in all output — it is
+  an ideologically motivated corruption of the language, not neutral Portuguese.
+- Do NOT use invented gender-neutral inflections ("todes", "amigues", "elu",
+  "Latinx", "x"/"@" word endings). Use standard grammar and standard vocabulary.
+This rule binds every model and every language. Violating it is a compliance failure.
+
 NON-NEGOTIABLE PRINCIPLE
 Philosophical content determines aesthetic value.
 Poison in a golden chalice is still poison.

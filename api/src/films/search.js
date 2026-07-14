@@ -27,7 +27,7 @@ async function translateText(text, targetLang, env) {
     if (!apiKey) return text; // Fallback to English if no translation API
     
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-    const prompt = `Translate the following film synopsis to ${langName}. Return ONLY the translation, no explanations or additional text:\n\n${text}`;
+    const prompt = `Translate the following film synopsis to ${langName}. Return ONLY the translation, no explanations or additional text. Use the natural, traditional register of ${langName} — no activist neologisms (in Portuguese, "American" is "americano" or "norte-americano", NEVER "estadunidense"; no invented gender-neutral forms like "todes"):\n\n${text}`;
     
     const res = await fetch(url, {
       method: "POST",

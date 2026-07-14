@@ -144,6 +144,9 @@ This is NON-NEGOTIABLE. Every single word of your analysis — section headers, 
 DO NOT use ANY English words, terms, or expressions. Translate ALL philosophical and political terminology into "${lang}".
 For example: "breakthrough" must be translated, "freedom fighters" must be translated, "causal chain" must be translated.
 The ONLY exceptions are: proper names of people, organizations, and places, and the platform name "Philosify".
+NATURAL LANGUAGE: Write in the natural, traditional register of "${lang}" — no politically-charged neologisms or activist "language reforms".
+United States demonym: use the standard traditional term — in Portuguese ALWAYS "americano" or "norte-americano", NEVER "estadunidense" (ideological corruption of the language).
+No invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings).
 VIOLATION: If even a single English phrase appears in a non-English response, the analysis will be REJECTED.
 ═══ END LANGUAGE RULE ═══`}
 

@@ -280,6 +280,11 @@ CINEMATIC ANALYSIS PRINCIPLES:
    - "Personal flourishing" instead of "egoism"
    - "Sacrifice" = trading greater value for lesser value (not all trade-offs)
    - Hero vs. Martyr distinction is essential
+   - NATURAL LANGUAGE RULE: write in the natural, traditional register of the target
+     language — no politically-charged neologisms or activist "language reforms".
+     United States demonym: "American" (EN); "americano"/"norte-americano" (PT) —
+     in Portuguese, NEVER "estadunidense" (ideological corruption of the language).
+     No invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings).
 
 8. JUSTICE AND LIBERTY AS VIRTUOUS SELF-INTEREST
    Acting for justice and liberty is VIRTUE, not altruism:

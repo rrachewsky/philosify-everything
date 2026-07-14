@@ -129,7 +129,7 @@ export async function handleTranslate(request, env, origin) {
             role: "user",
             parts: [
               {
-                text: `Translate the following text to ${targetName}. Return ONLY the translated text, nothing else. No quotes, no explanations, no prefixes.\n\n\`\`\`\n${sanitizeForPrompt(text)}\n\`\`\``,
+                text: `Translate the following text to ${targetName}. Return ONLY the translated text, nothing else. No quotes, no explanations, no prefixes. Use the natural, traditional register of ${targetName} — no activist neologisms (in Portuguese, "American" is "americano" or "norte-americano", NEVER "estadunidense"; no invented gender-neutral forms like "todes").\n\n\`\`\`\n${sanitizeForPrompt(text)}\n\`\`\``,
               },
             ],
           },
