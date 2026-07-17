@@ -2,7 +2,7 @@
 // UTILS - BARREL EXPORT
 // ============================================================
 
-export { getCorsHeaders } from './cors.js';
+export { getCorsHeaders, isAllowedOrigin } from './cors.js';
 export { validateSongInput, validateModel, validateLanguage, isValidLanguage, isValidUUID, safeJsonParse } from './validation.js';
 export { fetchWithTimeout } from './timeout.js';
 export { jsonResponse } from './response.js';

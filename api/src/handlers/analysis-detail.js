@@ -7,7 +7,8 @@
 //
 // Response shape matches analyze.js cache hit response exactly
 
-import { jsonResponse, errorResponse } from "../utils/response.js";
+import { jsonResponse } from "../utils/response.js";
+import { errorResponse } from "../utils/errorResponse.js";
 import { getLocalizedError } from "../utils/i18n-errors.js";
 import {
   getSupabaseForUser,

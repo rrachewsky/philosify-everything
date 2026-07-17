@@ -18,7 +18,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { getSecret } from "../utils/secrets.js";
-import { jsonResponse, getCorsHeaders } from "../utils/index.js";
+import { jsonResponse, getCorsHeaders, isAllowedOrigin } from "../utils/index.js";
 import {
   getSessionFromCookie,
   parseCookies,
@@ -382,6 +382,17 @@ async function handleSignUp(request, env, origin, isProd) {
  * SECURITY: Revokes server-side refresh token in addition to clearing cookie
  */
 async function handleSignOut(request, env, origin, isProd) {
+  // SECURITY: Signout is state-changing and must not be triggerable cross-site
+  // (logout CSRF). Require POST and a same-site Origin header. Combined with the
+  // SameSite=Lax auth cookie, this closes the GET / cross-origin vector.
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, 405, origin, env);
+  }
+  if (!isAllowedOrigin(origin, env)) {
+    console.warn("[Auth Proxy] /auth/signout rejected: untrusted origin");
+    return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+  }
+
   // Attempt server-side token revocation before clearing the cookie
   try {
     const session = getSessionFromCookie(request);
@@ -689,11 +700,11 @@ async function handleGoogleOAuth(request, env, origin) {
 }
 
 /**
- * GET /auth/callback - OAuth callback handler
+ * GET /auth/callback - OAuth callback handler (PKCE only)
  *
- * Handles two flows:
- * 1. PKCE: ?code=xxx → read pkce_id cookie → get code_verifier from KV → exchange at Supabase
- * 2. Implicit fallback: #access_token=xxx → serve HTML that extracts and posts to /auth/exchange
+ * PKCE: ?code=xxx → read pkce_id cookie → get code_verifier from KV → exchange at Supabase.
+ * A code-less hit (a legacy implicit/hash response or a stray request) is redirected to the
+ * app with a generic error — we no longer serve a client-side token-exchange page.
  */
 async function handleOAuthCallback(request, env, origin, isProd) {
   const url = new URL(request.url);
@@ -770,13 +781,16 @@ async function handleOAuthCallback(request, env, origin, isProd) {
     );
   }
 
-  // No code: implicit flow fallback — serve HTML that extracts tokens from hash fragment
-  const frontendUrl = isProd
-    ? "https://philosify.org"
-    : "http://localhost:3000";
-  return new Response(getOAuthCallbackHTML(frontendUrl), {
-    headers: { "Content-Type": "text/html" },
-  });
+  // No authorization code. With PKCE — the only OAuth flow we use — the provider always
+  // returns a ?code=. A code-less callback is a legacy implicit/hash response or a stray
+  // hit; redirect to the app with a generic error instead of serving a client-side
+  // token-exchange page (whose same-origin POST to /auth/exchange would be rejected by
+  // that endpoint's Origin check anyway).
+  console.warn("[Auth Proxy] /auth/callback hit with no authorization code");
+  return redirectToFrontend(
+    isProd,
+    `?error=${encodeURIComponent("Sign-in could not be completed, please try again")}`,
+  );
 }
 
 /**
@@ -789,7 +803,33 @@ async function handleTokenExchange(request, env, origin, isProd) {
     return jsonResponse({ error: "Method not allowed" }, 405, origin, env);
   }
 
-  const body = await request.json();
+  // SECURITY: /auth/exchange installs a session cookie from a caller-supplied token
+  // pair. Left unguarded it is a login-CSRF / session-swapping vector — a victim can
+  // be silently placed into an attacker-controlled account by having their browser
+  // POST the attacker's tokens here.
+  //
+  // Defense: require a same-site Origin. Every legitimate caller issues this fetch
+  // from the philosify.org app — the Google OAuth implicit fallback AND the email
+  // confirmation / password-recovery links (which land as #access_token in the hash
+  // and are exchanged by the app's useAuth hook, WITHOUT going through /auth/google).
+  // The browser attaches an accurate Origin header to EVERY cross-origin POST
+  // (including form submissions and no-preflight "simple" requests) and script cannot
+  // forge it, so a cross-site page's request always arrives with its own origin and is
+  // rejected below. CORS preflight on the JSON Content-Type is an additional barrier,
+  // not the primary one.
+  //
+  // NOTE: We deliberately do NOT require the /auth/google PKCE flow cookie here — the
+  // email-link flows never set it, so requiring it would break password recovery and
+  // signup confirmation. Origin validation closes the reported vector without that.
+  if (!isAllowedOrigin(origin, env)) {
+    console.warn("[Auth Proxy] /auth/exchange rejected: untrusted origin");
+    return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+  }
+
+  const body = await request.json().catch(() => null);
+  if (!body) {
+    return jsonResponse({ error: "Invalid JSON" }, 400, origin, env);
+  }
   const { access_token, refresh_token } = body;
 
   if (!access_token || !refresh_token) {
@@ -816,7 +856,8 @@ async function handleTokenExchange(request, env, origin, isProd) {
     expires_at: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
   };
 
-  // Set HttpOnly cookie and return user
+  // Set HttpOnly cookie and return user. Also clear any lingering pkce_id cookie
+  // from a Google OAuth round-trip so it can't be reused.
   const response = jsonResponse(
     {
       user: sanitizeUser(data.user),
@@ -827,7 +868,8 @@ async function handleTokenExchange(request, env, origin, isProd) {
     env,
   );
 
-  response.headers.set("Set-Cookie", buildAuthCookie(session, isProd));
+  response.headers.append("Set-Cookie", buildAuthCookie(session, isProd));
+  response.headers.append("Set-Cookie", buildClearPkceCookie(isProd));
 
   console.log(`[Auth Proxy] Token exchange successful: ${data.user.id}`);
   return response;
@@ -920,57 +962,15 @@ function redirectToFrontend(isProd, queryString = "") {
 }
 
 /**
- * HTML page to handle OAuth tokens from URL fragment
- * This is needed because server can't access URL fragments
- */
-function getOAuthCallbackHTML(frontendUrl) {
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Completing sign in...</title>
-</head>
-<body>
-  <p>Completing sign in...</p>
-  <script>
-    (function() {
-      var FRONTEND = ${JSON.stringify(frontendUrl)};
-      var hash = window.location.hash.substring(1);
-      var params = new URLSearchParams(hash);
-      var accessToken = params.get('access_token');
-      var refreshToken = params.get('refresh_token');
-      
-      if (accessToken && refreshToken) {
-        fetch('/auth/exchange', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken }),
-          credentials: 'include'
-        })
-        .then(function(res) { return res.json(); })
-        .then(function() {
-          window.location.href = FRONTEND;
-        })
-        .catch(function() {
-          window.location.href = FRONTEND + '?error=' + encodeURIComponent('Authentication failed');
-        });
-      } else {
-        var error = params.get('error_description') || params.get('error') || 'Authentication failed';
-        window.location.href = FRONTEND + '?error=' + encodeURIComponent(error);
-      }
-    })();
-  </script>
-</body>
-</html>
-`;
-}
-
-/**
  * POST /auth/update-password - Update password (when logged in)
  */
 async function handleUpdatePassword(request, env, origin) {
-  const body = await request.json();
-  const { password } = body;
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, 405, origin, env);
+  }
+
+  const body = await request.json().catch(() => null);
+  const password = body?.password;
 
   if (!password) {
     return jsonResponse(
@@ -1037,8 +1037,15 @@ async function handleUpdatePassword(request, env, origin) {
  * POST /auth/reset-password - Request password reset email
  */
 async function handleResetPassword(request, env, origin) {
-  const body = await request.json();
-  const { email } = body;
+  // Only POST is supported. A GET (or other method) here previously reached
+  // request.json() and threw, surfacing as an uncontrolled 500. Return a
+  // controlled 405 instead.
+  if (request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, 405, origin, env);
+  }
+
+  const body = await request.json().catch(() => null);
+  const email = body?.email;
 
   if (!email) {
     return jsonResponse({ error: "Email is required" }, 400, origin, env);

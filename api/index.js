@@ -2,7 +2,14 @@
 // Sistema de Análise Filosófica Musical Objetivista
 // Modular architecture with proper separation of concerns
 
-import { getCorsHeaders, jsonResponse, sanitizeErrorMessage } from "./src/utils/index.js";
+import {
+  getCorsHeaders,
+  jsonResponse,
+  sanitizeErrorMessage,
+  validateSongInput,
+  validateModel,
+  validateLanguage,
+} from "./src/utils/index.js";
 import { getUserFromAuth } from "./src/auth/index.js";
 import {
   reserveCredit,
@@ -3079,6 +3086,23 @@ export default {
           // SECURITY: is_free from client is IGNORED - validated server-side only
         } = requestBody;
 
+        // SECURITY/UX: Validate inputs BEFORE reserving a credit or acquiring a
+        // lock. Previously validation happened inside handleAnalyze — AFTER the
+        // credit was reserved — so a malformed request could deduct a credit and
+        // leave a reservation to be reaped. Fail fast here instead.
+        try {
+          validateSongInput(song, artist);
+          validateModel(model);
+          validateLanguage(lang);
+        } catch (validationErr) {
+          return jsonResponse(
+            { error: "Invalid input", message: validationErr.message },
+            400,
+            origin,
+            env,
+          );
+        }
+
         // Rate limit - FAIL CLOSED for expensive AI calls
         // Uses stricter ANALYZE_RATE_LIMITER (3 req/min) instead of general limiter (10 req/min)
         const ip = request.headers.get("cf-connecting-ip") || "unknown";
@@ -4669,6 +4693,22 @@ export default {
         ),
       );
     }
+
+    // Stale credit-reservation reaper (every 5 min).
+    // When a client aborts mid-analysis the Worker can be torn down before the
+    // in-request release/finally runs, leaving the reserved credit stuck (deducted
+    // from balance, never confirmed nor released, and absent from history). This
+    // safety net releases any reservation older than 10 minutes — comfortably
+    // beyond the longest legitimate analysis (AI calls cap at ~2 min), so it never
+    // reaps an in-flight request.
+    ctx.waitUntil(
+      cleanupStaleReservations(env, 10).catch((err) =>
+        console.error(
+          "[Cron] Stale reservation cleanup failed:",
+          err.message,
+        ),
+      ),
+    );
 
     // User-proposed colloquium: staggered philosopher replies (every 5 min)
     ctx.waitUntil(

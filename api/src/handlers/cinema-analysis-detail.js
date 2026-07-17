@@ -5,7 +5,8 @@
 // Returns full film analysis details for authenticated user.
 // Mirrors book-analysis-detail.js for cinema.
 
-import { jsonResponse, errorResponse } from "../utils/response.js";
+import { jsonResponse } from "../utils/response.js";
+import { errorResponse } from "../utils/errorResponse.js";
 import { getLocalizedError } from "../utils/i18n-errors.js";
 import { getSupabaseForUser, addRefreshedCookieToResponse } from "../utils/supabase-user.js";
 import { normalizeClassification, splitTrailingSchoolsParagraph } from "../ai/parser.js";
@@ -106,8 +107,11 @@ export async function handleCinemaAnalysisDetail(request, env, origin, analysisI
     const officialFinalScore = calculateWeightedScore(scorecardForCalc);
     const officialNote = calculatePhilosophicalNote(officialFinalScore);
     const canonicalClassification = normalizeClassification("", officialFinalScore);
-    const lang = analysis.language || "en";
-    const localizedClassification = localizeClassification(canonicalClassification, lang);
+    // Use analysis.language inline — do NOT re-declare `lang` here. A block-scoped
+    // `const lang` inside this try block would shadow the function-scoped `lang`
+    // and put the earlier errorResponse(..., lang) calls in the temporal dead zone,
+    // turning every 401/404 error path into a thrown ReferenceError -> generic 500.
+    const localizedClassification = localizeClassification(canonicalClassification, analysis.language || "en");
 
     // Guide proof
     let guideProof = null;

@@ -85,23 +85,44 @@ export async function cleanupStaleReservations(env, maxAgeMinutes = 2) {
     `[Credits] Cleaning up stale reservations older than ${maxAgeMinutes} minutes`,
   );
 
-  try {
-    const result = await callRpc(env, "cleanup_stale_reservations", {
-      p_max_age_minutes: maxAgeMinutes,
-    });
+  // The deployed cleanup_stale_reservations() function has been referenced with two
+  // different parameter names (docs + migration 009: p_age_minutes; older code:
+  // p_max_age_minutes). Try the canonical name (p_age_minutes) first, and fall back to
+  // the alternate only if PostgREST reports an unknown-function/signature error, so the
+  // reaper works against either signature without a wasted failing call on the hot path.
+  const paramNames = ["p_age_minutes", "p_max_age_minutes"];
+  let lastError = null;
 
-    if (result?.released_count > 0) {
-      console.log(
-        `[Credits] Cleaned up ${result.released_count} stale reservations`,
+  for (const paramName of paramNames) {
+    try {
+      const result = await callRpc(env, "cleanup_stale_reservations", {
+        [paramName]: maxAgeMinutes,
+      });
+
+      if (result?.released_count > 0) {
+        console.log(
+          `[Credits] Cleaned up ${result.released_count} stale reservations`,
+        );
+      }
+
+      return {
+        releasedCount: result?.released_count || 0,
+        releasedIds: result?.released_ids || [],
+      };
+    } catch (error) {
+      lastError = error;
+      const msg = error?.message || "";
+      const isSignatureError =
+        msg.includes("Could not find the function") ||
+        msg.includes("PGRST202") ||
+        msg.includes(" 404 ");
+      if (!isSignatureError) break; // real failure — don't keep retrying
+      console.warn(
+        `[Credits] cleanup_stale_reservations(${paramName}) not found, trying alternate signature`,
       );
     }
-
-    return {
-      releasedCount: result?.released_count || 0,
-      releasedIds: result?.released_ids || [],
-    };
-  } catch (error) {
-    console.error(`[Credits] Cleanup failed: ${error.message}`);
-    return { releasedCount: 0, releasedIds: [] };
   }
+
+  console.error(`[Credits] Cleanup failed: ${lastError?.message}`);
+  return { releasedCount: 0, releasedIds: [] };
 }
