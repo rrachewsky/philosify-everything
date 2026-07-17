@@ -78,10 +78,12 @@ BEGIN
     RETURNING r.id, r.user_id, r.credit_type
   ),
   refund_free AS (
-    -- Refund free credits, capped at the free_remaining <= 2 CHECK so one anomalous
-    -- row can never abort the whole batch.
+    -- Refund free credits: add back exactly what was reserved. Do NOT cap — a refund
+    -- only restores credits that reserve_credit previously deducted, so it can never
+    -- exceed the user's pre-reservation balance (free_remaining is not limited to 2 in
+    -- the live schema).
     UPDATE credits c
-    SET    free_remaining = LEAST(c.free_remaining + agg.n, 2),
+    SET    free_remaining = c.free_remaining + agg.n,
            updated_at     = NOW()
     FROM  (SELECT user_id, COUNT(*)::INT AS n
            FROM   released
