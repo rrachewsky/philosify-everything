@@ -60,7 +60,7 @@ export async function cleanupUserStaleReservations(
   try {
     const result = await callRpc(env, "cleanup_user_stale_reservations", {
       p_user_id: userId,
-      p_max_age_minutes: maxAgeMinutes,
+      p_age_minutes: maxAgeMinutes,
     });
 
     if (result?.released_count > 0) {
@@ -85,12 +85,11 @@ export async function cleanupStaleReservations(env, maxAgeMinutes = 2) {
     `[Credits] Cleaning up stale reservations older than ${maxAgeMinutes} minutes`,
   );
 
-  // The deployed cleanup_stale_reservations() function has been referenced with two
-  // different parameter names (docs + migration 009: p_age_minutes; older code:
-  // p_max_age_minutes). Try the canonical name (p_age_minutes) first, and fall back to
-  // the alternate only if PostgREST reports an unknown-function/signature error, so the
-  // reaper works against either signature without a wasted failing call on the hot path.
-  const paramNames = ["p_age_minutes", "p_max_age_minutes"];
+  // Deployed signature (verified in Supabase): cleanup_stale_reservations(p_max_age_minutes
+  // integer) RETURNS integer — the count of reservations released. Try that name first and
+  // fall back to p_age_minutes only if a future redeploy renames it, so the reaper keeps
+  // working across either signature.
+  const paramNames = ["p_max_age_minutes", "p_age_minutes"];
   let lastError = null;
 
   for (const paramName of paramNames) {
@@ -99,15 +98,20 @@ export async function cleanupStaleReservations(env, maxAgeMinutes = 2) {
         [paramName]: maxAgeMinutes,
       });
 
-      if (result?.released_count > 0) {
-        console.log(
-          `[Credits] Cleaned up ${result.released_count} stale reservations`,
-        );
+      // The deployed function returns a bare integer count. Handle both that and any
+      // alternate JSON-returning version (released_count field).
+      const releasedCount =
+        typeof result === "number" ? result : (result?.released_count ?? 0);
+
+      if (releasedCount > 0) {
+        console.log(`[Credits] Cleaned up ${releasedCount} stale reservations`);
       }
 
       return {
-        releasedCount: result?.released_count || 0,
-        releasedIds: result?.released_ids || [],
+        releasedCount,
+        releasedIds: Array.isArray(result?.released_ids)
+          ? result.released_ids
+          : [],
       };
     } catch (error) {
       lastError = error;
