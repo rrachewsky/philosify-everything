@@ -295,9 +295,11 @@ export async function handleUnsafeZone(request, env, origin) {
       return jsonResponse({ error: 'Service configuration error' }, 500, origin, env);
     }
 
-    // Determine model based on crisis escalation
+    // Determine model based on crisis escalation. Crisis turns always use the most
+    // capable model (Opus 4.8); normal turns use Sonnet 5. Keep these on current model
+    // IDs — the old claude-*-4-6 IDs no longer resolve and broke every call here.
     const escalate = requiresEscalation(messages);
-    const model = escalate ? 'claude-opus-4-6' : 'claude-sonnet-4-6';
+    const model = escalate ? 'claude-opus-4-8' : 'claude-sonnet-5';
 
     if (escalate) {
       console.log('[UnsafeZone] Crisis signals detected — escalating to Opus');
