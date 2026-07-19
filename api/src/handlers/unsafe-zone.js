@@ -186,9 +186,11 @@ export async function handleUnsafeZone(request, env, origin) {
       return jsonResponse({ error: 'Messages array is required' }, 400, origin, env);
     }
 
-    // Input size limits
-    if (messages.length > 200) {
-      return jsonResponse({ error: 'Too many messages (max 200)' }, 400, origin, env);
+    // Abuse guard only — reject absurdly large payloads. Normal long sessions are handled
+    // by windowing the AI context below (see aiMessages), NOT by rejecting them here. The
+    // old hard cap of 200 broke every send once a session grew past ~100 turns.
+    if (messages.length > 2000) {
+      return jsonResponse({ error: 'Conversation too long' }, 400, origin, env);
     }
 
     // Validate message format
@@ -321,18 +323,28 @@ export async function handleUnsafeZone(request, env, origin) {
 
     const client = new Anthropic({ apiKey });
 
+    // Window the conversation sent to the model. Long sessions accumulate hundreds of
+    // messages; sending them all is costly and previously tripped a hard 200-message
+    // limit that broke the feature. Keep the most recent turns, and since Anthropic
+    // requires the first message to be from the user, drop a leading assistant message.
+    const MAX_AI_CONTEXT = 60;
+    let aiMessages = messages.length > MAX_AI_CONTEXT ? messages.slice(-MAX_AI_CONTEXT) : messages;
+    if (aiMessages.length && aiMessages[0].role !== 'user') {
+      aiMessages = aiMessages.slice(1);
+    }
+
     let response;
     try {
-      console.log(`[UnsafeZone] Turn ${turnInfo.currentTurn}: Calling ${model} with ${messages.length} messages`);
+      console.log(`[UnsafeZone] Turn ${turnInfo.currentTurn}: Calling ${model} with ${aiMessages.length}/${messages.length} messages`);
 
       response = await client.messages.create({
         model,
         max_tokens: 1024,
         system: systemPrompt,
-        messages,
+        messages: aiMessages,
       });
     } catch (aiError) {
-      console.error('[UnsafeZone] AI call failed:', aiError.message);
+      console.error('[UnsafeZone] AI call failed — model:', model, '| status:', aiError?.status, '| type:', aiError?.error?.error?.type || aiError?.name, '| msg:', aiError?.message);
       // Release all reservations — user is not charged for AI failures
       await releaseAllReservations(env, reservationIds);
 
@@ -378,8 +390,14 @@ export async function handleUnsafeZone(request, env, origin) {
       };
       const targetLang = (lang || 'en').split('-')[0];
 
-      const errMsg = aiError.message || aiError.error?.message || '';
-      if (errMsg.includes('content') || errMsg.includes('blocked') || errMsg.includes('safety')) {
+      const errMsg = aiError?.message || aiError?.error?.message || '';
+      // Only a genuine content-policy refusal is a "filtered" 400. A bad model,
+      // transport error, or rate limit is a real failure and must surface as 500 —
+      // otherwise it is silently mislabeled as the user's content being blocked.
+      const isContentBlock =
+        aiError?.status === 400 &&
+        /content[_ ]?polic|content[_ ]?filter|blocked|safety|refus/i.test(errMsg);
+      if (isContentBlock) {
         return jsonResponse({
           error: FILTERED_MSG[targetLang] || FILTERED_MSG.en,
         }, 400, origin, env);
