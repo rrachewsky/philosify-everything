@@ -59,7 +59,7 @@ export async function handleAnalyze(
   let lang = "en"; // Hoist for error handling
   try {
     const body = await request.json();
-    let { song, artist, spotify_id, model = "claude" } = body;
+    let { song, artist, spotify_id, model = "grok" } = body;
     lang = body.lang || "en";
 
     // Extract user ID from JWT token (for audit trail)
@@ -67,6 +67,10 @@ export async function handleAnalyze(
     // But if user is authenticated, we log their request in user_analysis_requests
     const user = await getUserFromAuth(request, env);
     const userId = user?.userId || null;
+
+    // Never-pay-twice: true when this user already paid for ANY analysis
+    // variant (any model/language) of this song.
+    let ownedByUser = false;
 
     // Validate and sanitize all inputs
     try {
@@ -128,6 +132,33 @@ export async function handleAnalyze(
               `[Cache] Found song by spotify_id: ${songRecord.title} by ${songRecord.artist} (ID: ${songRecord.id})`,
             );
 
+            // Song-scoped ownership check: any analysis variant of this song
+            // the user has already requested makes every future access free.
+            if (userId) {
+              try {
+                const variantsRes = await fetch(
+                  `${supabaseUrl}/rest/v1/analyses?song_id=eq.${songRecord.id}&select=id`,
+                  { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+                );
+                if (variantsRes.ok) {
+                  const variants = await variantsRes.json();
+                  if (variants && variants.length > 0) {
+                    const idList = variants.map((v) => v.id).join(",");
+                    const ownedRes = await fetch(
+                      `${supabaseUrl}/rest/v1/user_analysis_requests?user_id=eq.${userId}&analysis_id=in.(${idList})&select=id&limit=1`,
+                      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+                    );
+                    if (ownedRes.ok) {
+                      const owned = await ownedRes.json();
+                      ownedByUser = owned && owned.length > 0;
+                    }
+                  }
+                }
+              } catch (err) {
+                console.warn("[Cache] Song ownership check failed:", err.message);
+              }
+            }
+
             const analysisUrl = `${supabaseUrl}/rest/v1/analyses?song_id=eq.${songRecord.id}&language=eq.${lang}&model=eq.${encodeURIComponent(model)}&status=eq.published&limit=1&select=*,metadata`;
             const analysisRes = await fetch(analysisUrl, {
               headers: {
@@ -167,33 +198,12 @@ export async function handleAnalyze(
                     `[Cache] ✓ Quality validation passed, returning cached analysis`,
                   );
 
-                  // Check if this user has already requested this analysis (re-view vs first view)
-                  // First view = charge credit, Re-view = no charge
-                  let isReview = false;
-                  if (userId && analysis.id) {
-                    try {
-                      const historyCheckUrl = `${supabaseUrl}/rest/v1/user_analysis_requests?user_id=eq.${userId}&analysis_id=eq.${analysis.id}&select=id&limit=1`;
-                      const historyRes = await fetch(historyCheckUrl, {
-                        headers: {
-                          apikey: supabaseKey,
-                          Authorization: `Bearer ${supabaseKey}`,
-                        },
-                      });
-                      if (historyRes.ok) {
-                        const historyData = await historyRes.json();
-                        isReview = historyData && historyData.length > 0;
-                        console.log(
-                          `[Cache] User history check: ${isReview ? "re-view (no charge)" : "first view (will charge)"}`,
-                        );
-                      }
-                    } catch (err) {
-                      console.warn(
-                        "[Cache] Failed to check user history:",
-                        err.message,
-                      );
-                      // Default to first view (charge) if check fails
-                    }
-                  }
+                  // Re-view = user already owns ANY variant of this song
+                  // (song-scoped — a user never pays twice for the same song)
+                  const isReview = ownedByUser;
+                  console.log(
+                    `[Cache] Ownership check: ${isReview ? "re-view (no charge)" : "first view (will charge)"}`,
+                  );
 
                   // Cached rows may have inconsistent derived fields (final_score / note / classification).
                   // Recompute official weighted final_score from stored axis scores, then derive note + classification from it.
@@ -828,6 +838,7 @@ export async function handleAnalyze(
       spotify_id: spotify_id || null, // Include spotify_id for Spotify embed
       cached: false, // New analysis, not from cache
       saveFailed: saveFailed, // Flag for credit handling
+      ownedByUser: ownedByUser, // user already paid for another variant of this song — no charge
       guide_proof: guideProof, // Guide SHA-256 hash and HMAC signature for internal auditing
       audio_url: null, // Will be populated later by TTS generation (check on frontend)
       metadata: guideProof

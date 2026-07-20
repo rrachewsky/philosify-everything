@@ -1227,7 +1227,7 @@ async function callOpenAI(prompt, lang) {
 
 async function callGemini(prompt, lang) {
   const genAI = new GoogleGenerativeAI(CONFIG.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
   const targetLanguage = LANG_NAMES[lang] || "English";
 
   const result = await model.generateContent(

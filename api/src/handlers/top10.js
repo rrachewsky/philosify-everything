@@ -124,7 +124,7 @@ async function analyzeTrack(env, track, origin) {
       song: track.song_title,
       artist: track.artist,
       spotify_id: track.spotify_id,
-      model: "openai", // GPT-4.1
+      model: "grok", // platform default; ~4x cheaper than openai for the same scorecard
       lang: "en", // English
     }),
   };

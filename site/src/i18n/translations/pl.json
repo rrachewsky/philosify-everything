@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1315,7 +1315,26 @@
       "deleteTitle": "Usuń wiadomość",
       "deleteConfirm": "Usunąć tę wiadomość? Tej operacji nie można cofnąć.",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "Zasady Agory",
+        "intro": "Agora to rynek idei. Wejdź na nią jak racjonalny dorosły, który ceni rozum i szanuje prawo każdego umysłu do własnego osądu.",
+        "commitLead": "Wchodząc, zobowiązuję się:",
+        "p1Title": "Rozum ponad siłą",
+        "p1": "Przekonuję argumentami i dowodami — nigdy zniewagą, groźbą czy zastraszaniem.",
+        "p2Title": "Idee, nie ludzie",
+        "p2": "Kwestionuję twierdzenia tak ostro, jak chcę, a osobę, która je głosi, traktuję z szacunkiem.",
+        "p3Title": "Dobra wiara",
+        "p3": "Uczciwie przedstawiam innych, biorę odpowiedzialność za swoje słowa i nie trolluję, nie spamuję ani nie zbaczam z tematu.",
+        "p4Title": "Poszanowanie praw",
+        "p4": "Żadnego nękania, gróźb, ujawniania danych osobowych ani nielegalnych treści. Zależy od tego wolność każdego tutaj.",
+        "p5Title": "Dbaj o wartość tego miejsca",
+        "p5": "Wnoszę uczciwy wkład i pomagam, by Agora pozostała miejscem wartym odwiedzenia.",
+        "consent": "Przeczytałem Zasady Agory i zobowiązuję się ich przestrzegać.",
+        "accept": "Wejdź na Agorę",
+        "gateBar": "Zaakceptuj Zasady Agory, aby dołączyć do rozmowy",
+        "footer": "Złamanie tych zasad może kosztować cię dostęp do Agory."
+      }
     },
     "dm": {
       "messagesTitle": "Wiadomości",

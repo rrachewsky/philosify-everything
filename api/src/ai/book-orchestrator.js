@@ -102,7 +102,7 @@ export async function analyzeBookPhilosophy(
   const requestedKey = normalizeModelKey(model);
 
   const callByKey = {
-    claude: () => callClaude(prompt, targetLanguage, env),
+    claude: () => callClaude(prompt, targetLanguage, env, { cacheableGuide: guide }),
     openai: () => callOpenAI(prompt, targetLanguage, env),
     gemini: () => callGemini(prompt, targetLanguage, env),
     grok: () => callGrok(prompt, targetLanguage, env),

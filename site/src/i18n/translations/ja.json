@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1214,7 +1214,26 @@
       "deleteTitle": "メッセージを削除",
       "deleteConfirm": "このメッセージを削除しますか？元に戻せません。",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "アゴラの原則",
+        "intro": "アゴラは思想の市場です。理性を重んじ、あらゆる精神が自ら判断を下す権利を尊重する、理性的な大人として入ってください。",
+        "commitLead": "入場するにあたり、私は次のことを誓います：",
+        "p1Title": "力ではなく理性を",
+        "p1": "私は論拠と証拠で説得します——侮辱・脅迫・威圧では決してしません。",
+        "p2Title": "人ではなく意見を",
+        "p2": "主張にはいくら厳しく反論してもよいが、それを述べる人には礼儀をもって接します。",
+        "p3Title": "誠実さ",
+        "p3": "私は他者の言葉を正直に伝え、自分の発言に責任を持ち、荒らし・スパム・話の脱線をしません。",
+        "p4Title": "権利の尊重",
+        "p4": "嫌がらせ・脅迫・個人情報の暴露・違法なコンテンツはしません。ここでの皆の自由はそれにかかっています。",
+        "p5Title": "訪れる価値のある場所に",
+        "p5": "私は誠実に貢献し、アゴラを訪れる価値のある場所に保ちます。",
+        "consent": "私はアゴラの原則を読み、それを守ることを誓います。",
+        "accept": "アゴラに入る",
+        "gateBar": "会話に参加するにはアゴラの原則に同意してください",
+        "footer": "これらの原則に違反すると、アゴラへのアクセスを失うことがあります。"
+      }
     },
     "dm": {
       "messagesTitle": "メッセージ",

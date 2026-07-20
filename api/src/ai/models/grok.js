@@ -1,9 +1,10 @@
 // ============================================================
-// AI MODEL - GROK 4.1 FAST (OpenAI-compatible SDK)
+// AI MODEL - GROK 4.5 (OpenAI-compatible SDK)
 // ============================================================
 // Using OpenAI SDK with xAI base URL for better reliability
-// Default: Grok 4.1 Fast with reasoning (95% cheaper than Grok 3)
-// Alternative: grok-3, grok-beta (set GROK_MODEL env var)
+// Default: Grok 4.5 (xAI flagship, July 2026 — $2/M in, $6/M out)
+// NOTE: the API model ID uses a dot ("grok-4.5"); "grok-4-5" 404s.
+// Alternative: grok-4-1-fast-reasoning (set GROK_MODEL env var)
 
 import OpenAI from "openai";
 import { getSecret } from "../../utils/secrets.js";
@@ -14,7 +15,7 @@ export async function callGrok(prompt, targetLanguage, env, options = {}) {
     throw new Error("GROK_API_KEY not configured");
   }
 
-  const model = env.GROK_MODEL || "grok-4-1-fast-reasoning";
+  const model = env.GROK_MODEL || "grok-4.5";
   const isReasoningModel =
     model.includes("reasoning") || model.includes("grok-4");
 
@@ -55,10 +56,21 @@ WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.
 REASONING INSTRUCTION:
 Think deeply about philosophical nuances, contradictions, and context BEFORE scoring.
 Consider the artist's intent, historical context, and symbolic meaning.
-Distinguish between artistic critique and philosophical messaging.`;
+Distinguish between artistic critique and philosophical messaging.
+
+GUIDE ADHERENCE (BINDING):
+The philosophical guide included in the prompt is the authoritative evaluation framework. Apply its definitions EXACTLY:
+- "Sacrifice" = trading a GREATER value for a LESSER one. A trade up, or effort spent on something you value more, is NOT sacrifice.
+- Hero vs. martyr: reason and self-interest define the hero; faith and self-immolation define the martyr. NEVER conflate them.
+- Terminology: "virtuous self-interest" (never "rational egoism"); in Portuguese "autointeresse virtuoso" (never "egoísmo racional").
+- Content determines aesthetic value: beautiful execution of a destructive philosophy must be judged by its philosophy.
+State every verdict plainly as the guide's conclusion. Never hedge with "some may argue", "it could be seen as", or both-sides framing — evaluate, don't equivocate. Keep the tone cool, direct, and educational.`;
 
   // Allow callers to override temperature (e.g. 0.65 for distinct philosopher voices)
   const temperature = options.temperature ?? 0.1;
+
+  // Allow callers to cap output (e.g. philosopher panel requests 4000-5000)
+  const maxTokens = options.maxTokens ?? 8000;
 
   try {
     const response = await client.chat.completions.create({
@@ -74,7 +86,7 @@ Distinguish between artistic critique and philosophical messaging.`;
         },
       ],
       temperature,
-      max_tokens: 8000,
+      max_tokens: maxTokens,
     });
 
     const u = response.usage;

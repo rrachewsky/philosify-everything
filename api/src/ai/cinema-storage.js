@@ -332,14 +332,51 @@ export async function getCachedFilmAnalysis(env, tmdbId, title, director, lang, 
   }
 }
 
-// Check if user has already accessed this analysis (re-view vs first view)
+// Check if the user has already accessed ANY analysis variant of a film.
+// FILM-scoped, not analysis-row-scoped: a user never pays twice for the same
+// film, even when the analysis is in a different model or language.
+async function userHasAnyFilmVariant(url, key, userId, filmId) {
+  const headers = { apikey: key, Authorization: `Bearer ${key}` };
+
+  const variantsRes = await fetch(
+    `${url}/rest/v1/film_analyses?film_id=eq.${filmId}&select=id`,
+    { headers },
+  );
+  if (!variantsRes.ok) return false;
+  const variants = await variantsRes.json();
+  if (!variants || variants.length === 0) return false;
+
+  const idList = variants.map((v) => v.id).join(",");
+  const checkUrl = `${url}/rest/v1/user_film_analysis_requests?user_id=eq.${userId}&film_analysis_id=in.(${idList})&select=id&limit=1`;
+  const res = await fetch(checkUrl, { headers });
+  if (!res.ok) return false;
+  const data = await res.json();
+  return data && data.length > 0;
+}
+
+// Re-view vs first view, film-wide (see userHasAnyFilmVariant)
 export async function checkUserFilmAccess(env, userId, filmAnalysisId) {
   try {
     const url = await getSecret(env.SUPABASE_URL);
     const key = await getSecret(env.SUPABASE_SERVICE_KEY);
 
     if (!url || !key || !userId || !filmAnalysisId) return false;
+    const headers = { apikey: key, Authorization: `Bearer ${key}` };
 
+    // Resolve which film this analysis belongs to
+    const filmRes = await fetch(
+      `${url}/rest/v1/film_analyses?id=eq.${filmAnalysisId}&select=film_id&limit=1`,
+      { headers },
+    );
+    if (filmRes.ok) {
+      const rows = await filmRes.json();
+      const filmId = rows?.[0]?.film_id;
+      if (filmId) {
+        return await userHasAnyFilmVariant(url, key, userId, filmId);
+      }
+    }
+
+    // Fallback: row-scoped check if film resolution failed
     const checkUrl = `${url}/rest/v1/user_film_analysis_requests?user_id=eq.${userId}&film_analysis_id=eq.${filmAnalysisId}&select=id&limit=1`;
     const res = await fetch(checkUrl, {
       headers: { apikey: key, Authorization: `Bearer ${key}` },
@@ -351,6 +388,37 @@ export async function checkUserFilmAccess(env, userId, filmAnalysisId) {
     return data && data.length > 0;
   } catch (error) {
     console.warn("[Cinema] User access check error:", error.message);
+    return false;
+  }
+}
+
+// Ownership check by film lookup — for the fresh-generation path, where no
+// analysis row exists yet for the requested model/language combination.
+export async function checkUserOwnsFilm(env, userId, tmdbId, title, director) {
+  try {
+    const url = await getSecret(env.SUPABASE_URL);
+    const key = await getSecret(env.SUPABASE_SERVICE_KEY);
+    if (!url || !key || !userId) return false;
+    const headers = { apikey: key, Authorization: `Bearer ${key}` };
+
+    let filmSearchUrl;
+    if (tmdbId) {
+      filmSearchUrl = `${url}/rest/v1/films?tmdb_id=eq.${encodeURIComponent(tmdbId)}&select=id&limit=1`;
+    } else if (title) {
+      filmSearchUrl = `${url}/rest/v1/films?title=ilike.${encodeURIComponent(title)}&director=ilike.${encodeURIComponent(director || "")}&select=id&limit=1`;
+    } else {
+      return false;
+    }
+
+    const filmRes = await fetch(filmSearchUrl, { headers });
+    if (!filmRes.ok) return false;
+    const films = await filmRes.json();
+    const filmId = films?.[0]?.id;
+    if (!filmId) return false;
+
+    return await userHasAnyFilmVariant(url, key, userId, filmId);
+  } catch (error) {
+    console.warn("[Cinema] Film ownership check error:", error.message);
     return false;
   }
 }

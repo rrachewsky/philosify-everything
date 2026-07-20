@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1315,7 +1315,26 @@
       "deleteTitle": "Delete Message",
       "deleteConfirm": "Delete this message? This cannot be undone.",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "The Agora Principles",
+        "intro": "The Agora is a marketplace of ideas. Enter it as a rational adult who values reason and respects every other mind's right to its own judgment.",
+        "commitLead": "By entering, I commit to:",
+        "p1Title": "Reason over force",
+        "p1": "I persuade with arguments and evidence — never with insults, threats, or intimidation.",
+        "p2Title": "Ideas, not people",
+        "p2": "I challenge claims as hard as I like, and treat the person making them with civility.",
+        "p3Title": "Good faith",
+        "p3": "I represent others honestly, own my words, and don't troll, spam, or derail.",
+        "p4Title": "Respect rights",
+        "p4": "No harassment, threats, doxxing, or illegal content. Everyone's freedom here depends on it.",
+        "p5Title": "Keep it worth entering",
+        "p5": "I contribute honestly and help keep the Agora a place worth being.",
+        "consent": "I have read the Agora Principles and I commit to upholding them.",
+        "accept": "Enter the Agora",
+        "gateBar": "Accept the Agora Principles to join the conversation",
+        "footer": "Breaking these principles may cost you access to the Agora."
+      }
     },
     "dm": {
       "messagesTitle": "Messages",

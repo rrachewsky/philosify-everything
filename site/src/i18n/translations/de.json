@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1248,7 +1248,26 @@
       "deleteTitle": "Nachricht löschen",
       "deleteConfirm": "Diese Nachricht löschen? Dies kann nicht rückgängig gemacht werden.",
       "questionOfTheDay": "Frage des Tages",
-      "viewAnalysis": "Analyse ansehen"
+      "viewAnalysis": "Analyse ansehen",
+      "rules": {
+        "title": "Die Prinzipien der Agora",
+        "intro": "Die Agora ist ein Marktplatz der Ideen. Betritt sie als vernünftiger Erwachsener, der die Vernunft schätzt und das Recht jedes Geistes auf sein eigenes Urteil achtet.",
+        "commitLead": "Mit dem Betreten verpflichte ich mich:",
+        "p1Title": "Vernunft statt Gewalt",
+        "p1": "Ich überzeuge mit Argumenten und Belegen — niemals mit Beleidigungen, Drohungen oder Einschüchterung.",
+        "p2Title": "Ideen, nicht Menschen",
+        "p2": "Ich fordere Behauptungen so hart heraus, wie ich will, und behandle die Person dahinter mit Anstand.",
+        "p3Title": "Redlichkeit",
+        "p3": "Ich gebe andere ehrlich wieder, stehe zu meinen Worten und betreibe kein Trollen, keinen Spam und kein Ablenken.",
+        "p4Title": "Rechte achten",
+        "p4": "Keine Belästigung, keine Drohungen, kein Doxing, keine illegalen Inhalte. Die Freiheit aller hier hängt davon ab.",
+        "p5Title": "Den Ort wertvoll halten",
+        "p5": "Ich trage ehrlich bei und helfe, die Agora zu einem Ort zu machen, der es wert ist.",
+        "consent": "Ich habe die Prinzipien der Agora gelesen und verpflichte mich, sie einzuhalten.",
+        "accept": "Die Agora betreten",
+        "gateBar": "Akzeptiere die Prinzipien der Agora, um an der Unterhaltung teilzunehmen",
+        "footer": "Ein Verstoß gegen diese Prinzipien kann dich den Zugang zur Agora kosten."
+      }
     },
     "dm": {
       "messagesTitle": "Nachrichten",

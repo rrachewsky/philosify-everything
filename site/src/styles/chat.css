@@ -719,3 +719,97 @@
 .underground-post__actions--own {
   justify-content: flex-end;
 }
+
+/* ===== AGORA RULES (Principles gate / terms of service) ===== */
+.agora-rules-modal .agora-rules-list {
+  list-style: none;
+  margin: 12px 0 18px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.agora-rules-modal .agora-rules-list li {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+  padding-left: 14px;
+  border-left: 2px solid rgba(0, 180, 200, 0.35);
+}
+
+.agora-rules-modal .agora-rules-list strong {
+  color: rgba(0, 220, 235, 0.95);
+}
+
+.agora-rules-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 16px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.agora-rules-consent input[type='checkbox'] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: #00c8dc;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.agora-rules-accept-btn {
+  width: 100%;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00b4c8, #6a5acd);
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.agora-rules-accept-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.agora-rules-accept-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.agora-rules-footer {
+  margin-top: 12px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+/* Shown in place of the input until the Principles are accepted */
+.agora-rules-gate-bar {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px dashed rgba(0, 180, 200, 0.5);
+  border-radius: 8px;
+  background: rgba(0, 180, 200, 0.06);
+  color: rgba(0, 210, 225, 0.9);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.agora-rules-gate-bar:hover {
+  background: rgba(0, 180, 200, 0.12);
+  border-color: rgba(0, 200, 220, 0.7);
+}

@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1315,7 +1315,26 @@
       "deleteTitle": "Üzenet törlése",
       "deleteConfirm": "Törli ezt az üzenetet? Ez a művelet nem vonható vissza.",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "Az Agora alapelvei",
+        "intro": "Az Agora az eszmék piactere. Lépj be úgy, mint racionális felnőtt, aki becsüli az észt, és tiszteletben tartja minden elme jogát a saját ítéletéhez.",
+        "commitLead": "Belépve vállalom, hogy:",
+        "p1Title": "Ész az erőszak helyett",
+        "p1": "Érvekkel és bizonyítékokkal győzök meg — soha nem sértéssel, fenyegetéssel vagy megfélemlítéssel.",
+        "p2Title": "Az eszmét, ne a személyt",
+        "p2": "Az állításokat olyan keményen vitatom, ahogy csak akarom, de a másik embert tisztelettel kezelem.",
+        "p3Title": "Jóhiszeműség",
+        "p3": "Másokat becsületesen idézek, vállalom a szavaimat, és nem trollkodom, nem spamelek és nem térek el a tárgytól.",
+        "p4Title": "A jogok tisztelete",
+        "p4": "Semmi zaklatás, fenyegetés, személyes adatok kiszivárogtatása vagy illegális tartalom. Mindenki szabadsága ezen múlik itt.",
+        "p5Title": "Megőrizni az értékét",
+        "p5": "Becsületesen hozzájárulok, és segítek, hogy az Agora olyan hely maradjon, ahová érdemes belépni.",
+        "consent": "Elolvastam az Agora alapelveit, és vállalom, hogy betartom őket.",
+        "accept": "Belépés az Agorába",
+        "gateBar": "Fogadd el az Agora alapelveit a beszélgetéshez való csatlakozáshoz",
+        "footer": "Ezen alapelvek megszegése az Agorához való hozzáférésedbe kerülhet."
+      }
     },
     "dm": {
       "messagesTitle": "Üzenetek",

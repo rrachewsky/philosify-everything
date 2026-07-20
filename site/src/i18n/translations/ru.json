@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1229,7 +1229,26 @@
       "deleteTitle": "Удалить сообщение",
       "deleteConfirm": "Удалить это сообщение? Это действие нельзя отменить.",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "Принципы Агоры",
+        "intro": "Агора — это рынок идей. Входи в неё как разумный взрослый человек, который ценит разум и уважает право каждого ума на собственное суждение.",
+        "commitLead": "Входя, я обязуюсь:",
+        "p1Title": "Разум, а не сила",
+        "p1": "Я убеждаю доводами и доказательствами — никогда оскорблениями, угрозами или запугиванием.",
+        "p2Title": "Идеи, а не люди",
+        "p2": "Я оспариваю утверждения сколь угодно резко, но отношусь к их автору с уважением.",
+        "p3Title": "Добросовестность",
+        "p3": "Я честно передаю слова других, отвечаю за свои и не занимаюсь троллингом, спамом или уводом темы.",
+        "p4Title": "Уважение к правам",
+        "p4": "Никаких преследований, угроз, раскрытия личных данных или незаконного контента. От этого зависит свобода каждого здесь.",
+        "p5Title": "Беречь это место",
+        "p5": "Я вношу честный вклад и помогаю сохранять Агору местом, куда стоит приходить.",
+        "consent": "Я прочитал(а) Принципы Агоры и обязуюсь их соблюдать.",
+        "accept": "Войти в Агору",
+        "gateBar": "Примите Принципы Агоры, чтобы присоединиться к беседе",
+        "footer": "Нарушение этих принципов может стоить вам доступа к Агоре."
+      }
     },
     "dm": {
       "messagesTitle": "Сообщения",

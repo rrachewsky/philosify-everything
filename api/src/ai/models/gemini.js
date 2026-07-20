@@ -16,6 +16,10 @@ const LEGACY_MODEL_MAP = {
   "gemini-2.5-flash-thinking-exp-01-21": "gemini-2.5-flash",
   "gemini-3.0-flash": "gemini-3.5-flash",
   "gemini-3-flash": "gemini-3.5-flash",
+  // gemini-2.0 and gemini-1.5 were shut down by Google (June 2026)
+  "gemini-2.0-flash": "gemini-3.1-flash-lite",
+  "gemini-2.0-flash-lite": "gemini-3.1-flash-lite",
+  "gemini-1.5-pro": "gemini-2.5-pro",
 };
 
 // Supported models for generateContent. Current generation first.
@@ -27,8 +31,6 @@ const SUPPORTED_MODELS = new Set([
   "gemini-2.5-pro",
   "gemini-2.5-flash",
   "gemini-2.5-flash-lite",
-  "gemini-2.0-flash",
-  "gemini-1.5-pro",
 ]);
 
 function resolveModel(envModel) {

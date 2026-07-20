@@ -10,7 +10,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { getSecret } from '../../utils/secrets.js';
 
-export async function callClaude(prompt, targetLanguage, env) {
+export async function callClaude(prompt, targetLanguage, env, options = {}) {
   const apiKey = await getSecret(env.ANTHROPIC_API_KEY);
   if (!apiKey) {
     throw new Error('ANTHROPIC_API_KEY not configured');
@@ -54,7 +54,40 @@ SPELLING AND TRANSLATION REQUIREMENTS:
 This is MANDATORY. If you write even ONE word in another language, you FAIL.
 The user is paying for analysis in ${targetLanguage} and cannot read other languages.
 
-WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.`;
+WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.
+
+GUIDE ADHERENCE (BINDING):
+The philosophical guide included in the prompt is the authoritative evaluation framework. Apply its definitions EXACTLY:
+- "Sacrifice" = trading a GREATER value for a LESSER one. A trade up, or effort spent on something you value more, is NOT sacrifice.
+- Hero vs. martyr: reason and self-interest define the hero; faith and self-immolation define the martyr. NEVER conflate them.
+- Terminology: "virtuous self-interest" (never "rational egoism"); in Portuguese "autointeresse virtuoso" (never "egoísmo racional").
+- Content determines aesthetic value: beautiful execution of a destructive philosophy must be judged by its philosophy.
+State every verdict plainly as the guide's conclusion. Never hedge with "some may argue", "it could be seen as", or both-sides framing — evaluate, don't equivocate. Keep the tone cool, direct, and educational.`;
+
+  // Prompt caching: the analysis prompt opens with a static preamble + the
+  // philosophical guide (stable per language), followed by volatile content
+  // (song/lyrics). When the caller passes the guide text, split the prompt at
+  // the end of the guide and mark the stable prefix with cache_control, so
+  // back-to-back analyses in the same language read the guide from cache
+  // (~90% cheaper) instead of paying full input price every call.
+  // Guard: only worth it when the guide is large enough to exceed the model's
+  // minimum cacheable prefix (~4k tokens on Opus).
+  let userContent = prompt;
+  const guide = options.cacheableGuide;
+  if (typeof guide === 'string' && guide.length > 8000) {
+    const guideStart = prompt.indexOf(guide);
+    if (guideStart >= 0) {
+      const splitAt = guideStart + guide.length;
+      userContent = [
+        {
+          type: 'text',
+          text: prompt.slice(0, splitAt),
+          cache_control: { type: 'ephemeral' },
+        },
+        { type: 'text', text: prompt.slice(splitAt) },
+      ];
+    }
+  }
 
   try {
     const response = await client.messages.create({
@@ -65,7 +98,7 @@ WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.`;
       system: systemPrompt,
       messages: [{
         role: 'user',
-        content: prompt
+        content: userContent
       }]
     });
 
@@ -76,7 +109,10 @@ WRITE EVERYTHING IN ${targetLanguage}. NO EXCEPTIONS.`;
     }
 
     const u = response.usage;
-    console.log(`[Claude] ✓ ${u.input_tokens + u.output_tokens} tokens (${u.input_tokens} in, ${u.output_tokens} out)`);
+    console.log(
+      `[Claude] ✓ ${u.input_tokens + u.output_tokens} tokens (${u.input_tokens} in, ${u.output_tokens} out, ` +
+      `cache: ${u.cache_read_input_tokens || 0} read / ${u.cache_creation_input_tokens || 0} written)`
+    );
     return textContent.text;
 
   } catch (error) {

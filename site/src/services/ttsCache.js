@@ -1,11 +1,14 @@
-// TTS Cache Service - Pre-generates audio in background after analysis completes
-// Audio is cached and ready for instant playback when user clicks Listen
+// TTS Cache Service - Generates audio on demand (first Listen click)
 // Auth: Uses HttpOnly cookies (credentials: 'include')
 //
 // Flow:
-// 1. Check if result.audio_url exists (already cached in R2) -> instant playback
-// 2. If not, call /api/tts to generate -> backend caches in R2 and updates analysis.audio_url
-// 3. On next load, audio_url will be populated -> instant playback
+// 1. User clicks Listen -> preloadTTS() calls /api/tts
+// 2. Backend serves from R2 cache when the song/lang was generated before
+//    (near-instant), otherwise generates and caches in R2
+// 3. Blob URL kept in-memory for the session; replays are instant
+//
+// Generation is intentionally NOT triggered when a result renders — eager
+// pre-generation paid for audio that was never played.
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
 

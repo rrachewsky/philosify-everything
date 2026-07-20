@@ -11,10 +11,11 @@ export function PaymentModal({ isOpen, onClose }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // tier is the legacy SKU sent to the backend; credits is what the user gets
   const creditOptions = [
-    { tier: 10, price: 'US$6.00', amount: 6.0, perAnalysis: 'US$0.60' },
-    { tier: 20, price: 'US$10.00', amount: 10.0, perAnalysis: 'US$0.50' },
-    { tier: 50, price: 'US$20.00', amount: 20.0, perAnalysis: 'US$0.40' },
+    { tier: 10, credits: 20, price: 'US$6.00', amount: 6.0, perAnalysis: 'US$0.30' },
+    { tier: 20, credits: 40, price: 'US$10.00', amount: 10.0, perAnalysis: 'US$0.25' },
+    { tier: 50, credits: 100, price: 'US$20.00', amount: 20.0, perAnalysis: 'US$0.20' },
   ];
 
   const handlePurchase = async (amount) => {
@@ -70,7 +71,7 @@ export function PaymentModal({ isOpen, onClose }) {
             style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
           >
             <div className="credit-option-left">
-              <div className="credit-amount">{option.tier}</div>
+              <div className="credit-amount">{option.credits}</div>
               <div className="credit-analyses">{t('payment.creditsSuffix')}</div>
             </div>
             <div className="credit-price">{option.price}</div>

@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1240,7 +1240,26 @@
       "deleteTitle": "Supprimer le message",
       "deleteConfirm": "Supprimer ce message ? Cette action est irréversible.",
       "questionOfTheDay": "Question du Jour",
-      "viewAnalysis": "Voir l'Analyse"
+      "viewAnalysis": "Voir l'Analyse",
+      "rules": {
+        "title": "Les Principes de l'Agora",
+        "intro": "L'Agora est un marché des idées. Entrez-y en adulte rationnel qui valorise la raison et respecte le droit de chaque esprit à son propre jugement.",
+        "commitLead": "En entrant, je m'engage à :",
+        "p1Title": "La raison plutôt que la force",
+        "p1": "Je persuade par des arguments et des preuves — jamais par l'insulte, la menace ou l'intimidation.",
+        "p2Title": "Les idées, pas les personnes",
+        "p2": "Je conteste les affirmations aussi vigoureusement que je le souhaite, et je traite leur auteur avec courtoisie.",
+        "p3Title": "Bonne foi",
+        "p3": "Je représente les autres honnêtement, j'assume mes propos et je ne fais ni troll, ni spam, ni hors-sujet.",
+        "p4Title": "Respect des droits",
+        "p4": "Pas de harcèlement, de menaces, de divulgation de données personnelles ni de contenu illégal. La liberté de chacun ici en dépend.",
+        "p5Title": "Un lieu qui vaut la peine",
+        "p5": "Je contribue honnêtement et j'aide à faire de l'Agora un lieu où il fait bon être.",
+        "consent": "J'ai lu les Principes de l'Agora et je m'engage à les respecter.",
+        "accept": "Entrer dans l'Agora",
+        "gateBar": "Acceptez les Principes de l'Agora pour rejoindre la conversation",
+        "footer": "Enfreindre ces principes peut vous coûter l'accès à l'Agora."
+      }
     },
     "dm": {
       "messagesTitle": "Messages",

@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1198,7 +1198,26 @@
       "deleteTitle": "מחק הודעה",
       "deleteConfirm": "למחוק הודעה זו? לא ניתן לבטל פעולה זו.",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "עקרונות האגורה",
+        "intro": "האגורה היא שוק של רעיונות. היכנס אליה כאדם רציונלי שמעריך את התבונה ומכבד את זכותה של כל תודעה לשיפוט משלה.",
+        "commitLead": "בכניסתי, אני מתחייב:",
+        "p1Title": "היגיון לפני כוח",
+        "p1": "אני משכנע בטיעונים ובראיות — לעולם לא בעלבונות, איומים או הפחדה.",
+        "p2Title": "רעיונות, לא אנשים",
+        "p2": "אני מאתגר טענות בכל עוצמה שארצה, ומתייחס לאדם שמאחוריהן בנימוס.",
+        "p3Title": "תום לב",
+        "p3": "אני מציג אחרים בהגינות, עומד מאחורי דבריי, ולא עוסק בטרולינג, ספאם או הסטת הדיון.",
+        "p4Title": "כבוד לזכויות",
+        "p4": "ללא הטרדה, איומים, חשיפת פרטים אישיים או תוכן בלתי חוקי. חירותו של כל אחד כאן תלויה בכך.",
+        "p5Title": "לשמור על ערך המקום",
+        "p5": "אני תורם בהגינות ועוזר לשמור על האגורה כמקום ששווה להיות בו.",
+        "consent": "קראתי את עקרונות האגורה ואני מתחייב לקיים אותם.",
+        "accept": "כניסה לאגורה",
+        "gateBar": "אשר את עקרונות האגורה כדי להצטרף לשיחה",
+        "footer": "הפרת עקרונות אלה עלולה לעלות לך בגישה לאגורה."
+      }
     },
     "dm": {
       "messagesTitle": "הודעות",

@@ -62,18 +62,18 @@ export const LANGUAGES = {
   TR: 'tr',
 };
 
-// Credit packages
+// Credit packages ($6→20, $10→40, $20→100; tier is the legacy backend SKU)
 export const CREDIT_PACKAGES = [
-  { amount: 6.0, credits: 10, tier: '10' },
-  { amount: 10.0, credits: 20, tier: '20' },
-  { amount: 20.0, credits: 50, tier: '50' },
+  { amount: 6.0, credits: 20, tier: '10' },
+  { amount: 10.0, credits: 40, tier: '20' },
+  { amount: 20.0, credits: 100, tier: '50' },
 ];
 
 // Default values
 export const DEFAULT_LANGUAGE = LANGUAGES.EN;
 export const DEFAULT_MODEL = AI_MODELS.GROK; // Grok is mandatory
 export const FREE_ANALYSES_COUNT = 2;
-export const CREDIT_COST_PER_ANALYSIS = 0.6;
+export const CREDIT_COST_PER_ANALYSIS = 0.3;
 
 // Debounce delays
 export const SEARCH_DEBOUNCE_MS = 500;

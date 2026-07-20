@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1230,7 +1230,26 @@
       "deleteTitle": "Excluir Mensagem",
       "deleteConfirm": "Excluir esta mensagem? Esta ação não pode ser desfeita.",
       "questionOfTheDay": "Pergunta do Dia",
-      "viewAnalysis": "Ver Analise"
+      "viewAnalysis": "Ver Analise",
+      "rules": {
+        "title": "Os Princípios da Ágora",
+        "intro": "A Ágora é um mercado de ideias. Entre nela como um adulto racional que valoriza a razão e respeita o direito de cada mente ao seu próprio julgamento.",
+        "commitLead": "Ao entrar, comprometo-me a:",
+        "p1Title": "Razão acima da força",
+        "p1": "Persuado com argumentos e evidências — nunca com insultos, ameaças ou intimidação.",
+        "p2Title": "Ideias, não pessoas",
+        "p2": "Questiono as afirmações com todo o rigor que eu quiser, e trato quem as faz com civilidade.",
+        "p3Title": "Boa-fé",
+        "p3": "Represento os outros com honestidade, assumo minhas palavras e não faço trollagem, spam ou desvio de assunto.",
+        "p4Title": "Respeito aos direitos",
+        "p4": "Sem assédio, ameaças, exposição de dados pessoais ou conteúdo ilegal. A liberdade de todos aqui depende disso.",
+        "p5Title": "Manter o lugar digno",
+        "p5": "Contribuo com honestidade e ajudo a manter a Ágora um lugar que vale a pena frequentar.",
+        "consent": "Li os Princípios da Ágora e comprometo-me a cumpri-los.",
+        "accept": "Entrar na Ágora",
+        "gateBar": "Aceite os Princípios da Ágora para participar da conversa",
+        "footer": "Violar estes princípios pode custar seu acesso à Ágora."
+      }
     },
     "dm": {
       "messagesTitle": "Mensagens",

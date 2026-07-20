@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1230,7 +1230,26 @@
       "deleteTitle": "Elimina Messaggio",
       "deleteConfirm": "Eliminare questo messaggio? Questa azione non può essere annullata.",
       "questionOfTheDay": "Domanda del Giorno",
-      "viewAnalysis": "Vedi Analisi"
+      "viewAnalysis": "Vedi Analisi",
+      "rules": {
+        "title": "I Principi dell'Agorà",
+        "intro": "L'Agorà è un mercato di idee. Entraci come un adulto razionale che dà valore alla ragione e rispetta il diritto di ogni mente al proprio giudizio.",
+        "commitLead": "Entrando, mi impegno a:",
+        "p1Title": "La ragione prima della forza",
+        "p1": "Convinco con argomenti e prove — mai con insulti, minacce o intimidazioni.",
+        "p2Title": "Le idee, non le persone",
+        "p2": "Contesto le affermazioni con tutto il rigore che voglio, e tratto con civiltà chi le fa.",
+        "p3Title": "Buona fede",
+        "p3": "Rappresento gli altri con onestà, mi assumo le mie parole e non faccio troll, spam o divagazioni.",
+        "p4Title": "Rispetto dei diritti",
+        "p4": "Niente molestie, minacce, divulgazione di dati personali o contenuti illegali. La libertà di tutti qui dipende da questo.",
+        "p5Title": "Un luogo che vale",
+        "p5": "Contribuisco con onestà e aiuto a mantenere l'Agorà un luogo che vale la pena frequentare.",
+        "consent": "Ho letto i Principi dell'Agorà e mi impegno a rispettarli.",
+        "accept": "Entra nell'Agorà",
+        "gateBar": "Accetta i Principi dell'Agorà per unirti alla conversazione",
+        "footer": "Violare questi principi può costarti l'accesso all'Agorà."
+      }
     },
     "dm": {
       "messagesTitle": "Messaggi",

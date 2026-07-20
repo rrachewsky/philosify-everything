@@ -446,7 +446,7 @@ Rules:
 - Return the EXACT same JSON structure with translated strings`;
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1404,7 +1404,7 @@ RULES:
 - No duplicate questions (be creative and varied)
 - Return ONLY the JSON array, no markdown fences`;
 
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
 
       const res = await fetch(geminiUrl, {
         method: 'POST',
@@ -1521,7 +1521,7 @@ RULES:
 - Wrong explanations must be educational
 - Return ONLY the JSON array, no markdown fences`;
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
 
     const res = await fetch(geminiUrl, {
       method: 'POST',
@@ -1651,7 +1651,7 @@ RULES:
 - Hero vs Martyr distinction: hero acts by reason, martyr acts by faith
 - Return ONLY the JSON array, no markdown fences`;
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`;
 
     const res = await fetch(geminiUrl, {
       method: 'POST',

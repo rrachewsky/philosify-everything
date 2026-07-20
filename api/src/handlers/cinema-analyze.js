@@ -19,6 +19,7 @@ import {
   logFilmAnalysisRequest,
   getCachedFilmAnalysis,
   checkUserFilmAccess,
+  checkUserOwnsFilm,
 } from "../ai/cinema-storage.js";
 import { getSecret } from "../utils/secrets.js";
 import { getLocalizedError } from "../utils/i18n-errors.js";
@@ -44,7 +45,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
     } catch {
       return jsonResponse({ error: "Invalid JSON in request body" }, 400, origin, env);
     }
-    const { title, director, tmdb_id, overview, genres, original_title, model = "claude" } = body;
+    const { title, director, tmdb_id, overview, genres, original_title, model = "grok" } = body;
     lang = body.lang || 'en'; // Extract lang for error handling
 
     if (!title || title.length < 1 || title.length > 300) {
@@ -248,16 +249,25 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
     console.log(`[CinemaAnalyze] Cache MISS — analyzing: "${title}" (${model}/${lang})`);
 
-    // Reserve 1 credit
-    const { reserveCredit, confirmReservation, releaseReservation } = await import("../credits/index.js");
-    const reservation = await reserveCredit(env, user.userId);
+    // Never-pay-twice: if this user already paid for ANY analysis of this film
+    // (any model/language), generating a new variant is free for them.
+    const alreadyOwned = await checkUserOwnsFilm(env, user.userId, tmdb_id, title, director);
 
-    if (!reservation.success) {
-      return jsonResponse({
-        error: getLocalizedError('INSUFFICIENT_CREDITS', lang),
-        needed: 1,
-        balance: reservation.newTotal || 0,
-      }, 402, origin, env);
+    // Reserve 1 credit (skipped when the user already owns this film)
+    const { reserveCredit, confirmReservation, releaseReservation } = await import("../credits/index.js");
+    let reservation = null;
+    if (alreadyOwned) {
+      console.log(`[CinemaAnalyze] User already owns this film — new variant generated free`);
+    } else {
+      reservation = await reserveCredit(env, user.userId);
+
+      if (!reservation.success) {
+        return jsonResponse({
+          error: getLocalizedError('INSUFFICIENT_CREDITS', lang),
+          needed: 1,
+          balance: reservation.newTotal || 0,
+        }, 402, origin, env);
+      }
     }
 
     try {
@@ -427,13 +437,17 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
         }
       }
 
-      // Confirm credit
-      await confirmReservation(env, reservation.reservationId, `cinema-analysis:${title.substring(0, 50)}`);
+      // Confirm credit (skipped for already-owned films)
+      if (reservation) {
+        await confirmReservation(env, reservation.reservationId, `cinema-analysis:${title.substring(0, 50)}`);
+      }
 
       return jsonResponse(result, 200, origin, env);
     } catch (err) {
       // Release credit on failure
-      await releaseReservation(env, reservation.reservationId, "cinema-analysis-failed");
+      if (reservation) {
+        await releaseReservation(env, reservation.reservationId, "cinema-analysis-failed");
+      }
       throw err;
     }
   } catch (err) {

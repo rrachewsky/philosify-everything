@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1209,7 +1209,26 @@
       "deleteTitle": "메시지 삭제",
       "deleteConfirm": "이 메시지를 삭제하시겠습니까? 되돌릴 수 없습니다.",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "아고라 원칙",
+        "intro": "아고라는 사상의 시장입니다. 이성을 중시하고 모든 정신이 스스로 판단할 권리를 존중하는 이성적인 성인으로서 들어오십시오.",
+        "commitLead": "입장하면서 저는 다음을 약속합니다:",
+        "p1Title": "힘이 아닌 이성으로",
+        "p1": "저는 논거와 증거로 설득합니다 — 결코 모욕, 위협, 협박으로 하지 않습니다.",
+        "p2Title": "사람이 아닌 생각을",
+        "p2": "주장은 얼마든지 강하게 반박하되, 그 주장을 하는 사람은 예의로 대합니다.",
+        "p3Title": "선의",
+        "p3": "저는 다른 사람의 말을 정직하게 전하고, 제 말에 책임을 지며, 트롤링·스팸·주제 이탈을 하지 않습니다.",
+        "p4Title": "권리 존중",
+        "p4": "괴롭힘, 위협, 개인정보 노출, 불법 콘텐츠는 없습니다. 이곳 모두의 자유가 여기에 달려 있습니다.",
+        "p5Title": "머물 가치가 있는 곳으로",
+        "p5": "저는 정직하게 기여하고, 아고라를 들를 만한 가치가 있는 곳으로 지킵니다.",
+        "consent": "저는 아고라 원칙을 읽었으며 이를 준수할 것을 약속합니다.",
+        "accept": "아고라 입장",
+        "gateBar": "대화에 참여하려면 아고라 원칙에 동의하세요",
+        "footer": "이 원칙을 위반하면 아고라 접근 권한을 잃을 수 있습니다."
+      }
     },
     "dm": {
       "messagesTitle": "메시지",

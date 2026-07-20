@@ -6,8 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { ChatMessage } from './ChatMessage.jsx';
 import { ChatInput } from './ChatInput.jsx';
 import { ConfirmModal } from '../common/ConfirmModal.jsx';
+import { AgoraRulesModal } from './AgoraRulesModal.jsx';
 import { useChat } from '../../hooks/useChat.js';
 import '../../styles/chat.css';
+
+// Bump this when the Agora Principles change so everyone must re-accept.
+const AGORA_RULES_VERSION = 'v1';
+const agoraRulesKey = (uid) => `philosify.agora.rules.${AGORA_RULES_VERSION}.${uid || 'anon'}`;
 
 export function AgoraChat({ onUserClick }) {
   const { t } = useTranslation();
@@ -33,6 +38,38 @@ export function AgoraChat({ onUserClick }) {
 
   // Delete confirmation state
   const [deleteTarget, setDeleteTarget] = useState(null);
+
+  // Agora Principles gate: users must commit to the rules before posting.
+  // null = unknown (still resolving), true = accepted, false = not yet accepted.
+  const [rulesAccepted, setRulesAccepted] = useState(null);
+  const [showRules, setShowRules] = useState(false);
+
+  useEffect(() => {
+    if (!userId) return;
+    let accepted = false;
+    try {
+      accepted = localStorage.getItem(agoraRulesKey(userId)) === '1';
+    } catch {
+      accepted = false;
+    }
+    setRulesAccepted(accepted);
+    setShowRules(!accepted);
+  }, [userId]);
+
+  const handleAcceptRules = useCallback(() => {
+    try {
+      localStorage.setItem(agoraRulesKey(userId), '1');
+    } catch {
+      /* storage unavailable — accept for this session only */
+    }
+    setRulesAccepted(true);
+    setShowRules(false);
+  }, [userId]);
+
+  const handleDeclineRules = useCallback(() => {
+    // Hide the modal but keep posting gated; the gate bar can reopen it.
+    setShowRules(false);
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -89,9 +126,13 @@ export function AgoraChat({ onUserClick }) {
 
   const handleSend = useCallback(
     (text, options = {}) => {
+      if (!rulesAccepted) {
+        setShowRules(true);
+        return;
+      }
       sendMessage(text, options);
     },
-    [sendMessage]
+    [sendMessage, rulesAccepted]
   );
 
   return (
@@ -128,13 +169,32 @@ export function AgoraChat({ onUserClick }) {
       </div>
 
       <div style={{ padding: '0 12px 12px' }}>
-        <ChatInput
-          onSend={handleSend}
-          sending={sending}
-          replyingTo={replyingTo}
-          onCancelReply={handleCancelReply}
-        />
+        {rulesAccepted ? (
+          <ChatInput
+            onSend={handleSend}
+            sending={sending}
+            replyingTo={replyingTo}
+            onCancelReply={handleCancelReply}
+          />
+        ) : rulesAccepted === false ? (
+          <button
+            type="button"
+            className="agora-rules-gate-bar"
+            onClick={() => setShowRules(true)}
+          >
+            {t(
+              'community.agora.rules.gateBar',
+              'Accept the Agora Principles to join the conversation'
+            )}
+          </button>
+        ) : null}
       </div>
+
+      <AgoraRulesModal
+        isOpen={showRules}
+        onAccept={handleAcceptRules}
+        onClose={handleDeclineRules}
+      />
 
       <ConfirmModal
         isOpen={!!deleteTarget}

@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1315,7 +1315,26 @@
       "deleteTitle": "Mesajı Sil",
       "deleteConfirm": "Bu mesaj silinsin mi? Bu işlem geri alınamaz.",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "Agora İlkeleri",
+        "intro": "Agora bir fikirler pazarıdır. Aklı değerli bulan ve her zihnin kendi yargısına olan hakkına saygı duyan akılcı bir yetişkin olarak gir.",
+        "commitLead": "Girerken şunları taahhüt ederim:",
+        "p1Title": "Güç değil, akıl",
+        "p1": "Kanıt ve argümanlarla ikna ederim — asla hakaret, tehdit ya da yıldırmayla değil.",
+        "p2Title": "Kişiler değil, fikirler",
+        "p2": "İddialara istediğim kadar sert karşı çıkarım, ama onları dile getiren kişiye nezaketle davranırım.",
+        "p3Title": "İyi niyet",
+        "p3": "Başkalarını dürüstçe aktarırım, sözlerimin arkasında dururum; trollük, spam ya da konuyu saptırma yapmam.",
+        "p4Title": "Haklara saygı",
+        "p4": "Taciz, tehdit, kişisel bilgi ifşası ya da yasa dışı içerik yok. Burada herkesin özgürlüğü buna bağlı.",
+        "p5Title": "Değerli bir yer olarak koru",
+        "p5": "Dürüstçe katkı sunar ve Agora'yı gelmeye değer bir yer olarak tutmaya yardım ederim.",
+        "consent": "Agora İlkeleri'ni okudum ve bunlara uymayı taahhüt ediyorum.",
+        "accept": "Agora'ya Gir",
+        "gateBar": "Sohbete katılmak için Agora İlkeleri'ni kabul edin",
+        "footer": "Bu ilkeleri çiğnemek Agora'ya erişiminize mal olabilir."
+      }
     },
     "dm": {
       "messagesTitle": "Mesajlar",

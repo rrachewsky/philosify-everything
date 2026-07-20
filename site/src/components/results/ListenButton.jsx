@@ -158,13 +158,9 @@ export function ListenButton({ result }) {
     [t]
   );
 
-  // Trigger preload when result is available
-  useEffect(() => {
-    if (result && selectedTTSLang) {
-      // Start pre-generating audio in background
-      preloadTTS(result, selectedTTSLang);
-    }
-  }, [result, selectedTTSLang]);
+  // Audio generation is lazy: it starts on the user's first click (handleListen),
+  // not when the result renders. Generating eagerly paid for TTS that was never
+  // played; cached audio (R2) still returns near-instantly on click.
 
   // Monitor preload status and auto-play when ready.
   // Once audio starts playing (or errors out), polling stops to prevent

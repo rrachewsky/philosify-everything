@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1315,7 +1315,26 @@
       "deleteTitle": "Bericht verwijderen",
       "deleteConfirm": "Dit bericht verwijderen? Dit kan niet ongedaan worden gemaakt.",
       "questionOfTheDay": "Vraag van de Dag",
-      "viewAnalysis": "Analyse bekijken"
+      "viewAnalysis": "Analyse bekijken",
+      "rules": {
+        "title": "De Beginselen van de Agora",
+        "intro": "De Agora is een marktplaats van ideeën. Betreed haar als een rationele volwassene die de rede waardeert en het recht van elke geest op een eigen oordeel respecteert.",
+        "commitLead": "Bij binnenkomst verbind ik mij ertoe om:",
+        "p1Title": "Rede boven geweld",
+        "p1": "Ik overtuig met argumenten en bewijs — nooit met beledigingen, bedreigingen of intimidatie.",
+        "p2Title": "Ideeën, geen mensen",
+        "p2": "Ik betwist beweringen zo fel als ik wil, en behandel de persoon erachter met beleefdheid.",
+        "p3Title": "Goede trouw",
+        "p3": "Ik geef anderen eerlijk weer, sta achter mijn woorden en doe niet aan trollen, spam of afdwalen.",
+        "p4Title": "Respect voor rechten",
+        "p4": "Geen intimidatie, bedreigingen, doxing of illegale inhoud. De vrijheid van iedereen hier hangt ervan af.",
+        "p5Title": "Houd het de moeite waard",
+        "p5": "Ik draag eerlijk bij en help de Agora een plek te houden die de moeite waard is.",
+        "consent": "Ik heb de Beginselen van de Agora gelezen en verbind mij ertoe ze na te leven.",
+        "accept": "De Agora betreden",
+        "gateBar": "Accepteer de Beginselen van de Agora om deel te nemen aan het gesprek",
+        "footer": "Het schenden van deze beginselen kan je de toegang tot de Agora kosten."
+      }
     },
     "dm": {
       "messagesTitle": "Berichten",

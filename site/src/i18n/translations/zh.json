@@ -256,7 +256,7 @@
     "section3Title": "3. Payment Terms",
     "section3Content": "Prices displayed in USD. Payments processed via Stripe. All sales final unless otherwise stated.",
     "section4Title": "4. Credits System",
-    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.60 each or via credit packages.",
+    "section4Content": "New users receive 2 free analyses. Additional analyses: $0.30 each or via credit packages.",
     "section5Title": "5. Acceptable Use",
     "section5Content": "You agree not to misuse the Service, including attempting to access unauthorized areas or disrupt the system.",
     "section6Title": "6. Intellectual Property",
@@ -1315,7 +1315,26 @@
       "deleteTitle": "删除消息",
       "deleteConfirm": "删除此消息？此操作无法撤销。",
       "questionOfTheDay": "Question of the Day",
-      "viewAnalysis": "View Analysis"
+      "viewAnalysis": "View Analysis",
+      "rules": {
+        "title": "广场准则",
+        "intro": "广场是思想的市场。请以理性成年人的身份进入——珍视理性，并尊重每一个心灵作出自己判断的权利。",
+        "commitLead": "进入即承诺：",
+        "p1Title": "以理服人，而非以力压人",
+        "p1": "我以论证和证据说服他人——绝不以侮辱、威胁或恐吓。",
+        "p2Title": "针对观点，而非个人",
+        "p2": "我可以尽情质疑观点，但会以礼相待提出观点的人。",
+        "p3Title": "善意",
+        "p3": "我如实转述他人，对自己的言论负责，不做挑衅、刷屏或带偏话题之事。",
+        "p4Title": "尊重权利",
+        "p4": "不骚扰、不威胁、不人肉、不发布非法内容。这里每个人的自由都系于此。",
+        "p5Title": "让此地值得驻足",
+        "p5": "我真诚地参与，帮助广场成为一个值得来的地方。",
+        "consent": "我已阅读广场准则，并承诺遵守。",
+        "accept": "进入广场",
+        "gateBar": "接受广场准则以加入对话",
+        "footer": "违反这些准则可能会使你失去进入广场的资格。"
+      }
     },
     "dm": {
       "messagesTitle": "消息",

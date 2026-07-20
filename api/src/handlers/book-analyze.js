@@ -42,13 +42,17 @@ export async function handleBookAnalyze(
       title,
       author,
       google_books_id,
-      model = "claude",
+      model = "grok",
     } = body;
     lang = body.lang || "en";
 
     // Extract user ID from JWT token
     const user = await getUserFromAuth(request, env);
     const userId = user?.userId || null;
+
+    // Never-pay-twice: true when this user already paid for ANY analysis
+    // variant (any model/language) of this book.
+    let ownedByUser = false;
 
     // Validate inputs
     try {
@@ -110,6 +114,33 @@ export async function handleBookAnalyze(
               `[BookCache] Found book: ${bookRecord.title} by ${bookRecord.author} (ID: ${bookRecord.id})`,
             );
 
+            // Book-scoped ownership check: any analysis variant of this book
+            // the user has already requested makes every future access free.
+            if (userId) {
+              try {
+                const variantsRes = await fetch(
+                  `${supabaseUrl}/rest/v1/book_analyses?book_id=eq.${bookRecord.id}&select=id`,
+                  { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+                );
+                if (variantsRes.ok) {
+                  const variants = await variantsRes.json();
+                  if (variants && variants.length > 0) {
+                    const idList = variants.map((v) => v.id).join(",");
+                    const ownedRes = await fetch(
+                      `${supabaseUrl}/rest/v1/user_book_analysis_requests?user_id=eq.${userId}&book_analysis_id=in.(${idList})&select=id&limit=1`,
+                      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+                    );
+                    if (ownedRes.ok) {
+                      const owned = await ownedRes.json();
+                      ownedByUser = owned && owned.length > 0;
+                    }
+                  }
+                }
+              } catch (err) {
+                console.warn("[BookCache] Ownership check failed:", err.message);
+              }
+            }
+
             const analysisUrl = `${supabaseUrl}/rest/v1/book_analyses?book_id=eq.${bookRecord.id}&language=eq.${lang}&model=eq.${encodeURIComponent(model)}&status=eq.active&limit=1&select=*,metadata`;
             const analysisRes = await fetch(analysisUrl, {
               headers: {
@@ -126,25 +157,12 @@ export async function handleBookAnalyze(
                   `[BookCache] HIT! Found cached book analysis (ID: ${analysis.id})`,
                 );
 
-                // Check re-view vs first view
-                let isReview = false;
-                if (userId && analysis.id) {
-                  try {
-                    const historyCheckUrl = `${supabaseUrl}/rest/v1/user_book_analysis_requests?user_id=eq.${userId}&book_analysis_id=eq.${analysis.id}&select=id&limit=1`;
-                    const historyRes = await fetch(historyCheckUrl, {
-                      headers: {
-                        apikey: supabaseKey,
-                        Authorization: `Bearer ${supabaseKey}`,
-                      },
-                    });
-                    if (historyRes.ok) {
-                      const historyData = await historyRes.json();
-                      isReview = historyData && historyData.length > 0;
-                    }
-                  } catch (err) {
-                    console.warn("[BookCache] Failed to check user history:", err.message);
-                  }
-                }
+                // Re-view = user already owns ANY variant of this book
+                // (book-scoped — a user never pays twice for the same book)
+                const isReview = ownedByUser;
+                console.log(
+                  `[BookCache] Ownership check: ${isReview ? "re-view (no charge)" : "first view (will charge)"}`,
+                );
 
                 // Recompute weighted score
                 const scorecardForCalc = {
@@ -417,6 +435,7 @@ export async function handleBookAnalyze(
       publisher: bookMetadata.publisher || null,
       cached: false,
       saveFailed: saveFailed,
+      ownedByUser: ownedByUser, // user already paid for another variant of this book — no charge
       guide_proof: guideProof,
       metadata: guideProof
         ? {

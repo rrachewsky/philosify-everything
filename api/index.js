@@ -2183,7 +2183,8 @@ export default {
             }
           }
 
-          const creditMap = { 10: 10, 20: 20, 50: 50 };
+          // Tier SKU → credits granted ($6→20, $10→40, $20→100; SKU names are legacy)
+          const creditMap = { 10: 20, 20: 40, 50: 100 };
           const credits = tier ? creditMap[tier] || 0 : 0;
 
           if (credits === 0) {
@@ -2391,7 +2392,8 @@ export default {
               }
             }
 
-            const creditMap = { 10: 10, 20: 20, 50: 50 };
+            // Tier SKU → credits granted ($6→20, $10→40, $20→100; SKU names are legacy)
+          const creditMap = { 10: 20, 20: 40, 50: 100 };
             const credits = tier ? creditMap[tier] || 0 : 0;
 
             if (credits === 0) {
@@ -3080,7 +3082,7 @@ export default {
         const {
           song = "Song",
           artist = "Artist",
-          model = "claude",
+          model = "grok",
           lang = "en",
           spotify_id = null,
           // SECURITY: is_free from client is IGNORED - validated server-side only
@@ -3313,6 +3315,18 @@ export default {
                 "[Credits] Reservation released - save failed, no charge",
               );
               charged = false;
+            } else if (resultData.ownedByUser) {
+              // Never-pay-twice: user already paid for another variant of this song
+              balanceResult = await releaseReservation(
+                env,
+                reservation.reservationId,
+                "already_owned",
+                resultData.id,
+              );
+              console.log(
+                "[Credits] Reservation released - user already owns this song, no charge",
+              );
+              charged = false;
             } else {
               // CONFIRM reservation (new analysis succeeded - write to credit_history with analysis_id)
               balanceResult = await confirmReservation(
@@ -3498,7 +3512,7 @@ export default {
         const {
           title = "Book",
           author = "Author",
-          model = "claude",
+          model = "grok",
           lang = "en",
           google_books_id = null,
         } = requestBody;
@@ -3590,6 +3604,10 @@ export default {
               charged = true;
             } else if (resultData.saveFailed) {
               balanceResult = await releaseReservation(env, reservation.reservationId, "failed");
+              charged = false;
+            } else if (resultData.ownedByUser) {
+              // Never-pay-twice: user already paid for another variant of this book
+              balanceResult = await releaseReservation(env, reservation.reservationId, "already_owned", resultData.id);
               charged = false;
             } else {
               balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id);

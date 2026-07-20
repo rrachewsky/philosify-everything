@@ -35,7 +35,7 @@ const QUIZ_CATEGORIES = [
 
 const TARGET_TOTAL = 500;
 const BATCH_SIZE = 8; // questions per Gemini call
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
 
 // ============================================================
 // Supabase helpers

@@ -354,7 +354,7 @@ Built on Supabase with **reserve/confirm/release pattern** for reliability:
 - Cached analyses don't consume credits
 - Full audit trail in `credit_reservations`
 
-**Tiers:** 10, 20, 50 credits (mapped to Stripe price IDs)
+**Packages:** $6→20, $10→40, $20→100 credits (mapped to Stripe price IDs; tier SKU names '10'/'20'/'50' are legacy and no longer match credit amounts)
 
 **Balance API Response (`/api/balance`):**
 ```javascript

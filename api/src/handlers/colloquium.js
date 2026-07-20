@@ -3230,7 +3230,7 @@ async function translateToAllLanguages(text, env) {
     const apiKey = await getSecret(env.GEMINI_API_KEY);
     if (!apiKey) return {};
 
-    const model = "gemini-2.0-flash";
+    const model = "gemini-3.1-flash-lite";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
@@ -3366,7 +3366,7 @@ ${text}
     const apiKey = await getSecret(env.GEMINI_API_KEY).catch(() => null);
     if (!apiKey) return { en: text };
 
-    const model = "gemini-2.0-flash";
+    const model = "gemini-3.1-flash-lite";
     const langCodes = Object.keys(SUPPORTED_LANGUAGES).filter(
       (code) => code !== "en",
     );

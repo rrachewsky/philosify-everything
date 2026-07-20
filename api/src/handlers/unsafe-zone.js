@@ -333,6 +333,20 @@ export async function handleUnsafeZone(request, env, origin) {
       aiMessages = aiMessages.slice(1);
     }
 
+    // Prompt caching: the guide is large and identical every turn — cache it so
+    // turns 2+ read it at ~10% of input price. A second breakpoint on the last
+    // message caches the conversation prefix between turns. Caches are per-model,
+    // so Sonnet turns and Opus (crisis) turns each keep their own entry.
+    const cachedMessages = aiMessages.map((m, i) => {
+      if (i !== aiMessages.length - 1 || typeof m.content !== 'string') return m;
+      return {
+        role: m.role,
+        content: [
+          { type: 'text', text: m.content, cache_control: { type: 'ephemeral' } },
+        ],
+      };
+    });
+
     let response;
     try {
       console.log(`[UnsafeZone] Turn ${turnInfo.currentTurn}: Calling ${model} with ${aiMessages.length}/${messages.length} messages`);
@@ -340,8 +354,14 @@ export async function handleUnsafeZone(request, env, origin) {
       response = await client.messages.create({
         model,
         max_tokens: 1024,
-        system: systemPrompt,
-        messages: aiMessages,
+        system: [
+          {
+            type: 'text',
+            text: systemPrompt,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
+        messages: cachedMessages,
       });
     } catch (aiError) {
       console.error('[UnsafeZone] AI call failed — model:', model, '| status:', aiError?.status, '| type:', aiError?.error?.error?.type || aiError?.name, '| msg:', aiError?.message);
