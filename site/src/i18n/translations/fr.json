@@ -224,6 +224,7 @@
   "payment": {
     "title": "Acheter des Crédits",
     "currentBalance": "Solde Actuel",
+    "localPriceNote": "Prix approximatif dans votre devise locale — le montant final est confirmé au paiement.",
     "credit": "crédit",
     "credits": "crédits",
     "freeRemaining": "gratuits restants",

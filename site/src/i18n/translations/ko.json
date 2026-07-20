@@ -224,6 +224,7 @@
   "payment": {
     "title": "크레딧 구매",
     "currentBalance": "현재 잔액",
+    "localPriceNote": "현지 통화 기준 대략적인 가격이며, 최종 금액은 결제 시 확정됩니다.",
     "credit": "크레딧",
     "credits": "크레딧",
     "freeRemaining": "무료 남음",

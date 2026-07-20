@@ -639,6 +639,18 @@ export default {
         );
       }
 
+      // Localized pricing (public, display-only; charge amounts come from Stripe price IDs)
+      if (url.pathname === "/api/pricing" && request.method === "GET") {
+        const ip = request.headers.get("cf-connecting-ip") || "unknown";
+        const rateLimitOk = await checkRateLimit(env, `pricing:${ip}`);
+        if (!rateLimitOk) {
+          return jsonResponse({ error: "Too many requests" }, 429, origin, env);
+        }
+        const { getLocalizedPricing } = await import("./src/payments/localized-pricing.js");
+        const pricing = await getLocalizedPricing(env, request.cf?.country);
+        return jsonResponse(pricing, 200, origin, env);
+      }
+
       // Search route (public - no auth required, but rate limited by IP)
       if (url.pathname === "/api/search" && request.method === "POST") {
         const ip = request.headers.get("cf-connecting-ip") || "unknown";

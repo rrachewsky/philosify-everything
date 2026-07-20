@@ -3,13 +3,15 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../common';
 import { useCreditsContext } from '@/contexts';
+import { useLocalizedPricing, formatLocalPrice } from '@/hooks';
 import { logger } from '@/utils';
 
 export function PaymentModal({ isOpen, onClose }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { balance, purchaseCredits } = useCreditsContext();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const pricing = useLocalizedPricing(isOpen);
 
   // tier is the legacy SKU sent to the backend; credits is what the user gets
   const creditOptions = [
@@ -17,6 +19,14 @@ export function PaymentModal({ isOpen, onClose }) {
     { tier: 20, credits: 40, price: 'US$10.00', amount: 10.0, perAnalysis: 'US$0.25' },
     { tier: 50, credits: 100, price: 'US$20.00', amount: 20.0, perAnalysis: 'US$0.20' },
   ];
+
+  // Approximate local-currency price (mirrors Stripe Adaptive Pricing);
+  // Stripe confirms the exact figure at checkout
+  const localPriceFor = (tier) => {
+    if (!pricing?.approximate) return null;
+    const pkg = pricing.packages.find((p) => p.tier === String(tier));
+    return pkg ? formatLocalPrice(pkg.amountLocal, pricing.currency, i18n.language) : null;
+  };
 
   const handlePurchase = async (amount) => {
     if (loading) return; // Prevent double-clicks
@@ -74,10 +84,27 @@ export function PaymentModal({ isOpen, onClose }) {
               <div className="credit-amount">{option.credits}</div>
               <div className="credit-analyses">{t('payment.creditsSuffix')}</div>
             </div>
-            <div className="credit-price">{option.price}</div>
+            <div className="credit-price">
+              {localPriceFor(option.tier) ? (
+                <>
+                  <div>≈ {localPriceFor(option.tier)}</div>
+                  <div className="text-white-70" style={{ fontSize: '11px', fontWeight: 'normal' }}>
+                    {option.price}
+                  </div>
+                </>
+              ) : (
+                option.price
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      {pricing?.approximate && (
+        <div className="text-center text-white-70 mt-2" style={{ fontSize: '12px' }}>
+          {t('payment.localPriceNote')}
+        </div>
+      )}
 
       {/* Loading indicator */}
       {loading && (

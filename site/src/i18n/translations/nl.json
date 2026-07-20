@@ -224,6 +224,7 @@
   "payment": {
     "title": "Credits Kopen",
     "currentBalance": "Huidig Saldo",
+    "localPriceNote": "Geschatte prijs in uw lokale valuta — het definitieve bedrag wordt bevestigd bij het afrekenen.",
     "credit": "credit",
     "credits": "credits",
     "freeRemaining": "gratis resterend",

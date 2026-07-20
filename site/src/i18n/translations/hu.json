@@ -224,6 +224,7 @@
   "payment": {
     "title": "Kreditek Vásárlása",
     "currentBalance": "Jelenlegi Egyenleg",
+    "localPriceNote": "Hozzávetőleges ár az Ön helyi pénznemében — a végleges összeg a fizetéskor kerül megerősítésre.",
     "credit": "kredit",
     "credits": "kredit",
     "freeRemaining": "ingyenes maradt",

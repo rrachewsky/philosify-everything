@@ -224,6 +224,7 @@
   "payment": {
     "title": "Buy Credits",
     "currentBalance": "Current Balance",
+    "localPriceNote": "Approximate price in your local currency — the final amount is confirmed at checkout.",
     "credit": "credit",
     "credits": "credits",
     "freeRemaining": "free remaining",

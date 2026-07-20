@@ -224,6 +224,7 @@
   "payment": {
     "title": "Kredi Satın Al",
     "currentBalance": "Mevcut Bakiye",
+    "localPriceNote": "Yerel para biriminizde yaklaşık fiyat — nihai tutar ödeme sırasında onaylanır.",
     "credit": "kredi",
     "credits": "kredi",
     "freeRemaining": "ücretsiz kalan",

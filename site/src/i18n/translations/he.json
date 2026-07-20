@@ -224,6 +224,7 @@
   "payment": {
     "title": "קנה קרדיטים",
     "currentBalance": "יתרה נוכחית",
+    "localPriceNote": "מחיר משוער במטבע המקומי שלך — הסכום הסופי מאושר בקופה.",
     "credit": "קרדיט",
     "credits": "קרדיטים",
     "freeRemaining": "חינם נותרו",

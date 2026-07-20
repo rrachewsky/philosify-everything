@@ -224,6 +224,7 @@
   "payment": {
     "title": "شراء رصيد",
     "currentBalance": "الرصيد الحالي",
+    "localPriceNote": "سعر تقريبي بعملتك المحلية — يتم تأكيد المبلغ النهائي عند الدفع.",
     "credit": "رصيد",
     "credits": "رصيد",
     "freeRemaining": "مجاني متبقي",

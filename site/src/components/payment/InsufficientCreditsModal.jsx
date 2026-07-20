@@ -3,10 +3,20 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../common';
 import { CREDIT_PACKAGES } from '@/utils/constants';
+import { useLocalizedPricing, formatLocalPrice } from '@/hooks';
 
 export function InsufficientCreditsModal({ isOpen, onClose, onPurchase }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const pricing = useLocalizedPricing(isOpen);
+
+  // Approximate local-currency price (mirrors Stripe Adaptive Pricing);
+  // Stripe confirms the exact figure at checkout
+  const localPriceFor = (tier) => {
+    if (!pricing?.approximate) return null;
+    const pkg = pricing.packages.find((p) => p.tier === String(tier));
+    return pkg ? formatLocalPrice(pkg.amountLocal, pricing.currency, i18n.language) : null;
+  };
 
   const handlePurchase = async (amount) => {
     setLoading(true);
@@ -71,10 +81,27 @@ export function InsufficientCreditsModal({ isOpen, onClose, onPurchase }) {
               <div className="credit-amount">{pkg.credits}</div>
               <div className="credit-analyses">{t('payment.creditsSuffix')}</div>
             </div>
-            <div className="credit-price">US${pkg.amount.toFixed(2)}</div>
+            <div className="credit-price">
+              {localPriceFor(pkg.tier) ? (
+                <>
+                  <div>≈ {localPriceFor(pkg.tier)}</div>
+                  <div className="text-white-70" style={{ fontSize: '11px', fontWeight: 'normal' }}>
+                    US${pkg.amount.toFixed(2)}
+                  </div>
+                </>
+              ) : (
+                `US$${pkg.amount.toFixed(2)}`
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      {pricing?.approximate && (
+        <div className="text-center text-white-70 mt-2" style={{ fontSize: '12px' }}>
+          {t('payment.localPriceNote')}
+        </div>
+      )}
 
       {/* Loading indicator */}
       {loading && (

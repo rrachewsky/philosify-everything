@@ -224,6 +224,7 @@
   "payment": {
     "title": "Kup Kredyty",
     "currentBalance": "Bieżące Saldo",
+    "localPriceNote": "Przybliżona cena w Twojej lokalnej walucie — ostateczna kwota zostanie potwierdzona przy płatności.",
     "credit": "kredyt",
     "credits": "kredytów",
     "freeRemaining": "darmowych pozostało",

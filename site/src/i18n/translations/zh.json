@@ -224,6 +224,7 @@
   "payment": {
     "title": "购买积分",
     "currentBalance": "当前余额",
+    "localPriceNote": "以您当地货币显示的大约价格——最终金额以结账时为准。",
     "credit": "积分",
     "credits": "积分",
     "freeRemaining": "免费剩余",

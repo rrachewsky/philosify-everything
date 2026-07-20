@@ -224,6 +224,7 @@
   "payment": {
     "title": "Credits kaufen",
     "currentBalance": "Aktuelles Guthaben",
+    "localPriceNote": "Ungefährer Preis in Ihrer Landeswährung — der endgültige Betrag wird beim Bezahlen bestätigt.",
     "credit": "Credit",
     "credits": "Credits",
     "freeRemaining": "kostenlos verbleibend",

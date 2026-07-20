@@ -1,5 +1,6 @@
 export { useAuth } from './useAuth.js';
 export { useCredits } from './useCredits.js';
+export { useLocalizedPricing, formatLocalPrice } from './useLocalizedPricing.js';
 export { useAnalysis } from './useAnalysis.js';
 export { useSpotifySearch } from './useSpotifySearch.js';
 export { useModal } from './useModal.js';

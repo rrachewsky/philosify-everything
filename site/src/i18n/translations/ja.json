@@ -224,6 +224,7 @@
   "payment": {
     "title": "クレジット購入",
     "currentBalance": "現在の残高",
+    "localPriceNote": "現地通貨での概算価格です。最終金額はお支払い時に確定します。",
     "credit": "クレジット",
     "credits": "クレジット",
     "freeRemaining": "無料残り",
