@@ -2035,11 +2035,13 @@ export default {
             );
           }
 
-          // Add tier and session ID placeholder to success URL
+          // Add credits and session ID placeholder to success URL
+          // (display hint only — the success page gets the real count from verifyPayment)
+          const tierCredits = { 10: 20, 20: 40, 50: 100 }[tier];
           const baseSuccessUrl =
             env.CHECKOUT_SUCCESS_URL || "https://philosify.org/payment/success";
-          const successUrl = tier
-            ? `${baseSuccessUrl}?credits=${tier}&session_id={CHECKOUT_SESSION_ID}`
+          const successUrl = tierCredits
+            ? `${baseSuccessUrl}?credits=${tierCredits}&session_id={CHECKOUT_SESSION_ID}`
             : `${baseSuccessUrl}?session_id={CHECKOUT_SESSION_ID}`;
           const cancelUrl =
             env.CHECKOUT_CANCEL_URL || "https://philosify.org/payment/cancel";
