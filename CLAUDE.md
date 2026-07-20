@@ -267,7 +267,10 @@ npm run dev
 npm run build
 
 # Deploy to Cloudflare Pages
-wrangler pages deploy dist --project-name=philosify-frontend
+wrangler pages deploy dist --project-name=philosify-frontend --branch=production
+# IMPORTANT: --branch=production is required — the project's production branch is
+# "production", and deploying from git branch "main" without the flag lands in the
+# Preview environment, so philosify.org keeps serving the old build.
 
 # Production URL: https://philosify.org
 # Pages project: philosify-frontend
@@ -494,7 +497,7 @@ Critical for credit system:
 
 **Manual Deployment Steps:**
 1. Deploy backend: `cd api && wrangler deploy --env production`
-2. Deploy frontend: `cd site && npm run build && wrangler pages deploy dist --project-name=philosify-frontend`
+2. Deploy frontend: `cd site && npm run build && wrangler pages deploy dist --project-name=philosify-frontend --branch=production`
 3. Upload guides (if updated): `cd api/guides && ./deploy_all_guides.sh` (Linux/Mac) or `deploy_all_guides.ps1` (Windows)
 4. Execute SQL (first time): Run migrations via Supabase dashboard SQL Editor
 5. Configure secrets (first time): Add all secrets to Secrets Store via Cloudflare dashboard
