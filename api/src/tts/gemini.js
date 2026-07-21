@@ -319,11 +319,11 @@ const PODCAST_PHRASES = {
     background:
       "Let's start with some background. What's the story behind this song?",
     criticHandoff:
-      "Thanks! {name}, what can you tell us about the creative process?",
+      "{name}, what can you tell us about the creative process?",
     creativeIntro:
       "That's fascinating context. And what about the creative process?",
     philosopherHandoff:
-      "Excellent insights! {name}, let's dive into the philosophical analysis.",
+      "{name}, let's dive into the philosophical analysis.",
     analysisIntro:
       "Now let's get to the heart of it - the philosophical analysis.",
     verdictHandoff: "{name}, what's your final verdict on this song?",
@@ -332,7 +332,7 @@ const PODCAST_PHRASES = {
     outOf10: "out of 10.",
     classification: "This places it in the",
     category: "category.",
-    thanks: "Another great analysis. Thanks for listening to Filosifai!",
+    thanks: "Thanks for listening to Filosifai!",
     reactions: [
       "That's really fascinating.",
       "Interesting point.",
@@ -356,10 +356,10 @@ const PODCAST_PHRASES = {
     background:
       "Vamos começar com um pouco de contexto. Qual é a história por trás desta música?",
     criticHandoff:
-      "Obrigada! {name}, o que você pode nos contar sobre o processo criativo?",
+      "{name}, o que você pode nos contar sobre o processo criativo?",
     creativeIntro: "Que contexto fascinante. E sobre o processo criativo?",
     philosopherHandoff:
-      "Excelentes insights! {name}, vamos mergulhar na análise filosófica.",
+      "{name}, vamos mergulhar na análise filosófica.",
     analysisIntro: "Agora vamos ao que interessa - a análise filosófica.",
     verdictHandoff: "{name}, qual é o seu veredito final sobre essa música?",
     verdictIntro: "Então, qual é o veredito final?",
@@ -367,7 +367,7 @@ const PODCAST_PHRASES = {
     outOf10: "de 10.",
     classification: "Isso a coloca na categoria",
     category: ".",
-    thanks: "Mais uma grande análise. Obrigado por ouvir o Filosifai!",
+    thanks: "Obrigado por ouvir o Filosifai!",
     reactions: [
       "Isso é realmente fascinante.",
       "Ponto interessante.",
@@ -391,10 +391,10 @@ const PODCAST_PHRASES = {
     background:
       "Empecemos con algo de contexto. ¿Cuál es la historia detrás de esta canción?",
     criticHandoff:
-      "¡Gracias! {name}, ¿qué puedes contarnos sobre el proceso creativo?",
+      "{name}, ¿qué puedes contarnos sobre el proceso creativo?",
     creativeIntro: "Qué contexto fascinante. ¿Y sobre el proceso creativo?",
     philosopherHandoff:
-      "¡Excelentes ideas! {name}, profundicemos en el análisis filosófico.",
+      "{name}, profundicemos en el análisis filosófico.",
     analysisIntro:
       "Ahora vamos al corazón del asunto - el análisis filosófico.",
     verdictHandoff: "{name}, ¿cuál es tu veredicto final sobre esta canción?",
@@ -403,7 +403,7 @@ const PODCAST_PHRASES = {
     outOf10: "de 10.",
     classification: "Esto la coloca en la categoría",
     category: ".",
-    thanks: "¡Otro gran análisis. Gracias por escuchar Filosifai!",
+    thanks: "¡Gracias por escuchar Filosifai!",
     reactions: [
       "Eso es realmente fascinante.",
       "Punto interesante.",
@@ -427,10 +427,10 @@ const PODCAST_PHRASES = {
     background:
       "Commençons par le contexte. Quelle est l'histoire derrière cette chanson ?",
     criticHandoff:
-      "Merci ! {name}, que pouvez-vous nous dire sur le processus créatif ?",
+      "{name}, que pouvez-vous nous dire sur le processus créatif ?",
     creativeIntro: "Quel contexte fascinant. Et le processus créatif ?",
     philosopherHandoff:
-      "Excellentes idées ! {name}, plongeons dans l'analyse philosophique.",
+      "{name}, plongeons dans l'analyse philosophique.",
     analysisIntro:
       "Maintenant, allons au cœur du sujet - l'analyse philosophique.",
     verdictHandoff: "{name}, quel est votre verdict final sur cette chanson ?",
@@ -439,7 +439,7 @@ const PODCAST_PHRASES = {
     outOf10: "sur 10.",
     classification: "Cela la place dans la catégorie",
     category: ".",
-    thanks: "Une autre grande analyse. Merci d'écouter Filosifaï !",
+    thanks: "Merci d'écouter Filosifaï !",
     reactions: [
       "C'est vraiment fascinant.",
       "Point intéressant.",
@@ -463,11 +463,11 @@ const PODCAST_PHRASES = {
     background:
       "Beginnen wir mit dem Hintergrund. Was ist die Geschichte hinter diesem Lied?",
     criticHandoff:
-      "Danke! {name}, was können Sie uns über den kreativen Prozess erzählen?",
+      "{name}, was können Sie uns über den kreativen Prozess erzählen?",
     creativeIntro:
       "Was für ein faszinierender Kontext. Und der kreative Prozess?",
     philosopherHandoff:
-      "Ausgezeichnete Einblicke! {name}, tauchen wir in die philosophische Analyse ein.",
+      "{name}, tauchen wir in die philosophische Analyse ein.",
     analysisIntro: "Jetzt kommen wir zum Kern - die philosophische Analyse.",
     verdictHandoff:
       "{name}, wie lautet Ihr endgültiges Urteil über dieses Lied?",
@@ -477,7 +477,7 @@ const PODCAST_PHRASES = {
     classification: "Das ordnet es in die Kategorie",
     category: "ein.",
     thanks:
-      "Eine weitere großartige Analyse. Danke fürs Zuhören bei Filosifai!",
+      "Danke fürs Zuhören bei Filosifai!",
     reactions: [
       "Das ist wirklich faszinierend.",
       "Interessanter Punkt.",
@@ -499,10 +499,10 @@ const PODCAST_PHRASES = {
     historianHandoff: "{name}, raccontaci la storia dietro questa canzone.",
     background:
       "Iniziamo con un po' di contesto. Qual è la storia dietro questa canzone?",
-    criticHandoff: "Grazie! {name}, cosa puoi dirci sul processo creativo?",
+    criticHandoff: "{name}, cosa puoi dirci sul processo creativo?",
     creativeIntro: "Che contesto affascinante. E il processo creativo?",
     philosopherHandoff:
-      "Ottimi spunti! {name}, immergiamoci nell'analisi filosofica.",
+      "{name}, immergiamoci nell'analisi filosofica.",
     analysisIntro:
       "Ora arriviamo al cuore della questione - l'analisi filosofica.",
     verdictHandoff: "{name}, qual è il tuo verdetto finale su questa canzone?",
@@ -511,7 +511,7 @@ const PODCAST_PHRASES = {
     outOf10: "su 10.",
     classification: "Questo la colloca nella categoria",
     category: ".",
-    thanks: "Un'altra grande analisi. Grazie per aver ascoltato Filosifai!",
+    thanks: "Grazie per aver ascoltato Filosifai!",
     reactions: [
       "È davvero affascinante.",
       "Punto interessante.",
@@ -533,10 +533,10 @@ const PODCAST_PHRASES = {
     historianHandoff: "{name}さん、この曲の背景について教えてください。",
     background: "まず背景から始めましょう。この曲の物語は何ですか？",
     criticHandoff:
-      "ありがとうございます！{name}さん、創作過程について教えていただけますか？",
+      "{name}さん、創作過程について教えていただけますか？",
     creativeIntro: "魅力的な背景ですね。創作過程についてはどうですか？",
     philosopherHandoff:
-      "素晴らしい洞察です！{name}さん、哲学的分析に入りましょう。",
+      "{name}さん、哲学的分析に入りましょう。",
     analysisIntro: "では本題に入りましょう - 哲学的分析です。",
     verdictHandoff: "{name}さん、この曲に対する最終評価は何ですか？",
     verdictIntro: "では、最終的な評価は？",
@@ -545,7 +545,7 @@ const PODCAST_PHRASES = {
     classification: "これは",
     category: "カテゴリーに分類されます。",
     thanks:
-      "また素晴らしい分析でした。フィロシファイをお聴きいただきありがとうございます！",
+      "フィロシファイをお聴きいただきありがとうございます！",
     reactions: [
       "それは本当に魅力的ですね。",
       "興味深いポイントです。",
@@ -566,10 +566,10 @@ const PODCAST_PHRASES = {
     hostGreeting: "자, {name}님,",
     historianHandoff: "{name}님, 이 노래의 역사적 배경에 대해 말씀해 주세요.",
     background: "배경부터 시작해 볼까요? 이 노래의 이야기는 무엇인가요?",
-    criticHandoff: "감사합니다! {name}님, 창작 과정에 대해 알려주시겠어요?",
+    criticHandoff: "{name}님, 창작 과정에 대해 알려주시겠어요?",
     creativeIntro: "매력적인 맥락이네요. 창작 과정은 어떤가요?",
     philosopherHandoff:
-      "훌륭한 통찰입니다! {name}님, 철학적 분석을 시작해 볼까요.",
+      "{name}님, 철학적 분석을 시작해 볼까요.",
     analysisIntro: "이제 본론으로 들어가겠습니다 - 철학적 분석입니다.",
     verdictHandoff: "{name}님, 이 노래에 대한 최종 평가는 무엇인가요?",
     verdictIntro: "그럼 최종 평가는 어떤가요?",
@@ -577,7 +577,7 @@ const PODCAST_PHRASES = {
     outOf10: "점(10점 만점)입니다.",
     classification: "이것은",
     category: "카테고리에 해당합니다.",
-    thanks: "또 훌륭한 분석이었습니다. 필로시파이를 들어주셔서 감사합니다!",
+    thanks: "필로시파이를 들어주셔서 감사합니다!",
     reactions: [
       "정말 매력적이네요.",
       "흥미로운 포인트입니다.",
@@ -597,9 +597,9 @@ const PODCAST_PHRASES = {
     hostGreeting: "好的，{name}，",
     historianHandoff: "{name}，请给我们讲讲这首歌的历史背景。",
     background: "让我们从背景开始。这首歌背后的故事是什么？",
-    criticHandoff: "谢谢！{name}，你能告诉我们创作过程吗？",
+    criticHandoff: "{name}，你能告诉我们创作过程吗？",
     creativeIntro: "多么迷人的背景。创作过程呢？",
-    philosopherHandoff: "精彩的见解！{name}，让我们深入哲学分析。",
+    philosopherHandoff: "{name}，让我们深入哲学分析。",
     analysisIntro: "现在让我们进入核心 - 哲学分析。",
     verdictHandoff: "{name}，你对这首歌的最终评价是什么？",
     verdictIntro: "那么，最终评价是什么？",
@@ -607,7 +607,7 @@ const PODCAST_PHRASES = {
     outOf10: "分（满分10分）。",
     classification: "这将其归类为",
     category: "类别。",
-    thanks: "又一次精彩的分析。感谢收听Filosifai！",
+    thanks: "感谢收听Filosifai！",
     reactions: [
       "这真的很有趣。",
       "有意思的观点。",
@@ -629,11 +629,11 @@ const PODCAST_PHRASES = {
     historianHandoff: "{name}, расскажите нам об истории этой песни.",
     background: "Начнём с контекста. Какова история этой песни?",
     criticHandoff:
-      "Спасибо! {name}, что вы можете рассказать о творческом процессе?",
+      "{name}, что вы можете рассказать о творческом процессе?",
     creativeIntro:
       "Какой увлекательный контекст. А как насчёт творческого процесса?",
     philosopherHandoff:
-      "Отличные мысли! {name}, давайте погрузимся в философский анализ.",
+      "{name}, давайте погрузимся в философский анализ.",
     analysisIntro: "Теперь перейдём к сути - философскому анализу.",
     verdictHandoff: "{name}, каков ваш окончательный вердикт об этой песне?",
     verdictIntro: "Итак, каков окончательный вердикт?",
@@ -641,7 +641,7 @@ const PODCAST_PHRASES = {
     outOf10: "из 10.",
     classification: "Это относит её к категории",
     category: ".",
-    thanks: "Ещё один отличный анализ. Спасибо за прослушивание Философай!",
+    thanks: "Спасибо за прослушивание Философай!",
     reactions: [
       "Это действительно увлекательно.",
       "Интересная мысль.",
@@ -662,9 +662,9 @@ const PODCAST_PHRASES = {
     hostGreeting: "حسناً، {name}،",
     historianHandoff: "{name}، أخبرنا عن تاريخ هذه الأغنية.",
     background: "لنبدأ ببعض السياق. ما هي القصة وراء هذه الأغنية؟",
-    criticHandoff: "شكراً! {name}، ماذا يمكنك أن تخبرنا عن العملية الإبداعية؟",
+    criticHandoff: "{name}، ماذا يمكنك أن تخبرنا عن العملية الإبداعية؟",
     creativeIntro: "يا له من سياق رائع. وماذا عن العملية الإبداعية؟",
-    philosopherHandoff: "رؤى ممتازة! {name}، دعنا نتعمق في التحليل الفلسفي.",
+    philosopherHandoff: "{name}، دعنا نتعمق في التحليل الفلسفي.",
     analysisIntro: "الآن دعونا ندخل في صلب الموضوع - التحليل الفلسفي.",
     verdictHandoff: "{name}، ما هو حكمك النهائي على هذه الأغنية؟",
     verdictIntro: "إذاً، ما هو الحكم النهائي؟",
@@ -672,7 +672,7 @@ const PODCAST_PHRASES = {
     outOf10: "من 10.",
     classification: "هذا يضعها في فئة",
     category: ".",
-    thanks: "تحليل رائع آخر. شكراً للاستماع إلى في-لو-سي-فاي!",
+    thanks: "شكراً للاستماع إلى في-لو-سي-فاي!",
     reactions: [
       "هذا رائع حقاً.",
       "نقطة مثيرة للاهتمام.",
@@ -692,9 +692,9 @@ const PODCAST_PHRASES = {
     hostGreeting: "ובכן, {name},",
     historianHandoff: "{name}, ספר לנו על ההיסטוריה של השיר הזה.",
     background: "בואו נתחיל עם קצת רקע. מה הסיפור מאחורי השיר הזה?",
-    criticHandoff: "תודה! {name}, מה אתה יכול לספר לנו על התהליך היצירתי?",
+    criticHandoff: "{name}, מה אתה יכול לספר לנו על התהליך היצירתי?",
     creativeIntro: "איזה הקשר מרתק. ומה לגבי התהליך היצירתי?",
-    philosopherHandoff: "תובנות מצוינות! {name}, בוא נצלול לניתוח הפילוסופי.",
+    philosopherHandoff: "{name}, בוא נצלול לניתוח הפילוסופי.",
     analysisIntro: "עכשיו בואו נגיע ללב העניין - הניתוח הפילוסופי.",
     verdictHandoff: "{name}, מה פסק הדין הסופי שלך על השיר הזה?",
     verdictIntro: "אז מה פסק הדין הסופי?",
@@ -702,7 +702,7 @@ const PODCAST_PHRASES = {
     outOf10: "מתוך 10.",
     classification: "זה מציב אותו בקטגוריה",
     category: ".",
-    thanks: "עוד ניתוח מעולה. תודה שהאזנתם לפילוסיפאי!",
+    thanks: "תודה שהאזנתם לפילוסיפאי!",
     reactions: [
       "זה באמת מרתק.",
       "נקודה מעניינת.",
@@ -725,11 +725,11 @@ const PODCAST_PHRASES = {
     background:
       "आइए कुछ पृष्ठभूमि से शुरू करें। इस गाने के पीछे की कहानी क्या है?",
     criticHandoff:
-      "धन्यवाद! {name}, रचनात्मक प्रक्रिया के बारे में क्या बता सकते हैं?",
+      "{name}, रचनात्मक प्रक्रिया के बारे में क्या बता सकते हैं?",
     creativeIntro:
       "कितना आकर्षक संदर्भ। और रचनात्मक प्रक्रिया के बारे में क्या?",
     philosopherHandoff:
-      "उत्कृष्ट अंतर्दृष्टि! {name}, चलिए दार्शनिक विश्लेषण में उतरते हैं।",
+      "{name}, चलिए दार्शनिक विश्लेषण में उतरते हैं।",
     analysisIntro: "अब मुख्य बात पर आते हैं - दार्शनिक विश्लेषण।",
     verdictHandoff: "{name}, इस गाने पर आपका अंतिम फैसला क्या है?",
     verdictIntro: "तो, अंतिम फैसला क्या है?",
@@ -737,7 +737,7 @@ const PODCAST_PHRASES = {
     outOf10: "10 में से।",
     classification: "यह इसे श्रेणी में रखता है",
     category: "।",
-    thanks: "एक और शानदार विश्लेषण। फ़िलोसिफ़ाय सुनने के लिए धन्यवाद!",
+    thanks: "फ़िलोसिफ़ाय सुनने के लिए धन्यवाद!",
     reactions: [
       "यह वाकई आकर्षक है।",
       "दिलचस्प बात है।",
@@ -761,10 +761,10 @@ const PODCAST_PHRASES = {
     background:
       "Laten we beginnen met wat achtergrond. Wat is het verhaal achter dit nummer?",
     criticHandoff:
-      "Bedankt! {name}, wat kun je ons vertellen over het creatieve proces?",
+      "{name}, wat kun je ons vertellen over het creatieve proces?",
     creativeIntro: "Wat een fascinerende context. En het creatieve proces?",
     philosopherHandoff:
-      "Uitstekende inzichten! {name}, laten we duiken in de filosofische analyse.",
+      "{name}, laten we duiken in de filosofische analyse.",
     analysisIntro: "Nu komen we bij de kern - de filosofische analyse.",
     verdictHandoff: "{name}, wat is jouw eindoordeel over dit nummer?",
     verdictIntro: "Dus, wat is het eindoordeel?",
@@ -773,7 +773,7 @@ const PODCAST_PHRASES = {
     classification: "Dit plaatst het in de categorie",
     category: ".",
     thanks:
-      "Weer een geweldige analyse. Bedankt voor het luisteren naar Filosifai!",
+      "Bedankt voor het luisteren naar Filosifai!",
     reactions: [
       "Dat is echt fascinerend.",
       "Interessant punt.",
@@ -795,10 +795,10 @@ const PODCAST_PHRASES = {
     historianHandoff: "{name}, opowiedz nam o historii tej piosenki.",
     background: "Zacznijmy od kontekstu. Jaka jest historia tej piosenki?",
     criticHandoff:
-      "Dziękuję! {name}, co możesz nam powiedzieć o procesie twórczym?",
+      "{name}, co możesz nam powiedzieć o procesie twórczym?",
     creativeIntro: "Cóż za fascynujący kontekst. A proces twórczy?",
     philosopherHandoff:
-      "Doskonałe spostrzeżenia! {name}, zagłębmy się w analizę filozoficzną.",
+      "{name}, zagłębmy się w analizę filozoficzną.",
     analysisIntro: "Teraz przejdźmy do sedna - analizy filozoficznej.",
     verdictHandoff: "{name}, jaki jest twój ostateczny werdykt o tej piosence?",
     verdictIntro: "Więc, jaki jest ostateczny werdykt?",
@@ -806,7 +806,7 @@ const PODCAST_PHRASES = {
     outOf10: "na 10.",
     classification: "To plasuje ją w kategorii",
     category: ".",
-    thanks: "Kolejna świetna analiza. Dziękujemy za słuchanie Filosifaj!",
+    thanks: "Dziękujemy za słuchanie Filosifaj!",
     reactions: [
       "To naprawdę fascynujące.",
       "Ciekawy punkt.",
@@ -829,9 +829,9 @@ const PODCAST_PHRASES = {
     background:
       "Biraz arka planla başlayalım. Bu şarkının arkasındaki hikaye nedir?",
     criticHandoff:
-      "Teşekkürler! {name}, yaratıcı süreç hakkında neler söyleyebilirsin?",
+      "{name}, yaratıcı süreç hakkında neler söyleyebilirsin?",
     creativeIntro: "Ne kadar büyüleyici bir bağlam. Peki yaratıcı süreç?",
-    philosopherHandoff: "Mükemmel görüşler! {name}, felsefi analize dalalım.",
+    philosopherHandoff: "{name}, felsefi analize dalalım.",
     analysisIntro: "Şimdi konunun özüne gelelim - felsefi analiz.",
     verdictHandoff: "{name}, bu şarkı hakkındaki nihai kararın nedir?",
     verdictIntro: "Peki, nihai karar nedir?",
@@ -840,7 +840,7 @@ const PODCAST_PHRASES = {
     classification: "Bu onu",
     category: "kategorisine yerleştiriyor.",
     thanks:
-      "Bir harika analiz daha. Filosifay'ı dinlediğiniz için teşekkürler!",
+      "Filosifay'ı dinlediğiniz için teşekkürler!",
     reactions: [
       "Bu gerçekten büyüleyici.",
       "İlginç bir nokta.",
@@ -861,10 +861,10 @@ const PODCAST_PHRASES = {
     hostGreeting: "Nos, {name},",
     historianHandoff: "{name}, mesélj nekünk a dal történetéről.",
     background: "Kezdjük egy kis háttérrel. Mi a történet e dal mögött?",
-    criticHandoff: "Köszönöm! {name}, mit tudsz mondani a kreatív folyamatról?",
+    criticHandoff: "{name}, mit tudsz mondani a kreatív folyamatról?",
     creativeIntro: "Milyen lenyűgöző kontextus. És a kreatív folyamat?",
     philosopherHandoff:
-      "Kiváló meglátások! {name}, merüljünk el a filozófiai elemzésben.",
+      "{name}, merüljünk el a filozófiai elemzésben.",
     analysisIntro: "Most térjünk a lényegre - a filozófiai elemzésre.",
     verdictHandoff: "{name}, mi a végső ítéleted erről a dalról?",
     verdictIntro: "Szóval, mi a végső ítélet?",
@@ -872,7 +872,7 @@ const PODCAST_PHRASES = {
     outOf10: "a 10-ből.",
     classification: "Ez a következő kategóriába helyezi",
     category: ".",
-    thanks: "Újabb remek elemzés. Köszönjük, hogy a Filosifáj-t hallgattátok!",
+    thanks: "Köszönjük, hogy a Filosifáj-t hallgattátok!",
     reactions: [
       "Ez igazán lenyűgöző.",
       "Érdekes pont.",
@@ -893,9 +893,9 @@ const PODCAST_PHRASES = {
     historianHandoff: "{name}، درباره تاریخچه این آهنگ به ما بگو.",
     background: "بیایید با کمی زمینه شروع کنیم. داستان پشت این آهنگ چیست؟",
     criticHandoff:
-      "ممنون! {name}، چه چیزی درباره فرآیند خلاقانه می‌توانی بگویی؟",
+      "{name}، چه چیزی درباره فرآیند خلاقانه می‌توانی بگویی؟",
     creativeIntro: "چه زمینه جذابی. و فرآیند خلاقانه چطور؟",
-    philosopherHandoff: "بینش‌های عالی! {name}، بیا به تحلیل فلسفی بپردازیم.",
+    philosopherHandoff: "{name}، بیا به تحلیل فلسفی بپردازیم.",
     analysisIntro: "حالا بیایید به اصل مطلب برسیم - تحلیل فلسفی.",
     verdictHandoff: "{name}، نظر نهایی تو درباره این آهنگ چیست؟",
     verdictIntro: "خب، حکم نهایی چیست؟",
@@ -903,7 +903,7 @@ const PODCAST_PHRASES = {
     outOf10: "از 10 است.",
     classification: "این آن را در دسته‌بندی",
     category: "قرار می‌دهد.",
-    thanks: "یک تحلیل عالی دیگر. ممنون که به فیلوسیفای گوش دادید!",
+    thanks: "ممنون که به فیلوسیفای گوش دادید!",
     reactions: [
       "این واقعاً جذاب است.",
       "نکته جالبی است.",
@@ -1229,57 +1229,9 @@ function splitTextInHalf(text) {
   };
 }
 
-/**
- * Fixed interjection count per chunk: 2-3 interjections
- * 1 question per 2 interjections
- * @returns {number}
- */
-function getChunkInterjectionCount(text) {
-  if (!text || text.length < 50) return 0;
-
-  const sentences = text
-    .split(/(?<=[.!?])\s+/)
-    .filter((s) => s.trim().length > 10);
-
-  // 2-3 interjections per chunk based on content length
-  if (sentences.length < 3) return 1;
-  if (sentences.length < 6) return 2;
-  return 3;
-}
-
-/**
- * Generate interjection pattern: 1Q per 2 interjections
- * @returns {string[]} Array of 'R' (reaction) or 'Q' (question)
- */
-function generateInterjectionPattern(count) {
-  if (count === 0) return [];
-  if (count === 1) return ["R"];
-  if (count === 2) return ["R", "Q"];
-  // count >= 3: R, Q, R pattern
-  return ["R", "Q", "R"];
-}
-
-/**
- * Pick random reactions from the fixed phrases, avoiding duplicates
- */
-function pickReactions(count, phrases, usedIndices = new Set()) {
-  const reactions = phrases.reactions || PODCAST_PHRASES.en.reactions;
-  const picked = [];
-
-  for (let i = 0; i < count; i++) {
-    let idx;
-    let attempts = 0;
-    do {
-      idx = Math.floor(Math.random() * reactions.length);
-      attempts++;
-    } while (usedIndices.has(idx) && attempts < reactions.length * 2);
-
-    usedIndices.add(idx);
-    picked.push(reactions[idx]);
-  }
-
-  return picked;
-}
+// Host reaction interjections removed: the host only introduces, asks the
+// contextual questions, and closes. (pickReactions and the R/Q pattern
+// helpers were deleted along with them.)
 
 /**
  * Generate contextual questions for 4 chunks using Gemini LLM
@@ -1406,58 +1358,29 @@ function buildChunkDialogue(
     return `**${expertVoice}:** ${contentWithGreeting}\n\n`;
   }
 
-  const interjectionCount = getChunkInterjectionCount(text);
-  const pattern = generateInterjectionPattern(interjectionCount);
-
-  // Calculate insertion points (evenly spaced)
-  const insertionPoints = [];
-  const spacing = Math.floor(sentences.length / (interjectionCount + 1));
-  for (let i = 1; i <= interjectionCount; i++) {
-    insertionPoints.push(i * spacing);
+  // Host interjections/reactions removed: the host only asks questions.
+  // Insert the single contextual question at the midpoint (if provided).
+  if (!question) {
+    return `**${expertVoice}:** ${contentWithGreeting}\n\n`;
   }
 
-  let result = "";
-  let currentChunk = "";
-  let interjectionIdx = 0;
-  let reactionIdx = 0;
-  let questionUsed = false;
+  const midpoint = Math.ceil(sentences.length / 2);
+  const firstHalf = sentences
+    .slice(0, midpoint)
+    .map((s) => s.trim())
+    .join(" ");
+  const secondHalf = sentences
+    .slice(midpoint)
+    .map((s) => s.trim())
+    .join(" ");
+  const questionLine = expertCharacterName
+    ? `${expertCharacterName}, ${question}`
+    : question;
 
-  for (let i = 0; i < sentences.length; i++) {
-    currentChunk += (currentChunk ? " " : "") + sentences[i].trim();
-
-    // Check if we should insert an interjection after this sentence
-    if (
-      interjectionIdx < insertionPoints.length &&
-      i + 1 >= insertionPoints[interjectionIdx]
-    ) {
-      result += `**${expertVoice}:** ${currentChunk}\n\n`;
-      currentChunk = "";
-
-      // Get the interjection (R or Q)
-      const type = pattern[interjectionIdx];
-      let interjection;
-
-      if (type === "Q" && question && !questionUsed) {
-        // Prepend expert's name to the question for natural dialogue
-        interjection = expertCharacterName
-          ? `${expertCharacterName}, ${question}`
-          : question;
-        questionUsed = true;
-      } else if (reactions && reactions.length > reactionIdx) {
-        interjection = reactions[reactionIdx];
-        reactionIdx++;
-      } else {
-        interjection = "That's fascinating.";
-      }
-
-      result += `**${hostVoice}:** ${interjection}\n\n`;
-      interjectionIdx++;
-    }
-  }
-
-  // Emit remaining text
-  if (currentChunk.trim()) {
-    result += `**${expertVoice}:** ${currentChunk.trim()}\n\n`;
+  let result = `**${expertVoice}:** ${firstHalf}\n\n`;
+  result += `**${hostVoice}:** ${questionLine}\n\n`;
+  if (secondHalf.trim()) {
+    result += `**${expertVoice}:** ${secondHalf.trim()}\n\n`;
   }
 
   return result;
@@ -1744,7 +1667,7 @@ LANGUAGE: Speak ONLY in ${langName}.
 `;
 
   // Intro - Host welcomes and addresses Historian by name
-  script += `**${hostVoice}:** ${phrases.welcome} "${song}" ${phrases.byArtist} ${artist}. ${phrases.fascinating}\n\n`;
+  script += `**${hostVoice}:** ${phrases.welcome} "${song}" ${phrases.byArtist} ${artist}.\n\n`;
 
   // Host addresses historian by name (use handoff phrase or fallback to background)
   const historianHandoff = phrases.historianHandoff
@@ -2118,7 +2041,7 @@ LANGUAGE: Speak ONLY in ${langName}.
     if (panelSections.length > 0) {
       const s1Content = panelSections[0].content.substring(0, CHUNK_LIMIT);
       scripts.push(scriptHeader +
-        `\n**${hostVoice}:** ${p.welcome} "${sections.song}" ${p.byArtist} ${sections.artist}. ${p.fascinating}\n\n` +
+        `\n**${hostVoice}:** ${p.welcome} "${sections.song}" ${p.byArtist} ${sections.artist}.\n\n` +
         `**${hostVoice}:** ${panelSections[0].header}.\n\n` +
         `**${philoVoiceA}:** ${s1Content}\n\n` +
         `=== END SCRIPT ===`);
@@ -2158,7 +2081,7 @@ LANGUAGE: Speak ONLY in ${langName}.
       console.log(`[TTS] Panel section parsing failed, using fallback`);
       const cleanText = cleanVerdictForTTS(rawText).substring(0, CHUNK_LIMIT);
       scripts.push(scriptHeader +
-        `\n**${hostVoice}:** ${p.welcome} "${sections.song}". ${p.fascinating}\n\n` +
+        `\n**${hostVoice}:** ${p.welcome} "${sections.song}".\n\n` +
         `**${philoVoiceA}:** ${cleanText}\n\n` +
         `=== END SCRIPT ===`);
     }
@@ -2275,10 +2198,10 @@ LANGUAGE: Speak ONLY in ${langName}.
   const usedReactionIndices = new Set();
 
   // Pick reactions for each chunk (2 reactions per chunk max)
-  const historyReactions = pickReactions(2, p, usedReactionIndices);
-  const creativeReactions = pickReactions(2, p, usedReactionIndices);
-  const analysis1Reactions = pickReactions(2, p, usedReactionIndices);
-  const analysis2Reactions = pickReactions(2, p, usedReactionIndices);
+  const historyReactions = [];
+  const creativeReactions = [];
+  const analysis1Reactions = [];
+  const analysis2Reactions = [];
 
   // Build scripts for each chunk
   const script1 = buildIntroChunkScript(
