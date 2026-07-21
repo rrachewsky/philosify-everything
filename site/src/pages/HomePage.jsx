@@ -255,6 +255,16 @@ export function HomePage({
           )}
         </motion.div>
 
+        {/* Philosify Ads Ateliê — advertiser portal entry (bottom-left) */}
+        <a
+          href="https://ads.philosify.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="landing-auth-link landing-ads-atelier"
+        >
+          Philosify Ads Ateliê
+        </a>
+
         {/* Background */}
         <div className="bg-video-layer">
           <div className="bg-overlay" style={{ background: '#0a0020' }} />
