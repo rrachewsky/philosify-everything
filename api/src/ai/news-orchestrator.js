@@ -11,7 +11,7 @@ import { callGrok, callClaude } from "./models/index.js";
 import { extractJSON } from "./parser.js";
 
 const LANG_NAMES = {
-  en: "English", pt: "Portuguese", es: "Spanish", de: "German",
+  en: "English", pt: "Brazilian Portuguese", es: "Spanish", de: "German",
   fr: "French", it: "Italian", hu: "Hungarian", ru: "Russian",
   ja: "Japanese", zh: "Chinese", ko: "Korean", he: "Hebrew",
   ar: "Arabic", hi: "Hindi", fa: "Farsi", nl: "Dutch",

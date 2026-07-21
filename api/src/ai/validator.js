@@ -99,14 +99,8 @@ export function validateAnalysisQuality(analysis) {
     issues.push("missing_classification");
   }
 
-  // 5b. School(s) of Thought container is mandatory (stored in metadata for older rows)
-  const schoolsOfThought =
-    (analysis.metadata && typeof analysis.metadata === "object"
-      ? analysis.metadata.schools_of_thought
-      : "") || "";
-  if (!schoolsOfThought || String(schoolsOfThought).trim() === "") {
-    issues.push("missing_schools_of_thought");
-  }
+  // 5b. Schools of Thought REMOVED per user decision (July 2026) — the field is
+  // no longer requested from models, so it must not be a validation requirement.
 
   // 6. Check final score exists
   if (analysis.final_score === undefined || analysis.final_score === null) {

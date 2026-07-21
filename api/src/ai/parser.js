@@ -481,7 +481,8 @@ export function normalizeResponse(data) {
       ? data.philosophical_note
       : data.philosophical_score;
 
-  // Map schools_of_thought (new standalone container)
+  // Map schools_of_thought (legacy: no longer requested for music analyses,
+  // but preserved if a model volunteers it or for book/cinema flows)
   let schools_of_thought = data.schools_of_thought;
   if (schools_of_thought && typeof schools_of_thought === "object") {
     // Avoid object types; expect string field
@@ -493,11 +494,7 @@ export function normalizeResponse(data) {
     typeof schools_of_thought !== "string" ||
     schools_of_thought.trim() === ""
   ) {
-    console.error(
-      "[Parser] ⚠️ CRITICAL: Missing MANDATORY schools_of_thought field",
-    );
-    schools_of_thought =
-      "[Schools of Thought not provided - MANDATORY FIELD MISSING]";
+    schools_of_thought = null;
   }
 
   // Validate and warn about missing critical fields (MANDATORY FIELDS)
@@ -531,8 +528,7 @@ export function normalizeResponse(data) {
     classification,
     philosophical_analysis:
       philosophical_analysis || "[Philosophical analysis not provided]",
-    schools_of_thought:
-      schools_of_thought || "[Schools of Thought not provided]",
+    schools_of_thought: schools_of_thought || null,
     philosophical_note,
     historical_context:
       historical_context || "[Historical context not provided]",

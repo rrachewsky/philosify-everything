@@ -3190,7 +3190,7 @@ export function findPhilosopher(name) {
 
 const SUPPORTED_LANGUAGES = {
   en: "English",
-  pt: "Portuguese",
+  pt: "Brazilian Portuguese",
   es: "Spanish",
   fr: "French",
   de: "German",

@@ -7,7 +7,7 @@ import { getSecret } from "../utils/secrets.js";
  * Map ISO 639-1 codes to full language names for Gemini
  */
 const LANG_NAMES = {
-  pt: 'Portuguese', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian',
+  pt: 'Brazilian Portuguese', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian',
   nl: 'Dutch', ru: 'Russian', zh: 'Chinese', ar: 'Arabic', he: 'Hebrew',
   ja: 'Japanese', ko: 'Korean', tr: 'Turkish', pl: 'Polish', hu: 'Hungarian',
   hi: 'Hindi', fa: 'Persian'

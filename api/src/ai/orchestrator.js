@@ -138,7 +138,7 @@ function isCompleteNormalizedAnalysis(normalized, lang = "en") {
 // Language code to name mapping (must match frontend i18n/config.js)
 const LANG_NAMES = {
   en: "English",
-  pt: "Portuguese",
+  pt: "Brazilian Portuguese",
   es: "Spanish",
   de: "German",
   fr: "French",

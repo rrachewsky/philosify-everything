@@ -14,7 +14,7 @@ import { checkRateLimit } from "../rate-limit/index.js";
 // Language code -> full name for prompt clarity
 const LANG_NAMES = {
   en: "English",
-  pt: "Portuguese",
+  pt: "Brazilian Portuguese",
   es: "Spanish",
   fr: "French",
   de: "German",

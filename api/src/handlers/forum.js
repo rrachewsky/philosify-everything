@@ -126,7 +126,7 @@ async function fetchUserLanguage(env, userId) {
 // Map language codes to full names for Grok
 const LANG_CODE_TO_NAME = {
   en: "English",
-  pt: "Portuguese",
+  pt: "Brazilian Portuguese",
   es: "Spanish",
   fr: "French",
   de: "German",
