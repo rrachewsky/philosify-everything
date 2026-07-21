@@ -738,6 +738,16 @@ export function LandingScreen({
         </div>
       </div>
 
+      {/* Philosify Ads Ateliê — advertiser portal entry (bottom-left) */}
+      <a
+        href="https://ads.philosify.org"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="landing-auth-link landing-ads-atelier"
+      >
+        Philosify Ads Ateliê
+      </a>
+
       {/* Footer Section - scrollable area below landing screen (desktop only) */}
       <div className="landing-footer-section">
         <footer className="landing-footer">
