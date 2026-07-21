@@ -1294,16 +1294,21 @@ body:has(.landing-screen)::-webkit-scrollbar {
 }
 
 /* ===== Philosify Ads Ateliê — advertiser portal link (bottom-left) ===== */
-/* Inherits Orbitron 11px from .landing-auth-link; cyan like History/Buy Credits */
+/* Same column as the auth/profile links (left: 57px = 1.5cm) and identical
+   typography: Orbitron 11px/500 inherited from .landing-auth-link, zero
+   padding/margin like the profile links, cyan like History/Buy Credits. */
 .landing-ads-atelier {
   position: fixed;
-  left: 24px;
-  bottom: 24px;
+  left: 57px;
+  bottom: 57px;
   z-index: 100;
   color: #00f0ff !important;
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
   text-decoration: none;
-  padding: 8px 0;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  text-align: left;
 }
 
 .landing-ads-atelier:hover {
