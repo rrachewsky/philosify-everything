@@ -17,68 +17,6 @@ export function buildBookAnalysisPrompt(
   guide,
   lang = "en",
 ) {
-  // Probable School of Thought disclaimer (localized)
-  const probableSchoolDisclaimerByLang = {
-    en: "School of Thought is a supposition based on probability. It may not be as accurate as you are expecting.",
-    pt: "Escola de Pensamento é uma suposição baseada em probabilidade. Pode não ser tão precisa quanto você espera.",
-    es: "La Escuela de Pensamiento es una suposición basada en probabilidad. Puede no ser tan precisa como esperas.",
-    fr: "L'École de pensée est une supposition fondée sur la probabilité. Elle peut ne pas être aussi précise que vous l'espérez.",
-    de: "Die Denkschule ist eine Annahme auf Basis von Wahrscheinlichkeit. Sie ist möglicherweise nicht so präzise, wie Sie erwarten.",
-    it: "La Scuola di pensiero è una supposizione basata sulla probabilità. Potrebbe non essere precisa quanto ti aspetti.",
-    hu: "A gondolkodási iskola valószínűségen alapuló feltételezés. Lehet, hogy nem olyan pontos, mint várnád.",
-    ru: "Школа мысли — это предположение, основанное на вероятности. Оно может быть не таким точным, как вы ожидаете.",
-    ja: "思想学派は確率に基づく推測です。期待するほど正確ではない場合があります。",
-    zh: "思想学派是基于概率的推测。它可能不如您期望的那样准确。",
-    ko: "사상 학파는 확률에 기반한 추측입니다. 기대만큼 정확하지 않을 수 있습니다.",
-    he: "אסכולת המחשבה היא השערה המבוססת על הסתברות. ייתכן שהיא לא מדויקת כפי שאתה מצפה.",
-    ar: "مدرسة الفكر هي افتراض قائم على الاحتمالية. قد لا تكون دقيقة كما تتوقع.",
-    hi: "विचार का स्कूल संभावना पर आधारित एक अनुमान है। यह उतना सटीक नहीं हो सकता जितना आप उम्मीद कर रहे हैं।",
-    fa: "مکتب فکری یک فرض بر اساس احتمال است. ممکن است به اندازه‌ای که انتظار دارید دقیق نباشد.",
-  };
-  const probableSchoolDisclaimer =
-    probableSchoolDisclaimerByLang[String(lang || "en").toLowerCase()] ||
-    probableSchoolDisclaimerByLang.en;
-  const probableSchoolPrefixByLang = {
-    en: "Probable School of Thought",
-    pt: "Escola de Pensamento (provável)",
-    es: "Escuela de Pensamiento (probable)",
-    fr: "École de pensée (probable)",
-    de: "Denkschule (wahrscheinlich)",
-    it: "Scuola di pensiero (probabile)",
-    hu: "Valószínű gondolkodási iskola",
-    ru: "Вероятная школа мысли",
-    ja: "推定される思想学派",
-    zh: "可能的思想学派",
-    ko: "추정 사상 학파",
-    he: "אסכולת מחשבה משוערת",
-    ar: "مدرسة الفكر المحتملة",
-    hi: "संभावित विचार स्कूल",
-    fa: "مکتب فکری احتمالی",
-  };
-  const probableSchoolPrefix =
-    probableSchoolPrefixByLang[String(lang || "en").toLowerCase()] ||
-    probableSchoolPrefixByLang.en;
-
-  // Schools of Thought labels (localized)
-  const schoolLabels = {
-    en: { primary: "Primary", secondary: "Secondary", peripheral: "Peripheral", exclusions: "Exclusions", not: "NOT", evidence: "Evidence", metaphysics: "Metaphysics", epistemology: "Epistemology", ethics: "Ethics", politics: "Politics", aesthetics: "Aesthetics" },
-    pt: { primary: "Primário", secondary: "Secundário", peripheral: "Periférico", exclusions: "Exclusões", not: "NÃO", evidence: "Evidência", metaphysics: "Metafísica", epistemology: "Epistemologia", ethics: "Ética", politics: "Política", aesthetics: "Estética" },
-    es: { primary: "Primario", secondary: "Secundario", peripheral: "Periférico", exclusions: "Exclusiones", not: "NO", evidence: "Evidencia", metaphysics: "Metafísica", epistemology: "Epistemología", ethics: "Ética", politics: "Política", aesthetics: "Estética" },
-    fr: { primary: "Primaire", secondary: "Secondaire", peripheral: "Périphérique", exclusions: "Exclusions", not: "PAS", evidence: "Preuve", metaphysics: "Métaphysique", epistemology: "Épistémologie", ethics: "Éthique", politics: "Politique", aesthetics: "Esthétique" },
-    de: { primary: "Primär", secondary: "Sekundär", peripheral: "Peripher", exclusions: "Ausschlüsse", not: "NICHT", evidence: "Beleg", metaphysics: "Metaphysik", epistemology: "Erkenntnistheorie", ethics: "Ethik", politics: "Politik", aesthetics: "Ästhetik" },
-    it: { primary: "Primario", secondary: "Secondario", peripheral: "Periferico", exclusions: "Esclusioni", not: "NON", evidence: "Evidenza", metaphysics: "Metafisica", epistemology: "Epistemologia", ethics: "Etica", politics: "Politica", aesthetics: "Estetica" },
-    hu: { primary: "Elsődleges", secondary: "Másodlagos", peripheral: "Perifériás", exclusions: "Kizárások", not: "NEM", evidence: "Bizonyíték", metaphysics: "Metafizika", epistemology: "Ismeretelmélet", ethics: "Etika", politics: "Politika", aesthetics: "Esztétika" },
-    ru: { primary: "Первичная", secondary: "Вторичная", peripheral: "Периферийная", exclusions: "Исключения", not: "НЕ", evidence: "Доказательство", metaphysics: "Метафизика", epistemology: "Эпистемология", ethics: "Этика", politics: "Политика", aesthetics: "Эстетика" },
-    ja: { primary: "主要", secondary: "副次的", peripheral: "周辺的", exclusions: "除外", not: "非", evidence: "証拠", metaphysics: "形而上学", epistemology: "認識論", ethics: "倫理学", politics: "政治学", aesthetics: "美学" },
-    zh: { primary: "主要", secondary: "次要", peripheral: "边缘", exclusions: "排除", not: "非", evidence: "证据", metaphysics: "形而上学", epistemology: "认识论", ethics: "伦理学", politics: "政治学", aesthetics: "美学" },
-    ko: { primary: "주요", secondary: "부차적", peripheral: "주변적", exclusions: "제외", not: "아님", evidence: "증거", metaphysics: "형이상학", epistemology: "인식론", ethics: "윤리학", politics: "정치학", aesthetics: "미학" },
-    he: { primary: "ראשי", secondary: "משני", peripheral: "היקפי", exclusions: "החרגות", not: "לא", evidence: "ראיה", metaphysics: "מטאפיזיקה", epistemology: "אפיסטמולוגיה", ethics: "אתיקה", politics: "פוליטיקה", aesthetics: "אסתטיקה" },
-    ar: { primary: "أساسي", secondary: "ثانوي", peripheral: "هامشي", exclusions: "استثناءات", not: "ليس", evidence: "دليل", metaphysics: "ميتافيزيقا", epistemology: "نظرية المعرفة", ethics: "أخلاق", politics: "سياسة", aesthetics: "جماليات" },
-    hi: { primary: "प्राथमिक", secondary: "द्वितीयक", peripheral: "परिधीय", exclusions: "बहिष्करण", not: "नहीं", evidence: "साक्ष्य", metaphysics: "तत्वमीमांसा", epistemology: "ज्ञानमीमांसा", ethics: "नीतिशास्त्र", politics: "राजनीति", aesthetics: "सौंदर्यशास्त्र" },
-    fa: { primary: "اصلی", secondary: "ثانویه", peripheral: "حاشیه‌ای", exclusions: "استثناها", not: "نه", evidence: "شواهد", metaphysics: "متافیزیک", epistemology: "معرفت‌شناسی", ethics: "اخلاق", politics: "سیاست", aesthetics: "زیبایی‌شناسی" },
-  };
-  const L_schools =
-    schoolLabels[String(lang || "en").toLowerCase()] || schoolLabels.en;
 
   // Language code to name mapping
   const langNames = {
@@ -301,12 +239,12 @@ IF YOUR JUSTIFICATION DESCRIBES NEGATIVE CONTENT -> USE NEGATIVE SCORE
 IF YOUR JUSTIFICATION DESCRIBES POSITIVE CONTENT -> USE POSITIVE SCORE
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CRITICAL: SCHOOL OF THOUGHT -> SCORE CONSISTENCY
+CRITICAL: PHILOSOPHY -> SCORE CONSISTENCY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 NON-NEGOTIABLE RULE: "POISON IN A GOLDEN CHALICE IS STILL POISON"
 
-If your schools_of_thought analysis identifies as PRIMARY school any of these:
+If the work's dominant philosophy aligns with any of these currents:
 - MARXISM, NIHILISM, DETERMINISM (rigid), POSTMODERNISM
 - ZEN/BUDDHISM (desire-negation), UTILITARIANISM (sacrifice logic)
 - STOICISM (resignation/fatalism), IDEALISM/KANTIANISM (duty over happiness)
@@ -440,72 +378,6 @@ MANDATORY VERIFICATION:
 - It is better to say "limited information available" than to fabricate content
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-SCHOOL(S) OF THOUGHT - CLASSIFICATION (MANDATORY FIELD: schools_of_thought):
-
-USE ONLY THESE 17 SCHOOLS - NO EXCEPTIONS, NO INVENTIONS:
-
-1. OBJECTIVISM - Ayn Rand, Leonard Peikoff
-2. MARXISM - Karl Marx, Friedrich Engels
-3. STOICISM - Epictetus, Seneca, Marcus Aurelius
-4. EXISTENTIALISM - Sartre, Camus, de Beauvoir
-5. NIHILISM - Max Stirner, Nietzsche (diagnostic)
-6. UTILITARIANISM - Bentham, Mill, Singer
-7. DETERMINISM - Spinoza, d'Holbach
-8. HEDONISM - Aristippus, Epicurus
-9. PRAGMATISM - James, Dewey, Rorty
-10. ZEN/BUDDHISM - Nagarjuna, Dogen
-11. IDEALISM/KANTIANISM - Kant, Fichte, Hegel
-12. POSTMODERNISM - Foucault, Derrida, Butler
-13. SECULAR HUMANISM - Russell, Sagan, Pinker
-14. JUDAISM - Maimonides, Philo
-15. CATHOLICISM - Aquinas, Augustine
-16. PROTESTANTISM - Luther, Calvin
-17. ISLAM - Avicenna, Averroes
-
-FORBIDDEN NAMES (NEVER USE):
-- "Individualism", "Rational Individualism"
-- "Liberalism", "Classical Liberalism", "Libertarianism"
-- "Romanticism", "Humanism" (alone)
-- ANY name not in the 17 schools above
-
-CLASSIFICATION REQUIRES 5-AXIS ALIGNMENT.
-If alignment is partial or mixed -> use "Mixed/Uncertain" or list as Secondary/Peripheral.
-
-OBJECTIVISM DISQUALIFIERS - AUTOMATIC EXCLUSION:
-A book CANNOT be classified as OBJECTIVISM if it contains:
-1. Religious/mystical elements (God, prayer, divine intervention, afterlife)
-2. Resignation/fatalism/passivity (acceptance without action)
-3. Altruism/self-sacrifice as moral duty (sacrifice for "the greater good")
-4. Collectivism (group identity over individual)
-5. Anti-reason/emotionalism ("follow your heart, not your head")
-
-EXCEPTION: Dying for a deeply loved person IS compatible with Objectivism (acting on highest values).
-
-ONE DISQUALIFIER = CANNOT BE OBJECTIVISM.
-
-If you cannot find a matching school -> "Mixed/Uncertain"
-NEVER invent a school name.
-
-You MUST include a top-level JSON field "schools_of_thought" (string) written in ${targetLanguage}.
-This MUST be a standalone container/section (NOT inside philosophical_analysis).
-Formatting requirement: return HTML (no markdown). Use <strong> for school names and <br/> for line breaks.
-
-ALL text in schools_of_thought MUST be in ${targetLanguage}, including ALL labels.
-
-REQUIRED STRUCTURE (ALL TEXT IN ${targetLanguage}):
-  <strong>${probableSchoolPrefix}</strong><br/><br/>
-  1. <strong>${L_schools.primary}:</strong> <SCHOOL NAME> - <Key Philosophers> (Level 1-2)<br/>
-  * ${L_schools.metaphysics}: <brief description><br/>
-  * ${L_schools.epistemology}: <brief description><br/>
-  * ${L_schools.ethics}: <brief description><br/>
-  * ${L_schools.politics}: <brief description><br/>
-  * ${L_schools.aesthetics}: <brief description><br/>
-  <em>${L_schools.evidence}:</em> <book-based justification><br/><br/>
-  2. <strong>${L_schools.secondary}:</strong> <SCHOOL - Philosophers> (Level 2-3) - <brief evidence><br/><br/>
-  3. <strong>${L_schools.peripheral}:</strong> <SCHOOL - Philosophers> (Level 3) - <brief evidence><br/><br/>
-  4. <strong>${L_schools.exclusions}:</strong> ${L_schools.not} <list schools clearly absent><br/><br/>
-  ${probableSchoolDisclaimer}
 
 DEPTH AND EXTENSIVENESS REQUIREMENTS:
 - Each justification: ~100-150 words, thorough and detailed
