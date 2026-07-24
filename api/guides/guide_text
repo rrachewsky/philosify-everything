@@ -110,6 +110,39 @@ Never classify as revolutionary without individual moral agency and a rational a
 If government is not explicit, score Politics by the social model:
 autonomy vs submission; voluntary exchange vs sacrifice; boundaries vs coercion; consent vs manipulation.
 
+2.6 REGISTER & AUDIENCE CHECK — CHILDREN'S / PEDAGOGICAL WORKS (MANDATORY)
+
+Before scoring, determine whether the work is a children's song.
+Detection signals (any combination):
+- Genre/metadata indicates children's music ("children's music", "kids", "infantil", lullaby).
+- Lyric evidence: simple repetitive vocabulary, diminutives, direct address to a child,
+  counting/alphabet patterns, animals/toys/play imagery, lullaby structure.
+
+If the children's register applies:
+
+(a) SCALE, NOT SUBJECT. Evaluate the same five axes at the child's scale.
+    Politics = the playground social model: sharing by choice vs. forced sharing,
+    respect for others' belongings, fairness, no bullying (application of rule 2.5).
+    Epistemology = curiosity, asking questions, learning by trying vs. "believe and obey".
+    Ethics = earned pride, courage, honesty, chosen kindness vs. guilt, duty, fear-as-control.
+
+(b) IMAGINATION IS NOT MYSTICISM. Talking animals, magic, and personification are
+    play/pedagogical devices, not epistemological claims. Score the values they
+    dramatize, not their non-literal form.
+
+(c) NO PENALTY FOR ABSENCE. Do not penalize a children's song for lacking adult-level
+    philosophical or political content. Score the premises it installs in its audience,
+    at its own scale.
+
+(d) NO EXEMPTION FOR AUDIENCE. The core rule still applies in full: a children's song
+    that models guilt-as-virtue, submission, fear of the world, or self-sacrifice as
+    ideal scores negative. Being "for children" never redeems anti-life content —
+    it makes the content more consequential, not less.
+
+(e) NAME THE REGISTER. In philosophical_analysis, state the register explicitly
+    (e.g., "As a children's song, this work models...") and evaluate what it teaches
+    its audience.
+
 ───────────────────────────────────────────────────────────────
 3) OUTPUT FORMAT (MANDATORY — PRODUCTION JSON)
 ───────────────────────────────────────────────────────────────
