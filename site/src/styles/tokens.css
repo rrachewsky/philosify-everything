@@ -16,7 +16,8 @@
 
   /* ---------- INK -------------------------------------------- */
   --ink-hi:    #F5F5F6;
-  --ink-mid:   #9C9CA3;
+  --ink-text:  #C2C2CB;   /* reading tier: text inside boxes/cells, tickers (Law §2.1) */
+  --ink-mid:   #9C9CA3;   /* secondary chrome only — NOT for reading text */
   --ink-low:   #5E5E65;
   --ink-inv:   #0A0A0C;   /* text on inverted blocks             */
 
@@ -56,7 +57,7 @@
 /* ---------- WHITE THEME -------------------------------------- */
 body.t-white {
   --bg:#FFFFFF; --bg-cell:rgba(0,0,0,.018); --bg-inset:#F4F4F7; --bg-inv:#0A0A0C;
-  --ink-hi:#0A0A0C; --ink-mid:#4C4C54; --ink-low:#8C8C92; --ink-inv:#F5F5F6;
+  --ink-hi:#0A0A0C; --ink-text:#3E3E48; --ink-mid:#4C4C54; --ink-low:#8C8C92; --ink-inv:#F5F5F6;
   --silver:#3A3E46; --silver-dim:#4A4E56;   /* silver -> graphite on light */
   --line:rgba(0,0,0,.13); --line-strong:rgba(0,0,0,.32);
   --grid-line:rgba(0,0,0,.05);
@@ -90,7 +91,7 @@ body.t-white {
   transition:transform .38s var(--ease-out)}
 .cell:hover::after{transform:scaleX(1)}
 .cell h2{font:400 15.5px var(--f-disp);letter-spacing:.14em;color:var(--ink-hi)}
-.cell p{font:400 11.5px/1.65 var(--f-disp);letter-spacing:.04em;color:var(--ink-mid)}
+.cell p{font:400 11.5px/1.65 var(--f-disp);letter-spacing:.04em;color:var(--ink-text)}
 .cell.inverted{background:var(--bg-inv);border-color:var(--bg-inv)}
 .cell.inverted h2,.cell.inverted p{color:var(--ink-inv)}
 
