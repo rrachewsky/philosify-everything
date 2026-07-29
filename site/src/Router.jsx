@@ -1,5 +1,11 @@
-// Router - React Router v6 setup for Philosify with sidebar architecture
-import { Suspense, lazy, useState, useEffect, useCallback } from 'react';
+// Router - v2 page architecture (WP3). Modules are PAGES (Design Law §4
+// navigation law); the sidebar architecture is retired on this branch.
+// The three formerly sidebar-targeting threads now target URLs (Addendum 1):
+//   1. Payment resume: PaymentSuccess still navigates '/' with legacy state
+//      flags; PaymentReturnRedirect translates them to module URLs.
+//   2. Push: PushNavigateListener navigates the payload URL (now real routes).
+//   3. History replay: V2ModalsHost history rows navigate /module?analysis=id.
+import { Suspense, lazy, useEffect } from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -11,235 +17,42 @@ import {
 } from 'react-router-dom';
 import App from './App';
 import { Spinner } from './components/common';
-import {
-  LoginModal,
-  SignupModal,
-  ForgotPasswordModal,
-  PaymentModal,
-  AccountModal,
-} from './components';
-import { CommunityHub } from './components/community';
-import { IdeasHub } from './components/ideas';
-import { MusicSidebar } from './components/music/MusicSidebar';
-import { LiteratureSidebar } from './components/literature/LiteratureSidebar';
-import { CinemaSidebar } from './components/cinema/CinemaSidebar';
-import NewsSidebar from './components/news/NewsSidebar';
-import { HistorySidebar } from './components/history';
-import { QuizSidebar } from './components/quiz/QuizSidebar';
-import { UnsafeZoneSidebar } from './components/unsafe-zone/UnsafeZoneSidebar';
-import { ComingSoonSidebar } from './components/ComingSoonSidebar';
-import { useModal, useAuth, useMusicSidebar, useLiteratureSidebar, useIdeas, useHistorySidebar, useQuiz, useUnsafeZone } from './hooks';
-import { useCinemaSidebar } from './hooks/useCinemaSidebar.js';
-import { useNews } from './hooks/useNews.js';
-import { useCommunity } from './hooks/useCommunity.js';
-import { logger, getPendingAction } from './utils';
+import { logger } from './utils';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api.philosify.org';
-
-// Lazy load pages (code splitting - these are loaded on demand)
+// Lazy-loaded pages (code splitting)
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
 const PaymentCancel = lazy(() => import('./pages/PaymentCancel'));
 const SharedAnalysis = lazy(() => import('./pages/SharedAnalysis'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
-const HomePage = lazy(() => import('./pages/HomePage'));
+
+// v2 pages
+const LandingPage = lazy(() => import('./pages/v2/LandingPage'));
+const MusicPage = lazy(() => import('./pages/v2/MusicPage'));
+const NewsPage = lazy(() => import('./pages/v2/NewsPage'));
+const CinemaPage = lazy(() => import('./pages/v2/CinemaPage'));
+const LiteraturePage = lazy(() => import('./pages/v2/LiteraturePage'));
+const IdeasPage = lazy(() => import('./pages/v2/IdeasPage'));
+const HistoryPage = lazy(() => import('./pages/v2/HistoryPage'));
+const QuizPage = lazy(() => import('./pages/v2/QuizPage'));
+const CommunityPage = lazy(() => import('./pages/v2/CommunityPage'));
+const UnsafeZonePage = lazy(() => import('./pages/v2/UnsafeZonePage'));
+const SignInPage = lazy(() => import('./pages/v2/SignInPage'));
+const SignUpPage = lazy(() => import('./pages/v2/SignUpPage'));
+const LegalPage = lazy(() => import('./pages/v2/LegalPage'));
+
 // Dev-only v2 component gallery (WP2 acceptance surface; absent from builds)
 const V2Gallery = import.meta.env.DEV ? lazy(() => import('./pages/V2Gallery')) : null;
 
-// Home page wrapper with auth modals
-function HomePageWrapper({
-  onCommunity,
-  onOpenMusic,
-  onOpenCategory,
-  onOpenQuiz,
-  onSignUp,
-  onBuyCredits,
-  onViewAnalysis,
-  onViewDebate,
-  onOpenSidebar,
-  anySidebarOpen,
-}) {
-  const { user, signOut } = useAuth();
-  const loginModal = useModal();
-  const signupModal = useModal();
-  const forgotPasswordModal = useModal();
-  const paymentModal = useModal();
-  const historyModal = useModal();
-
-  const handleViewCachedAnalysis = async (analysisId, mediaType, kind) => {
-    logger.log('[Router] Viewing history item:', analysisId, 'mediaType:', mediaType, 'kind:', kind);
-    try {
-      // Debates — open the debate view
-      if (kind === 'debate') {
-        historyModal.close();
-        if (onViewDebate) onViewDebate(analysisId);
-        return;
-      }
-
-      // Unsafe Zone — open sidebar and resume the specific session
-      if (kind === 'unsafe-zone') {
-        historyModal.close();
-        if (onOpenSidebar) onOpenSidebar('unsafe-zone', analysisId);
-        return;
-      }
-
-      // Quiz — not navigable (no quiz review page)
-      if (kind === 'quiz') {
-        return;
-      }
-
-      // Panels — fetch full analysis from KV, then open sidebar with result
-      if (kind === 'panel') {
-        try {
-          const panelRes = await fetch(`${API_URL}/api/panel/${analysisId}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          if (panelRes.status === 401) {
-            throw new Error('Session expired — please sign out and sign back in.');
-          }
-          if (panelRes.ok) {
-            const panelData = await panelRes.json();
-            if (panelData.success && panelData.panel) {
-              historyModal.close();
-              if (onOpenSidebar) onOpenSidebar(mediaType, panelData.panel);
-              return;
-            }
-          }
-        } catch (err) {
-          logger.error('[Router] Failed to fetch panel:', err);
-        }
-        // Fallback: just open sidebar if panel data unavailable
-        historyModal.close();
-        if (onOpenSidebar) onOpenSidebar(mediaType);
-        return;
-      }
-
-      // Regular analyses — fetch full data from API
-      let endpoint;
-      if (mediaType === 'literature') {
-        endpoint = `${API_URL}/api/book-analysis/${analysisId}`;
-      } else if (mediaType === 'cinema') {
-        endpoint = `${API_URL}/api/cinema-analysis/${analysisId}`;
-      } else {
-        endpoint = `${API_URL}/api/analysis/${analysisId}`;
-      }
-
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (response.status === 401) {
-        throw new Error('Session expired — please sign out and sign back in.');
-      }
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP ${response.status}`);
-      }
-      const data = await response.json();
-      historyModal.close();
-
-      if (mediaType === 'literature') {
-        const formattedResult = { ...data, media_type: 'literature', cached: true };
-        if (onOpenSidebar) onOpenSidebar('literature', formattedResult);
-      } else if (mediaType === 'cinema') {
-        const formattedResult = { ...data, media_type: 'cinema', cached: true };
-        if (onOpenSidebar) onOpenSidebar('films', formattedResult);
-      } else {
-        const formattedResult = { ...data, song_name: data.song_name || data.song, cached: true };
-        if (onViewAnalysis) {
-          onViewAnalysis(formattedResult);
-        }
-      }
-    } catch (err) {
-      logger.error('[Router] Failed to load analysis:', err);
-    }
-  };
-
-  const handleViewDebate = (threadId) => {
-    logger.log('[Router] Viewing debate from history:', threadId);
-    historyModal.close();
-    if (onViewDebate) {
-      onViewDebate(threadId);
-    }
-  };
-
-  const handleSwitchToSignup = () => {
-    loginModal.close();
-    signupModal.open();
-  };
-
-  const handleSwitchToLogin = () => {
-    signupModal.close();
-    loginModal.open();
-  };
-
-  const handleSwitchToForgotPassword = () => {
-    loginModal.close();
-    forgotPasswordModal.open();
-  };
-
-  const handleBackToLogin = () => {
-    forgotPasswordModal.close();
-    loginModal.open();
-  };
-
-  return (
-    <>
-      <HomePage
-        onSignIn={loginModal.open}
-        onSignUp={onSignUp || signupModal.open}
-        onLogout={signOut}
-        onBuyCredits={onBuyCredits || paymentModal.open}
-        onHistory={historyModal.open}
-        onOpenMusic={onOpenMusic}
-        onOpenCommunity={onCommunity}
-        onOpenCategory={onOpenCategory}
-        onOpenQuiz={onOpenQuiz}
-        anySidebarOpen={anySidebarOpen}
-      />
-      <LoginModal
-        isOpen={loginModal.isOpen}
-        onClose={loginModal.close}
-        onSwitchToSignup={handleSwitchToSignup}
-        onSwitchToForgotPassword={handleSwitchToForgotPassword}
-      />
-      <SignupModal
-        isOpen={signupModal.isOpen}
-        onClose={signupModal.close}
-        onSwitchToLogin={handleSwitchToLogin}
-      />
-      <ForgotPasswordModal
-        isOpen={forgotPasswordModal.isOpen}
-        onClose={forgotPasswordModal.close}
-        onBackToLogin={handleBackToLogin}
-      />
-      <PaymentModal isOpen={paymentModal.isOpen} onClose={paymentModal.close} />
-      <AccountModal
-        isOpen={historyModal.isOpen}
-        onClose={historyModal.close}
-        user={user}
-        onViewAnalysis={handleViewCachedAnalysis}
-        onViewDebate={handleViewDebate}
-      />
-    </>
-  );
-}
-
-// Loading fallback for lazy-loaded routes
 function PageLoader() {
   return (
     <div className="page-center page-center--dark">
-      <Spinner size={48} color="#4CAF50" />
+      <Spinner size={48} color="#5E5E65" />
     </div>
   );
 }
 
-// Listens for push-navigate events dispatched by pwa.js when the SW sends a PUSH_CLICK
-// message (fallback path when client.navigate() is unavailable). Navigates in-app.
+// Push notifications: pwa.js dispatches push-navigate on SW PUSH_CLICK.
+// Payload URLs are real routes in the page architecture.
 function PushNavigateListener() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -256,168 +69,81 @@ function PushNavigateListener() {
   return null;
 }
 
-// Handles return from PaymentSuccess — reads location.state and opens the correct sidebar
-function PaymentReturnHandler({ onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone, onOpenCinema, onOpenNews }) {
+// Payment-resume thread (Addendum 1): PaymentSuccess/PaymentCancel navigate
+// '/' with the legacy state flags; translate them to URL targets so each
+// module page resumes its own pending action on mount.
+function PaymentReturnRedirect() {
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const state = location.state;
-    if (!state) return;
+    if (!state || location.pathname !== '/') return;
+    logger.log('[PaymentReturnRedirect] state:', state);
 
-    logger.log('[PaymentReturnHandler] Detected state:', state);
-    logger.log('[PaymentReturnHandler] Pending action in localStorage:', getPendingAction());
-
-    // Open sidebar and clear state (delay ensures components are mounted)
-    const timer = setTimeout(() => {
-      if (state.openMusic) {
-        logger.log('[PaymentReturnHandler] Opening music sidebar');
-        onOpenMusic?.();
-      } else if (state.openBooks) {
-        logger.log('[PaymentReturnHandler] Opening literature sidebar');
-        onOpenBooks?.();
-      } else if (state.openDebate) {
-        onOpenDebate?.(state.openDebate);
-      } else if (state.openIdeas) {
-        onOpenIdeas?.();
-      } else if (state.openCommunity) {
-        onOpenCommunity?.(state.openCommunity);
-      } else if (state.openUnsafeZone) {
-        logger.log('[PaymentReturnHandler] Opening unsafe zone sidebar');
-        onOpenUnsafeZone?.();
-      } else if (state.openCinema) {
-        logger.log('[PaymentReturnHandler] Opening cinema sidebar');
-        onOpenCinema?.();
-      } else if (state.openNews) {
-        logger.log('[PaymentReturnHandler] Opening news sidebar');
-        onOpenNews?.();
-      }
-      // Clear state AFTER opening sidebar (must be inside timeout to avoid cleanup race)
-      navigate(location.pathname, { replace: true, state: null });
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [location.state, navigate, location.pathname, onOpenMusic, onOpenBooks, onOpenCommunity, onOpenIdeas, onOpenDebate, onOpenUnsafeZone, onOpenCinema, onOpenNews]);
+    const go = (to, extra) => navigate(to, { replace: true, state: { resume: true, ...extra } });
+    if (state.openMusic) go('/music');
+    else if (state.openBooks) go('/literature');
+    else if (state.openDebate) navigate(`/ideas?debate=${state.openDebate}`, { replace: true, state: { resume: true } });
+    else if (state.openIdeas) go('/ideas');
+    else if (state.openCommunity) go('/community', { tab: state.openCommunity });
+    else if (state.openUnsafeZone) go('/unsafe-zone');
+    else if (state.openCinema) go('/cinema');
+    else if (state.openNews) go('/news');
+    else if (state.openPaymentModal) {
+      navigate('/', { replace: true, state: null });
+      setTimeout(() => window.dispatchEvent(new CustomEvent('v2-open-buy-credits')), 100);
+    }
+  }, [location.state, location.pathname, navigate]);
 
   return null;
 }
 
-// Deep link handler for /debate/:debateId — redirects to home and opens Ideas sidebar
-function DebateDeepLink({ onOpenDebate }) {
-  const navigate = useNavigate();
+// Deep link /debate/:debateId → Ideas page with the debate open
+function DebateDeepLink() {
   const { debateId } = useParams();
-
-  useEffect(() => {
-    if (debateId) {
-      onOpenDebate(debateId);
-      navigate('/', { replace: true });
-    }
-  }, [debateId, onOpenDebate, navigate]);
-
-  return null;
+  return <Navigate to={`/ideas?debate=${debateId}`} replace />;
 }
 
 export function Router() {
-  const community = useCommunity();
-  const ideas = useIdeas();
-  const music = useMusicSidebar();
-  const literature = useLiteratureSidebar();
-  const news = useNews();
-  const cinema = useCinemaSidebar();
-  const history = useHistorySidebar();
-  const quiz = useQuiz();
-  const unsafeZone = useUnsafeZone();
-  const [comingSoonCategory, setComingSoonCategory] = useState(null);
-
-  // NOTE: Modal Scoping Rule
-  // - Modals triggered from SIDEBAR → render INSIDE sidebar (confined to 520px)
-  // - Modals triggered from LANDING SCREEN → render at component level (full screen)
-  // Each component (MusicSidebar, HomePageWrapper) manages its own modals internally.
-
-  // Handle deep link to a debate - opens Ideas sidebar
-  const handleOpenDebate = useCallback(
-    (debateId) => {
-      ideas.openWithDebate(debateId);
-    },
-    [ideas]
-  );
-
-  // Open category sidebar - Ideas and Books have their own sidebars, others use ComingSoon
-  const openCategory = useCallback(
-    (category) => {
-      if (category === 'ideas') {
-        ideas.open();
-      } else if (category === 'books') {
-        literature.open();
-      } else if (category === 'news') {
-        news.open();
-      } else if (category === 'films') {
-        cinema.open();
-      } else if (category === 'history') {
-        history.open();
-      } else if (category === 'unsafe-zone') {
-        unsafeZone.open();
-      } else {
-        setComingSoonCategory(category);
-      }
-    },
-    [ideas, literature, news, cinema, history, unsafeZone]
-  );
-
-  // Close ComingSoon sidebar
-  const closeComingSoon = useCallback(() => {
-    setComingSoonCategory(null);
-  }, []);
-
   return (
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Home Page - Interactive logo with sidebar navigation */}
-          <Route
-            path="/"
-            element={
-              <HomePageWrapper
-                onCommunity={community.open}
-                onOpenMusic={music.open}
-                onOpenCategory={openCategory}
-                onOpenQuiz={quiz.open}
-                onSignUp={music.isOpen ? null : undefined}
-                onBuyCredits={music.isOpen ? null : undefined}
-                onViewAnalysis={music.openWithResult}
-                onViewDebate={ideas.openWithDebate}
-                onOpenSidebar={(type, result) => {
-                   if (type === 'news') result ? news.openWithResult(result) : news.open();
-                   else if (type === 'literature') result ? literature.openWithResult(result) : literature.open();
-                   else if (type === 'films') result ? cinema.openWithResult(result) : cinema.open();
-                   else if (type === 'unsafe-zone') result ? unsafeZone.openWithSession(result) : unsafeZone.open();
-                  else result ? music.openWithResult(result) : music.open();
-                }}
-                anySidebarOpen={music.isOpen || literature.isOpen || news.isOpen || cinema.isOpen || community.isOpen || ideas.isOpen || history.isOpen || quiz.isOpen || unsafeZone.isOpen || !!comingSoonCategory}
-              />
-            }
-          />
+          <Route path="/" element={<LandingPage />} />
 
-          {/* Main App - Full analysis experience */}
+          {/* Module pages */}
+          <Route path="/music" element={<MusicPage />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/cinema" element={<CinemaPage />} />
+          <Route path="/literature" element={<LiteraturePage />} />
+          <Route path="/ideas" element={<IdeasPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/unsafe-zone" element={<UnsafeZonePage />} />
+
+          {/* Auth pages (existing auth logic underneath) */}
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+
+          {/* Legacy results view (kept for /reset-password backdrop + shares) */}
           <Route path="/app" element={<App />} />
 
           {/* Deep link to a specific debate */}
-          <Route
-            path="/debate/:debateId"
-            element={<DebateDeepLink onOpenDebate={handleOpenDebate} />}
-          />
+          <Route path="/debate/:debateId" element={<DebateDeepLink />} />
 
           {/* Payment routes */}
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/payment/cancel" element={<PaymentCancel />} />
 
-          {/* Public routes */}
+          {/* Public share routes */}
           <Route path="/a/:slug" element={<SharedAnalysis />} />
           <Route path="/shared/:id" element={<SharedAnalysis />} />
 
-          {/* Legal pages */}
-          <Route path="/tos" element={<TermsOfService />} />
-          <Route path="/pp" element={<PrivacyPolicy />} />
+          {/* Legal pages (v2, real ToS/PP text via i18n) */}
+          <Route path="/tos" element={<LegalPage doc="terms" />} />
+          <Route path="/pp" element={<LegalPage doc="privacy" />} />
 
           {/* Reset password shows app behind the modal overlay */}
           <Route
@@ -430,158 +156,13 @@ export function Router() {
             }
           />
 
-          {/* Catch-all route - redirect unknown paths to home */}
           {V2Gallery && <Route path="/dev/v2" element={<V2Gallery />} />}
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
 
-        {/* Push notification in-app navigation listener */}
         <PushNavigateListener />
-
-        {/* Payment return — opens correct sidebar after credit purchase */}
-        <PaymentReturnHandler
-          onOpenMusic={music.openWithPendingAction}
-          onOpenBooks={literature.openWithPendingAction}
-          onOpenCommunity={community.open}
-          onOpenIdeas={ideas.open}
-          onOpenDebate={ideas.openWithDebate}
-          onOpenUnsafeZone={unsafeZone.open}
-          onOpenCinema={cinema.openWithPendingAction}
-          onOpenNews={news.openWithPendingAction}
-        />
-
-        {/* Community Hub Sidebar */}
-        <CommunityHub
-          isOpen={community.isOpen}
-          onClose={community.close}
-          activeTab={community.activeTab}
-          onTabChange={community.switchTab}
-          isSpaceLocked={community.isSpaceLocked}
-          refreshAccess={community.refreshAccess}
-        />
-
-        {/* Ideas Hub Sidebar (Debates & Colloquiums) */}
-        <IdeasHub
-          isOpen={ideas.isOpen}
-          onClose={ideas.close}
-          deepLinkDebateId={ideas.deepLinkDebateId}
-          clearDeepLinkDebate={ideas.clearDeepLinkDebate}
-        />
-
-        {/* Music Sidebar */}
-        <MusicSidebar
-          isOpen={music.isOpen}
-          onClose={music.close}
-          query={music.query}
-          setQuery={music.setQuery}
-          results={music.results}
-          loading={music.loading}
-          selectedTrack={music.selectedTrack}
-          selectTrack={music.selectTrack}
-          clearTrack={music.clearTrack}
-          isAnalyzing={music.isAnalyzing}
-          analysisResult={music.analysisResult}
-          analysisError={music.analysisError}
-          analyze={music.analyze}
-          cancelAnalysis={music.cancelAnalysis}
-          elapsedTime={music.elapsedTime}
-          formatTime={music.formatTime}
-          user={music.user}
-          balance={music.balance}
-          onAdLoaded={music.handleAdLoaded}
-          currentAdMediaType={music.currentAdMediaType}
-        />
-
-        {/* Literature Sidebar (Books) */}
-        <LiteratureSidebar
-          isOpen={literature.isOpen}
-          onClose={literature.close}
-          query={literature.query}
-          setQuery={literature.setQuery}
-          results={literature.results}
-          loading={literature.loading}
-          hasSearched={literature.hasSearched}
-          selectedBook={literature.selectedBook}
-          selectBook={literature.selectBook}
-          clearBook={literature.clearBook}
-          isAnalyzing={literature.isAnalyzing}
-          analysisResult={literature.analysisResult}
-          analysisError={literature.analysisError}
-          analyze={literature.analyze}
-          cancelAnalysis={literature.cancelAnalysis}
-          elapsedTime={literature.elapsedTime}
-          formatTime={literature.formatTime}
-          user={literature.user}
-          balance={literature.balance}
-          onAdLoaded={literature.handleAdLoaded}
-        />
-
-        {/* News Sidebar */}
-        <NewsSidebar
-          isOpen={news.isOpen}
-          onClose={news.close}
-          news={news}
-          balance={music.balance}
-          onAdLoaded={news.handleAdLoaded}
-        />
-
-        {/* Cinema Sidebar (Films) */}
-        <CinemaSidebar
-          isOpen={cinema.isOpen}
-          onClose={cinema.close}
-          query={cinema.query}
-          setQuery={cinema.setQuery}
-          results={cinema.results}
-          searchLoading={cinema.searchLoading}
-          hasSearched={cinema.hasSearched}
-          searchError={cinema.searchError}
-          selectedFilm={cinema.selectedFilm}
-          selectFilm={cinema.selectFilm}
-          clearFilm={cinema.clearFilm}
-          isAnalyzing={cinema.isAnalyzing}
-          analysisResult={cinema.analysisResult}
-          analysisError={cinema.analysisError}
-          analyze={cinema.analyze}
-          cancelAnalysis={cinema.cancelAnalysis}
-          panelLoading={cinema.panelLoading}
-          panelResult={cinema.panelResult}
-          panelError={cinema.panelError}
-          elapsedTime={cinema.elapsedTime}
-          panelElapsed={cinema.panelElapsed}
-          formatTime={cinema.formatTime}
-          analyzeWithPanel={cinema.analyzeWithPanel}
-          user={cinema.user}
-          balance={cinema.balance}
-          onAdLoaded={cinema.handleAdLoaded}
-          currentAdMediaType={cinema.currentAdMediaType}
-        />
-
-        {/* Coming Soon Sidebar */}
-        <ComingSoonSidebar
-          isOpen={!!comingSoonCategory}
-          onClose={closeComingSoon}
-          category={comingSoonCategory}
-        />
-
-        {/* History Sidebar (Philosophy Graph - Free) */}
-        <HistorySidebar isOpen={history.isOpen} onClose={history.close} />
-
-        {/* Quiz Sidebar */}
-        <QuizSidebar
-          isOpen={quiz.isOpen}
-          onClose={quiz.close}
-          user={music.user}
-        />
-
-        {/* Unsafe Zone Sidebar — key forces full remount on user change */}
-        <UnsafeZoneSidebar
-          key={`uz-${music.user?.id || music.user?.userId || 'anon'}`}
-          isOpen={unsafeZone.isOpen}
-          onClose={unsafeZone.close}
-          pendingSessionId={unsafeZone.pendingSessionId}
-          onClearPendingSession={unsafeZone.clearPendingSession}
-        />
+        <PaymentReturnRedirect />
       </Suspense>
     </BrowserRouter>
   );

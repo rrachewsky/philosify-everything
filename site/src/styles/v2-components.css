@@ -71,6 +71,9 @@
 .v2 .acctmenu.open{display:block}
 .v2 .acctmenu a{display:block;padding:10px 18px;color:var(--dim);letter-spacing:.14em}
 .v2 .acctmenu hr{border:0;height:1px;background:var(--line);margin:6px 0}
+.v2 .acctmenu.langgrid{display:none;grid-template-columns:repeat(3,1fr);min-width:210px;padding:10px}
+.v2 .acctmenu.langgrid.open{display:grid}
+.v2 .acctmenu.langgrid a{padding:8px 10px;text-align:center;letter-spacing:.14em}
 
 /* ---------- Page column (module 81 / interior 76 top pad) ----- */
 .v2 .page{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:81px 48px 60px}
