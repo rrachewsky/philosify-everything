@@ -114,8 +114,9 @@ body.t-white .v2 { --mid: #4C4C54; }
  background:none;border:1px solid var(--strong);padding:13px 25px;cursor:pointer}
 .v2 .pill{font:500 10px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;
  border:1px solid var(--strong);border-radius:999px;color:var(--mid)}
+/* Law §4 radii: inputs 6px (mockups render square by omission; the Law wins) */
 .v2 input.f,.v2 textarea.f{width:100%;background:var(--inset);border:1px solid var(--line);color:var(--ink);
- font:400 14px var(--fu);padding:14px 16px;outline:none;border-radius:0}
+ font:400 14px var(--fu);padding:14px 16px;outline:none;border-radius:var(--radius-input)}
 .v2 input.f:focus,.v2 textarea.f:focus{border-color:var(--strong)}
 .v2 label.f{display:block;font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin:16px 0 7px}
 
