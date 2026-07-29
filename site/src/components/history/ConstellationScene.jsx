@@ -18,11 +18,13 @@ const CONNECTION_COLORS = {
 };
 
 // Earth texture URLs (NASA Blue Marble + Real Topography)
-const EARTH_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-blue-marble.jpg';
-const EARTH_BUMP = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-topology.png';
-const EARTH_DISPLACEMENT = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-topology.png'; // Elevation map for real 3D topography
-const EARTH_SPECULAR = 'https://unpkg.com/three-globe@2.45.1/example/img/earth-water.png'; // Ocean specular map
-const STAR_TEXTURE = 'https://unpkg.com/three-globe@2.45.1/example/img/night-sky.png';
+// Self-hosted (Addendum 1 item 4, 29 Jul 2026) — copied from
+// three-globe@2.45.1 example imagery; no runtime third-party dependency.
+const EARTH_TEXTURE = '/textures/earth-blue-marble.jpg';
+const EARTH_BUMP = '/textures/earth-topology.png';
+const EARTH_DISPLACEMENT = '/textures/earth-topology.png'; // Elevation map for real 3D topography
+const EARTH_SPECULAR = '/textures/earth-water.png'; // Ocean specular map
+const STAR_TEXTURE = '/textures/night-sky.png';
 
 // ============================================================
 // EARTH ROTATION BY ERA - Geographic center of philosophy
