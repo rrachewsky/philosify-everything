@@ -2688,7 +2688,7 @@ export default {
           // If social bot, return HTML with Open Graph meta tags for rich preview
           if (isSocialBot) {
             const shareUrl = `https://philosify.org/shared/${analysisId}`;
-            const logoUrl = "https://philosify.org/logo.png";
+            const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
             // Escape user-supplied values to prevent HTML/XSS injection
             const songEsc = escapeHtml(enrichedAnalysis.song);
             const artistEsc = escapeHtml(enrichedAnalysis.artist);
@@ -2932,7 +2932,7 @@ export default {
           if (isSocialBot) {
             const analysis = result.analysis;
             const shareUrl = `https://philosify.org/api/shared/${slug}`;
-            const logoUrl = "https://philosify.org/logo.png";
+            const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
             // Escape user-supplied values to prevent HTML/XSS injection
             const songEsc = escapeHtml(analysis.song);
             const artistEsc = escapeHtml(analysis.artist);
@@ -3842,7 +3842,7 @@ export default {
           const excerpt = escapeHtml(rawContent.length > 160 ? rawContent.slice(0, 160) + "..." : rawContent);
           const philosophers = (thread?.metadata?.philosophers || []).join(", ");
           const desc = philosophers ? `${excerpt} — ${escapeHtml(philosophers)}` : excerpt;
-          const logoUrl = "https://philosify.org/logo.png";
+          const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
           const previewUrl = `https://philosify.org/api/share-preview/debate/${threadId}`;
 
           const html = `<!DOCTYPE html>
@@ -3882,7 +3882,7 @@ export default {
           const excerpt = escapeHtml(analysis.replace(/\*\*/g, "").replace(/\*/g, "").slice(0, 160) + "...");
           const mediaType = panel?.mediaType || "news";
           const desc = `${mediaType === "news" ? "📰" : mediaType === "cinema" ? "🎬" : mediaType === "music" ? "🎵" : "📚"} ${excerpt}`;
-          const logoUrl = "https://philosify.org/logo.png";
+          const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
           const previewUrl = `https://philosify.org/api/share-preview/panel/${panelId}`;
 
           const html = `<!DOCTYPE html>
