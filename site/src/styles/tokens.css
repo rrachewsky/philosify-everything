@@ -1,0 +1,99 @@
+/* ============================================================
+   PHILOSIFY — DESIGN TOKENS v2.0  (27 Jul 2026)
+   Direction: MONOCHROME + SILVER — black/white/grey interface,
+   flat silver as the sole emphasis register. Supersedes v1
+   (violet canvas, cyan/magenta voices) per Roberto's decisions.
+   The films keep their own palette as CONTENT; the interface
+   around them is monochrome.
+   ============================================================ */
+
+:root {
+  /* ---------- SURFACES (black theme, default) ---------------- */
+  --bg:        #070708;
+  --bg-cell:   rgba(255,255,255,.022);
+  --bg-inset:  #000000;
+  --bg-inv:    #F5F5F6;   /* inverted blocks (Unsafe Zone cell)  */
+
+  /* ---------- INK -------------------------------------------- */
+  --ink-hi:    #F5F5F6;
+  --ink-mid:   #9C9CA3;
+  --ink-low:   #5E5E65;
+  --ink-inv:   #0A0A0C;   /* text on inverted blocks             */
+
+  /* ---------- SILVER (the only emphasis) ---------------------
+     Flat tones ONLY — never gradients (tested and rejected).
+     Scarcity rule: max one silvered element per region.
+     Silver marks meaning (key phrases, declared quantities,
+     the tagline, balance numerals) — never buttons, borders,
+     backgrounds, or whole paragraphs.                           */
+  --silver:     #DDE1E8;
+  --silver-dim: #C9CDD6;
+
+  /* ---------- LINES & GRID ----------------------------------- */
+  --line:        rgba(255,255,255,.11);
+  --line-strong: rgba(255,255,255,.28);
+  --grid-line:   rgba(255,255,255,.045);
+  --grid-size:   64px;
+
+  /* ---------- TYPE ------------------------------------------- */
+  --f-disp: "Michroma","Inter","Noto Sans",sans-serif;  /* titles, wordmark, cell text */
+  --f-ui:   "Inter","Noto Sans",sans-serif;             /* UI chrome, telemetry        */
+  --f-prose:"Newsreader","Noto Serif",Georgia,serif;    /* long-form analysis prose    */
+
+  /* ---------- SHAPE ------------------------------------------
+     Cells and cards are SQUARE-CORNERED (radius 0) — the crisp
+     instrument register. Radius only on inputs and pills.       */
+  --radius-card:  0;
+  --radius-input: 6px;
+  --radius-pill:  999px;
+
+  /* ---------- LAYOUT / MOTION (unchanged from v1) ------------ */
+  --container-max: 1240px;  --content-well: 720px;
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --dur-fast: 160ms;  --dur-base: 400ms;  --stagger: 50ms;
+}
+
+/* ---------- WHITE THEME -------------------------------------- */
+body.t-white {
+  --bg:#FFFFFF; --bg-cell:rgba(0,0,0,.018); --bg-inset:#F4F4F7; --bg-inv:#0A0A0C;
+  --ink-hi:#0A0A0C; --ink-mid:#4C4C54; --ink-low:#8C8C92; --ink-inv:#F5F5F6;
+  --silver:#3A3E46; --silver-dim:#4A4E56;   /* silver -> graphite on light */
+  --line:rgba(0,0,0,.13); --line-strong:rgba(0,0,0,.32);
+  --grid-line:rgba(0,0,0,.05);
+}
+
+/* ---------- GRID VEIL (64px cells, fades at extremes) -------- */
+.grid-veil{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size);
+  -webkit-mask-image:radial-gradient(ellipse 100% 96% at 50% 46%,#000 58%,rgba(0,0,0,.55) 82%,transparent 104%);
+  mask-image:radial-gradient(ellipse 100% 96% at 50% 46%,#000 58%,rgba(0,0,0,.55) 82%,transparent 104%)}
+
+/* ---------- HUD (mono) --------------------------------------- */
+.hud-corner{position:fixed;width:24px;height:24px;border:1px solid var(--ink-low);opacity:.6;pointer-events:none}
+.hud-txt{font:500 11px/1 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-low)}
+
+/* ---------- EMPHASIS ------------------------------------------ */
+.hl{color:var(--silver)}          /* the silver register, flat   */
+
+/* ---------- MODULE CELL (landing-approved) -------------------- */
+.cell{position:relative;display:flex;flex-direction:column;gap:10px;
+  padding:24px 24px 26px;border:1px solid var(--line);background:var(--bg-cell);
+  color:inherit;text-decoration:none;transition:var(--dur-fast)}
+.cell::before{content:"\2192";position:absolute;top:18px;right:20px;
+  color:var(--ink-low);font:400 14px/1 var(--f-ui);transition:var(--dur-fast)}
+.cell:hover{border-color:var(--line-strong)}
+.cell:hover::before{color:var(--ink-hi);transform:translateX(3px)}
+.cell::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;
+  background:var(--ink-hi);transform:scaleX(0);transform-origin:left;
+  transition:transform .38s var(--ease-out)}
+.cell:hover::after{transform:scaleX(1)}
+.cell h2{font:400 15.5px var(--f-disp);letter-spacing:.14em;color:var(--ink-hi)}
+.cell p{font:400 11.5px/1.65 var(--f-disp);letter-spacing:.04em;color:var(--ink-mid)}
+.cell.inverted{background:var(--bg-inv);border-color:var(--bg-inv)}
+.cell.inverted h2,.cell.inverted p{color:var(--ink-inv)}
+
+/* ---------- REDUCED MOTION ------------------------------------ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

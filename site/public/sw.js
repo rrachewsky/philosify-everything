@@ -210,7 +210,7 @@ self.addEventListener('push', (event) => {
 
 async function handlePushEvent() {
   // Philosify branding: large icon for notification panel, badge for status bar
-  const iconUrl = new URL('/logo.png', self.location.origin).href;
+  const iconUrl = new URL('/icon-192.png', self.location.origin).href;
   // Badge: small monochrome icon shown in Android status bar / notification tray.
   // Using favicon.ico as it's small and recognizable. Chrome ignores badge on desktop.
   const badgeUrl = new URL('/favicon.ico', self.location.origin).href;

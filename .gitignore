@@ -188,6 +188,7 @@ test-*.ps1
 !**/ForgotPasswordModal.jsx
 !api/src/utils/secrets.js
 !api/src/spotify/token.js
+!site/src/styles/tokens.css
 
 # Claude Code local settings
 .claude/

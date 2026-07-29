@@ -3,6 +3,10 @@
    Philosify - Algorithmic Philosophical Music Analysis System
    ============================================================ */
 
+/* Design Law v2 tokens (single source of visual truth) + v2 foundation */
+@import './tokens.css';
+@import './v2-foundation.css';
+
 /* Base: Variables, Reset, Typography */
 @import './base.css';
 

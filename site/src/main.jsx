@@ -7,10 +7,14 @@ import { logger } from './utils';
 import { initPWA } from './utils/pwa';
 import { initSentry } from './utils/sentry';
 import { initI18nLanguage } from './i18n'; // Initialize i18n language (awaitable)
+import { initTheme } from './utils/theme';
 import './styles/global.css';
 
 // Initialize Sentry (production only)
 initSentry();
+
+// Apply the persisted v2 theme class (inert on pre-v2 surfaces)
+initTheme();
 
 // CRITICAL: Capture beforeinstallprompt IMMEDIATELY at module level.
 // Chrome fires this event as soon as installability criteria are met, which can

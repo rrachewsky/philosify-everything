@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '../i18n';
 import { useLanguage } from '../hooks/useLanguage';
+import { ensureLocaleFont } from '../utils/localeFonts';
 
 const LanguageContext = createContext(null);
 
@@ -19,6 +20,7 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     document.documentElement.lang = languageUtils.currentLanguage;
     document.documentElement.setAttribute('data-rtl', languageUtils.isRTL ? 'true' : 'false');
+    ensureLocaleFont(languageUtils.currentLanguage);
   }, [languageUtils.currentLanguage, languageUtils.isRTL]);
 
   return (

@@ -1,0 +1,50 @@
+/* ============================================================
+   V2 FOUNDATION — per-locale Noto fallbacks (Design Law §3)
+   Re-declares the three font-stack tokens per script so the
+   generic "Noto Sans"/"Noto Serif" slots resolve to the script
+   that actually covers the locale. The frozen tokens.css file is
+   not edited; :root:lang() outranks :root by specificity.
+   Font files load lazily via utils/localeFonts.js on locale
+   change. CJK prose line-height (1.8) lands in WP4.
+   ============================================================ */
+
+:root:lang(ar), :root:lang(fa) {
+  --f-disp: "Michroma", "Inter", "Noto Sans Arabic", sans-serif;
+  --f-ui: "Inter", "Noto Sans Arabic", sans-serif;
+  --f-prose: "Newsreader", "Noto Naskh Arabic", Georgia, serif;
+}
+
+:root:lang(he) {
+  --f-disp: "Michroma", "Inter", "Noto Sans Hebrew", sans-serif;
+  --f-ui: "Inter", "Noto Sans Hebrew", sans-serif;
+  --f-prose: "Newsreader", "Noto Serif Hebrew", Georgia, serif;
+}
+
+:root:lang(hi) {
+  --f-disp: "Michroma", "Inter", "Noto Sans Devanagari", sans-serif;
+  --f-ui: "Inter", "Noto Sans Devanagari", sans-serif;
+  --f-prose: "Newsreader", "Noto Serif Devanagari", Georgia, serif;
+}
+
+:root:lang(ja) {
+  --f-disp: "Michroma", "Inter", "Noto Sans JP", sans-serif;
+  --f-ui: "Inter", "Noto Sans JP", sans-serif;
+  --f-prose: "Newsreader", "Noto Serif JP", Georgia, serif;
+}
+
+:root:lang(ko) {
+  --f-disp: "Michroma", "Inter", "Noto Sans KR", sans-serif;
+  --f-ui: "Inter", "Noto Sans KR", sans-serif;
+  --f-prose: "Newsreader", "Noto Serif KR", Georgia, serif;
+}
+
+:root:lang(zh) {
+  --f-disp: "Michroma", "Inter", "Noto Sans SC", sans-serif;
+  --f-ui: "Inter", "Noto Sans SC", sans-serif;
+  --f-prose: "Newsreader", "Noto Serif SC", Georgia, serif;
+}
+
+/* Inter covers Cyrillic; Newsreader does not */
+:root:lang(ru) {
+  --f-prose: "Noto Serif", Georgia, serif;
+}

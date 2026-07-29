@@ -10,3 +10,4 @@ export { Skeleton, SkeletonText, SkeletonCircle } from './Skeleton.jsx';
 export { TransactionSkeleton } from './TransactionSkeleton.jsx';
 export { TranslateButton } from './TranslateButton.jsx';
 export { Lockup } from './Lockup.jsx';
+export { GridVeil } from './GridVeil.jsx';
