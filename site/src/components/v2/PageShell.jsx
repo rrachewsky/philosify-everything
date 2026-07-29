@@ -32,6 +32,7 @@ export function PageShell({
   return (
     <div className="v2">
       <GridVeil />
+      <div className="hudground" aria-hidden="true" />
       <HudFrame status={status} />
       {nav && <NavChrome>{nav}</NavChrome>}
       <div className={`page${variant === 'interior' ? ' interior' : ''}`}>
