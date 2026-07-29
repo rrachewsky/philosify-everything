@@ -44,6 +44,8 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
+// Dev-only v2 component gallery (WP2 acceptance surface; absent from builds)
+const V2Gallery = import.meta.env.DEV ? lazy(() => import('./pages/V2Gallery')) : null;
 
 // Home page wrapper with auth modals
 function HomePageWrapper({
@@ -429,6 +431,8 @@ export function Router() {
           />
 
           {/* Catch-all route - redirect unknown paths to home */}
+          {V2Gallery && <Route path="/dev/v2" element={<V2Gallery />} />}
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
 

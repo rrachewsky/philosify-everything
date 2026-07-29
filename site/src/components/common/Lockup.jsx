@@ -10,6 +10,7 @@ const VARIANTS = {
   landing: { src: '/brand/philosify-logo-lockup.png', height: 162, plate: 'lock-plate' },
   module: { src: '/brand/philosify-logo-lockup.png', height: 117, plate: 'lock-plate' },
   interior: { src: '/brand/philosify-logo-lockup.png', height: 78, plate: 'lock-plate' },
+  auth: { src: '/brand/philosify-logo-lockup.png', height: 105, plate: 'lock-plate' },
   footer: { src: '/brand/philosify-logo-horizontal.png', height: 32, plate: 'lock-plate-s' },
 };
 

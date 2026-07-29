@@ -1,0 +1,264 @@
+/* ============================================================
+   V2 COMPONENT KIT — lifted from the approved mockups (WP2)
+   Sources: philosify-news.html (module-template standard),
+   philosify-landing.html (master), philosify-music.html
+   (analysis stack), philosify-modals.html, philosify-auth.html,
+   philosify-unsafezone.html. Values are verbatim; the only
+   changes are (a) everything is scoped under .v2 so the old UI
+   is untouched until cutover, and (b) the mockups' short var
+   names alias the canonical tokens.css vars below.
+   NOT lifted (Law-conformance): .bmini / .alock .pl/.pw
+   (parts-built lockups, Law §1.3 application rule), .frame /
+   .mark-ring / .mark-sq (retired ring lockup), .silvertext
+   (gradient silver, Law §2.3).
+   ============================================================ */
+
+.v2 {
+  /* aliases → tokens.css (single source of truth) */
+  --bgcell: var(--bg-cell);
+  --inset: var(--bg-inset);
+  --inv: var(--bg-inv);
+  --ink: var(--ink-hi);
+  --dim: var(--ink-mid);
+  --low: var(--ink-low);
+  --inkinv: var(--ink-inv);
+  --silverd: var(--silver-dim);
+  --strong: var(--line-strong);
+  --grid: var(--grid-line);
+  --fd: var(--f-disp);
+  --fu: var(--f-ui);
+  --fp: var(--f-prose);
+  /* Law §2.1 "text inside boxes/cells & tickers" — value exists in the
+     Law and mockups but has no var in the frozen tokens.css; aliased
+     here pending Roberto's token amendment. Inverts per Law §2.2. */
+  --mid: #C2C2CB;
+  /* Law §2.1 functional error — PENDING Roberto's approval */
+  --warn: #FF5A5A;
+
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 15px/1.6 var(--fu);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+body.t-white .v2 { --mid: #4C4C54; }
+
+/* ---------- HUD chrome (news/base kit) ------------------------ */
+.v2 .hc{position:fixed;width:24px;height:24px;border:1px solid var(--low);opacity:.6;z-index:2;pointer-events:none}
+.v2 .hc.tl{top:22px;left:24px;border-right:0;border-bottom:0}
+.v2 .hc.tr{top:22px;right:24px;border-left:0;border-bottom:0}
+.v2 .hc.bl{bottom:22px;left:24px;border-right:0;border-top:0}
+.v2 .hc.br{bottom:22px;right:24px;border-left:0;border-top:0}
+.v2 .hudtxt{position:fixed;z-index:2;font:500 11px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--low)}
+.v2 .hud-status{top:30px;left:64px;color:var(--low)}
+.v2 .navr{top:26px;right:64px;display:flex;gap:26px}
+.v2 .navr a{color:var(--dim);text-decoration:none;font:500 11px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+.v2 .navr a:hover{color:var(--ink)}
+.v2 .acctmenu{display:none;position:absolute;right:0;top:26px;min-width:168px;background:var(--bg);border:1px solid var(--strong);padding:6px 0;z-index:9}
+.v2 .acctmenu.open{display:block}
+.v2 .acctmenu a{display:block;padding:10px 18px;color:var(--dim);letter-spacing:.14em}
+.v2 .acctmenu hr{border:0;height:1px;background:var(--line);margin:6px 0}
+
+/* ---------- Page column (module 81 / interior 76 top pad) ----- */
+.v2 .page{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:81px 48px 60px}
+.v2 .page.interior{padding-top:76px}
+.v2 .lockband{display:flex;justify-content:center;padding:0 0 40px}
+
+/* ---------- Module header: title + marker line + ticker ------- */
+.v2 h1.mod{font:400 22px var(--fd);letter-spacing:.2em}
+.v2 .mrail{position:relative;height:1px;background:var(--low);margin-top:14px}
+.v2 .mrail::after{content:"";position:absolute;right:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.v2 .mrail.draw{transform-origin:left;animation:v2draw 1.1s cubic-bezier(.16,1,.3,1) .5s both}
+.v2 .tick{display:flex;justify-content:space-between;margin-top:10px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.v2 .tick b{color:var(--silver);font-weight:500}
+
+/* ---------- Cell — compact module variant (base kit) ---------- */
+.v2 .cell{position:relative;display:flex;flex-direction:column;gap:9px;padding:20px;border:1px solid var(--line);
+ background:var(--bgcell);text-decoration:none;color:inherit;transition:.16s}
+.v2 .cell::before{content:"\2192";position:absolute;top:15px;right:17px;color:var(--low);font:400 13px/1 var(--fu);transition:.16s}
+.v2 .cell:hover{border-color:var(--strong)}
+.v2 .cell:hover::before{color:var(--ink);transform:translateX(3px)}
+.v2 .cell::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--ink);
+ transform:scaleX(0);transform-origin:left;transition:transform .38s cubic-bezier(.16,1,.3,1)}
+.v2 .cell:hover::after{transform:scaleX(1)}
+.v2 .cell h2{font:400 13px var(--fd);letter-spacing:.14em}
+.v2 .cell p{font:400 11px/1.65 var(--fd);letter-spacing:.04em;color:var(--mid)}
+.v2 .cell .credit{font:500 10px/1 var(--fu);letter-spacing:.16em;color:var(--silver)}
+
+/* ---------- Cell — landing variant (cell9, master) ------------ */
+.v2 .cell9{position:relative;display:flex;flex-direction:column;gap:10px;
+ padding:24px 24px 26px;border:1px solid var(--line);
+ background:var(--bgcell);text-decoration:none;color:inherit;transition:.18s}
+.v2 .cell9 h2{font:400 15.5px var(--fd);letter-spacing:.14em;color:var(--ink)}
+.v2 .cell9 p{font:400 11.5px/1.65 var(--fd);letter-spacing:.04em;color:var(--mid)}
+.v2 .cell9::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;
+ background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .38s cubic-bezier(.16,1,.3,1)}
+.v2 .cell9::before{content:"\2192";position:absolute;top:18px;right:20px;
+ color:var(--low);font:400 14px/1 var(--fu);transition:.18s}
+.v2 .cell9:hover::before{color:var(--ink);transform:translateX(3px)}
+.v2 .cell9:hover{border-color:var(--strong)}
+.v2 .cell9:hover::after{transform:scaleX(1)}
+.v2 .cell9.uz{background:var(--inv);border-color:var(--inv)}
+.v2 .cell9.uz h2,.v2 .cell9.uz p{color:var(--inkinv)}
+.v2 .cell9.uz::after{background:var(--inkinv)}
+.v2 .cell9.uz::before{color:var(--inkinv);opacity:.55}
+.v2 .cell9.uz:hover::before{opacity:1}
+
+/* ---------- Emphasis ------------------------------------------ */
+.v2 .hl{color:var(--silver)}
+
+/* ---------- Buttons / pill / inputs (base kit) ---------------- */
+.v2 .btnp{font:500 13px/1 var(--fu);letter-spacing:.1em;text-transform:uppercase;color:var(--inkinv);
+ background:var(--ink);border:0;padding:14px 26px;cursor:pointer}
+.v2 .btns{font:500 13px/1 var(--fu);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);
+ background:none;border:1px solid var(--strong);padding:13px 25px;cursor:pointer}
+.v2 .pill{font:500 10px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;
+ border:1px solid var(--strong);border-radius:999px;color:var(--mid)}
+.v2 input.f,.v2 textarea.f{width:100%;background:var(--inset);border:1px solid var(--line);color:var(--ink);
+ font:400 14px var(--fu);padding:14px 16px;outline:none;border-radius:0}
+.v2 input.f:focus,.v2 textarea.f:focus{border-color:var(--strong)}
+.v2 label.f{display:block;font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin:16px 0 7px}
+
+/* ---------- Telemetry state line (music stack) ---------------- */
+.v2 .state{display:flex;align-items:center;gap:18px;border:1px solid var(--line);background:var(--bgcell);
+ padding:14px 18px;margin-top:16px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
+.v2 .state b{color:var(--silver);font-weight:500;font-variant-numeric:tabular-nums}
+.v2 .state .bar{flex:1;height:1px;background:var(--line);position:relative}
+.v2 .state .bar i{position:absolute;left:0;top:0;height:1px;background:var(--ink)}
+.v2 .state a{color:var(--mid);text-decoration:none;cursor:pointer}
+
+/* ---------- Analysis card stack (music) ----------------------- */
+.v2 .verdict{border:1px solid var(--strong);background:var(--bgcell);padding:26px;margin-top:26px}
+.v2 .vlabel{font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--low)}
+.v2 .vgrid{display:flex;gap:28px;align-items:baseline;margin-top:12px;flex-wrap:wrap}
+.v2 .note9{font:400 42px/1 var(--fd);color:var(--silver)}
+.v2 .classif{font:400 18px/1.35 var(--fd);letter-spacing:.08em}
+.v2 .audio{display:flex;align-items:center;gap:16px;border:1px solid var(--line);padding:14px 18px;margin-top:14px;
+ font:500 10.5px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
+.v2 .audio .play{width:30px;height:30px;border:1px solid var(--strong);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none;cursor:pointer;background:none;font:inherit}
+.v2 .audio .aline{flex:1;height:1px;background:var(--line)}
+.v2 .xcard{border:1px solid var(--line);background:var(--bgcell);padding:20px 24px;margin-top:12px;cursor:pointer}
+.v2 .xcard .head{display:flex;justify-content:space-between;align-items:center}
+.v2 .xcard h4{font:400 12.5px var(--fd);letter-spacing:.16em}
+.v2 .xcard .chev{font:400 11px var(--fu);color:var(--low);letter-spacing:.1em}
+.v2 .xcard .body{display:none;margin-top:14px;font:400 16.5px/1.75 var(--fp);color:var(--ink)}
+.v2 .xcard.open .body{display:block}
+.v2 .actions{display:flex;gap:22px;margin-top:24px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase}
+.v2 .actions a{color:var(--low);text-decoration:none;cursor:pointer}
+.v2 .actions a:hover{color:var(--ink)}
+.v2 .slot{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px;display:flex;align-items:center;gap:16px;
+ font:400 12px var(--fu);color:var(--mid)}
+.v2 .slot .tag{font:500 9.5px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--low);border:1px solid var(--line);padding:4px 8px}
+.v2 .trackc{display:flex;gap:16px;align-items:center;border:1px solid var(--line);background:var(--bgcell);padding:18px;margin-top:12px}
+.v2 .coverc{width:56px;height:56px;flex:none;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+ font:400 20px var(--fd);color:var(--low)}
+.v2 .trackc h3{font:400 14px var(--fd);letter-spacing:.1em}
+.v2 .trackc p{font:400 12px var(--fu);color:var(--low);margin-top:4px;letter-spacing:.04em}
+
+/* ---------- Modal (modals mockup) ----------------------------- */
+.v2 .mwrap{max-width:640px;margin:0 auto 44px;border:1px solid var(--strong);background:var(--bg);position:relative}
+.v2 .mhead{display:flex;justify-content:space-between;align-items:center;padding:20px 26px;border-bottom:1px solid var(--line)}
+.v2 .mhead h2{font:400 14px var(--fd);letter-spacing:.18em}
+.v2 .mhead .x{color:var(--low);text-decoration:none;font:400 16px var(--fu);background:none;border:0;cursor:pointer}
+.v2 .mbody{padding:26px}
+.v2 .cfoot{display:flex;justify-content:flex-end;gap:12px;padding:18px 26px;border-top:1px solid var(--line)}
+.v2 .moverlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.6);display:flex;align-items:flex-start;justify-content:center;padding:10vh 24px 24px;overflow-y:auto}
+.v2 .moverlay .mwrap{margin:0;width:100%}
+
+/* ---------- Modal content patterns (WP3 wiring) --------------- */
+.v2 .packs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.v2 .pack{text-align:center;padding:24px 14px}
+.v2 .pack .n{font:400 30px var(--fd);color:var(--ink)}
+.v2 .pack .u{font:500 9.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin-top:6px}
+.v2 .pack .pr{font:400 14px var(--fu);color:var(--mid);margin-top:12px}
+.v2 .pack .best{position:absolute;top:12px;left:50%;transform:translateX(-50%);font:500 8.5px/1 var(--fu);
+ letter-spacing:.16em;color:var(--silver);border:1px solid var(--strong);padding:4px 9px;border-radius:999px}
+.v2 .tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:4px}
+.v2 .tab{font:500 11px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--low);
+ padding:12px 18px;cursor:pointer;border-bottom:1px solid transparent;margin-bottom:-1px;background:none;border-top:0;border-left:0;border-right:0}
+.v2 .tab.on{color:var(--ink);border-bottom-color:var(--ink)}
+.v2 .hrow{display:grid;grid-template-columns:52px 1fr auto auto auto;gap:16px;align-items:center;
+ padding:15px 6px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.v2 .hrow:hover{background:var(--bgcell)}
+.v2 .hrow .id{font:400 11px var(--fd);color:var(--low)}
+.v2 .hrow .t{font:400 12.5px var(--fd);letter-spacing:.08em;color:var(--ink)}
+.v2 .hrow .m{font:500 9.5px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.v2 .hrow .d{font:400 12px var(--fu);color:var(--low)}
+.v2 .mnote{font:400 11.5px var(--fu);color:var(--low);margin-top:16px;letter-spacing:.03em}
+
+/* ---------- Auth (auth mockup; card renamed from .acard) ------ */
+.v2 .awrap{max-width:400px;margin:0 auto;padding-top:6vh}
+.v2 .alock{display:flex;flex-direction:column;align-items:center;margin-bottom:34px}
+.v2 .authcard{border:1px solid var(--line);background:var(--bgcell);padding:28px}
+.v2 .aerr{font:400 12px var(--fu);color:var(--warn);margin-top:12px;letter-spacing:.03em}
+.v2 .aalt{text-align:center;margin-top:20px;font:400 12px var(--fu);color:var(--low)}
+.v2 .aalt a{color:var(--mid);text-decoration:none}
+.v2 .aalt a:hover{color:var(--ink)}
+.v2 .oauth{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+
+/* ---------- Unsafe Zone dialogue (unsafezone mockup) ---------- */
+.v2 .uhead{display:flex;justify-content:space-between;align-items:baseline}
+.v2 .uhead h1{font:400 22px var(--fd);letter-spacing:.2em}
+.v2 .uwell{max-width:720px;margin:30px auto 0}
+.v2 .msg{margin:18px 0;max-width:82%}
+.v2 .msg.you{margin-left:auto;text-align:right}
+.v2 .msg .who{font:500 9.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin-bottom:7px}
+.v2 .msg .b{font:400 16px/1.75 var(--fp);color:var(--ink);border:1px solid var(--line);padding:16px 20px;text-align:left}
+.v2 .msg.ai .b{background:var(--inv);color:var(--inkinv);border-color:var(--inv)}
+.v2 .entry{display:flex;gap:12px;margin-top:30px}
+.v2 .entry textarea{flex:1;min-height:56px;resize:vertical}
+.v2 .unote{font:400 11px var(--fu);color:var(--low);margin-top:12px;letter-spacing:.04em;text-align:center}
+
+/* ---------- Landing pieces (master) --------------------------- */
+.v2 .masthead{display:flex;flex-direction:column;align-items:center;text-align:center;padding:11vh 0 0}
+/* position/transform resets guard against the old .tagline rule */
+.v2 .tagline{position:static;left:auto;top:auto;transform:none;margin:28px 0 0;
+ font:400 clamp(11px,1.3vw,13px) var(--f-disp);letter-spacing:.42em;
+ text-transform:uppercase;color:var(--silverd)}
+.v2 .rail{position:relative;height:1px;background:var(--low);margin:48px 0 0;
+ transform-origin:left;animation:v2draw 1.1s cubic-bezier(.16,1,.3,1) .5s both}
+.v2 .rail::after{content:"";position:absolute;right:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;
+ background:var(--ink)}
+.v2 .rail-label{display:flex;justify-content:space-between;margin-top:12px;
+ font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--low)}
+.v2 .rail-label b{color:var(--silver);font-weight:500}
+.v2 .acct{transition:.16s;color:var(--low);text-decoration:none}
+.v2 .acct:hover{color:var(--ink)!important}
+.v2 .acct-links{display:flex;gap:26px}
+.v2 .selectline{font:500 10.5px/1 var(--fu);letter-spacing:.22em;text-transform:uppercase;color:var(--low)}
+.v2 .modules{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+/* ---------- Footers ------------------------------------------- */
+/* Base reset: the old global stylesheet paints bare <footer> with a
+   violet gradient + Georgia links (layout.css); neutralize inside .v2
+   so the canvas shows through (Law §2.1: ground is the black canvas). */
+.v2 footer{background:none;text-align:left;border-top:0;margin:0;border-radius:0}
+.v2 footer a{font:inherit;transition:none}
+.v2 footer.landing{margin-top:auto;padding:32px 6px 38px;display:flex;justify-content:space-between;align-items:center;
+ color:var(--low);font:400 12px/1 var(--fu);letter-spacing:.06em}
+.v2 footer.landing .brandline{display:flex;align-items:center;gap:5px;color:var(--ink);
+ font:400 11px var(--fd);letter-spacing:.14em}
+.v2 footer.module{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:26px 48px 38px;display:flex;justify-content:space-between;align-items:center;
+ border-top:1px solid var(--line);color:var(--low);font:400 12px/1 var(--fu);letter-spacing:.06em}
+.v2 footer nav{display:flex;gap:22px}
+.v2 footer a{color:var(--low);text-decoration:none}
+.v2 footer a:hover{color:var(--dim)}
+
+/* ---------- Theme bar (landing) ------------------------------- */
+.v2 .themebar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:5;
+ display:flex;gap:6px;padding:6px;border:1px solid var(--line);border-radius:999px;
+ background:var(--bg);backdrop-filter:blur(8px)}
+.v2 .themebar button{font:500 10.5px/1 var(--fu);letter-spacing:.12em;text-transform:uppercase;
+ color:var(--low);background:none;border:0;border-radius:999px;padding:8px 16px;cursor:pointer}
+.v2 .themebar button.on{color:var(--ink);box-shadow:inset 0 0 0 1px var(--strong)}
+
+/* ---------- Entrance motion (landing) ------------------------- */
+.v2 .rv{opacity:0;transform:translateY(12px);animation:v2in .55s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes v2in{to{opacity:1;transform:none}}
+@keyframes v2draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.v2 .rv,.v2 .rail,.v2 .mrail.draw{animation:none;opacity:1;transform:none}}
+
+/* ---------- Breakpoints (landing master) ---------------------- */
+@media (max-width:900px){.v2 .modules{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:860px){.v2 .page{padding-left:26px;padding-right:26px}.v2 .navr{right:60px}.v2 .hud-status{display:none}}
+@media (max-width:600px){.v2 .modules{grid-template-columns:1fr}.v2 .themebar{bottom:12px}}
