@@ -1,0 +1,18 @@
+/* Lockup - brand lockup placement (Design Law §1.3, §2.2) */
+.lockup {
+  display: flex;
+}
+.lockup.lock-plate {
+  justify-content: center;
+}
+
+/* White theme: the lockup never inverts — it carries its own black plate.
+   Selectors match the mockup convention (body.t-white); wired in WP1. */
+body.t-white .lock-plate {
+  background: #070708;
+  padding: 26px 40px 22px;
+}
+body.t-white .lock-plate-s {
+  background: #070708;
+  padding: 10px 14px 8px;
+}

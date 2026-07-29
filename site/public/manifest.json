@@ -4,29 +4,23 @@
   "description": "Philosophical analysis of music, literature, news, and ideas based on objective reality, logical reasoning, individualistic ethics, justice and liberty principles.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0020",
-  "theme_color": "#D90B91",
+  "background_color": "#070708",
+  "theme_color": "#070708",
   "orientation": "portrait-primary",
   "scope": "/",
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/logo-everything.jpg",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo-everything.jpg",
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "/logo-everything.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg",
-      "purpose": "maskable"
     }
   ],
   "categories": ["education", "philosophy", "news", "entertainment"],
@@ -36,7 +30,7 @@
       "short_name": "Analyze",
       "description": "Search and analyze music, literature, news, and more",
       "url": "/?action=analyze",
-      "icons": [{ "src": "/logo-everything.jpg", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
