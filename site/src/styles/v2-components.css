@@ -283,6 +283,73 @@
 @media (max-width:860px){.v2 .page{padding-left:26px;padding-right:26px}.v2 .navr{right:60px}.v2 .hud-status{display:none}}
 @media (max-width:600px){.v2 .modules{grid-template-columns:1fr}.v2 .themebar{bottom:12px}}
 
+/* ---------- WP6.1 mobile pass (360-430 baseline) ---------------
+   Flex-item min-width guard: the landing mounts .page as a flex-column
+   item; min-width:auto resolved to min-content (600px+ from letter-
+   spaced rows) and pushed the whole page off a 360px viewport. */
+.v2 .page{min-width:0}
+
+/* PWA standalone / notch: fixed chrome respects safe-area insets.
+   The header ground grows INTO the top inset (its grid replica stays
+   aligned because the page grid is offset by the same amount). */
+.v2 .hudground{height:calc(var(--grid-size) + env(safe-area-inset-top,0px))}
+.v2 .hudground::before{top:env(safe-area-inset-top,0px)}
+.v2 .hud-status{top:calc(30px + env(safe-area-inset-top,0px))}
+.v2 .navr{top:calc(26px + env(safe-area-inset-top,0px))}
+.v2 .hc.tl,.v2 .hc.tr{top:calc(22px + env(safe-area-inset-top,0px))}
+.v2 .hc.bl,.v2 .hc.br{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+.v2 .themebar{bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+.v2 .page{padding-top:calc(81px + env(safe-area-inset-top,0px));
+ padding-left:max(48px,env(safe-area-inset-left,0px));padding-right:max(48px,env(safe-area-inset-right,0px))}
+.v2 .page.interior{padding-top:calc(76px + env(safe-area-inset-top,0px))}
+
+/* Long unbreakable data (song titles, hashes, session codes) wraps */
+.v2 .trackc h3,.v2 .trackc p{overflow-wrap:anywhere}
+
+@media (max-width:860px){
+ .v2 .page{padding-left:max(26px,env(safe-area-inset-left,0px));padding-right:max(26px,env(safe-area-inset-right,0px))}
+}
+
+@media (max-width:640px){
+ /* header bar: nav claims the full width and may wrap to two rows */
+ .v2 .navr{left:16px;right:16px;justify-content:flex-end;flex-wrap:wrap;gap:8px 16px}
+ .v2 .hc{width:16px;height:16px}
+ .v2 .hc.tl,.v2 .hc.bl{left:12px}
+ .v2 .hc.tr,.v2 .hc.br{right:12px}
+ .v2 .page{padding-top:calc(88px + env(safe-area-inset-top,0px));
+  padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));
+  padding-bottom:48px}
+ .v2 .page.interior{padding-top:calc(84px + env(safe-area-inset-top,0px))}
+ .v2 .lockband{padding-bottom:26px}
+ /* touch targets >= 44px without shifting the 11px-type layout */
+ .v2 .navr a{padding:16px 6px;margin:-16px -6px}
+ .v2 .acctmenu{top:34px}
+ .v2 .acctmenu a{padding:14px 18px}
+ .v2 .themebar button{padding:13px 18px}
+ .v2 .btnp{padding:16px 24px}
+ .v2 .btns{padding:15px 23px}
+ /* landing master collapses */
+ .v2 .masthead{padding-top:6vh}
+ .v2 .tagline{white-space:normal;text-align:center;line-height:1.6}
+ .v2 .rail-label{flex-wrap:wrap;row-gap:8px}
+ .v2 .modules{gap:12px}
+ .v2 footer.landing{flex-direction:column;gap:16px;align-items:flex-start}
+ .v2 footer.module{flex-direction:column;gap:16px;align-items:flex-start;padding-left:18px;padding-right:18px}
+ .v2 footer nav{flex-wrap:wrap;row-gap:12px}
+ .v2 footer a{padding:10px 2px;margin:-10px -2px}
+ /* module template rows wrap instead of overflowing */
+ .v2 .tick{flex-wrap:wrap;row-gap:8px}
+ .v2 .state{flex-wrap:wrap;row-gap:10px}
+ .v2 .audio{flex-wrap:wrap;row-gap:10px}
+ .v2 .actions{flex-wrap:wrap;row-gap:16px}
+ .v2 .vgrid{gap:16px}
+ .v2 .cfoot{flex-wrap:wrap;row-gap:10px}
+ .v2 .moverlay{padding:calc(4vh + env(safe-area-inset-top,0px)) 12px calc(16px + env(safe-area-inset-bottom,0px))}
+ .v2 .mbody{padding:20px 16px}
+ /* iOS: sub-16px inputs trigger auto-zoom on focus */
+ .v2 input.f,.v2 textarea.f{font-size:16px}
+}
+
 /* ---------- WP4 locale rules ---------------------------------- */
 /* CJK prose reads at 1.8 (Law §3 tops the 1.75–1.8 range for CJK).
    html[lang] is set by i18n on languageChanged. */
