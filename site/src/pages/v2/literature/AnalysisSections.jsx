@@ -45,7 +45,7 @@ const CLASSIFICATION_KEYS = {
 const stripWordCount = (value) =>
   value ? String(value).replace(/\s*\(\s*\d+\s*(palavras|words)\s*\)\s*$/i, '').trim() : value;
 
-const clean = (value) => ({ __html: DOMPurify.sanitize(stripWordCount(value) || '') });
+const clean = (value) => ({ __html: DOMPurify.sanitize(stripWordCount(value) || '', { ADD_TAGS: ['hl'] }) });
 
 export function classificationLabel(t, result) {
   if (result.classification_localized) return result.classification_localized;

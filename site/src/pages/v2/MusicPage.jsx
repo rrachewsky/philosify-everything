@@ -91,7 +91,7 @@ const formatModelName = (model) => {
   );
 };
 
-const sanitize = (html) => DOMPurify.sanitize(stripTrailingWordCount(html));
+const sanitize = (html) => DOMPurify.sanitize(stripTrailingWordCount(html), { ADD_TAGS: ['hl'] });
 
 // Top-50 marquee rendered inside the v2 ticker line (mockup .tick anatomy)
 function Top50Line({ tracks, label, onSelect }) {

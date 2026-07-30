@@ -22,7 +22,7 @@
  font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
 .v2 .pg-unsafe-zone .uz-link:hover{color:var(--ink)}
 .v2 .pg-unsafe-zone .uz-intro{border:1px solid var(--line);background:var(--bgcell);padding:16px 20px;
- margin:0 0 6px;font:400 14.5px/1.7 var(--fp);color:var(--mid)}
+ margin:0 0 6px;font:400 16.5px/1.75 var(--fp);color:var(--mid)}
 .v2 .pg-unsafe-zone .uz-intro p{margin:0 0 8px}
 .v2 .pg-unsafe-zone .uz-intro p:last-child{margin-bottom:0}
 .v2 .pg-unsafe-zone .uz-intro .quiet{color:var(--low)}

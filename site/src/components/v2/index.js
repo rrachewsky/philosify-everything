@@ -4,6 +4,7 @@ export { Cell } from './Cell.jsx';
 export { Button } from './Button.jsx';
 export { Pill } from './Pill.jsx';
 export { Ticker } from './Ticker.jsx';
+export { BreakingTicker } from './BreakingTicker.jsx';
 export { ModuleHeader, MarkerLine } from './ModuleHeader.jsx';
 export { Telemetry } from './Telemetry.jsx';
 export { ModalV2 } from './Modal.jsx';

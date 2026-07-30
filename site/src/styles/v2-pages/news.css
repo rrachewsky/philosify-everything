@@ -62,11 +62,11 @@
 
 /* Reading prose inside output cells (Newsreader tier; the mockup's silver
    key-phrase treatment maps to emphasis markup in the real analysis) */
-.v2 .pg-news .prose{font:400 15px/1.75 var(--fp);letter-spacing:0;color:var(--ink)}
+.v2 .pg-news .prose{font:400 16.5px/1.75 var(--fp);letter-spacing:0;color:var(--ink)}
 .v2 .pg-news .prose p{margin:0 0 12px}
 .v2 .pg-news .prose p:last-child{margin-bottom:0}
 .v2 .pg-news .prose :where(strong,b,em){color:var(--silver);font-weight:400;font-style:normal}
-.v2 .pg-news .prose.sm{font-size:13.5px;line-height:1.7;color:var(--mid)}
+.v2 .pg-news .prose.sm{color:var(--mid)}
 
 /* ---- Modal internals: philosopher picker ---- */
 .v2 .pg-news .pcount{margin-top:12px;font:500 10px/1 var(--fu);letter-spacing:.16em;

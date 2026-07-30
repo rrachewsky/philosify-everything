@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DOMPurify from 'dompurify';
-import { PageShell, ModuleHeader, Ticker, Telemetry, Button, Pill } from '../../components/v2';
+import { PageShell, ModuleHeader, BreakingTicker, Telemetry, Button, Pill } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
 import InlineAdSlot from '../../components/ads/InlineAdSlot.jsx';
@@ -41,7 +41,7 @@ function Prose({ text, className = 'prose' }) {
           .split(/\n{2,}/)
           .map((p) => `<p>${p.replace(/\n/g, '<br/>')}</p>`)
           .join('');
-    return DOMPurify.sanitize(raw);
+    return DOMPurify.sanitize(raw, { ADD_TAGS: ['hl'] });
   }, [text]);
   if (!html) return null;
   return <div className={className} dangerouslySetInnerHTML={{ __html: html }} />;
@@ -445,23 +445,16 @@ export default function NewsPage() {
       <div className="pg-news">
         <section className="mod-section">
           <ModuleHeader title={t('v2.news.title', 'NEWS')}>
-            <Ticker stat={t('v2.news.tickerStat', 'Read the news, armed')}>
-              {t('v2.news.breaking', 'Breaking')} //{' '}
-              {news.breakingLoading && news.breakingNews.length === 0 ? (
-                t('v2.news.breakingLoading', 'Loading breaking news…')
-              ) : news.breakingNews.length === 0 ? (
-                t('v2.news.breakingEmpty', 'No breaking headlines right now')
-              ) : (
-                news.breakingNews.map((a, i) => (
-                  <span key={a.url || i}>
-                    {i > 0 && ' · '}
-                    <button type="button" className="bk-item" onClick={() => selectArticle(a)}>
-                      {a.title}
-                    </button>
-                  </span>
-                ))
-              )}
-            </Ticker>
+            {/* Breaking ticker (30 Jul anatomy): silver BREAKING >>> label,
+                rolling headlines to the edge, no stat. Live /api/news/breaking. */}
+            <BreakingTicker
+              label={`${t('v2.news.breaking', 'Breaking')} >>>`}
+              items={news.breakingNews}
+              onSelect={selectArticle}
+              loading={news.breakingLoading}
+              loadingText={t('v2.news.breakingLoading', 'Loading breaking news…')}
+              emptyText={t('v2.news.breakingEmpty', 'No breaking headlines right now')}
+            />
           </ModuleHeader>
 
           <div className="body">

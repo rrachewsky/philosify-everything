@@ -2,6 +2,7 @@
 // Verdict (label + silver Note numeral + ink classification + score line +
 // rationale), AudioBar, ExpandableSection, ActionsRow, AdSlot, TrackCard.
 import { useState } from 'react';
+import DOMPurify from 'dompurify';
 
 // Display formatting: true minus sign for negative scores (tabular numerals).
 export function formatSignedScore(score) {
@@ -11,9 +12,11 @@ export function formatSignedScore(score) {
 // Rationale for the verdict card: the opening 1–2 sentences of the analysis
 // itself — integrated analysis first, else the top-weighted scorecard
 // justification (ethics, 40%). Frontend-only; the engine output is untouched.
+// Strip every tag EXCEPT <hl> (six-question highlights, Law 30 Jul) —
+// DOMPurify repairs any tag left unbalanced by the sentence cut.
 const stripTags = (html) =>
   String(html)
-    .replace(/<[^>]*>/g, ' ')
+    .replace(/<(?!\/?hl\b)[^>]*>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -45,7 +48,14 @@ export function Verdict({ label = 'Philosify Verdict', note, classification, sco
         {classification && <span className="classif">{classification}</span>}
       </div>
       {scoreLine && <div className="vscore">{scoreLine}</div>}
-      {rationale && <p className="vwhy">{rationale}</p>}
+      {rationale && (
+        <p
+          className="vwhy"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(rationale, { ALLOWED_TAGS: ['hl'] }),
+          }}
+        />
+      )}
     </div>
   );
 }

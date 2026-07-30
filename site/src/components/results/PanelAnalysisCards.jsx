@@ -92,7 +92,8 @@ function renderBody(text) {
       .replace(/\n\n/g, '</p><p>')
       .replace(/\n/g, '<br/>')
       .replace(/^/, '<p>')
-      .replace(/$/, '</p>')
+      .replace(/$/, '</p>'),
+    { ADD_TAGS: ['hl'] }
   );
 }
 
