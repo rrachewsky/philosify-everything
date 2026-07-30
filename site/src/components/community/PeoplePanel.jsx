@@ -7,30 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { config } from '@/config';
 import { useContactImport } from '@hooks/useContactImport.js';
 
-// Language code -> flag emoji mapping
-const LANG_FLAGS = {
-  en: '\u{1F1FA}\u{1F1F8}', // US
-  pt: '\u{1F1E7}\u{1F1F7}', // Brazil
-  es: '\u{1F1EA}\u{1F1F8}', // Spain
-  fr: '\u{1F1EB}\u{1F1F7}', // France
-  de: '\u{1F1E9}\u{1F1EA}', // Germany
-  it: '\u{1F1EE}\u{1F1F9}', // Italy
-  ru: '\u{1F1F7}\u{1F1FA}', // Russia
-  ja: '\u{1F1EF}\u{1F1F5}', // Japan
-  ko: '\u{1F1F0}\u{1F1F7}', // Korea
-  zh: '\u{1F1E8}\u{1F1F3}', // China
-  hi: '\u{1F1EE}\u{1F1F3}', // India
-  ar: '\u{1F1F8}\u{1F1E6}', // Saudi Arabia
-  he: '\u{1F1EE}\u{1F1F1}', // Israel
-  nl: '\u{1F1F3}\u{1F1F1}', // Netherlands
-  pl: '\u{1F1F5}\u{1F1F1}', // Poland
-  tr: '\u{1F1F9}\u{1F1F7}', // Turkey
-  hu: '\u{1F1ED}\u{1F1FA}', // Hungary
-  fa: '\u{1F1EE}\u{1F1F7}', // Iran
-};
-
 function MemberItem({ member, onStartDM, isOnline, t }) {
-  const flag = member.language ? LANG_FLAGS[member.language] || null : null;
+  // WP6.2: flag emoji chrome replaced by the locale code as a text label (v2 Law)
+  const flag = member.language ? member.language.toUpperCase() : null;
   const online = isOnline ? isOnline(member.id) : false;
 
   return (

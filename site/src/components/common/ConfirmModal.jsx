@@ -1,17 +1,8 @@
 // ConfirmModal - Confirmation dialog matching Philosify modal design
+// WP6.2: inline gradient styles removed — variants are classes so the
+// v2 skin (styles/v2-pages/community-panels.css) can style them with
+// tokens (danger = --warn outline, Law-approved functional red).
 import { Modal } from './Modal.jsx';
-
-const cancelStyle = {
-  background: 'linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f97316 100%)',
-  border: '1px solid transparent',
-  color: '#fff',
-};
-
-const confirmStyle = {
-  background: 'rgba(124, 58, 237, 0.3)',
-  border: '1px solid rgba(124, 58, 237, 0.5)',
-  color: '#00e0f0',
-};
 
 export function ConfirmModal({
   isOpen,
@@ -21,7 +12,6 @@ export function ConfirmModal({
   message,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
-  // eslint-disable-next-line no-unused-vars
   confirmVariant = 'primary', // 'primary' | 'danger'
 }) {
   const handleConfirm = () => {
@@ -34,10 +24,13 @@ export function ConfirmModal({
       <p className="text-white-70 mb-6 leading-normal text-sm">{message}</p>
 
       <div className="flex gap-3 justify-end">
-        <button className="form-button flex-1" onClick={onClose} style={cancelStyle}>
+        <button className="form-button form-button--cancel flex-1" onClick={onClose}>
           {cancelText}
         </button>
-        <button className="form-button flex-1" onClick={handleConfirm} style={confirmStyle}>
+        <button
+          className={`form-button flex-1${confirmVariant === 'danger' ? ' form-button--danger' : ''}`}
+          onClick={handleConfirm}
+        >
           {confirmText}
         </button>
       </div>

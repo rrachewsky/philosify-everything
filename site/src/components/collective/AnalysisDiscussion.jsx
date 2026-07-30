@@ -116,13 +116,8 @@ export function AnalysisDiscussion({ collectiveAnalysisId, onBack, onUserClick }
     setReplyingTo(null);
   };
 
-  // Get color based on philosophical note (1-10)
-  const getScoreColor = (note) => {
-    if (note == null) return 'rgba(255, 255, 255, 0.4)';
-    if (note >= 8) return '#00e0a0'; // Green for 8-10
-    if (note >= 5) return '#ffc832'; // Yellow for 5-7
-    return '#ff4680'; // Red for 1-4
-  };
+  // WP6.2: score traffic-light colors removed — the Philosophical Note
+  // numeral renders silver via CSS (Design Law §2.3, one per region).
 
   if (loading) {
     return (
@@ -164,10 +159,7 @@ export function AnalysisDiscussion({ collectiveAnalysisId, onBack, onUserClick }
       {analysis && (
         <div className="analysis-discussion__summary">
           <div className="analysis-discussion__song-row">
-            <span
-              className="analysis-discussion__score"
-              style={{ color: getScoreColor(calculatePhilosophicalNote(analysis.score)) }}
-            >
+            <span className="analysis-discussion__score">
               {analysis.score != null ? calculatePhilosophicalNote(analysis.score) : '?'}
             </span>
             <span className="analysis-discussion__song">{analysis.song_name}</span>

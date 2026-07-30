@@ -44,13 +44,8 @@ export function CollectiveFeed({ groupId, analyses: initialAnalyses, onSelectAna
     }
   }, [groupId, analyses.length, loading, hasMore]);
 
-  // Get color based on philosophical note (1-10)
-  const getScoreColor = (note) => {
-    if (note == null) return 'rgba(255, 255, 255, 0.4)';
-    if (note >= 8) return '#00e0a0'; // Green for 8-10
-    if (note >= 5) return '#ffc832'; // Yellow for 5-7
-    return '#ff4680'; // Red for 1-4
-  };
+  // WP6.2: score traffic-light colors removed — the numeral renders in the
+  // monochrome display register (Design Law §2, styled via CSS).
 
   // Group analyses by song name (case-insensitive)
   // Sort groups by best score within group (descending)
@@ -114,9 +109,7 @@ export function CollectiveFeed({ groupId, analyses: initialAnalyses, onSelectAna
                     className="song-group__entry"
                     onClick={() => onSelectAnalysis(analysis.id)}
                   >
-                    <span className="song-group__score" style={{ color: getScoreColor(note) }}>
-                      {note != null ? note : '?'}
-                    </span>
+                    <span className="song-group__score">{note != null ? note : '?'}</span>
                     {analysis.language && (
                       <span className="song-group__lang">{analysis.language.toUpperCase()}</span>
                     )}

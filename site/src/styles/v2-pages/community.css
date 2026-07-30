@@ -20,22 +20,20 @@
 .v2 .pg-community .subline{font:500 10px/1.5 var(--fu);letter-spacing:.16em;text-transform:uppercase;
  color:var(--low);margin:12px 2px 0}
 
-/* Panel host — bounded flex column so the reused panels (built for
-   the sidebar's .community-hub__content) keep their internal
-   scrolling. Ground stays dark in BOTH themes: the panels' own
-   inks are light-on-dark and ignore the v2 theme by design. */
+/* Panel host — bounded flex column so the reused panels keep their
+   internal scrolling. WP6.2: the panels are now token-skinned
+   (v2-pages/community-panels.css + underground.css), so the host is
+   an ordinary theme-aware cell — the forced always-dark ground of
+   the WP3 "framed" era is superseded. */
 .v2 .pg-community .panelhost{position:relative;display:flex;flex-direction:column;
  height:min(70vh,760px);margin-top:16px;border:1px solid var(--line);
- background:var(--inset);overflow:hidden}
+ background:var(--bgcell);overflow:hidden}
 .v2 .pg-community .panelhost > *{min-height:0}
-body.t-white .v2 .pg-community .panelhost{background:var(--inv);border-color:var(--strong)}
 
 /* Signed-out gate inside the host */
 .v2 .pg-community .authgate{flex:1;display:flex;flex-direction:column;align-items:center;
  justify-content:center;gap:18px;padding:40px 24px;text-align:center}
 .v2 .pg-community .authgate p{font:400 12.5px/1.65 var(--fd);letter-spacing:.06em;color:var(--mid)}
-/* The host ground is dark in both themes — keep the gate text light there */
-body.t-white .v2 .pg-community .authgate p{color:var(--inkinv)}
 
 @media (max-width:700px){
   .v2 .pg-community .panelhost{height:min(76vh,700px)}

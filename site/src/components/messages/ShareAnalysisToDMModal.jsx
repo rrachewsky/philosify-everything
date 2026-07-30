@@ -1,10 +1,14 @@
 // ShareAnalysisToDMModal - Share an analysis as a rich card via DM
 // Multi-select: user can pick multiple recipients, then click Send
-// NOTE: Modal scoping rule - renders in place (no portal) so sidebar CSS can confine it
+// NOTE: Modal scoping rule - renders in place (no portal) so page CSS can confine it
+// WP6.2: inline cyberpunk styles replaced by .share-dm-modal__* classes,
+// skinned monochrome + silver in styles/v2-pages/community-panels.css
+// (unscoped there on purpose — this modal mounts on every analysis surface).
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { config } from '../../config';
 import { dmService } from '../../services/api/dm.js';
+import '../../styles/v2-pages/community-panels.css';
 
 export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
   const { t } = useTranslation();
@@ -139,100 +143,27 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
 
   const { songName, artist, philosophicalNote, classification } = analysisData || {};
 
-  // Render in place (no portal) - sidebar CSS will confine it when inside sidebar
-  // Default: position fixed (full screen), but .music-sidebar .share-dm-modal-overlay → absolute
+  // Render in place (no portal) - page CSS confines it where needed
   return (
     <div className="share-dm-modal-overlay" onClick={onClose}>
-      <div
-        className="group-members-modal"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'rgba(15, 8, 40, 0.98)',
-          border: '1px solid rgba(120, 100, 180, 0.3)',
-          borderRadius: '16px',
-          width: '100%',
-          maxWidth: '400px',
-          height: '70vh',
-          maxHeight: '550px',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
-        }}
-      >
+      <div className="share-dm-modal" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div
-          className="group-members-modal__header"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '16px',
-            borderBottom: '1px solid rgba(120, 100, 180, 0.15)',
-            flexShrink: 0,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'Orbitron', sans-serif",
-              fontSize: '14px',
-              fontWeight: 700,
-              color: '#fff',
-            }}
-          >
-            {t('community.dm.shareAnalysis')}
-          </span>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'rgba(255, 255, 255, 0.6)',
-              fontSize: '24px',
-              cursor: 'pointer',
-              lineHeight: 1,
-            }}
-          >
+        <div className="share-dm-modal__header">
+          <span className="share-dm-modal__title">{t('community.dm.shareAnalysis')}</span>
+          <button className="share-dm-modal__close" onClick={onClose}>
             &times;
           </button>
         </div>
 
         {/* Analysis preview */}
         {songName && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px 16px',
-              background: 'rgba(90, 30, 160, 0.15)',
-              borderLeft: '3px solid #8a2be2',
-              flexShrink: 0,
-            }}
-          >
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '8px',
-                background: 'linear-gradient(135deg, #8a2be2, #5a1ea0)',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 700,
-                fontSize: '16px',
-              }}
-            >
-              P
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 600, color: '#fff', fontSize: '13px' }}>{songName}</div>
-              <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px' }}>{artist}</div>
+          <div className="share-dm-modal__preview">
+            <div className="share-dm-modal__preview-icon">P</div>
+            <div className="share-dm-modal__preview-info">
+              <div className="share-dm-modal__preview-song">{songName}</div>
+              <div className="share-dm-modal__preview-artist">{artist}</div>
               {philosophicalNote && (
-                <div
-                  style={{ color: '#00e0f0', fontSize: '11px', marginTop: '4px', lineHeight: 1.3 }}
-                >
+                <div className="share-dm-modal__preview-note">
                   <strong>{t('philosophicalNote')}:</strong>{' '}
                   {philosophicalNote.length > 60
                     ? philosophicalNote.substring(0, 60) + '...'
@@ -240,9 +171,7 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
                 </div>
               )}
               {classification && (
-                <div
-                  style={{ color: '#a78bfa', fontSize: '11px', marginTop: '2px', lineHeight: 1.3 }}
-                >
+                <div className="share-dm-modal__preview-classification">
                   <strong>{t('philosophicalClassification')}:</strong> {classification}
                 </div>
               )}
@@ -251,92 +180,35 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
         )}
 
         {/* Error message */}
-        {error && (
-          <div
-            style={{
-              margin: '8px 16px',
-              padding: '8px 12px',
-              background: 'rgba(255, 50, 50, 0.15)',
-              border: '1px solid rgba(255, 50, 50, 0.3)',
-              borderRadius: '6px',
-              color: '#ff6b6b',
-              fontSize: '12px',
-              flexShrink: 0,
-            }}
-          >
-            {error}
-          </div>
-        )}
+        {error && <div className="share-dm-modal__error">{error}</div>}
 
         {/* Search input */}
-        <div style={{ padding: '12px 16px', flexShrink: 0 }}>
+        <div className="share-dm-modal__search-wrap">
           <input
             type="text"
+            className="share-dm-modal__search"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             placeholder={t('community.dm.searchPeople') || 'Search people...'}
-            style={{
-              width: '100%',
-              padding: '10px 12px',
-              background: 'rgba(15, 8, 35, 0.9)',
-              border: '1px solid rgba(120, 100, 180, 0.25)',
-              borderRadius: '8px',
-              color: '#fff',
-              fontSize: '13px',
-              outline: 'none',
-              boxSizing: 'border-box',
-            }}
             autoFocus
           />
         </div>
 
         {/* Selected count */}
         {selected.size > 0 && (
-          <div
-            style={{
-              padding: '0 16px 8px',
-              fontSize: '12px',
-              color: '#00e0f0',
-              flexShrink: 0,
-            }}
-          >
+          <div className="share-dm-modal__selected">
             {selected.size} {t('community.dm.selected') || 'selected'}
           </div>
         )}
 
         {/* People list - scrollable */}
-        <div
-          style={{
-            flex: 1,
-            minHeight: 0,
-            overflowY: 'auto',
-            padding: '0 12px',
-          }}
-        >
+        <div className="share-dm-modal__list">
           {loading && (
-            <div
-              style={{
-                padding: '20px',
-                textAlign: 'center',
-                color: 'rgba(255,255,255,0.5)',
-                fontSize: '13px',
-              }}
-            >
-              {t('community.dm.loadingConversations')}
-            </div>
+            <div className="share-dm-modal__empty">{t('community.dm.loadingConversations')}</div>
           )}
 
           {!loading && filteredPeople.length === 0 && (
-            <div
-              style={{
-                padding: '20px',
-                textAlign: 'center',
-                color: 'rgba(255,255,255,0.5)',
-                fontSize: '13px',
-              }}
-            >
-              {t('community.dm.noResults')}
-            </div>
+            <div className="share-dm-modal__empty">{t('community.dm.noResults')}</div>
           )}
 
           {filteredPeople.map((person) => {
@@ -345,41 +217,19 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
               <div
                 key={person.id}
                 onClick={() => toggleSelect(person.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '10px 8px',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  background: isSelected ? 'rgba(0, 180, 200, 0.12)' : 'transparent',
-                  border: isSelected ? '1px solid rgba(0, 180, 200, 0.3)' : '1px solid transparent',
-                  marginBottom: '4px',
-                  transition: 'all 0.15s',
-                }}
+                className={`share-dm-modal__person${
+                  isSelected ? ' share-dm-modal__person--selected' : ''
+                }`}
               >
                 {/* Checkbox */}
-                <div
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '4px',
-                    border: isSelected ? '2px solid #00e0f0' : '2px solid rgba(120, 100, 180, 0.4)',
-                    background: isSelected ? '#00e0f0' : 'transparent',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    transition: 'all 0.15s',
-                  }}
-                >
+                <div className="share-dm-modal__checkbox">
                   {isSelected && (
                     <svg
                       width="12"
                       height="12"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#0a0020"
+                      stroke="currentColor"
                       strokeWidth="3"
                     >
                       <polyline points="20 6 9 17 4 12" />
@@ -388,62 +238,23 @@ export function ShareAnalysisToDMModal({ analysisData, onClose, onSuccess }) {
                 </div>
 
                 {/* Avatar */}
-                <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    background:
-                      'linear-gradient(135deg, rgba(120, 100, 180, 0.4), rgba(90, 70, 150, 0.4))',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#fff',
-                    fontWeight: 600,
-                    fontSize: '14px',
-                    flexShrink: 0,
-                  }}
-                >
+                <div className="share-dm-modal__avatar">
                   {(person.displayName || '?')[0].toUpperCase()}
                 </div>
 
                 {/* Name */}
-                <span style={{ color: '#fff', fontSize: '14px', flex: 1 }}>
-                  {person.displayName}
-                </span>
+                <span className="share-dm-modal__name">{person.displayName}</span>
               </div>
             );
           })}
         </div>
 
         {/* Send button */}
-        <div
-          style={{
-            padding: '12px 16px',
-            borderTop: '1px solid rgba(120, 100, 180, 0.15)',
-            flexShrink: 0,
-          }}
-        >
+        <div className="share-dm-modal__footer">
           <button
+            className="share-dm-modal__send"
             onClick={handleSend}
             disabled={selected.size === 0 || sending}
-            style={{
-              width: '100%',
-              padding: '12px',
-              background:
-                selected.size > 0
-                  ? 'linear-gradient(135deg, #00e0f0, #0099aa)'
-                  : 'rgba(120, 100, 180, 0.2)',
-              border: 'none',
-              borderRadius: '8px',
-              color: selected.size > 0 ? '#0a0020' : 'rgba(255,255,255,0.4)',
-              fontFamily: "'Orbitron', sans-serif",
-              fontSize: '13px',
-              fontWeight: 700,
-              cursor: selected.size > 0 ? 'pointer' : 'not-allowed',
-              transition: 'all 0.2s',
-              opacity: sending ? 0.7 : 1,
-            }}
           >
             {sending
               ? t('community.dm.sending') || 'Sending...'

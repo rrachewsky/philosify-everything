@@ -1,0 +1,131 @@
+/* ============================================================
+   V2 UNDERGROUND — WP6.2 reskin. The Underground surfaces
+   (SpaceLock unlock shell + UndergroundFeed: nickname setup,
+   anonymous posts, reactions, composer) restyled to REAL v2:
+   monochrome + silver, tokens only, square corners.
+   Markup/handlers untouched; the PaymentModal mounted by
+   SpaceLock is owned elsewhere and is NOT styled here.
+   Supersedes the .space-lock/.underground-* rules of the emptied
+   styles/community.css (+ the underground action-bar rules that
+   lived in styles/chat.css).
+   ============================================================ */
+
+/* ---------- SpaceLock (credit-gated unlock shell) ------------- */
+.v2 .space-lock{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;gap:16px;padding:40px 30px;text-align:center;overflow-y:auto}
+/* was a padlock emoji — now a tracked chrome label */
+.v2 .space-lock__icon{font:500 9.5px/1 var(--f-ui);letter-spacing:.24em;text-transform:uppercase;
+ color:var(--ink-low);border:1px solid var(--line);padding:6px 12px}
+.v2 .space-lock__title{font:400 15px var(--f-disp);letter-spacing:.16em;text-transform:uppercase;
+ color:var(--ink-hi)}
+.v2 .space-lock__description{max-width:46ch;font:400 13.5px/1.7 var(--f-prose);
+ color:var(--ink-text)}
+/* cost transparency — the region's one silver (contract §wiring) */
+.v2 .space-lock__cost{font:500 10.5px/1 var(--f-ui);letter-spacing:.18em;text-transform:uppercase;
+ color:var(--silver)}
+.v2 .space-lock__unlock-btn{background:var(--ink-hi);border:0;border-radius:0;
+ color:var(--ink-inv);font:500 12px/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;
+ padding:14px 26px;cursor:pointer;transition:.15s}
+.v2 .space-lock__unlock-btn:hover:not(:disabled){opacity:.92}
+.v2 .space-lock__unlock-btn:disabled{opacity:.4;cursor:default}
+.v2 .space-lock .chat-error{margin:0;align-self:stretch}
+
+/* ---------- Nickname setup ------------------------------------ */
+.v2 .underground-feed{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.v2 .underground-nickname-setup{flex:1;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;padding:40px 30px;overflow-y:auto}
+.v2 .underground-nickname-setup__header{text-align:center;margin-bottom:22px;max-width:52ch}
+.v2 .underground-nickname-setup__header h3{font:400 14px var(--f-disp);letter-spacing:.16em;
+ text-transform:uppercase;color:var(--ink-hi);margin:0 0 10px}
+.v2 .underground-nickname-setup__header p{font:400 13.5px/1.7 var(--f-prose);
+ color:var(--ink-text);margin:0}
+.v2 .underground-nickname-setup form{width:100%;max-width:320px;display:flex;
+ flex-direction:column;gap:10px}
+.v2 .underground-nickname-setup__input{width:100%;padding:12px 14px;background:var(--bg-inset);
+ border:1px solid var(--line);border-radius:var(--radius-input);color:var(--ink-text);
+ font:400 14px var(--f-ui);box-sizing:border-box;text-align:center;letter-spacing:.06em}
+.v2 .underground-nickname-setup__input::placeholder{color:var(--ink-low)}
+.v2 .underground-nickname-setup__input:focus{outline:none;border-color:var(--line-strong)}
+.v2 .underground-nickname-setup__hint{font:400 10.5px/1.6 var(--f-ui);letter-spacing:.04em;
+ color:var(--ink-mid);text-align:center}
+.v2 .underground-nickname-setup__error{border:1px solid var(--warn);color:var(--warn);
+ padding:8px 12px;font:400 11.5px/1.5 var(--f-ui);text-align:center}
+.v2 .underground-nickname-setup__submit{background:var(--ink-hi);border:0;border-radius:0;
+ color:var(--ink-inv);font:500 11px/1 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;
+ padding:13px 18px;cursor:pointer;transition:.15s}
+.v2 .underground-nickname-setup__submit:hover:not(:disabled){opacity:.92}
+.v2 .underground-nickname-setup__submit:disabled{opacity:.4;cursor:default}
+
+/* ---------- Identity line ------------------------------------- */
+.v2 .underground-identity{padding:12px 16px 0;font:500 9.5px/1 var(--f-ui);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--ink-low)}
+/* the feed chrome's one silver: the anonymous identity */
+.v2 .underground-identity__nickname{color:var(--silver);letter-spacing:.14em}
+
+/* ---------- Composer ------------------------------------------ */
+.v2 .underground-feed .chat-reply-bar{margin:10px 16px 0}
+.v2 .underground-input{display:flex;flex-direction:column;gap:8px;padding:12px 16px;
+ border-bottom:1px solid var(--line)}
+.v2 .underground-input__textarea{width:100%;padding:10px 14px;background:var(--bg-inset);
+ border:1px solid var(--line);border-radius:var(--radius-input);color:var(--ink-text);
+ font:400 14px/1.5 var(--f-ui);resize:vertical;box-sizing:border-box}
+.v2 .underground-input__textarea::placeholder{color:var(--ink-low)}
+.v2 .underground-input__textarea:focus{outline:none;border-color:var(--line-strong)}
+.v2 .underground-input__footer{display:flex;align-items:center;justify-content:space-between}
+.v2 .underground-input__charcount{font:400 9.5px var(--f-ui);color:var(--ink-low);
+ font-variant-numeric:tabular-nums}
+.v2 .underground-input__submit{background:var(--ink-hi);border:0;border-radius:0;
+ color:var(--ink-inv);font:500 10px/1 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;
+ padding:11px 16px;cursor:pointer;transition:.15s}
+.v2 .underground-input__submit:hover:not(:disabled){opacity:.92}
+.v2 .underground-input__submit:disabled{opacity:.4;cursor:default}
+.v2 .underground-error{margin:8px 16px;border:1px solid var(--warn);color:var(--warn);
+ padding:8px 12px;font:400 11.5px/1.5 var(--f-ui);text-align:center}
+
+/* ---------- Posts feed ---------------------------------------- */
+.v2 .underground-posts{flex:1;overflow-y:auto;padding:12px 16px;touch-action:pan-y;
+ -webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:10px;
+ scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+.v2 .underground-empty,.v2 .underground-loading{flex:1;display:flex;align-items:center;
+ justify-content:center;padding:28px 20px;font:500 10.5px/1.8 var(--f-ui);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--ink-low);text-align:center}
+.v2 .underground-load-more{align-self:center;background:none;border:1px solid var(--line);
+ border-radius:0;color:var(--ink-mid);font:500 9.5px/1 var(--f-ui);letter-spacing:.16em;
+ text-transform:uppercase;padding:7px 14px;cursor:pointer;margin:4px auto 8px}
+.v2 .underground-load-more:hover:not(:disabled){border-color:var(--line-strong);
+ color:var(--ink-hi)}
+.v2 .underground-load-more:disabled{opacity:.4;cursor:default}
+
+.v2 .underground-post{position:relative;border:1px solid var(--line);background:var(--bg-cell);
+ padding:12px 14px;transition:border-color .15s}
+.v2 .underground-post:hover{border-color:var(--line-strong)}
+.v2 .underground-post__actions{display:flex;gap:4px;margin-bottom:6px;opacity:0;
+ transition:opacity .15s}
+.v2 .underground-post:hover .underground-post__actions{opacity:1}
+@media (hover:none){.v2 .underground-post__actions{opacity:.6}}
+.v2 .underground-post__actions--own{justify-content:flex-end}
+.v2 .underground-post__header{display:flex;align-items:baseline;gap:10px;margin-bottom:5px}
+.v2 .underground-post__nickname{font:400 10px var(--f-disp);letter-spacing:.14em;
+ text-transform:uppercase;color:var(--ink-hi)}
+.v2 .underground-post__time{font:400 9.5px var(--f-ui);color:var(--ink-low)}
+.v2 .underground-post__encrypted{font:500 8.5px/1 var(--f-ui);letter-spacing:.12em;
+ color:var(--ink-low)}
+.v2 .underground-post__content{font:400 13.5px/1.65 var(--f-ui);color:var(--ink-text);
+ overflow-wrap:anywhere;text-align:left}
+.v2 .underground-post__footer{margin-top:8px}
+.v2 .underground-post__reactions{display:flex;gap:6px;flex-wrap:wrap}
+/* reaction emoji = the user's expressed reaction (content, kept);
+   monochrome pill chrome around it */
+.v2 .underground-reaction{display:inline-flex;align-items:center;gap:5px;background:none;
+ border:1px solid var(--line);border-radius:999px;padding:3px 9px;cursor:pointer;transition:.15s}
+.v2 .underground-reaction:hover{border-color:var(--line-strong)}
+.v2 .underground-reaction--active{border-color:var(--ink-hi)}
+.v2 .underground-reaction__emoji{font-size:12px;line-height:1}
+.v2 .underground-reaction__count{font:500 9.5px/1 var(--f-ui);color:var(--ink-mid);
+ font-variant-numeric:tabular-nums}
+.v2 .underground-reaction--active .underground-reaction__count{color:var(--ink-hi)}
+
+/* ---------- Responsive ---------------------------------------- */
+@media (max-width:640px){
+ .v2 .underground-input__textarea,.v2 .underground-nickname-setup__input{font-size:16px}
+}

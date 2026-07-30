@@ -69,7 +69,8 @@ export function SpaceLock({ space, onUnlocked }) {
 
   return (
     <div className="space-lock">
-      <div className="space-lock__icon">&#128274;</div>
+      {/* WP6.2: padlock emoji chrome replaced by a text label (v2 Law) */}
+      <div className="space-lock__icon">{t('v2.community.locked', 'Locked')}</div>
       <div className="space-lock__title">{t(info.titleKey)}</div>
       <div className="space-lock__description">{t(info.descriptionKey)}</div>
       <div className="space-lock__cost">

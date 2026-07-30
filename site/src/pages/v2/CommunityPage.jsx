@@ -30,8 +30,9 @@ import { useCrypto } from '../../hooks/useCrypto.js';
 import { useDMUnreadCount } from '../../hooks/useDMUnreadCount.js';
 import { usePresence } from '../../hooks/usePresence.js';
 import { useAutoSubscribePush } from '../../hooks/useAutoSubscribePush.js';
-import '../../styles/community.css';
 import '../../styles/v2-pages/community.css';
+import '../../styles/v2-pages/community-panels.css';
+import '../../styles/v2-pages/underground.css';
 
 const TABS = ['people', 'messages', 'agora', 'collective', 'underground'];
 
