@@ -1,0 +1,126 @@
+/* ============================================================
+   IDEAS v2 page styles (WP3) — scoped under .v2 .pg-ideas.
+   Visual truth: new_design/philosify-ideas.html read through the
+   Design Law (monochrome + silver; tokens only, no hex).
+   ============================================================ */
+
+/* ---------- Feed: section labels + header rows --------------- */
+.v2 .pg-ideas .slabel{font:500 10px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--low)}
+.v2 .pg-ideas .feed{margin-top:22px}
+.v2 .pg-ideas .feed > .slabel{display:block;margin:0 0 10px}
+.v2 .pg-ideas .shead{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin:26px 0 10px}
+.v2 .pg-ideas .sbtns{display:flex;gap:10px;flex-wrap:wrap}
+.v2 .pg-ideas .sbtn{padding:9px 16px;font-size:11px}
+.v2 .pg-ideas .sbtn.on{color:var(--ink);border-color:var(--ink)}
+
+/* ---------- Feed cards (session matchup cells) --------------- */
+.v2 .pg-ideas .icard{margin-bottom:10px;cursor:pointer}
+.v2 .pg-ideas .icard h2{text-transform:uppercase}
+.v2 .pg-ideas .icard.featured{border-color:var(--strong);margin-bottom:26px}
+.v2 .pg-ideas .icard.ended h2{color:var(--mid)}
+.v2 .pg-ideas .cmeta{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+ font:500 10px/1.6 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--low)}
+.v2 .pg-ideas .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+
+/* ---------- Non-link cells (gate / paywall / question) ------- */
+.v2 .pg-ideas .cell.gate,.v2 .pg-ideas .cell.paywall,.v2 .pg-ideas .cell.qcell{cursor:default}
+.v2 .pg-ideas .cell.gate::before,.v2 .pg-ideas .cell.paywall::before,.v2 .pg-ideas .cell.qcell::before{content:none}
+.v2 .pg-ideas .cell.gate:hover::after,.v2 .pg-ideas .cell.paywall:hover::after,.v2 .pg-ideas .cell.qcell:hover::after{transform:scaleX(0)}
+.v2 .pg-ideas .cell.gate,.v2 .pg-ideas .cell.paywall{margin-top:22px}
+.v2 .pg-ideas .cell.qcell{margin-top:22px}
+.v2 .pg-ideas .prose{font:400 16.5px/1.75 var(--fp);color:var(--ink);white-space:pre-wrap}
+
+/* ---------- Detail chrome ------------------------------------ */
+.v2 .pg-ideas .detail{margin-top:22px}
+.v2 .pg-ideas .dhead{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.v2 .pg-ideas .dback,.v2 .pg-ideas .dactions a{font:500 11px/1 var(--fu);letter-spacing:.16em;
+ text-transform:uppercase;color:var(--dim);text-decoration:none;cursor:pointer}
+.v2 .pg-ideas .dback:hover,.v2 .pg-ideas .dactions a:hover{color:var(--ink)}
+.v2 .pg-ideas .dactions{display:flex;gap:22px}
+.v2 .pg-ideas .dtitle{font:400 18px/1.4 var(--fd);letter-spacing:.08em;margin-top:20px}
+.v2 .pg-ideas .dmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.v2 .pg-ideas .dcount{font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.v2 .pg-ideas .dcount b{color:var(--silver);font-weight:500;font-variant-numeric:tabular-nums}
+
+/* ---------- Transcript (reading well + msg meta) ------------- */
+.v2 .pg-ideas .iwell{max-width:720px;margin:30px auto 0}
+.v2 .pg-ideas .mmeta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:7px;
+ font:500 10px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--low)}
+.v2 .pg-ideas .msg.you .mmeta{justify-content:flex-end}
+.v2 .pg-ideas .mmeta a{color:var(--mid);text-decoration:none;cursor:pointer}
+.v2 .pg-ideas .mmeta a:hover{color:var(--ink)}
+.v2 .pg-ideas .mmeta a.on{color:var(--ink)}
+.v2 .pg-ideas .mmeta a.off{opacity:.4;cursor:default}
+.v2 .pg-ideas .msg.nested{margin-left:24px}
+.v2 .pg-ideas .msg.you.nested{margin-left:auto;margin-right:24px}
+.v2 .pg-ideas .msg .b.medit{padding:12px}
+.v2 .pg-ideas .msg .b.medit textarea{min-height:72px;resize:vertical}
+
+/* Legacy TranslateButton, restyled as v2 chrome inside this page */
+.v2 .pg-ideas .translate-wrapper{margin-top:6px}
+.v2 .pg-ideas .msg.you .translate-wrapper{text-align:right}
+.v2 .pg-ideas .translate-btn{background:none;border:0;padding:0;cursor:pointer;
+ font:500 10px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--low)}
+.v2 .pg-ideas .translate-btn:hover{color:var(--mid)}
+.v2 .pg-ideas .translate-result{margin-top:8px;padding-left:12px;border-left:1px solid var(--line);
+ font:400 14.5px/1.7 var(--fp);color:var(--mid);text-align:left}
+.v2 .pg-ideas .translate-error{font:400 11px var(--fu);color:var(--warn);margin-left:10px}
+
+/* ---------- Verdict / audio ---------------------------------- */
+.v2 .pg-ideas .vprose{margin-top:16px}
+.v2 .pg-ideas .vaudio{margin-top:14px}
+.v2 .pg-ideas .atime{font-variant-numeric:tabular-nums;color:var(--low)}
+.v2 .pg-ideas .aseek{position:relative;flex:1;height:12px;background:none;cursor:pointer;align-self:center}
+.v2 .pg-ideas .aseek::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line)}
+.v2 .pg-ideas .aseek i{position:absolute;left:0;top:50%;height:1px;background:var(--ink)}
+.v2 .pg-ideas .aspeed{cursor:pointer}
+.v2 .pg-ideas .verdict .share-button__container{margin-top:16px}
+
+/* ---------- Action bar / entry ------------------------------- */
+.v2 .pg-ideas .abar{margin-top:26px}
+.v2 .pg-ideas .entry{margin-top:0}
+.v2 .pg-ideas .genline{font:500 10.5px/1.6 var(--fu);letter-spacing:.18em;text-transform:uppercase;
+ color:var(--low);margin-bottom:10px}
+.v2 .pg-ideas .arow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.v2 .pg-ideas .wrapcta{margin-top:26px}
+
+/* ---------- Philosopher poll --------------------------------- */
+.v2 .pg-ideas .ipoll{border:1px solid var(--line);background:var(--bgcell);padding:20px 24px;margin-top:26px}
+.v2 .pg-ideas .ipoll-head{display:flex;justify-content:space-between;gap:14px;margin-bottom:8px;
+ font:400 12.5px var(--fd);letter-spacing:.16em;text-transform:uppercase}
+.v2 .pg-ideas .ipoll-total{font:500 10px/1 var(--fu);letter-spacing:.14em;color:var(--low);align-self:center}
+.v2 .pg-ideas .ipoll-row{display:flex;gap:14px;align-items:center;width:100%;padding:10px 0;
+ background:none;border:0;border-top:1px solid var(--line);cursor:pointer;text-align:left;
+ font:400 12.5px var(--fu);color:var(--mid)}
+.v2 .pg-ideas .ipoll-row.voted{color:var(--ink)}
+.v2 .pg-ideas .ipoll-name{flex:none;min-width:180px}
+.v2 .pg-ideas .ipoll-bar{position:relative;flex:1;height:10px}
+.v2 .pg-ideas .ipoll-bar::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line)}
+.v2 .pg-ideas .ipoll-bar i{position:absolute;left:0;top:50%;margin-top:-1px;height:3px;background:var(--ink)}
+.v2 .pg-ideas .ipoll-pct{flex:none;font-variant-numeric:tabular-nums;color:var(--low)}
+
+/* ---------- Roster / people list (modals) -------------------- */
+.v2 .pg-ideas .vseg{display:flex;gap:10px;margin-bottom:8px}
+.v2 .pg-ideas .rlist{max-height:320px;overflow-y:auto;border:1px solid var(--line);margin-top:14px}
+.v2 .pg-ideas .rrow{display:flex;gap:12px;align-items:baseline;width:100%;padding:12px 14px;
+ background:none;border:0;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;
+ font:400 12.5px var(--fu);color:var(--mid)}
+.v2 .pg-ideas .rrow:last-child{border-bottom:0}
+.v2 .pg-ideas .rrow.on{color:var(--ink);background:var(--bgcell)}
+.v2 .pg-ideas .rname{flex:none;color:var(--ink)}
+.v2 .pg-ideas .rmeta{flex:1;font:400 11px var(--fu);color:var(--low)}
+.v2 .pg-ideas .rprice{flex:none;font:500 10px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--mid)}
+
+/* ---------- Errors / toast ----------------------------------- */
+.v2 .pg-ideas .ierr{font:400 12px var(--fu);color:var(--warn);margin-top:12px;letter-spacing:.03em}
+.v2 .pg-ideas .ptoast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:30;
+ background:var(--bg);border:1px solid var(--strong);padding:12px 20px;
+ font:500 11px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+
+/* ---------- Breakpoints -------------------------------------- */
+@media (max-width:600px){
+  .v2 .pg-ideas .shead{flex-direction:column;align-items:flex-start;gap:10px}
+  .v2 .pg-ideas .msg{max-width:100%}
+  .v2 .pg-ideas .ipoll-name{min-width:110px}
+  .v2 .pg-ideas .entry{flex-direction:column}
+}
