@@ -14,6 +14,8 @@ export {
   ActionsRow,
   AdSlot,
   TrackCard,
+  formatSignedScore,
+  verdictRationale,
 } from './AnalysisStack.jsx';
 export { Field } from './Field.jsx';
 export { ThemeBar } from './ThemeBar.jsx';

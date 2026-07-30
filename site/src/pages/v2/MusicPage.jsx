@@ -20,6 +20,8 @@ import {
   Verdict,
   ActionsRow,
   TrackCard,
+  formatSignedScore,
+  verdictRationale,
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
@@ -725,6 +727,18 @@ export default function MusicPage() {
     ? analysisResult.classification_localized || analysisResult.classification || ''
     : '';
 
+  // Verdict anatomy (WP4.1): "Final score −X.X · Note N of 10" when both
+  // figures exist; weighted-score fallback otherwise.
+  const verdictScoreLine =
+    analysisResult && analysisResult.final_score !== undefined && analysisResult.final_score !== null
+      ? analysisResult.philosophical_note != null
+        ? t('v2.verdict.scoreLine', 'Final score {{score}} · Note {{n}} of 10', {
+            score: formatSignedScore(analysisResult.final_score),
+            n: analysisResult.philosophical_note,
+          })
+        : `${t('v2.music.weightedScore', 'Weighted score')} ${formatSignedScore(analysisResult.final_score)}`
+      : undefined;
+
   return (
     <PageShell status={t('v2.music.status', 'Analysis Engine // Active')} nav={<NavAccount />}>
       <div className="pg-music">
@@ -885,15 +899,9 @@ export default function MusicPage() {
                 label={t('v2.music.verdictLabel', 'Philosify Verdict')}
                 note={analysisResult.philosophical_note}
                 classification={classification}
+                scoreLine={verdictScoreLine}
+                rationale={verdictRationale(analysisResult)}
               />
-              {(analysisResult.final_score !== undefined || guideProof?.model) && (
-                <div className="vmeta">
-                  {analysisResult.final_score !== undefined &&
-                    `${t('v2.music.weightedScore', 'Weighted score')} ${analysisResult.final_score}`}
-                  {analysisResult.final_score !== undefined && guideProof?.model ? ' // ' : ''}
-                  {guideProof?.model || ''}
-                </div>
-              )}
 
               <V2AudioBar key={`tts-${analysisResult.id || 'scan'}`} result={analysisResult} />
 

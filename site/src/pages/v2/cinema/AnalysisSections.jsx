@@ -1,5 +1,6 @@
 // AnalysisSections (Cinema) - the v2 result stack for a 1-credit scan:
-// Verdict (silver Note numeral + classification + weighted score line),
+// Verdict (silver Note numeral + ink classification + final-score line +
+// rationale),
 // TTS audio bar, expandable prose sections (historical context open by
 // default per the music-template mockup, then creative process, the five
 // weighted branches with their scores, the integrated analysis), and the
@@ -7,7 +8,12 @@
 // ResultsContainer.jsx (schools-of-thought stays hidden, as there).
 import DOMPurify from 'dompurify';
 import { useTranslation } from 'react-i18next';
-import { ExpandableSection } from '../../../components/v2';
+import {
+  ExpandableSection,
+  Verdict,
+  formatSignedScore,
+  verdictRationale,
+} from '../../../components/v2';
 import { V2AudioBar } from './V2AudioBar.jsx';
 
 const BRANCHES = [
@@ -97,22 +103,27 @@ export function AnalysisSections({ result }) {
     aesthetics: t('v2.cinema.branchAesthetics', 'Aesthetics'),
   };
 
+  // Verdict anatomy (WP4.1): "Final score −X.X · Note N of 10" when both
+  // figures exist; weighted-score fallback otherwise.
+  const scoreLine =
+    finalScore !== undefined && finalScore !== null
+      ? result.philosophical_note != null
+        ? t('v2.verdict.scoreLine', 'Final score {{score}} · Note {{n}} of 10', {
+            score: formatSignedScore(finalScore),
+            n: result.philosophical_note,
+          })
+        : `${t('v2.cinema.weightedScore', 'Weighted score')} ${formatSignedScore(finalScore)}`
+      : undefined;
+
   return (
     <>
-      <div className="verdict">
-        <span className="vlabel">{t('v2.cinema.verdictLabel', 'Philosify Verdict')}</span>
-        <div className="vgrid">
-          {result.philosophical_note != null && (
-            <span className="note9">{result.philosophical_note}</span>
-          )}
-          {classif && <span className="classif">{classif}</span>}
-        </div>
-        {finalScore !== undefined && finalScore !== null && (
-          <div className="vmeta">
-            {t('v2.cinema.weightedScore', 'Weighted score')} {finalScore}
-          </div>
-        )}
-      </div>
+      <Verdict
+        label={t('v2.cinema.verdictLabel', 'Philosify Verdict')}
+        note={result.philosophical_note}
+        classification={classif}
+        scoreLine={scoreLine}
+        rationale={verdictRationale(result)}
+      />
 
       <V2AudioBar result={result} />
 

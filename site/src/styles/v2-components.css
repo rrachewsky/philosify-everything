@@ -30,8 +30,10 @@
   --fp: var(--f-prose);
   /* Law §2.1 reading tier — token added by Roberto, 29 Jul 2026 */
   --mid: var(--ink-text);
-  /* Law §2.1 functional error — PENDING Roberto's approval */
-  --warn: #FF5A5A;
+  /* Law §2.1 functional error — #FF5A5A still PENDING Roberto's approval.
+     Until ratified (token lint, 30 Jul 2026): errors render in the high-ink
+     register. One-line revert: set this to the approved literal/token. */
+  --warn: var(--ink-hi);
 
   background: var(--bg);
   color: var(--ink);
@@ -149,7 +151,9 @@
 .v2 .vlabel{font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--low)}
 .v2 .vgrid{display:flex;gap:28px;align-items:baseline;margin-top:12px;flex-wrap:wrap}
 .v2 .note9{font:400 42px/1 var(--fd);color:var(--silver)}
-.v2 .classif{font:400 18px/1.35 var(--fd);letter-spacing:.08em}
+.v2 .classif{font:400 18px/1.35 var(--fd);letter-spacing:.08em;color:var(--ink)}
+.v2 .vscore{margin-top:12px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);font-variant-numeric:tabular-nums}
+.v2 .vwhy{margin-top:14px;max-width:62ch;font:400 15.5px/1.7 var(--fp);color:var(--mid)}
 .v2 .audio{display:flex;align-items:center;gap:16px;border:1px solid var(--line);padding:14px 18px;margin-top:14px;
  font:500 10.5px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
 .v2 .audio .play{width:30px;height:30px;border:1px solid var(--strong);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none;cursor:pointer;background:none;font:inherit}
@@ -179,7 +183,7 @@
 .v2 .mhead .x{color:var(--low);text-decoration:none;font:400 16px var(--fu);background:none;border:0;cursor:pointer}
 .v2 .mbody{padding:26px}
 .v2 .cfoot{display:flex;justify-content:flex-end;gap:12px;padding:18px 26px;border-top:1px solid var(--line)}
-.v2 .moverlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.6);display:flex;align-items:flex-start;justify-content:center;padding:10vh 24px 24px;overflow-y:auto}
+.v2 .moverlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;justify-content:center;padding:10vh 24px 24px;overflow-y:auto}
 .v2 .moverlay .mwrap{margin:0;width:100%}
 
 /* ---------- Modal content patterns (WP3 wiring) --------------- */
@@ -283,11 +287,11 @@
 /* ---------- WP4 locale rules ---------------------------------- */
 /* CJK prose reads at 1.8 (Law §3 tops the 1.75–1.8 range for CJK).
    html[lang] is set by i18n on languageChanged. */
-html:is(:lang(zh),:lang(ja),:lang(ko)) .v2 :is(.xcard .body,.msg .b,.prose,.panel-analysis__section-body,.manifesto,.uz-intro,.qcell .q,.selsum,.synopsis,.translate-result){line-height:1.8}
+html:is(:lang(zh),:lang(ja),:lang(ko)) .v2 :is(.xcard .body,.msg .b,.prose,.panel-analysis__section-body,.manifesto,.uz-intro,.qcell .q,.selsum,.synopsis,.translate-result,.vwhy){line-height:1.8}
 /* Non-Latin headers: Michroma covers Latin only — glyphs fall through to
    Inter/Noto; the fallback renders bold, keeping each rule's tracking (Law §3). */
 html:is(:lang(zh),:lang(ja),:lang(ko),:lang(hi),:lang(ar),:lang(he),:lang(fa),:lang(ru)) .v2 :is(h1.mod,.cell h2,.cell9 h2,.classif,.xcard h4,.trackc h3,.mhead h2,.uhead h1,.hrow .t,.dtitle){font-weight:700}
 /* RTL locales: reading text runs right-to-left; chrome and layout stay LTR
    (same mechanism as base.css [data-rtl] — these v2 prose blocks are divs
    the base list doesn't reach). */
-[data-rtl='true'] .v2 :is(.xcard .body,.msg .b,.prose,.panel-analysis__section-body,.manifesto,.uz-intro,.selsum,.synopsis,.translate-result){direction:rtl;text-align:right}
+[data-rtl='true'] .v2 :is(.xcard .body,.msg .b,.prose,.panel-analysis__section-body,.manifesto,.uz-intro,.selsum,.synopsis,.translate-result,.vwhy){direction:rtl;text-align:right}

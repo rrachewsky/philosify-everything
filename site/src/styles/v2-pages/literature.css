@@ -53,7 +53,6 @@
 
 /* ---------- Verdict extras ----------------------------------- */
 .v2 .pg-literature .classif{text-transform:uppercase}
-.v2 .pg-literature .vmeta{margin-top:16px;font:500 10.5px/1.6 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
 
 /* ---------- Expandable sections ------------------------------ */
 .v2 .pg-literature .xcard h4{text-transform:uppercase}
@@ -121,7 +120,7 @@
 .v2 .pg-literature .adwrap{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px}
 
 /* ---------- Philosopher picker (reused component, v2 skin) ---- */
-.v2 .pg-literature .philosopher-picker-overlay{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.6);
+.v2 .pg-literature .philosopher-picker-overlay{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);
  display:flex;align-items:flex-start;justify-content:center;padding:8vh 24px 24px;overflow-y:auto}
 .v2 .pg-literature .philosopher-picker{width:100%;max-width:640px;background:var(--bg);border:1px solid var(--strong);
  display:flex;flex-direction:column;max-height:82vh}
