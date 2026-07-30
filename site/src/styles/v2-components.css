@@ -279,3 +279,15 @@
 @media (max-width:900px){.v2 .modules{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:860px){.v2 .page{padding-left:26px;padding-right:26px}.v2 .navr{right:60px}.v2 .hud-status{display:none}}
 @media (max-width:600px){.v2 .modules{grid-template-columns:1fr}.v2 .themebar{bottom:12px}}
+
+/* ---------- WP4 locale rules ---------------------------------- */
+/* CJK prose reads at 1.8 (Law §3 tops the 1.75–1.8 range for CJK).
+   html[lang] is set by i18n on languageChanged. */
+html:is(:lang(zh),:lang(ja),:lang(ko)) .v2 :is(.xcard .body,.msg .b,.prose,.panel-analysis__section-body,.manifesto,.uz-intro,.qcell .q,.selsum,.synopsis,.translate-result){line-height:1.8}
+/* Non-Latin headers: Michroma covers Latin only — glyphs fall through to
+   Inter/Noto; the fallback renders bold, keeping each rule's tracking (Law §3). */
+html:is(:lang(zh),:lang(ja),:lang(ko),:lang(hi),:lang(ar),:lang(he),:lang(fa),:lang(ru)) .v2 :is(h1.mod,.cell h2,.cell9 h2,.classif,.xcard h4,.trackc h3,.mhead h2,.uhead h1,.hrow .t,.dtitle){font-weight:700}
+/* RTL locales: reading text runs right-to-left; chrome and layout stay LTR
+   (same mechanism as base.css [data-rtl] — these v2 prose blocks are divs
+   the base list doesn't reach). */
+[data-rtl='true'] .v2 :is(.xcard .body,.msg .b,.prose,.panel-analysis__section-body,.manifesto,.uz-intro,.selsum,.synopsis,.translate-result){direction:rtl;text-align:right}
