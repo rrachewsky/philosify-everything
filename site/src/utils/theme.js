@@ -12,6 +12,12 @@ export function getTheme() {
   }
 }
 
+// index.html paints the first frame black via an inline html/body rule;
+// the white theme has to repaint that canvas or overscroll stays dark.
+function paintCanvas(theme) {
+  document.documentElement.style.background = theme === 'white' ? '#FFFFFF' : '#070708';
+}
+
 export function setTheme(theme) {
   try {
     localStorage.setItem(STORAGE_KEY, theme);
@@ -19,6 +25,7 @@ export function setTheme(theme) {
     // private mode: theme still applies for the session
   }
   document.body.classList.toggle('t-white', theme === 'white');
+  paintCanvas(theme);
   // theme-aware components (brand lockup src swap) re-render on this
   window.dispatchEvent(new CustomEvent('philosify-theme', { detail: theme }));
 }
@@ -30,5 +37,7 @@ export function toggleTheme() {
 }
 
 export function initTheme() {
-  document.body.classList.toggle('t-white', getTheme() === 'white');
+  const theme = getTheme();
+  document.body.classList.toggle('t-white', theme === 'white');
+  paintCanvas(theme);
 }

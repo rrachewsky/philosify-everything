@@ -3,6 +3,12 @@
   <head>
     <!-- BUILD_TAG: 2026-01-28_19-15 -->
     <meta charset="UTF-8" />
+    <!-- First painted frame is black on every page and connection (WP6 C.2).
+         Must precede every external stylesheet; theme.js repaints for t-white. -->
+    <style>
+      html { background: #070708; }
+      body { background: #070708; margin: 0; }
+    </style>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -63,7 +69,7 @@
       href="https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap"
     />
   </head>
-  <body style="background: #0a0020; margin: 0">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
