@@ -1,13 +1,16 @@
 // ============================================================
 // HISTORY SIDEBAR - Container for the Constellation of Ideas
 // Free module - no credits required
-// Uses same styling as Music/Cinema sidebars
+// v2 shell skin (WP6.3, ruling 30 Jul 2026): .hist-shell classes
+// in v2-pages/history-ui.css replace the legacy music-sidebar
+// skin — mechanics (backdrop, slide-in, scroll lock, error
+// boundary) are unchanged.
 // ============================================================
 
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConstellationOfIdeas } from './ConstellationOfIdeas.jsx';
-import '../../styles/music-sidebar.css';
+import '../../styles/v2-pages/history-ui.css';
 
 // Error boundary to catch 3D rendering crashes
 class HistoryErrorBoundary extends React.Component {
@@ -27,6 +30,7 @@ class HistoryErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      // v2 error state — --warn functional-only; kit primary/secondary buttons
       return (
         <div
           style={{
@@ -35,26 +39,38 @@ class HistoryErrorBoundary extends React.Component {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: '#0a0a0f',
-            color: '#F2F2F5',
+            background: 'var(--bg)',
+            color: 'var(--ink-hi)',
           }}
         >
           <div style={{ textAlign: 'center', padding: 24 }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>&#9888;</div>
-            <div style={{ fontSize: 16, marginBottom: 8 }}>3D Graph Failed to Load</div>
-            <div style={{ fontSize: 12, color: '#89CFF0', marginBottom: 16 }}>
+            <div
+              style={{
+                font: '500 12px/1.4 var(--f-ui)',
+                letterSpacing: '.16em',
+                textTransform: 'uppercase',
+                color: 'var(--warn)',
+                marginBottom: 8,
+              }}
+            >
+              3D Graph Failed to Load
+            </div>
+            <div style={{ font: '400 12px/1.5 var(--f-ui)', color: 'var(--ink-mid)', marginBottom: 18 }}>
               Your browser may not support WebGL
             </div>
             <button
               onClick={() => this.setState({ hasError: false, error: null })}
               style={{
-                padding: '8px 16px',
-                background: '#D6158C',
-                border: 'none',
-                borderRadius: 6,
-                color: '#fff',
+                padding: '14px 26px',
+                background: 'var(--ink-hi)',
+                border: 0,
+                borderRadius: 0,
+                color: 'var(--ink-inv)',
+                font: '500 13px/1 var(--f-ui)',
+                letterSpacing: '.1em',
+                textTransform: 'uppercase',
                 cursor: 'pointer',
-                marginRight: 8,
+                marginRight: 10,
               }}
             >
               Retry
@@ -62,11 +78,14 @@ class HistoryErrorBoundary extends React.Component {
             <button
               onClick={this.props.onClose}
               style={{
-                padding: '8px 16px',
-                background: 'transparent',
-                border: '1px solid #444',
-                borderRadius: 6,
-                color: '#F2F2F5',
+                padding: '13px 25px',
+                background: 'none',
+                border: '1px solid var(--line-strong)',
+                borderRadius: 0,
+                color: 'var(--ink-hi)',
+                font: '500 13px/1 var(--f-ui)',
+                letterSpacing: '.1em',
+                textTransform: 'uppercase',
                 cursor: 'pointer',
               }}
             >
@@ -118,30 +137,28 @@ export function HistorySidebar({ isOpen, onClose }) {
   return (
     <>
       {/* Backdrop */}
-      <div 
-        className={`music-backdrop ${isOpen ? 'music-backdrop--open' : ''}`}
+      <div
+        className={`hist-shell-backdrop ${isOpen ? 'hist-shell-backdrop--open' : ''}`}
         onClick={onClose}
       />
-      
+
       {/* Fullscreen Panel */}
-      <div 
-        className={`music-sidebar ${isOpen ? 'music-sidebar--open' : ''}`}
-        style={{
-          width: '100vw',
-          maxWidth: '100vw',
-          background: '#0a0a0f',
-        }}
+      <div
+        className={`hist-shell ${isOpen ? 'hist-shell--open' : ''}`}
         role="dialog"
         aria-modal="true"
       >
-        {/* Header - same pattern as Music/Cinema */}
-        <div className="music-sidebar__header" style={{ background: '#0a0a0f', borderBottom: '1px solid rgba(120, 100, 180, 0.12)' }}>
-          <span className="music-sidebar__title">
-            <span className="music-sidebar__icon">&#127760;</span>
+        {/* Header — Michroma title, kit exit instrument; no bottom hairline (Law §4) */}
+        <div className="hist-shell__header">
+          <span className="hist-shell__title">
             {t('nav.historyShort', 'HISTORY')}
           </span>
-          <button className="music-sidebar__close" onClick={onClose}>
-            &times;
+          <button
+            className="hist-shell__close"
+            onClick={onClose}
+            aria-label={t('constellation.close')}
+          >
+            ✕
           </button>
         </div>
 

@@ -22,7 +22,8 @@ const BATTLE_KEYS = {
   good_evil: ['good', 'evil', 'good_evil'],
 };
 
-// Connection type labels and colors
+// Connection type colors — DATA, not UI (they mirror the tether colors in the
+// 3D scene; ruling 30 Jul 2026). They appear only in the data dots, never on chrome.
 const CONNECTION_COLORS = {
   influence: '#4CAF50',
   opposition: '#F44336',
@@ -32,7 +33,7 @@ const CONNECTION_COLORS = {
   contemporary: '#FF9800',
 };
 
-// Influence direction colors
+// Influence direction colors — DATA (magenta = received, cyan = given), dots only
 const INFLUENCE_RECEIVED_COLOR = '#D6158C'; // Magenta - philosophers who influenced this one
 const INFLUENCE_GIVEN_COLOR = '#3AAFCF';    // Cyan - philosophers this one influenced
 
@@ -43,7 +44,7 @@ function BattleBar({ battle, score, t }) {
   const [positiveKey, negativeKey] = BATTLE_KEYS[battle] || ['left', 'right'];
   const positiveLabel = t(`constellation.battles.${positiveKey}`);
   const negativeLabel = t(`constellation.battles.${negativeKey}`);
-  const color = BATTLE_COLORS[battle] || '#888';
+  const color = BATTLE_COLORS[battle] || 'var(--ink-low)'; // battle color = DATA
   
   // Score: -1 to +1 (normalized from -10 to +10)
   // +1 = fully positive (Reason, Reality, Individual, etc.) - extends RIGHT
@@ -74,14 +75,15 @@ function BattleBar({ battle, score, t }) {
   return (
     <div style={styles.battleRow}>
       <div style={styles.battleHeader}>
-        {/* Negative label on left, positive on right (matches bar direction) */}
-        <span style={{ ...styles.battleLabelLeft, color: !isPositive ? color : 'rgba(255, 255, 255, 0.5)' }}>
+        {/* Negative label on left, positive on right (matches bar direction).
+            Dominant side carries the battle DATA color; the other is chrome. */}
+        <span style={{ ...styles.battleLabelLeft, color: !isPositive ? color : 'var(--ink-low)' }}>
           {negativeLabel}
         </span>
         <span style={styles.battleScore}>
           {displayScore > 0 ? '+' : ''}{displayScore}
         </span>
-        <span style={{ ...styles.battleLabelRight, color: isPositive ? color : 'rgba(255, 255, 255, 0.5)' }}>
+        <span style={{ ...styles.battleLabelRight, color: isPositive ? color : 'var(--ink-low)' }}>
           {positiveLabel}
         </span>
       </div>
@@ -94,7 +96,7 @@ function BattleBar({ battle, score, t }) {
             position: 'absolute',
             top: 0,
             height: '100%',
-            borderRadius: 3,
+            borderRadius: 0,
             background: color,
             // For positive: start at center (50%), extend right
             // For negative: end at center (50%), extend left
@@ -121,7 +123,7 @@ const getTranslatedName = (node, t) => {
 
 function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear, t, userId }) {
   const connections = getNodeConnections(node.id);
-  const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
+  const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || 'var(--ink-low)';
   const [imageError, setImageError] = React.useState(false);
   const contentRef = React.useRef(null);
   const translatedName = getTranslatedName(node, t);
@@ -238,10 +240,10 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
 
         return (
           <>
-            {/* Influenced By - Magenta */}
+            {/* Influenced By — label is chrome; magenta lives in the data dots */}
             {influencedBy.length > 0 && (
               <div style={styles.section}>
-                <div style={{ ...styles.sectionLabel, color: INFLUENCE_RECEIVED_COLOR }}>
+                <div style={styles.sectionLabel}>
                   {t('constellation.influencedBy')} ({influencedBy.length})
                 </div>
                 <div style={styles.connectionsList}>
@@ -263,10 +265,10 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
               </div>
             )}
 
-            {/* Influenced - Cyan */}
+            {/* Influenced — label is chrome; cyan lives in the data dots */}
             {influenced.length > 0 && (
               <div style={styles.section}>
-                <div style={{ ...styles.sectionLabel, color: INFLUENCE_GIVEN_COLOR }}>
+                <div style={styles.sectionLabel}>
                   {t('constellation.influenced')} ({influenced.length})
                 </div>
                 <div style={styles.connectionsList}>
@@ -308,7 +310,7 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
                         <span
                           style={{
                             ...styles.connectionDot,
-                            background: CONNECTION_COLORS[getEdgeType(edge)] || '#888',
+                            background: CONNECTION_COLORS[getEdgeType(edge)] || 'var(--ink-low)',
                           }}
                         />
                         <span style={styles.connectionName}>{getTranslatedName(other, t)}</span>
@@ -330,7 +332,7 @@ function EdgeDetails({ edge, findPhilosopher, onNodeSelect, formatYear, t }) {
   const source = findPhilosopher(edge.source_id);
   const target = findPhilosopher(edge.target_id);
   const edgeType = getEdgeType(edge);
-  const typeColor = CONNECTION_COLORS[edgeType] || '#888';
+  const typeColor = CONNECTION_COLORS[edgeType] || 'var(--ink-low)';
   const contentRef = React.useRef(null);
 
   // Scroll to top when edge changes
@@ -417,11 +419,9 @@ export function ConstellationInfoPanel({
       {/* Drag handle for mobile */}
       {isMobile && <div style={styles.dragHandle} />}
       
-      {/* Close button */}
+      {/* Close button — kit .mhead .x text glyph */}
       <button style={closeButtonStyle} onClick={onClose} aria-label={t('constellation.close')}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+        ✕
       </button>
 
       {/* Content */}
@@ -452,6 +452,7 @@ export function ConstellationInfoPanel({
   );
 }
 
+// v2 tokens only (WP6.3) — square-cornered instrument panel over the globe.
 const styles = {
   // Desktop: right sidebar - positioned at top right
   container: {
@@ -460,10 +461,9 @@ const styles = {
     right: 16,
     width: 320,
     maxHeight: 'calc(100vh - 180px)',
-    background: 'rgba(15, 15, 25, 0.95)',
-    borderRadius: 12,
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    backdropFilter: 'blur(12px)',
+    background: 'var(--bg)',
+    borderRadius: 0,
+    border: '1px solid var(--line-strong)',
     overflow: 'hidden',
     zIndex: 150,
     display: 'flex',
@@ -478,27 +478,24 @@ const styles = {
     right: 0,
     height: '80vh',
     maxHeight: '80vh',
-    background: 'rgba(15, 15, 25, 0.98)',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    border: '1px solid rgba(255, 255, 255, 0.15)',
+    background: 'var(--bg)',
+    borderRadius: 0,
+    border: '1px solid var(--line-strong)',
     borderBottom: 'none',
-    backdropFilter: 'blur(16px)',
     overflowX: 'hidden',
     overflowY: 'auto',
     zIndex: 200,
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.5), 0 -2px 8px rgba(0, 0, 0, 0.3)',
     WebkitOverflowScrolling: 'touch',
   },
 
   // Drag handle indicator for mobile
   dragHandle: {
     width: 40,
-    height: 4,
-    background: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 2,
+    height: 3,
+    background: 'var(--line-strong)',
+    borderRadius: 0,
     margin: '12px auto 8px',
     flexShrink: 0,
   },
@@ -509,10 +506,11 @@ const styles = {
     right: 12,
     width: 32,
     height: 32,
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
-    borderRadius: 6,
-    color: '#F2F2F5',
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
+    font: '400 14px/1 var(--f-ui)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -527,10 +525,11 @@ const styles = {
     right: 12,
     width: 40,
     height: 40,
-    background: 'rgba(255, 255, 255, 0.15)',
-    border: 'none',
-    borderRadius: 20,
-    color: '#F2F2F5',
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
+    font: '400 16px/1 var(--f-ui)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -571,11 +570,11 @@ const styles = {
   portraitContainer: {
     width: 64,
     height: 80,
-    borderRadius: 6,
+    borderRadius: 0,
     overflow: 'hidden',
     flexShrink: 0,
-    border: '2px solid rgba(255, 255, 255, 0.15)',
-    background: 'rgba(0, 0, 0, 0.3)',
+    border: '1px solid var(--line-strong)',
+    background: 'var(--bg-inset)',
   },
 
   portrait: {
@@ -587,19 +586,19 @@ const styles = {
   portraitPlaceholder: {
     width: 64,
     height: 80,
-    borderRadius: 6,
+    borderRadius: 0,
     flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '2px solid rgba(255, 255, 255, 0.15)',
+    border: '1px solid var(--line-strong)',
   },
 
   portraitInitial: {
-    fontSize: 28,
-    fontWeight: 700,
-    color: 'rgba(255, 255, 255, 0.9)',
-    textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+    fontFamily: 'var(--f-disp)',
+    fontSize: 26,
+    fontWeight: 400,
+    color: 'var(--ink-inv)',
   },
 
   headerText: {
@@ -607,72 +606,78 @@ const styles = {
     minWidth: 0,
   },
 
+  // School chip keeps its DATA color as ground; ink inverts for contrast
   schoolBadge: {
     display: 'inline-block',
-    fontSize: 10,
-    fontWeight: 600,
-    color: '#000',
-    padding: '3px 8px',
-    borderRadius: 4,
+    font: '500 9px/1 var(--f-ui)',
+    letterSpacing: '.12em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-inv)',
+    padding: '4px 9px',
+    borderRadius: 'var(--radius-pill)',
     marginTop: 4,
   },
 
   traditionIndicator: {
     width: 4,
     height: 40,
-    borderRadius: 2,
+    borderRadius: 0,
     flexShrink: 0,
   },
 
   name: {
-    fontSize: 17,
-    fontWeight: 700,
-    color: '#F2F2F5',
+    fontFamily: 'var(--f-disp)',
+    fontSize: 15,
+    fontWeight: 400,
+    letterSpacing: '.08em',
+    color: 'var(--ink-hi)',
     margin: 0,
-    lineHeight: 1.2,
+    lineHeight: 1.35,
   },
 
   dates: {
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.85)',
+    font: '400 11px/1.4 var(--f-ui)',
+    fontVariantNumeric: 'tabular-nums',
+    color: 'var(--ink-mid)',
     marginTop: 3,
   },
 
   birthplace: {
-    fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.7)',
+    font: '400 10.5px/1.4 var(--f-ui)',
+    color: 'var(--ink-low)',
     marginTop: 2,
   },
 
   era: {
-    fontSize: 12,
-    color: '#D6158C',
-    fontWeight: 600,
+    font: '500 10px/1.4 var(--f-ui)',
+    letterSpacing: '.14em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-mid)',
     marginTop: 6,
   },
 
   section: {
-    marginBottom: 12,
+    marginBottom: 14,
   },
 
   sectionLabel: {
-    fontSize: 11,
-    fontWeight: 800,
+    font: '500 10px/1.4 var(--f-ui)',
+    letterSpacing: '.18em',
     textTransform: 'uppercase',
-    letterSpacing: 1.2,
+    color: 'var(--ink-low)',
     marginBottom: 6,
-    textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
   },
 
   location: {
-    fontSize: 13,
-    color: '#F2F2F5',
+    font: '400 13px/1.5 var(--f-ui)',
+    color: 'var(--ink-hi)',
   },
 
   school: {
-    fontSize: 14,
-    color: '#D6158C',
-    fontWeight: 600,
+    font: '500 10px/1.4 var(--f-ui)',
+    letterSpacing: '.14em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-mid)',
   },
 
   ideasList: {
@@ -681,9 +686,10 @@ const styles = {
     listStyle: 'none',
   },
 
+  // Reading tier — WHITE (Law §2.1, 30 Jul)
   ideaItem: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
+    font: '400 13.5px/1.7 var(--f-prose)',
+    color: 'var(--ink-text)',
     marginBottom: 6,
     paddingLeft: 12,
     position: 'relative',
@@ -709,32 +715,34 @@ const styles = {
   },
 
   battleLabelLeft: {
-    fontSize: 11,
-    fontWeight: 600,
+    font: '500 10px/1.4 var(--f-ui)',
+    letterSpacing: '.08em',
+    textTransform: 'uppercase',
     flex: 1,
     textAlign: 'left',
   },
 
   battleScore: {
-    fontSize: 11,
-    fontWeight: 700,
-    color: 'rgba(255, 255, 255, 0.9)',
+    font: '500 11px/1.4 var(--f-ui)',
+    fontVariantNumeric: 'tabular-nums',
+    color: 'var(--ink-hi)',
     minWidth: 28,
     textAlign: 'center',
   },
 
   battleLabelRight: {
-    fontSize: 11,
-    fontWeight: 600,
+    font: '500 10px/1.4 var(--f-ui)',
+    letterSpacing: '.08em',
+    textTransform: 'uppercase',
     flex: 1,
     textAlign: 'right',
   },
 
   battleTrack: {
     width: '100%',
-    height: 8,
-    background: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 4,
+    height: 6,
+    background: 'var(--line)',
+    borderRadius: 0,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -743,17 +751,17 @@ const styles = {
     position: 'absolute',
     left: '50%',
     top: 0,
-    width: 2,
+    width: 1,
     height: '100%',
-    background: 'rgba(255, 255, 255, 0.3)',
+    background: 'var(--line-strong)',
     transform: 'translateX(-50%)',
     zIndex: 1,
   },
 
   battleIntensity: {
-    fontSize: 9,
-    color: 'rgba(255, 255, 255, 0.5)',
-    fontStyle: 'italic',
+    font: '400 9.5px/1.4 var(--f-ui)',
+    letterSpacing: '.04em',
+    color: 'var(--ink-low)',
     textAlign: 'center',
   },
 
@@ -768,33 +776,33 @@ const styles = {
     alignItems: 'center',
     gap: 10,
     padding: '10px 14px',
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
+    background: 'var(--bg-cell)',
+    border: '1px solid var(--line)',
+    borderRadius: 0,
     cursor: 'pointer',
     width: '100%',
     textAlign: 'left',
-    transition: 'all 0.15s ease',
+    transition: 'all 0.16s ease',
   },
 
   connectionDot: {
-    width: 10,
-    height: 10,
+    width: 8,
+    height: 8,
     borderRadius: '50%',
     flexShrink: 0,
-    boxShadow: '0 0 6px currentColor',
   },
 
   connectionName: {
-    fontSize: 13,
-    color: '#FFFFFF',
+    font: '400 12.5px/1.4 var(--f-ui)',
+    color: 'var(--ink-hi)',
     flex: 1,
   },
 
   connectionType: {
-    fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.4)',
-    textTransform: 'capitalize',
+    font: '500 9px/1.4 var(--f-ui)',
+    letterSpacing: '.14em',
+    color: 'var(--ink-low)',
+    textTransform: 'uppercase',
   },
 
   // Edge details
@@ -807,14 +815,16 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    fontSize: 16,
-    fontWeight: 600,
-    color: '#F2F2F5',
+    fontFamily: 'var(--f-disp)',
+    fontSize: 13,
+    fontWeight: 400,
+    letterSpacing: '.12em',
+    color: 'var(--ink-hi)',
   },
 
   edgeTypeDot: {
-    width: 12,
-    height: 12,
+    width: 10,
+    height: 10,
     borderRadius: '50%',
   },
 
@@ -828,36 +838,37 @@ const styles = {
   edgeNodeButton: {
     flex: 1,
     padding: 12,
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
+    background: 'var(--bg-cell)',
+    border: '1px solid var(--line)',
+    borderRadius: 0,
     cursor: 'pointer',
     textAlign: 'center',
   },
 
   edgeNodeName: {
     display: 'block',
-    fontSize: 14,
-    fontWeight: 600,
-    color: '#F2F2F5',
+    font: '400 13px/1.4 var(--f-ui)',
+    color: 'var(--ink-hi)',
   },
 
   edgeNodeDates: {
     display: 'block',
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.5)',
+    font: '400 11px/1.4 var(--f-ui)',
+    fontVariantNumeric: 'tabular-nums',
+    color: 'var(--ink-low)',
     marginTop: 4,
   },
 
   edgeArrow: {
-    fontSize: 20,
-    color: 'rgba(255, 255, 255, 0.3)',
+    fontSize: 18,
+    color: 'var(--ink-low)',
   },
 
+  // Reading tier — WHITE, justified (Law §3, 30 Jul)
   edgeDescription: {
-    fontSize: 13,
-    color: 'rgba(255, 255, 255, 0.8)',
-    lineHeight: 1.5,
+    font: '400 13.5px/1.7 var(--f-prose)',
+    color: 'var(--ink-text)',
+    textAlign: 'justify',
     margin: 0,
   },
 };

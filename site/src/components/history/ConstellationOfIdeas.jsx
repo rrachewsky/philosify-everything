@@ -13,23 +13,23 @@ import { ConstellationInfoPanel } from './ConstellationInfoPanel.jsx';
 import { ConstellationSearch } from './ConstellationSearch.jsx';
 import { HistoricalEventTicker } from './HistoricalEventTicker.jsx';
 import { HistoricalEventInfoPanel } from './HistoricalEventInfoPanel.jsx';
+import '../../styles/v2-pages/history-ui.css';
 
 // Loading state component
 function LoadingState({ t }) {
   return (
     <div style={styles.loadingContainer}>
-      <div style={styles.loadingSpinner} />
+      <div className="hist-spinner" />
       <div style={styles.loadingText}>{t('constellation.loading')}</div>
       <div style={styles.loadingSubtext}>{t('constellation.loadingSubtext')}</div>
     </div>
   );
 }
 
-// Error state component
+// Error state component — functional error tone only (Law: --warn, states only)
 function ErrorState({ error, onRetry, t }) {
   return (
     <div style={styles.errorContainer}>
-      <div style={styles.errorIcon}>⚠</div>
       <div style={styles.errorText}>{t('constellation.loadError')}</div>
       <div style={styles.errorSubtext}>{error?.message || t('constellation.unknownError')}</div>
       <button style={styles.retryButton} onClick={onRetry}>
@@ -300,7 +300,7 @@ export function ConstellationOfIdeas() {
           <button
             style={{
               ...styles.controlButton,
-              ...(showSearch ? { background: 'rgba(214, 21, 140, 0.3)', borderColor: 'rgba(214, 21, 140, 0.5)' } : {}),
+              ...(showSearch ? { borderColor: 'var(--ink-hi)' } : {}),
             }}
             onClick={() => setShowSearch(!showSearch)}
             title={t('constellation.search')}
@@ -422,12 +422,13 @@ export function ConstellationOfIdeas() {
   );
 }
 
+// v2 tokens only (WP6.3) — the UI layer over the untouched engine.
 const styles = {
   container: {
     position: 'relative',
     width: '100%',
     height: '100%',
-    background: '#0a0a0f',
+    background: 'var(--bg)',
     overflow: 'hidden',
   },
 
@@ -451,19 +452,19 @@ const styles = {
     gap: 8,
   },
 
+  // Square instrument buttons (monochrome stroke icons, not emojis)
   controlButton: {
     width: 40,
     height: 40,
-    background: 'rgba(20, 20, 30, 0.85)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: 8,
-    color: '#F2F2F5',
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 0.2s',
-    backdropFilter: 'blur(8px)',
+    transition: 'all 0.16s',
   },
 
   // Year display - centered above globe
@@ -488,7 +489,7 @@ const styles = {
     letterSpacing: 2,
   },
   
-  // Loading
+  // Loading (spinner class lives in v2-pages/history-ui.css)
   loadingContainer: {
     width: '100%',
     height: '100%',
@@ -496,29 +497,24 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    background: '#0a0a0f',
-    color: '#F2F2F5',
-  },
-  loadingSpinner: {
-    width: 48,
-    height: 48,
-    border: '3px solid rgba(214, 21, 140, 0.2)',
-    borderTop: '3px solid #D6158C',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
-    marginBottom: 16,
+    background: 'var(--bg)',
+    color: 'var(--ink-hi)',
   },
   loadingText: {
-    fontSize: 16,
-    fontWeight: 600,
-    marginBottom: 4,
+    font: '500 12px/1.4 var(--f-ui)',
+    letterSpacing: '.16em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-hi)',
+    marginBottom: 6,
   },
   loadingSubtext: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.5)',
+    font: '500 10.5px/1.4 var(--f-ui)',
+    letterSpacing: '.16em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-low)',
   },
 
-  // Error
+  // Error — --warn is functional-only (states, never decoration)
   errorContainer: {
     width: '100%',
     height: '100%',
@@ -526,81 +522,33 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    background: '#0a0a0f',
-    color: '#F2F2F5',
-  },
-  errorIcon: {
-    fontSize: 48,
-    marginBottom: 16,
+    background: 'var(--bg)',
+    color: 'var(--ink-hi)',
   },
   errorText: {
-    fontSize: 16,
-    fontWeight: 600,
-    marginBottom: 4,
+    font: '500 12px/1.4 var(--f-ui)',
+    letterSpacing: '.16em',
+    textTransform: 'uppercase',
+    color: 'var(--warn)',
+    marginBottom: 6,
   },
   errorSubtext: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.5)',
-    marginBottom: 16,
+    font: '400 12px/1.5 var(--f-ui)',
+    color: 'var(--ink-mid)',
+    marginBottom: 18,
   },
+  // Kit secondary button (.btns)
   retryButton: {
-    padding: '10px 24px',
-    background: '#D6158C',
-    border: 'none',
-    borderRadius: 8,
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 600,
+    padding: '13px 25px',
+    background: 'none',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
+    font: '500 13px/1 var(--f-ui)',
+    letterSpacing: '.1em',
+    textTransform: 'uppercase',
     cursor: 'pointer',
   },
-
-  // Legend - position overridden inline for mobile
-  legend: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
-    background: 'rgba(20, 20, 30, 0.85)',
-    borderRadius: 8,
-    padding: '12px 16px',
-    zIndex: 100,
-    backdropFilter: 'blur(8px)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-  },
-  legendTitle: {
-    fontSize: 10,
-    fontWeight: 700,
-    color: 'rgba(255, 255, 255, 0.5)',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  legendItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 4,
-  },
-  legendDot: {
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-  },
-  legendLabel: {
-    fontSize: 11,
-    color: '#F2F2F5',
-  },
 };
-
-// Add keyframes for spinner
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement('style');
-  styleSheet.textContent = `
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  `;
-  document.head.appendChild(styleSheet);
-}
 
 export default ConstellationOfIdeas;

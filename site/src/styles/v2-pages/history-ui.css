@@ -1,0 +1,60 @@
+/* ============================================================
+   v2 HISTORY — Constellation UI LAYER (WP6.3)
+   Ruling 30 Jul 2026: the History/Constellation UI layer adopts
+   the v2 standard; the ENGINE (globe, satellites, tethers, clock,
+   school/tradition data colors) stays intact.
+   Tokens only — no color literals. Scoped: .hist-ticker (the
+   BREAKING event ticker) + .hist-ui helpers used by the inline
+   style objects in site/src/components/history/.
+   ============================================================ */
+
+/* ---------- BREAKING ticker (clock-synced, single pass) -------
+   Structure preserved from the working ticker (label + track >
+   content > item[]); translateX is driven by currentYear exactly
+   as before — only the skin is v2. */
+.hist-ticker{position:relative;z-index:5;display:flex;align-items:center;height:32px;
+ direction:ltr;background:var(--bg);border-bottom:1px solid var(--line);overflow:hidden}
+.hist-ticker__label{flex:none;position:relative;z-index:2;display:flex;align-items:center;height:100%;
+ padding:0 16px;background:var(--bg);border-right:1px solid var(--line);white-space:nowrap;
+ font:500 10.5px/1 var(--f-ui);letter-spacing:.18em;text-transform:uppercase;color:var(--silver)}
+.hist-ticker__track{flex:1;height:100%;overflow:hidden;cursor:grab}
+.hist-ticker__track:active{cursor:grabbing}
+.hist-ticker__content{display:flex;align-items:center;height:100%;width:max-content}
+.hist-ticker__item{display:flex;align-items:center;gap:8px;flex-shrink:0;height:100%;
+ padding:0 16px;background:none;border:0;border-right:1px solid var(--line);cursor:pointer;
+ white-space:nowrap;direction:ltr;
+ font:500 10.5px/1 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-text);
+ transition:background .16s}
+.hist-ticker__item:hover{background:var(--bg-cell)}
+.hist-ticker__year{color:var(--ink-mid);font-variant-numeric:tabular-nums}
+.hist-ticker__sep{color:var(--ink-low)}
+.hist-ticker__headline{color:var(--ink-text)}
+
+/* ---------- Fullscreen globe shell (HistorySidebar) -----------
+   Replaces the legacy music-sidebar skin for History only. The
+   MECHANICS are replicated verbatim (fixed panel, backdrop,
+   slide-in transform, z-indexes, timings) — only the skin is v2.
+   Law §4: fixed top bar carries NO bottom hairline. */
+.hist-shell-backdrop{position:fixed;inset:0;background:var(--scrim);z-index:200000;
+ opacity:0;pointer-events:none;transition:opacity .3s ease}
+.hist-shell-backdrop--open{opacity:1;pointer-events:auto}
+.hist-shell{position:fixed;top:0;right:0;width:100vw;max-width:100vw;height:100vh;height:100dvh;
+ background:var(--bg);z-index:200001;display:flex;flex-direction:column;overflow:hidden;
+ transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+ touch-action:manipulation}
+.hist-shell--open{transform:translateX(0)}
+.hist-shell__header{display:flex;align-items:center;justify-content:space-between;
+ padding:14px 16px 10px;flex-shrink:0;background:var(--bg)}
+.hist-shell__title{font:400 14px/1 var(--f-disp);letter-spacing:.2em;text-transform:uppercase;
+ color:var(--ink-hi)}
+.hist-shell__close{width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;
+ background:none;border:1px solid var(--line-strong);border-radius:0;color:var(--ink-hi);
+ font:400 14px/1 var(--f-ui);cursor:pointer;transition:border-color .16s}
+.hist-shell__close:hover{border-color:var(--ink-hi)}
+
+/* ---------- Loading spinner (scoped keyframe) ----------------- */
+@keyframes hist-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.hist-spinner{width:40px;height:40px;border:2px solid var(--line);
+ border-top:2px solid var(--ink-hi);border-radius:50%;
+ animation:hist-spin 1s linear infinite;margin-bottom:16px}
+@media (prefers-reduced-motion:reduce){.hist-spinner{animation:none}}

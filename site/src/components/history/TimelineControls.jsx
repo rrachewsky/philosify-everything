@@ -90,9 +90,6 @@ export function TimelineControls({
           onClick={() => setShowEras(!showEras)}
           aria-label={t('constellation.showEras')}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          </svg>
           <span>{t('constellation.eras.label', 'Eras')}</span>
         </button>
 
@@ -105,10 +102,6 @@ export function TimelineControls({
           onClick={() => setShowSchools(!showSchools)}
           aria-label={t('constellation.filterBySchool')}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="3" />
-            <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24" />
-          </svg>
           <span>{t('constellation.schools.label', 'Schools')}</span>
         </button>
       </div>
@@ -144,15 +137,15 @@ export function TimelineControls({
       {showSchools && (
         <div style={styles.filterRow}>
           {schools.map(school => {
-            const color = SCHOOL_COLORS[school] || '#888';
+            const color = SCHOOL_COLORS[school] || 'var(--ink-low)'; // school color = DATA
             const isSelected = selectedSchool === school;
             return (
               <button
                 key={school}
                 style={{
+                  // Monochrome pill chrome; the school COLOR lives in the dot (data).
                   ...styles.filterPill,
-                  borderColor: isSelected ? color : 'rgba(255, 255, 255, 0.15)',
-                  background: isSelected ? `${color}33` : 'rgba(255, 255, 255, 0.08)',
+                  ...(isSelected ? styles.filterPillActive : {}),
                 }}
                 onClick={() => toggleSchoolFilter(school)}
                 title={t(`constellation.schools.${school}`, school)}
@@ -176,21 +169,13 @@ export function TimelineControls({
       {/* Main controls row */}
       <div style={styles.controlsRow}>
         {/* Play/Pause */}
+        {/* v2 kit play affordance (AudioBar glyphs) */}
         <button
           style={styles.playButton}
           onClick={togglePlay}
           aria-label={isPlaying ? t('constellation.pause') : t('constellation.play')}
         >
-          {isPlaying ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" rx="1" />
-              <rect x="14" y="4" width="4" height="16" rx="1" />
-            </svg>
-          ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          )}
+          {isPlaying ? '❚❚' : '▶'}
         </button>
 
         {/* Slider */}
@@ -248,13 +233,14 @@ export function TimelineControls({
   );
 }
 
+// v2 tokens only (WP6.3) — monochrome + silver; pills 999px, square controls.
 const styles = {
   container: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    background: 'linear-gradient(transparent, rgba(10, 10, 15, 0.95))',
+    background: 'linear-gradient(transparent, var(--bg))',
     padding: '40px 24px 24px',
     zIndex: 100,
   },
@@ -271,20 +257,22 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 6,
-    padding: '6px 12px',
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: 16,
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 12,
+    padding: '6px 13px',
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 'var(--radius-pill)',
+    color: 'var(--ink-mid)',
+    font: '500 10px/1 var(--f-ui)',
+    letterSpacing: '.14em',
+    textTransform: 'uppercase',
     cursor: 'pointer',
-    transition: 'all 0.2s',
+    transition: 'all 0.16s',
   },
 
   filterToggleActive: {
-    background: 'rgba(214, 21, 140, 0.2)',
-    borderColor: 'rgba(214, 21, 140, 0.5)',
-    color: '#F2F2F5',
+    background: 'var(--bg)',
+    borderColor: 'var(--ink-hi)',
+    color: 'var(--ink-hi)',
   },
 
   // Filter pills row (eras or schools)
@@ -299,29 +287,31 @@ const styles = {
 
   filterPill: {
     padding: '5px 12px',
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 11,
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 'var(--radius-pill)',
+    color: 'var(--ink-mid)',
+    font: '500 10px/1 var(--f-ui)',
+    letterSpacing: '.14em',
+    textTransform: 'uppercase',
     cursor: 'pointer',
-    transition: 'all 0.2s',
+    transition: 'all 0.16s',
     display: 'flex',
     alignItems: 'center',
-    gap: 5,
+    gap: 6,
     whiteSpace: 'nowrap',
   },
 
   filterPillActive: {
-    background: 'rgba(214, 21, 140, 0.3)',
-    borderColor: '#D6158C',
-    color: '#F2F2F5',
+    background: 'var(--bg)',
+    borderColor: 'var(--ink-hi)',
+    color: 'var(--ink-hi)',
   },
 
   filterPillClear: {
-    background: 'rgba(255, 100, 100, 0.15)',
-    borderColor: 'rgba(255, 100, 100, 0.4)',
-    color: 'rgba(255, 150, 150, 0.9)',
+    background: 'var(--bg)',
+    borderColor: 'var(--line-strong)',
+    color: 'var(--ink-hi)',
   },
 
   schoolDot: {
@@ -337,26 +327,28 @@ const styles = {
     gap: 16,
   },
 
+  // Square instrument control (kit .audio .play register)
   playButton: {
-    width: 48,
-    height: 48,
-    background: '#D6158C',
-    border: 'none',
-    borderRadius: '50%',
-    color: '#fff',
+    width: 44,
+    height: 44,
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
+    font: '400 13px/1 var(--f-ui)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    boxShadow: '0 4px 20px rgba(214, 21, 140, 0.4)',
   },
 
+  // Timeline rail: hairline track, white fill, node thumb (mrail motif)
   sliderTrack: {
     flex: 1,
-    height: 8,
-    background: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 4,
+    height: 2,
+    background: 'var(--line)',
+    borderRadius: 0,
     position: 'relative',
     cursor: 'pointer',
   },
@@ -366,8 +358,8 @@ const styles = {
     top: 0,
     left: 0,
     height: '100%',
-    background: 'linear-gradient(90deg, #D6158C, #89CFF0)',
-    borderRadius: 4,
+    background: 'var(--ink-hi)',
+    borderRadius: 0,
     pointerEvents: 'none',
   },
 
@@ -375,32 +367,33 @@ const styles = {
     position: 'absolute',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 18,
-    height: 18,
-    background: '#F2F2F5',
+    width: 10,
+    height: 10,
+    background: 'var(--ink-hi)',
     borderRadius: '50%',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
     pointerEvents: 'none',
   },
 
   eraMarker: {
     position: 'absolute',
-    top: -4,
+    top: -5,
     transform: 'translateX(-50%)',
-    width: 2,
-    height: 16,
-    background: 'rgba(255, 255, 255, 0.2)',
+    width: 1,
+    height: 12,
+    background: 'var(--line-strong)',
     pointerEvents: 'none',
   },
 
   speedButton: {
     padding: '8px 12px',
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: 6,
-    color: '#F2F2F5',
-    fontSize: 12,
-    fontWeight: 600,
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
+    font: '500 11px/1 var(--f-ui)',
+    letterSpacing: '.1em',
+    textTransform: 'uppercase',
+    fontVariantNumeric: 'tabular-nums',
     cursor: 'pointer',
     flexShrink: 0,
     minWidth: 48,
@@ -410,9 +403,12 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: 8,
-    fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.4)',
-    paddingLeft: 64,
+    font: '500 10px/1 var(--f-ui)',
+    letterSpacing: '.16em',
+    textTransform: 'uppercase',
+    fontVariantNumeric: 'tabular-nums',
+    color: 'var(--ink-low)',
+    paddingLeft: 60,
     paddingRight: 60,
   },
 };

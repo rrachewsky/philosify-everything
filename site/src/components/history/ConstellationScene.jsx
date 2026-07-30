@@ -148,8 +148,11 @@ function createTextCard(text, schoolColor, isFoundational = false, isMostFoundat
     : (isFoundational ? layout.textFoundationalFontSize : baseFontSize);
   const fontWeight = '400'; // Always normal weight - NO bold
   
-  // Arial Narrow as primary, with condensed fallbacks
-  const fontFamily = '"Arial Narrow", "Helvetica Neue Condensed", "Arial", sans-serif';
+  // WP6.3 (ruling 30 Jul 2026): in-scene labels rasterize in Michroma —
+  // the ONLY sanctioned change in this file. Size tiers, measureText
+  // layout, texture sizing and sprite scaling are untouched (the canvas
+  // is sized from measureText, so the card adapts to the wider face).
+  const fontFamily = '"Michroma", "Inter", sans-serif';
   
   ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
   const textWidth = ctx.measureText(text).width;

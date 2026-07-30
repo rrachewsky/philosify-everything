@@ -1,18 +1,19 @@
 // ============================================================
 // HISTORICAL EVENT TICKER
-// Same structure as Music/News/Cinema/Literature tickers:
-//   .top-ten-ticker > .ticker-label + .ticker-track > .ticker-content > .ticker-item[]
+// Same structure as the working tickers:
+//   .hist-ticker > __label + __track > __content > __item[]
+// v2 skin (WP6.3): silver "BREAKING >>>" label, monochrome items.
 //
-// Only difference: NO looping. Single pass from -600 to 2026.
-// Constant visual scroll speed (like the other tickers).
-// translateX on .ticker-content is driven by currentYear.
+// Only difference from the other tickers: NO looping. Single pass
+// from -600 to 2026. Constant visual scroll speed.
+// translateX on the content is driven by currentYear (clock sync).
 // Dragging the ticker scrubs the global timeline.
 // ============================================================
 
 import { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { HISTORICAL_EVENTS, EVENT_CATEGORIES, EVENT_HEADLINES } from '@/data/historicalEvents.js';
-import '../TopTenTicker.css';
+import { HISTORICAL_EVENTS, EVENT_HEADLINES } from '@/data/historicalEvents.js';
+import '../../styles/v2-pages/history-ui.css';
 
 // Pre-sort events once (chronological, earliest first).
 const SORTED_EVENTS = [...HISTORICAL_EVENTS].sort((a, b) => a.year - b.year);
@@ -55,7 +56,7 @@ export function HistoricalEventTicker({
     if (itemOffsets) return;
     const content = contentRef.current;
     if (!content) return;
-    const items = content.querySelectorAll('.ticker-item');
+    const items = content.querySelectorAll('.hist-ticker__item');
     if (items.length !== SORTED_EVENTS.length) return;
 
     const contentRect = content.getBoundingClientRect();
@@ -188,18 +189,14 @@ export function HistoricalEventTicker({
   const translateX = containerWidth - scrollOffset;
 
   return (
-    <div className="top-ten-ticker" style={{ direction: 'ltr', position: 'relative', borderRadius: '6px' }}>
-      <div className="ticker-label">
-        <span className="ticker-icon">&#128240;</span>
-        <span>{t('constellation.breakingNews', 'BREAKING')}</span>
+    <div className="hist-ticker">
+      <div className="hist-ticker__label">
+        {t('constellation.breakingNews', 'BREAKING')} {'>>>'}
       </div>
       <div
-        className="ticker-track"
+        className="hist-ticker__track"
         ref={trackRef}
-        style={{
-          overflow: 'hidden',
-          cursor: isDragging ? 'grabbing' : 'grab',
-        }}
+        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
@@ -210,7 +207,7 @@ export function HistoricalEventTicker({
       >
         <div
           ref={contentRef}
-          className="ticker-content"
+          className="hist-ticker__content"
           style={{
             transform: `translateX(${translateX}px)`,
             animation: 'none',
@@ -218,7 +215,6 @@ export function HistoricalEventTicker({
           }}
         >
           {SORTED_EVENTS.map((event) => {
-            const cat = EVENT_CATEGORIES[event.category] || EVENT_CATEGORIES.political;
             const headline = t(`historicalEvents.${event.id}.headline`, {
               defaultValue: EVENT_HEADLINES[event.id] || event.title,
             });
@@ -226,18 +222,12 @@ export function HistoricalEventTicker({
             return (
               <button
                 key={event.id}
-                className="ticker-item"
+                className="hist-ticker__item"
                 onClick={() => handleEventClick(event)}
-                style={{ direction: 'ltr' }}
               >
-                <span className="ticker-rank">{cat.icon} {formatYear(event.year)}</span>
-                <span className="ticker-separator">&mdash;</span>
-                <span
-                  className="ticker-song"
-                  style={{ maxWidth: 'none', overflow: 'visible', textOverflow: 'unset', fontSize: '13px' }}
-                >
-                  {headline}
-                </span>
+                <span className="hist-ticker__year">{formatYear(event.year)}</span>
+                <span className="hist-ticker__sep">&mdash;</span>
+                <span className="hist-ticker__headline">{headline}</span>
               </button>
             );
           })}

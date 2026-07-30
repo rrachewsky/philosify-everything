@@ -28,14 +28,13 @@ export function HistoricalEventInfoPanel({
       {/* Mobile drag handle */}
       {isMobile && <div style={styles.dragHandle} />}
 
-      {/* Close button */}
+      {/* Close button — kit .mhead .x text glyph */}
       <button
         style={isMobile ? styles.closeButtonMobile : styles.closeButton}
         onClick={onClose}
+        aria-label={t('constellation.close')}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+        ✕
       </button>
 
       {/* Scrollable content */}
@@ -45,11 +44,13 @@ export function HistoricalEventInfoPanel({
           <div style={styles.year}>{formatYear(event.year)}</div>
         </div>
 
-        {/* Header - category badge below year */}
+        {/* Header — category pill: chrome label + category DATA color dot */}
         <div style={styles.header}>
-          <div style={{ ...styles.categoryBadge, background: `${category.color}22`, borderColor: category.color }}>
-            <span style={styles.categoryIcon}>{category.icon}</span>
-            <span style={{ ...styles.categoryLabel, color: category.color }}>{category.label}</span>
+          <div style={styles.categoryBadge}>
+            <span style={{ ...styles.categoryDot, background: category.color }} />
+            <span style={styles.categoryLabel}>
+              {t(`constellation.eventCategories.${event.category}`, category.label)}
+            </span>
           </div>
         </div>
 
@@ -65,10 +66,6 @@ export function HistoricalEventInfoPanel({
         {/* Philosify's Analysis Section */}
         <div style={styles.analysisSection}>
           <div style={styles.analysisBadge}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 6v6l4 2" />
-            </svg>
             <span>{t('constellation.philosifyAnalysis', "Philosify's Analysis")}</span>
           </div>
           <p style={styles.analysisText}>
@@ -79,7 +76,8 @@ export function HistoricalEventInfoPanel({
               return (
                 <>
                   {match[1]}
-                  <span style={{ color: '#00e5ff', fontWeight: 700 }}>{match[2]}</span>
+                  {/* the silver register — flat, one key phrase per cell (Law §2.3) */}
+                  <span style={{ color: 'var(--silver)' }}>{match[2]}</span>
                   {match[3]}
                 </>
               );
@@ -91,6 +89,7 @@ export function HistoricalEventInfoPanel({
   );
 }
 
+// v2 tokens only (WP6.3) — square-cornered instrument panel over the globe.
 const styles = {
   // Desktop: left sidebar
   container: {
@@ -99,15 +98,13 @@ const styles = {
     left: 70,
     width: 380,
     maxHeight: 'calc(100vh - 180px)',
-    background: 'rgba(15, 15, 25, 0.95)',
-    borderRadius: 12,
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    backdropFilter: 'blur(12px)',
+    background: 'var(--bg)',
+    borderRadius: 0,
+    border: '1px solid var(--line-strong)',
     overflow: 'hidden',
     zIndex: 160,
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
   },
 
   // Mobile: bottom sheet
@@ -118,24 +115,21 @@ const styles = {
     right: 0,
     height: '75vh',
     maxHeight: '75vh',
-    background: 'rgba(15, 15, 25, 0.98)',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    border: '1px solid rgba(255, 255, 255, 0.15)',
+    background: 'var(--bg)',
+    borderRadius: 0,
+    border: '1px solid var(--line-strong)',
     borderBottom: 'none',
-    backdropFilter: 'blur(16px)',
     overflow: 'hidden',
     zIndex: 200,
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.5)',
   },
 
   dragHandle: {
     width: 40,
-    height: 4,
-    background: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: 2,
+    height: 3,
+    background: 'var(--line-strong)',
+    borderRadius: 0,
     margin: '12px auto 8px',
     flexShrink: 0,
   },
@@ -146,10 +140,11 @@ const styles = {
     right: 12,
     width: 32,
     height: 32,
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
-    borderRadius: 6,
-    color: '#F2F2F5',
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
+    font: '400 14px/1 var(--f-ui)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -163,10 +158,11 @@ const styles = {
     right: 12,
     width: 40,
     height: 40,
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
-    borderRadius: 8,
-    color: '#F2F2F5',
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
+    color: 'var(--ink-hi)',
+    font: '400 16px/1 var(--f-ui)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -194,49 +190,57 @@ const styles = {
   categoryBadge: {
     display: 'flex',
     alignItems: 'center',
-    gap: 6,
-    padding: '4px 10px',
-    borderRadius: 16,
-    border: '1px solid',
+    gap: 7,
+    padding: '4px 11px',
+    borderRadius: 'var(--radius-pill)',
+    border: '1px solid var(--line-strong)',
   },
 
-  categoryIcon: {
-    fontSize: 14,
+  // Category DATA color, carried by the dot only
+  categoryDot: {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    flexShrink: 0,
   },
 
   categoryLabel: {
-    fontSize: 11,
-    fontWeight: 600,
+    font: '500 9.5px/1 var(--f-ui)',
+    letterSpacing: '.14em',
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    color: 'var(--ink-mid)',
   },
 
+  // Display numeral — silver Michroma (the region's one silver)
   year: {
-    fontSize: 18,
-    fontWeight: 700,
-    fontFamily: "'Orbitron', monospace",
-    color: '#D6158C',
-    letterSpacing: 1,
+    fontFamily: 'var(--f-disp)',
+    fontSize: 16,
+    fontWeight: 400,
+    color: 'var(--silver)',
+    letterSpacing: '.08em',
   },
 
   title: {
-    fontSize: 20,
-    fontWeight: 700,
-    color: '#F2F2F5',
+    fontFamily: 'var(--f-disp)',
+    fontSize: 16,
+    fontWeight: 400,
+    letterSpacing: '.06em',
+    color: 'var(--ink-hi)',
     margin: '0 0 12px 0',
-    lineHeight: 1.3,
+    lineHeight: 1.4,
   },
 
+  // Reading tier — WHITE, justified (Law §2.1 / §3, 30 Jul)
   description: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    lineHeight: 1.6,
+    font: '400 14.5px/1.7 var(--f-prose)',
+    color: 'var(--ink-text)',
+    textAlign: 'justify',
     margin: 0,
   },
 
   divider: {
     height: 1,
-    background: 'rgba(255, 255, 255, 0.1)',
+    background: 'var(--line)',
     margin: '20px 0',
   },
 
@@ -248,33 +252,18 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    color: '#D6158C',
-    fontSize: 12,
-    fontWeight: 600,
+    color: 'var(--ink-low)',
+    font: '500 10px/1.4 var(--f-ui)',
+    letterSpacing: '.18em',
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
     marginBottom: 12,
   },
 
   analysisText: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.9)',
-    lineHeight: 1.7,
+    font: '400 14.5px/1.75 var(--f-prose)',
+    color: 'var(--ink-text)',
     margin: 0,
     textAlign: 'justify',
-  },
-
-  contextNote: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: 8,
-    padding: 12,
-    background: 'rgba(214, 21, 140, 0.1)',
-    borderRadius: 8,
-    border: '1px solid rgba(214, 21, 140, 0.2)',
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.6)',
-    lineHeight: 1.5,
   },
 };
 

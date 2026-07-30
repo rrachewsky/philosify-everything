@@ -98,7 +98,7 @@ export function ConstellationSearch({
       {results.length > 0 && (
         <div style={styles.results}>
           {results.map((node, index) => {
-            const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || '#fff';
+            const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || 'var(--ink-low)';
             return (
               <button
                 key={node.id}
@@ -133,6 +133,7 @@ export function ConstellationSearch({
   );
 }
 
+// v2 tokens only (WP6.3) — kit input (6px radius, inset ground), square dropdown.
 const styles = {
   container: {
     position: 'relative',
@@ -140,16 +141,15 @@ const styles = {
   },
 
   input: {
-    width: 140,
+    width: 160,
     height: 40,
     padding: '0 12px',
-    background: 'rgba(20, 20, 30, 0.95)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: 8,
-    color: '#F2F2F5',
-    fontSize: 14,
+    background: 'var(--bg-inset)',
+    border: '1px solid var(--line)',
+    borderRadius: 'var(--radius-input)',
+    color: 'var(--ink-hi)',
+    font: '400 14px/1.4 var(--f-ui)',
     outline: 'none',
-    backdropFilter: 'blur(8px)',
   },
 
   results: {
@@ -158,10 +158,9 @@ const styles = {
     left: 0,
     width: 220,
     marginTop: 4,
-    background: 'rgba(20, 20, 30, 0.95)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: 8,
-    backdropFilter: 'blur(16px)',
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: 0,
     overflow: 'hidden',
     maxHeight: 240,
     overflowY: 'auto',
@@ -180,9 +179,10 @@ const styles = {
   },
 
   resultItemActive: {
-    background: 'rgba(214, 21, 140, 0.2)',
+    background: 'var(--bg-cell)',
   },
 
+  // School DATA color dot
   traditionDot: {
     width: 8,
     height: 8,
@@ -196,17 +196,17 @@ const styles = {
   },
 
   resultName: {
-    fontSize: 13,
-    fontWeight: 600,
-    color: '#F2F2F5',
+    font: '500 12.5px/1.4 var(--f-ui)',
+    color: 'var(--ink-hi)',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
 
   resultMeta: {
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.5)',
+    font: '400 10.5px/1.4 var(--f-ui)',
+    fontVariantNumeric: 'tabular-nums',
+    color: 'var(--ink-low)',
     marginTop: 1,
   },
 };
