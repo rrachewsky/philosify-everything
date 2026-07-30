@@ -39,31 +39,38 @@
   min-height: 100vh;
 }
 
-/* ---------- Header ground (Roberto, 29 Jul 2026) --------------
-   The fixed top bar's ground IS the page: canvas + the identical
-   64px grid, aligned with the page's grid veil (a clipped replica
-   of .grid-veil — same gradients, size, and radial mask over the
-   same full-viewport box, so the two are pixel-identical).
-   Content scrolling under it slides beneath the page surface.
-   No hairline, no shadow, no tint difference. */
-.v2 .hudground{position:fixed;top:0;left:0;right:0;height:var(--grid-size);z-index:2;
- background:var(--bg);overflow:hidden;pointer-events:none}
-.v2 .hudground::before{content:"";position:absolute;left:0;top:0;width:100%;height:100vh;
+/* ---------- Fixed header band (C.3 ruling, 30 Jul) ------------
+   The header is the full band: centered official vertical lockup
+   (~64px owl, uniform on every page) + session chrome top-right
+   inside the band. Fixed to the viewport — the whole body scrolls
+   beneath it; the owl never moves. Ground is seamless: canvas +
+   a clipped replica of the page's 64px grid veil (same gradients,
+   size and radial mask over the same full-viewport box, so the
+   two are pixel-identical). No hairline, no shadow, no tint. */
+.v2{--hdrh:106px}
+.v2.hdr-tagged{--hdrh:130px} /* landing: tagline under the lockup */
+.v2 .hdr{position:fixed;top:0;left:0;right:0;z-index:4;
+ height:calc(var(--hdrh) + env(safe-area-inset-top,0px));
+ padding-top:env(safe-area-inset-top,0px);background:var(--bg);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.v2 .hdr .hdrgrid{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.v2 .hdr .hdrgrid::before{content:"";position:absolute;left:0;top:0;width:100%;height:100vh;
  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),
                   linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
  background-size:var(--grid-size) var(--grid-size);
  -webkit-mask-image:radial-gradient(ellipse 100% 96% at 50% 46%,#000 58%,rgba(0,0,0,.55) 82%,transparent 104%);
  mask-image:radial-gradient(ellipse 100% 96% at 50% 46%,#000 58%,rgba(0,0,0,.55) 82%,transparent 104%)}
-
-/* ---------- HUD chrome (news/base kit) ------------------------ */
+.v2 .hdrlock{position:relative}
+.v2 .hdrtag{position:relative;font:400 clamp(10px,1.2vw,11.5px) var(--fd);letter-spacing:.42em;
+ text-transform:uppercase;color:var(--silverd);padding-left:.42em}
+/* Top HUD corners retired (C.3); bottom pair stays. */
 .v2 .hc{position:fixed;width:24px;height:24px;border:1px solid var(--low);opacity:.6;z-index:3;pointer-events:none}
-.v2 .hc.tl{top:22px;left:24px;border-right:0;border-bottom:0}
-.v2 .hc.tr{top:22px;right:24px;border-left:0;border-bottom:0}
 .v2 .hc.bl{bottom:22px;left:24px;border-right:0;border-top:0}
 .v2 .hc.br{bottom:22px;right:24px;border-left:0;border-top:0}
 .v2 .hudtxt{position:fixed;z-index:3;font:500 11px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--low)}
-.v2 .hud-status{top:30px;left:64px;color:var(--low)}
+.v2 .hdr .hud-status{position:absolute;top:calc(30px + env(safe-area-inset-top,0px));left:64px;color:var(--low)}
 .v2 .navr{top:26px;right:64px;display:flex;gap:26px}
+.v2 .hdr .navr{position:absolute;top:calc(26px + env(safe-area-inset-top,0px))}
 .v2 .navr a{color:var(--dim);text-decoration:none;font:500 11px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
 .v2 .navr a:hover{color:var(--ink)}
 .v2 .acctmenu{display:none;position:absolute;right:0;top:26px;min-width:168px;background:var(--bg);border:1px solid var(--strong);padding:6px 0;z-index:9}
@@ -74,10 +81,10 @@
 .v2 .acctmenu.langgrid.open{display:grid}
 .v2 .acctmenu.langgrid a{padding:8px 10px;text-align:center;letter-spacing:.14em}
 
-/* ---------- Page column (module 81 / interior 76 top pad) ----- */
-.v2 .page{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:81px 48px 60px}
-.v2 .page.interior{padding-top:76px}
-.v2 .lockband{display:flex;justify-content:center;padding:0 0 40px}
+/* ---------- Page column (under the fixed header) -------------- */
+/* Content clears the band (header height + safe area) + breathing. */
+.v2 .page{position:relative;z-index:1;max-width:1080px;margin:0 auto;
+ padding:calc(var(--hdrh) + env(safe-area-inset-top,0px) + 30px) 48px 60px}
 
 /* ---------- Module header: title + marker line + ticker ------- */
 /* Module titles — --module-title cyan (30 Jul); Unsafe Zone renders its
@@ -86,8 +93,12 @@
 .v2 .mrail{position:relative;height:1px;background:var(--low);margin-top:14px}
 .v2 .mrail::after{content:"";position:absolute;right:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;background:var(--ink)}
 .v2 .mrail.draw{transform-origin:left;animation:v2draw 1.1s cubic-bezier(.16,1,.3,1) .5s both}
-.v2 .tick{display:flex;justify-content:space-between;margin-top:10px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+/* Universal ticker anatomy (C.4, 30 Jul): fixed label left, feed
+   running to the edge; right-side catalog stats retired. */
+.v2 .tick{display:flex;margin-top:10px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
 .v2 .tick b{color:var(--silver);font-weight:500}
+.v2 .tick .tkbody{flex:1;min-width:0;display:flex;align-items:baseline}
+.v2 .tick .lbl{flex:none;color:var(--silver)}
 
 /* ---------- Breaking ticker (news mockup, reusable) ----------- */
 .v2 .tick.brk{justify-content:flex-start}
@@ -257,21 +268,8 @@
 .v2 .unote{font:400 11px var(--fu);color:var(--mid);margin-top:12px;letter-spacing:.04em;text-align:center}
 
 /* ---------- Landing pieces (master) --------------------------- */
-.v2 .masthead{display:flex;flex-direction:column;align-items:center;text-align:center;padding:11vh 0 0}
-/* position/transform resets guard against the old .tagline rule */
-.v2 .tagline{position:static;left:auto;top:auto;transform:none;margin:28px 0 0;
- font:400 clamp(11px,1.3vw,13px) var(--f-disp);letter-spacing:.42em;
- text-transform:uppercase;color:var(--silverd)}
-.v2 .rail{position:relative;height:1px;background:var(--low);margin:48px 0 0;
- transform-origin:left;animation:v2draw 1.1s cubic-bezier(.16,1,.3,1) .5s both}
-.v2 .rail::after{content:"";position:absolute;right:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;
- background:var(--ink)}
-.v2 .rail-label{display:flex;justify-content:space-between;margin-top:12px;
- font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--low)}
-.v2 .rail-label b{color:var(--silver);font-weight:500}
-.v2 .acct{transition:.16s;color:var(--low);text-decoration:none}
-.v2 .acct:hover{color:var(--ink)!important}
-.v2 .acct-links{display:flex;gap:26px}
+/* Masthead, tagline and account rail retired (C.3): the brand and the
+   session chrome live only in the fixed header band. */
 .v2 .selectline{font:500 10.5px/1 var(--fu);letter-spacing:.22em;text-transform:uppercase;color:var(--low)}
 .v2 .modules{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 
@@ -297,17 +295,18 @@
  background:var(--bg);backdrop-filter:blur(8px)}
 .v2 .themebar button{font:500 10.5px/1 var(--fu);letter-spacing:.12em;text-transform:uppercase;
  color:var(--low);background:none;border:0;border-radius:999px;padding:8px 16px;cursor:pointer}
-.v2 .themebar button.on{color:var(--ink);box-shadow:inset 0 0 0 1px var(--strong)}
+/* C.5 shadow sweep: ring drawn with outline, not box-shadow */
+.v2 .themebar button.on{color:var(--ink);outline:1px solid var(--strong);outline-offset:-1px}
 
 /* ---------- Entrance motion (landing) ------------------------- */
 .v2 .rv{opacity:0;transform:translateY(12px);animation:v2in .55s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes v2in{to{opacity:1;transform:none}}
 @keyframes v2draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@media (prefers-reduced-motion:reduce){.v2 .rv,.v2 .rail,.v2 .mrail.draw{animation:none;opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.v2 .rv,.v2 .mrail.draw{animation:none;opacity:1;transform:none}}
 
 /* ---------- Breakpoints (landing master) ---------------------- */
 @media (max-width:900px){.v2 .modules{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:860px){.v2 .page{padding-left:26px;padding-right:26px}.v2 .navr{right:60px}.v2 .hud-status{display:none}}
+@media (max-width:860px){.v2 .page{padding-left:26px;padding-right:26px}.v2 .navr{right:60px}.v2 .hdr .hud-status{display:none}}
 @media (max-width:600px){.v2 .modules{grid-template-columns:1fr}.v2 .themebar{bottom:12px}}
 
 /* ---------- WP6.1 mobile pass (360-430 baseline) ---------------
@@ -316,19 +315,12 @@
    spaced rows) and pushed the whole page off a 360px viewport. */
 .v2 .page{min-width:0}
 
-/* PWA standalone / notch: fixed chrome respects safe-area insets.
-   The header ground grows INTO the top inset (its grid replica stays
-   aligned because the page grid is offset by the same amount). */
-.v2 .hudground{height:calc(var(--grid-size) + env(safe-area-inset-top,0px))}
-.v2 .hudground::before{top:env(safe-area-inset-top,0px)}
-.v2 .hud-status{top:calc(30px + env(safe-area-inset-top,0px))}
-.v2 .navr{top:calc(26px + env(safe-area-inset-top,0px))}
-.v2 .hc.tl,.v2 .hc.tr{top:calc(22px + env(safe-area-inset-top,0px))}
+/* PWA standalone / notch: the header band grows INTO the top inset
+   (its .hdr height/padding already carry the env() terms); remaining
+   fixed chrome respects safe-area insets. */
 .v2 .hc.bl,.v2 .hc.br{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
 .v2 .themebar{bottom:calc(18px + env(safe-area-inset-bottom,0px))}
-.v2 .page{padding-top:calc(81px + env(safe-area-inset-top,0px));
- padding-left:max(48px,env(safe-area-inset-left,0px));padding-right:max(48px,env(safe-area-inset-right,0px))}
-.v2 .page.interior{padding-top:calc(76px + env(safe-area-inset-top,0px))}
+.v2 .page{padding-left:max(48px,env(safe-area-inset-left,0px));padding-right:max(48px,env(safe-area-inset-right,0px))}
 
 /* Long unbreakable data (song titles, hashes, session codes) wraps */
 .v2 .trackc h3,.v2 .trackc p{overflow-wrap:anywhere}
@@ -338,27 +330,33 @@
 }
 
 @media (max-width:640px){
- /* header bar: nav claims the full width and may wrap to two rows */
- .v2 .navr{left:16px;right:16px;justify-content:flex-end;flex-wrap:wrap;gap:8px 16px}
+ /* fixed header stacks: session nav row on top, lockup centered under
+    it (uniform 78px image / 64px owl — the size never changes) */
+ .v2{--hdrh:122px}
+ .v2.hdr-tagged{--hdrh:152px}
+ .v2 .hdr{justify-content:flex-start;padding-top:calc(env(safe-area-inset-top,0px) + 10px);gap:7px}
+ .v2 .hdr .navr{position:static;width:100%;justify-content:flex-end;flex-wrap:wrap;gap:8px 16px;padding:0 16px}
+ .v2 .hdr .navr a{max-width:44vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .v2 .hdrtag{letter-spacing:.22em;padding-left:16px;padding-right:16px;text-align:center;
+  white-space:normal;line-height:1.7}
  .v2 .hc{width:16px;height:16px}
- .v2 .hc.tl,.v2 .hc.bl{left:12px}
- .v2 .hc.tr,.v2 .hc.br{right:12px}
- .v2 .page{padding-top:calc(88px + env(safe-area-inset-top,0px));
-  padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));
+ .v2 .hc.bl{left:12px}
+ .v2 .hc.br{right:12px}
+ .v2 .page{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));
   padding-bottom:48px}
- .v2 .page.interior{padding-top:calc(84px + env(safe-area-inset-top,0px))}
- .v2 .lockband{padding-bottom:26px}
  /* touch targets >= 44px without shifting the 11px-type layout */
  .v2 .navr a{padding:16px 6px;margin:-16px -6px}
  .v2 .acctmenu{top:34px}
  .v2 .acctmenu a{padding:14px 18px}
+ /* language dropdown becomes a usable panel: fixed under the header,
+    the 18 locales in a grid, scrollable (C.1 defect fix) */
+ .v2 .acctmenu.langgrid{position:fixed;left:16px;right:16px;
+  top:calc(var(--hdrh) + env(safe-area-inset-top,0px) + 8px);
+  grid-template-columns:repeat(4,1fr);min-width:0;max-height:min(58vh,420px);overflow-y:auto}
+ .v2 .acctmenu.langgrid a{padding:13px 8px}
  .v2 .themebar button{padding:13px 18px}
  .v2 .btnp{padding:16px 24px}
  .v2 .btns{padding:15px 23px}
- /* landing master collapses */
- .v2 .masthead{padding-top:6vh}
- .v2 .tagline{white-space:normal;text-align:center;line-height:1.6}
- .v2 .rail-label{flex-wrap:wrap;row-gap:8px}
  .v2 .modules{gap:12px}
  .v2 footer.landing{flex-direction:column;gap:16px;align-items:flex-start}
  .v2 footer.module{flex-direction:column;gap:16px;align-items:flex-start;padding-left:18px;padding-right:18px}

@@ -8,21 +8,19 @@ import { Link } from 'react-router-dom';
 import { getTheme } from '../../utils/theme';
 import './Lockup.css';
 
-// Image heights lifted from the approved mockups; the owl inside the
-// vertical asset is 528/646 of image height → owl 132 / 96 / 64 px.
+// Header ruling (C.3, 30 Jul): the lockup renders at ONE uniform size on
+// every page — the fixed header band's vertical lockup, ~64px owl (the owl
+// is 528/646 of image height → 78px image). The horizontal variant is
+// retired: assets stay archived in /brand but nothing may use them.
 const VARIANTS = {
-  landing: { asset: 'lockup', height: 162 },
-  module: { asset: 'lockup', height: 117 },
-  interior: { asset: 'lockup', height: 78 },
-  auth: { asset: 'lockup', height: 105 },
-  footer: { asset: 'horizontal', height: 32 },
+  header: { asset: 'lockup', height: 78 },
 };
 
 const src = (asset, theme) =>
   `/brand/philosify-logo-${asset}${theme === 'white' ? '-black' : ''}.png`;
 
-export function Lockup({ variant = 'module', className = '' }) {
-  const v = VARIANTS[variant] || VARIANTS.module;
+export function Lockup({ variant = 'header', className = '' }) {
+  const v = VARIANTS[variant] || VARIANTS.header;
   const [theme, setThemeState] = useState(getTheme());
   useEffect(() => {
     const onTheme = (e) => setThemeState(e.detail);

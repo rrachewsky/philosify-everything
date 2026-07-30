@@ -1,4 +1,5 @@
-export { PageShell, HudFrame, NavChrome } from './PageShell.jsx';
+export { PageShell, HudFrame } from './PageShell.jsx';
+export { HeaderBar } from './HeaderBar.jsx';
 export { FooterV2 } from './FooterV2.jsx';
 export { Cell } from './Cell.jsx';
 export { Button } from './Button.jsx';

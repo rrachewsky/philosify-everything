@@ -1,46 +1,34 @@
-// PageShell - v2 page chrome (Design Law §4, module-template standard)
-// HUD corners + telemetry chrome + centered lockup band + footer.
-import { GridVeil, Lockup } from '../common';
+// PageShell - v2 page chrome (Design Law §4, C.3 header ruling 30 Jul)
+// Fixed header band (lockup + session chrome) + bottom HUD corners +
+// page column + footer. Content takes padding-top = header height (CSS).
+import { GridVeil } from '../common';
 import { FooterV2 } from './FooterV2.jsx';
+import { HeaderBar } from './HeaderBar.jsx';
 import '../../styles/v2-components.css';
 
-export function HudFrame({ status }) {
+// Top HUD corners retired with the fixed header (C.3); bottom pair stays.
+export function HudFrame() {
   return (
     <>
-      <span className="hc tl" aria-hidden="true" />
-      <span className="hc tr" aria-hidden="true" />
       <span className="hc bl" aria-hidden="true" />
       <span className="hc br" aria-hidden="true" />
-      {status && <div className="hudtxt hud-status">{status}</div>}
     </>
   );
 }
 
-export function NavChrome({ children }) {
-  return <nav className="hudtxt navr">{children}</nav>;
-}
-
 export function PageShell({
-  variant = 'module', // 'module' (81px top) | 'interior' (76px top)
+  variant = 'module', // 'module' | 'interior' (kept for page-level CSS hooks)
   status,
-  nav,
+  nav, // optional session-chrome override (V2Gallery mock); default NavAccount
   footer = 'module', // 'module' | 'landing' | null
-  lockup, // override Lockup variant; defaults to match shell variant
   children,
 }) {
-  const lockupVariant = lockup || (variant === 'module' ? 'module' : 'interior');
   return (
     <div className="v2">
       <GridVeil />
-      <div className="hudground" aria-hidden="true" />
-      <HudFrame status={status} />
-      {nav && <NavChrome>{nav}</NavChrome>}
-      <div className={`page${variant === 'interior' ? ' interior' : ''}`}>
-        <div className="lockband">
-          <Lockup variant={lockupVariant} />
-        </div>
-        {children}
-      </div>
+      <HeaderBar status={status} nav={nav} />
+      <HudFrame />
+      <div className={`page${variant === 'interior' ? ' interior' : ''}`}>{children}</div>
       {footer && <FooterV2 variant={footer} />}
     </div>
   );

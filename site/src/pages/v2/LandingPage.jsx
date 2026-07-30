@@ -1,14 +1,13 @@
-// LandingPage - v2 landing (MASTER: new_design/philosify-landing.html).
-// Masthead lockup → tagline → rail with account line → "Select a module"
-// → 3×3 module grid (Law §4 order, Unsafe Zone inverted) → landing footer.
-import { Link, useNavigate } from 'react-router-dom';
+// LandingPage - v2 landing (MASTER: new_design/philosify-landing.html,
+// C.3 header ruling 30 Jul): fixed header band (lockup + tagline +
+// session chrome) → "Select a module" → 3×3 module grid (Law §4 order,
+// Unsafe Zone inverted) → landing footer. Session chrome lives ONLY in
+// the header; the old masthead and account rail are retired.
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { GridVeil, Lockup } from '../../components/common';
-import { HudFrame, NavChrome, Cell, FooterV2, ThemeBar } from '../../components/v2';
-import { NavAccount } from '../../components/v2/NavAccount.jsx';
+import { GridVeil } from '../../components/common';
+import { HudFrame, HeaderBar, Cell, FooterV2, ThemeBar } from '../../components/v2';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
-import { useAuth } from '../../hooks/useAuth';
-import { useCreditsContext } from '../../contexts/CreditsContext';
 import { CATALOG } from '../../config/catalog';
 import '../../styles/v2-components.css';
 
@@ -41,83 +40,18 @@ function HlText({ text }) {
 export default function LandingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
-  const { balance } = useCreditsContext();
 
   return (
-    <div className="v2" style={{ display: 'flex', flexDirection: 'column' }}>
+    <div className="v2 hdr-tagged" style={{ display: 'flex', flexDirection: 'column' }}>
       <GridVeil />
-      <div className="hudground" aria-hidden="true" />
-      <HudFrame status={t('v2.landing.status', 'Analysis Engine // Active')} />
-      <NavChrome>
-        <NavAccount />
-      </NavChrome>
+      <HeaderBar
+        tagline={t('v2.landing.tagline', 'The final word is always yours')}
+        status={t('v2.landing.status', 'Analysis Engine // Active')}
+      />
+      <HudFrame />
 
-      <div className="page" style={{ display: 'flex', flexDirection: 'column', flex: 1, paddingTop: 0 }}>
-        <header className="masthead">
-          <div className="rv lock-plate" style={{ animationDelay: '.08s', display: 'flex', justifyContent: 'center' }}>
-            <Lockup variant="landing" />
-          </div>
-          <div className="tagline rv" style={{ animationDelay: '.3s' }}>
-            {t('v2.landing.tagline', 'The final word is always yours')}
-          </div>
-        </header>
-
-        <div>
-          <div className="rail" aria-hidden="true" />
-          <div className="rail-label rv" style={{ animationDelay: '.6s' }}>
-            {isAuthenticated ? (
-              <>
-                <a
-                  className="acct"
-                  href="#balance"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.dispatchEvent(new CustomEvent('v2-open-buy-credits'));
-                  }}
-                >
-                  {t('v2.nav.balance', 'Balance')}: <b className="hl">{balance?.total ?? 0} {t('v2.commerce.credits', 'Credits')}</b>
-                </a>
-                <span className="acct-links">
-                  <a
-                    className="acct"
-                    href="#buy"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.dispatchEvent(new CustomEvent('v2-open-buy-credits'));
-                    }}
-                  >
-                    {t('v2.nav.buyCredits', 'Buy Credits')}
-                  </a>
-                  <a
-                    className="acct"
-                    href="#history"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.dispatchEvent(new CustomEvent('v2-open-history'));
-                    }}
-                  >
-                    {t('v2.nav.history', 'History')}
-                  </a>
-                </span>
-              </>
-            ) : (
-              <>
-                <span>{t('v2.landing.guestLine', 'Two free analyses on signup')}</span>
-                <span className="acct-links">
-                  <Link className="acct" to="/signup">
-                    {t('v2.nav.signUp', 'Sign up')}
-                  </Link>
-                  <Link className="acct" to="/signin">
-                    {t('v2.nav.signIn', 'Sign in')}
-                  </Link>
-                </span>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="selectline rv" style={{ animationDelay: '.58s', marginTop: 30 }}>
+      <div className="page" style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <div className="selectline rv" style={{ animationDelay: '.18s' }}>
           {t('v2.landing.select', 'Select a module')}
         </div>
 
@@ -130,7 +64,7 @@ export default function LandingPage() {
               to={`/${slug}`}
               title={t(`v2.landing.cells.${slug}.title`, title)}
               className="rv"
-              style={{ animationDelay: `${0.62 + i * 0.05}s` }}
+              style={{ animationDelay: `${0.22 + i * 0.05}s` }}
             >
               <HlText text={t(`v2.landing.cells.${slug}.desc`, { defaultValue: desc, ...CATALOG })} />
             </Cell>
