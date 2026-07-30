@@ -10,6 +10,7 @@ import { PageShell, ModuleHeader, Ticker, Cell, Pill } from '../../components/v2
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
 import { HistorySidebar } from '../../components/history';
+import { SEED_NODES } from '../../data/constellationSeedData';
 
 const SCHOOL_PILLS = ['Stoicism', 'Pre-Socratics', 'Enlightenment', 'German Idealism', 'Objectivism'];
 
@@ -60,7 +61,8 @@ export default function HistoryPage() {
           ))}
         </div>
 
-        <Ticker stat={t('v2.history.countStat', 'Over 300 philosophers')}>
+        {/* Live count from the seed actually rendered (telemetry honesty §5b) */}
+        <Ticker stat={t('v2.history.countStat', '{{n}} philosophers', { n: SEED_NODES.length })}>
           {t(
             'v2.history.eventsLine',
             'Aristotle begins tutoring Alexander — 343 BCE /// Hypatia teaches in Alexandria — c. 400 CE'

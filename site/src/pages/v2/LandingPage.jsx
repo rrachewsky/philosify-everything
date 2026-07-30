@@ -9,17 +9,19 @@ import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
 import { useAuth } from '../../hooks/useAuth';
 import { useCreditsContext } from '../../contexts/CreditsContext';
+import { CATALOG } from '../../config/catalog';
 import '../../styles/v2-components.css';
 
+// Counts interpolate from CATALOG (telemetry honesty — spec §5b).
 const MODULES = [
-  ['music', 'MUSIC', 'Search <hl>1.7M songs</hl> via Spotify and Genius and receive a philosophical analysis of the lyrics, with audio playback.'],
-  ['cinema', 'CINEMA', "Philosophical analysis of <hl>over 1.3 million films</hl> from the TMDb catalog — themes, characters and ideas."],
-  ['literature', 'LITERATURE', 'Philosophical analysis of <hl>over 40 million books</hl> from the Google Books catalog, by scan or philosopher panel.'],
+  ['music', 'MUSIC', 'Search <hl>{{songs}} songs</hl> via Spotify and Genius and receive a philosophical analysis of the lyrics, with audio playback.'],
+  ['cinema', 'CINEMA', "Philosophical analysis of <hl>over {{films}} films</hl> from the TMDb catalog — themes, characters and ideas."],
+  ['literature', 'LITERATURE', 'Philosophical analysis of <hl>over {{books}} books</hl> from the Google Books catalog, by scan or philosopher panel.'],
   ['news', 'NEWS', "Analysis of current news: the source and its bias, where it errs and where it is right, and <hl>Philosify's opinion</hl>."],
   ['ideas', 'IDEAS', 'Debates and colloquiums between historical philosophers, <hl>in character</hl>, on questions you propose.'],
-  ['history', 'HISTORY', 'An interactive globe and timeline of <hl>over 300 philosophers</hl>, their schools and events across 2,600 years.'],
+  ['history', 'HISTORY', 'An interactive globe and timeline of <hl>{{philosophers}} philosophers</hl>, their schools and events across 2,600 years.'],
   ['quiz', 'QUIZ', 'A questionnaire that identifies which <hl>premises you actually hold</hl>.'],
-  ['community', 'COMMUNITY', 'Member profiles, groups, direct messages and public debates, in <hl>18 languages</hl>.'],
+  ['community', 'COMMUNITY', 'Member profiles, groups, direct messages and public debates, in <hl>{{locales}} languages</hl>.'],
   ['unsafe-zone', 'UNSAFE ZONE', 'No dogmas. No fallacies. No fantasy. No evasions. Bring your real questions. And answers.'],
 ];
 
@@ -130,7 +132,7 @@ export default function LandingPage() {
               className="rv"
               style={{ animationDelay: `${0.62 + i * 0.05}s` }}
             >
-              <HlText text={t(`v2.landing.cells.${slug}.desc`, desc)} />
+              <HlText text={t(`v2.landing.cells.${slug}.desc`, { defaultValue: desc, ...CATALOG })} />
             </Cell>
           ))}
         </main>

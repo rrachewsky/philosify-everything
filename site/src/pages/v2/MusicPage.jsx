@@ -23,6 +23,7 @@ import {
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
+import { CATALOG } from '../../config/catalog';
 import { PhilosopherPicker } from '../../components/common/PhilosopherPicker';
 import { ShareButton } from '../../components/sharing/ShareButton';
 import { ShareToDMButton } from '../../components/sharing/ShareToDMButton';
@@ -728,7 +729,7 @@ export default function MusicPage() {
     <PageShell status={t('v2.music.status', 'Analysis Engine // Active')} nav={<NavAccount />}>
       <div className="pg-music">
         <ModuleHeader title={t('v2.music.title', 'MUSIC')}>
-          <Ticker stat={t('v2.music.tickerStat', '1.7M songs // Spotify + Genius')}>
+          <Ticker stat={t('v2.music.tickerStat', '{{songs}} songs // Spotify + Genius', { songs: CATALOG.songs })}>
             <Top50Line
               tracks={top50}
               label={t('v2.music.top50', 'Top 50')}

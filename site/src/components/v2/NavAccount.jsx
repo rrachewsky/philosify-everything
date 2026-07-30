@@ -42,7 +42,7 @@ export function NavAccount() {
           }}
           href="#lang"
         >
-          {i18n.language.toUpperCase()} · 18
+          {i18n.language.toUpperCase()} · {LOCALES.length}
         </a>
         <span className={`acctmenu langgrid${menu === 'lang' ? ' open' : ''}`}>
           {LOCALES.map((code) => (
