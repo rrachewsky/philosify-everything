@@ -1183,7 +1183,8 @@
       "viktor_frankl": "Uno psicologo nei lager; volontà di significato; logoterapia; libertà di scegliere l'atteggiamento",
       "wang_yangming": "Unità di conoscenza e azione; conoscenza morale innata; mente-cuore come fonte di verità",
       "winston_churchill": "Democrazia come peggior sistema tranne tutti gli altri; resistenza alla tirannia; libertà individuale; civiltà occidentale",
-      "zhu_xi": "Li (principio) e qi (forza vitale); investigazione delle cose; coltivazione morale"
+      "zhu_xi": "Li (principio) e qi (forza vitale); investigazione delle cose; coltivazione morale",
+      "martin_luther_king_jr": "Resistenza nonviolenta; disobbedienza civile; comunità amata; giudicati per il carattere, non per il colore; dignità individuale"
     },
     "breakingNews": "ULTIME NOTIZIE",
     "clickForAnalysis": "Clicca per l'analisi",
@@ -2784,6 +2785,9 @@
       "welcome8": "L'ultimo passo è sempre tuo.",
       "welcome9": "Non sei qui per il conforto. Sei qui per la chiarezza.",
       "you": "Tu"
+    },
+    "verdict": {
+      "scoreLine": "Punteggio finale {{score}} · Nota {{n}} su 10"
     }
   }
 }

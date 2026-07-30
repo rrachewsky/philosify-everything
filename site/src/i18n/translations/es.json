@@ -1204,7 +1204,8 @@
       "viktor_frankl": "El hombre en busca de sentido; voluntad de significado; logoterapia; libertad de elegir actitud",
       "wang_yangming": "Unidad de conocimiento y acción; conocimiento moral innato; mente-corazón como fuente de la verdad",
       "winston_churchill": "Democracia como peor sistema excepto todos los demás; resistencia a la tiranía; libertad individual; civilización occidental",
-      "zhu_xi": "Li (principio) y qi (fuerza vital); investigación de las cosas; cultivo moral"
+      "zhu_xi": "Li (principio) y qi (fuerza vital); investigación de las cosas; cultivo moral",
+      "martin_luther_king_jr": "Resistencia no violenta; desobediencia civil; comunidad amada; juzgado por el carácter, no por el color; dignidad individual"
     },
     "breakingNews": "URGENTE",
     "clickForAnalysis": "Haz clic para ver el análisis",
@@ -2810,6 +2811,9 @@
       "welcome8": "El último paso es siempre tuyo.",
       "welcome9": "No estás aquí por consuelo. Estás aquí por claridad.",
       "you": "Tú"
+    },
+    "verdict": {
+      "scoreLine": "Puntuación final {{score}} · Nota {{n}} de 10"
     }
   }
 }

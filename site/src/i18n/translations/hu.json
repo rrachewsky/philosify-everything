@@ -1268,7 +1268,8 @@
       "viktor_frankl": "...mégis satisfies mondj igent az életre; akaratérvényesítés értelemre; logoterápia; hozzáállás választásának szabadsága",
       "wang_yangming": "Tudás és cselekvés egysége; veleszületett erkölcsi tudás; szív-elme mint az igazság forrása",
       "winston_churchill": "Demokrácia mint legrosszabb rendszer az összes többi kivételével; zsarnokság elleni ellenállás; egyéni szabadság; nyugati civilizáció",
-      "zhu_xi": "Li (elv) és qi (életerő); dolgok vizsgálata; erkölcsi művelés"
+      "zhu_xi": "Li (elv) és qi (életerő); dolgok vizsgálata; erkölcsi művelés",
+      "martin_luther_king_jr": "Erőszakmentes ellenállás; polgári engedetlenség; szeretett közösség; jellem alapján ítélve, nem bőrszín szerint; az egyén méltósága"
     },
     "breakingNews": "RENDKÍVÜLI",
     "clickForAnalysis": "Kattintson az elemzéshez",
@@ -2869,6 +2870,9 @@
       "welcome8": "Az utolsó lépés mindig a tied.",
       "welcome9": "Nem a vigaszért vagy itt. A tisztánlátásért.",
       "you": "Te"
+    },
+    "verdict": {
+      "scoreLine": "Végső pontszám {{score}} · Jegy {{n}} a 10-ből"
     }
   }
 }

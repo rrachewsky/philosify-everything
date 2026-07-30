@@ -1201,7 +1201,8 @@
       "viktor_frankl": "...trotzdem Ja zum Leben sagen; Wille zum Sinn; Logotherapie; Freiheit der Einstellungswahl",
       "wang_yangming": "Einheit von Wissen und Handeln; angeborenes moralisches Wissen; Herz-Geist als Quelle der Wahrheit",
       "winston_churchill": "Demokratie als schlechtestes System außer allen anderen; Widerstand gegen Tyrannei; individuelle Freiheit; westliche Zivilisation",
-      "zhu_xi": "Li (Prinzip) und Qi (Lebenskraft); Untersuchung der Dinge; moralische Kultivierung"
+      "zhu_xi": "Li (Prinzip) und Qi (Lebenskraft); Untersuchung der Dinge; moralische Kultivierung",
+      "martin_luther_king_jr": "Gewaltfreier Widerstand; ziviler Ungehorsam; geliebte Gemeinschaft; nach dem Charakter beurteilt, nicht nach der Hautfarbe; Würde des Einzelnen"
     },
     "breakingNews": "EILMELDUNG",
     "clickForAnalysis": "Klicken für Analyse",
@@ -2802,6 +2803,9 @@
       "welcome8": "Der letzte Schritt liegt immer bei dir.",
       "welcome9": "Du bist nicht hier, um dich wohlzufühlen. Du bist hier für Klarheit.",
       "you": "Du"
+    },
+    "verdict": {
+      "scoreLine": "Endbewertung {{score}} · Note {{n}} von 10"
     }
   }
 }

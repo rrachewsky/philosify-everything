@@ -1268,7 +1268,8 @@
       "viktor_frankl": "De zin van het bestaan; wil tot betekenis; logotherapie; vrijheid om houding te kiezen",
       "wang_yangming": "Eenheid van kennis en handelen; aangeboren morele kennis; hart-geest als bron van waarheid",
       "winston_churchill": "Democratie als slechtste systeem behalve alle andere; verzet tegen tirannie; individuele vrijheid; westerse beschaving",
-      "zhu_xi": "Li (principe) en qi (levenskracht); onderzoek der dingen; morele cultivatie"
+      "zhu_xi": "Li (principe) en qi (levenskracht); onderzoek der dingen; morele cultivatie",
+      "martin_luther_king_jr": "Geweldloos verzet; burgerlijke ongehoorzaamheid; geliefde gemeenschap; beoordeeld op karakter, niet op kleur; individuele waardigheid"
     },
     "breakingNews": "BREAKING",
     "clickForAnalysis": "Klik voor analyse",
@@ -2869,6 +2870,9 @@
       "welcome8": "De laatste stap is altijd aan jou.",
       "welcome9": "Je bent hier niet voor comfort. Je bent hier voor helderheid.",
       "you": "Jij"
+    },
+    "verdict": {
+      "scoreLine": "Eindscore {{score}} · Noot {{n}} van 10"
     }
   }
 }

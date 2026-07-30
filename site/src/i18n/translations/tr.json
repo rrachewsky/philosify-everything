@@ -1268,7 +1268,8 @@
       "viktor_frankl": "İnsanın Anlam Arayışı; anlam iradesi; logoterapi; tutum seçme özgürlüğü",
       "wang_yangming": "Bilgi ve eylemin birliği; doğuştan ahlaki bilgi; hakikatin kaynağı olarak kalp-zihin",
       "winston_churchill": "Diğerleri hariç en kötü sistem olarak demokrasi; tiranlığa direniş; bireysel özgürlük; Batı medeniyeti",
-      "zhu_xi": "Li (ilke) ve qi (yaşam gücü); şeylerin araştırılması; ahlaki gelişim"
+      "zhu_xi": "Li (ilke) ve qi (yaşam gücü); şeylerin araştırılması; ahlaki gelişim",
+      "martin_luther_king_jr": "Şiddetsiz direniş; sivil itaatsizlik; sevgi toplumu; renge göre değil karaktere göre yargılanmak; birey onuru"
     },
     "breakingNews": "SON DAKİKA",
     "clickForAnalysis": "Analiz için tıklayın",
@@ -2869,6 +2870,9 @@
       "welcome8": "Son adım her zaman senin.",
       "welcome9": "Buraya teselli için değilsin. Buraya netlik için geldin.",
       "you": "Sen"
+    },
+    "verdict": {
+      "scoreLine": "Nihai puan {{score}} · Not {{n}}/10"
     }
   }
 }
