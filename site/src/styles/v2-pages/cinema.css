@@ -1,0 +1,158 @@
+/* ============================================================
+   CINEMA PAGE (v2) — scoped page styles (.v2 .pg-cinema only)
+   Visual truth: new_design/philosify-cinema.html ("same template
+   as Music") read through new_design/philosify-music.html; values
+   lifted from the mockups / v2-components.css kit. Tokens only.
+   ============================================================ */
+
+.v2 .pg-cinema .mod-body{margin-top:18px;margin-bottom:70px}
+
+/* ---------- Top 50 ticker line (marquee inside .tick) --------- */
+.v2 .pg-cinema .tick>span:first-child{display:flex;align-items:center;flex:1;min-width:0;margin-right:24px}
+.v2 .pg-cinema .t50{display:flex;align-items:center;flex:1;min-width:0}
+.v2 .pg-cinema .t50 .lbl{flex:none;margin-right:8px}
+.v2 .pg-cinema .t50-strip{flex:1;min-width:0;overflow:hidden;position:relative}
+.v2 .pg-cinema .t50-run{display:inline-flex;white-space:nowrap;animation:pgc-t50 linear infinite}
+.v2 .pg-cinema .t50-strip:hover .t50-run{animation-play-state:paused}
+.v2 .pg-cinema .t50-run a{color:var(--mid);text-decoration:none;cursor:pointer;margin-right:22px}
+.v2 .pg-cinema .t50-run a:hover{color:var(--ink)}
+@keyframes pgc-t50{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){
+  .v2 .pg-cinema .t50-run{animation:none}
+  .v2 .pg-cinema .t50-strip{overflow-x:auto;scrollbar-width:none}
+}
+
+/* ---------- Search ------------------------------------------- */
+.v2 .pg-cinema .fieldwrap{position:relative}
+.v2 .pg-cinema .srload{font:400 11.5px var(--fu);color:var(--low);margin-top:10px;letter-spacing:.03em}
+.v2 .pg-cinema .srhead{font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin-top:14px}
+.v2 .pg-cinema .srlist{border:1px solid var(--line);background:var(--inset);margin-top:8px;max-height:320px;overflow-y:auto}
+.v2 .pg-cinema .srrow{display:flex;justify-content:space-between;align-items:baseline;gap:16px;width:100%;
+ text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 16px;cursor:pointer;
+ color:var(--mid);font:400 13px/1.4 var(--fu)}
+.v2 .pg-cinema .srrow:last-child{border-bottom:0}
+.v2 .pg-cinema .srrow .s{color:var(--ink);letter-spacing:.04em}
+.v2 .pg-cinema .srrow .a{color:var(--low);flex:none;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v2 .pg-cinema .srrow:hover,.v2 .pg-cinema .srrow.focused{background:var(--bgcell)}
+.v2 .pg-cinema .noresults{font:400 12px var(--fu);color:var(--low);margin-top:14px;letter-spacing:.03em}
+
+/* ---------- Selected film card (poster + specs) --------------- */
+.v2 .pg-cinema .selwrap{position:relative}
+.v2 .pg-cinema .selwrap .tclear{position:absolute;top:12px;right:14px;background:none;border:0;
+ color:var(--low);font:400 15px/1 var(--fu);cursor:pointer;padding:4px 6px;z-index:1}
+.v2 .pg-cinema .selwrap .tclear:hover{color:var(--ink)}
+.v2 .pg-cinema .trackc h3{text-transform:uppercase}
+.v2 .pg-cinema .coverc{overflow:hidden}
+.v2 .pg-cinema .coverc img{width:100%;height:100%;object-fit:cover;display:block}
+.v2 .pg-cinema .synopsis{margin-top:12px;border:1px solid var(--line);background:var(--bgcell);
+ padding:16px 20px;font:400 15px/1.7 var(--fp);color:var(--mid)}
+
+/* ---------- Mode cells (Scan / Panel) ------------------------ */
+.v2 .pg-cinema .modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:640px){.v2 .pg-cinema .modes{grid-template-columns:1fr}}
+
+/* ---------- Verdict extras ----------------------------------- */
+.v2 .pg-cinema .classif{text-transform:uppercase}
+.v2 .pg-cinema .vmeta{margin-top:16px;font:500 10.5px/1.6 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
+
+/* ---------- Expandable sections ------------------------------ */
+.v2 .pg-cinema .xcard h4{text-transform:uppercase}
+.v2 .pg-cinema .xcard h4 .xscore{color:var(--low);margin-left:10px;font:400 11px var(--fu);
+ letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.v2 .pg-cinema .xcard .body p{margin:0 0 12px}
+.v2 .pg-cinema .xcard .body p:last-child{margin-bottom:0}
+
+/* ---------- Audio bar extras (V2AudioBar) -------------------- */
+.v2 .pg-cinema .audio .aline{position:relative;cursor:pointer;align-self:stretch;height:auto;
+ background:none;display:flex;align-items:center}
+.v2 .pg-cinema .audio .aline::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line)}
+.v2 .pg-cinema .audio .aline i{position:absolute;left:0;top:50%;height:1px;background:var(--ink)}
+.v2 .pg-cinema .audio .aspeed{background:none;border:0;padding:0;cursor:pointer;color:var(--mid);
+ font:500 10.5px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase}
+.v2 .pg-cinema .audio .aspeed:hover{color:var(--ink)}
+.v2 .pg-cinema .audio .aerrtxt{color:var(--warn);text-transform:none;letter-spacing:.04em}
+
+/* ---------- Guide proof line --------------------------------- */
+.v2 .pg-cinema .proof{border:1px solid var(--line);background:var(--bgcell);padding:14px 18px;margin-top:12px;
+ display:flex;flex-wrap:wrap;gap:6px 22px;font:500 10px/1.6 var(--fu);letter-spacing:.12em;
+ text-transform:uppercase;color:var(--low)}
+.v2 .pg-cinema .proof b{color:var(--mid);font-weight:500;word-break:break-all;text-transform:none;letter-spacing:.04em}
+
+/* ---------- Errors / replay note ----------------------------- */
+.v2 .pg-cinema .errline{font:400 12px var(--fu);color:var(--warn);margin-top:14px;letter-spacing:.03em}
+.v2 .pg-cinema .loadnote{font:400 11.5px var(--fu);color:var(--low);margin-top:16px;letter-spacing:.03em}
+
+/* ---------- Panel result stack ------------------------------- */
+.v2 .pg-cinema .panel-analysis{margin-top:2px}
+.v2 .pg-cinema .panel-analysis__section{border:1px solid var(--line);background:var(--bgcell);padding:20px 24px;margin-top:12px}
+.v2 .pg-cinema .panel-analysis__section--verdict{border-color:var(--strong)}
+.v2 .pg-cinema .panel-analysis__section-title{font:400 12.5px var(--fd);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0}
+.v2 .pg-cinema .panel-analysis__section-subtitle{font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin:8px 0 0}
+.v2 .pg-cinema .panel-analysis__section-body{margin-top:14px;font:400 16.5px/1.75 var(--fp);color:var(--ink)}
+.v2 .pg-cinema .panel-analysis__section-body p{margin:0 0 12px}
+.v2 .pg-cinema .panel-analysis__section-body p:last-child{margin-bottom:0}
+
+/* ---------- Actions row: reused share triggers, monochrome --- */
+.v2 .pg-cinema .actions{flex-wrap:wrap;align-items:center;row-gap:12px}
+.v2 .pg-cinema .actions .share-dm-button,
+.v2 .pg-cinema .actions .share-community-btn{background:none;border:0;padding:0;margin:0;cursor:pointer;
+ color:var(--low);font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;
+ display:inline-flex;align-items:center;gap:0}
+.v2 .pg-cinema .actions .share-dm-button:hover,
+.v2 .pg-cinema .actions .share-community-btn:hover{color:var(--ink)}
+.v2 .pg-cinema .actions .share-dm-button:disabled{opacity:.4;cursor:default}
+.v2 .pg-cinema .actions .share-dm-button svg,
+.v2 .pg-cinema .actions .share-community-btn svg{display:none}
+.v2 .pg-cinema .actions .share-community-container{display:inline-flex;flex-direction:column}
+.v2 .pg-cinema .actions .share-community-error{font:400 11px var(--fu);color:var(--warn);
+ text-transform:none;letter-spacing:.03em;margin-top:6px}
+
+/* ---------- Share tray (reused ShareButton, monochrome) ------ */
+.v2 .pg-cinema .sharetray{border:1px solid var(--line);background:var(--bgcell);margin-top:14px}
+.v2 .pg-cinema .sharetray .share-button__container{display:flex;flex-direction:column;gap:14px;padding:18px 20px}
+.v2 .pg-cinema .sharetray .share-button__container p{font:500 10.5px/1.6 var(--fu);letter-spacing:.14em;
+ text-transform:uppercase;color:var(--low);margin:0;font-weight:500}
+.v2 .pg-cinema .sharetray .share-button__icon-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-start}
+.v2 .pg-cinema .sharetray .share-button__btn{background:none;border:1px solid var(--line);padding:8px;cursor:pointer;border-radius:0}
+.v2 .pg-cinema .sharetray .share-button__btn:hover{border-color:var(--strong)}
+.v2 .pg-cinema .sharetray .share-button__icon-img{width:20px;height:20px;display:block;filter:grayscale(1)}
+
+/* ---------- Ad slot wrapper (mockup .slot; internals untouched) */
+.v2 .pg-cinema .adwrap{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px}
+
+/* ---------- Philosopher picker (reused component, v2 skin) ---- */
+.v2 .pg-cinema .philosopher-picker-overlay{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.6);
+ display:flex;align-items:flex-start;justify-content:center;padding:8vh 24px 24px;overflow-y:auto}
+.v2 .pg-cinema .philosopher-picker{width:100%;max-width:640px;background:var(--bg);border:1px solid var(--strong);
+ display:flex;flex-direction:column;max-height:82vh}
+.v2 .pg-cinema .philosopher-picker__header{display:flex;justify-content:space-between;align-items:center;
+ padding:20px 26px;border-bottom:1px solid var(--line)}
+.v2 .pg-cinema .philosopher-picker__title{font:400 14px var(--fd);letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.v2 .pg-cinema .philosopher-picker__close{background:none;border:0;color:var(--low);font:400 16px/1 var(--fu);cursor:pointer}
+.v2 .pg-cinema .philosopher-picker__close:hover{color:var(--ink)}
+.v2 .pg-cinema .philosopher-picker__error{padding:12px 26px 0;color:var(--warn);font:400 12px var(--fu)}
+.v2 .pg-cinema .philosopher-picker__body{padding:20px 26px;overflow-y:auto;flex:1}
+.v2 .pg-cinema .philosopher-picker__loading,
+.v2 .pg-cinema .philosopher-picker__empty{font:400 12px var(--fu);color:var(--low)}
+.v2 .pg-cinema .philosopher-picker__search-wrap{position:relative}
+.v2 .pg-cinema .philosopher-picker__search{width:100%;background:var(--inset);border:1px solid var(--line);
+ color:var(--ink);font:400 14px var(--fu);padding:12px 40px 12px 14px;outline:none;border-radius:var(--radius-input)}
+.v2 .pg-cinema .philosopher-picker__search:focus{border-color:var(--strong)}
+.v2 .pg-cinema .philosopher-picker__search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+ background:none;border:0;color:var(--low);cursor:pointer;font:400 15px/1 var(--fu);padding:6px 10px}
+.v2 .pg-cinema .philosopher-picker__search-clear:hover{color:var(--ink)}
+.v2 .pg-cinema .philosopher-picker__count{margin:14px 0 4px;font:500 10px/1 var(--fu);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--silver)}
+.v2 .pg-cinema .philosopher-picker__list{display:flex;flex-direction:column}
+.v2 .pg-cinema .philosopher-picker__item{display:flex;justify-content:space-between;align-items:center;gap:16px;
+ background:none;border:0;border-bottom:1px solid var(--line);padding:12px 6px;cursor:pointer;text-align:left}
+.v2 .pg-cinema .philosopher-picker__item:hover{background:var(--bgcell)}
+.v2 .pg-cinema .philosopher-picker__item--selected{background:var(--bgcell)}
+.v2 .pg-cinema .philosopher-picker__item--disabled{opacity:.4;cursor:default}
+.v2 .pg-cinema .philosopher-picker__name{display:block;font:400 12.5px var(--fd);letter-spacing:.08em;color:var(--ink)}
+.v2 .pg-cinema .philosopher-picker__meta{display:block;font:400 11px var(--fu);color:var(--low);margin-top:3px}
+.v2 .pg-cinema .philosopher-picker__check{color:var(--ink);font:400 13px var(--fu);flex:none}
+.v2 .pg-cinema .philosopher-picker__footer{display:flex;justify-content:flex-end;padding:18px 26px;border-top:1px solid var(--line)}
+.v2 .pg-cinema .philosopher-picker__confirm{font:500 13px/1 var(--fu);letter-spacing:.1em;text-transform:uppercase;
+ color:var(--inkinv);background:var(--ink);border:0;padding:14px 26px;cursor:pointer}
+.v2 .pg-cinema .philosopher-picker__confirm:disabled{opacity:.4;cursor:default}
