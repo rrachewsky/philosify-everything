@@ -436,6 +436,9 @@ export const PHILOSOPHER_PORTRAITS = {
   'sam_harris': '/portraits/sam_harris.jpg',
   'christopher_hitchens': '/portraits/christopher_hitchens.jpg',
   'richard_dawkins': '/portraits/richard_dawkins.jpg',
+
+  // CIVIL RIGHTS
+  'martin_luther_king_jr': '/portraits/martin_luther_king_jr.jpg',
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -6908,6 +6911,29 @@ export const SEED_NODES = [
     // Anti-market (-0.5): capitalism commodifies everything including human relationships.
     // Influenced by Levinas (ethics of the Other) and Frankfurt School.
     battles: { reason_faith: 0.5, reality_mysticism: 0.4, individual_collective: -0.3, freedom_coercion: 0.4, value_nihilism: 0.4, market_planning: -0.5, beauty_chaos: 0.4, good_evil: 0.4 }
+  },
+  {
+    id: 'martin_luther_king_jr',
+    name: 'Martin Luther King Jr.',
+    birth_year: 1929,
+    death_year: 1968,
+    dates: '1929–1968',
+    birth_city: 'Atlanta',
+    birth_country_modern: 'United States',
+    latitude: 33.749,
+    longitude: -84.388,
+    school_of_thought: 'Civil Rights / Nonviolence',
+    school: 'Liberal',
+    tradition: 'western',
+    stance: 'pro',
+    is_champion: true,
+    key_ideas: ['Nonviolent resistance; civil disobedience; beloved community; judged by character not color; individual dignity'],
+    historical_weight: 1,
+    // Martin Luther King Jr.: American Baptist minister; leader of the civil rights movement.
+    // Nonviolent resistance grounded in moral law; Letter from Birmingham Jail defends civil disobedience against unjust law.
+    // "I Have a Dream": persons judged by the content of their character, not the color of their skin — individual dignity.
+    // Values synced from the API seed (source of truth, 2026-07-30).
+    battles: { reason_faith: 0.7, reality_mysticism: 0.6, individual_collective: 0.8, freedom_coercion: 0.8, value_nihilism: 0.8, market_planning: 0.3, beauty_chaos: 0.6, good_evil: 0.85 }
   },
 ];
 
