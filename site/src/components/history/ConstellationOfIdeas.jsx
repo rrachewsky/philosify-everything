@@ -476,12 +476,15 @@ const styles = {
     pointerEvents: 'none',
   },
 
+  // Year readout is CHROME, not engine content — silver Michroma per the Law
+  // (Roberto's ruling, 30 Jul 2026; the sole authorized change in the engine).
+  // Flat silver, no glow; the black shadow stays for legibility over the globe.
   yearText: {
-    fontFamily: "'Orbitron', monospace",
+    fontFamily: 'var(--f-disp)',
     fontSize: 32,
-    fontWeight: 700,
-    color: '#D6158C',
-    textShadow: '0 0 20px rgba(214, 21, 140, 0.5), 0 2px 10px rgba(0, 0, 0, 0.8)',
+    fontWeight: 400,
+    color: 'var(--silver)',
+    textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)',
     letterSpacing: 2,
   },
   

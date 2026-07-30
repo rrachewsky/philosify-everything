@@ -120,7 +120,7 @@
 .v2 .pg-cinema .adwrap{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px}
 
 /* ---------- Philosopher picker (reused component, v2 skin) ---- */
-.v2 .pg-cinema .philosopher-picker-overlay{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);
+.v2 .pg-cinema .philosopher-picker-overlay{position:fixed;inset:0;z-index:30;background:var(--scrim);
  display:flex;align-items:flex-start;justify-content:center;padding:8vh 24px 24px;overflow-y:auto}
 .v2 .pg-cinema .philosopher-picker{width:100%;max-width:640px;background:var(--bg);border:1px solid var(--strong);
  display:flex;flex-direction:column;max-height:82vh}

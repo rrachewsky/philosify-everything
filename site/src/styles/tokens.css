@@ -31,6 +31,7 @@
   --silver-dim: #C9CDD6;
 
   /* ---------- LINES & GRID ----------------------------------- */
+  --scrim:       rgba(0,0,0,.55);   /* modal/picker backdrop (ratified 30 Jul 2026) */
   --line:        rgba(255,255,255,.11);
   --line-strong: rgba(255,255,255,.28);
   --grid-line:   rgba(255,255,255,.045);

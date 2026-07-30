@@ -30,10 +30,9 @@
   --fp: var(--f-prose);
   /* Law §2.1 reading tier — token added by Roberto, 29 Jul 2026 */
   --mid: var(--ink-text);
-  /* Law §2.1 functional error — #FF5A5A still PENDING Roberto's approval.
-     Until ratified (token lint, 30 Jul 2026): errors render in the high-ink
-     register. One-line revert: set this to the approved literal/token. */
-  --warn: var(--ink-hi);
+  /* Error red — APPROVED by Roberto 30 Jul 2026, functional-only:
+     error states and destructive confirmations, never decoration. */
+  --warn: #FF5A5A;
 
   background: var(--bg);
   color: var(--ink);
@@ -183,7 +182,7 @@
 .v2 .mhead .x{color:var(--low);text-decoration:none;font:400 16px var(--fu);background:none;border:0;cursor:pointer}
 .v2 .mbody{padding:26px}
 .v2 .cfoot{display:flex;justify-content:flex-end;gap:12px;padding:18px 26px;border-top:1px solid var(--line)}
-.v2 .moverlay{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;justify-content:center;padding:10vh 24px 24px;overflow-y:auto}
+.v2 .moverlay{position:fixed;inset:0;z-index:20;background:var(--scrim);display:flex;align-items:flex-start;justify-content:center;padding:10vh 24px 24px;overflow-y:auto}
 .v2 .moverlay .mwrap{margin:0;width:100%}
 
 /* ---------- Modal content patterns (WP3 wiring) --------------- */

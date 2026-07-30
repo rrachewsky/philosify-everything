@@ -26,6 +26,10 @@ const norm = (s) => s.toLowerCase().replace(/\s+/g, '');
 const tokensSrc = fs.readFileSync(path.join(SITE, 'styles', 'tokens.css'), 'utf8');
 const allow = new Set((tokensSrc.match(COLOR_LITERAL) || []).map(norm));
 ['transparent', 'currentcolor', 'inherit', 'none', 'initial', 'unset'].forEach((k) => allow.add(k));
+// Sanctioned exceptions outside tokens.css — each needs an explicit ruling.
+// #FF5A5A: error red, APPROVED by Roberto 30 Jul 2026 (functional-only:
+// error states and destructive confirmations, never decoration).
+['#ff5a5a'].forEach((k) => allow.add(k));
 
 // 2. Files under lint: every v2 surface
 const files = [];
