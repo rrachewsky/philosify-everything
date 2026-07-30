@@ -360,13 +360,8 @@
   color: #ffffff; /* Bright white text */
   letter-spacing: 2px; /* Wider letter spacing */
   text-transform: uppercase; /* Uppercase text */
-  text-shadow:
-    0 0 5px #ffffff,
-    0 0 10px #ffffff,
-    0 0 20px rgba(236, 72, 153, 0.8),
-    0 0 40px rgba(236, 72, 153, 0.6),
-    0 0 60px rgba(168, 85, 247, 0.5),
-    0 0 80px rgba(124, 58, 237, 0.4); /* Strong neon glow */
+  /* Neon glow retired (C.5, 30 Jul): the tagline is flat — no text-shadow
+     in either theme. */
   /* Fade in to prevent flash of fallback language */
   animation: tagline-fade-in 0.3s ease-out 0.1s forwards;
   opacity: 0;
