@@ -1,0 +1,106 @@
+/* ============================================================
+   v2 NEWS page — WP3 (module-template STANDARD)
+   Source of truth: new_design/philosify-news.html, read through
+   philosify-design-law.md. Tokens/aliases only — no hex, no new
+   fonts. Every selector scoped under .v2 .pg-news per contract.
+   ============================================================ */
+
+.v2 .pg-news .mod-section{margin-bottom:70px}
+.v2 .pg-news .body{margin-top:18px}
+
+/* ---- Breaking ticker line (headlines scroll in their own box) ---- */
+.v2 .pg-news .tick{gap:18px}
+.v2 .pg-news .tick>span{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.v2 .pg-news .tick>span::-webkit-scrollbar{display:none}
+.v2 .pg-news .tick b{flex:none;white-space:nowrap}
+.v2 .pg-news .bk-item{background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;
+ letter-spacing:inherit;text-transform:inherit;cursor:pointer;transition:.16s}
+.v2 .pg-news .bk-item:hover{color:var(--ink)}
+
+/* ---- Search meta row (results count + Sources affordance) ---- */
+.v2 .pg-news .meta-row{display:flex;justify-content:space-between;align-items:center;gap:16px;
+ margin-top:10px;min-height:12px;font:500 10px/1 var(--fu);letter-spacing:.16em;
+ text-transform:uppercase;color:var(--low)}
+.v2 .pg-news .meta-row a{color:var(--dim);text-decoration:none;cursor:pointer;transition:.16s}
+.v2 .pg-news .meta-row a:hover{color:var(--ink)}
+
+/* ---- Article rows (compact cells; silver date only on the selected row) ---- */
+.v2 .pg-news .rows{margin-top:12px}
+.v2 .pg-news .rows .cell{margin-bottom:8px}
+.v2 .pg-news .row h2{text-transform:uppercase}
+.v2 .pg-news .cell.sel{border-color:var(--strong)}
+.v2 .pg-news .trl{color:var(--dim);text-decoration:underline;cursor:pointer}
+.v2 .pg-news .trl:hover{color:var(--ink)}
+
+/* ---- Selected article summary (reading tier) ---- */
+.v2 .pg-news .selsum{margin-top:12px;max-width:68ch;font:400 14.5px/1.7 var(--fp);
+ letter-spacing:0;color:var(--mid)}
+
+/* ---- Action cells (SCAN NEWS / PHILOSOPHER PANEL) ---- */
+.v2 .pg-news .acts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.v2 .pg-news .acts .cell.inactive{opacity:.45}
+.v2 .pg-news .acts .cell.inactive:hover{border-color:var(--line)}
+.v2 .pg-news .acts .cell.inactive:hover::before{color:var(--low);transform:none}
+.v2 .pg-news .acts .cell.inactive::after{display:none}
+
+/* ---- Errors (functional error tone — states only, never decoration) ---- */
+.v2 .pg-news .err{margin-top:12px;font:400 12px var(--fu);color:var(--warn);letter-spacing:.03em}
+
+/* ---- Empty search states ---- */
+.v2 .pg-news .empty{text-align:center;padding:30px 20px;font:400 12.5px/1.65 var(--fu);color:var(--mid)}
+.v2 .pg-news .empty .btns{margin-top:12px}
+
+/* ---- Scan output (mockup grid: excerpt 1.4fr / side 1fr, opinion below) ---- */
+.v2 .pg-news .scan{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}
+.v2 .pg-news .scan .side{display:flex;flex-direction:column;gap:10px}
+.v2 .pg-news .scan .side h2{font-size:11px}
+.v2 .pg-news .cell.static{cursor:default}
+.v2 .pg-news .cell.static::after{display:none}
+.v2 .pg-news .opinion{margin-top:14px}
+.v2 .pg-news .panelout{margin-top:16px}
+.v2 .pg-news .phl-row{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 4px}
+
+/* Reading prose inside output cells (Newsreader tier; the mockup's silver
+   key-phrase treatment maps to emphasis markup in the real analysis) */
+.v2 .pg-news .prose{font:400 15px/1.75 var(--fp);letter-spacing:0;color:var(--ink)}
+.v2 .pg-news .prose p{margin:0 0 12px}
+.v2 .pg-news .prose p:last-child{margin-bottom:0}
+.v2 .pg-news .prose :where(strong,b,em){color:var(--silver);font-weight:400;font-style:normal}
+.v2 .pg-news .prose.sm{font-size:13.5px;line-height:1.7;color:var(--mid)}
+
+/* ---- Modal internals: philosopher picker ---- */
+.v2 .pg-news .pcount{margin-top:12px;font:500 10px/1 var(--fu);letter-spacing:.16em;
+ text-transform:uppercase;color:var(--low)}
+.v2 .pg-news .plist{margin-top:12px;max-height:320px;overflow-y:auto;border:1px solid var(--line)}
+.v2 .pg-news .plist .pitem{display:flex;justify-content:space-between;align-items:center;width:100%;
+ gap:12px;padding:12px 14px;background:none;border:0;border-bottom:1px solid var(--line);
+ color:var(--mid);font:400 12.5px/1.4 var(--fu);cursor:pointer;text-align:left;transition:.16s}
+.v2 .pg-news .plist .pitem:last-child{border-bottom:0}
+.v2 .pg-news .plist .pitem:hover{color:var(--ink);background:var(--bgcell)}
+.v2 .pg-news .plist .pitem.on{color:var(--ink);background:var(--bgcell)}
+.v2 .pg-news .plist .pitem:disabled{opacity:.4;cursor:default}
+.v2 .pg-news .pitem .pmeta{display:block;font:400 11px/1.4 var(--fu);color:var(--low);margin-top:3px}
+.v2 .pg-news .pitem .pcheck{flex:none;color:var(--ink)}
+
+/* ---- Modal internals: source picker ---- */
+.v2 .pg-news .ulk-title{font:400 14px var(--fd);letter-spacing:.12em}
+.v2 .pg-news .ulk-desc{margin-top:10px;font:400 13px/1.7 var(--fu);color:var(--mid)}
+.v2 .pg-news .ulk-def{margin-top:14px;font:400 11.5px/1.7 var(--fu);color:var(--low)}
+.v2 .pg-news .srcacts{display:flex;gap:22px;margin:2px 0 4px;font:500 10.5px/1 var(--fu);
+ letter-spacing:.18em;text-transform:uppercase}
+.v2 .pg-news .srcacts a{color:var(--low);text-decoration:none;cursor:pointer;transition:.16s}
+.v2 .pg-news .srcacts a:hover{color:var(--ink)}
+.v2 .pg-news .srccat{margin-top:18px}
+.v2 .pg-news .srccat h4{font:400 11px var(--fd);letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.v2 .pg-news .srcgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:10px}
+.v2 .pg-news .srcitem{display:flex;align-items:center;gap:9px;font:400 12.5px/1.4 var(--fu);
+ color:var(--mid);cursor:pointer}
+.v2 .pg-news .srcitem input{accent-color:var(--ink);width:14px;height:14px;flex:none;margin:0}
+.v2 .pg-news .srcitem.on{color:var(--ink)}
+
+/* ---- Breakpoints ---- */
+@media (max-width:860px){
+ .v2 .pg-news .scan{grid-template-columns:1fr}
+ .v2 .pg-news .acts{grid-template-columns:1fr}
+ .v2 .pg-news .srcgrid{grid-template-columns:1fr}
+}
