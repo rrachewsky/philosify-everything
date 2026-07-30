@@ -1,12 +1,8 @@
-// FooterV2 - v2 footer with the horizontal lockup (Design Law §1.3)
-import { Lockup } from '../common';
-
+// FooterV2 - v2 footer, links only (ruling 30 Jul 2026: no lockup here —
+// the brand lives in the permanent fixed bar).
 export function FooterV2({ variant = 'module', links, children }) {
   return (
     <footer className={variant}>
-      <div className={variant === 'landing' ? 'brandline lock-plate-s' : undefined}>
-        <Lockup variant="footer" />
-      </div>
       <nav>
         {children || (
           <>

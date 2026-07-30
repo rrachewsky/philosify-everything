@@ -34,7 +34,7 @@
  color:var(--mid);font:400 13px/1.4 var(--fu)}
 .v2 .pg-music .srrow:last-child{border-bottom:0}
 .v2 .pg-music .srrow .s{color:var(--ink);letter-spacing:.04em}
-.v2 .pg-music .srrow .a{color:var(--low);flex:none}
+.v2 .pg-music .srrow .a{color:var(--mid);flex:none}
 .v2 .pg-music .srrow:hover,.v2 .pg-music .srrow.focused{background:var(--bgcell)}
 
 /* ---------- Selected track card ------------------------------ */
@@ -134,7 +134,7 @@
 .v2 .pg-music .philosopher-picker__error{padding:12px 26px 0;color:var(--warn);font:400 12px var(--fu)}
 .v2 .pg-music .philosopher-picker__body{padding:20px 26px;overflow-y:auto;flex:1}
 .v2 .pg-music .philosopher-picker__loading,
-.v2 .pg-music .philosopher-picker__empty{font:400 12px var(--fu);color:var(--low)}
+.v2 .pg-music .philosopher-picker__empty{font:400 12px var(--fu);color:var(--mid)}
 .v2 .pg-music .philosopher-picker__search-wrap{position:relative}
 .v2 .pg-music .philosopher-picker__search{width:100%;background:var(--inset);border:1px solid var(--line);
  color:var(--ink);font:400 14px var(--fu);padding:12px 40px 12px 14px;outline:none;border-radius:var(--radius-input)}
@@ -151,7 +151,7 @@
 .v2 .pg-music .philosopher-picker__item--selected{background:var(--bgcell)}
 .v2 .pg-music .philosopher-picker__item--disabled{opacity:.4;cursor:default}
 .v2 .pg-music .philosopher-picker__name{display:block;font:400 12.5px var(--fd);letter-spacing:.08em;color:var(--ink)}
-.v2 .pg-music .philosopher-picker__meta{display:block;font:400 11px var(--fu);color:var(--low);margin-top:3px}
+.v2 .pg-music .philosopher-picker__meta{display:block;font:400 11px var(--fu);color:var(--mid);margin-top:3px}
 .v2 .pg-music .philosopher-picker__check{color:var(--ink);font:400 13px var(--fu);flex:none}
 .v2 .pg-music .philosopher-picker__footer{display:flex;justify-content:flex-end;padding:18px 26px;border-top:1px solid var(--line)}
 .v2 .pg-music .philosopher-picker__confirm{font:500 13px/1 var(--fu);letter-spacing:.1em;text-transform:uppercase;

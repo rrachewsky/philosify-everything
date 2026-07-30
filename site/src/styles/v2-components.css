@@ -30,9 +30,7 @@
   --fp: var(--f-prose);
   /* Law §2.1 reading tier — token added by Roberto, 29 Jul 2026 */
   --mid: var(--ink-text);
-  /* Error red — APPROVED by Roberto 30 Jul 2026, functional-only:
-     error states and destructive confirmations, never decoration. */
-  --warn: #FF5A5A;
+  /* --warn / --progress / --module-title come from tokens.css (30 Jul) */
 
   background: var(--bg);
   color: var(--ink);
@@ -82,7 +80,9 @@
 .v2 .lockband{display:flex;justify-content:center;padding:0 0 40px}
 
 /* ---------- Module header: title + marker line + ticker ------- */
-.v2 h1.mod{font:400 22px var(--fd);letter-spacing:.2em}
+/* Module titles — --module-title cyan (30 Jul); Unsafe Zone renders its
+   own .uhead h1 and is the ruled exception. */
+.v2 h1.mod{font:400 22px var(--fd);letter-spacing:.2em;color:var(--module-title)}
 .v2 .mrail{position:relative;height:1px;background:var(--low);margin-top:14px}
 .v2 .mrail::after{content:"";position:absolute;right:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;background:var(--ink)}
 .v2 .mrail.draw{transform-origin:left;animation:v2draw 1.1s cubic-bezier(.16,1,.3,1) .5s both}
@@ -137,12 +137,18 @@
 .v2 input.f:focus,.v2 textarea.f:focus{border-color:var(--strong)}
 .v2 label.f{display:block;font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin:16px 0 7px}
 
+/* Explicit post-scan panel convocation (30 Jul): secondary button with
+   the cost pill — cost-transparency silver, the region's one silver. */
+.v2 .actions .panelbtn{display:inline-flex;align-items:center;gap:10px}
+.v2 .panelbtn .pill{color:var(--silver)}
+
 /* ---------- Telemetry state line (music stack) ---------------- */
 .v2 .state{display:flex;align-items:center;gap:18px;border:1px solid var(--line);background:var(--bgcell);
  padding:14px 18px;margin-top:16px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
 .v2 .state b{color:var(--silver);font-weight:500;font-variant-numeric:tabular-nums}
 .v2 .state .bar{flex:1;height:1px;background:var(--line);position:relative}
-.v2 .state .bar i{position:absolute;left:0;top:0;height:1px;background:var(--ink)}
+/* Analysis progress fill — --progress magenta, functional only (30 Jul) */
+.v2 .state .bar i{position:absolute;left:0;top:0;height:1px;background:var(--progress)}
 .v2 .state a{color:var(--mid);text-decoration:none;cursor:pointer}
 
 /* ---------- Analysis card stack (music) ----------------------- */
@@ -173,7 +179,7 @@
 .v2 .coverc{width:56px;height:56px;flex:none;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
  font:400 20px var(--fd);color:var(--low)}
 .v2 .trackc h3{font:400 14px var(--fd);letter-spacing:.1em}
-.v2 .trackc p{font:400 12px var(--fu);color:var(--low);margin-top:4px;letter-spacing:.04em}
+.v2 .trackc p{font:400 12px var(--fu);color:var(--mid);margin-top:4px;letter-spacing:.04em}
 
 /* ---------- Modal (modals mockup) ----------------------------- */
 .v2 .mwrap{max-width:640px;margin:0 auto 44px;border:1px solid var(--strong);background:var(--bg);position:relative}
@@ -204,14 +210,14 @@
 .v2 .hrow .t{font:400 12.5px var(--fd);letter-spacing:.08em;color:var(--ink)}
 .v2 .hrow .m{font:500 9.5px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 .v2 .hrow .d{font:400 12px var(--fu);color:var(--low)}
-.v2 .mnote{font:400 11.5px var(--fu);color:var(--low);margin-top:16px;letter-spacing:.03em}
+.v2 .mnote{font:400 11.5px var(--fu);color:var(--mid);margin-top:16px;letter-spacing:.03em}
 
 /* ---------- Auth (auth mockup; card renamed from .acard) ------ */
 .v2 .awrap{max-width:400px;margin:0 auto;padding-top:6vh}
 .v2 .alock{display:flex;flex-direction:column;align-items:center;margin-bottom:34px}
 .v2 .authcard{border:1px solid var(--line);background:var(--bgcell);padding:28px}
 .v2 .aerr{font:400 12px var(--fu);color:var(--warn);margin-top:12px;letter-spacing:.03em}
-.v2 .aalt{text-align:center;margin-top:20px;font:400 12px var(--fu);color:var(--low)}
+.v2 .aalt{text-align:center;margin-top:20px;font:400 12px var(--fu);color:var(--mid)}
 .v2 .aalt a{color:var(--mid);text-decoration:none}
 .v2 .aalt a:hover{color:var(--ink)}
 .v2 .oauth{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
@@ -227,7 +233,7 @@
 .v2 .msg.ai .b{background:var(--inv);color:var(--inkinv);border-color:var(--inv)}
 .v2 .entry{display:flex;gap:12px;margin-top:30px}
 .v2 .entry textarea{flex:1;min-height:56px;resize:vertical}
-.v2 .unote{font:400 11px var(--fu);color:var(--low);margin-top:12px;letter-spacing:.04em;text-align:center}
+.v2 .unote{font:400 11px var(--fu);color:var(--mid);margin-top:12px;letter-spacing:.04em;text-align:center}
 
 /* ---------- Landing pieces (master) --------------------------- */
 .v2 .masthead{display:flex;flex-direction:column;align-items:center;text-align:center;padding:11vh 0 0}

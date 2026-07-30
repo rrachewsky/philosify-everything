@@ -19,6 +19,8 @@ export function setTheme(theme) {
     // private mode: theme still applies for the session
   }
   document.body.classList.toggle('t-white', theme === 'white');
+  // theme-aware components (brand lockup src swap) re-render on this
+  window.dispatchEvent(new CustomEvent('philosify-theme', { detail: theme }));
 }
 
 export function toggleTheme() {

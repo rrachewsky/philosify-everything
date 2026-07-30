@@ -594,7 +594,7 @@ export default function LiteraturePage() {
               cancelLabel={t('v2.literature.cancel', 'Cancel')}
             />
           )}
-          {panelLoading && (
+          {panelLoading && !result && (
             <Telemetry
               label={t('v2.literature.panelAnalyzing', 'Philosophers are analyzing…')}
               time={ls.formatTime(panelElapsed)}
@@ -637,16 +637,11 @@ export default function LiteraturePage() {
                     onOpenCommunity={goCollective}
                   />
                 )}
-                {!panel && (
-                  <a
-                    href="#panel"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleOpenPanel();
-                    }}
-                  >
-                    {t('v2.literature.panelAction', 'Philosopher panel — 3 credits')}
-                  </a>
+                {!panel && !panelLoading && (
+                  <button className="btns panelbtn" onClick={handleOpenPanel}>
+                    {t('v2.literature.panelTitle', 'PHILOSOPHER PANEL')}
+                    <span className="pill">{t('v2.literature.panelCredit', '3 CREDITS')}</span>
+                  </button>
                 )}
                 {!panel && (
                   <a
@@ -660,6 +655,15 @@ export default function LiteraturePage() {
                   </a>
                 )}
               </ActionsRow>
+
+              {/* Panel running post-scan: same ANALYZING block, in view */}
+              {panelLoading && (
+                <Telemetry
+                  label={t('v2.literature.panelAnalyzing', 'Philosophers are analyzing…')}
+                  time={ls.formatTime(panelElapsed)}
+                  progress={Math.min(96, (panelElapsed / 90000) * 100)}
+                />
+              )}
               {shareOpen === 'analysis' && result.id && (
                 <div className="sharetray">
                   <ShareButton

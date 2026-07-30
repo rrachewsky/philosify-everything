@@ -442,7 +442,7 @@ export default function CinemaPage() {
               cancelLabel={t('v2.cinema.cancel', 'Cancel')}
             />
           )}
-          {cs.panelLoading && (
+          {cs.panelLoading && !result && (
             <Telemetry
               label={t('v2.cinema.panelAnalyzing', 'Philosophers are analyzing…')}
               time={cs.formatTime(cs.panelElapsed)}
@@ -485,16 +485,11 @@ export default function CinemaPage() {
                     onOpenCommunity={goCollective}
                   />
                 )}
-                {!panel && (
-                  <a
-                    href="#panel"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleOpenPanel();
-                    }}
-                  >
-                    {t('v2.cinema.panelAction', 'Philosopher panel — 3 credits')}
-                  </a>
+                {!panel && !cs.panelLoading && (
+                  <button className="btns panelbtn" onClick={handleOpenPanel}>
+                    {t('v2.cinema.panelTitle', 'PHILOSOPHER PANEL')}
+                    <span className="pill">{t('v2.cinema.panelCredit', '3 CREDITS')}</span>
+                  </button>
                 )}
                 {!panel && (
                   <a
@@ -508,6 +503,15 @@ export default function CinemaPage() {
                   </a>
                 )}
               </ActionsRow>
+
+              {/* Panel running post-scan: same ANALYZING block, in view */}
+              {cs.panelLoading && (
+                <Telemetry
+                  label={t('v2.cinema.panelAnalyzing', 'Philosophers are analyzing…')}
+                  time={cs.formatTime(cs.panelElapsed)}
+                  progress={Math.min(96, (cs.panelElapsed / 90000) * 100)}
+                />
+              )}
               {shareOpen === 'analysis' && result.id && (
                 <div className="sharetray">
                   <ShareButton

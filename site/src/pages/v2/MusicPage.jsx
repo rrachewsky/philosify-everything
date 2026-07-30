@@ -862,8 +862,9 @@ export default function MusicPage() {
             />
           )}
 
-          {/* Telemetry — panel */}
-          {panelLoading && (
+          {/* Telemetry — panel (pre-scan position; post-scan renders below
+              the verdict actions where the user just clicked) */}
+          {panelLoading && !analysisResult && (
             <Telemetry
               label={t('v2.music.panelAnalyzing', 'Philosophers are analyzing')}
               time={formatTime(panelElapsed)}
@@ -967,12 +968,22 @@ export default function MusicPage() {
                   />
                 )}
                 {!panelResult && !panelLoading && (
-                  <a onClick={handleOpenPanel}>
-                    {t('v2.music.panelAction', 'Philosopher panel — 3 credits')}
-                  </a>
+                  <button className="btns panelbtn" onClick={handleOpenPanel}>
+                    {t('v2.music.panelTitle', 'PHILOSOPHER PANEL')}
+                    <span className="pill">{t('v2.music.panelCredit', '3 CREDITS')}</span>
+                  </button>
                 )}
                 <a onClick={clearAll}>{t('v2.music.analyzeAnother', 'Analyze another')}</a>
               </ActionsRow>
+
+              {/* Panel running post-scan: same ANALYZING block, in view */}
+              {panelLoading && (
+                <Telemetry
+                  label={t('v2.music.panelAnalyzing', 'Philosophers are analyzing')}
+                  time={formatTime(panelElapsed)}
+                  progress={panelProgress}
+                />
+              )}
 
               {shareOpen && analysisResult.id && (
                 <div className="sharetray">

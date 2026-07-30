@@ -16,7 +16,7 @@
 
   /* ---------- INK -------------------------------------------- */
   --ink-hi:    #F5F5F6;
-  --ink-text:  #C2C2CB;   /* reading tier: text inside boxes/cells, tickers (Law §2.1) */
+  --ink-text:  #F5F5F6;   /* reading tier is WHITE (30 Jul: all greys rejected as illegible) */
   --ink-mid:   #9C9CA3;   /* secondary chrome only — NOT for reading text */
   --ink-low:   #5E5E65;
   --ink-inv:   #0A0A0C;   /* text on inverted blocks             */
@@ -32,6 +32,10 @@
 
   /* ---------- LINES & GRID ----------------------------------- */
   --scrim:       rgba(0,0,0,.55);   /* modal/picker backdrop (ratified 30 Jul 2026) */
+  --warn:        #FF5A5A;           /* APPROVED functional-only (29 Jul 2026): error states and
+                                       destructive confirmations — never decoration */
+  --progress:    #D6158C;           /* APPROVED 30 Jul: analysis progress/timer bars ONLY */
+  --module-title:#59D4E4;           /* APPROVED 30 Jul: the 8 module page titles (Unsafe Zone excepted) */
   --line:        rgba(255,255,255,.11);
   --line-strong: rgba(255,255,255,.28);
   --grid-line:   rgba(255,255,255,.045);
@@ -58,10 +62,11 @@
 /* ---------- WHITE THEME -------------------------------------- */
 body.t-white {
   --bg:#FFFFFF; --bg-cell:rgba(0,0,0,.018); --bg-inset:#F4F4F7; --bg-inv:#0A0A0C;
-  --ink-hi:#0A0A0C; --ink-text:#3E3E48; --ink-mid:#4C4C54; --ink-low:#8C8C92; --ink-inv:#F5F5F6;
+  --ink-hi:#0A0A0C; --ink-text:#0A0A0C; --ink-mid:#4C4C54; --ink-low:#8C8C92; --ink-inv:#F5F5F6;
   --silver:#3A3E46; --silver-dim:#4A4E56;   /* silver -> graphite on light */
   --line:rgba(0,0,0,.13); --line-strong:rgba(0,0,0,.32);
   --grid-line:rgba(0,0,0,.05);
+  --module-title:#1E7E8C;
 }
 
 /* ---------- GRID VEIL (64px cells, fades at extremes) -------- */

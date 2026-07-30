@@ -694,6 +694,12 @@ export default function NewsPage() {
                 )}
                 <TTSBar result={activeScan} lang={userLang} t={t} />
                 <div className="actions">
+                  {!activePanel && (
+                    <button className="btns panelbtn" onClick={handleOpenPanel}>
+                      {t('v2.news.panelTitle', 'PHILOSOPHER PANEL')}
+                      <span className="pill">{t('v2.news.panelCost', '3 CREDITS')}</span>
+                    </button>
+                  )}
                   <a
                     href="#another"
                     onClick={(e) => {

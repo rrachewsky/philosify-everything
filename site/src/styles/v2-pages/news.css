@@ -79,13 +79,13 @@
 .v2 .pg-news .plist .pitem:hover{color:var(--ink);background:var(--bgcell)}
 .v2 .pg-news .plist .pitem.on{color:var(--ink);background:var(--bgcell)}
 .v2 .pg-news .plist .pitem:disabled{opacity:.4;cursor:default}
-.v2 .pg-news .pitem .pmeta{display:block;font:400 11px/1.4 var(--fu);color:var(--low);margin-top:3px}
+.v2 .pg-news .pitem .pmeta{display:block;font:400 11px/1.4 var(--fu);color:var(--mid);margin-top:3px}
 .v2 .pg-news .pitem .pcheck{flex:none;color:var(--ink)}
 
 /* ---- Modal internals: source picker ---- */
 .v2 .pg-news .ulk-title{font:400 14px var(--fd);letter-spacing:.12em}
 .v2 .pg-news .ulk-desc{margin-top:10px;font:400 13px/1.7 var(--fu);color:var(--mid)}
-.v2 .pg-news .ulk-def{margin-top:14px;font:400 11.5px/1.7 var(--fu);color:var(--low)}
+.v2 .pg-news .ulk-def{margin-top:14px;font:400 11.5px/1.7 var(--fu);color:var(--mid)}
 .v2 .pg-news .srcacts{display:flex;gap:22px;margin:2px 0 4px;font:500 10.5px/1 var(--fu);
  letter-spacing:.18em;text-transform:uppercase}
 .v2 .pg-news .srcacts a{color:var(--low);text-decoration:none;cursor:pointer;transition:.16s}
