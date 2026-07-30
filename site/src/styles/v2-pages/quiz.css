@@ -1,0 +1,66 @@
+/* ============================================================
+   V2 QUIZ PAGE — new_design/philosify-quiz.html lifted values.
+   Every selector scoped under .v2 .pg-quiz (WP3 contract).
+   Tokens/aliases only (Design Law lint) — no raw colors.
+   ============================================================ */
+
+.v2 .pg-quiz{margin-top:22px;margin-bottom:70px}
+
+/* Functional error / warning line (Law §2.1 pending error red) */
+.v2 .pg-quiz .err{font:400 12px var(--fu);color:var(--warn);margin:0 0 14px;letter-spacing:.03em}
+.v2 .pg-quiz .warnnote{font:500 10.5px/1.5 var(--fu);letter-spacing:.16em;text-transform:uppercase;
+ color:var(--mid);border:1px solid var(--strong);padding:12px 16px;margin-bottom:14px}
+
+/* Question cell (mockup: .cell with prose question line) */
+.v2 .pg-quiz .qcell{cursor:default}
+.v2 .pg-quiz .qcell::before{content:none}
+.v2 .pg-quiz .qcell p.q{font:400 15px/1.7 var(--fp);letter-spacing:0;color:var(--ink)}
+
+/* Answer options (mockup: 4-up cell grid, h2 at 11px; live options
+   carry full sentences, so 2-up with letter + text) */
+.v2 .pg-quiz .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.v2 .pg-quiz .opt{cursor:pointer;text-align:left;font:inherit;align-items:flex-start}
+.v2 .pg-quiz .opt h2{font-size:11px}
+.v2 .pg-quiz .opt:disabled{cursor:default;opacity:.6}
+.v2 .pg-quiz .opt.on{border-color:var(--strong)}
+.v2 .pg-quiz .opt.on::before{color:var(--ink)}
+.v2 .pg-quiz .opt.on::after{transform:scaleX(1)}
+
+/* Action row: button + silver cost declaration (cost before click) */
+.v2 .pg-quiz .actionrow{display:flex;align-items:center;gap:16px;margin-top:22px;flex-wrap:wrap}
+.v2 .pg-quiz .costlab{font:500 10px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--silver)}
+
+/* Idle rules list (cell-description register) */
+.v2 .pg-quiz .rules{margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.v2 .pg-quiz .rules li{list-style:none;font:400 11.5px/1.65 var(--fd);letter-spacing:.04em;color:var(--mid)}
+
+/* Reading prose (feedback explanations — Newsreader well) */
+.v2 .pg-quiz .prose{font:400 16.5px/1.75 var(--fp);color:var(--ink);margin-top:10px;max-width:720px}
+.v2 .pg-quiz .xplain{border:1px solid var(--line);background:var(--bgcell);padding:20px 24px;margin-top:12px}
+.v2 .pg-quiz .xplain + .xplain{margin-top:12px}
+.v2 .pg-quiz .vsub{font:400 12.5px var(--fu);color:var(--mid);letter-spacing:.03em}
+
+/* Leaderboard (idle state) */
+.v2 .pg-quiz .lb{margin-top:38px}
+.v2 .pg-quiz .lbhead{font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--low);
+ padding-bottom:10px;border-bottom:1px solid var(--line)}
+.v2 .pg-quiz .lbrow{display:grid;grid-template-columns:52px 1fr auto auto;gap:16px;align-items:center;
+ padding:13px 6px;border-bottom:1px solid var(--line)}
+.v2 .pg-quiz .lbrow .rk{font:400 11px var(--fd);color:var(--low)}
+.v2 .pg-quiz .lbrow .nk{font:400 12.5px var(--fd);letter-spacing:.08em;color:var(--ink)}
+.v2 .pg-quiz .lbrow .sc{font:400 12px var(--fu);color:var(--mid);font-variant-numeric:tabular-nums}
+.v2 .pg-quiz .lbrow .st{font:500 9.5px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+ font-variant-numeric:tabular-nums}
+
+/* Final results grid (display numerals, Michroma; score silvered) */
+.v2 .pg-quiz .endgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+.v2 .pg-quiz .endgrid .cell{cursor:default;text-align:center;align-items:center}
+.v2 .pg-quiz .endgrid .cell::before{content:none}
+.v2 .pg-quiz .endgrid .n{font:400 30px var(--fd);color:var(--ink)}
+.v2 .pg-quiz .endgrid .n.hl{color:var(--silver)}
+.v2 .pg-quiz .endgrid .u{font:500 9.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
+
+@media (max-width:700px){
+  .v2 .pg-quiz .opts{grid-template-columns:1fr}
+  .v2 .pg-quiz .endgrid{grid-template-columns:repeat(2,1fr)}
+}
