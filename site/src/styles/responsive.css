@@ -49,19 +49,8 @@
   height: 0 !important;
 }
 
-/* Exception: Account history and security need visible scrollbar for navigation */
-.account-history,
-.account-security {
-  scrollbar-width: thin !important; /* Firefox */
-  -ms-overflow-style: auto !important; /* IE and Edge */
-}
-
-.account-history::-webkit-scrollbar,
-.account-security::-webkit-scrollbar {
-  display: block !important; /* Chrome, Safari, Opera */
-  width: 10px !important;
-  height: auto !important;
-}
+/* (Account modal scrollbar exceptions removed — WP6.2 v2 reskin: the v2
+   account surface scrolls on its overlay, not inner panes) */
 
 /* Improve touch targets on mobile */
 @media (max-width: 560px) {
@@ -622,16 +611,14 @@
     margin-bottom: 4px;
   }
 
-  /* Modal responsive */
+  /* Modal responsive (.credits-modal removed — WP6.2 v2 reskin) */
   .auth-modal,
-  .credits-modal,
   .legal-modal {
     padding: 30px 20px;
     max-width: 95%;
   }
 
   .auth-modal h2,
-  .credits-modal h2,
   .legal-modal h1 {
     font-size: 24px;
   }

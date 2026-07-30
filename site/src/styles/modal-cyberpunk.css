@@ -405,20 +405,8 @@
   cursor: not-allowed;
 }
 
-.stripe-powered-badge {
-  width: 100%;
-  padding: 10px;
-  background: rgba(120, 100, 200, 0.05);
-  border: 1px solid rgba(120, 100, 200, 0.2);
-  border-radius: 8px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 10px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 38px;
-}
+/* .stripe-powered-badge gutted (WP6.2): the v2 PaymentModal carries a text
+   line instead of the purple Stripe SVG badge (monochrome law). */
 
 /* ===== AUTH PAGE (STANDALONE) ===== */
 .auth-page {

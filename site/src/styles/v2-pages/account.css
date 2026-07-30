@@ -1,0 +1,143 @@
+/* ============================================================
+   V2 ACCOUNT + PAYMENT MODALS (WP6.2) — reskin of the legacy
+   AccountModal (Profile / History / Notifications / Security)
+   and PaymentModal (Buy Credits inside the Underground flow).
+   Anatomy from new_design/philosify-modals.html via the kit in
+   v2-components.css (.mwrap/.mhead/.mbody/.cfoot/.tabs/.f).
+   Each modal root carries `v2` + its surface class so the kit
+   applies wherever the component mounts; every rule here is
+   scoped under .v2.acct-surface / .v2.pay-surface. Tokens only.
+   ============================================================ */
+
+/* ---------- Overlay roots (self-contained moverlay recipe) ---- */
+.v2.acct-surface,
+.v2.pay-surface{position:fixed;inset:0;z-index:30;background:var(--scrim);
+ display:flex;align-items:flex-start;justify-content:center;
+ padding:10vh 24px 24px;overflow-y:auto;min-height:100vh;
+ /* reset chrome inheritance (the account modal mounts inside .navr) */
+ text-transform:none;letter-spacing:normal;text-align:left;cursor:auto}
+.v2.acct-surface .mwrap,
+.v2.pay-surface .mwrap{margin:0;width:100%}
+.v2.acct-surface .mhead h2,
+.v2.pay-surface .mhead h2{text-transform:uppercase}
+.v2.acct-surface .tabs{margin-bottom:14px}
+
+/* ---------- Shared: section heading, values, messages --------- */
+.v2.acct-surface .acct-sec{font:400 12.5px var(--f-disp);letter-spacing:.16em;
+ text-transform:uppercase;color:var(--ink-hi);margin:22px 0 2px}
+.v2.acct-surface .acct-sec:first-child{margin-top:4px}
+.v2.acct-surface .acct-value{font:400 13px/1.5 var(--f-ui);letter-spacing:.03em;
+ color:var(--ink-text);overflow-wrap:anywhere}
+/* success confirmation = the pane's one silvered element (Law §2.3) */
+.v2.acct-surface .acct-ok{font:400 12px var(--f-ui);letter-spacing:.03em;
+ color:var(--silver);margin-top:12px}
+.v2.acct-surface .acct-foot{display:flex;justify-content:flex-end;margin-top:24px}
+
+/* ---------- Profile form -------------------------------------- */
+.v2.acct-surface select.f{width:100%;background:var(--bg-inset);border:1px solid var(--line);
+ color:var(--ink-hi);font:400 14px var(--f-ui);padding:13px 16px;outline:none;
+ border-radius:var(--radius-input)}
+.v2.acct-surface select.f:focus{border-color:var(--line-strong)}
+.v2.acct-surface select.f option{background:var(--bg-inset);color:var(--ink-hi)}
+.v2.acct-surface .acct-phone-row{display:flex;gap:12px}
+.v2.acct-surface .acct-phone-area{flex:0 0 130px}
+.v2.acct-surface .acct-phone-number{flex:1;min-width:0}
+.v2.acct-surface input.f{font-variant-numeric:tabular-nums}
+.v2.acct-surface input.f:-webkit-autofill,
+.v2.acct-surface input.f:-webkit-autofill:hover,
+.v2.acct-surface input.f:-webkit-autofill:focus{
+ -webkit-text-fill-color:var(--ink-hi);
+ -webkit-box-shadow:0 0 0 1000px var(--bg-inset) inset;
+ transition:background-color 9999s ease-out}
+
+/* ---------- History rows (mockup .hrow register) --------------- */
+.v2.acct-surface .acct-rows{margin-top:2px}
+.v2.acct-surface .acct-row{display:grid;grid-template-columns:minmax(0,1fr) auto;
+ gap:14px;align-items:center;padding:14px 6px;border-bottom:1px solid var(--line)}
+.v2.acct-surface .acct-row:hover{background:var(--bg-cell)}
+.v2.acct-surface .acct-row.clickable{cursor:pointer}
+.v2.acct-surface .acct-cell{min-width:0}
+.v2.acct-surface .acct-desc{display:block;font:400 12.5px/1.5 var(--f-disp);
+ letter-spacing:.06em;color:var(--ink-hi);
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v2.acct-surface .acct-date{display:block;font:400 11px var(--f-ui);
+ color:var(--ink-low);margin-top:3px}
+.v2.acct-surface .acct-right{display:flex;align-items:center;gap:10px;flex:none}
+.v2.acct-surface .acct-amt{font:500 12px/1 var(--f-ui);letter-spacing:.06em;
+ font-variant-numeric:tabular-nums}
+.v2.acct-surface .acct-amt.pos{color:var(--ink-hi)}
+.v2.acct-surface .acct-amt.neg{color:var(--ink-mid)}
+.v2.acct-surface .acct-arrow{font:400 15px/1 var(--f-ui);color:var(--ink-low);
+ transition:.16s}
+.v2.acct-surface .acct-row:hover .acct-arrow{color:var(--ink-hi);transform:translateX(3px)}
+.v2.acct-surface .acct-receipt{font:500 10px/1 var(--f-ui);letter-spacing:.14em;
+ text-transform:uppercase;color:var(--ink-mid);text-decoration:none;
+ border:1px solid var(--line);border-radius:999px;padding:5px 10px;transition:.16s}
+.v2.acct-surface .acct-receipt:hover{color:var(--ink-hi);border-color:var(--line-strong)}
+
+/* ---------- Notification preferences --------------------------- */
+.v2.acct-surface .acct-note{font:400 12.5px/1.65 var(--f-ui);letter-spacing:.02em;
+ color:var(--ink-text);margin:4px 0 16px}
+.v2.acct-surface .acct-notif{display:flex;align-items:center;justify-content:space-between;
+ gap:16px;border:1px solid var(--line);background:var(--bg-cell);
+ padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .16s}
+.v2.acct-surface .acct-notif:hover{border-color:var(--line-strong)}
+.v2.acct-surface .acct-notif.waiting{opacity:.6;pointer-events:none;cursor:wait}
+.v2.acct-surface .acct-notif-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.v2.acct-surface .acct-notif-label{font:500 12px var(--f-ui);letter-spacing:.04em;
+ color:var(--ink-hi)}
+.v2.acct-surface .acct-notif-hint{font:400 11px/1.5 var(--f-ui);color:var(--ink-mid)}
+.v2.acct-surface .acct-toggle{position:relative;flex:none;width:40px;height:22px;
+ border:1px solid var(--line-strong);border-radius:999px;background:var(--bg-inset);
+ transition:border-color .16s}
+.v2.acct-surface .acct-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;
+ border-radius:50%;background:var(--ink-low);transition:.16s}
+.v2.acct-surface .acct-toggle.on{border-color:var(--ink-hi)}
+.v2.acct-surface .acct-toggle.on .acct-knob{left:20px;background:var(--ink-hi)}
+.v2.acct-surface .acct-toggle.waiting{opacity:.6;pointer-events:none}
+
+/* ---------- Security (password form) --------------------------- */
+.v2.acct-surface .password-input-wrapper{position:relative;width:100%}
+.v2.acct-surface .password-input-wrapper input.f{padding-right:44px}
+.v2.acct-surface .password-toggle-btn{position:absolute;right:12px;top:50%;
+ transform:translateY(-50%);background:none;border:0;color:var(--ink-low);
+ cursor:pointer;padding:2px;display:flex;align-items:center;justify-content:center}
+.v2.acct-surface .password-toggle-btn:hover,
+.v2.acct-surface .password-toggle-btn:focus{color:var(--ink-hi);outline:none}
+
+/* ---------- Payment (Buy Credits) ------------------------------ */
+/* balance strip: the balance numeral is this region's one silver
+   (Law §2.3: balance/credit numerals) */
+.v2.pay-surface .pay-balance{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+ border:1px solid var(--line);background:var(--bg-cell);padding:16px 18px;margin-bottom:18px}
+.v2.pay-surface .pay-balance-label{font:500 10.5px/1 var(--f-ui);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--ink-low)}
+.v2.pay-surface .pay-balance-n{font:400 26px/1 var(--f-disp);color:var(--silver);
+ font-variant-numeric:tabular-nums}
+.v2.pay-surface .pay-balance-free{font:400 12px var(--f-ui);color:var(--ink-mid)}
+.v2.pay-surface .pack{position:relative}
+.v2.pay-surface .pack.waiting{opacity:.5;cursor:default}
+.v2.pay-surface .pack .usd{display:block;font:400 11px var(--f-ui);
+ color:var(--ink-low);margin-top:4px}
+.v2.pay-surface .aerr{margin:0 0 14px}
+
+/* ---------- Locale parity (kit convention) --------------------- */
+html:is(:lang(zh),:lang(ja),:lang(ko),:lang(hi),:lang(ar),:lang(he),:lang(fa),:lang(ru))
+ .v2.acct-surface :is(.acct-desc,.acct-sec){font-weight:700}
+
+/* ---------- Mobile (kit breakpoint parity) --------------------- */
+@media (max-width:640px){
+ .v2.acct-surface,
+ .v2.pay-surface{padding:calc(4vh + env(safe-area-inset-top,0px)) 12px
+  calc(16px + env(safe-area-inset-bottom,0px))}
+ .v2.acct-surface .acct-row{padding:12px 2px}
+ .v2.acct-surface .acct-phone-row{flex-wrap:wrap}
+ .v2.acct-surface .acct-phone-area{flex:1 1 110px}
+ .v2.acct-surface select.f{font-size:16px} /* iOS: sub-16px inputs zoom on focus */
+ .v2.acct-surface .tabs{flex-wrap:wrap}
+}
+
+@media (prefers-reduced-motion:reduce){
+ .v2.acct-surface *,
+ .v2.pay-surface *{transition-duration:.01ms!important}
+}

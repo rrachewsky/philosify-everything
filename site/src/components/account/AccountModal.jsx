@@ -1,12 +1,16 @@
 // AccountModal - Account settings with Profile, History, Notifications and Security tabs
+// v2 skin (WP6.2): Console-for-Thinking modal anatomy (mwrap/mhead/mbody kit,
+// new_design/philosify-modals.html). Behavior, props contract, hooks and
+// handlers are unchanged from the legacy surface — only the skin moved.
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, TransactionSkeleton, PasswordInput } from '../common';
+import { PasswordInput } from '../common';
 import { useAuth, useAccountHistory } from '@/hooks';
 import { profileService } from '@/services/api/profile.js';
 import { config } from '@/config';
 import { isValidPassword } from '@utils/validation.js';
 import { isPushSubscribed, subscribeToPush, unsubscribeFromPush } from '../../utils/pwa.js';
+import '../../styles/v2-pages/account.css';
 
 // Common country codes for the dropdown
 const COUNTRY_CODES = [
@@ -46,6 +50,15 @@ const COUNTRY_CODES = [
   { code: '+63', label: '+63 (PH)' },
 ];
 
+// v2 chrome carries no emojis (Design Law): strip pictographs from the
+// hook-formatted descriptions at render time. Data and behavior untouched.
+const stripPictographs = (s) =>
+  String(s || '')
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/️/gu, '') // stray emoji variation selectors
+    .replace(/\s+/g, ' ')
+    .trim();
+
 export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDebate }) {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('history');
@@ -83,6 +96,14 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
   const [notifError, setNotifError] = useState('');
   const [pushSubscribed, setPushSubscribed] = useState(false);
   const [pushToggling, setPushToggling] = useState(false);
+
+  // Escape closes (v2 modal kit parity)
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
 
   // Load profile when modal opens or tab switches to profile
   useEffect(() => {
@@ -301,111 +322,131 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
 
     // Quiz — show credits consumed but no arrow (not navigable)
     if (item.kind === 'quiz') {
-      return credits > 0 ? (
-        <span className="transaction-amount negative">
-          -{credits}
-        </span>
-      ) : null;
+      return credits > 0 ? <span className="acct-amt neg">-{credits}</span> : null;
     }
 
     if (isNavigable) {
       return (
-        <span className="transaction-right-group">
-          {credits > 0 && (
-            <span className="transaction-amount negative">
-              -{credits}
-            </span>
-          )}
-          <span className="transaction-amount analysis-arrow">&#8250;</span>
+        <span className="acct-right">
+          {credits > 0 && <span className="acct-amt neg">-{credits}</span>}
+          <span className="acct-arrow" aria-hidden="true">&#8250;</span>
         </span>
       );
     }
 
     // For non-clickable items (purchases, etc.)
     const amt = Number(item.amount || 0);
+    const receiptUrl =
+      item.kind === 'credit' && item.type === 'purchase' ? item.metadata?.receipt_url : null;
     return (
-      <span className={`transaction-amount ${amt >= 0 ? 'positive' : 'negative'}`}>
-        {amt >= 0 ? '+' : ''}
-        {amt}
+      <span className="acct-right">
+        <span className={`acct-amt ${amt >= 0 ? 'pos' : 'neg'}`}>
+          {amt >= 0 ? '+' : ''}
+          {amt}
+        </span>
+        {receiptUrl && (
+          <a
+            className="acct-receipt"
+            href={receiptUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {t('account.receipt', { defaultValue: 'Receipt' })} &#8594;
+          </a>
+        )}
       </span>
     );
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t('account.title', { defaultValue: 'My Account' })}
-      maxWidth="500px"
-      className="account-modal"
+    <div
+      className="v2 acct-surface"
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
-      {/* Tabs */}
-      <div className="account-tabs">
-        <button
-          className={`account-tab ${activeTab === 'profile' ? 'active' : ''}`}
-          onClick={() => setActiveTab('profile')}
-        >
-          {t('account.profile', { defaultValue: 'Profile' })}
-        </button>
-        <button
-          className={`account-tab ${activeTab === 'history' ? 'active' : ''}`}
-          onClick={() => setActiveTab('history')}
-        >
-          {t('account.history', { defaultValue: 'History' })}
-        </button>
-        <button
-          className={`account-tab ${activeTab === 'notifications' ? 'active' : ''}`}
-          onClick={() => setActiveTab('notifications')}
-        >
-          {t('account.notifications', { defaultValue: 'Notifications' })}
-        </button>
-        <button
-          className={`account-tab ${activeTab === 'security' ? 'active' : ''}`}
-          onClick={() => setActiveTab('security')}
-        >
-          {t('account.security', { defaultValue: 'Security' })}
-        </button>
-      </div>
+      <div className="mwrap" role="dialog" aria-modal="true" aria-labelledby="acct-title">
+        <div className="mhead">
+          <h2 id="acct-title">{t('account.title', { defaultValue: 'My Account' })}</h2>
+          <button className="x" onClick={onClose} aria-label="Close">
+            &#10005;
+          </button>
+        </div>
+        <div className="mbody">
+          {/* Tabs */}
+          <div className="tabs" role="tablist">
+            <button
+              className={`tab ${activeTab === 'profile' ? 'on' : ''}`}
+              role="tab"
+              aria-selected={activeTab === 'profile'}
+              onClick={() => setActiveTab('profile')}
+            >
+              {t('account.profile', { defaultValue: 'Profile' })}
+            </button>
+            <button
+              className={`tab ${activeTab === 'history' ? 'on' : ''}`}
+              role="tab"
+              aria-selected={activeTab === 'history'}
+              onClick={() => setActiveTab('history')}
+            >
+              {t('account.history', { defaultValue: 'History' })}
+            </button>
+            <button
+              className={`tab ${activeTab === 'notifications' ? 'on' : ''}`}
+              role="tab"
+              aria-selected={activeTab === 'notifications'}
+              onClick={() => setActiveTab('notifications')}
+            >
+              {t('account.notifications', { defaultValue: 'Notifications' })}
+            </button>
+            <button
+              className={`tab ${activeTab === 'security' ? 'on' : ''}`}
+              role="tab"
+              aria-selected={activeTab === 'security'}
+              onClick={() => setActiveTab('security')}
+            >
+              {t('account.security', { defaultValue: 'Security' })}
+            </button>
+          </div>
 
-      {/* Profile Tab */}
-      {activeTab === 'profile' && (
-        <div className="account-security">
-          {profileLoading ? (
-            <div className="account-empty">
-              {t('account.loading', { defaultValue: 'Loading...' })}
-            </div>
-          ) : (
-            <form onSubmit={handleSaveProfile}>
-              <div className="security-section">
-                <h3>{t('account.email', { defaultValue: 'Email' })}</h3>
-                <p className="security-value">{user?.email || '--'}</p>
-              </div>
+          {/* Profile Tab */}
+          {activeTab === 'profile' && (
+            <div className="acct-pane">
+              {profileLoading ? (
+                <div className="mnote">{t('account.loading', { defaultValue: 'Loading...' })}</div>
+              ) : (
+                <form onSubmit={handleSaveProfile}>
+                  <label className="f">{t('account.email', { defaultValue: 'Email' })}</label>
+                  <div className="acct-value">{user?.email || '--'}</div>
 
-              <div className="security-section">
-                <h3>{t('account.displayNameLabel', { defaultValue: 'Display Name' })}</h3>
-                <div className="form-group">
+                  <label className="f" htmlFor="acctDisplayName">
+                    {t('account.displayNameLabel', { defaultValue: 'Display Name' })}
+                  </label>
                   <input
+                    id="acctDisplayName"
                     type="text"
-                    className="form-input"
+                    className="f"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     placeholder={user?.email?.split('@')[0] || 'Your name'}
                     maxLength={50}
                     autoComplete="name"
                   />
-                </div>
-              </div>
 
-              <div className="security-section">
-                <h3>{t('account.phoneLabel', { defaultValue: 'Mobile Phone' })}</h3>
+                  <div className="acct-sec">
+                    {t('account.phoneLabel', { defaultValue: 'Mobile Phone' })}
+                  </div>
 
-                <div className="form-group">
-                  <label htmlFor="phoneCountryCode">
+                  <label className="f" htmlFor="phoneCountryCode">
                     {t('account.countryCode', { defaultValue: 'Country Code' })}
                   </label>
                   <select
                     id="phoneCountryCode"
-                    className="form-input"
+                    className="f"
                     value={phoneCountryCode}
                     onChange={(e) => setPhoneCountryCode(e.target.value)}
                   >
@@ -416,249 +457,244 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
                       </option>
                     ))}
                   </select>
-                </div>
 
-                <div className="phone-row">
-                  <div className="form-group phone-area">
-                    <label htmlFor="phoneAreaCode">
-                      {t('account.areaCode', { defaultValue: 'Area Code' })}
-                    </label>
-                    <input
-                      id="phoneAreaCode"
-                      type="text"
-                      className="form-input"
-                      value={phoneAreaCode}
-                      onChange={(e) =>
-                        setPhoneAreaCode(e.target.value.replace(/\D/g, '').slice(0, 5))
-                      }
-                      placeholder="11"
-                      maxLength={5}
-                      inputMode="numeric"
-                      autoComplete="tel-area-code"
-                    />
-                  </div>
-                  <div className="form-group phone-number">
-                    <label htmlFor="phoneNumber">
-                      {t('account.phoneNumber', { defaultValue: 'Number' })}
-                    </label>
-                    <input
-                      id="phoneNumber"
-                      type="text"
-                      className="form-input"
-                      value={phoneNumber}
-                      onChange={(e) =>
-                        setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 15))
-                      }
-                      placeholder="912345678"
-                      maxLength={15}
-                      inputMode="numeric"
-                      autoComplete="tel-local"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {profileMessage && <div className="security-success">{profileMessage}</div>}
-              {profileError && <div className="security-error">{profileError}</div>}
-
-              <button type="submit" className="form-button mt-2" disabled={profileSaving}>
-                {profileSaving
-                  ? t('account.saving', { defaultValue: 'Saving...' })
-                  : t('account.saveProfile', { defaultValue: 'Save Profile' })}
-              </button>
-            </form>
-          )}
-        </div>
-      )}
-
-      {/* History Tab */}
-      {activeTab === 'history' && (
-        <div className="account-history">
-          {historyLoading ? (
-            <TransactionSkeleton count={5} message="Loading history..." />
-          ) : historyError ? (
-            <div className="account-error">{historyError}</div>
-          ) : historyItems.length === 0 ? (
-            <div className="account-empty">
-              {t('account.noTransactions', { defaultValue: 'No history yet' })}
-            </div>
-          ) : (
-            <div className="transaction-list">
-              {historyItems.map((item) => {
-                const isInteraction = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone';
-                const debateThreadId = item.kind === 'debate' ? item.id : getDebateThreadId(item);
-                const isClickable = (isInteraction || !!debateThreadId) && item.kind !== 'quiz';
-                const handler = isInteraction
-                  ? () => onViewAnalysis?.(item.analysisId || item.id, item.mediaType, item.kind)
-                  : debateThreadId
-                    ? () => onViewDebate?.(debateThreadId)
-                    : null;
-                const title = isInteraction
-                  ? t('account.viewAnalysis', { defaultValue: 'View this analysis' })
-                  : debateThreadId
-                    ? t('account.viewDebate', { defaultValue: 'View this debate' })
-                    : undefined;
-                return (
-                  <div
-                    key={item.id}
-                    className={`transaction-item ${isClickable ? 'clickable' : ''}`}
-                    {...(isClickable && {
-                      onClick: handler,
-                      role: 'button',
-                      tabIndex: 0,
-                      onKeyDown: (e) => e.key === 'Enter' && handler(),
-                      title,
-                    })}
-                  >
-                    <div className="transaction-info">
-                      <div className="transaction-description">{formatDescription(item, historyItems)}</div>
-                      <div className="transaction-date">
-                        {item.date ? formatDate(item.date) : ''}
-                      </div>
+                  <div className="acct-phone-row">
+                    <div className="acct-phone-area">
+                      <label className="f" htmlFor="phoneAreaCode">
+                        {t('account.areaCode', { defaultValue: 'Area Code' })}
+                      </label>
+                      <input
+                        id="phoneAreaCode"
+                        type="text"
+                        className="f"
+                        value={phoneAreaCode}
+                        onChange={(e) =>
+                          setPhoneAreaCode(e.target.value.replace(/\D/g, '').slice(0, 5))
+                        }
+                        placeholder="11"
+                        maxLength={5}
+                        inputMode="numeric"
+                        autoComplete="tel-area-code"
+                      />
                     </div>
-                    {renderRight(item)}
+                    <div className="acct-phone-number">
+                      <label className="f" htmlFor="phoneNumber">
+                        {t('account.phoneNumber', { defaultValue: 'Number' })}
+                      </label>
+                      <input
+                        id="phoneNumber"
+                        type="text"
+                        className="f"
+                        value={phoneNumber}
+                        onChange={(e) =>
+                          setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 15))
+                        }
+                        placeholder="912345678"
+                        maxLength={15}
+                        inputMode="numeric"
+                        autoComplete="tel-local"
+                      />
+                    </div>
                   </div>
-                );
-              })}
+
+                  {profileMessage && <div className="acct-ok">{profileMessage}</div>}
+                  {profileError && <div className="aerr">{profileError}</div>}
+
+                  <div className="acct-foot">
+                    <button type="submit" className="btnp" disabled={profileSaving}>
+                      {profileSaving
+                        ? t('account.saving', { defaultValue: 'Saving...' })
+                        : t('account.saveProfile', { defaultValue: 'Save Profile' })}
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           )}
-        </div>
-      )}
 
-      {/* Notifications Tab */}
-      {activeTab === 'notifications' && (
-        <div className="account-security">
-          {notifLoading ? (
-            <div className="account-empty">
-              {t('account.loading', { defaultValue: 'Loading...' })}
+          {/* History Tab */}
+          {activeTab === 'history' && (
+            <div className="acct-pane">
+              {historyLoading ? (
+                <div className="mnote">{t('account.loading', { defaultValue: 'Loading...' })}</div>
+              ) : historyError ? (
+                <div className="aerr">{historyError}</div>
+              ) : historyItems.length === 0 ? (
+                <div className="mnote">
+                  {t('account.noTransactions', { defaultValue: 'No history yet' })}
+                </div>
+              ) : (
+                <div className="acct-rows">
+                  {historyItems.map((item) => {
+                    const isInteraction = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone';
+                    const debateThreadId = item.kind === 'debate' ? item.id : getDebateThreadId(item);
+                    const isClickable = (isInteraction || !!debateThreadId) && item.kind !== 'quiz';
+                    const handler = isInteraction
+                      ? () => onViewAnalysis?.(item.analysisId || item.id, item.mediaType, item.kind)
+                      : debateThreadId
+                        ? () => onViewDebate?.(debateThreadId)
+                        : null;
+                    const title = isInteraction
+                      ? t('account.viewAnalysis', { defaultValue: 'View this analysis' })
+                      : debateThreadId
+                        ? t('account.viewDebate', { defaultValue: 'View this debate' })
+                        : undefined;
+                    return (
+                      <div
+                        key={item.id}
+                        className={`acct-row ${isClickable ? 'clickable' : ''}`}
+                        {...(isClickable && {
+                          onClick: handler,
+                          role: 'button',
+                          tabIndex: 0,
+                          onKeyDown: (e) => e.key === 'Enter' && handler(),
+                          title,
+                        })}
+                      >
+                        <span className="acct-cell">
+                          <span className="acct-desc">
+                            {stripPictographs(formatDescription(item, historyItems))}
+                          </span>
+                          <span className="acct-date">{item.date ? formatDate(item.date) : ''}</span>
+                        </span>
+                        {renderRight(item)}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          ) : (
-            <>
-              <p className="notif-pref__description">{t('community.notifications.description')}</p>
-
-              <div
-                className={`notif-pref__item notif-pref__item--push-master${pushToggling ? ' notif-pref__item--disabled' : ''}`}
-                onClick={pushToggling ? undefined : togglePush}
-              >
-                <div className="notif-pref__info">
-                  <span className="notif-pref__label">
-                    {t('community.notifications.pushLabel', { defaultValue: 'Push notifications' })}
-                  </span>
-                  <span className="notif-pref__hint">
-                    {t('community.notifications.pushHint', {
-                      defaultValue: 'Receive notifications on this device',
-                    })}
-                  </span>
-                </div>
-                <div
-                  className={`notif-pref__toggle ${pushSubscribed ? 'notif-pref__toggle--on' : ''} ${pushToggling ? 'notif-pref__toggle--disabled' : ''}`}
-                >
-                  <div className="notif-pref__toggle-knob" />
-                </div>
-              </div>
-
-              <div className="notif-pref__item" onClick={() => toggleNotifPref('dm_enabled')}>
-                <div className="notif-pref__info">
-                  <span className="notif-pref__label">{t('community.notifications.dmLabel')}</span>
-                  <span className="notif-pref__hint">{t('community.notifications.dmHint')}</span>
-                </div>
-                <div
-                  className={`notif-pref__toggle ${notifPrefs.dm_enabled ? 'notif-pref__toggle--on' : ''}`}
-                >
-                  <div className="notif-pref__toggle-knob" />
-                </div>
-              </div>
-
-              <div className="notif-pref__item" onClick={() => toggleNotifPref('replies_enabled')}>
-                <div className="notif-pref__info">
-                  <span className="notif-pref__label">
-                    {t('community.notifications.repliesLabel')}
-                  </span>
-                  <span className="notif-pref__hint">
-                    {t('community.notifications.repliesHint')}
-                  </span>
-                </div>
-                <div
-                  className={`notif-pref__toggle ${notifPrefs.replies_enabled ? 'notif-pref__toggle--on' : ''}`}
-                >
-                  <div className="notif-pref__toggle-knob" />
-                </div>
-              </div>
-
-              <div
-                className="notif-pref__item"
-                onClick={() => toggleNotifPref('collective_enabled')}
-              >
-                <div className="notif-pref__info">
-                  <span className="notif-pref__label">
-                    {t('community.notifications.collectiveLabel')}
-                  </span>
-                  <span className="notif-pref__hint">
-                    {t('community.notifications.collectiveHint')}
-                  </span>
-                </div>
-                <div
-                  className={`notif-pref__toggle ${notifPrefs.collective_enabled ? 'notif-pref__toggle--on' : ''}`}
-                >
-                  <div className="notif-pref__toggle-knob" />
-                </div>
-              </div>
-
-              {notifMessage && <div className="security-success">{notifMessage}</div>}
-              {notifError && <div className="security-error">{notifError}</div>}
-            </>
           )}
-        </div>
-      )}
 
-      {/* Security Tab */}
-      {activeTab === 'security' && (
-        <div className="account-security">
-          <div className="security-section">
-            <h3>{t('account.changePassword', { defaultValue: 'Change Password' })}</h3>
+          {/* Notifications Tab */}
+          {activeTab === 'notifications' && (
+            <div className="acct-pane">
+              {notifLoading ? (
+                <div className="mnote">{t('account.loading', { defaultValue: 'Loading...' })}</div>
+              ) : (
+                <>
+                  <p className="acct-note">{t('community.notifications.description')}</p>
 
-            {message && <div className="security-success">{message}</div>}
-            {error && <div className="security-error">{error}</div>}
+                  <div
+                    className={`acct-notif${pushToggling ? ' waiting' : ''}`}
+                    onClick={pushToggling ? undefined : togglePush}
+                  >
+                    <div className="acct-notif-info">
+                      <span className="acct-notif-label">
+                        {t('community.notifications.pushLabel', {
+                          defaultValue: 'Push notifications',
+                        })}
+                      </span>
+                      <span className="acct-notif-hint">
+                        {t('community.notifications.pushHint', {
+                          defaultValue: 'Receive notifications on this device',
+                        })}
+                      </span>
+                    </div>
+                    <div
+                      className={`acct-toggle${pushSubscribed ? ' on' : ''}${pushToggling ? ' waiting' : ''}`}
+                    >
+                      <div className="acct-knob" />
+                    </div>
+                  </div>
 
-            <form onSubmit={handleChangePassword} className="password-form">
-              <div className="form-group">
-                <label htmlFor="newPassword">
+                  <div className="acct-notif" onClick={() => toggleNotifPref('dm_enabled')}>
+                    <div className="acct-notif-info">
+                      <span className="acct-notif-label">
+                        {t('community.notifications.dmLabel')}
+                      </span>
+                      <span className="acct-notif-hint">{t('community.notifications.dmHint')}</span>
+                    </div>
+                    <div className={`acct-toggle${notifPrefs.dm_enabled ? ' on' : ''}`}>
+                      <div className="acct-knob" />
+                    </div>
+                  </div>
+
+                  <div className="acct-notif" onClick={() => toggleNotifPref('replies_enabled')}>
+                    <div className="acct-notif-info">
+                      <span className="acct-notif-label">
+                        {t('community.notifications.repliesLabel')}
+                      </span>
+                      <span className="acct-notif-hint">
+                        {t('community.notifications.repliesHint')}
+                      </span>
+                    </div>
+                    <div className={`acct-toggle${notifPrefs.replies_enabled ? ' on' : ''}`}>
+                      <div className="acct-knob" />
+                    </div>
+                  </div>
+
+                  <div className="acct-notif" onClick={() => toggleNotifPref('collective_enabled')}>
+                    <div className="acct-notif-info">
+                      <span className="acct-notif-label">
+                        {t('community.notifications.collectiveLabel')}
+                      </span>
+                      <span className="acct-notif-hint">
+                        {t('community.notifications.collectiveHint')}
+                      </span>
+                    </div>
+                    <div className={`acct-toggle${notifPrefs.collective_enabled ? ' on' : ''}`}>
+                      <div className="acct-knob" />
+                    </div>
+                  </div>
+
+                  {notifMessage && <div className="acct-ok">{notifMessage}</div>}
+                  {notifError && <div className="aerr">{notifError}</div>}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Security Tab */}
+          {activeTab === 'security' && (
+            <div className="acct-pane">
+              <div className="acct-sec">
+                {t('account.changePassword', { defaultValue: 'Change Password' })}
+              </div>
+
+              {message && <div className="acct-ok">{message}</div>}
+              {error && <div className="aerr">{error}</div>}
+
+              <form onSubmit={handleChangePassword}>
+                <label className="f" htmlFor="newPassword">
                   {t('account.newPassword', { defaultValue: 'New Password' })}
                 </label>
                 <PasswordInput
                   id="newPassword"
+                  className="f"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                   minLength={6}
                   autoComplete="new-password"
                 />
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="confirmPassword">
+                <label className="f" htmlFor="confirmPassword">
                   {t('account.confirmPassword', { defaultValue: 'Confirm Password' })}
                 </label>
                 <PasswordInput
                   id="confirmPassword"
+                  className="f"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   minLength={6}
                   autoComplete="new-password"
                 />
-              </div>
 
-              <button type="submit" className="form-button mt-2" disabled={authLoading}>
-                {authLoading
-                  ? t('account.changing', { defaultValue: 'Changing...' })
-                  : t('account.changePassword', { defaultValue: 'Change Password' })}
-              </button>
-            </form>
-          </div>
+                <div className="acct-foot">
+                  <button type="submit" className="btnp" disabled={authLoading}>
+                    {authLoading
+                      ? t('account.changing', { defaultValue: 'Changing...' })
+                      : t('account.changePassword', { defaultValue: 'Change Password' })}
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
         </div>
-      )}
-    </Modal>
+      </div>
+    </div>
   );
 }
 
