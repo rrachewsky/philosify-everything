@@ -71,10 +71,23 @@ export async function handleUserHistory(request, env, origin) {
       ),
     ]);
 
-    // Normalize music (1 credit per analysis)
+    // News scans share user_analysis_requests with music; their analyses row
+    // carries classification "news" (news-analyze.js) — label from it.
+    // If this lookup fails, query() returns [] and every row stays "music"
+    // (the pre-fix behavior).
+    const newsIds = new Set();
+    const scanIds = musicRows.map((r) => r.analysis_id).filter(Boolean);
+    if (scanIds.length) {
+      const scanRows = await query(sbUrl, sbKey,
+        `analyses?id=in.(${scanIds.join(",")})&select=id,classification`
+      );
+      for (const a of scanRows) if (a.classification === "news") newsIds.add(a.id);
+    }
+
+    // Normalize music + news scans (1 credit per analysis)
     const music = musicRows.map((r) => ({
       kind: "analysis",
-      mediaType: "music",
+      mediaType: newsIds.has(r.analysis_id) ? "news" : "music",
       id: r.analysis_id,
       title: r.song_title,
       artist: r.artist_name,
