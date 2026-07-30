@@ -271,7 +271,7 @@ export default function IdeasPage() {
     <PageShell status="Analysis Engine // Active" nav={<NavAccount />}>
       <div className="pg-ideas">
         <ModuleHeader title={t('v2.ideas.title', 'IDEAS')}>
-          <Ticker stat={t('v2.ideas.tickerStat', 'In-character')}>
+          <Ticker>
             {t('v2.ideas.ticker', 'Colloquium // Daily by the system · Debates // By users')}
           </Ticker>
         </ModuleHeader>

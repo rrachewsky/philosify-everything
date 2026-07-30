@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { PageShell, ModuleHeader, Ticker, Button } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
-import { CATALOG } from '../../config/catalog';
 import { SpaceLock } from '../../components/community/SpaceLock.jsx';
 import { PeoplePanel } from '../../components/community/PeoplePanel.jsx';
 import { AgoraChat } from '../../components/chat/AgoraChat.jsx';
@@ -218,8 +217,8 @@ export default function CommunityPage() {
   return (
     <PageShell status={t('v2.landing.status', 'Analysis Engine // Active')} nav={<NavAccount />}>
       <ModuleHeader title={t('v2.community.title', 'COMMUNITY')}>
-        <Ticker stat={t('v2.community.tickerStat', '{{locales}} languages', { locales: CATALOG.locales })}>
-          {t('v2.community.ticker', 'The Agora // Members')}
+        <Ticker>
+          {t('v2.community.ticker', 'The Agora >>> Members')}
         </Ticker>
       </ModuleHeader>
 

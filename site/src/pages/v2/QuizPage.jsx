@@ -481,8 +481,8 @@ export default function QuizPage() {
   return (
     <PageShell status={t('v2.landing.status', 'Analysis Engine // Active')} nav={<NavAccount />}>
       <ModuleHeader title={t('v2.quiz.title', 'QUIZ')}>
-        <Ticker stat={t('v2.quiz.tickerStat', 'What you actually hold')}>
-          {t('v2.quiz.ticker', 'Premise check // 10 questions per credit')}
+        <Ticker>
+          {t('v2.quiz.ticker', 'Premise check >>> 10 questions per credit')}
         </Ticker>
       </ModuleHeader>
 

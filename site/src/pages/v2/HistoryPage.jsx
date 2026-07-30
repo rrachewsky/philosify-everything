@@ -6,11 +6,10 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { PageShell, ModuleHeader, Ticker, Cell, Pill } from '../../components/v2';
+import { PageShell, ModuleHeader, BreakingTicker, Cell, Pill } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
 import { HistorySidebar } from '../../components/history';
-import { SEED_NODES } from '../../data/constellationSeedData';
 
 const SCHOOL_PILLS = ['Stoicism', 'Pre-Socratics', 'Enlightenment', 'German Idealism', 'Objectivism'];
 
@@ -31,10 +30,20 @@ export default function HistoryPage() {
 
   return (
     <PageShell status={t('v2.history.status', 'Temporal Sync // Active')} nav={<NavAccount />}>
+      {/* Universal ticker anatomy (C.4): BREAKING label + rolling feed of
+          historical events (locale line split on the >>> separator). */}
       <ModuleHeader title={t('v2.history.title', 'HISTORY')}>
-        <Ticker stat={t('v2.history.stat', 'The Living Globe')}>
-          {t('v2.history.tickerLine', 'Temporal sync // Shell C')}
-        </Ticker>
+        <BreakingTicker
+          label={`${t('v2.news.breaking', 'Breaking')} >>>`}
+          items={t(
+            'v2.history.eventsLine',
+            'Aristotle begins tutoring Alexander — 343 BCE >>> Hypatia teaches in Alexandria — c. 400 CE'
+          )
+            .split(/\s*>>>\s*/)
+            .filter(Boolean)
+            .map((title) => ({ title }))}
+          onSelect={() => setGlobeOpen(true)}
+        />
       </ModuleHeader>
 
       <div style={{ marginTop: 22 }}>
@@ -60,14 +69,6 @@ export default function HistoryPage() {
             </Pill>
           ))}
         </div>
-
-        {/* Live count from the seed actually rendered (telemetry honesty §5b) */}
-        <Ticker stat={t('v2.history.countStat', '{{n}} philosophers', { n: SEED_NODES.length })}>
-          {t(
-            'v2.history.eventsLine',
-            'Aristotle begins tutoring Alexander — 343 BCE /// Hypatia teaches in Alexandria — c. 400 CE'
-          )}
-        </Ticker>
       </div>
 
       <HistorySidebar isOpen={globeOpen} onClose={closeGlobe} />

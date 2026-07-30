@@ -25,7 +25,6 @@ import {
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
-import { CATALOG } from '../../config/catalog';
 import { PhilosopherPicker } from '../../components/common/PhilosopherPicker';
 import { ShareButton } from '../../components/sharing/ShareButton';
 import { ShareToDMButton } from '../../components/sharing/ShareToDMButton';
@@ -79,7 +78,7 @@ function TopFilmsStrip({ onSelect }) {
   const doubled = [...films, ...films];
   return (
     <span className="t50">
-      <span className="lbl">{t('v2.cinema.top50', 'Top 50 //')}</span>
+      <span className="lbl">{t('v2.cinema.top50', 'Top 50 >>>')}</span>
       <span className="t50-strip">
         <span className="t50-run" style={{ animationDuration: `${films.length * 8}s` }}>
           {doubled.map((film, i) => (
@@ -321,7 +320,7 @@ export default function CinemaPage() {
     <PageShell status={t('v2.cinema.status', 'Analysis Engine // Active')} nav={<NavAccount />}>
       <section className="pg-cinema">
         <ModuleHeader title={t('v2.cinema.title', 'CINEMA')}>
-          <Ticker stat={t('v2.cinema.stat', '{{films}} films // TMDb', { films: CATALOG.films })}>
+          <Ticker>
             <TopFilmsStrip onSelect={handleSelect} />
           </Ticker>
         </ModuleHeader>

@@ -418,9 +418,7 @@ function UnsafeZoneConsole({ user }) {
         )}
       </div>
       <MarkerLine draw />
-      <Ticker
-        stat={t('v2.unsafe-zone.tickerStat', 'No dogmas. No fallacies. No fantasy. No evasions.')}
-      >
+      <Ticker>
         {sessionId
           ? t('v2.unsafe-zone.sessionActive', 'Session {{id}} // Active', {
               id: shortCode(sessionId),

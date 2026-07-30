@@ -25,7 +25,6 @@ import {
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
-import { CATALOG } from '../../config/catalog';
 import { PhilosopherPicker } from '../../components/common/PhilosopherPicker';
 import { ShareButton } from '../../components/sharing/ShareButton';
 import { ShareToDMButton } from '../../components/sharing/ShareToDMButton';
@@ -100,7 +99,7 @@ function Top50Line({ tracks, label, onSelect }) {
   const doubled = [...items, ...items];
   return (
     <span className="t50">
-      <span className="lbl">{label} //</span>
+      <span className="lbl">{label}</span>
       <span className="t50-strip">
         <span className="t50-run" style={{ animationDuration: `${tracks.length * 8}s` }}>
           {doubled.map((tr, i) => (
@@ -743,10 +742,10 @@ export default function MusicPage() {
     <PageShell status={t('v2.music.status', 'Analysis Engine // Active')} nav={<NavAccount />}>
       <div className="pg-music">
         <ModuleHeader title={t('v2.music.title', 'MUSIC')}>
-          <Ticker stat={t('v2.music.tickerStat', '{{songs}} songs // Spotify + Genius', { songs: CATALOG.songs })}>
+          <Ticker>
             <Top50Line
               tracks={top50}
-              label={t('v2.music.top50', 'Top 50')}
+              label={t('v2.music.top50', 'Top 50 >>>')}
               onSelect={handleSelect}
             />
           </Ticker>

@@ -57,9 +57,9 @@ export default function V2Gallery() {
     >
       <Section title="Module header — title / marker line / ticker (news standard)">
         <ModuleHeader title="NEWS">
-          <Ticker stat="Read the news, armed">
-            Breaking // Central bank raises rates 0.5% · Markets steady · Election court ruling
-            expected
+          <Ticker>
+            Breaking &gt;&gt;&gt; Central bank raises rates 0.5% · Markets steady · Election court
+            ruling expected
           </Ticker>
         </ModuleHeader>
       </Section>

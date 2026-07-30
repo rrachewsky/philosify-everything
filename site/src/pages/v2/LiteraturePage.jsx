@@ -27,7 +27,6 @@ import {
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
-import { CATALOG } from '../../config/catalog';
 import { PhilosopherPicker } from '../../components/common/PhilosopherPicker';
 import { ShareButton } from '../../components/sharing/ShareButton';
 import { ShareToDMButton } from '../../components/sharing/ShareToDMButton';
@@ -82,7 +81,7 @@ function TopBooksStrip({ onSelect }) {
   const doubled = [...books, ...books];
   return (
     <span className="t50">
-      <span className="lbl">{t('v2.literature.top50', 'Top 50 //')}</span>
+      <span className="lbl">{t('v2.literature.top50', 'Top 50 >>>')}</span>
       <span className="t50-strip">
         <span className="t50-run" style={{ animationDuration: `${books.length * 8}s` }}>
           {doubled.map((book, i) => (
@@ -419,7 +418,7 @@ export default function LiteraturePage() {
     <PageShell status={t('v2.literature.status', 'Analysis Engine // Active')} nav={<NavAccount />}>
       <section className="pg-literature">
         <ModuleHeader title={t('v2.literature.title', 'LITERATURE')}>
-          <Ticker stat={t('v2.literature.stat', '{{books}} books // Google Books', { books: CATALOG.books })}>
+          <Ticker>
             <TopBooksStrip onSelect={handleSelect} />
           </Ticker>
         </ModuleHeader>
