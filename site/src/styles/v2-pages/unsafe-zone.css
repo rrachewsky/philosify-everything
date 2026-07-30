@@ -1,0 +1,73 @@
+/* ============================================================
+   UNSAFE ZONE page (WP3) — scoped under .v2 .pg-unsafe-zone
+   Mockup: new_design/philosify-unsafezone.html. The dialogue
+   anatomy (.uhead/.uwell/.msg/.msg.ai/.entry/.unote) lives in
+   v2-components.css; this file adds only page-local states.
+   Tokens/aliases only (Law lint). NO ads on this page (spec §10).
+   ============================================================ */
+
+/* Dialogue bodies carry multi-paragraph AI replies verbatim */
+.v2 .pg-unsafe-zone .msg .b{white-space:pre-wrap;overflow-wrap:break-word}
+
+/* Manifesto — idle reading state (Newsreader prose, Law §3) */
+.v2 .pg-unsafe-zone .manifesto{font:400 16.5px/1.75 var(--fp);color:var(--mid)}
+.v2 .pg-unsafe-zone .manifesto p{margin:0 0 14px}
+.v2 .pg-unsafe-zone .manifesto p:last-child{margin-bottom:0}
+.v2 .pg-unsafe-zone .manifesto .quiet{color:var(--low)}
+.v2 .pg-unsafe-zone .manifesto .em{color:var(--ink)}
+.v2 .pg-unsafe-zone .manifesto .close{color:var(--ink);text-align:center;margin-top:22px}
+
+/* How-it-works toggle + collapsed intro inside a conversation */
+.v2 .pg-unsafe-zone .uz-link{display:block;margin:0 auto 14px;background:none;border:0;cursor:pointer;
+ font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
+.v2 .pg-unsafe-zone .uz-link:hover{color:var(--ink)}
+.v2 .pg-unsafe-zone .uz-intro{border:1px solid var(--line);background:var(--bgcell);padding:16px 20px;
+ margin:0 0 6px;font:400 14.5px/1.7 var(--fp);color:var(--mid)}
+.v2 .pg-unsafe-zone .uz-intro p{margin:0 0 8px}
+.v2 .pg-unsafe-zone .uz-intro p:last-child{margin-bottom:0}
+.v2 .pg-unsafe-zone .uz-intro .quiet{color:var(--low)}
+.v2 .pg-unsafe-zone .uz-intro .em{color:var(--ink)}
+.v2 .pg-unsafe-zone .uz-intro .close{color:var(--ink);text-align:center}
+
+/* Thinking indicator — dots inside the AI inverted block */
+.v2 .pg-unsafe-zone .uz-dots{display:inline-flex;gap:6px;padding:6px 0}
+.v2 .pg-unsafe-zone .uz-dots i{width:6px;height:6px;border-radius:50%;background:var(--inkinv);
+ opacity:.35;animation:uzPulse 1.2s ease-in-out infinite}
+.v2 .pg-unsafe-zone .uz-dots i:nth-child(2){animation-delay:.2s}
+.v2 .pg-unsafe-zone .uz-dots i:nth-child(3){animation-delay:.4s}
+@keyframes uzPulse{0%,100%{opacity:.25}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.v2 .pg-unsafe-zone .uz-dots i{animation:none;opacity:.6}}
+
+/* Billing telemetry: extension warning above the entry */
+.v2 .pg-unsafe-zone .uz-warn{margin-top:26px;font:500 10.5px/1.6 var(--fu);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--mid);text-align:center}
+
+/* Standing cost line (cost transparency BEFORE the click) */
+.v2 .pg-unsafe-zone .uz-cost{margin-top:12px;font:500 10.5px/1.6 var(--fu);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--low);text-align:center}
+
+/* Silver credit label on the spending button (one silver per region) */
+.v2 .pg-unsafe-zone .uz-sendcol{display:flex;flex-direction:column;gap:8px;align-items:center;flex:none}
+.v2 .pg-unsafe-zone .uz-credit{font:500 10px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;
+ color:var(--silver);text-align:center}
+
+/* Errors — functional error tone only (Law §2.1) */
+.v2 .pg-unsafe-zone .uz-err{margin-top:14px;font:400 12px var(--fu);color:var(--warn);
+ letter-spacing:.03em;text-align:center}
+.v2 .pg-unsafe-zone .uz-err a{color:var(--warn);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+
+/* Send button disabled state */
+.v2 .pg-unsafe-zone .btnp:disabled{opacity:.45;cursor:default}
+
+/* Actions row centered under the entry */
+.v2 .pg-unsafe-zone .actions{justify-content:center;margin-top:20px}
+
+/* History list */
+.v2 .pg-unsafe-zone .uz-history label.f{margin-top:0}
+
+@media (max-width:640px){
+ .v2 .pg-unsafe-zone .hrow{grid-template-columns:44px 1fr auto;gap:10px}
+ .v2 .pg-unsafe-zone .hrow .m,.v2 .pg-unsafe-zone .hrow .d{display:none}
+ .v2 .pg-unsafe-zone .entry{flex-direction:column;align-items:stretch}
+ .v2 .pg-unsafe-zone .uz-sendcol{align-items:stretch}
+}

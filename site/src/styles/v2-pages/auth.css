@@ -1,0 +1,23 @@
+/* v2 auth pages — /signin + /signup (mockup: philosify-auth.html).
+   Anatomy (.awrap/.alock/.authcard/.aerr/.aalt/.oauth, label.f/input.f,
+   .btnp/.btns) lives in v2-components.css; only the mockup's inline
+   adjustments and page-specific bits are scoped here (WP3 contract). */
+
+/* First label of the card sits flush (mockup: style="margin-top:0") */
+.v2 .pg-auth .authcard form label.f:first-child { margin-top: 0; }
+
+/* Primary action fills the card (mockup: width:100%;margin-top:22px) */
+.v2 .pg-auth .authcard .btnp { width: 100%; margin-top: 22px; }
+
+/* Single OAuth provider (Google) spans the mockup's two-column grid */
+.v2 .pg-auth .oauth .btns { grid-column: 1 / -1; }
+
+/* Email-sent / reset-sent confirmation copy (quiet UI register) */
+.v2 .pg-auth .amsg {
+  font: 400 13px/1.7 var(--fu);
+  color: var(--mid);
+  margin-bottom: 14px;
+}
+
+/* Signup legal disclaimer under the .aalt line */
+.v2 .pg-auth .aalt.adisc { margin-top: 12px; font-size: 11px; line-height: 1.7; }
