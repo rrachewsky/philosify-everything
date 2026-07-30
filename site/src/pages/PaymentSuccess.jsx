@@ -211,6 +211,11 @@ export function PaymentSuccess() {
         navigate('/', { state: { openNews: true } });
         return;
       }
+      // Quiz start/continue — resume on the quiz page
+      if (pending.type === 'quiz:start' || pending.type === 'quiz:continue') {
+        navigate('/', { state: { openQuiz: true } });
+        return;
+      }
     }
     navigate('/');
   };

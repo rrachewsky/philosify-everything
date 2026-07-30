@@ -88,6 +88,7 @@ function PaymentReturnRedirect() {
     else if (state.openIdeas) go('/ideas');
     else if (state.openCommunity) go('/community', { tab: state.openCommunity });
     else if (state.openUnsafeZone) go('/unsafe-zone');
+    else if (state.openQuiz) go('/quiz');
     else if (state.openCinema) go('/cinema');
     else if (state.openNews) go('/news');
     else if (state.openPaymentModal) {
