@@ -7,6 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { useCreditsContext } from '../../contexts/CreditsContext';
 import { changeLanguageWithPreload } from '../../i18n/config.js';
+// Full account surface (Profile / History+transactions / Notifications /
+// Security) reused untouched — legacy skin, flagged for a future v2 mockup.
+import { AccountModal } from '../account';
 
 const LOCALES = [
   'en', 'pt', 'es', 'de', 'fr', 'it', 'hu', 'zh', 'ja',
@@ -19,7 +22,22 @@ export function NavAccount() {
   const { user, isAuthenticated, signOut } = useAuth();
   const { balance } = useCreditsContext();
   const [menu, setMenu] = useState(null); // 'acct' | 'lang' | null
+  const [acctOpen, setAcctOpen] = useState(false);
   const rootRef = useRef(null);
+
+  // AccountModal history rows → URL targets (Addendum 1 replay pattern)
+  const moduleForMedia = (mt) =>
+    mt === 'book' ? 'literature' : mt === 'film' || mt === 'cinema' ? 'cinema' : mt === 'news' ? 'news' : 'music';
+  const viewAnalysis = (id, mediaType, kind) => {
+    setAcctOpen(false);
+    if (kind === 'unsafe-zone') return navigate(`/unsafe-zone?session=${id}`);
+    if (kind === 'panel') return navigate(`/${moduleForMedia(mediaType)}?panel=${id}`);
+    return navigate(`/${moduleForMedia(mediaType)}?analysis=${id}`);
+  };
+  const viewDebate = (id) => {
+    setAcctOpen(false);
+    navigate(`/ideas?debate=${id}`);
+  };
 
   useEffect(() => {
     const close = (e) => {
@@ -104,6 +122,16 @@ export function NavAccount() {
               >
                 {t('v2.nav.buyCredits', 'Buy Credits')}
               </a>
+              <a
+                href="#account-settings"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMenu(null);
+                  setAcctOpen(true);
+                }}
+              >
+                {t('v2.nav.accountSettings', 'Account settings')}
+              </a>
               <hr />
               <a
                 href="#logout"
@@ -140,6 +168,16 @@ export function NavAccount() {
             {t('v2.nav.signUp', 'Sign up')}
           </a>
         </>
+      )}
+
+      {acctOpen && (
+        <AccountModal
+          isOpen={acctOpen}
+          onClose={() => setAcctOpen(false)}
+          user={user}
+          onViewAnalysis={viewAnalysis}
+          onViewDebate={viewDebate}
+        />
       )}
     </span>
   );

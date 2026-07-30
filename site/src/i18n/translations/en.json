@@ -2717,6 +2717,7 @@
       "weightedScore": "Weighted score"
     },
     "nav": {
+      "accountSettings": "Account settings",
       "balance": "Balance",
       "buyCredits": "Buy Credits",
       "history": "History",
