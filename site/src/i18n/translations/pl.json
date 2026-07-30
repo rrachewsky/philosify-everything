@@ -2872,6 +2872,33 @@
       "you": "Ty"
     },
     "verdict": {
+      "r": {
+        "frame": "Dzieło {{clauses}} — stąd {{score}}: {{band}}.",
+        "frameOpen": "Dzieło {{clauses}}.",
+        "join": "; ",
+        "mix": "utrzymuje {{concept}} i jego przeciwieństwa niemal w równowadze",
+        "concept": {
+          "ethics": "poczucie własnej wartości",
+          "metaphysics": "rzeczywistość",
+          "epistemology": "rozum",
+          "politics": "wolność",
+          "aesthetics": "piękno"
+        },
+        "pos": {
+          "ethics": "broni zasłużonego poczucia własnej wartości przed poświęceniem",
+          "metaphysics": "uznaje poznawalną, przychylną rzeczywistość, otwartą na sukces",
+          "epistemology": "odpowiada przed rozumem",
+          "politics": "broni wolności i dobrowolnych stosunków",
+          "aesthetics": "ukazuje piękno jako świętowanie życia"
+        },
+        "neg": {
+          "ethics": "wymienia poczucie własnej wartości na altruistyczną winę i poświęcenie",
+          "metaphysics": "maluje rzeczywistość jako wrogą lub przesądzoną",
+          "epistemology": "sięga po mistycyzm i sceptycyzm zamiast rozumu",
+          "politics": "stawia przymus i kolektyw ponad jednostką",
+          "aesthetics": "zadowala się nihilizmem przeciw pięknu"
+        }
+      },
       "scoreLine": "Wynik końcowy {{score}} · Nota {{n}} na 10"
     }
   }

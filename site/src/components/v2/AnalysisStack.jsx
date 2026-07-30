@@ -9,34 +9,77 @@ export function formatSignedScore(score) {
   return String(score).replace('-', '−');
 }
 
-// Rationale for the verdict card: the opening 1–2 sentences of the analysis
-// itself — integrated analysis first, else the top-weighted scorecard
-// justification (ethics, 40%). Frontend-only; the engine output is untouched.
-// Strip every tag EXCEPT <hl> (six-question highlights, Law 30 Jul) —
-// DOMPurify repairs any tag left unbalanced by the sentence cut.
-const stripTags = (html) =>
-  String(html)
-    .replace(/<(?!\/?hl\b)[^>]*>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+// Rationale for the verdict card (ruling 30 Jul): why THIS verdict and
+// THIS note — never a description of the work. Composed deterministically
+// from the scorecard's weighted verdicts in the canonical grade vocabulary
+// (new_design/philosify-grade-vocabulary.md): which premises the work
+// accepts or challenges along the five axes, closing with the score's
+// coherence. Non-Disclosure-safe; results without a scorecard render no
+// rationale rather than a poetic slice. No new engine fields (vocabulary
+// note 3): the axis scores ARE each justification's distilled verdict.
+const AXES = ['ethics', 'metaphysics', 'epistemology', 'politics', 'aesthetics'];
 
-export function verdictRationale(result) {
-  if (!result) return '';
-  const source =
-    result.philosophical_analysis ||
-    result.summary ||
-    result.integrated_analysis ||
-    result.scorecard?.ethics?.justification ||
-    result.ethics_analysis ||
-    '';
-  const text = stripTags(source);
-  if (!text) return '';
-  // Sentence boundaries across scripts: Latin/Cyrillic enders + CJK/Arabic marks.
-  const parts = text.match(/[^.!?。！？؟…]+[.!?。！？؟…]+["»”“』」]?/g) || [text];
-  let out = parts.slice(0, 2).join(' ').trim();
-  if (out.length > 340) out = parts[0].trim();
-  if (out.length > 340) out = out.slice(0, 339).trimEnd() + '…';
-  return out;
+const CLAUSE_EN = {
+  pos: {
+    ethics: 'upholds earned self-esteem against sacrifice',
+    metaphysics: 'grants a knowable, benevolent reality open to success',
+    epistemology: 'answers to reason',
+    politics: 'defends freedom and voluntary dealings',
+    aesthetics: 'renders beauty as the celebration of life',
+  },
+  neg: {
+    ethics: 'trades self-esteem for altruist guilt and sacrifice',
+    metaphysics: 'casts reality as malevolent or fated',
+    epistemology: 'reaches for mysticism and skepticism over reason',
+    politics: 'places coercion and the collective above the individual',
+    aesthetics: 'settles for nihilism against beauty',
+  },
+};
+
+const CONCEPT_EN = {
+  ethics: 'self-esteem',
+  metaphysics: 'reality',
+  epistemology: 'reason',
+  politics: 'freedom',
+  aesthetics: 'beauty',
+};
+
+export function verdictRationale(result, t, band) {
+  if (!result || typeof t !== 'function') return '';
+  const sc = result.scorecard || {};
+  const axes = AXES.map((k) => ({ k, s: Number(sc[k]?.score) })).filter((a) => Number.isFinite(a.s));
+  if (!axes.length) return '';
+
+  // Salience: ethics always (the dominant 40% axis), then the strongest
+  // remaining axes; near-balance axes (|s|<2) speak only when nothing
+  // clearer exists. At most three clauses — the rule caps at 1–2 sentences.
+  const ethics = axes.find((a) => a.k === 'ethics');
+  const rest = axes
+    .filter((a) => a.k !== 'ethics')
+    .sort((a, b) => Math.abs(b.s) - Math.abs(a.s));
+  const picked = [...(ethics ? [ethics] : []), ...rest.filter((a) => Math.abs(a.s) >= 2)].slice(0, 3);
+  if (picked.length < 2 && rest.length) picked.push(rest[0]);
+
+  const clause = (a) => {
+    const text =
+      Math.abs(a.s) < 2
+        ? t('v2.verdict.r.mix', 'holds {{concept}} and its opponents in near balance', {
+            concept: t(`v2.verdict.r.concept.${a.k}`, CONCEPT_EN[a.k]),
+          })
+        : t(`v2.verdict.r.${a.s > 0 ? 'pos' : 'neg'}.${a.k}`, CLAUSE_EN[a.s > 0 ? 'pos' : 'neg'][a.k]);
+    return `${text} (${formatSignedScore(a.s > 0 ? `+${a.s}` : a.s)})`;
+  };
+  const clauses = picked.map(clause).join(t('v2.verdict.r.join', '; '));
+
+  const finalScore = sc.final_score ?? result.final_score ?? result.overall_grade;
+  if (finalScore == null || !band) {
+    return t('v2.verdict.r.frameOpen', 'The work {{clauses}}.', { clauses });
+  }
+  return t('v2.verdict.r.frame', 'The work {{clauses}} — hence {{score}}: {{band}}.', {
+    clauses,
+    score: formatSignedScore(finalScore),
+    band,
+  });
 }
 
 export function Verdict({ label = 'Philosify Verdict', note, classification, scoreLine, rationale }) {

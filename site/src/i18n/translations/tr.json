@@ -2872,6 +2872,33 @@
       "you": "Sen"
     },
     "verdict": {
+      "r": {
+        "frame": "Eser {{clauses}} — buradan {{score}}: {{band}}.",
+        "frameOpen": "Eser {{clauses}}.",
+        "join": "; ",
+        "mix": "{{concept}} ile karşıtlarını neredeyse dengede tutuyor",
+        "concept": {
+          "ethics": "öz saygı",
+          "metaphysics": "gerçeklik",
+          "epistemology": "akıl",
+          "politics": "özgürlük",
+          "aesthetics": "güzellik"
+        },
+        "pos": {
+          "ethics": "hak edilmiş öz saygıyı fedakârlığa karşı savunuyor",
+          "metaphysics": "bilinebilir, iyicil ve başarıya açık bir gerçeklik tanıyor",
+          "epistemology": "akla kulak veriyor",
+          "politics": "özgürlüğü ve gönüllü ilişkileri savunuyor",
+          "aesthetics": "güzelliği yaşamın kutlanışı olarak sunuyor"
+        },
+        "neg": {
+          "ethics": "öz saygıyı özgeci suçluluk ve fedakârlıkla takas ediyor",
+          "metaphysics": "gerçekliği kötücül ya da yazgılı gösteriyor",
+          "epistemology": "akıl yerine mistisizme ve kuşkuculuğa başvuruyor",
+          "politics": "zorlamayı ve kolektifi bireyin üstüne koyuyor",
+          "aesthetics": "güzelliğe karşı nihilizmle yetiniyor"
+        }
+      },
       "scoreLine": "Nihai puan {{score}} · Not {{n}}/10"
     }
   }

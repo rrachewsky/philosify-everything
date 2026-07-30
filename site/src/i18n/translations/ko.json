@@ -2766,6 +2766,33 @@
       "you": "나"
     },
     "verdict": {
+      "r": {
+        "frame": "이 작품은 {{clauses}} — 따라서 {{score}}, {{band}}.",
+        "frameOpen": "이 작품은 {{clauses}}.",
+        "join": "; ",
+        "mix": "{{concept}} 및 그 반대 전제를 거의 균형 상태로 둔다",
+        "concept": {
+          "ethics": "자존감",
+          "metaphysics": "현실",
+          "epistemology": "이성",
+          "politics": "자유",
+          "aesthetics": "아름다움"
+        },
+        "pos": {
+          "ethics": "획득한 자존감을 희생보다 앞세운다",
+          "metaphysics": "인식 가능하고 호의적이며 성공에 열린 현실을 인정한다",
+          "epistemology": "이성에 따른다",
+          "politics": "자유와 자발적 관계를 옳호한다",
+          "aesthetics": "아름다움을 삶의 예찬으로 그린다"
+        },
+        "neg": {
+          "ethics": "자존감을 이타적 죄책감과 희생과 맞바꾼다",
+          "metaphysics": "현실을 악의적이거나 운명적인 것으로 그린다",
+          "epistemology": "이성 대신 신비주의와 회의주의에 기댈다",
+          "politics": "강제와 집단을 개인 위에 둔다",
+          "aesthetics": "아름다움 대신 허무주의에 안주한다"
+        }
+      },
       "scoreLine": "최종 점수 {{score}} · 메모 {{n}}/10"
     }
   }

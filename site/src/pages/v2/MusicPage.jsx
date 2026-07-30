@@ -900,7 +900,7 @@ export default function MusicPage() {
                 note={analysisResult.philosophical_note}
                 classification={classification}
                 scoreLine={verdictScoreLine}
-                rationale={verdictRationale(analysisResult)}
+                rationale={verdictRationale(analysisResult, t, classification)}
               />
 
               <V2AudioBar key={`tts-${analysisResult.id || 'scan'}`} result={analysisResult} />

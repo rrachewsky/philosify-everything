@@ -2797,6 +2797,33 @@
       "you": "Vous"
     },
     "verdict": {
+      "r": {
+        "frame": "L'œuvre {{clauses}} — d'où {{score}} : {{band}}.",
+        "frameOpen": "L'œuvre {{clauses}}.",
+        "join": " ; ",
+        "mix": "tient {{concept}} et ses contraires en quasi-équilibre",
+        "concept": {
+          "ethics": "l'estime de soi",
+          "metaphysics": "la réalité",
+          "epistemology": "la raison",
+          "politics": "la liberté",
+          "aesthetics": "la beauté"
+        },
+        "pos": {
+          "ethics": "soutient l'estime de soi méritée contre le sacrifice",
+          "metaphysics": "accorde une réalité connaissable et bienveillante, ouverte au succès",
+          "epistemology": "répond à la raison",
+          "politics": "défend la liberté et les rapports volontaires",
+          "aesthetics": "présente la beauté comme célébration de la vie"
+        },
+        "neg": {
+          "ethics": "échange l'estime de soi contre la culpabilité altruiste et le sacrifice",
+          "metaphysics": "peint la réalité comme malveillante ou fatale",
+          "epistemology": "recourt au mysticisme et au scepticisme contre la raison",
+          "politics": "place la contrainte et le collectif au-dessus de l'individu",
+          "aesthetics": "se contente du nihilisme contre la beauté"
+        }
+      },
       "scoreLine": "Score final {{score}} · Note {{n}} sur 10"
     }
   }

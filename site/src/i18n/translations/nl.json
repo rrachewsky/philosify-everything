@@ -2872,6 +2872,33 @@
       "you": "Jij"
     },
     "verdict": {
+      "r": {
+        "frame": "Het werk {{clauses}} — vandaar {{score}}: {{band}}.",
+        "frameOpen": "Het werk {{clauses}}.",
+        "join": "; ",
+        "mix": "houdt {{concept}} en zijn tegenpolen vrijwel in evenwicht",
+        "concept": {
+          "ethics": "zelfrespect",
+          "metaphysics": "de werkelijkheid",
+          "epistemology": "de rede",
+          "politics": "vrijheid",
+          "aesthetics": "schoonheid"
+        },
+        "pos": {
+          "ethics": "verdedigt verdiend zelfrespect tegen opoffering",
+          "metaphysics": "erkent een kenbare, welwillende werkelijkheid, open voor succes",
+          "epistemology": "richt zich naar de rede",
+          "politics": "verdedigt vrijheid en vrijwillige verhoudingen",
+          "aesthetics": "toont schoonheid als viering van het leven"
+        },
+        "neg": {
+          "ethics": "ruilt zelfrespect in voor altruïstische schuld en opoffering",
+          "metaphysics": "schildert de werkelijkheid als kwaadaardig of onafwendbaar",
+          "epistemology": "grijpt naar mystiek en scepsis in plaats van de rede",
+          "politics": "plaatst dwang en het collectief boven het individu",
+          "aesthetics": "neemt genoegen met nihilisme tegenover schoonheid"
+        }
+      },
       "scoreLine": "Eindscore {{score}} · Noot {{n}} van 10"
     }
   }

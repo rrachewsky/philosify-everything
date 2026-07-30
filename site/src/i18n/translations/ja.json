@@ -2771,6 +2771,33 @@
       "you": "あなた"
     },
     "verdict": {
+      "r": {
+        "frame": "この作品は{{clauses}}——ゆえに{{score}}、{{band}}。",
+        "frameOpen": "この作品は{{clauses}}。",
+        "join": "、",
+        "mix": "{{concept}}とその対立項をほぼ拮抗させている",
+        "concept": {
+          "ethics": "自尊",
+          "metaphysics": "現実",
+          "epistemology": "理性",
+          "politics": "自由",
+          "aesthetics": "美"
+        },
+        "pos": {
+          "ethics": "獲得された自尊を犠牲より上に置く",
+          "metaphysics": "認識可能で好意的な、成功に開かれた現実を認める",
+          "epistemology": "理性に従う",
+          "politics": "自由と自発的な関係を擁護する",
+          "aesthetics": "美を生の讃美として描く"
+        },
+        "neg": {
+          "ethics": "自尊を利他的な罪悪感と犠牲に引き換える",
+          "metaphysics": "現実を悪意あるもの、宿命的なものとして描く",
+          "epistemology": "理性より神秘主義と懐疑論に頼る",
+          "politics": "強制と集団を個人の上に置く",
+          "aesthetics": "美に対して虚無主義で済ませる"
+        }
+      },
       "scoreLine": "最終スコア {{score}} · 注記 {{n}}/10"
     }
   }

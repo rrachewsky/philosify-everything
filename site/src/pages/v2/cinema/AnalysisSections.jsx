@@ -122,7 +122,7 @@ export function AnalysisSections({ result }) {
         note={result.philosophical_note}
         classification={classif}
         scoreLine={scoreLine}
-        rationale={verdictRationale(result)}
+        rationale={verdictRationale(result, t, classif)}
       />
 
       <V2AudioBar result={result} />

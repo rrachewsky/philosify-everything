@@ -2872,6 +2872,33 @@
       "you": "你"
     },
     "verdict": {
+      "r": {
+        "frame": "作品{{clauses}}——由此得出{{score}}：{{band}}。",
+        "frameOpen": "作品{{clauses}}。",
+        "join": "；",
+        "mix": "在{{concept}}与其对立面之间近乎持平",
+        "concept": {
+          "ethics": "自尊",
+          "metaphysics": "现实",
+          "epistemology": "理性",
+          "politics": "自由",
+          "aesthetics": "美"
+        },
+        "pos": {
+          "ethics": "以应得的自尊对抗牺牲",
+          "metaphysics": "承认一个可知、善意、向成功敞开的现实",
+          "epistemology": "诉诸理性",
+          "politics": "捍卫自由与自愿的交往",
+          "aesthetics": "把美呈现为对生命的礼赞"
+        },
+        "neg": {
+          "ethics": "以利他的负罪感和牺牲换掉自尊",
+          "metaphysics": "把现实描绘成恶意或宿命",
+          "epistemology": "舍理性而取神秘主义与怀疑论",
+          "politics": "把强制与集体置于个人之上",
+          "aesthetics": "以虚无主义取代美"
+        }
+      },
       "scoreLine": "最终分数 {{score}} · 注释 {{n}}/10"
     }
   }

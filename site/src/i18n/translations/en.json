@@ -2887,6 +2887,33 @@
       "you": "You"
     },
     "verdict": {
+      "r": {
+        "frame": "The work {{clauses}} — hence {{score}}: {{band}}.",
+        "frameOpen": "The work {{clauses}}.",
+        "join": "; ",
+        "mix": "holds {{concept}} and its opponents in near balance",
+        "concept": {
+          "ethics": "self-esteem",
+          "metaphysics": "reality",
+          "epistemology": "reason",
+          "politics": "freedom",
+          "aesthetics": "beauty"
+        },
+        "pos": {
+          "ethics": "upholds earned self-esteem against sacrifice",
+          "metaphysics": "grants a knowable, benevolent reality open to success",
+          "epistemology": "answers to reason",
+          "politics": "defends freedom and voluntary dealings",
+          "aesthetics": "renders beauty as the celebration of life"
+        },
+        "neg": {
+          "ethics": "trades self-esteem for altruist guilt and sacrifice",
+          "metaphysics": "casts reality as malevolent or fated",
+          "epistemology": "reaches for mysticism and skepticism over reason",
+          "politics": "places coercion and the collective above the individual",
+          "aesthetics": "settles for nihilism against beauty"
+        }
+      },
       "scoreLine": "Final score {{score}} · Note {{n}} of 10"
     }
   }

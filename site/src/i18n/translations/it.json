@@ -2787,6 +2787,33 @@
       "you": "Tu"
     },
     "verdict": {
+      "r": {
+        "frame": "L'opera {{clauses}} — da qui {{score}}: {{band}}.",
+        "frameOpen": "L'opera {{clauses}}.",
+        "join": "; ",
+        "mix": "tiene {{concept}} e i suoi opposti quasi in equilibrio",
+        "concept": {
+          "ethics": "l'autostima",
+          "metaphysics": "la realtà",
+          "epistemology": "la ragione",
+          "politics": "la libertà",
+          "aesthetics": "la bellezza"
+        },
+        "pos": {
+          "ethics": "sostiene l'autostima meritata contro il sacrificio",
+          "metaphysics": "concede una realtà conoscibile e benevola, aperta al successo",
+          "epistemology": "risponde alla ragione",
+          "politics": "difende la libertà e i rapporti volontari",
+          "aesthetics": "presenta la bellezza come celebrazione della vita"
+        },
+        "neg": {
+          "ethics": "scambia l'autostima con la colpa altruista e il sacrificio",
+          "metaphysics": "dipinge la realtà come malevola o fatale",
+          "epistemology": "ricorre al misticismo e allo scetticismo contro la ragione",
+          "politics": "pone la coercizione e il collettivo al di sopra dell'individuo",
+          "aesthetics": "si accontenta del nichilismo contro la bellezza"
+        }
+      },
       "scoreLine": "Punteggio finale {{score}} · Nota {{n}} su 10"
     }
   }

@@ -2872,6 +2872,33 @@
       "you": "Te"
     },
     "verdict": {
+      "r": {
+        "frame": "A mű {{clauses}} — innen a {{score}}: {{band}}.",
+        "frameOpen": "A mű {{clauses}}.",
+        "join": "; ",
+        "mix": "csaknem egyensúlyban tartja {{concept}} és az ellenkezőjét",
+        "concept": {
+          "ethics": "az önbecsülést",
+          "metaphysics": "a valóságot",
+          "epistemology": "az értelmet",
+          "politics": "a szabadságot",
+          "aesthetics": "a szépséget"
+        },
+        "pos": {
+          "ethics": "a kiérdemelt önbecsülést védi az áldozathozatallal szemben",
+          "metaphysics": "megismerhető, jóindulatú, sikerre nyitott valóságot ad",
+          "epistemology": "az értelemre hallgat",
+          "politics": "a szabadságot és az önkéntes viszonyokat védi",
+          "aesthetics": "a szépséget az élet ünnepeként mutatja fel"
+        },
+        "neg": {
+          "ethics": "az önbecsülést altruista bűntudatra és áldozatra cseréli",
+          "metaphysics": "a valóságot rosszindulatúnak vagy végzetszerűnek festi",
+          "epistemology": "miszticizmushoz és szkepszishez nyúl az értelem helyett",
+          "politics": "a kényszert és a kollektívát az egyén fölé helyezi",
+          "aesthetics": "a nihilizmussal éri be a szépség ellenében"
+        }
+      },
       "scoreLine": "Végső pontszám {{score}} · Jegy {{n}} a 10-ből"
     }
   }

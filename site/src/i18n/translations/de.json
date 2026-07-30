@@ -2805,6 +2805,33 @@
       "you": "Du"
     },
     "verdict": {
+      "r": {
+        "frame": "Das Werk {{clauses}} — daher {{score}}: {{band}}.",
+        "frameOpen": "Das Werk {{clauses}}.",
+        "join": "; ",
+        "mix": "hält {{concept}} und deren Gegenspieler nahezu im Gleichgewicht",
+        "concept": {
+          "ethics": "den Selbstwert",
+          "metaphysics": "die Realität",
+          "epistemology": "die Vernunft",
+          "politics": "die Freiheit",
+          "aesthetics": "die Schönheit"
+        },
+        "pos": {
+          "ethics": "verteidigt verdienten Selbstwert gegen das Opfer",
+          "metaphysics": "gewährt eine erkennbare, wohlwollende Realität, offen für Erfolg",
+          "epistemology": "folgt der Vernunft",
+          "politics": "verteidigt Freiheit und freiwillige Beziehungen",
+          "aesthetics": "zeigt Schönheit als Feier des Lebens"
+        },
+        "neg": {
+          "ethics": "tauscht Selbstwert gegen altruistische Schuld und Opfer",
+          "metaphysics": "zeichnet die Realität als bösartig oder schicksalhaft",
+          "epistemology": "greift zu Mystizismus und Skepsis statt Vernunft",
+          "politics": "stellt Zwang und das Kollektiv über das Individuum",
+          "aesthetics": "begnügt sich mit Nihilismus gegen die Schönheit"
+        }
+      },
       "scoreLine": "Endbewertung {{score}} · Note {{n}} von 10"
     }
   }

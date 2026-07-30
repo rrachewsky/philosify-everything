@@ -2792,6 +2792,33 @@
       "you": "Você"
     },
     "verdict": {
+      "r": {
+        "frame": "A obra {{clauses}} — daí {{score}}: {{band}}.",
+        "frameOpen": "A obra {{clauses}}.",
+        "join": "; ",
+        "mix": "mantém {{concept}} e seus opostos em quase equilíbrio",
+        "concept": {
+          "ethics": "a autoestima",
+          "metaphysics": "a realidade",
+          "epistemology": "a razão",
+          "politics": "a liberdade",
+          "aesthetics": "a beleza"
+        },
+        "pos": {
+          "ethics": "sustenta a autoestima merecida contra o sacrifício",
+          "metaphysics": "concede uma realidade cognoscível e benevolente, aberta ao êxito",
+          "epistemology": "responde à razão",
+          "politics": "defende a liberdade e as relações voluntárias",
+          "aesthetics": "apresenta a beleza como celebração da vida"
+        },
+        "neg": {
+          "ethics": "troca a autoestima por culpa altruísta e sacrifício",
+          "metaphysics": "pinta a realidade como malévola ou fatalista",
+          "epistemology": "recorre ao misticismo e ao ceticismo contra a razão",
+          "politics": "põe a coerção e o coletivo acima do indivíduo",
+          "aesthetics": "contenta-se com o niilismo contra a beleza"
+        }
+      },
       "scoreLine": "Pontuação final {{score}} · Nota {{n}} de 10"
     }
   }
