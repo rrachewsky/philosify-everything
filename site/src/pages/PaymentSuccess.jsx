@@ -6,7 +6,7 @@ import { Modal } from '../components/common';
 import { useAuth } from '../hooks';
 import { useCreditsContext } from '../contexts';
 import { verifyPayment } from '../services/api';
-import { logger, getPendingAction, clearPendingAction } from '../utils';
+import { logger, getPendingAction } from '../utils';
 
 export function PaymentSuccess() {
   const { t } = useTranslation();
@@ -165,55 +165,54 @@ export function PaymentSuccess() {
   const handleReturn = () => {
     const pending = getPendingAction();
     if (pending) {
-      // Don't clear yet — consuming components read it to restore context.
-      // They call clearPendingAction() after consuming.
+      // Don't clear yet — the target module consumes it on mount to restore
+      // the selected item and re-run the action. It calls clearPendingAction().
 
-      // Colloquium actions with a threadId — open ideas sidebar + debate
-      if (pending.threadId && pending.type?.startsWith('colloquium:')) {
-        navigate('/', { state: { openDebate: pending.threadId } });
+      // Colloquium actions — Ideas page; a threadId opens that debate
+      // (?debate= is what IdeasPage consumes; the state carries it too)
+      if (pending.type?.startsWith('colloquium:')) {
+        if (pending.threadId) {
+          navigate(`/ideas?debate=${pending.threadId}`, {
+            state: { resume: true, openDebate: pending.threadId },
+          });
+        } else {
+          navigate('/ideas', { state: { resume: true } });
+        }
         return;
       }
-      // Colloquium propose / open-debate — open ideas sidebar
-      if (
-        pending.type === 'colloquium:propose' ||
-        pending.type === 'colloquium:proposeOpenDebate'
-      ) {
-        navigate('/', { state: { openIdeas: true } });
-        return;
-      }
-      // Space unlock — open community hub to that space tab
+      // Space unlock — community hub on that space tab (SpaceLock auto-retries)
       if (pending.type === 'space:unlock') {
-        navigate('/', { state: { openCommunity: pending.space || 'underground' } });
+        navigate('/community', { state: { resume: true, tab: pending.space || 'underground' } });
         return;
       }
-      // Book analysis or book panel — open literature sidebar
+      // Book analysis or book panel — literature module
       if (pending.type === 'book-analysis' || (pending.type === 'panel-analysis' && pending.book)) {
-        navigate('/', { state: { openBooks: true } });
+        navigate('/literature', { state: { resume: true } });
         return;
       }
-      // Music analysis or music panel — open music sidebar
+      // Music analysis or music panel — music module
       if (pending.type === 'analysis' || (pending.type === 'panel-analysis' && pending.track)) {
-        navigate('/', { state: { openMusic: true } });
+        navigate('/music', { state: { resume: true } });
         return;
       }
-      // Unsafe Zone — open unsafe zone sidebar
+      // Unsafe Zone — dialogue console (draft + auto-send live there)
       if (pending.type === 'unsafe-zone') {
-        navigate('/', { state: { openUnsafeZone: true } });
+        navigate('/unsafe-zone', { state: { resume: true } });
         return;
       }
-      // Cinema analysis or film panel — open cinema sidebar
+      // Cinema analysis or film panel — cinema module
       if (pending.type === 'cinema-analysis' || pending.type === 'film-panel') {
-        navigate('/', { state: { openCinema: true } });
+        navigate('/cinema', { state: { resume: true } });
         return;
       }
-      // News analysis or news panel — open news sidebar
+      // News analysis or news panel — news module
       if (pending.type === 'news-analysis' || pending.type === 'news-panel') {
-        navigate('/', { state: { openNews: true } });
+        navigate('/news', { state: { resume: true } });
         return;
       }
-      // Quiz start/continue — resume on the quiz page
+      // Quiz start/continue — quiz page boot resumes the pending action
       if (pending.type === 'quiz:start' || pending.type === 'quiz:continue') {
-        navigate('/', { state: { openQuiz: true } });
+        navigate('/quiz', { state: { resume: true } });
         return;
       }
     }

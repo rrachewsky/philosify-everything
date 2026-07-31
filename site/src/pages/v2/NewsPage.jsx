@@ -153,11 +153,16 @@ export default function NewsPage() {
 
   // ── Mount: payment-resume (Addendum 1, same as sidebar openWithPendingAction)
   //    + breaking ticker load + search focus ──
+  const [resumeRun, setResumeRun] = useState(null); // 'news-analysis' | 'news-panel'
   useEffect(() => {
     const action = getPendingAction();
     if ((action?.type === 'news-analysis' || action?.type === 'news-panel') && action.article) {
       news.selectArticle(action.article);
       clearPendingAction();
+      // WP7: arm the auto-run (replay params win — same rule as Music)
+      if (!searchParams.get('analysis') && !searchParams.get('panel')) {
+        setResumeRun(action.type);
+      }
     } else if (!location.state?.resume) {
       setTimeout(() => searchRef.current?.focus(), 300);
     }
@@ -168,6 +173,19 @@ export default function NewsPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ── Payment-resume execution (WP7): with the restored article, the user
+  //    and the balance all in, fire the SAME handler the user would click.
+  //    The flag clears first, so the handler's own credit gate can re-open
+  //    Buy Credits without looping. ──
+  useEffect(() => {
+    if (!resumeRun || !news.selectedArticle || !user || balance === null) return;
+    const run = resumeRun;
+    setResumeRun(null);
+    if (run === 'news-analysis') handleScan();
+    else handleOpenPanel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resumeRun, news.selectedArticle, user, balance]);
 
   // ── History replay (Addendum 1): ?analysis=<id> via GET /api/analysis/:id
   //    (news analyses live in the analyses table; the 4 news fields ride in

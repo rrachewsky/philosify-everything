@@ -578,6 +578,7 @@ export default function MusicPage() {
 
   // ---- payment-resume on mount (Addendum 1) ----
   const resumeHandledRef = useRef(false);
+  const [resumeRun, setResumeRun] = useState(null); // 'analysis' | 'panel-analysis'
   useEffect(() => {
     if (resumeHandledRef.current) return;
     resumeHandledRef.current = true;
@@ -593,10 +594,28 @@ export default function MusicPage() {
         setAnalysisResult(null);
         setAnalysisError(null);
         clearPendingAction();
+        // WP7: arm the auto-run — executed below once user + balance load
+        setResumeRun(pending.type);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ---- payment-resume execution (WP7): with the restored track, the user
+  //      and the balance all in, fire the SAME handler the user would click.
+  //      The flag clears first, so the handler's own credit gate can re-open
+  //      Buy Credits without looping. ----
+  useEffect(() => {
+    if (!resumeRun || !selectedTrack || !user || balance === null) return;
+    const run = resumeRun;
+    setResumeRun(null);
+    if (run === 'analysis') {
+      handleAnalyze();
+    } else {
+      // Philosophers are not stored — reopening the picker IS the restore
+      handleOpenPanel();
+    }
+  }, [resumeRun, selectedTrack, user, balance, handleAnalyze, handleOpenPanel]);
 
   // ---- unmount cleanup (parity with sidebar close()) ----
   useEffect(

@@ -110,22 +110,37 @@ function UnsafeZoneConsole({ user }) {
   const userId = user?.id;
 
   // ---- Payment-resume (Addendum 1) + draft restore, on mount ----
+  // The console is keyed by user id: the pre-auth mount (key 'guest') must
+  // leave the draft and the pending action in storage so the post-auth
+  // remount can consume them and arm the one-shot auto-send (WP7).
+  const [autoSend, setAutoSend] = useState(false);
+  const autoSentRef = useRef(false);
   useEffect(() => {
     const pending = getPendingAction();
-    if (location.state?.resume || pending?.type === 'unsafe-zone') {
+    const isResume = location.state?.resume || pending?.type === 'unsafe-zone';
+    if (isResume) {
       logger.log('[UnsafeZone] Resume on mount:', { state: location.state, pending });
       // The unsafe-zone pending action carries only {credits}; resuming means
       // reloading the conversation (done below) with the draft restored.
-      if (pending?.type === 'unsafe-zone') clearPendingAction();
-      if (location.state?.resume) {
-        navigate(location.pathname + location.search, { replace: true, state: null });
+      if (user) {
+        if (pending?.type === 'unsafe-zone') clearPendingAction();
+        if (location.state?.resume) {
+          navigate(location.pathname + location.search, { replace: true, state: null });
+        }
       }
     }
     try {
       const draft = sessionStorage.getItem(DRAFT_KEY);
       if (draft) {
         setInput(draft);
-        sessionStorage.removeItem(DRAFT_KEY);
+        if (user) {
+          sessionStorage.removeItem(DRAFT_KEY);
+          // WP7: resuming with a restored draft — send it once the
+          // conversation reload and the balance are both in (below).
+          if (isResume) {
+            setAutoSend(true);
+          }
+        }
       }
     } catch {
       // sessionStorage unavailable
@@ -340,6 +355,30 @@ function UnsafeZoneConsole({ user }) {
       setSending(false);
     }
   }, [input, sending, user, balance, messages, i18n, t, sessionId, getRequiredCredits, navigate]);
+
+  // ---- Payment-resume execution (WP7): once the conversation reload and
+  //      the balance are both in, fire the SAME send path the user would
+  //      click. The ref guarantees a single attempt ever; if the reloaded
+  //      conversation already answered this exact draft (another tab), do
+  //      nothing. ----
+  useEffect(() => {
+    if (!autoSend || autoSentRef.current) return;
+    if (!user || !conversationLoaded || balance === null || sending) return;
+    const draft = input.trim();
+    if (!draft) {
+      setAutoSend(false);
+      return;
+    }
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user');
+    if (lastUserMsg && lastUserMsg.content === draft) {
+      // Session already carries (and answered) this draft — do nothing
+      setAutoSend(false);
+      return;
+    }
+    autoSentRef.current = true;
+    setAutoSend(false);
+    sendMessage();
+  }, [autoSend, user, conversationLoaded, balance, sending, input, messages, sendMessage]);
 
   const handleKeyDown = useCallback(
     (e) => {

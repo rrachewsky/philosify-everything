@@ -117,6 +117,7 @@ export default function CinemaPage() {
   const [replayLoading, setReplayLoading] = useState(false);
   const [replayError, setReplayError] = useState(null);
   const replayedRef = useRef(false);
+  const [resumeRun, setResumeRun] = useState(null); // 'cinema-analysis' | 'film-panel'
 
   const {
     selectedFilm,
@@ -205,9 +206,24 @@ export default function CinemaPage() {
     if (pending?.film && (pending.type === 'cinema-analysis' || pending.type === 'film-panel')) {
       selectFilm(pending.film);
       clearPendingAction();
+      // WP7: arm the auto-run — executed below once user + balance load
+      setResumeRun(pending.type);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Payment-resume execution (WP7): with the restored film, the user and the
+  // balance all in, fire the SAME handler the user would click. The flag
+  // clears first, so the handler's own credit gate can re-open Buy Credits
+  // without looping.
+  useEffect(() => {
+    if (!resumeRun || !selectedFilm || !isAuthenticated || balance === null) return;
+    const run = resumeRun;
+    setResumeRun(null);
+    if (run === 'cinema-analysis') handleScan();
+    else handleOpenPanel(); // philosophers are not stored — the picker IS the restore
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resumeRun, selectedFilm, isAuthenticated, balance]);
 
   const clearReplayParams = () => {
     if (searchParams.get('analysis') || searchParams.get('panel')) {
