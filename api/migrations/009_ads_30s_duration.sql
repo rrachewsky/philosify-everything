@@ -38,6 +38,24 @@ WHERE NOT EXISTS (
     AND is_active = true
 );
 
+-- 4. Creative fee for the new slot -------------------------------------
+-- WITHOUT THIS ROW A 30s BUY IS UNDERCHARGED. The quote builder falls back
+-- to 15000 when no creative_fee row matches the duration (inventory.js:
+-- `feeData?.[0]?.price_cents || 15000`), which is the FIVE-second fee — so a
+-- 30s Philosify-produced creative would bill $150 instead of its real price.
+--
+-- The existing ladder rises $100 per 5 seconds:
+--   5s = $150 · 10s = $250 · 15s = $350 · 20s = $450
+-- which puts 30s at $650. CHANGE 65000 HERE IF THE RATE CARD SAYS OTHERWISE.
+INSERT INTO ads.pricing_config (pricing_type, placement, duration, price_cents)
+SELECT 'creative_fee', 'sidebar', 30, 65000
+WHERE NOT EXISTS (
+  SELECT 1 FROM ads.pricing_config
+  WHERE pricing_type = 'creative_fee'
+    AND duration = 30
+    AND is_active = true
+);
+
 COMMIT;
 
 -- Verify -----------------------------------------------------------------
