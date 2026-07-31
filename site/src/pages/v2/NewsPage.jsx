@@ -701,29 +701,25 @@ export default function NewsPage() {
                     <h2>{t('news.theFactsTitle', 'The Facts')}</h2>
                     <Prose text={activeScan.the_facts || activeScan.philosophical_analysis} />
                   </div>
-                  {(activeScan.source_analysis || activeScan.hits_and_misses) && (
-                    <div className="side">
-                      {activeScan.source_analysis && (
-                        <div className="cell static">
-                          <h2>{t('v2.news.framingTitle', 'FRAMING')}</h2>
-                          <Prose className="prose sm" text={activeScan.source_analysis} />
-                        </div>
-                      )}
-                      {activeScan.hits_and_misses && (
-                        <div className="cell static">
-                          <h2>{t('v2.news.reliabilityTitle', 'RELIABILITY')}</h2>
-                          <Prose className="prose sm" text={activeScan.hits_and_misses} />
-                        </div>
-                      )}
+                  {activeScan.source_analysis && (
+                    <div className="cell static">
+                      <h2>{t('news.sourceAnalysisTitle', 'Source Analysis')}</h2>
+                      <Prose text={activeScan.source_analysis} />
+                    </div>
+                  )}
+                  {activeScan.hits_and_misses && (
+                    <div className="cell static">
+                      <h2>{t('news.hitsAndMissesTitle', 'Hits, Misses and Omissions')}</h2>
+                      <Prose text={activeScan.hits_and_misses} />
+                    </div>
+                  )}
+                  {activeScan.philosify_opinion && (
+                    <div className="cell static">
+                      <h2>{t('v2.news.opinionTitle', 'PHILOSIFY OPINION')}</h2>
+                      <Prose text={activeScan.philosify_opinion} />
                     </div>
                   )}
                 </div>
-                {activeScan.philosify_opinion && (
-                  <div className="cell static opinion">
-                    <h2>{t('v2.news.opinionTitle', 'PHILOSIFY OPINION')}</h2>
-                    <Prose text={activeScan.philosify_opinion} />
-                  </div>
-                )}
                 <TTSBar result={activeScan} lang={userLang} t={t} />
                 <div className="actions">
                   {activeScan.id && (
