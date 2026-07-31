@@ -3,6 +3,7 @@
 // ============================================================
 
 import { getSecret } from '../utils/secrets.js';
+import { titleMatches } from '../lyrics/genius.js';
 
 // Get book metadata by Google Books ID (when already selected from dropdown)
 export async function getBookMetadataById(googleBooksId, env) {
@@ -67,15 +68,25 @@ export async function getBookMetadata(title, author, env) {
     }
 
     const data = await res.json();
-    const volumes = data.items || [];
+    const volumes = (data.items || []).filter((v) => v && v.volumeInfo);
 
     if (volumes.length === 0) {
       console.warn(`[GoogleBooks] No results found for "${title}" by "${author}"`);
       return null;
     }
 
-    // Return first match
-    const volume = volumes[0];
+    // Never take the first hit blindly (same defect class as the Genius
+    // lyrics lookup, 31 Jul): a search that cannot find the requested title
+    // can still return another book by the same author. Google Books is far
+    // less exposed than Genius because the query is field-scoped with
+    // intitle:/inauthor:, but the guard costs nothing.
+    const volume = volumes.find((v) => titleMatches(title, v.volumeInfo?.title || ''));
+    if (!volume) {
+      console.warn(
+        `[GoogleBooks] ${volumes.length} result(s) for "${title}", none with a matching title — refusing`
+      );
+      return null;
+    }
     const info = volume.volumeInfo || {};
     const identifiers = info.industryIdentifiers || [];
     const isbn13 = identifiers.find(id => id.type === 'ISBN_13')?.identifier;

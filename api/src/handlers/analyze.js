@@ -541,7 +541,13 @@ export async function handleAnalyze(
     console.log(`[Philosify] Fetching lyrics: ${song} - ${artist}`);
     const rawLyrics = await getLyrics(song, artist, env);
 
-    // Validate lyrics format before sanitization
+    // MISSING LYRICS IS A FIRST-CLASS STATE, NEVER A FALLBACK (ruling 31 Jul).
+    // Both sources are title-exact: Genius validates artist AND title over its
+    // top 10 hits, Letras.mus.br resolves an exact /artist/song URL. When
+    // neither yields the requested song the analysis is REFUSED here — the
+    // credit reservation is released by the caller in index.js. Substituting
+    // another track's lyrics is what produced the Joana -> Realize defect and
+    // must never be reintroduced.
     if (!validateLyricsFormat(rawLyrics)) {
       console.error(`[Philosify] ✗✗✗ FATAL ERROR ✗✗✗`);
       console.error(`[Philosify] Lyrics invalid or not found`);

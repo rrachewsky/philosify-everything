@@ -4608,6 +4608,28 @@ export default {
       // END ADS PLATFORM ROUTES
       // ============================================================
 
+      // Lyrics contamination audit (read-only) and the reviewed purge.
+      // Both gated on ADMIN_SECRET; the purge acts only on an explicit id list.
+      if (url.pathname === "/api/admin/lyrics-audit" && request.method === "GET") {
+        const adminSecret = request.headers.get("X-Admin-Secret");
+        const expected = await getSecret(env.ADMIN_SECRET);
+        if (!adminSecret || !safeEq(adminSecret, expected)) {
+          return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+        }
+        const { handleLyricsAudit } = await import("./src/handlers/admin/lyrics-audit.js");
+        return handleLyricsAudit(request, env, origin);
+      }
+
+      if (url.pathname === "/api/admin/lyrics-audit/purge" && request.method === "POST") {
+        const adminSecret = request.headers.get("X-Admin-Secret");
+        const expected = await getSecret(env.ADMIN_SECRET);
+        if (!adminSecret || !safeEq(adminSecret, expected)) {
+          return jsonResponse({ error: "Forbidden" }, 403, origin, env);
+        }
+        const { handleLyricsPurge } = await import("./src/handlers/admin/lyrics-audit.js");
+        return handleLyricsPurge(request, env, origin);
+      }
+
       // Temporary diagnostic: check profiles table and auth trigger
       if (url.pathname === "/api/admin/diagnose-auth" && request.method === "GET") {
         const adminSecret = request.headers.get("X-Admin-Secret");

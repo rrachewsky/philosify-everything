@@ -7,7 +7,7 @@ import { getSecret } from '../utils/secrets.js';
 
 // Comparable form: accent-free lowercase words, version/feature suffixes and
 // punctuation dropped. "Joana (Ao Vivo)" and "joana" compare equal.
-function normalizeTitle(value) {
+export function normalizeTitle(value) {
   if (!value) return '';
   return String(value)
     .toLowerCase()
@@ -23,7 +23,7 @@ function normalizeTitle(value) {
 // A hit is the requested song only when the titles are equal once normalized,
 // or one is the other plus a trailing qualifier ("Joana" vs "Joana Ao Vivo").
 // Containment must land on a word boundary, so "Eu" never matches "Eu Sei".
-function titleMatches(requested, found) {
+export function titleMatches(requested, found) {
   const a = normalizeTitle(requested);
   const b = normalizeTitle(found);
   if (!a || !b) return false;
@@ -31,6 +31,17 @@ function titleMatches(requested, found) {
   const [shorter, longer] = a.length <= b.length ? [a, b] : [b, a];
   if (shorter.length < 4) return false;
   return longer.startsWith(`${shorter} `);
+}
+
+// Artist comparison, extracted so the retroactive audit replays PRODUCTION's
+// rule rather than a lookalike of it. Either name may contain the other, which
+// tolerates "Bob Rach" vs "Bob Rach & Band".
+export function artistMatches(requested, found) {
+  const normalize = (a) => String(a || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const a = normalize(requested);
+  const b = normalize(found);
+  if (!a || !b) return false;
+  return a.includes(b) || b.includes(a);
 }
 
 export async function getLyricsFromGenius(song, simplifiedArtist, artist, env) {
@@ -83,14 +94,7 @@ export async function getLyricsFromGenius(song, simplifiedArtist, artist, env) {
 
         // Validate artist if necessary (RIGOROUS)
         if (strategy.validateArtist && artist) {
-          const normalizeArtist = (a) => a.toLowerCase().replace(/[^a-z0-9]/g, '');
-          const foundNormalized = normalizeArtist(foundArtist);
-          const searchNormalized = normalizeArtist(simplifiedArtist);
-
-          const artistMatches = foundNormalized.includes(searchNormalized) ||
-                               searchNormalized.includes(foundNormalized);
-
-          if (!artistMatches) continue; // Skip - wrong artist
+          if (!artistMatches(simplifiedArtist, foundArtist)) continue; // Skip - wrong artist
         }
 
         // Validate title — without this the artist check alone lets a
