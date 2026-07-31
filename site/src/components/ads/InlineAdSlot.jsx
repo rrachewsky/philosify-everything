@@ -5,6 +5,23 @@ import '@/styles/ads.css';
 
 const IMPRESSION_DELAY_MS = 1200;
 
+// An advertiser URL saved without a scheme ("acme.com") is a RELATIVE href:
+// the browser resolves it against the current page, no route matches, and the
+// SPA catch-all sends the visitor to our own landing page instead of the
+// advertiser. Force an absolute http(s) destination, and refuse any other
+// scheme so a stored javascript:/data: URL can never execute from the frame.
+function absoluteAdUrl(raw) {
+  const value = String(raw || '').trim();
+  if (!value) return null;
+  const candidate = /^[a-z][a-z0-9+.-]*:/i.test(value) ? value : `https://${value}`;
+  try {
+    const parsed = new URL(candidate);
+    return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function InlineAdSlot({
   userId,
   placement = 'sidebar',
@@ -184,9 +201,11 @@ export default function InlineAdSlot({
     }
   };
 
-  if (!ad?.creative_url || !ad?.target_url || isClosed) {
-    console.log('[Ad] Not rendering - missing data or closed:', { 
-      creative_url: ad?.creative_url, 
+  const targetUrl = absoluteAdUrl(ad?.target_url);
+
+  if (!ad?.creative_url || !targetUrl || isClosed) {
+    console.log('[Ad] Not rendering - missing data or closed:', {
+      creative_url: ad?.creative_url,
       target_url: ad?.target_url,
       isClosed,
     });
@@ -198,7 +217,7 @@ export default function InlineAdSlot({
       <p className="ad-slot__label">{label ?? t('ads.sponsored', 'Sponsored')}</p>
       <a
         className="ad-slot__card"
-        href={ad.target_url}
+        href={targetUrl}
         target="_blank"
         rel="noreferrer"
         onClick={handleClick}

@@ -202,6 +202,19 @@ export function isValidUrl(url) {
 }
 
 /**
+ * Make an advertiser destination absolute, assuming https when the scheme is
+ * missing. Stored without one ("acme.com"), the click target is a RELATIVE
+ * href in the browser and the visitor lands back on our own site instead of
+ * the advertiser's. Returns null when the result is not http(s).
+ */
+export function normalizeTargetUrl(url) {
+  const value = String(url || '').trim();
+  if (!value) return null;
+  const candidate = /^[a-z][a-z0-9+.-]*:/i.test(value) ? value : `https://${value}`;
+  return isValidUrl(candidate) ? candidate : null;
+}
+
+/**
  * Get CPM for placement/duration (fallback values — DB pricing_config is source of truth)
  * These must match inventory.js DEFAULT_CPM and the pricing_config table
  */

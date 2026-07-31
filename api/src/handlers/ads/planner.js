@@ -6,7 +6,7 @@
 
 import { getServiceSupabase } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
-import { getAdvertiserFromRequest } from './utils.js';
+import { getAdvertiserFromRequest, normalizeTargetUrl } from './utils.js';
 import { topUpInventoryForecast } from './inventory.js';
 
 // SECURITY: UUID validation for route parameters
@@ -385,6 +385,18 @@ export async function handleCreateFromPlan(request, env, corsHeaders) {
       return jsonResponse({ error: `Missing required fields: ${[!name && 'name', !target_url && 'target_url', !creative_type && 'creative_type'].filter(Boolean).join(', ')}` }, 400, corsHeaders);
     }
 
+    // This path never checked the destination, unlike campaigns/orders, so a
+    // scheme-less URL was stored verbatim and clicks resolved against our own
+    // origin — the visitor came back to the landing page, not the advertiser.
+    const targetUrl = normalizeTargetUrl(target_url);
+    if (!targetUrl) {
+      return jsonResponse(
+        { error: 'target_url must be a valid http(s) address' },
+        400,
+        corsHeaders,
+      );
+    }
+
     if (creative_type === 'self' && !creative_url) {
       return jsonResponse({ error: 'creative_url required for self-uploaded creatives' }, 400, corsHeaders);
     }
@@ -422,7 +434,7 @@ export async function handleCreateFromPlan(request, env, corsHeaders) {
       .insert({
         advertiser_id: advertiser.id,
         name,
-        target_url,
+        target_url: targetUrl,
         creative_type,
         creative_url: creative_type === 'self' ? creative_url : null,
         creative_brief: creative_type === 'philosify' ? creative_brief : null,
@@ -454,7 +466,7 @@ export async function handleCreateFromPlan(request, env, corsHeaders) {
           placement: placement.placement,
           duration: placement.duration,
           impressions_ordered: placement.impressions,
-          target_url,
+          target_url: targetUrl,
           creative_type,
           creative_url: creative_type === 'self' ? creative_url : null,
           creative_status: creative_type === 'self' ? 'ready' : 'pending',
@@ -644,8 +656,17 @@ export async function handleUpdatePlan(request, env, corsHeaders, planId) {
     const body = await request.json();
     const updates = {};
 
+    let normalizedTarget = null;
     if (body.target_url) {
-      updates.target_url = body.target_url;
+      normalizedTarget = normalizeTargetUrl(body.target_url);
+      if (!normalizedTarget) {
+        return jsonResponse(
+          { error: 'target_url must be a valid http(s) address' },
+          400,
+          corsHeaders,
+        );
+      }
+      updates.target_url = normalizedTarget;
     }
     if (body.start_date) {
       updates.start_date = body.start_date;
@@ -672,9 +693,9 @@ export async function handleUpdatePlan(request, env, corsHeaders, planId) {
     }
 
     // Also update orders if target_url or dates changed
-    if (body.target_url) {
+    if (normalizedTarget) {
       await supabase.from('ads.ad_orders').update(
-        { target_url: body.target_url, updated_at: new Date().toISOString() },
+        { target_url: normalizedTarget, updated_at: new Date().toISOString() },
         `plan_id=eq.${planId}`
       );
     }
