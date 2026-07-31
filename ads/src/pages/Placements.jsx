@@ -130,6 +130,7 @@ function getPlacements(t) {
         { seconds: 10, cpm: 20 },
         { seconds: 15, cpm: 30 },
         { seconds: 20, cpm: 40 },
+        { seconds: 30, cpm: 60 },
       ],
       specs: {
         dimensions: t('placements.sidebarDimensions'),

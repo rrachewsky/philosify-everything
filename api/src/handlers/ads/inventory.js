@@ -241,7 +241,7 @@ export async function handleGetQuote(request, env, corsHeaders) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
     }
 
-    const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20];
+    const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20, 30];
     if (!duration || !validDurations.includes(duration)) {
       return jsonResponse({ error: `Invalid duration for ${placement}` }, 400, corsHeaders);
     }
@@ -365,7 +365,7 @@ export async function handleCalculateCart(request, env, corsHeaders) {
         return jsonResponse({ error: `Invalid placement: ${placement}` }, 400, corsHeaders);
       }
 
-      const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20];
+      const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20, 30];
       if (!duration || !validDurations.includes(duration)) {
         return jsonResponse({ error: `Invalid duration ${duration}s for ${placement}` }, 400, corsHeaders);
       }

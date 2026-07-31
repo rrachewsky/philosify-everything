@@ -113,7 +113,7 @@ export async function handleCreateCampaign(request, env, corsHeaders) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
     }
 
-    const validDurations = placement === 'sidebar' ? [5, 10, 15, 20] : [5];
+    const validDurations = placement === 'sidebar' ? [5, 10, 15, 20, 30] : [5];
     if (!validDurations.includes(duration)) {
       return jsonResponse({ error: 'Invalid duration for placement' }, 400, corsHeaders);
     }

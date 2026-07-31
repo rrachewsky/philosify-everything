@@ -24,6 +24,7 @@ const DURATIONS = [
   { value: 10, label: '10s' },
   { value: 15, label: '15s' },
   { value: 20, label: '20s' },
+  { value: 30, label: '30s' },
 ];
 
 function CreateCampaign() {

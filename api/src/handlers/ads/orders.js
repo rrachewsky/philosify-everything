@@ -166,7 +166,7 @@ export async function handleCreateOrder(request, env, corsHeaders) {
     }
 
     // Validate duration
-    const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20];
+    const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20, 30];
     if (!validDurations.includes(duration)) {
       return jsonResponse({ error: `Invalid duration for ${placement}` }, 400, corsHeaders);
     }

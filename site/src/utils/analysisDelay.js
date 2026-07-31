@@ -11,7 +11,8 @@ const AD_PADDING_MS = 2_000;
  * Otherwise falls back to the default 20s window.
  *
  * @param {number} startedAt - Date.now() when analysis started
- * @param {number|null} adDurationSeconds - contracted ad duration in seconds (5, 10, 15, 20)
+ * @param {number|null} adDurationSeconds - contracted ad duration in seconds (5, 10, 15, 20, 30).
+ *   NOTE: this hold delays the reader's own result — a 30s buy means a 32s wait.
  */
 export async function waitForMinimumAnalysisWindow(startedAt, adDurationSeconds = null) {
   let minimumMs;

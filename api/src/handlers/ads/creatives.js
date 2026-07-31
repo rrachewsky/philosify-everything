@@ -413,8 +413,9 @@ export async function generateAICreative(env, options) {
 // AI VIDEO GENERATION (SORA)
 // ============================================================
 
-// Sora accepts: 4, 8, or 12 seconds only
-const VIDEO_DURATIONS = { 5: '4', 10: '8', 15: '12', 20: '12' };
+// Sora accepts: 4, 8, or 12 seconds only — longer slots get the 12s cut,
+// which loops inside the frame for the remainder of the buy.
+const VIDEO_DURATIONS = { 5: '4', 10: '8', 15: '12', 20: '12', 30: '12' };
 
 export async function generateAIVideo(env, options) {
   const { advertiserId, brief, brandName, targetUrl, placement, duration } = options;
