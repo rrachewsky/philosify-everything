@@ -697,7 +697,7 @@ export default function NewsPage() {
             {activeScan && !busy && (
               <div ref={resultRef}>
                 <div className="scan">
-                  <div className="cell static">
+                  <div className="cell static facts">
                     <h2>{t('news.theFactsTitle', 'The Facts')}</h2>
                     <Prose text={activeScan.the_facts || activeScan.philosophical_analysis} />
                   </div>

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { BATTLE_COLORS, TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
+import { TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 
 // Battle dimension keys for translation lookup
@@ -44,8 +44,9 @@ function BattleBar({ battle, score, t }) {
   const [positiveKey, negativeKey] = BATTLE_KEYS[battle] || ['left', 'right'];
   const positiveLabel = t(`constellation.battles.${positiveKey}`);
   const negativeLabel = t(`constellation.battles.${negativeKey}`);
-  const color = BATTLE_COLORS[battle] || 'var(--ink-low)'; // battle color = DATA
-  
+  // Ruling 31 Jul: the scorecard meters are MEASUREMENT, not data identity —
+  // they carry no per-axis colour. School colour survives on the map only.
+
   // Score: -1 to +1 (normalized from -10 to +10)
   // +1 = fully positive (Reason, Reality, Individual, etc.) - extends RIGHT
   // -1 = fully negative (Faith, Mysticism, Collective, etc.) - extends LEFT
@@ -76,14 +77,24 @@ function BattleBar({ battle, score, t }) {
     <div style={styles.battleRow}>
       <div style={styles.battleHeader}>
         {/* Negative label on left, positive on right (matches bar direction).
-            Dominant side carries the battle DATA color; the other is chrome. */}
-        <span style={{ ...styles.battleLabelLeft, color: !isPositive ? color : 'var(--ink-low)' }}>
+            Dominant side reads at the text tier, the other at chrome tier. */}
+        <span
+          style={{
+            ...styles.battleLabelLeft,
+            color: !isPositive ? 'var(--ink-text)' : 'var(--ink-mid)',
+          }}
+        >
           {negativeLabel}
         </span>
         <span style={styles.battleScore}>
           {displayScore > 0 ? '+' : ''}{displayScore}
         </span>
-        <span style={{ ...styles.battleLabelRight, color: isPositive ? color : 'var(--ink-low)' }}>
+        <span
+          style={{
+            ...styles.battleLabelRight,
+            color: isPositive ? 'var(--ink-text)' : 'var(--ink-mid)',
+          }}
+        >
           {positiveLabel}
         </span>
       </div>
@@ -97,7 +108,7 @@ function BattleBar({ battle, score, t }) {
             top: 0,
             height: '100%',
             borderRadius: 0,
-            background: color,
+            background: 'var(--silver)',
             // For positive: start at center (50%), extend right
             // For negative: end at center (50%), extend left
             ...(isPositive
@@ -642,9 +653,11 @@ const styles = {
     marginTop: 3,
   },
 
+  // Philosopher card, ruling 31 Jul: everything in this card is information
+  // the reader came for — chrome tier, not the whisper tier.
   birthplace: {
     font: '400 10.5px/1.4 var(--f-ui)',
-    color: 'var(--ink-low)',
+    color: 'var(--ink-mid)',
     marginTop: 2,
   },
 
@@ -664,7 +677,7 @@ const styles = {
     font: '500 10px/1.4 var(--f-ui)',
     letterSpacing: '.18em',
     textTransform: 'uppercase',
-    color: 'var(--ink-low)',
+    color: 'var(--ink-mid)',
     marginBottom: 6,
   },
 
@@ -725,7 +738,7 @@ const styles = {
   battleScore: {
     font: '500 11px/1.4 var(--f-ui)',
     fontVariantNumeric: 'tabular-nums',
-    color: 'var(--ink-hi)',
+    color: 'var(--ink-text)',
     minWidth: 28,
     textAlign: 'center',
   },
@@ -741,7 +754,7 @@ const styles = {
   battleTrack: {
     width: '100%',
     height: 6,
-    background: 'var(--line)',
+    background: 'var(--ink-low)',
     borderRadius: 0,
     position: 'relative',
     overflow: 'hidden',
@@ -753,7 +766,8 @@ const styles = {
     top: 0,
     width: 1,
     height: '100%',
-    background: 'var(--line-strong)',
+    // Zero marker must stay legible over both the rail and the silver fill.
+    background: 'var(--bg)',
     transform: 'translateX(-50%)',
     zIndex: 1,
   },
@@ -761,7 +775,7 @@ const styles = {
   battleIntensity: {
     font: '400 9.5px/1.4 var(--f-ui)',
     letterSpacing: '.04em',
-    color: 'var(--ink-low)',
+    color: 'var(--ink-mid)',
     textAlign: 'center',
   },
 
@@ -801,7 +815,7 @@ const styles = {
   connectionType: {
     font: '500 9px/1.4 var(--f-ui)',
     letterSpacing: '.14em',
-    color: 'var(--ink-low)',
+    color: 'var(--ink-mid)',
     textTransform: 'uppercase',
   },
 
@@ -855,7 +869,7 @@ const styles = {
     display: 'block',
     font: '400 11px/1.4 var(--f-ui)',
     fontVariantNumeric: 'tabular-nums',
-    color: 'var(--ink-low)',
+    color: 'var(--ink-mid)',
     marginTop: 4,
   },
 

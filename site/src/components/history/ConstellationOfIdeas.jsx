@@ -5,7 +5,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useConstellation, BATTLE_COLORS, ERAS } from '@hooks/useConstellation';
+import { useConstellation, ERAS } from '@hooks/useConstellation';
 import { useAuth } from '../../hooks/useAuth.js';
 import { ConstellationScene } from './ConstellationScene.jsx';
 import { TimelineControls } from './TimelineControls.jsx';

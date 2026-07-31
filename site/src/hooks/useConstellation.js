@@ -62,17 +62,8 @@ const TRADITION_BASE_X = {
   islamic: 20,
 };
 
-// Battle dimension colors
-export const BATTLE_COLORS = {
-  reason_faith: '#FFD700',        // Gold
-  reality_mysticism: '#00BFFF',   // Deep Sky Blue
-  individual_collective: '#D6158C', // Magenta (Philosify brand)
-  freedom_coercion: '#32CD32',    // Lime Green
-  value_nihilism: '#FF6347',      // Tomato
-  market_planning: '#9370DB',     // Medium Purple
-  beauty_chaos: '#FF69B4',        // Hot Pink
-  good_evil: '#20B2AA',           // Light Sea Green
-};
+// BATTLE_COLORS (per-axis gold/cyan/magenta/lime/…) retired 31 Jul: the
+// scorecard meters are monochrome. School colour is the map's only accent.
 
 // Tradition colors for satellites
 export const TRADITION_COLORS = {

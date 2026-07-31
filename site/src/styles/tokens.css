@@ -17,7 +17,9 @@
   /* ---------- INK -------------------------------------------- */
   --ink-hi:    #F5F5F6;
   --ink-text:  #F5F5F6;   /* reading tier is WHITE (30 Jul: all greys rejected as illegible) */
-  --ink-mid:   #9C9CA3;   /* secondary chrome only — NOT for reading text */
+  --ink-mid:   #D2D2D9;   /* secondary chrome only — NOT for reading text.
+                             Raised from #9C9CA3 (ruling 31 Jul): the chrome tier
+                             read too dark against the black canvas. */
   --ink-low:   #5E5E65;
   --ink-inv:   #0A0A0C;   /* text on inverted blocks             */
 

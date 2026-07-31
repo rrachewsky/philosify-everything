@@ -5,7 +5,7 @@
 import React, { useRef, useEffect, useImperativeHandle, forwardRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as THREE from 'three';
-import { TRADITION_COLORS, BATTLE_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
+import { TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
 
 // Connection type colors
 const CONNECTION_COLORS = {

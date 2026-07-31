@@ -13,7 +13,9 @@
 .v2 .pg-unsafe-zone .manifesto{font:400 16.5px/1.75 var(--fp);color:var(--mid)}
 .v2 .pg-unsafe-zone .manifesto p{margin:0 0 14px}
 .v2 .pg-unsafe-zone .manifesto p:last-child{margin-bottom:0}
-.v2 .pg-unsafe-zone .manifesto .quiet{color:var(--low)}
+/* Reading tier stays WHITE (ruling 31 Jul): .quiet held manifesto sentences
+   at --ink-low, which is the quiet-chrome tone, not a prose tone. */
+.v2 .pg-unsafe-zone .manifesto .quiet{color:var(--ink-text)}
 .v2 .pg-unsafe-zone .manifesto .em{color:var(--ink)}
 .v2 .pg-unsafe-zone .manifesto .close{color:var(--ink);text-align:center;margin-top:22px}
 
@@ -25,7 +27,7 @@
  margin:0 0 6px;font:400 16.5px/1.75 var(--fp);color:var(--mid)}
 .v2 .pg-unsafe-zone .uz-intro p{margin:0 0 8px}
 .v2 .pg-unsafe-zone .uz-intro p:last-child{margin-bottom:0}
-.v2 .pg-unsafe-zone .uz-intro .quiet{color:var(--low)}
+.v2 .pg-unsafe-zone .uz-intro .quiet{color:var(--ink-text)}
 .v2 .pg-unsafe-zone .uz-intro .em{color:var(--ink)}
 .v2 .pg-unsafe-zone .uz-intro .close{color:var(--ink);text-align:center}
 

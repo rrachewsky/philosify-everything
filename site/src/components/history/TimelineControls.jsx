@@ -409,7 +409,8 @@ const styles = {
     letterSpacing: '.16em',
     textTransform: 'uppercase',
     fontVariantNumeric: 'tabular-nums',
-    color: 'var(--ink-low)',
+    // HUD telemetry the user reads to know the visible window (31 Jul).
+    color: 'var(--ink-mid)',
     paddingLeft: 60,
     paddingRight: 60,
   },

@@ -252,7 +252,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    color: 'var(--ink-low)',
+    color: 'var(--ink-mid)',
     font: '500 10px/1.4 var(--f-ui)',
     letterSpacing: '.18em',
     textTransform: 'uppercase',

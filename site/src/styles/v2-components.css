@@ -186,8 +186,10 @@
 .v2 .panelbtn .pill{color:var(--silver)}
 
 /* ---------- Telemetry state line (music stack) ---------------- */
+/* Ruling 31 Jul: ANALYZING and its telemetry are information the user needs
+   to read while waiting — chrome tier, not the whisper tier. */
 .v2 .state{display:flex;align-items:center;gap:18px;border:1px solid var(--line);background:var(--bgcell);
- padding:14px 18px;margin-top:16px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low)}
+ padding:14px 18px;margin-top:16px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid)}
 .v2 .state b{color:var(--silver);font-weight:500;font-variant-numeric:tabular-nums}
 .v2 .state .bar{flex:1;height:1px;background:var(--line);position:relative}
 /* Analysis progress fill — --progress magenta, functional only (30 Jul) */
@@ -196,11 +198,13 @@
 
 /* ---------- Analysis card stack (music) ----------------------- */
 .v2 .verdict{border:1px solid var(--strong);background:var(--bgcell);padding:26px;margin-top:26px}
-.v2 .vlabel{font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--low)}
+/* Section label of the verdict card + its declared score — the "PHILOSOPHICAL
+   POSITIONS" family (ruling 31 Jul): read, not ambient. */
+.v2 .vlabel{font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid)}
 .v2 .vgrid{display:flex;gap:28px;align-items:baseline;margin-top:12px;flex-wrap:wrap}
 .v2 .note9{font:400 42px/1 var(--fd);color:var(--silver)}
 .v2 .classif{font:400 18px/1.35 var(--fd);letter-spacing:.08em;color:var(--ink)}
-.v2 .vscore{margin-top:12px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);font-variant-numeric:tabular-nums}
+.v2 .vscore{margin-top:12px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mid);font-variant-numeric:tabular-nums}
 .v2 .vwhy{margin-top:14px;max-width:62ch;font:400 16.5px/1.75 var(--fp);color:var(--mid)}
 .v2 .audio{display:flex;align-items:center;gap:16px;border:1px solid var(--line);padding:14px 18px;margin-top:14px;
  font:500 10.5px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
