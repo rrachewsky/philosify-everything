@@ -690,7 +690,7 @@ export default function NewsPage() {
               <div ref={resultRef}>
                 <div className="scan">
                   <div className="cell static">
-                    <h2>{t('v2.news.excerptTitle', 'SCAN OUTPUT // EXCERPT')}</h2>
+                    <h2>{t('news.theFactsTitle', 'The Facts')}</h2>
                     <Prose text={activeScan.the_facts || activeScan.philosophical_analysis} />
                   </div>
                   {(activeScan.source_analysis || activeScan.hits_and_misses) && (
