@@ -13,6 +13,9 @@ import DOMPurify from 'dompurify';
 import { PageShell, ModuleHeader, BreakingTicker, Telemetry, Button, Pill } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
+import { ShareButton } from '../../components/sharing/ShareButton';
+import { ShareToDMButton } from '../../components/sharing/ShareToDMButton';
+import { ShareToCommunityButton } from '../../components/sharing/ShareToCommunityButton';
 import InlineAdSlot from '../../components/ads/InlineAdSlot.jsx';
 import { useNews } from '../../hooks/useNews.js';
 import { useNewsPreferences } from '../../hooks/useNewsPreferences.js';
@@ -141,6 +144,8 @@ export default function NewsPage() {
   const [showPicker, setShowPicker] = useState(false);
   const [replay, setReplay] = useState(null); // { type: 'analysis' | 'panel', data }
   const [replayError, setReplayError] = useState(null);
+  // WP7 item 2: post-verdict sharing rail (same anatomy as Music/Cinema/Literature)
+  const [shareOpen, setShareOpen] = useState(null); // 'analysis' | 'panel' | null
 
   const searchRef = useRef(null);
   const resultRef = useRef(null);
@@ -299,6 +304,7 @@ export default function NewsPage() {
       setAnalysisError(null);
       setReplay(null);
       setReplayError(null);
+      setShareOpen(null);
       news.selectArticle(article);
     },
     [news]
@@ -309,6 +315,7 @@ export default function NewsPage() {
     setAnalysisError(null);
     setReplay(null);
     setReplayError(null);
+    setShareOpen(null);
     news.clearArticle();
     if (searchParams.get('analysis') || searchParams.get('panel')) {
       navigate('/news', { replace: true });
@@ -321,6 +328,7 @@ export default function NewsPage() {
     async (article, lang, model = 'grok') => {
       setIsAnalyzing(true);
       setAnalysisError(null);
+      setShareOpen(null);
       setElapsedTime(0);
       const startTime = Date.now();
       timerRef.current = setInterval(() => setElapsedTime(Date.now() - startTime), 100);
@@ -428,6 +436,7 @@ export default function NewsPage() {
   const handlePanelConfirm = async (philosophers) => {
     setShowPicker(false);
     setReplay(null);
+    setShareOpen(null);
     try {
       await news.analyzeWithPanel(philosophers, userLang);
     } catch (err) {
@@ -437,6 +446,10 @@ export default function NewsPage() {
       }
     }
   };
+
+  // ShareToCommunityButton target (same contract as Literature/Cinema)
+  const goCollective = (tab, groupId) =>
+    navigate('/community', { state: { tab: 'collective', groupId } });
 
   // ── Derived render state ──
   const selected = news.selectedArticle;
@@ -705,6 +718,31 @@ export default function NewsPage() {
                 )}
                 <TTSBar result={activeScan} lang={userLang} t={t} />
                 <div className="actions">
+                  {activeScan.id && (
+                    <a
+                      href="#share"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShareOpen(shareOpen === 'analysis' ? null : 'analysis');
+                      }}
+                    >
+                      {t('v2.music.share', 'Share')}
+                    </a>
+                  )}
+                  {activeScan.id && (
+                    <ShareToDMButton
+                      analysisId={activeScan.id}
+                      songName={activeScan.title || activeScan.song_name}
+                      artist={activeScan.source || activeScan.artist}
+                    />
+                  )}
+                  {activeScan.id && (
+                    <ShareToCommunityButton
+                      analysisId={activeScan.id}
+                      artist={activeScan.source || activeScan.artist}
+                      onOpenCommunity={goCollective}
+                    />
+                  )}
                   {!activePanel && (
                     <button className="btns panelbtn" onClick={handleOpenPanel}>
                       {t('v2.news.panelTitle', 'PHILOSOPHER PANEL')}
@@ -721,6 +759,18 @@ export default function NewsPage() {
                     {t('v2.news.analyzeAnother', 'Analyze another story')}
                   </a>
                 </div>
+                {shareOpen === 'analysis' && activeScan.id && (
+                  <div className="sharetray">
+                    <ShareButton
+                      analysisId={activeScan.id}
+                      songName={activeScan.title || activeScan.song_name}
+                      artist={activeScan.source || activeScan.artist}
+                      shareText={t('share.shareNewsText', {
+                        title: activeScan.title || activeScan.song_name,
+                      })}
+                    />
+                  </div>
+                )}
               </div>
             )}
 
@@ -751,6 +801,31 @@ export default function NewsPage() {
                   t={t}
                 />
                 <div className="actions">
+                  {activePanel.id && (
+                    <a
+                      href="#share"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setShareOpen(shareOpen === 'panel' ? null : 'panel');
+                      }}
+                    >
+                      {t('v2.music.share', 'Share')}
+                    </a>
+                  )}
+                  {activePanel.id && (
+                    <ShareToDMButton
+                      analysisId={activePanel.id}
+                      songName={activePanel.title}
+                      artist={activePanel.artist || activePanel.source}
+                    />
+                  )}
+                  {activePanel.id && (
+                    <ShareToCommunityButton
+                      analysisId={activePanel.id}
+                      artist={activePanel.artist || activePanel.source}
+                      onOpenCommunity={goCollective}
+                    />
+                  )}
                   <a
                     href="#another"
                     onClick={(e) => {
@@ -761,6 +836,16 @@ export default function NewsPage() {
                     {t('v2.news.analyzeAnother', 'Analyze another story')}
                   </a>
                 </div>
+                {shareOpen === 'panel' && activePanel.id && (
+                  <div className="sharetray">
+                    <ShareButton
+                      shareUrl={`${config.apiUrl}/api/share-preview/panel/${activePanel.id}?lang=${userLang}`}
+                      shareText={t('share.shareNewsText', { title: activePanel.title })}
+                      songName={activePanel.title}
+                      artist={activePanel.artist || activePanel.source}
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>

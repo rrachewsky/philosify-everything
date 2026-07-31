@@ -68,6 +68,33 @@
 .v2 .pg-news .prose :where(strong,b,em){color:var(--silver);font-weight:400;font-style:normal}
 .v2 .pg-news .prose.sm{color:var(--mid)}
 
+/* ---- Actions row: reused share triggers, monochrome (WP7 item 2 —
+   same anatomy as music.css; mockup rail: Share / Share via DM /
+   Join [source] / Analyze another) ---- */
+.v2 .pg-news .actions{flex-wrap:wrap;align-items:center;row-gap:12px}
+.v2 .pg-news .actions .share-dm-button,
+.v2 .pg-news .actions .share-community-btn{background:none;border:0;padding:0;margin:0;cursor:pointer;
+ color:var(--low);font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;
+ display:inline-flex;align-items:center;gap:0}
+.v2 .pg-news .actions .share-dm-button:hover,
+.v2 .pg-news .actions .share-community-btn:hover{color:var(--ink)}
+.v2 .pg-news .actions .share-dm-button:disabled{opacity:.4;cursor:default}
+.v2 .pg-news .actions .share-dm-button svg,
+.v2 .pg-news .actions .share-community-btn svg{display:none}
+.v2 .pg-news .actions .share-community-container{display:inline-flex;flex-direction:column}
+.v2 .pg-news .actions .share-community-error{font:400 11px var(--fu);color:var(--warn);
+ text-transform:none;letter-spacing:.03em;margin-top:6px}
+
+/* ---- Share tray (reused ShareButton, monochrome) ---- */
+.v2 .pg-news .sharetray{border:1px solid var(--line);background:var(--bgcell);margin-top:14px}
+.v2 .pg-news .sharetray .share-button__container{display:flex;flex-direction:column;gap:14px;padding:18px 20px}
+.v2 .pg-news .sharetray .share-button__container p{font:500 10.5px/1.6 var(--fu);letter-spacing:.14em;
+ text-transform:uppercase;color:var(--low);margin:0;font-weight:500}
+.v2 .pg-news .sharetray .share-button__icon-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-start}
+.v2 .pg-news .sharetray .share-button__btn{background:none;border:1px solid var(--line);padding:8px;cursor:pointer;border-radius:0}
+.v2 .pg-news .sharetray .share-button__btn:hover{border-color:var(--strong)}
+.v2 .pg-news .sharetray .share-button__icon-img{width:20px;height:20px;display:block;filter:grayscale(1)}
+
 /* ---- Modal internals: philosopher picker ---- */
 .v2 .pg-news .pcount{margin-top:12px;font:500 10px/1 var(--fu);letter-spacing:.16em;
  text-transform:uppercase;color:var(--low)}
