@@ -2649,6 +2649,8 @@
       "searchPlaceholder": "ابحث عن قضية — النتائج من الأحدث إلى الأقدم",
       "searching": "جاري البحث…",
       "selectedTag": "محدد",
+      "otherHeadlines": "→ عناوين أخرى",
+      "changeArticle": "→ تغيير الخبر",
       "sourcePicker": {
         "clearAll": "مسح الكل",
         "currentDefault": "المصادر الافتراضية الحالية:",

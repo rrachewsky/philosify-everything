@@ -2639,6 +2639,8 @@
       "searchPlaceholder": "חפש נושא — תוצאות מהחדש לישן",
       "searching": "מחפש…",
       "selectedTag": "נבחרו",
+      "otherHeadlines": "→ כותרות אחרות",
+      "changeArticle": "→ החלפת כתבה",
       "sourcePicker": {
         "clearAll": "נקה הכל",
         "currentDefault": "מקורות ברירת מחדל נוכחיים:",

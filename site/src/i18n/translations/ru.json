@@ -2670,6 +2670,8 @@
       "searchPlaceholder": "Поиск темы — результаты от новых к старым",
       "searching": "Поиск…",
       "selectedTag": "выбрано",
+      "otherHeadlines": "← Другие заголовки",
+      "changeArticle": "← Сменить материал",
       "sourcePicker": {
         "clearAll": "Очистить все",
         "currentDefault": "Текущие источники по умолчанию:",

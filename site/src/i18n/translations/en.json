@@ -2771,6 +2771,8 @@
       "searchPlaceholder": "Search an issue — results from newest to oldest",
       "searching": "Searching…",
       "selectedTag": "selected",
+      "otherHeadlines": "← Other headlines",
+      "changeArticle": "← Change article",
       "sourcePicker": {
         "clearAll": "Clear all",
         "currentDefault": "Current default sources:",

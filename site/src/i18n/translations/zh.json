@@ -2756,6 +2756,8 @@
       "searchPlaceholder": "搜索一个议题 — 结果由新到旧",
       "searching": "搜索中…",
       "selectedTag": "已选择",
+      "otherHeadlines": "← 其他标题",
+      "changeArticle": "← 更换报道",
       "sourcePicker": {
         "clearAll": "清除全部",
         "currentDefault": "当前默认来源：",

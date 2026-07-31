@@ -2650,6 +2650,8 @@
       "searchPlaceholder": "이슈 검색 — 최신순 결과",
       "searching": "검색 중…",
       "selectedTag": "선택됨",
+      "otherHeadlines": "← 다른 헤드라인",
+      "changeArticle": "← 기사 변경",
       "sourcePicker": {
         "clearAll": "전체 해제",
         "currentDefault": "현재 기본 소스:",

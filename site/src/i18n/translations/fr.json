@@ -2681,6 +2681,8 @@
       "searchPlaceholder": "Recherchez un sujet — résultats du plus récent au plus ancien",
       "searching": "Recherche…",
       "selectedTag": "sélectionnées",
+      "otherHeadlines": "← Autres titres",
+      "changeArticle": "← Changer d’article",
       "sourcePicker": {
         "clearAll": "Tout effacer",
         "currentDefault": "Sources par défaut actuelles :",

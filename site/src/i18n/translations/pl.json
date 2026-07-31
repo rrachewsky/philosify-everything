@@ -2756,6 +2756,8 @@
       "searchPlaceholder": "Szukaj tematu — wyniki od najnowszych do najstarszych",
       "searching": "Wyszukiwanie…",
       "selectedTag": "wybrano",
+      "otherHeadlines": "← Inne nagłówki",
+      "changeArticle": "← Zmień artykuł",
       "sourcePicker": {
         "clearAll": "Wyczyść wszystko",
         "currentDefault": "Obecne domyślne źródła:",

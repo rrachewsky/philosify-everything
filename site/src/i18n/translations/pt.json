@@ -2676,6 +2676,8 @@
       "searchPlaceholder": "Busque um assunto — resultados do mais recente ao mais antigo",
       "searching": "Buscando…",
       "selectedTag": "selecionado",
+      "otherHeadlines": "← Outras manchetes",
+      "changeArticle": "← Trocar notícia",
       "sourcePicker": {
         "clearAll": "Limpar todos",
         "currentDefault": "Fontes padrão atuais:",

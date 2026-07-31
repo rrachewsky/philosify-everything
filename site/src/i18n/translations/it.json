@@ -2671,6 +2671,8 @@
       "searchPlaceholder": "Cerca un tema — risultati dal più recente al più vecchio",
       "searching": "Ricerca…",
       "selectedTag": "selezionato",
+      "otherHeadlines": "← Altri titoli",
+      "changeArticle": "← Cambia notizia",
       "sourcePicker": {
         "clearAll": "Cancella tutto",
         "currentDefault": "Fonti predefinite attuali:",

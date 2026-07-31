@@ -60,7 +60,7 @@ function Prose({ text, className = 'prose' }) {
 
 // Search result / selected-article row (v2 compact cell).
 // Preserves the sidebar's on-demand translation (POST /api/news/translate).
-function ResultRow({ article, selected, onSelect, onClear, userLang, formatDate, t }) {
+function ResultRow({ article, selected, onSelect, userLang, formatDate, t }) {
   const [translating, setTranslating] = useState(false);
   const [translated, setTranslated] = useState(null);
   const needsTranslation =
@@ -90,11 +90,11 @@ function ResultRow({ article, selected, onSelect, onClear, userLang, formatDate,
       href="#article"
       onClick={(e) => {
         e.preventDefault();
-        if (selected) {
-          onClear();
-        } else {
-          onSelect({ ...article, title: displayTitle, description: displayDesc, aiSummary: displayDesc });
-        }
+        // Choosing is one-way: a tap on the chosen headline no longer clears it.
+        // Deselection happens only through the explicit "other headlines" control,
+        // so a stray tap while scrolling cannot undo the choice (ruling 31 Jul).
+        if (selected) return;
+        onSelect({ ...article, title: displayTitle, description: displayDesc, aiSummary: displayDesc });
       }}
     >
       <h2>{displayTitle}</h2>
@@ -157,6 +157,7 @@ export default function NewsPage() {
 
   const searchRef = useRef(null);
   const resultRef = useRef(null);
+  const pickedRef = useRef(null);
   const debounceRef = useRef(null);
 
   const handleAdLoaded = useCallback(({ duration, mediaType }) => {
@@ -465,9 +466,16 @@ export default function NewsPage() {
   const activeScan =
     !activePanel && (analysisResult || (replay?.type === 'analysis' ? replay.data : null));
   const busy = isAnalyzing || news.panelLoading;
-  const selectedInResults =
-    selected &&
-    sortedResults.some((a) => (a.url && selected.url ? a.url === selected.url : a.title === selected.title));
+  const selectedKey = selected?.url || selected?.title || null;
+
+  // Choosing a headline collapses the list; bring the chosen one to the top of
+  // the viewport so the analysis buttons below it need no scrolling. Also runs
+  // on a post-purchase resume, which lands on the same article (ruling 31 Jul).
+  useEffect(() => {
+    if (!selectedKey || !pickedRef.current) return;
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    pickedRef.current.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  }, [selectedKey]);
 
   // Bring the result stack into view when it lands (sidebar scrolled to top)
   useEffect(() => {
@@ -531,21 +539,19 @@ export default function NewsPage() {
             {news.searchError && <div className="err">{news.searchError}</div>}
             {replayError && <div className="err">{replayError}</div>}
 
-            {/* Result rows */}
-            {sortedResults.length > 0 && (
+            {/* Result rows — two explicit states (ruling 31 Jul). With nothing
+                chosen the whole list shows. Once a headline is chosen the list
+                COLLAPSES to it, so the analysis buttons land in the viewport
+                and no amount of scrolling can reach a row that would undo the
+                choice. State is explicit, never a function of scroll position. */}
+            {!selected && sortedResults.length > 0 && (
               <div className="rows">
                 {sortedResults.map((article, i) => (
                   <ResultRow
                     key={article.url || `${article.title}-${i}`}
                     article={article}
-                    selected={
-                      !!selected &&
-                      (article.url && selected.url
-                        ? article.url === selected.url
-                        : article.title === selected.title)
-                    }
+                    selected={false}
                     onSelect={selectArticle}
-                    onClear={clearAll}
                     userLang={userLang}
                     formatDate={formatDate}
                     t={t}
@@ -575,30 +581,32 @@ export default function NewsPage() {
                 <div className="mnote">{t('v2.news.noResults', 'No articles found for this search.')}</div>
               )}
 
-            {/* Selection made outside the result list (ticker / history replay) */}
-            {selected && !selectedInResults && (
-              <div className="rows">
-                <a
-                  className="cell row sel"
-                  href="#selected"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    clearAll();
-                  }}
-                >
-                  <h2>{selected.title}</h2>
-                  <p>
-                    {selected.source}
-                    {selected.publishedAt && (
-                      <>
-                        {' · '}
-                        <span className="hl">{formatDate(selected.publishedAt)}</span>
-                      </>
-                    )}
-                    {' · '}
-                    {t('v2.news.selectedTag', 'selected')}
-                  </p>
-                </a>
+            {/* The chosen headline, alone, with the way back above it. Covers
+                every origin: the result list, the breaking ticker and a history
+                replay — all of them land here. */}
+            {selected && (
+              <div className="picked" ref={pickedRef}>
+                <button type="button" className="backrow" onClick={clearAll}>
+                  {sortedResults.length > 0
+                    ? t('v2.news.otherHeadlines', '← Other headlines')
+                    : t('v2.news.changeArticle', '← Change article')}
+                </button>
+                <div className="rows">
+                  <div className="cell row sel">
+                    <h2>{selected.title}</h2>
+                    <p>
+                      {selected.source}
+                      {selected.publishedAt && (
+                        <>
+                          {' · '}
+                          <span className="hl">{formatDate(selected.publishedAt)}</span>
+                        </>
+                      )}
+                      {' · '}
+                      {t('v2.news.selectedTag', 'selected')}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 

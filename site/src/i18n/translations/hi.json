@@ -2628,6 +2628,8 @@
       "searchPlaceholder": "कोई मुद्दा खोजें — नए से पुराने परिणाम",
       "searching": "खोजा जा रहा है…",
       "selectedTag": "चयनित",
+      "otherHeadlines": "← अन्य सुर्खियाँ",
+      "changeArticle": "← समाचार बदलें",
       "sourcePicker": {
         "clearAll": "सभी हटाएं",
         "currentDefault": "वर्तमान डिफ़ॉल्ट स्रोत:",

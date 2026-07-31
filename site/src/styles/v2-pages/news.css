@@ -29,6 +29,16 @@
 .v2 .pg-news .rows .cell{margin-bottom:8px}
 .v2 .pg-news .row h2{text-transform:uppercase}
 .v2 .pg-news .cell.sel{border-color:var(--strong)}
+
+/* Chosen headline block — the list collapses to this, and the way back sits
+   above it (ruling 31 Jul). scroll-margin clears the fixed brand band so the
+   headline lands under the header, not behind it. */
+.v2 .pg-news .picked{scroll-margin-top:96px}
+.v2 .pg-news .picked .cell.row{cursor:default}
+.v2 .pg-news .backrow{display:inline-flex;align-items:center;gap:8px;margin:14px 0 8px;padding:0;
+ background:none;border:0;cursor:pointer;font:500 10.5px/1 var(--fu);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--ink-mid);transition:color var(--dur-fast)}
+.v2 .pg-news .backrow:hover,.v2 .pg-news .backrow:focus-visible{color:var(--ink-hi)}
 .v2 .pg-news .trl{color:var(--dim);text-decoration:underline;cursor:pointer}
 .v2 .pg-news .trl:hover{color:var(--ink)}
 

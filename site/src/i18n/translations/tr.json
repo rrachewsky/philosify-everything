@@ -2756,6 +2756,8 @@
       "searchPlaceholder": "Bir konu arayın — yeniden eskiye sonuçlar",
       "searching": "Aranıyor…",
       "selectedTag": "seçildi",
+      "otherHeadlines": "← Diğer başlıklar",
+      "changeArticle": "← Haberi değiştir",
       "sourcePicker": {
         "clearAll": "Tümünü temizle",
         "currentDefault": "Mevcut varsayılan kaynaklar:",

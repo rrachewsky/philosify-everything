@@ -2756,6 +2756,8 @@
       "searchPlaceholder": "Keress egy témát — találatok a legújabbtól a legrégebbiig",
       "searching": "Keresés…",
       "selectedTag": "kiválasztva",
+      "otherHeadlines": "← Más címek",
+      "changeArticle": "← Másik cikk",
       "sourcePicker": {
         "clearAll": "Összes törlése",
         "currentDefault": "Jelenlegi alapértelmezett források:",

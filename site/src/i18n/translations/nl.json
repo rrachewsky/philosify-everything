@@ -2756,6 +2756,8 @@
       "searchPlaceholder": "Zoek een onderwerp — resultaten van nieuw naar oud",
       "searching": "Zoeken…",
       "selectedTag": "geselecteerd",
+      "otherHeadlines": "← Andere koppen",
+      "changeArticle": "← Ander artikel",
       "sourcePicker": {
         "clearAll": "Alles wissen",
         "currentDefault": "Huidige standaardbronnen:",

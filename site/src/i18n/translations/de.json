@@ -2689,6 +2689,8 @@
       "searchPlaceholder": "Ein Thema suchen — Ergebnisse von neu nach alt",
       "searching": "Suche…",
       "selectedTag": "ausgewählt",
+      "otherHeadlines": "← Andere Schlagzeilen",
+      "changeArticle": "← Artikel wechseln",
       "sourcePicker": {
         "clearAll": "Alle löschen",
         "currentDefault": "Aktuelle Standardquellen:",

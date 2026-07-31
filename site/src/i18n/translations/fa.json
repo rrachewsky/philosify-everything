@@ -2628,6 +2628,8 @@
       "searchPlaceholder": "جستجوی یک موضوع — نتایج از جدید به قدیم",
       "searching": "در حال جستجو…",
       "selectedTag": "انتخاب شده",
+      "otherHeadlines": "→ تیترهای دیگر",
+      "changeArticle": "→ تغییر خبر",
       "sourcePicker": {
         "clearAll": "پاک کردن همه",
         "currentDefault": "منابع پیش‌فرض فعلی:",

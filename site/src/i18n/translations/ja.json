@@ -2655,6 +2655,8 @@
       "searchPlaceholder": "話題を検索 — 新しい順に表示",
       "searching": "検索中…",
       "selectedTag": "選択済み",
+      "otherHeadlines": "← ほかの見出し",
+      "changeArticle": "← 記事を変更",
       "sourcePicker": {
         "clearAll": "全てクリア",
         "currentDefault": "現在のデフォルトソース:",
