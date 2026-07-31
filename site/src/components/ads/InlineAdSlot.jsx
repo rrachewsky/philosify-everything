@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { config } from '@/config';
 import '@/styles/ads.css';
 
@@ -10,11 +11,12 @@ export default function InlineAdSlot({
   layout = 'card',
   refreshKey = 'default',
   className = '',
-  label = 'Sponsored',
+  label, // defaults to the localized Ateliê tag (t('ads.sponsored'))
   onAdLoaded,
   onVideoEnded, // Callback when video ends (for constellation auto-scroll)
   mediaType = null, // For sidebar: filter by 'video' or 'image' to maintain consistency
 }) {
+  const { t } = useTranslation();
   const [ad, setAd] = useState(null);
   const [impressionId, setImpressionId] = useState(null);
   const [hasRecordedImpression, setHasRecordedImpression] = useState(false);
@@ -193,7 +195,7 @@ export default function InlineAdSlot({
 
   return (
     <aside ref={adContainerRef} className={`ad-slot ad-slot--${layout} ${className}`.trim()} aria-label="Sponsored message">
-      <p className="ad-slot__label">{label}</p>
+      <p className="ad-slot__label">{label ?? t('ads.sponsored', 'Sponsored')}</p>
       <a
         className="ad-slot__card"
         href={ad.target_url}

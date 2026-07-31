@@ -1,3 +1,11 @@
+/* ============================================================
+   ADS — Ateliê spec §3 under the frozen Design Law (WP7 item 7).
+   Square corners, hairline DASHED border (the one visual marker
+   reserved for ads), SPONSORED tag in telemetry voice inside the
+   frame. Ads never use silver, the brand white register, the
+   module cyan, or any glow: advertiser text sits in the
+   bright-grey tier. Supersedes the pre-v2 cyberpunk skin.
+   ============================================================ */
 .ad-slot {
   position: relative;
   display: flex;
@@ -7,12 +15,12 @@
 
 .ad-slot__label {
   margin: 0;
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--f-ui);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(0, 240, 255, 0.8);
+  color: var(--ink-low);
 }
 
 .ad-slot__close {
@@ -25,21 +33,19 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 16px;
-  font-weight: 700;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--ink-mid);
+  font-size: 14px;
+  font-weight: 400;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.16s ease, color 0.16s ease;
 }
 
 .ad-slot__close:hover {
-  background: rgba(236, 72, 153, 0.9);
-  color: #fff;
-  transform: scale(1.1);
+  border-color: var(--ink-mid);
+  color: var(--ink-hi);
 }
 
 .ad-slot__mute {
@@ -52,39 +58,33 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  font-size: 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--ink-mid);
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.16s ease, color 0.16s ease;
 }
 
 .ad-slot__mute:hover {
-  background: rgba(0, 240, 255, 0.9);
-  transform: scale(1.1);
+  border-color: var(--ink-mid);
+  color: var(--ink-hi);
 }
 
+/* The dashed hairline IS the ad marker (Ateliê §3) */
 .ad-slot__card {
   display: block;
   overflow: hidden;
   text-decoration: none;
-  border: 1px solid rgba(0, 240, 255, 0.18);
-  background: rgba(8, 11, 34, 0.82);
-  backdrop-filter: blur(10px);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+  border: 1px dashed var(--line-strong);
+  border-radius: 0;
+  background: var(--bg-cell);
+  transition: border-color 0.2s ease;
 }
 
 .ad-slot__card:hover {
-  transform: translateY(-1px);
-  border-color: rgba(236, 72, 153, 0.3);
-  box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.35),
-    0 0 18px rgba(236, 72, 153, 0.1);
+  border-color: var(--ink-mid);
 }
 
 .ad-slot__creative {
@@ -108,28 +108,28 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  background: linear-gradient(transparent, var(--scrim));
 }
 
+/* Advertiser text sits over their own creative, so it stays light in both
+   themes; bright-grey tier, never the brand white register (Ateliê §3). */
 .ad-slot__brand {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  font-family: var(--f-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #9c9ca3;
 }
 
 .ad-slot__domain {
+  font-family: var(--f-ui);
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  font-weight: 400;
+  color: #9c9ca3;
 }
 
 .ad-slot--card .ad-slot__card {
-  border-radius: 16px;
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(0, 240, 255, 0.08);
+  border-radius: 0;
 }
 
 .ad-slot--card .ad-slot__image,
@@ -138,10 +138,7 @@
 }
 
 .ad-slot--banner .ad-slot__card {
-  border-radius: 12px;
-  box-shadow:
-    0 8px 22px rgba(0, 0, 0, 0.28),
-    0 0 14px rgba(0, 240, 255, 0.06);
+  border-radius: 0;
 }
 
 .ad-slot--banner .ad-slot__image,
