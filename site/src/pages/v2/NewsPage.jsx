@@ -708,7 +708,7 @@ export default function NewsPage() {
                     </div>
                   )}
                   {activeScan.hits_and_misses && (
-                    <div className="cell static">
+                    <div className="cell static hits">
                       <h2>{t('news.hitsAndMissesTitle', 'Hits, Misses and Omissions')}</h2>
                       <Prose text={activeScan.hits_and_misses} />
                     </div>

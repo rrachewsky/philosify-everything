@@ -68,12 +68,14 @@
 .v2 .pg-news .prose p:last-child{margin-bottom:0}
 .v2 .pg-news .prose :where(strong,b,em){color:var(--silver);font-weight:400;font-style:normal}
 
-/* THE FACTS — the emphasis markup in this container carries the six-question
-   labels (what/who/when/where/how/why). They are LABELS, not the silver
-   key-phrase register: white, UI tier at 500 (ruling 31 Jul). Size is trimmed
-   because Inter's larger x-height would otherwise outweigh the Newsreader
-   body it sits inside. <em> keeps the silver register. */
-.v2 .pg-news .facts .prose :where(strong,b){
+/* LABELLED BOXES — the emphasis markup in these two containers carries
+   structural labels: the six questions in THE FACTS (what/who/when/where/
+   how/why) and the three verdicts in HITS, MISSES AND OMISSIONS. They are
+   LABELS, not the silver key-phrase register: white, UI tier at 500 (ruling
+   31 Jul). Size is trimmed because Inter's larger x-height would otherwise
+   outweigh the Newsreader body it sits inside. <em> keeps the silver
+   register, as does emphasis in the two unlabelled boxes. */
+.v2 .pg-news :is(.facts,.hits) .prose :where(strong,b){
  font-family:var(--fu);font-weight:500;font-size:15px;color:var(--ink-text)}
 
 /* ---- Actions row: reused share triggers, monochrome (WP7 item 2 —

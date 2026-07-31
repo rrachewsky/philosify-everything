@@ -133,10 +133,22 @@ Analyze this news article and return JSON with EXACTLY these fields:
 Establish the objective facts using the 5W+H framework:
 - What: What happened? What is the core event or development?
 - Who: Who are the actors involved (individuals, institutions, governments)?
-- Where: Where did this occur (geographic, institutional, jurisdictional)?
 - When: When did this happen (date, timeline, sequence of events)?
+- Where: Where did this occur (geographic, institutional, jurisdictional)?
 - How: How did this event unfold (mechanism, process, chain of actions)?
 - Why: Why did this happen according to the SOURCE (the source's stated reasons)?
+
+MANDATORY STRUCTURE — NO EXCEPTIONS:
+Answer ALL SIX questions, in the order above, each as its own <p> paragraph
+opened by its label in <strong> tags:
+
+<p><strong>What:</strong> ...</p><p><strong>Who:</strong> ...</p><p><strong>When:</strong> ...</p><p><strong>Where:</strong> ...</p><p><strong>How:</strong> ...</p><p><strong>Why:</strong> ...</p>
+
+- Write the six labels in ${targetLanguage}, in that language's natural register
+  (Portuguese: O quê / Quem / Quando / Onde / Como / Por quê).
+- If the material does not establish an answer, STILL write that question's
+  paragraph and say plainly that the source does not establish it.
+  NEVER drop a question.
 
 RULES for this field:
 - State ONLY verified, objective facts. No opinion. No analysis.
@@ -154,6 +166,8 @@ Describe and analyze the news source:
 - Is the source reporting facts, editorializing, or mixing both?
 
 RULES for this field:
+- Break the text into <p> paragraphs, one per aspect (identity, bias, intention,
+  framing). Never one undivided block.
 - Be specific about the bias — not just "left/right" but HOW the bias manifests.
 - Reference concrete editorial choices: what words were chosen, what angle was prioritized.
 - If you are not certain about the source's profile, acknowledge it.
@@ -173,6 +187,18 @@ MISSES (where the source gets it wrong):
 OMISSIONS (what the source leaves out):
 - Relevant information the source does not mention
 - Why these omissions matter for understanding the full picture
+
+MANDATORY STRUCTURE — NO EXCEPTIONS:
+All THREE blocks appear, in this order, each opened by its label in <strong>
+tags and written as one or more <p> paragraphs:
+
+<p><strong>Hits:</strong> ...</p><p><strong>Misses:</strong> ...</p><p><strong>Omissions:</strong> ...</p>
+
+- Write the three labels in ${targetLanguage} (Portuguese: Acertos / Erros /
+  Omissões).
+- The OMISSIONS block is MANDATORY and must never be skipped. Name at least one
+  thing the source left out, or state explicitly that you found none and why.
+  What a source silences is an editorial choice and belongs in the evaluation.
 
 RULES for this field:
 - Every hit and miss MUST have a concrete reason ("because...").
@@ -230,6 +256,8 @@ RULES for this field:
 - Do NOT mention "advisors", "council", "panel", "thinkers", or philosopher names.
 - Do NOT use scorecard language, ratings, or grades.
 - Write as ONE cohesive analytical essay, not bullet points or fragmented sections.
+- Break that essay into <p> paragraphs — one argumentative move per paragraph.
+  Paragraphs are not fragmentation; a single undivided block is unreadable.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 FACTUAL ACCURACY — MANDATORY
@@ -269,6 +297,10 @@ MANDATORY RESPONSE FORMAT:
 - DO NOT include explanatory text before or after the JSON
 - DO NOT use markdown code blocks
 - Start your response directly with { and end with }
+- The four text fields carry HTML: <p> for paragraphs and <strong> for the
+  labels required above. Use NO other tags.
+- NEVER use markdown for emphasis. Asterisks are not rendered and would appear
+  literally on screen. Bold is <strong>, and nothing else.
 
 EXPECTED JSON FORMAT:
 {
