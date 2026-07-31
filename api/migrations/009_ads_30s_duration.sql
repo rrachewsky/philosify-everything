@@ -47,8 +47,9 @@ WHERE NOT EXISTS (
 -- The existing ladder rises $100 per 5 seconds:
 --   5s = $150 · 10s = $250 · 15s = $350 · 20s = $450
 -- which puts 30s at $650. CHANGE 65000 HERE IF THE RATE CARD SAYS OTHERWISE.
+-- placement is NULL for creative fees, matching the four seeded rows (006).
 INSERT INTO ads.pricing_config (pricing_type, placement, duration, price_cents)
-SELECT 'creative_fee', 'sidebar', 30, 65000
+SELECT 'creative_fee', NULL, 30, 65000
 WHERE NOT EXISTS (
   SELECT 1 FROM ads.pricing_config
   WHERE pricing_type = 'creative_fee'
