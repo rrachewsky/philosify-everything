@@ -19,6 +19,7 @@ import {
   Ticker,
   Cell,
   Telemetry,
+  analysisProgress,
   Field,
   ActionsRow,
   TrackCard,
@@ -458,7 +459,7 @@ export default function CinemaPage() {
             <Telemetry
               label={t('v2.cinema.analyzing', 'Analyzing')}
               time={cs.formatTime(cs.elapsedTime)}
-              progress={Math.min(96, (cs.elapsedTime / 30000) * 100)}
+              progress={analysisProgress(cs.elapsedTime, 30000)}
               onCancel={handleCancel}
               cancelLabel={t('v2.cinema.cancel', 'Cancel')}
             />
@@ -467,7 +468,7 @@ export default function CinemaPage() {
             <Telemetry
               label={t('v2.cinema.panelAnalyzing', 'Philosophers are analyzing…')}
               time={cs.formatTime(cs.panelElapsed)}
-              progress={Math.min(96, (cs.panelElapsed / 90000) * 100)}
+              progress={analysisProgress(cs.panelElapsed, 90000)}
             />
           )}
           {(cs.analysisError || cs.panelError) && (
@@ -530,7 +531,7 @@ export default function CinemaPage() {
                 <Telemetry
                   label={t('v2.cinema.panelAnalyzing', 'Philosophers are analyzing…')}
                   time={cs.formatTime(cs.panelElapsed)}
-                  progress={Math.min(96, (cs.panelElapsed / 90000) * 100)}
+                  progress={analysisProgress(cs.panelElapsed, 90000)}
                 />
               )}
               {shareOpen === 'analysis' && result.id && (

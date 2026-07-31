@@ -10,7 +10,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DOMPurify from 'dompurify';
-import { PageShell, ModuleHeader, BreakingTicker, Telemetry, Button, Pill } from '../../components/v2';
+import {
+  PageShell,
+  ModuleHeader,
+  BreakingTicker,
+  Telemetry,
+  analysisProgress,
+  Button,
+  Pill,
+} from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
 import { ShareButton } from '../../components/sharing/ShareButton';
@@ -648,7 +656,7 @@ export default function NewsPage() {
                 <Telemetry
                   label={t('v2.news.analyzing', 'Analyzing')}
                   time={news.formatTime(elapsedTime)}
-                  progress={Math.min(96, (elapsedTime / 45000) * 100)}
+                  progress={analysisProgress(elapsedTime, 45000)}
                   onCancel={cancelScan}
                   cancelLabel={t('v2.news.cancel', 'Cancel')}
                 />
@@ -668,7 +676,7 @@ export default function NewsPage() {
                 <Telemetry
                   label={t('v2.news.panelGenerating', 'Philosophers are analyzing…')}
                   time={news.formatTime(news.panelElapsed)}
-                  progress={Math.min(96, (news.panelElapsed / 60000) * 100)}
+                  progress={analysisProgress(news.panelElapsed, 60000)}
                 />
                 <InlineAdSlot
                   key={`news-panel-${adKeyBase}`}

@@ -16,6 +16,7 @@ import {
   Ticker,
   Cell,
   Telemetry,
+  analysisProgress,
   Field,
   Verdict,
   ActionsRow,
@@ -724,8 +725,8 @@ export default function MusicPage() {
     return { version, model, sha, signature, duration };
   }, [analysisResult]);
 
-  const scanProgress = Math.min(96, (elapsedTime / MIN_ANALYSIS_AD_WINDOW_MS) * 100);
-  const panelProgress = Math.min(96, (panelElapsed / 90000) * 100);
+  const scanProgress = analysisProgress(elapsedTime, MIN_ANALYSIS_AD_WINDOW_MS);
+  const panelProgress = analysisProgress(panelElapsed, 90000);
 
   const showModeCells =
     selectedTrack && !analysisResult && !panelResult && !isAnalyzing && !panelLoading;

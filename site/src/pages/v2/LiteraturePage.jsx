@@ -21,6 +21,7 @@ import {
   Cell,
   Button,
   Telemetry,
+  analysisProgress,
   Field,
   ActionsRow,
   TrackCard,
@@ -610,7 +611,7 @@ export default function LiteraturePage() {
             <Telemetry
               label={t('v2.literature.analyzing', 'Analyzing')}
               time={ls.formatTime(ls.elapsedTime)}
-              progress={Math.min(96, (ls.elapsedTime / 30000) * 100)}
+              progress={analysisProgress(ls.elapsedTime, 30000)}
               onCancel={handleCancel}
               cancelLabel={t('v2.literature.cancel', 'Cancel')}
             />
@@ -619,7 +620,7 @@ export default function LiteraturePage() {
             <Telemetry
               label={t('v2.literature.panelAnalyzing', 'Philosophers are analyzing…')}
               time={ls.formatTime(panelElapsed)}
-              progress={Math.min(96, (panelElapsed / 90000) * 100)}
+              progress={analysisProgress(panelElapsed, 90000)}
             />
           )}
           {(ls.analysisError || panelError) && (
@@ -682,7 +683,7 @@ export default function LiteraturePage() {
                 <Telemetry
                   label={t('v2.literature.panelAnalyzing', 'Philosophers are analyzing…')}
                   time={ls.formatTime(panelElapsed)}
-                  progress={Math.min(96, (panelElapsed / 90000) * 100)}
+                  progress={analysisProgress(panelElapsed, 90000)}
                 />
               )}
               {shareOpen === 'analysis' && result.id && (

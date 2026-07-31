@@ -1,6 +1,7 @@
 // Ideas v2 - shared helpers (time, countdown, chronometer)
 // Logic lifted from components/community/DebatePanel.jsx (WP3 parity).
 import { useEffect, useRef, useState } from 'react';
+import { analysisProgress } from '../../../components/v2/Telemetry.jsx';
 
 /** Relative time label ("Just now", "5m ago", …) */
 export function formatTimeAgo(isoString, t) {
@@ -76,5 +77,8 @@ export function useChronometer(active) {
 
 /** Chronometer progress % against a 120s reference window */
 export function chronoProgress(ms) {
-  return Math.min(100, (ms / 120000) * 100);
+  // Shares the ANALYZING pacing law (ruling 31 Jul): the linear fill here also
+  // hit a hard 100%, claiming the verdict had landed while it was still being
+  // written.
+  return analysisProgress(ms, 120000);
 }
