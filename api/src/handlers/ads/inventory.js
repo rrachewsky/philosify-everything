@@ -4,7 +4,7 @@
 // Browse available inventory, check availability, pricing
 // ============================================================
 
-import { getServiceSupabase } from '../../utils/supabase.js';
+import { getServiceSupabase, getSupabaseCredentials } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
 import { getAdvertiserFromRequest } from './utils.js';
 
@@ -418,4 +418,89 @@ export async function handleCalculateCart(request, env, corsHeaders) {
     console.error('[Ads] Calculate cart error:', err);
     return jsonResponse({ error: 'Internal server error' }, 500, corsHeaders);
   }
+}
+
+// ============================================================
+// INVENTORY FORECAST MAINTENANCE
+// ============================================================
+// The forecast table is what the planner allocates against: with no rows
+// for a date, that day has zero available impressions. Migration 006 seeded
+// 90 days from the day it ran and left the refill to "a cron job" that was
+// never built, so the window silently lapsed and every generated plan came
+// back with no placements. This keeps a rolling window filled.
+
+// Same traffic assumptions as the migration seed (weekends run lighter).
+const FORECAST_BASELINE = {
+  sidebar: { weekday: 5000, weekend: 3000 },
+  constellation: { weekday: 2500, weekend: 1500 },
+};
+
+const isoDay = (date) => date.toISOString().split('T')[0];
+
+/**
+ * Ensure ads.inventory_forecast covers [today, today + days].
+ * Only missing (date, placement) pairs are inserted — existing rows keep
+ * their reserved_impressions untouched.
+ * @returns {Promise<{created: number, from: string, to: string}>}
+ */
+export async function topUpInventoryForecast(env, days = 180) {
+  const { url, key } = await getSupabaseCredentials(env);
+  const headers = {
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    'Content-Type': 'application/json',
+    'Accept-Profile': 'ads',
+    'Content-Profile': 'ads',
+  };
+
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const start = isoDay(today);
+  const end = isoDay(new Date(today.getTime() + days * 24 * 60 * 60 * 1000));
+
+  const existingRes = await fetch(
+    `${url}/rest/v1/inventory_forecast` +
+      `?select=forecast_date,placement` +
+      `&forecast_date=gte.${start}&forecast_date=lte.${end}`,
+    { headers },
+  );
+  if (!existingRes.ok) {
+    throw new Error(`Inventory forecast read failed: ${existingRes.status}`);
+  }
+  const existing = await existingRes.json();
+  const have = new Set((existing || []).map((r) => `${r.forecast_date}|${r.placement}`));
+
+  const rows = [];
+  for (let i = 0; i <= days; i++) {
+    const day = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
+    const date = isoDay(day);
+    const weekend = day.getUTCDay() === 0 || day.getUTCDay() === 6;
+    for (const placement of Object.keys(FORECAST_BASELINE)) {
+      if (have.has(`${date}|${placement}`)) continue;
+      rows.push({
+        forecast_date: date,
+        placement,
+        estimated_impressions: FORECAST_BASELINE[placement][weekend ? 'weekend' : 'weekday'],
+      });
+    }
+  }
+
+  if (rows.length === 0) {
+    return { created: 0, from: start, to: end };
+  }
+
+  // ignore-duplicates so a concurrent run can never overwrite a row that
+  // already carries reservations (available_impressions is generated).
+  const insertRes = await fetch(`${url}/rest/v1/inventory_forecast`, {
+    method: 'POST',
+    headers: { ...headers, Prefer: 'resolution=ignore-duplicates,return=minimal' },
+    body: JSON.stringify(rows),
+  });
+  if (!insertRes.ok) {
+    const detail = await insertRes.text();
+    throw new Error(`Inventory forecast insert failed: ${insertRes.status} ${detail}`);
+  }
+
+  console.log(`[Ads] Inventory forecast topped up: ${rows.length} row(s) for ${start}..${end}`);
+  return { created: rows.length, from: start, to: end };
 }

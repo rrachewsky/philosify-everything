@@ -7,6 +7,7 @@
 import { getServiceSupabase } from '../../utils/supabase.js';
 import { jsonResponse } from '../../utils/index.js';
 import { getAdvertiserFromRequest } from './utils.js';
+import { topUpInventoryForecast } from './inventory.js';
 
 // SECURITY: UUID validation for route parameters
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -67,11 +68,16 @@ export async function handleGeneratePlan(request, env, corsHeaders) {
     }
 
     // Get current pricing
-    const { data: pricingData } = await supabase
+    const { data: pricingData, error: pricingError } = await supabase
       .from('ads.pricing_config')
       .select('placement,duration,price_cents', {
         filter: 'pricing_type=eq.cpm&is_active=eq.true',
       });
+
+    if (pricingError) {
+      console.error('[Ads] Pricing lookup failed:', pricingError);
+      return jsonResponse({ error: 'Failed to load pricing' }, 500, corsHeaders);
+    }
 
     const pricing = {};
     for (const p of pricingData || []) {
@@ -83,17 +89,40 @@ export async function handleGeneratePlan(request, env, corsHeaders) {
     const inventoryEndDate = end_date || 
       new Date(planStartDate.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     
-    const { data: inventory } = await supabase
-      .from('ads.inventory_forecast')
-      .select('forecast_date,placement,available_impressions', {
-        filter: `forecast_date=gte.${planStartDate.toISOString().split('T')[0]}&forecast_date=lte.${inventoryEndDate}`,
-        order: 'forecast_date.asc',
-      });
+    const readInventory = async () => {
+      const { data, error } = await supabase
+        .from('ads.inventory_forecast')
+        .select('forecast_date,placement,available_impressions', {
+          filter: `forecast_date=gte.${planStartDate.toISOString().split('T')[0]}&forecast_date=lte.${inventoryEndDate}`,
+          order: 'forecast_date.asc',
+        });
+      if (error) throw new Error(`inventory lookup: ${error.message}`);
+      const byPlacement = { sidebar: 0, constellation: 0 };
+      for (const day of data || []) {
+        byPlacement[day.placement] += day.available_impressions;
+      }
+      return byPlacement;
+    };
 
-    // Calculate total available inventory
-    const availableByPlacement = { sidebar: 0, constellation: 0 };
-    for (const day of inventory || []) {
-      availableByPlacement[day.placement] += day.available_impressions;
+    let availableByPlacement;
+    try {
+      availableByPlacement = await readInventory();
+    } catch (err) {
+      console.error('[Ads] Inventory lookup failed:', err.message);
+      return jsonResponse({ error: 'Failed to load inventory' }, 500, corsHeaders);
+    }
+
+    // Self-heal: the forecast is a rolling window maintained by cron. If it has
+    // lapsed there is nothing to allocate against and every plan comes back
+    // empty, so fill the gap now rather than making the advertiser wait a day.
+    if (availableByPlacement.sidebar + availableByPlacement.constellation === 0) {
+      try {
+        const filled = await topUpInventoryForecast(env, 180);
+        console.warn(`[Ads] Forecast window was empty — topped up ${filled.created} row(s)`);
+        availableByPlacement = await readInventory();
+      } catch (err) {
+        console.error('[Ads] Inventory top-up failed:', err.message);
+      }
     }
 
     // Generate the plan
@@ -107,6 +136,32 @@ export async function handleGeneratePlan(request, env, corsHeaders) {
       startDate: planStartDate.toISOString().split('T')[0],
       endDate: inventoryEndDate,
     });
+
+    // An empty plan used to be returned as a success, and the advertiser only
+    // hit the wall one step later ("Invalid plan: placements is empty") with no
+    // way to tell what went wrong. Say which constraint bit.
+    if (!plan.placements || plan.placements.length === 0) {
+      const totalAvailable = availableByPlacement.sidebar + availableByPlacement.constellation;
+      let reason;
+      if (totalAvailable === 0) {
+        reason =
+          'No inventory is forecast for the selected dates. The forecast window needs to be extended before campaigns can be planned.';
+      } else if (placement_preference !== 'mixed' && !availableByPlacement[placement_preference]) {
+        reason = `No inventory is forecast for the "${placement_preference}" placement in the selected dates.`;
+      } else {
+        reason =
+          'The budget is too small to reach the minimum of 1,000 impressions per placement. Raise the budget or pick a single placement.';
+      }
+      console.warn(
+        `[Ads] Empty plan — budget=${budget_cents} goal=${goal} placement=${placement_preference} ` +
+          `duration=${duration_preference} inventory=${JSON.stringify(availableByPlacement)}`,
+      );
+      return jsonResponse(
+        { error: reason, availableInventory: availableByPlacement },
+        409,
+        corsHeaders,
+      );
+    }
 
     // Calculate plan duration in days
     const start = new Date(plan.startDate);
@@ -177,14 +232,22 @@ function generateOptimalPlan({
 
   // Filter by placement preference
   if (placementPreference !== 'mixed') {
-    allocationStrategy = allocationStrategy.filter(a => a.placement === placementPreference);
-    // Renormalize weights
-    const totalWeight = allocationStrategy.reduce((sum, a) => sum + a.weight, 0);
-    allocationStrategy = allocationStrategy.map(a => ({ ...a, weight: a.weight / totalWeight }));
+    const filtered = allocationStrategy.filter(a => a.placement === placementPreference);
+    if (filtered.length === 0) {
+      // The goal's strategy may not list this placement at all (engagement is
+      // sidebar-only). Honour the preference with a single allocation rather
+      // than returning a plan with nothing in it.
+      allocationStrategy = [{ placement: placementPreference, duration: 10, weight: 1 }];
+    } else {
+      const totalWeight = filtered.reduce((sum, a) => sum + a.weight, 0);
+      allocationStrategy = filtered.map(a => ({ ...a, weight: a.weight / totalWeight }));
+    }
   }
 
-  // Filter by duration preference
-  if (durationPreference !== 'mixed' && typeof durationPreference === 'number') {
+  // Filter by duration preference (forms post it as a string — coerce first,
+  // otherwise the preference was silently ignored)
+  if (durationPreference !== 'mixed' && Number.isFinite(Number(durationPreference))) {
+    durationPreference = Number(durationPreference);
     allocationStrategy = allocationStrategy.filter(a => a.duration === durationPreference);
     if (allocationStrategy.length === 0) {
       // Fallback to requested duration for sidebar

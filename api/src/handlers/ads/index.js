@@ -65,6 +65,7 @@ export {
   handleGetPricing,
   handleGetQuote,
   handleCalculateCart,
+  topUpInventoryForecast,
 } from './inventory.js';
 
 // Orders

@@ -312,6 +312,7 @@ import {
   handleAgencyCreateClientCampaign,
   handleAgencyUpdateClientCampaign,
   handleAgencyDeleteClientCampaign,
+  topUpInventoryForecast,
 } from "./src/handlers/ads/index.js";
 
 // Request body size limit (1 MB)
@@ -4774,6 +4775,15 @@ export default {
       ctx.waitUntil(
         cleanupPushQueue(env).catch((err) =>
           console.error("[Cron] Push queue cleanup failed:", err.message),
+        ),
+      );
+
+      // Ads inventory forecast — keep a rolling 180-day window. Migration 006
+      // seeded 90 days once and assumed a cron that never existed; when the
+      // window lapsed the planner had zero inventory and produced empty plans.
+      ctx.waitUntil(
+        topUpInventoryForecast(env, 180).catch((err) =>
+          console.error("[Cron] Inventory forecast top-up failed:", err.message),
         ),
       );
     }
