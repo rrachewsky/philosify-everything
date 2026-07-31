@@ -1,6 +1,6 @@
 // Service Worker for Philosify PWA
 // IMPORTANT: Increment version to force cache invalidation when site updates
-const CACHE_NAME = 'philosify-v11';
+const CACHE_NAME = 'philosify-v12';
 const RUNTIME_CACHE = 'philosify-runtime-v11';
 
 // API URL for fetching push notification content
@@ -22,18 +22,25 @@ const log = (...args) => {
 };
 
 // Assets to cache on install
-const PRECACHE_ASSETS = ['/', '/index.html', '/logo.png', '/favicon.ico'];
+const PRECACHE_ASSETS = ['/', '/index.html', '/icon-192.png', '/favicon.ico'];
 
-// Install event - cache assets
+// Install event - cache assets.
+// Each asset is added on its own: addAll() rejects atomically, so a single
+// missing file used to abort the install and leave skipWaiting() unreached —
+// no offline shell, and updates stuck behind the old worker.
 self.addEventListener('install', (event) => {
   log('[SW] Installing service worker...');
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => {
-        log('[SW] Caching assets');
-        return cache.addAll(PRECACHE_ASSETS);
-      })
+      .then((cache) =>
+        Promise.all(
+          PRECACHE_ASSETS.map((asset) =>
+            cache.add(asset).catch((err) => log('[SW] Precache skipped', asset, err))
+          )
+        )
+      )
+      .catch((err) => log('[SW] Precache failed', err))
       .then(() => self.skipWaiting()) // Activate immediately
   );
 });

@@ -7,7 +7,7 @@ import { logger } from './utils';
 import { initPWA } from './utils/pwa';
 import { initSentry } from './utils/sentry';
 import { initI18nLanguage } from './i18n'; // Initialize i18n language (awaitable)
-import { initTheme } from './utils/theme';
+import { getTheme, initTheme } from './utils/theme';
 import './styles/global.css';
 
 // Initialize Sentry (production only)
@@ -84,14 +84,19 @@ function AppWithInitialization() {
     };
   }, []);
 
-  // Loading state - splash screen only in standalone PWA (installed app), not in browser
+  // Loading state - splash screen only in standalone PWA (installed app), not in browser.
+  // The mark is the official lockup asset, so the OS splash icon, this frame and
+  // the landing header all show the same brand; white theme swaps the SRC (Law
+  // §1.3), never a filter. Not the Lockup component: it renders a <Link>, and the
+  // Router is not mounted yet.
   const isStandalone =
     window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   if (!isReady) {
     if (isStandalone) {
+      const lockup = `/brand/philosify-logo-lockup${getTheme() === 'white' ? '-black' : ''}.png`;
       return (
         <div className="splash-screen">
-          <img src="/logo-everything.png" alt="Philosify" className="splash-logo" />
+          <img src={lockup} alt="philosify" className="splash-logo" />
           <div className="splash-spinner" />
         </div>
       );
