@@ -21,3 +21,4 @@ export {
 } from './AnalysisStack.jsx';
 export { Field } from './Field.jsx';
 export { ThemeBar } from './ThemeBar.jsx';
+export { useMarqueeDuration } from './useMarqueeDuration.js';

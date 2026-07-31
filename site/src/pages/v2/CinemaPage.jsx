@@ -22,6 +22,7 @@ import {
   Field,
   ActionsRow,
   TrackCard,
+  useMarqueeDuration,
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
@@ -49,6 +50,7 @@ const openBuyCredits = () => window.dispatchEvent(new CustomEvent('v2-open-buy-c
 function TopFilmsStrip({ onSelect }) {
   const { t } = useTranslation();
   const [films, setFilms] = useState([]);
+  const [runRef, duration] = useMarqueeDuration([films]);
 
   useEffect(() => {
     let alive = true;
@@ -80,7 +82,11 @@ function TopFilmsStrip({ onSelect }) {
     <span className="t50">
       <span className="lbl">{t('v2.cinema.top50', 'Top 50 >>>')}</span>
       <span className="t50-strip">
-        <span className="t50-run" style={{ animationDuration: `${films.length * 8}s` }}>
+        <span
+          className="t50-run"
+          ref={runRef}
+          style={{ animationDuration: `${duration ?? films.length * 8}s` }}
+        >
           {doubled.map((film, i) => (
             <a
               key={`${film.id}-${i}`}

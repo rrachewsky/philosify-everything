@@ -22,6 +22,7 @@ import {
   TrackCard,
   formatSignedScore,
   verdictRationale,
+  useMarqueeDuration,
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
@@ -94,6 +95,7 @@ const sanitize = (html) => DOMPurify.sanitize(stripTrailingWordCount(html), { AD
 
 // Top-50 marquee rendered inside the v2 ticker line (mockup .tick anatomy)
 function Top50Line({ tracks, label, onSelect }) {
+  const [runRef, duration] = useMarqueeDuration([tracks]);
   if (!tracks.length) return <span className="t50"><span className="lbl">{label}</span></span>;
   const items = tracks.map((tr, i) => ({ ...tr, rank: i + 1 }));
   const doubled = [...items, ...items];
@@ -101,7 +103,11 @@ function Top50Line({ tracks, label, onSelect }) {
     <span className="t50">
       <span className="lbl">{label}</span>
       <span className="t50-strip">
-        <span className="t50-run" style={{ animationDuration: `${tracks.length * 8}s` }}>
+        <span
+          className="t50-run"
+          ref={runRef}
+          style={{ animationDuration: `${duration ?? tracks.length * 8}s` }}
+        >
           {doubled.map((tr, i) => (
             <a
               key={`${tr.spotify_id || tr.rank}-${i}`}

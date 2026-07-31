@@ -3,7 +3,11 @@
 // continuously to the edge in a seamless -50% loop (content duplicated,
 // twin aria-hidden). Hover pauses; prefers-reduced-motion renders the
 // strip static (CSS). Reusable — items come from the caller (live data).
+// Duration is measured, not fixed (WP7 item 4): ~60px/s whatever the load.
+import { useMarqueeDuration } from './useMarqueeDuration.js';
+
 export function BreakingTicker({ label, items = [], onSelect, loading, loadingText, emptyText }) {
+  const [rollRef, duration] = useMarqueeDuration([items]);
   const hasItems = items.length > 0;
   const strip = (hidden) => (
     <span aria-hidden={hidden || undefined}>
@@ -28,7 +32,11 @@ export function BreakingTicker({ label, items = [], onSelect, loading, loadingTe
       <b className="brklabel">{label}</b>
       <span className="roll">
         {hasItems ? (
-          <span className="rollin">
+          <span
+            className="rollin"
+            ref={rollRef}
+            style={duration ? { animationDuration: `${duration}s` } : undefined}
+          >
             {strip(false)}
             {strip(true)}
           </span>
