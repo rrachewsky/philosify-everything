@@ -39,10 +39,11 @@ function ErrorState({ error, onRetry, t }) {
   );
 }
 
-export function ConstellationOfIdeas() {
+export function ConstellationOfIdeas({ initialSchool = null }) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const sceneRef = useRef(null);
+  const appliedSchoolRef = useRef(null);
   const [showSearch, setShowSearch] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -203,6 +204,17 @@ export function ConstellationOfIdeas() {
   const handleRetry = useCallback(() => {
     window.location.reload();
   }, []);
+
+  // Apply the school preselected on HistoryPage (pill deep-link) once nodes
+  // are loaded — the fly-to needs data. One-shot per school value via ref;
+  // the component remounts on every shell open, so reopening from another
+  // pill starts clean and applies the new school.
+  useEffect(() => {
+    if (loading || error || !initialSchool) return;
+    if (appliedSchoolRef.current === initialSchool) return;
+    appliedSchoolRef.current = initialSchool;
+    handleSchoolFilter(initialSchool);
+  }, [loading, error, initialSchool, handleSchoolFilter]);
 
   // Keyboard shortcuts
   useEffect(() => {

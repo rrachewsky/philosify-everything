@@ -107,18 +107,18 @@ const styles = {
     flexDirection: 'column',
   },
 
-  // Mobile: bottom sheet
+  // Mobile: bottom sheet floating ABOVE the timeline controls stack (same
+  // rule as ConstellationInfoPanel) so the filters stay reachable.
   containerMobile: {
     position: 'fixed',
-    bottom: 0,
+    bottom: 138,
     left: 0,
     right: 0,
-    height: '75vh',
-    maxHeight: '75vh',
+    height: 'min(62vh, calc(100dvh - 190px))',
+    maxHeight: 'calc(100dvh - 190px)',
     background: 'var(--bg)',
     borderRadius: 0,
     border: '1px solid var(--line-strong)',
-    borderBottom: 'none',
     overflow: 'hidden',
     zIndex: 200,
     display: 'flex',

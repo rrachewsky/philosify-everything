@@ -242,7 +242,9 @@ const styles = {
     right: 0,
     background: 'linear-gradient(transparent, var(--bg))',
     padding: '40px 24px 24px',
-    zIndex: 100,
+    // Above the mobile info sheets (z 200): expanding ERAS/SCHOOLS grows the
+    // stack upward, and the filter the user just asked for must win.
+    zIndex: 300,
   },
 
   // Top row with filter toggles

@@ -470,18 +470,18 @@ const styles = {
     flexDirection: 'column',
   },
 
-  // Mobile: bottom sheet covering 80% of screen
+  // Mobile: bottom sheet floating ABOVE the timeline controls stack, so the
+  // ERAS/SCHOOLS row and the scrubber stay reachable while a node is open.
   containerMobile: {
     position: 'fixed',
-    bottom: 0,
+    bottom: 138,
     left: 0,
     right: 0,
-    height: '80vh',
-    maxHeight: '80vh',
+    height: 'min(62vh, calc(100dvh - 190px))',
+    maxHeight: 'calc(100dvh - 190px)',
     background: 'var(--bg)',
     borderRadius: 0,
     border: '1px solid var(--line-strong)',
-    borderBottom: 'none',
     overflowX: 'hidden',
     overflowY: 'auto',
     zIndex: 200,

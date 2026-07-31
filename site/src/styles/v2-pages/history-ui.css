@@ -52,6 +52,10 @@
  font:400 14px/1 var(--f-ui);cursor:pointer;transition:border-color .16s}
 .hist-shell__close:hover{border-color:var(--ink-hi)}
 
+/* ---------- School pills: open the globe already filtered ----- */
+.hist-school-pill{cursor:pointer;transition:border-color .16s,color .16s}
+.hist-school-pill:hover,.hist-school-pill:focus-visible{border-color:var(--strong);color:var(--ink)}
+
 /* ---------- Loading spinner (scoped keyframe) ----------------- */
 @keyframes hist-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .hist-spinner{width:40px;height:40px;border:2px solid var(--line);

@@ -11,20 +11,36 @@ import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
 import { HistorySidebar } from '../../components/history';
 
-const SCHOOL_PILLS = ['Stoicism', 'Pre-Socratics', 'Enlightenment', 'German Idealism', 'Objectivism'];
+// label = mockup wording (unchanged); school = node.school value in the
+// constellation data (SCHOOL_COLORS keys) — three differ from the labels.
+const SCHOOL_PILLS = [
+  { label: 'Stoicism', school: 'Stoic' },
+  { label: 'Pre-Socratics', school: 'Pre-Socratic' },
+  { label: 'Enlightenment', school: 'Enlightenment' },
+  { label: 'German Idealism', school: 'German Idealism' },
+  { label: 'Objectivism', school: 'Objectivist' },
+];
 
 export default function HistoryPage() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [globeOpen, setGlobeOpen] = useState(searchParams.get('enter') === '1');
+  const [initialSchool, setInitialSchool] = useState(null);
 
   useEffect(() => {
     if (searchParams.get('enter') === '1' && !globeOpen) setGlobeOpen(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
+  // Single open path: pills pass their school; other entries clear it.
+  const openGlobe = (school = null) => {
+    setInitialSchool(school);
+    setGlobeOpen(true);
+  };
+
   const closeGlobe = () => {
     setGlobeOpen(false);
+    setInitialSchool(null);
     if (searchParams.get('enter')) setSearchParams({}, { replace: true });
   };
 
@@ -42,7 +58,7 @@ export default function HistoryPage() {
             .split(/\s*>>>\s*/)
             .filter(Boolean)
             .map((title) => ({ title }))}
-          onSelect={() => setGlobeOpen(true)}
+          onSelect={() => openGlobe()}
         />
       </ModuleHeader>
 
@@ -52,7 +68,7 @@ export default function HistoryPage() {
           title={t('v2.history.enterTitle', 'ENTER THE LIVING GLOBE')}
           onClick={(e) => {
             e.preventDefault();
-            setGlobeOpen(true);
+            openGlobe();
           }}
           style={{ minHeight: 180, justifyContent: 'center' }}
         >
@@ -63,15 +79,31 @@ export default function HistoryPage() {
         </Cell>
 
         <div style={{ display: 'flex', gap: 10, marginTop: 14, flexWrap: 'wrap' }}>
-          {SCHOOL_PILLS.map((school, i) => (
-            <Pill key={school} silver={i === 0}>
-              {school}
+          {/* Pill renders a span and spreads props (a style prop would clobber
+              the silver variant), so interactivity goes in via role/tabIndex
+              and the cursor via .hist-school-pill (history-ui.css). */}
+          {SCHOOL_PILLS.map(({ label, school }, i) => (
+            <Pill
+              key={school}
+              silver={i === 0}
+              className="hist-school-pill"
+              role="button"
+              tabIndex={0}
+              onClick={() => openGlobe(school)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  openGlobe(school);
+                }
+              }}
+            >
+              {label}
             </Pill>
           ))}
         </div>
       </div>
 
-      <HistorySidebar isOpen={globeOpen} onClose={closeGlobe} />
+      <HistorySidebar isOpen={globeOpen} onClose={closeGlobe} initialSchool={initialSchool} />
       <V2ModalsHost />
     </PageShell>
   );

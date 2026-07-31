@@ -8,6 +8,7 @@
 // ============================================================
 
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { ConstellationOfIdeas } from './ConstellationOfIdeas.jsx';
 import '../../styles/v2-pages/history-ui.css';
@@ -100,7 +101,7 @@ class HistoryErrorBoundary extends React.Component {
   }
 }
 
-export function HistorySidebar({ isOpen, onClose }) {
+export function HistorySidebar({ isOpen, onClose, initialSchool = null }) {
   const { t } = useTranslation();
 
   // Lock body scroll and restore position on close (same pattern as other sidebars)
@@ -134,7 +135,12 @@ export function HistorySidebar({ isOpen, onClose }) {
   
   if (!isOpen) return null;
 
-  return (
+  // Portaled to document.body: .v2 .page (z-index:1) is a stacking context
+  // below the fixed .hdr (z-index:4), so mounted inline the header paints
+  // over the shell's top band and swallows the close button. history-ui.css
+  // selectors are unscoped and tokens live on :root / body.t-white, so the
+  // shell renders identically outside the .v2 subtree.
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -165,11 +171,12 @@ export function HistorySidebar({ isOpen, onClose }) {
         {/* Constellation Container - takes remaining space */}
         <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
           <HistoryErrorBoundary onClose={onClose}>
-            <ConstellationOfIdeas />
+            <ConstellationOfIdeas initialSchool={initialSchool} />
           </HistoryErrorBoundary>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
 
