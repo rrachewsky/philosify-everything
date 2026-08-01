@@ -78,6 +78,15 @@
  text-transform:uppercase;color:var(--low)}
 .v2 .pg-music .proof b{color:var(--mid);font-weight:500;word-break:break-all;text-transform:none;letter-spacing:.04em}
 
+/* Shared permalink CTA — the one block a visitor from a link is asked to act on
+   (1 Aug). Same cell anatomy as the rest of v2: square, hairline, no gradient. */
+.v2 :is(.pg-music,.pg-news) .sharecta{border:1px solid var(--strong);background:var(--bgcell);
+ padding:26px;margin-top:26px;text-align:center}
+.v2 :is(.pg-music,.pg-news) .sharecta h3{font:400 15.5px var(--fd);letter-spacing:.14em;
+ text-transform:uppercase;color:var(--ink);margin:0 0 10px}
+.v2 :is(.pg-music,.pg-news) .sharecta p{font:400 14.5px/1.7 var(--fp);color:var(--mid);
+ max-width:52ch;margin:0 auto 18px}
+
 /* ---------- Errors ------------------------------------------- */
 .v2 .pg-music .errline{font:400 12px var(--fu);color:var(--warn);margin-top:14px;letter-spacing:.03em}
 
