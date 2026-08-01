@@ -3823,6 +3823,13 @@ export default {
       };
       const getLabel = (type, lang) => SHARE_LABELS[type]?.[lang] || SHARE_LABELS[type]?.en || "";
 
+      // GET /api/share-preview/a/:slug — Open Graph metadata, never counts a view
+      const shareCardMatch = url.pathname.match(/^\/api\/share-preview\/a\/([A-Za-z0-9_-]{4,64})$/);
+      if (shareCardMatch && request.method === "GET") {
+        const { handleSharePreview } = await import("./src/handlers/share-preview.js");
+        return handleSharePreview(request, env, origin, shareCardMatch[1]);
+      }
+
       // GET /api/share-preview/debate/:threadId?lang=xx
       const debateShareMatch = url.pathname.match(/^\/api\/share-preview\/debate\/([a-f0-9-]+)$/);
       if (debateShareMatch && request.method === "GET") {
