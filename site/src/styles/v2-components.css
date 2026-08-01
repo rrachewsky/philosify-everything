@@ -408,3 +408,17 @@ html:is(:lang(zh),:lang(ja),:lang(ko),:lang(hi),:lang(ar),:lang(he),:lang(fa),:l
    tickers and titles stay start-aligned; in RTL the direction rule
    above makes the last line fall to the right. */
 .v2 :is(.xcard .body,.vwhy,.synopsis,.panel-analysis__section-body,.prose,.msg .b,.manifesto,.uz-intro,.translate-result){text-align:justify;-webkit-hyphens:auto;hyphens:auto}
+
+/* ---------- Share tray ---------------------------------------- */
+/* One tray for every v2 module. Music, News, Cinema and Literature each
+   carried a byte-identical copy of this block, and each copy shrank the
+   app logos to 20px and stripped their colour with grayscale(1) — which is
+   why the same WhatsApp mark looked drawn here and official in Debates.
+   The logo itself is deliberately NOT styled here: it renders from the one
+   rule in utilities.css that Debates has always used, so every share
+   surface shows the same official asset at the same size, in the brand's
+   own colours, with the same clear space. Change it there, once. */
+.v2 .sharetray{border:1px solid var(--line);background:var(--bgcell);margin-top:14px}
+.v2 .sharetray .share-button__container{align-items:flex-start;gap:14px;padding:18px 20px}
+.v2 .sharetray .share-button__container p{font:500 10.5px/1.6 var(--fu);letter-spacing:.14em;
+ text-transform:uppercase;color:var(--low);margin:0}

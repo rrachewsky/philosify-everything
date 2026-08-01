@@ -117,16 +117,6 @@
 .v2 .pg-music .actions .share-community-error{font:400 11px var(--fu);color:var(--warn);
  text-transform:none;letter-spacing:.03em;margin-top:6px}
 
-/* ---------- Share tray (reused ShareButton, monochrome) ------ */
-.v2 .pg-music .sharetray{border:1px solid var(--line);background:var(--bgcell);margin-top:14px}
-.v2 .pg-music .sharetray .share-button__container{display:flex;flex-direction:column;gap:14px;padding:18px 20px}
-.v2 .pg-music .sharetray .share-button__container p{font:500 10.5px/1.6 var(--fu);letter-spacing:.14em;
- text-transform:uppercase;color:var(--low);margin:0;font-weight:500}
-.v2 .pg-music .sharetray .share-button__icon-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-start}
-.v2 .pg-music .sharetray .share-button__btn{background:none;border:1px solid var(--line);padding:8px;cursor:pointer;border-radius:0}
-.v2 .pg-music .sharetray .share-button__btn:hover{border-color:var(--strong)}
-.v2 .pg-music .sharetray .share-button__icon-img{width:20px;height:20px;display:block;filter:grayscale(1)}
-
 /* ---------- Ad slot wrapper (mockup .slot; internals untouched) */
 .v2 .pg-music .adwrap{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px}
 
