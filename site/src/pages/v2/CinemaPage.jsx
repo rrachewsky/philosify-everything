@@ -621,7 +621,7 @@ export default function CinemaPage() {
               {shareOpen === 'panel' && panel.id && (
                 <div className="sharetray">
                   <ShareButton
-                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panel.id}?lang=${lang}`}
+                    shareUrl={`${window.location.origin}/panel/${panel.id}`}
                     shareText={t('share.shareFilmText', {
                       title: panel.title,
                       artist: panelArtist,

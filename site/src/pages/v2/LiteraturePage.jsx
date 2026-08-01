@@ -773,7 +773,7 @@ export default function LiteraturePage() {
               {shareOpen === 'panel' && panel.id && (
                 <div className="sharetray">
                   <ShareButton
-                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panel.id}?lang=${i18n.language}`}
+                    shareUrl={`${window.location.origin}/panel/${panel.id}`}
                     shareText={t('share.shareLiteratureText', {
                       title: panel.title,
                       artist: panelArtist,

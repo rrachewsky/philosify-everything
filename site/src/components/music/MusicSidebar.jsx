@@ -16,7 +16,6 @@ import PanelAnalysisCards from '../results/PanelAnalysisCards.jsx';
 import TopTenTicker from '../TopTenTicker';
 import { useModal } from '../../hooks';
 import { setPendingAction } from '../../utils/pendingAction.js';
-import { config } from '@/config';
 import { requestPhilosopherPanel } from '../../services/api/philosopherPanel.js';
 import '../../styles/music-sidebar.css';
 
@@ -515,7 +514,7 @@ export function MusicSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.resolvedLanguage || i18n.language}` : undefined}
+                    shareUrl={panelResult.id ? `${window.location.origin}/panel/${panelResult.id}` : undefined}
                     shareText={t('share.shareMusicText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton
@@ -587,7 +586,7 @@ export function MusicSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.resolvedLanguage || i18n.language}` : undefined}
+                    shareUrl={panelResult.id ? `${window.location.origin}/panel/${panelResult.id}` : undefined}
                     shareText={t('share.shareMusicText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton

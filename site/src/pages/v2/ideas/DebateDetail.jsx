@@ -3,7 +3,6 @@
 // debate detail (WP3 parity).
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { config } from '@/config';
 import { Button, Pill, Telemetry } from '../../../components/v2';
 import { ShareButton } from '../../../components/sharing/ShareButton.jsx';
 import { TranslateButton } from '../../../components/common/TranslateButton.jsx';
@@ -127,7 +126,7 @@ export function DebateDetail({ debate, lang, user, onBack }) {
           <div className="prose vprose">{debate.wrapup}</div>
           <TranslateButton text={debate.wrapup} />
           <ShareButton
-            shareUrl={`${config.apiUrl}/api/share-preview/debate/${ad.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
+            shareUrl={`${window.location.origin}/debate/${ad.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
             shareText={t('share.shareDebateText', {
               title: ad.title || t('v2.ideas.wrapupTitle', 'Philosify verdict'),
             })}

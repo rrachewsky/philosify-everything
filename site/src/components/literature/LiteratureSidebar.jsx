@@ -702,7 +702,7 @@ export function LiteratureSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}` : undefined}
+                    shareUrl={panelResult.id ? `${window.location.origin}/panel/${panelResult.id}` : undefined}
                     shareText={t('share.shareLiteratureText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton
@@ -776,7 +776,7 @@ export function LiteratureSidebar({
                     analysisId={panelResult.id}
                     songName={panelResult.title}
                     artist={panelResult.artist}
-                    shareUrl={panelResult.id ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${i18n.language}` : undefined}
+                    shareUrl={panelResult.id ? `${window.location.origin}/panel/${panelResult.id}` : undefined}
                     shareText={t('share.shareLiteratureText', { title: panelResult.title, artist: panelResult.artist })}
                   />
                   <ShareToDMButton

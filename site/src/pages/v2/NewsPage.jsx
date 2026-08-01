@@ -851,7 +851,7 @@ export default function NewsPage() {
                 {shareOpen === 'panel' && activePanel.id && (
                   <div className="sharetray">
                     <ShareButton
-                      shareUrl={`${config.apiUrl}/api/share-preview/panel/${activePanel.id}?lang=${userLang}`}
+                      shareUrl={`${window.location.origin}/panel/${activePanel.id}`}
                       shareText={t('share.shareNewsText', { title: activePanel.title })}
                       songName={activePanel.title}
                       artist={activePanel.artist || activePanel.source}

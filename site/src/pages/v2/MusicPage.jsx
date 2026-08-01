@@ -733,9 +733,7 @@ export default function MusicPage() {
   const adMounted = isAnalyzing || panelLoading || (adRun && (analysisResult || panelResult));
 
   const panelShareUrl = panelResult?.id
-    ? `${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${
-        i18n.resolvedLanguage || i18n.language
-      }`
+    ? `${window.location.origin}/panel/${panelResult.id}`
     : undefined;
 
   const panelTtsResult = panelResult

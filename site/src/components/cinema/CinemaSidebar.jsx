@@ -250,8 +250,6 @@ export function CinemaSidebar({
     }
   };
 
-  const lang = i18n.resolvedLanguage || i18n.language || 'en';
-
   return (
     <>
       <div
@@ -504,7 +502,7 @@ export function CinemaSidebar({
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
                   <ShareButton
-                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${lang}`}
+                    shareUrl={`${window.location.origin}/panel/${panelResult.id}`}
                     shareText={t('share.shareFilmText', {
                       title: panelResult.title,
                       artist: panelResult.artist || selectedFilm?.director || '',
@@ -592,7 +590,7 @@ export function CinemaSidebar({
               {panelResult.id && (
                 <div className="result-card flex-center p-6" style={{ gap: '12px', flexWrap: 'wrap' }}>
                   <ShareButton
-                    shareUrl={`${config.apiUrl}/api/share-preview/panel/${panelResult.id}?lang=${lang}`}
+                    shareUrl={`${window.location.origin}/panel/${panelResult.id}`}
                     shareText={t('share.shareFilmText', {
                       title: panelResult.title,
                       artist: panelResult.artist || selectedFilm?.director || '',

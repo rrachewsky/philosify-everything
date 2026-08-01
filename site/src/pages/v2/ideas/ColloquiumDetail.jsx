@@ -325,7 +325,7 @@ export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
                 refreshKey={`coll-verdict-${ac.id}`}
               />
               <ShareButton
-                shareUrl={`${config.apiUrl}/api/share-preview/debate/${ac.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
+                shareUrl={`${window.location.origin}/debate/${ac.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
                 shareText={t('share.shareDebateText', {
                   title: localizedTitle || t('v2.ideas.wrapupTitle', 'Philosify verdict'),
                 })}

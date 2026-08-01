@@ -3823,11 +3823,24 @@ export default {
       };
       const getLabel = (type, lang) => SHARE_LABELS[type]?.[lang] || SHARE_LABELS[type]?.en || "";
 
-      // GET /api/share-preview/a/:slug — Open Graph metadata, never counts a view
-      const shareCardMatch = url.pathname.match(/^\/api\/share-preview\/a\/([A-Za-z0-9_-]{4,64})$/);
+      // GET /api/share-card/{a|panel|debate}/:id — Open Graph metadata for the
+      // three public permalinks. Read-only: never counts a view, because every
+      // chat app previews a link before a human opens it.
+      const shareCardMatch = url.pathname.match(
+        /^\/api\/share-card\/(a|panel|debate)\/([A-Za-z0-9_-]{4,80})$/
+      );
       if (shareCardMatch && request.method === "GET") {
+        const { handleShareCard } = await import("./src/handlers/share-preview.js");
+        return handleShareCard(request, env, origin, shareCardMatch[1], shareCardMatch[2]);
+      }
+
+      // Original path, still called by the protected rollback deployment.
+      const sharePreviewMatch = url.pathname.match(
+        /^\/api\/share-preview\/a\/([A-Za-z0-9_-]{4,64})$/
+      );
+      if (sharePreviewMatch && request.method === "GET") {
         const { handleSharePreview } = await import("./src/handlers/share-preview.js");
-        return handleSharePreview(request, env, origin, shareCardMatch[1]);
+        return handleSharePreview(request, env, origin, sharePreviewMatch[1]);
       }
 
       // GET /api/share-preview/debate/:threadId?lang=xx
@@ -3851,7 +3864,10 @@ export default {
           const philosophers = (thread?.metadata?.philosophers || []).join(", ");
           const desc = philosophers ? `${excerpt} — ${escapeHtml(philosophers)}` : excerpt;
           const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
-          const previewUrl = `https://philosify.org/api/share-preview/debate/${threadId}`;
+          // Legacy endpoint: links shared before 1 Aug 2026 still point here.
+          // It used to bounce the visitor to the home page, which meant the
+          // shared debate was unreachable — send them to the debate itself.
+          const previewUrl = `https://philosify.org/debate/${threadId}`;
 
           const html = `<!DOCTYPE html>
 <html lang="${lang}"><head>
@@ -3867,7 +3883,7 @@ export default {
 <meta name="twitter:description" content="${desc}">
 <meta name="twitter:image" content="${logoUrl}">
 <title>${title} | Philosify</title>
-<meta http-equiv="refresh" content="1;url=https://philosify.org">
+<meta http-equiv="refresh" content="1;url=${previewUrl}">
 </head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
 
            return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
@@ -3891,7 +3907,10 @@ export default {
           const mediaType = panel?.mediaType || "news";
           const desc = `${mediaType === "news" ? "📰" : mediaType === "cinema" ? "🎬" : mediaType === "music" ? "🎵" : "📚"} ${excerpt}`;
           const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
-          const previewUrl = `https://philosify.org/api/share-preview/panel/${panelId}`;
+          // Legacy endpoint: links shared before 1 Aug 2026 still point here.
+          // It used to bounce the visitor to the home page, which meant the
+          // shared panel was unreachable — send them to the panel itself.
+          const previewUrl = `https://philosify.org/panel/${panelId}`;
 
           const html = `<!DOCTYPE html>
 <html lang="${lang}"><head>
@@ -3907,7 +3926,7 @@ export default {
 <meta name="twitter:description" content="${desc}">
 <meta name="twitter:image" content="${logoUrl}">
 <title>${title} | Philosify</title>
-<meta http-equiv="refresh" content="1;url=https://philosify.org">
+<meta http-equiv="refresh" content="1;url=${previewUrl}">
 </head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
 
            return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });

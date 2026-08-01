@@ -7,7 +7,10 @@
 // handled here. That is why the Open Graph rewrite below lives in this file
 // instead of a `functions/a/[slug].js`.
 
-const SHARE_PATH = /^\/(?:a|shared)\/([A-Za-z0-9_-]{4,64})\/?$/;
+// The three public permalinks. /a and /shared are the same thing (a shared
+// analysis) under two historical prefixes.
+const SHARE_PATH = /^\/(a|shared|panel|debate)\/([A-Za-z0-9_-]{4,80})\/?$/;
+const CARD_TYPE = { a: 'a', shared: 'a', panel: 'panel', debate: 'debate' };
 
 class MetaRewriter {
   constructor(map) {
@@ -39,17 +42,18 @@ class LangRewriter {
   }
 }
 
-// Open Graph card for a shared analysis.
+// Open Graph card for a shared analysis, panel or debate.
 //
 // The crawlers behind WhatsApp, Telegram and Slack do not execute JavaScript:
 // they read the served HTML and leave. index.html carries the site's generic
 // English slogan, so a Portuguese analysis previewed in English. Here the same
-// document is served with its meta tags rewritten from the analysis itself —
-// already in the analysis language, so no translation layer can drift.
+// document is served with its meta tags rewritten from the shared item itself —
+// title, verdict and rationale, already in that item's language, so there is no
+// translation layer in between to drift.
 //
 // A preview failure must never cost the visitor the page: every failure path
 // returns the untouched document.
-async function shareDocument(slug, url, request, assetFetch) {
+async function shareDocument(type, id, url, request, assetFetch) {
   const indexReq = new Request(new URL('/index.html', url.origin).toString(), {
     method: request.method,
     headers: request.headers,
@@ -58,7 +62,12 @@ async function shareDocument(slug, url, request, assetFetch) {
 
   let preview = null;
   try {
-    const api = `https://api.philosify.org/api/share-preview/a/${encodeURIComponent(slug)}`;
+    // A debate is translated on demand and has no language of its own, so the
+    // link carries the one it was shared in.
+    const lang = url.searchParams.get('lang');
+    const api =
+      `https://api.philosify.org/api/share-card/${type}/${encodeURIComponent(id)}` +
+      (lang ? `?lang=${encodeURIComponent(lang)}` : '');
     const res = await fetch(api, { cf: { cacheTtl: 300, cacheEverything: true } });
     if (res.ok) {
       const data = await res.json();
@@ -70,7 +79,7 @@ async function shareDocument(slug, url, request, assetFetch) {
 
   if (!preview) return assetResponse;
 
-  const title = `${preview.title} | Philosify`;
+  const title = `${preview.title} · Philosify`;
   const description = preview.description || '';
   const canonical = `${url.origin}${url.pathname}`;
   const map = {
@@ -118,7 +127,7 @@ export default {
     const share = pathname.match(SHARE_PATH);
     if (share) {
       try {
-        return await shareDocument(share[1], url, request, assetFetch);
+        return await shareDocument(CARD_TYPE[share[1]], share[2], url, request, assetFetch);
       } catch {
         // fall through to the normal SPA path
       }

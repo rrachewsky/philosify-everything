@@ -23,6 +23,7 @@ import { logger } from './utils';
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
 const PaymentCancel = lazy(() => import('./pages/PaymentCancel'));
 const SharedAnalysis = lazy(() => import('./pages/SharedAnalysis'));
+const PanelPermalink = lazy(() => import('./pages/v2/PanelPermalink'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
 
 // v2 pages
@@ -141,6 +142,7 @@ export function Router() {
           {/* Public share routes */}
           <Route path="/a/:slug" element={<SharedAnalysis />} />
           <Route path="/shared/:id" element={<SharedAnalysis />} />
+          <Route path="/panel/:id" element={<PanelPermalink />} />
 
           {/* Legal pages (v2, real ToS/PP text via i18n) */}
           <Route path="/tos" element={<LegalPage doc="terms" />} />
