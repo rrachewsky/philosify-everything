@@ -1,6 +1,95 @@
 // Cloudflare Pages Functions (Single Worker) - SPA fallback
 // This ensures deep links like /shared/:id work even when direct uploads
 // do not apply Netlify-style `_redirects` rules consistently.
+//
+// NOTE: this file puts the project in Pages "advanced mode". While it exists,
+// Cloudflare IGNORES the entire `functions/` directory — every route must be
+// handled here. That is why the Open Graph rewrite below lives in this file
+// instead of a `functions/a/[slug].js`.
+
+const SHARE_PATH = /^\/(?:a|shared)\/([A-Za-z0-9_-]{4,64})\/?$/;
+
+class MetaRewriter {
+  constructor(map) {
+    this.map = map;
+  }
+  element(el) {
+    const key = el.getAttribute('property') || el.getAttribute('name');
+    const value = this.map[key];
+    // HTMLRewriter escapes attribute values on serialization — do not pre-escape.
+    if (value) el.setAttribute('content', value);
+  }
+}
+
+class TitleRewriter {
+  constructor(title) {
+    this.title = title;
+  }
+  element(el) {
+    el.setInnerContent(this.title);
+  }
+}
+
+class LangRewriter {
+  constructor(lang) {
+    this.lang = lang;
+  }
+  element(el) {
+    if (this.lang) el.setAttribute('lang', this.lang);
+  }
+}
+
+// Open Graph card for a shared analysis.
+//
+// The crawlers behind WhatsApp, Telegram and Slack do not execute JavaScript:
+// they read the served HTML and leave. index.html carries the site's generic
+// English slogan, so a Portuguese analysis previewed in English. Here the same
+// document is served with its meta tags rewritten from the analysis itself —
+// already in the analysis language, so no translation layer can drift.
+//
+// A preview failure must never cost the visitor the page: every failure path
+// returns the untouched document.
+async function shareDocument(slug, url, request, assetFetch) {
+  const indexReq = new Request(new URL('/index.html', url.origin).toString(), {
+    method: request.method,
+    headers: request.headers,
+  });
+  const assetResponse = await assetFetch(indexReq);
+
+  let preview = null;
+  try {
+    const api = `https://api.philosify.org/api/share-preview/a/${encodeURIComponent(slug)}`;
+    const res = await fetch(api, { cf: { cacheTtl: 300, cacheEverything: true } });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.ok && data.title) preview = data;
+    }
+  } catch {
+    preview = null;
+  }
+
+  if (!preview) return assetResponse;
+
+  const title = `${preview.title} | Philosify`;
+  const description = preview.description || '';
+  const canonical = `${url.origin}${url.pathname}`;
+  const map = {
+    'og:title': title,
+    'og:description': description,
+    'og:url': canonical,
+    'og:type': 'article',
+    'twitter:title': title,
+    'twitter:description': description,
+    'twitter:url': canonical,
+    description,
+  };
+
+  return new HTMLRewriter()
+    .on('html', new LangRewriter(preview.lang))
+    .on('title', new TitleRewriter(title))
+    .on('meta', new MetaRewriter(map))
+    .transform(assetResponse);
+}
 
 export default {
   async fetch(request, env, ctx) {
@@ -23,6 +112,16 @@ export default {
     // Only apply SPA fallback to GET/HEAD navigation requests
     if (method !== 'GET' && method !== 'HEAD') {
       return assetFetch(request);
+    }
+
+    // Public permalinks get the same document with a localized preview card.
+    const share = pathname.match(SHARE_PATH);
+    if (share) {
+      try {
+        return await shareDocument(share[1], url, request, assetFetch);
+      } catch {
+        // fall through to the normal SPA path
+      }
     }
 
     // Don’t rewrite known static assets
@@ -58,5 +157,3 @@ export default {
     return assetFetch(indexReq);
   },
 };
-
-
