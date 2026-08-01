@@ -31,6 +31,7 @@
 // - Sort by: source priority → philosophical relevance → date
 // ============================================================
 
+import { languageName } from '../ai/prompts/languages.js';
 import { getSecret } from "../utils/secrets.js";
 
 const NEWSAPI_BASE = "https://eventregistry.org/api/v1";
@@ -488,12 +489,12 @@ export async function summarizeArticles(articles, lang, env) {
   const batch = articles.map((a, i) => `[${i}] ${a.title}${a.description ? " — " + a.description : ""}`).join("\n");
 
   const prompt = `You are a multilingual news editor. For each article below:
-1. Translate the headline title into the language with ISO code "${lang}" (if it is already in "${lang}", keep it as-is).
-2. Write a concise summary of approximately 40 words in "${lang}".
+1. Translate the headline title into ${languageName(lang)} (if it is already in ${languageName(lang)}, keep it as-is).
+2. Write a concise summary of approximately 40 words in ${languageName(lang)}.
 
 The articles may be in ANY language (English, Chinese, Arabic, Hebrew, Japanese, etc.).
-You MUST translate EVERY title and summary into "${lang}". No exceptions.
-Use the natural, traditional register of "${lang}" — no activist neologisms (in Portuguese, "American" is "americano" or "norte-americano", NEVER "estadunidense"; no invented gender-neutral forms like "todes").
+You MUST translate EVERY title and summary into ${languageName(lang)}. No exceptions.
+Use the natural, traditional register of ${languageName(lang)} — no activist neologisms (in Portuguese, "American" is "americano" or "norte-americano", NEVER "estadunidense"; no invented gender-neutral forms like "todes").
 
 Return ONLY a valid JSON array:
 [{"id":0,"title":"translated title in ${lang}","summary":"summary in ${lang}"},{"id":1,"title":"...","summary":"..."},...]

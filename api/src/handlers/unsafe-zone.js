@@ -11,6 +11,7 @@
 // - Warning at turns 15, 25, 35... (5 turns before payment gate)
 // ============================================================
 
+import { languageName } from '../ai/prompts/languages.js';
 import Anthropic from '@anthropic-ai/sdk';
 import { jsonResponse } from '../utils/index.js';
 import { getServiceSupabase } from '../utils/supabase.js';
@@ -311,7 +312,7 @@ export async function handleUnsafeZone(request, env, origin) {
     const targetLang = lang || 'en';
     let systemPrompt = guide;
     if (targetLang !== 'en') {
-      systemPrompt += `\n\n🚨 CRITICAL: Respond ENTIRELY in the language with ISO code "${targetLang}". Every word must be in ${targetLang}. Do not use English unless quoting a specific term.`;
+      systemPrompt += `\n\n🚨 CRITICAL: Respond ENTIRELY in ${languageName(targetLang)}. Every word must be in ${languageName(targetLang)}. Do not use English unless quoting a specific term.`;
     }
 
     // Call Anthropic

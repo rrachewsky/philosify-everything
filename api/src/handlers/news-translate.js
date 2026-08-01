@@ -4,6 +4,7 @@
 // Used when the article's language doesn't match the user's language
 // ============================================================
 
+import { languageName } from '../ai/prompts/languages.js';
 import { jsonResponse } from "../utils/index.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { getSecret } from "../utils/secrets.js";
@@ -39,7 +40,7 @@ export async function handleNewsTranslate(request, env, origin) {
       return errorResponse(env, origin, 'NEWS_SERVICE_UNAVAILABLE', lang);
     }
 
-    const prompt = `Translate the following news headline and description into the language with ISO code "${targetLang}".
+    const prompt = `Translate the following news headline and description into ${languageName(targetLang)}.
 Return ONLY a valid JSON object: {"title":"translated title","summary":"translated description as ~40 word summary"}
 No markdown fences, no explanation, ONLY the JSON object.
 

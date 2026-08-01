@@ -8,6 +8,8 @@
 // Cost: 3 credits
 // ============================================================
 
+import { languageName } from './languages.js';
+
 /**
  * Build the philosopher panel analysis prompt.
  *
@@ -199,12 +201,12 @@ RULES:
 - Use markdown formatting: **bold** for philosopher names/section headers, *italics* for schools/emphasis.
 
 ${lang === 'en' ? '' : `═══ MANDATORY LANGUAGE RULE ═══
-Write the ENTIRE response in the language with ISO code "${lang}".
-This is NON-NEGOTIABLE. Every single word of your analysis — section headers, philosophical terms, descriptions, arguments, verdict, and conclusions — MUST be written in "${lang}".
-DO NOT use ANY English words, terms, or expressions. Translate ALL philosophical terminology into "${lang}".
+Write the ENTIRE response in ${languageName(lang)}.
+This is NON-NEGOTIABLE. Every single word of your analysis — section headers, philosophical terms, descriptions, arguments, verdict, and conclusions — MUST be written in ${languageName(lang)}.
+DO NOT use ANY English words, terms, or expressions. Translate ALL philosophical terminology into ${languageName(lang)}.
 For example: "achievement-oriented" must be translated, "sense of life" must be translated, "benevolent universe" must be translated.
 The ONLY exceptions are: philosopher proper names (e.g., "Ayn Rand", "Nietzsche") and the platform name "Philosify".
-NATURAL LANGUAGE: Write in the natural, traditional register of "${lang}" — no politically-charged neologisms or activist "language reforms".
+NATURAL LANGUAGE: Write in the natural, traditional register of ${languageName(lang)} — no politically-charged neologisms or activist "language reforms".
 United States demonym: use the standard traditional term — in Portuguese ALWAYS "americano" or "norte-americano", NEVER "estadunidense" (ideological corruption of the language).
 No invented gender-neutral forms ("todes", "amigues", "elu", "Latinx", "x"/"@" endings).
 VIOLATION: If even a single English phrase appears in a non-English response, the analysis will be REJECTED.

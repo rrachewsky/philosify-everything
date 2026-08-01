@@ -2,6 +2,7 @@
 // QUIZ HANDLERS - Philosophical Quiz API
 // ============================================================
 
+import { languageName } from '../ai/prompts/languages.js';
 import { jsonResponse, sanitizeErrorMessage } from '../utils/index.js';
 import { getServiceSupabase, callRpc } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
@@ -426,7 +427,7 @@ async function translateQuestionWithAI(question, lang, env) {
     const wrongExpl = typeof question.wrong_explanations === 'string'
       ? JSON.parse(question.wrong_explanations) : question.wrong_explanations;
 
-    const prompt = `Translate this philosophical quiz question into the language with ISO code "${lang}".
+    const prompt = `Translate this philosophical quiz question into ${languageName(lang)}.
 Return ONLY a valid JSON object, no markdown fences, no explanation.
 
 Input:
