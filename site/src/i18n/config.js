@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next';
 import en from './translations/en.json';
 
 // Supported languages (all 15 supported by Gemini TTS + existing)
-const SUPPORTED_LANGUAGES = [
+export const SUPPORTED_LANGUAGES = [
   'en',
   'pt',
   'es',

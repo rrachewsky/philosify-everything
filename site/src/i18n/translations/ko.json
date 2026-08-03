@@ -343,6 +343,7 @@
     "shareMusicText": "🎵 Philosify에서 {{artist}}의 {{title}} 철학적 분석을 확인하세요!",
     "shareLiteratureText": "📚 Philosify에서 {{artist}}의 {{title}} 철학적 분석을 확인하세요!",
     "shareNewsText": "📰 철학자 패널 확인: {{title}} | Philosify",
+    "shareNewsAnalysisText": "📰 Philosify에서 {{title}} 철학적 분석을 확인하세요!",
     "shareDebateText": "💬 이 철학적 토론을 확인하세요: {{title}} | Philosify",
     "shareFilmText": "🎬 Philosify에서 {{artist}}의 {{title}} 철학적 분석을 확인하세요!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",

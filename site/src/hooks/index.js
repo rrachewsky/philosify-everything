@@ -5,6 +5,7 @@ export { useAnalysis } from './useAnalysis.js';
 export { useSpotifySearch } from './useSpotifySearch.js';
 export { useModal } from './useModal.js';
 export { useLanguage } from './useLanguage.js';
+export { useSharedContentLanguage } from './useSharedContentLanguage.js';
 export { useToast } from './useToast.js';
 export { useTransactions } from './useTransactions.js';
 export { useAnalysisHistory } from './useAnalysisHistory.js';

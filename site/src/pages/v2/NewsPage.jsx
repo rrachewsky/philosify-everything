@@ -777,7 +777,7 @@ export default function NewsPage() {
                       analysisId={activeScan.id}
                       songName={activeScan.title || activeScan.song_name}
                       artist={activeScan.source || activeScan.artist}
-                      shareText={t('share.shareNewsText', {
+                      shareText={t('share.shareNewsAnalysisText', {
                         title: activeScan.title || activeScan.song_name,
                       })}
                     />

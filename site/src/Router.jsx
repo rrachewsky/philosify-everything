@@ -101,10 +101,20 @@ function PaymentReturnRedirect() {
   return null;
 }
 
-// Deep link /debate/:debateId → Ideas page with the debate open
+// Deep link /debate/:debateId → Ideas page with the debate open.
+//
+// The share link carries ?lang= because a debate, unlike an analysis, IS stored
+// translated — it is the one thing the sender can hand over in their language.
+// Dropping the parameter here made the card arrive in French and the page open
+// in whatever the visitor had saved, so it is carried through to /ideas, which
+// applies it while the deep-linked debate is open.
 function DebateDeepLink() {
   const { debateId } = useParams();
-  return <Navigate to={`/ideas?debate=${debateId}`} replace />;
+  const lang = new URLSearchParams(useLocation().search).get('lang');
+  const target = `/ideas?debate=${encodeURIComponent(debateId)}${
+    lang ? `&lang=${encodeURIComponent(lang)}` : ''
+  }`;
+  return <Navigate to={target} replace />;
 }
 
 export function Router() {

@@ -11,6 +11,7 @@ import { PageShell, ModuleHeader, Ticker, Button, Telemetry } from '../../compon
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
 import { useAuth } from '../../hooks/useAuth.js';
+import { useSharedContentLanguage } from '../../hooks/useSharedContentLanguage.js';
 import { useCreditsContext } from '../../contexts/CreditsContext';
 import { useDebate } from '../../hooks/useDebate.js';
 import { useColloquium } from '../../hooks/useColloquium.js';
@@ -46,6 +47,11 @@ export default function IdeasPage() {
 
   const debateParam = searchParams.get('debate');
   const openedDeepLinkRef = useRef(null);
+
+  // Arriving from a shared /debate/:id link: read it in the language it was
+  // shared in. Only when a debate is actually deep-linked — /ideas on its own is
+  // the visitor's own page and keeps the visitor's language.
+  useSharedContentLanguage(debateParam ? searchParams.get('lang') : null);
 
   // ─── Credit pre-check: store the SAME pendingAction shapes the current
   // system uses, then open the shared Buy Credits modal (contract §wiring).

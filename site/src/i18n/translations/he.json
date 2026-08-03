@@ -343,6 +343,7 @@
     "shareMusicText": "🎵 בדוק את הניתוח הפילוסופי של {{title}} מאת {{artist}} ב-Philosify!",
     "shareLiteratureText": "📚 בדוק את הניתוח הפילוסופי של {{title}} מאת {{artist}} ב-Philosify!",
     "shareNewsText": "📰 בדוק את פאנל הפילוסופים: {{title}} | Philosify",
+    "shareNewsAnalysisText": "📰 בדוק את הניתוח הפילוסופי של {{title}} ב-Philosify!",
     "shareDebateText": "💬 בדוק את הדיון הפילוסופי הזה: {{title}} | Philosify",
     "shareFilmText": "🎬 בדוק את הניתוח הפילוסופי של {{title}} מאת {{artist}} ב-Philosify!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",

@@ -343,6 +343,7 @@
     "shareMusicText": "🎵 Schau dir die philosophische Analyse von {{title}} von {{artist}} auf Philosify an!",
     "shareLiteratureText": "📚 Schau dir die philosophische Analyse von {{title}} von {{artist}} auf Philosify an!",
     "shareNewsText": "📰 Schau dir das Philosophen-Panel an: {{title}} | Philosify",
+    "shareNewsAnalysisText": "📰 Schau dir die philosophische Analyse von {{title}} auf Philosify an!",
     "shareDebateText": "💬 Schau dir diese philosophische Debatte an: {{title}} | Philosify",
     "shareFilmText": "🎬 Schau dir die philosophische Analyse von {{title}} von {{artist}} auf Philosify an!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",

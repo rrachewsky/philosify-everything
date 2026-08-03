@@ -532,7 +532,7 @@ export const ResultsContainer = forwardRef(function ResultsContainer(
             analysisId={result.id}
             songName={result.song || result.song_name || result.title}
             artist={result.artist || result.author}
-            shareText={t(isNews ? 'share.shareNewsText' : (mediaType === 'literature' ? 'share.shareLiteratureText' : 'share.shareMusicText'), { title: result.song || result.song_name || result.title, artist: result.artist || result.author })}
+            shareText={t(isNews ? 'share.shareNewsAnalysisText' : (mediaType === 'literature' ? 'share.shareLiteratureText' : 'share.shareMusicText'), { title: result.song || result.song_name || result.title, artist: result.artist || result.author })}
           />
           <ShareToDMButton
             analysisId={result.id}

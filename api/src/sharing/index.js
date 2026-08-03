@@ -4,6 +4,7 @@
 // Handles WhatsApp sharing, referral tracking, and credit bonuses
 
 import { getSecret } from '../utils/secrets.js';
+import { findAnalysisById, enrichAnalysis } from './analysis-lookup.js';
 
 /**
  * Generate a random alphanumeric slug for share tokens
@@ -159,42 +160,18 @@ export async function getSharedAnalysis(env, slug, viewerUserId = null) {
       };
     }
 
-    // Fetch the actual analysis with song details (join with songs table)
-    const analysisUrl = `${supabaseUrl}/rest/v1/analyses?id=eq.${data.analysis_id}&select=*,songs(title,artist,spotify_id)`;
-    const analysisResponse = await fetch(analysisUrl, {
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`
-      }
-    });
+    // Fetch the actual analysis, whichever media table it lives in, with the
+    // work and its author flattened in for the frontend.
+    const found = await findAnalysisById(supabaseUrl, supabaseKey, data.analysis_id);
 
-    if (!analysisResponse.ok) {
-      console.error('[Sharing] Failed to fetch analysis');
+    if (!found) {
       return { success: false, error: 'Analysis not found' };
     }
 
-    const analyses = await analysisResponse.json();
+    const enrichedAnalysis = enrichAnalysis(found.row, found.source);
 
-    if (!analyses || analyses.length === 0) {
-      return { success: false, error: 'Analysis not found' };
-    }
-
-    // Flatten the song data into the analysis object
-    const analysis = analyses[0];
-    const songData = analysis.songs;
-
-    // Merge song data into analysis for frontend compatibility
-    const enrichedAnalysis = {
-      ...analysis,
-      song: songData?.title,
-      song_name: songData?.title,
-      title: songData?.title,
-      artist: songData?.artist,
-      spotify_id: songData?.spotify_id || analysis.spotify_id
-    };
-
-    // Remove the nested songs object
-    delete enrichedAnalysis.songs;
+    // Remove the nested work object
+    delete enrichedAnalysis[found.source.work];
 
     console.log(`[Sharing] Retrieved shared analysis for slug: ${slug}`);
 

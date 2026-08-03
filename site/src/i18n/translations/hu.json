@@ -343,6 +343,7 @@
     "shareMusicText": "🎵 Nézd meg {{title}} - {{artist}} filozófiai elemzését a Philosify-on!",
     "shareLiteratureText": "📚 Nézd meg {{title}} - {{artist}} filozófiai elemzését a Philosify-on!",
     "shareNewsText": "📰 Nézd meg a Filozófusok Paneljét: {{title}} | Philosify",
+    "shareNewsAnalysisText": "📰 Nézd meg {{title}} filozófiai elemzését a Philosify-on!",
     "shareDebateText": "💬 Nézd meg ezt a filozófiai vitát: {{title}} | Philosify",
     "shareFilmText": "🎬 Nézd meg {{title}} - {{artist}} filozófiai elemzését a Philosify-on!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",

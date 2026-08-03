@@ -20,6 +20,7 @@
 import { jsonResponse } from '../utils/response.js';
 import { getSupabaseCredentials } from '../utils/supabase.js';
 import { verdictLabel, panelLabel, debateLabel } from '../config/share-labels.js';
+import { findAnalysisById, enrichAnalysis } from '../sharing/analysis-lookup.js';
 
 const MAX_DESCRIPTION = 200;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -72,16 +73,19 @@ async function analysisCard(env, id) {
   }
   if (!analysisId) return null;
 
-  const select =
-    'select=language,classification,summary,philosophical_analysis,metadata,songs(title,artist)';
-  const aRes = await fetch(`${sbUrl}/rest/v1/analyses?id=eq.${analysisId}&${select}&limit=1`, {
-    headers,
-  });
-  if (!aRes.ok) return null;
+  // Music and News live in `analyses`, Cinema in `film_analyses`, Literature in
+  // `book_analyses`. Looking only in the first is what made a shared film fall
+  // through to the site's generic English card.
+  const found = await findAnalysisById(sbUrl, sbKey, analysisId, [
+    'language',
+    'classification',
+    'summary',
+    'philosophical_analysis',
+    'metadata',
+  ]);
+  if (!found) return null;
 
-  const rows = await aRes.json().catch(() => []);
-  const a = rows?.[0];
-  if (!a) return null;
+  const a = enrichAnalysis(found.row, found.source);
 
   const lang = baseLang(a.language);
   const meta = (a.metadata && typeof a.metadata === 'object' && a.metadata) || {};
@@ -93,7 +97,7 @@ async function analysisCard(env, id) {
 
   return {
     lang,
-    title: join([[a.songs?.title, a.songs?.artist].filter(Boolean).join(' — '), verdict]),
+    title: join([[a.title, a.artist].filter(Boolean).join(' — '), verdict]),
     description: truncate(join([verdict, body])),
     classification: a.classification || null,
   };
@@ -161,28 +165,105 @@ async function debateCard(env, id, requestedLang) {
 
 // --------------------------------------------------------------- dispatch
 
-export async function handleShareCard(request, env, origin, type, id) {
-  const empty = { ok: false };
-
-  if (!id || !/^[A-Za-z0-9_-]{4,80}$/.test(id)) {
-    return jsonResponse(empty, 200, origin, env);
-  }
+/**
+ * The single source of truth for what a shared link says about itself.
+ *
+ * Exported so the legacy HTML endpoints can render from the same data instead
+ * of composing their own titles: two generators drift, and the ones in
+ * index.js had drifted into hardcoded English.
+ *
+ * @returns {Promise<{lang, title, description, classification}|null>}
+ */
+export async function resolveShareCard(env, type, id, lang = null) {
+  if (!id || !/^[A-Za-z0-9_-]{4,80}$/.test(id)) return null;
 
   try {
-    const lang = new URL(request.url).searchParams.get('lang');
     let card = null;
-
     if (type === 'panel') card = await panelCard(env, id);
     else if (type === 'debate') card = await debateCard(env, id, lang);
     else card = await analysisCard(env, id);
 
-    if (!card || !card.title) return jsonResponse(empty, 200, origin, env);
-
-    return jsonResponse({ ok: true, ...card }, 200, origin, env);
+    return card && card.title ? card : null;
   } catch (err) {
     console.error(`[ShareCard] ${type} failed:`, err.message);
-    return jsonResponse(empty, 200, origin, env);
+    return null;
   }
+}
+
+const escapeHtml = (value) =>
+  String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+const OG_IMAGE = 'https://philosify.org/brand/philosify-og-card.png';
+
+/**
+ * Crawler-facing HTML for the legacy API-host endpoints, built from a resolved
+ * card. Humans who land here are sent on to the real permalink.
+ */
+export function shareCardHtml(card, canonical) {
+  const title = escapeHtml(`${card.title} · Philosify`);
+  const description = escapeHtml(card.description || '');
+  const url = escapeHtml(canonical);
+  const lang = escapeHtml(card.lang || 'en');
+
+  return `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <meta name="description" content="${description}">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="${url}">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:image" content="${OG_IMAGE}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Philosify">
+    <meta property="og:locale" content="${lang}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="${url}">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${description}">
+    <meta name="twitter:image" content="${OG_IMAGE}">
+
+    <link rel="canonical" href="${url}">
+    <meta http-equiv="refresh" content="1;url=${url}">
+</head>
+<body>
+    <h1>${title}</h1>
+    <p>${description}</p>
+    <p><a href="${url}">${url}</a></p>
+</body>
+</html>`;
+}
+
+export function shareCardHtmlResponse(card, canonical, extraHeaders = {}) {
+  return new Response(shareCardHtml(card, canonical), {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      ...extraHeaders,
+    },
+  });
+}
+
+export const SOCIAL_BOT_RE = /WhatsApp|Telegram|facebook|Twitter|LinkedIn|Slack|Discordbot/i;
+
+export async function handleShareCard(request, env, origin, type, id) {
+  const lang = new URL(request.url).searchParams.get('lang');
+  const card = await resolveShareCard(env, type, id, lang);
+  if (!card) return jsonResponse({ ok: false }, 200, origin, env);
+  return jsonResponse({ ok: true, ...card }, 200, origin, env);
 }
 
 // Kept under its original name: the protected rollback deployment still calls

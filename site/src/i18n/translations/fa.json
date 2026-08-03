@@ -343,6 +343,7 @@
     "shareMusicText": "🎵 تحلیل فلسفی {{title}} از {{artist}} را در Philosify ببینید!",
     "shareLiteratureText": "📚 تحلیل فلسفی {{title}} از {{artist}} را در Philosify ببینید!",
     "shareNewsText": "📰 پنل فیلسوفان را ببینید: {{title}} | Philosify",
+    "shareNewsAnalysisText": "📰 تحلیل فلسفی {{title}} را در Philosify ببینید!",
     "shareDebateText": "💬 این بحث فلسفی را ببینید: {{title}} | Philosify",
     "shareFilmText": "🎬 تحلیل فلسفی {{title}} از {{artist}} را در Philosify ببینید!",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",

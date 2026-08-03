@@ -343,6 +343,7 @@
     "shareMusicText": "🎵 查看Philosify上{{artist}}的{{title}}的哲学分析！",
     "shareLiteratureText": "📚 查看Philosify上{{artist}}的{{title}}的哲学分析！",
     "shareNewsText": "📰 查看哲学家论坛：{{title}} | Philosify",
+    "shareNewsAnalysisText": "📰 查看Philosify上{{title}}的哲学分析！",
     "shareDebateText": "💬 查看这场哲学辩论：{{title}} | Philosify",
     "shareFilmText": "🎬 查看Philosify上{{artist}}的{{title}}的哲学分析！",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",

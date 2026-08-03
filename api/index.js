@@ -346,17 +346,6 @@ async function checkDailyAICap(env, userId, endpoint) {
   }
 }
 
-// HTML escape helper for Open Graph meta tags (prevents XSS/injection)
-function escapeHtml(str) {
-  if (!str) return "";
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;");
-}
-
 // ============================================================
 // MAIN WORKER
 // ============================================================
@@ -2638,16 +2627,19 @@ export default {
           const supabaseUrl = await getSecret(env.SUPABASE_URL);
           const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
-          const analysisUrl = `${supabaseUrl}/rest/v1/analyses?id=eq.${analysisId}&select=*,songs(title,artist,spotify_id)`;
-          const analysisResponse = await fetch(analysisUrl, {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: `Bearer ${supabaseKey}`,
-            },
-          });
+          // Music and News live in `analyses`, Cinema in `film_analyses`,
+          // Literature in `book_analyses`. Querying only the first left every
+          // shared film and book answering "not found".
+          const { findAnalysisById, enrichAnalysis } = await import(
+            "./src/sharing/analysis-lookup.js"
+          );
+          const found = await findAnalysisById(
+            supabaseUrl,
+            supabaseKey,
+            analysisId,
+          );
 
-          if (!analysisResponse.ok) {
-            console.error("[Share] Failed to fetch analysis");
+          if (!found) {
             return jsonResponse(
               { error: "Analysis not found" },
               404,
@@ -2656,97 +2648,21 @@ export default {
             );
           }
 
-          const analyses = await analysisResponse.json();
+          const enrichedAnalysis = enrichAnalysis(found.row, found.source);
 
-          if (!analyses || analyses.length === 0) {
-            return jsonResponse(
-              { error: "Analysis not found" },
-              404,
-              origin,
-              env,
-            );
-          }
-
-          // Prepare analysis data
-          const analysis = analyses[0];
-          const songData = analysis.songs;
-          const enrichedAnalysis = {
-            ...analysis,
-            song: songData?.title,
-            song_name: songData?.title,
-            title: songData?.title,
-            artist: songData?.artist,
-            spotify_id: songData?.spotify_id || analysis.spotify_id,
-          };
-
-          // Check if request is from social media bot (WhatsApp, Telegram, etc)
-          const userAgent = request.headers.get("user-agent") || "";
-          const isSocialBot =
-            /WhatsApp|Telegram|facebook|Twitter|LinkedIn|Slack|Discordbot/i.test(
-              userAgent,
-            );
-
-          // If social bot, return HTML with Open Graph meta tags for rich preview
-          if (isSocialBot) {
-            const shareUrl = `https://philosify.org/shared/${analysisId}`;
-            const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
-            // Escape user-supplied values to prevent HTML/XSS injection
-            const songEsc = escapeHtml(enrichedAnalysis.song);
-            const artistEsc = escapeHtml(enrichedAnalysis.artist);
-            const classificationEsc = escapeHtml(
-              enrichedAnalysis.classification,
-            );
-            const title = `${songEsc} - ${artistEsc}`;
-            const description = `Philosophical analysis: ${classificationEsc || "View on Philosify"}`;
-
-            const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title} | Philosify</title>
-
-    <!-- Open Graph / Facebook / WhatsApp -->
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="${shareUrl}">
-    <meta property="og:title" content="${title}">
-    <meta property="og:description" content="${description}">
-    <meta property="og:image" content="${logoUrl}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Philosify">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="${shareUrl}">
-    <meta name="twitter:title" content="${title}">
-    <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="${logoUrl}">
-
-    <script>
-      // Redirect to main app
-      setTimeout(function() {
-        window.location.href = 'https://philosify.org?analysis=${analysisId}';
-      }, 100);
-    </script>
-</head>
-<body>
-    <h1>${songEsc}</h1>
-    <h2>${artistEsc}</h2>
-    <p>Redirecting to Philosify...</p>
-</body>
-</html>`;
-
-            return new Response(html, {
-              status: 200,
-              headers: {
-                "Content-Type": "text/html; charset=utf-8",
-                "Cache-Control": "public, max-age=3600",
-                "Strict-Transport-Security":
-                  "max-age=31536000; includeSubDomains; preload",
-                ...corsHeaders,
-              },
-            });
+          // Crawlers get the same card the site serves — one generator, in the
+          // language the analysis was written in.
+          const { resolveShareCard, shareCardHtmlResponse, SOCIAL_BOT_RE } =
+            await import("./src/handlers/share-preview.js");
+          if (SOCIAL_BOT_RE.test(request.headers.get("user-agent") || "")) {
+            const card = await resolveShareCard(env, "a", analysisId);
+            if (card) {
+              return shareCardHtmlResponse(
+                card,
+                `https://philosify.org/shared/${analysisId}`,
+                corsHeaders,
+              );
+            }
           }
 
           // For normal requests: require authentication
@@ -2812,18 +2728,14 @@ export default {
             const supabaseUrl = await getSecret(env.SUPABASE_URL);
             const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
-            const analysisUrl = `${supabaseUrl}/rest/v1/analyses?id=eq.${slug}&select=*,songs(title,artist,spotify_id)`;
-            const analysisResponse = await fetch(analysisUrl, {
-              headers: {
-                apikey: supabaseKey,
-                Authorization: `Bearer ${supabaseKey}`,
-              },
-            });
+            // Same three-table lookup as /shared/:uuid — Cinema and Literature
+            // do not live in `analyses`.
+            const { findAnalysisById, enrichAnalysis } = await import(
+              "./src/sharing/analysis-lookup.js"
+            );
+            const found = await findAnalysisById(supabaseUrl, supabaseKey, slug);
 
-            if (!analysisResponse.ok) {
-              console.error(
-                "[Share] Failed to fetch analysis (uuid via /api/shared)",
-              );
+            if (!found) {
               return jsonResponse(
                 { error: "Analysis not found" },
                 404,
@@ -2832,26 +2744,7 @@ export default {
               );
             }
 
-            const analyses = await analysisResponse.json();
-            if (!analyses || analyses.length === 0) {
-              return jsonResponse(
-                { error: "Analysis not found" },
-                404,
-                origin,
-                env,
-              );
-            }
-
-            const analysis = analyses[0];
-            const songData = analysis.songs;
-            const enrichedAnalysis = {
-              ...analysis,
-              song: songData?.title,
-              song_name: songData?.title,
-              title: songData?.title,
-              artist: songData?.artist,
-              spotify_id: songData?.spotify_id || analysis.spotify_id,
-            };
+            const enrichedAnalysis = enrichAnalysis(found.row, found.source);
 
             // Require authentication for full analysis content
             let shareUser2 = null;
@@ -2923,72 +2816,22 @@ export default {
           }
 
           // Check if request is from WhatsApp, Telegram, or other social media bots
-          const userAgent = request.headers.get("user-agent") || "";
-          const isSocialBot =
-            /WhatsApp|Telegram|facebook|Twitter|LinkedIn|Slack|Discordbot/i.test(
-              userAgent,
-            );
-
-          // If social bot, return HTML with Open Graph meta tags for rich preview
-          if (isSocialBot) {
-            const analysis = result.analysis;
-            const shareUrl = `https://philosify.org/api/shared/${slug}`;
-            const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
-            // Escape user-supplied values to prevent HTML/XSS injection
-            const songEsc = escapeHtml(analysis.song);
-            const artistEsc = escapeHtml(analysis.artist);
-            const classificationEsc = escapeHtml(analysis.classification);
-            const title = `${songEsc} - ${artistEsc}`;
-            const description = `Philosophical analysis: ${classificationEsc || "View on Philosify"}`;
-
-            const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title} | Philosify</title>
-
-    <!-- Open Graph / Facebook / WhatsApp -->
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="${shareUrl}">
-    <meta property="og:title" content="${title}">
-    <meta property="og:description" content="${description}">
-    <meta property="og:image" content="${logoUrl}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Philosify">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="${shareUrl}">
-    <meta name="twitter:title" content="${title}">
-    <meta name="twitter:description" content="${description}">
-    <meta name="twitter:image" content="${logoUrl}">
-
-    <script>
-      // Redirect to main app after meta tags are scraped
-      setTimeout(function() {
-        window.location.href = 'https://philosify.org?share=${slug}';
-      }, 100);
-    </script>
-</head>
-<body>
-    <h1>${songEsc}</h1>
-    <h2>${artistEsc}</h2>
-    <p>Redirecting to Philosify...</p>
-</body>
-</html>`;
-
-            return new Response(html, {
-              status: 200,
-              headers: {
-                "Content-Type": "text/html; charset=utf-8",
-                "Cache-Control": "public, max-age=3600",
-                "Strict-Transport-Security":
-                  "max-age=31536000; includeSubDomains; preload",
-                ...corsHeaders,
-              },
-            });
+          // Crawlers get the single generator's card, in the analysis's own
+          // language, pointing at the real permalink.
+          const {
+            resolveShareCard: resolveCardBySlug,
+            shareCardHtmlResponse: cardHtmlBySlug,
+            SOCIAL_BOT_RE: botReBySlug,
+          } = await import("./src/handlers/share-preview.js");
+          if (botReBySlug.test(request.headers.get("user-agent") || "")) {
+            const card = await resolveCardBySlug(env, "a", slug);
+            if (card) {
+              return cardHtmlBySlug(
+                card,
+                `https://philosify.org/a/${slug}`,
+                corsHeaders,
+              );
+            }
           }
 
           // For normal requests (from the app), return JSON
@@ -3814,14 +3657,10 @@ export default {
       }
 
       // ── Share preview pages (serve OG tags for WhatsApp/Telegram link previews) ──
-
-      // ── Share preview i18n labels ──
-      const SHARE_LABELS = {
-        debate: { en: "Philosophical Debate", pt: "Debate Filosófico", es: "Debate Filosófico", fr: "Débat Philosophique", de: "Philosophische Debatte", it: "Dibattito Filosofico", nl: "Filosofisch Debat", ru: "Философская дискуссия", zh: "哲学辩论", ja: "哲学的討論", ko: "철학적 토론", ar: "نقاش فلسفي", he: "דיון פילוסופי", hi: "दार्शनिक बहस", fa: "بحث فلسفی", tr: "Felsefi Tartışma", pl: "Debata Filozoficzna", hu: "Filozófiai Vita" },
-        panel: { en: "Philosopher's Panel", pt: "Painel dos Filósofos", es: "Panel de Filósofos", fr: "Panel des Philosophes", de: "Philosophen-Panel", it: "Panel dei Filosofi", nl: "Filosofenpanel", ru: "Панель Философов", zh: "哲学家论坛", ja: "哲学者パネル", ko: "철학자 패널", ar: "لجنة الفلاسفة", he: "פאנל הפילוסופים", hi: "दार्शनिक पैनल", fa: "پنل فیلسوفان", tr: "Filozof Paneli", pl: "Panel Filozofów", hu: "Filozófusok Panele" },
-        tagline: { en: "Algorithmic Philosophical System for Cultural Analysis", pt: "Sistema Filosófico Algorítmico de Análise Cultural", es: "Sistema Filosófico Algorítmico de Análisis Cultural", fr: "Système Philosophique Algorithmique d'Analyse Culturelle", de: "Algorithmisches Philosophisches System für Kulturanalyse", it: "Sistema Filosofico Algoritmico di Analisi Culturale" },
-      };
-      const getLabel = (type, lang) => SHARE_LABELS[type]?.[lang] || SHARE_LABELS[type]?.en || "";
+      //
+      // The label tables that used to live here were a second, thinner copy of
+      // src/config/share-labels.js — 6 locales against 18, and drifting from the
+      // UI's own wording. Every path below now reads the generated one.
 
       // GET /api/share-card/{a|panel|debate}/:id — Open Graph metadata for the
       // three public permalinks. Read-only: never counts a view, because every
@@ -3843,95 +3682,39 @@ export default {
         return handleSharePreview(request, env, origin, sharePreviewMatch[1]);
       }
 
-      // GET /api/share-preview/debate/:threadId?lang=xx
-      const debateShareMatch = url.pathname.match(/^\/api\/share-preview\/debate\/([a-f0-9-]+)$/);
-      if (debateShareMatch && request.method === "GET") {
+      // GET /api/share-preview/{debate,panel}/:id?lang=xx
+      //
+      // Legacy endpoints: links shared before 1 Aug 2026 still point here, so
+      // they must keep answering. They used to compose their own titles and
+      // descriptions, which is how two generators drifted apart; now they only
+      // supply the transport — the card itself comes from the same resolver
+      // that serves philosify.org, and the visitor is forwarded to the real
+      // permalink instead of the home page.
+      const legacyPreviewMatch = url.pathname.match(
+        /^\/api\/share-preview\/(debate|panel)\/([a-f0-9-]+)$/,
+      );
+      if (legacyPreviewMatch && request.method === "GET") {
         try {
-          const threadId = debateShareMatch[1];
-          const lang = url.searchParams.get("lang") || "en";
-          const { pg: pgQuery } = await import("./src/utils/pg.js");
-          const threads = await pgQuery(env, "GET", "forum_threads", {
-            filter: `id=eq.${threadId}`,
-            select: "id,title,content,metadata",
-          });
-          const thread = threads?.[0];
-          // Translations stored as metadata.translations.title.{lang} and metadata.translations.content.{lang}
-          const trans = thread?.metadata?.translations || {};
-          const rawTitle = trans.title?.[lang] || thread?.title || getLabel("debate", lang);
-          const rawContent = trans.content?.[lang] || thread?.content || "";
-          const title = escapeHtml(rawTitle);
-          const excerpt = escapeHtml(rawContent.length > 160 ? rawContent.slice(0, 160) + "..." : rawContent);
-          const philosophers = (thread?.metadata?.philosophers || []).join(", ");
-          const desc = philosophers ? `${excerpt} — ${escapeHtml(philosophers)}` : excerpt;
-          const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
-          // Legacy endpoint: links shared before 1 Aug 2026 still point here.
-          // It used to bounce the visitor to the home page, which meant the
-          // shared debate was unreachable — send them to the debate itself.
-          const previewUrl = `https://philosify.org/debate/${threadId}`;
-
-          const html = `<!DOCTYPE html>
-<html lang="${lang}"><head>
-<meta charset="UTF-8">
-<meta property="og:type" content="article">
-<meta property="og:url" content="${previewUrl}">
-<meta property="og:title" content="${title} | Philosify">
-<meta property="og:description" content="${desc}">
-<meta property="og:image" content="${logoUrl}">
-<meta property="og:site_name" content="Philosify">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${title} | Philosify">
-<meta name="twitter:description" content="${desc}">
-<meta name="twitter:image" content="${logoUrl}">
-<title>${title} | Philosify</title>
-<meta http-equiv="refresh" content="1;url=${previewUrl}">
-</head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
-
-           return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
+          const [, kind, itemId] = legacyPreviewMatch;
+          const { resolveShareCard, shareCardHtmlResponse } = await import(
+            "./src/handlers/share-preview.js"
+          );
+          const card = await resolveShareCard(
+            env,
+            kind,
+            itemId,
+            url.searchParams.get("lang"),
+          );
+          if (!card) {
+            return jsonResponse({ error: "Not found" }, 404, origin, env);
+          }
+          return shareCardHtmlResponse(
+            card,
+            `https://philosify.org/${kind}/${itemId}`,
+            corsHeaders,
+          );
         } catch (e) {
-          console.error("[SharePreview] Debate error:", e.message);
-          return jsonResponse({ error: "Failed to load preview" }, 500, origin, env);
-        }
-      }
-
-      // GET /api/share-preview/panel/:panelId?lang=xx
-      const panelShareMatch = url.pathname.match(/^\/api\/share-preview\/panel\/([a-f0-9-]+)$/);
-      if (panelShareMatch && request.method === "GET") {
-        try {
-          const panelId = panelShareMatch[1];
-          const lang = url.searchParams.get("lang") || "en";
-          const raw = await env.PHILOSIFY_KV.get(`panel:${panelId}`);
-          const panel = raw ? JSON.parse(raw) : null;
-          const title = escapeHtml(panel?.title || getLabel("panel", lang));
-          const analysis = panel?.analysis || "";
-          const excerpt = escapeHtml(analysis.replace(/\*\*/g, "").replace(/\*/g, "").slice(0, 160) + "...");
-          const mediaType = panel?.mediaType || "news";
-          const desc = `${mediaType === "news" ? "📰" : mediaType === "cinema" ? "🎬" : mediaType === "music" ? "🎵" : "📚"} ${excerpt}`;
-          const logoUrl = "https://philosify.org/brand/philosify-og-card.png";
-          // Legacy endpoint: links shared before 1 Aug 2026 still point here.
-          // It used to bounce the visitor to the home page, which meant the
-          // shared panel was unreachable — send them to the panel itself.
-          const previewUrl = `https://philosify.org/panel/${panelId}`;
-
-          const html = `<!DOCTYPE html>
-<html lang="${lang}"><head>
-<meta charset="UTF-8">
-<meta property="og:type" content="article">
-<meta property="og:url" content="${previewUrl}">
-<meta property="og:title" content="${title} | Philosify">
-<meta property="og:description" content="${desc}">
-<meta property="og:image" content="${logoUrl}">
-<meta property="og:site_name" content="Philosify">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${title} | Philosify">
-<meta name="twitter:description" content="${desc}">
-<meta name="twitter:image" content="${logoUrl}">
-<title>${title} | Philosify</title>
-<meta http-equiv="refresh" content="1;url=${previewUrl}">
-</head><body><h1>${title}</h1><p>${desc}</p></body></html>`;
-
-           return new Response(html, { status: 200, headers: { "Content-Type": "text/html;charset=UTF-8", ...corsHeaders } });
-        } catch (e) {
-          console.error("[SharePreview] Panel error:", e.message);
+          console.error("[SharePreview] Legacy preview error:", e.message);
           return jsonResponse({ error: "Failed to load preview" }, 500, origin, env);
         }
       }

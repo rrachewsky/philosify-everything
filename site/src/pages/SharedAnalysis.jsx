@@ -21,7 +21,12 @@ import {
   formatSignedScore,
   verdictRationale,
 } from '../components/v2';
-import { useAuth } from '../hooks';
+import { ShareButton } from '../components/sharing/ShareButton';
+// The verdict is stored in canonical English; this is the existing map from
+// classification to the UI's own wording. Reused rather than copied — there are
+// already three identical copies of it in the tree.
+import { classificationLabel } from './v2/cinema/AnalysisSections.jsx';
+import { useAuth, useSharedContentLanguage } from '../hooks';
 import { getApiUrl } from '../config';
 import { logger } from '../utils';
 import '../styles/v2-pages/music.css';
@@ -66,6 +71,11 @@ export function SharedAnalysis() {
   const [maxViewsReached, setMaxViewsReached] = useState(false);
   const [requiresAuth, setRequiresAuth] = useState(false);
   const [teaser, setTeaser] = useState(null);
+
+  // A shared analysis is read in the language it was written in — the sender's.
+  // This overrides the visitor's preference for this view only; the hook puts
+  // their stored preference back so the rest of the site is unaffected.
+  useSharedContentLanguage(analysis?.language || analysis?.lang);
 
   // Normalize analyses coming from different endpoints/shapes so ResultsContainer
   // always receives a consistent structure.
@@ -255,23 +265,6 @@ export function SharedAnalysis() {
 
         setAnalysis(normalizeAnalysisForUI(data.analysis));
 
-        // If user has no explicit language preference yet, try to align UI language with analysis language.
-        // This prevents mixed-language pages on shared links (analysis text in PT, UI in EN).
-        try {
-          const hasPreferred = !!localStorage.getItem('preferredLanguage');
-          if (!hasPreferred) {
-            const analysisLangRaw = data.analysis?.lang || data.analysis?.language || null;
-            const analysisLang = String(analysisLangRaw || '')
-              .split('-')[0]
-              .trim();
-            if (analysisLang && analysisLang !== i18n.language) {
-              await i18n.changeLanguage(analysisLang);
-            }
-          }
-        } catch {
-          // ignore (private mode / blocked storage)
-        }
-
         // Store referral slug for tracking after signup ONLY for token-based links (/a/:slug)
         if (!isAuthenticated && slug) {
       sessionStorage.setItem('pendingReferralSlug', identifier);
@@ -402,6 +395,11 @@ export function SharedAnalysis() {
         : t('v2.verdict.scoreOnly', 'Final score {{score}}', { score: formatSignedScore(finalScore) })
       : null;
 
+  // Cinema and Literature store the verdict in canonical English and send no
+  // localized copy, so an untranslated word would sit in the middle of an
+  // otherwise Portuguese page.
+  const verdictText = analysis ? classificationLabel(t, analysis) : '';
+
   const proof = analysis?.guide_proof;
 
   return shell(
@@ -447,7 +445,7 @@ export function SharedAnalysis() {
             <Verdict
               label={t('v2.music.verdictLabel', 'Philosify Verdict')}
               note={analysis.philosophical_note}
-              classification={analysis.classification}
+              classification={verdictText}
               scoreLine={scoreLine}
               rationale={verdictRationale(analysis, t, analysis.classification)}
             />
@@ -510,6 +508,21 @@ export function SharedAnalysis() {
           )}
         </div>
       )}
+
+      {/* Closing the loop: whoever arrives by a link can pass the same link on.
+          It is handed to ShareButton directly instead of letting it mint a fresh
+          token — minting requires a session, and this visitor usually has none.
+          Re-sharing the URL keeps the original referral attribution intact.
+          No shareText: this route serves music, news, film and books alike, so
+          the message is the component's own analysis default, the one line that
+          is true for all of them. */}
+      <div className="sharetray">
+        <ShareButton
+          shareUrl={`${window.location.origin}${slug ? `/a/${slug}` : `/shared/${identifier}`}`}
+          songName={workTitle}
+          artist={workBy}
+        />
+      </div>
 
       {cta}
     </>,

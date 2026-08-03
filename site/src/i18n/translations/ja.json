@@ -343,6 +343,7 @@
     "shareMusicText": "🎵 Philosifyで{{artist}}の{{title}}の哲学的分析をチェック！",
     "shareLiteratureText": "📚 Philosifyで{{artist}}の{{title}}の哲学的分析をチェック！",
     "shareNewsText": "📰 哲学者パネルをチェック：{{title}} | Philosify",
+    "shareNewsAnalysisText": "📰 Philosifyで{{title}}の哲学的分析をチェック！",
     "shareDebateText": "💬 この哲学的討論をチェック：{{title}} | Philosify",
     "shareFilmText": "🎬 Philosifyで{{artist}}の{{title}}の哲学的分析をチェック！",
     "shareInstructionTitle": "Share this Philosify analysis with your friends.",
