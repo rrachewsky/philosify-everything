@@ -1,0 +1,76 @@
+column_name,data_type
+id,uuid
+song_id,uuid
+language,text
+version,integer
+metaphysics_score,integer
+epistemology_score,integer
+ethics_score,integer
+politics_score,integer
+aesthetics_score,integer
+final_score,numeric
+classification,text
+classification_color,text
+ethics_category,text
+epistemology_category,text
+xy_cell,text
+is_hero,boolean
+is_martyr,boolean
+hero_martyr_note,text
+summary,text
+metaphysics_analysis,text
+epistemology_analysis,text
+ethics_analysis,text
+politics_analysis,text
+aesthetics_analysis,text
+conclusion,text
+evidence,jsonb
+has_sacrifice_voluntary,boolean
+has_coercion_initiation,boolean
+has_form_content_contradiction,boolean
+status,USER-DEFINED
+reviewed_by,uuid
+reviewed_at,timestamp with time zone
+created_at,timestamp with time zone
+updated_at,timestamp with time zone
+created_by,uuid
+was_free,boolean
+cost,numeric
+metadata,jsonb
+release_year,integer
+genre,character varying
+duration_ms,integer
+tempo,numeric
+key,character varying
+time_signature,character varying
+country,character varying
+historical_context,text
+creative_process,text
+cultural_impact,text
+artist_background,text
+lyrics,text
+main_themes,text
+symbolic_elements,text
+philosophical_analysis,text
+philosophical_note,integer
+scorecard_weights,jsonb
+overall_grade,character varying
+objectivist_alignment,character varying
+recommended,boolean
+content_warnings,ARRAY
+has_ambivalence,boolean
+ambivalence_explanation,text
+philosophical_contradictions,ARRAY
+virtue_indicators,jsonb
+hero_vs_martyr_score,integer
+reason_vs_faith_score,integer
+individualism_vs_collectivism_score,integer
+key_quotes,ARRAY
+supporting_evidence,jsonb
+similar_songs,ARRAY
+contrast_songs,ARRAY
+artist_philosophical_trajectory,text
+analysis_duration_ms,integer
+prompt_version,character varying
+model,character varying
+audio_url,text
