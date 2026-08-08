@@ -230,6 +230,9 @@ export async function handlePhilosopherPanel(
       const panelId = crypto.randomUUID();
 
       // ── Build panel data object ──
+      // `model` records which model actually generated this panel (the
+      // fallback chain makes it request-dependent). New panels only —
+      // pre-existing blobs don't carry it and are never backfilled.
       const panelData = {
         id: panelId,
         mediaType,
@@ -239,6 +242,7 @@ export async function handlePhilosopherPanel(
         objectivist: uniqueNames[0],
         analysis: panelText,
         lang,
+        model: usedModel,
         createdAt: new Date().toISOString(),
       };
 
