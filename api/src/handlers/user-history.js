@@ -23,7 +23,13 @@ async function query(sbUrl, sbKey, path) {
   });
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
-    console.error(`[UserHistory] Query failed: ${res.status} ${path.split("?")[0]} — ${errText.slice(0, 200)}`);
+    // LOUD on purpose: a failed query silently empties a whole history
+    // category (D2 incident, Aug 2026). The full PostgREST body names the
+    // offending column; the category still degrades to [] for the client.
+    console.error(
+      `[UserHistory] QUERY FAILED — table=${path.split("?")[0]} status=${res.status} ` +
+      `query=${path.slice(0, 300)} body=${errText.slice(0, 500)}`
+    );
     return [];
   }
   return res.json();
@@ -41,9 +47,12 @@ export async function handleUserHistory(request, env, origin) {
 
     // Fetch all types in parallel
     const [musicRows, bookRows, filmRows, panelRows, accessRows, unsafeRows, quizRows] = await Promise.all([
-      // Music analyses
+      // Music analyses — user_analysis_requests carries no title columns
+      // (only id/user_id/analysis_id/requested_at/metadata, confirmed Aug
+      // 2026); titles come from the analyses→songs join below, the same
+      // source analysis-history uses.
       query(sbUrl, sbKey,
-        `user_analysis_requests?user_id=eq.${uid}&select=analysis_id,song_title,artist_name,requested_at&order=requested_at.desc&limit=50`
+        `user_analysis_requests?user_id=eq.${uid}&select=analysis_id,requested_at&order=requested_at.desc&limit=50`
       ),
       // Book analyses (join through book_analyses → books to get title/author)
       query(sbUrl, sbKey,
@@ -65,23 +74,29 @@ export async function handleUserHistory(request, env, origin) {
       query(sbUrl, sbKey,
         `unsafe_zone_sessions?user_id=eq.${uid}&select=id,turn_count,status,created_at,updated_at,messages&order=created_at.desc&limit=50`
       ),
-      // Quiz sessions
+      // Quiz sessions — started_at is referenced nowhere else in the
+      // codebase (quiz.js never writes it); created_at is the table default
+      // every sibling table carries. 4.4's live test + tail verifies.
       query(sbUrl, sbKey,
-        `quiz_sessions?user_id=eq.${uid}&select=id,status,score,total_correct,total_wrong,max_streak,credits_spent,started_at,ended_at&order=started_at.desc&limit=50`
+        `quiz_sessions?user_id=eq.${uid}&select=id,status,score,total_correct,total_wrong,max_streak,credits_spent,created_at,ended_at&order=created_at.desc&limit=50`
       ),
     ]);
 
-    // News scans share user_analysis_requests with music; their analyses row
-    // carries classification "news" (news-analyze.js) — label from it.
-    // If this lookup fails, query() returns [] and every row stays "music"
-    // (the pre-fix behavior).
+    // One lookup serves two needs: classification (news scans share
+    // user_analysis_requests with music) and title/artist via the
+    // analyses→songs join — the same join analysis-history uses.
     const newsIds = new Set();
+    const songByAnalysis = {};
     const scanIds = musicRows.map((r) => r.analysis_id).filter(Boolean);
     if (scanIds.length) {
       const scanRows = await query(sbUrl, sbKey,
-        `analyses?id=in.(${scanIds.join(",")})&select=id,classification`
+        `analyses?id=in.(${scanIds.join(",")})&select=id,classification,song_id,songs:song_id(title,artist)`
       );
-      for (const a of scanRows) if (a.classification === "news") newsIds.add(a.id);
+      for (const a of scanRows) {
+        if (a.classification === "news") newsIds.add(a.id);
+        const song = a.songs ? (Array.isArray(a.songs) ? a.songs[0] : a.songs) : null;
+        if (song) songByAnalysis[a.id] = song;
+      }
     }
 
     // Normalize music + news scans (1 credit per analysis)
@@ -89,8 +104,8 @@ export async function handleUserHistory(request, env, origin) {
       kind: "analysis",
       mediaType: newsIds.has(r.analysis_id) ? "news" : "music",
       id: r.analysis_id,
-      title: r.song_title,
-      artist: r.artist_name,
+      title: songByAnalysis[r.analysis_id]?.title || null,
+      artist: songByAnalysis[r.analysis_id]?.artist || null,
       date: r.requested_at,
       credits: 1,
     }));
@@ -168,7 +183,7 @@ export async function handleUserHistory(request, env, origin) {
         totalQuestions,
         maxStreak: r.max_streak || 0,
         status: r.status,
-        date: r.started_at,
+        date: r.created_at,
         credits: r.credits_spent || 1,
       };
     });
