@@ -1,29 +1,117 @@
 // ============================================================
 // AI - PHILOSOPHER PANEL PROMPT BUILDER
 // ============================================================
-// Generates a multi-philosopher analysis of a song, book, news, or film.
+// Generates a multi-philosopher analysis of a song, book or film.
+// News has its own builder (news-panel-template.js) and never arrives here.
 // 3 philosophers: all user-chosen from the full roster.
 //
 // Output: individual philosopher perspectives + agreements/conflicts + verdict
 // Cost: 3 credits
 // ============================================================
+//
+// HISTORY — why this file resolves the media type explicitly:
+//
+// Until 2 Aug 2026 the type was a binary: `mediaType === 'literature' ? book : song`.
+// Cinema fell into the else, so every film panel told the model it was analysing a
+// SONG, called the director "Artist", and asked what the LYRICS revealed. Nine of
+// twenty-one cached film panels opened with lines like "Esta canção, 'Matrix', de
+// Lana Wachowski". The type was never lost — the handler validates it, the cache key
+// carries it, it arrives here as a parameter. This file threw it away.
+//
+// So there is no catch-all branch any more. An unknown type raises
+// UnsupportedMediaTypeError instead of quietly becoming a song: the panel is refused
+// and the caller's catch releases the three reserved credits, before any model is
+// called. A wrong answer costs more than no answer.
 
 import { languageName } from './languages.js';
+
+/**
+ * Raised when the panel is asked for a media type this builder does not know.
+ * The handler catches it, releases the credit reservations and fails the request.
+ */
+export class UnsupportedMediaTypeError extends Error {
+  constructor(mediaType) {
+    super(
+      `Philosopher panel: unsupported mediaType "${mediaType}". ` +
+        `Refusing rather than defaulting — a panel with the wrong context is worse than none.`
+    );
+    this.name = 'UnsupportedMediaTypeError';
+    this.code = 'UNSUPPORTED_MEDIA_TYPE';
+    this.mediaType = mediaType;
+  }
+}
+
+// One entry per media type this builder serves. Adding a type to the product means
+// adding it here; there is no fallback that will silently absorb it.
+const MEDIA = {
+  music: {
+    workType: 'song',
+    creatorLabel: 'Artist',
+    heading: 'SONG',
+    lens: `For songs:
+  - What would they say about the song's message, themes, and values?
+  - How do the lyrics reflect or contradict their philosophical framework?
+  - What does the melody and delivery add to — or betray about — that message?
+  - What worldview does the song project? Is it compatible with their philosophy?
+  - What would they praise? What would they criticize?`,
+    verdictFocus: `Evaluate the song's philosophical significance: Does it celebrate life, agency, and authentic values?
+Or does it promote resignation, conformity, or anti-life premises?`,
+  },
+
+  literature: {
+    workType: 'book',
+    creatorLabel: 'Author',
+    heading: 'BOOK',
+    lens: `For books:
+  - What would they say about the book's central thesis or narrative?
+  - How does the book's worldview align or clash with their philosophy?
+  - For fiction: analyze the characters' values, the plot's causality, and the sense of life
+  - For non-fiction: evaluate the arguments, premises, and conclusions
+  - How does the prose itself — its structure and style — serve the theme?
+  - What would they praise? What would they criticize?`,
+    verdictFocus: `Evaluate the book's philosophical significance: Does it advance human understanding?
+Does it champion reason, productive achievement, individual rights, and human flourishing?
+For Rand's own books: acknowledge the monumental achievement — Atlas Shrugged is not just a novel, it is a philosophical system delivered through fiction. The verdict must reflect that stature.`,
+  },
+
+  cinema: {
+    workType: 'film',
+    creatorLabel: 'Director',
+    heading: 'FILM',
+    lens: `For films:
+  - What would they say about the story the film tells and the values it dramatizes?
+  - How do the direction, cinematography, editing and score serve — or undercut — that worldview?
+  - What do the characters' choices reveal? Is the plot driven by their volition or by circumstance?
+  - What do the performances make the audience feel about those choices?
+  - What would they praise? What would they criticize?`,
+    verdictFocus: `Evaluate the film's philosophical significance: Does it dramatize human agency, achievement, and rational values?
+Does the direction give those values visual and dramatic form, or does the craft serve resignation, determinism, and anti-life premises?`,
+    // Only a film panel needs this; it was previously in the shared body, where it
+    // reached song and book panels that have no use for it.
+    extraGuidance: `BIOGRAPHICAL VS. FICTIONAL FILMS:
+When analyzing biographical or documentary films, you MUST distinguish:
+- FICTION: The author CHOOSES to create passive or active characters — this choice can be critiqued aesthetically
+- BIOGRAPHY/DOCUMENTARY: The filmmaker documents what ACTUALLY HAPPENED to real people — criticizing real historical figures for not being idealized heroes is inappropriate
+
+A biographical film about survival under persecution has VALUE as historical testimony. The filmmaker's choice to tell a TRUE story honestly — even if that truth is not heroic — is valid and important. Reality is not obligated to conform to Romantic aesthetics.`,
+  },
+};
 
 /**
  * Build the philosopher panel analysis prompt.
  *
  * @param {Object} params
- * @param {'music'|'literature'} params.mediaType
- * @param {string} params.title - Song or book title
- * @param {string} params.artist - Artist or author
+ * @param {'music'|'literature'|'cinema'} params.mediaType - news is built by news-panel-template.js
+ * @param {string} params.title - Song, book or film title
+ * @param {string} params.artist - Artist (music), author (books) or director (film)
  * @param {string} [params.lyrics] - Song lyrics (music only)
- * @param {string} [params.description] - Book description (literature only)
- * @param {string} [params.categories] - Book categories (literature only)
+ * @param {string} [params.description] - Book description or film synopsis
+ * @param {string} [params.categories] - Book categories or film genres
  * @param {Array<Object>} params.philosophers - Array of philosopher profile objects
  * @param {string} params.guide - Philosophical guide text
  * @param {string} [params.lang='en'] - User language
  * @returns {string} The full prompt
+ * @throws {UnsupportedMediaTypeError} if mediaType is unknown — never defaults
  */
 export function buildPhilosopherPanelPrompt({
   mediaType,
@@ -36,9 +124,10 @@ export function buildPhilosopherPanelPrompt({
   guide,
   lang = 'en',
 }) {
-  const isBook = mediaType === 'literature';
-  const workType = isBook ? 'book' : 'song';
-  const creatorLabel = isBook ? 'Author' : 'Artist';
+  const media = MEDIA[mediaType];
+  if (!media) throw new UnsupportedMediaTypeError(mediaType);
+
+  const { workType, creatorLabel, heading } = media;
 
   // Build philosopher panel list with full profiles
   const philosopherPanelList = philosophers
@@ -53,23 +142,38 @@ export function buildPhilosopherPanelPrompt({
 
   // Build the work description section
   let workSection;
-  if (isBook) {
-    workSection = `═══ BOOK TO ANALYZE ═══
+  if (mediaType === 'literature') {
+    workSection = `═══ ${heading} TO ANALYZE ═══
 Title: ${title}
 ${creatorLabel}: ${artist}
 ${categories ? `Categories: ${categories}` : ''}
 ${description ? `Description: ${description}` : ''}
-═══ END BOOK ═══
+═══ END ${heading} ═══
 
 IMPORTANT: Use your knowledge of this book's content, themes, arguments, characters (if fiction),
 and cultural significance. The description above is only metadata — your analysis should draw on
 the full depth of the work.`;
+  } else if (mediaType === 'cinema') {
+    // The frontend has always sent the synopsis and genres; the old else-branch read
+    // only `lyrics` and discarded both, leaving the model with no film metadata at all.
+    workSection = `═══ ${heading} TO ANALYZE ═══
+Title: ${title}
+${creatorLabel}: ${artist}
+${categories ? `Genres: ${categories}` : ''}
+${description ? `Synopsis: ${description}` : ''}
+═══ END ${heading} ═══
+
+IMPORTANT: This is a MOTION PICTURE, not a song and not a book. Use your knowledge of the film
+itself — its narrative, characters, direction, cinematography, editing, performances and cultural
+significance. The synopsis above is only metadata; your analysis should draw on the full work.
+Never refer to it as a song, and never discuss "lyrics" — discuss scenes, shots, performances and
+dramatic structure.`;
   } else {
-    workSection = `═══ SONG TO ANALYZE ═══
+    workSection = `═══ ${heading} TO ANALYZE ═══
 Title: ${title}
 ${creatorLabel}: ${artist}
 ${lyrics ? `\nLyrics:\n${lyrics}` : '\n(No lyrics available — analyze based on your knowledge of this song, its themes, cultural context, and the artist\'s body of work.)'}
-═══ END SONG ═══`;
+═══ END ${heading} ═══`;
   }
 
   const prompt = `You are Philosify's Philosopher Panel — a panel of distinguished philosophers analyzing a ${workType} through their unique philosophical lenses.
@@ -96,20 +200,11 @@ You are writing an academic, educational, technically rigorous yet ENGAGING phil
 SECTION 1 — **Individual Philosopher Perspectives** (MANDATORY)
 For EACH philosopher on the panel, write a dedicated subsection:
   **[Philosopher Name]** — *School of Thought*
-  
+
   Write IN THIS PHILOSOPHER'S VOICE and analytical style. How would they analyze this ${workType}?
-  
-  ${isBook ? `For books:
-  - What would they say about the book's central thesis or narrative?
-  - How does the book's worldview align or clash with their philosophy?
-  - For fiction: analyze the characters' values, the plot's causality, and the sense of life
-  - For non-fiction: evaluate the arguments, premises, and conclusions
-  - What would they praise? What would they criticize?` : `For songs:
-  - What would they say about the song's message, themes, and values?
-  - How do the lyrics reflect or contradict their philosophical framework?
-  - What worldview does the song project? Is it compatible with their philosophy?
-  - What would they praise? What would they criticize?`}
-  
+
+  ${media.lens}
+
   Be SPECIFIC — reference actual content from the ${workType}, not vague generalities.
   Each subsection must be 4-6 sentences minimum.
   The philosopher's personality and rhetorical style MUST be evident.
@@ -134,10 +229,7 @@ CRITICAL RULES FOR THE VERDICT:
 - The verdict CAN acknowledge genuine intellectual contributions from other philosophers when they align with reason — but never at the expense of Objectivism's core principles.
 - The verdict uses HISTORICAL CONSEQUENCES as evidence: collectivism produced the Soviet Union, Maoist China, Cambodia. Faith-based morality produced the Inquisition, theocratic tyranny. These are facts, not opinions.
 
-${isBook ? `Evaluate the book's philosophical significance: Does it advance human understanding?
-Does it champion reason, productive achievement, individual rights, and human flourishing?
-For Rand's own books: acknowledge the monumental achievement — Atlas Shrugged is not just a novel, it is a philosophical system delivered through fiction. The verdict must reflect that stature.` : `Evaluate the song's philosophical significance: Does it celebrate life, agency, and authentic values?
-Or does it promote resignation, conformity, or anti-life premises?`}
+${media.verdictFocus}
 
 End with a PROVOCATION — a question or paradox that the analysis leaves open.
 Something that invites the reader to think further. The verdict is clear, but philosophy is ongoing.
@@ -180,15 +272,8 @@ In emergencies:
 - Normal ethical expectations do not apply the same way
 - You CANNOT judge a person's character by how they act in emergencies — only by how they live their normal life
 
-Example: Władysław Szpilman in "The Pianist" was in an EMERGENCY — the Holocaust. He survived through hiding, luck, help from others, and his talent. This is NOT "passivity" — it is rational survival under totalitarian terror where heroic resistance meant certain death. Criticizing real Holocaust survivors for not being fictional Romantic heroes violates Rand's own principle that emergencies are the exception, not the rule.
-
-BIOGRAPHICAL VS. FICTIONAL FILMS:
-When analyzing biographical or documentary films, you MUST distinguish:
-- FICTION: The author CHOOSES to create passive or active characters — this choice can be critiqued aesthetically
-- BIOGRAPHY/DOCUMENTARY: The filmmaker documents what ACTUALLY HAPPENED to real people — criticizing real historical figures for not being idealized heroes is inappropriate
-
-A biographical film about survival under persecution has VALUE as historical testimony. The filmmaker's choice to tell a TRUE story honestly — even if that truth is not heroic — is valid and important. Reality is not obligated to conform to Romantic aesthetics.
-
+Example (an OUTSIDE illustration, not the work under analysis): Władysław Szpilman, as portrayed in the film "The Pianist", was in an EMERGENCY — the Holocaust. He survived through hiding, luck, help from others, and his talent. This is NOT "passivity" — it is rational survival under totalitarian terror where heroic resistance meant certain death. Criticizing real Holocaust survivors for not being fictional Romantic heroes violates Rand's own principle that emergencies are the exception, not the rule.
+${media.extraGuidance ? `\n${media.extraGuidance}\n` : ''}
 RULES:
 - You MUST include EVERY philosopher on the panel in Section 1. Skipping any philosopher is a failure.
 - Each philosopher's perspective MUST reflect their ACTUAL school of thought, doctrines, and rhetorical style.
@@ -199,6 +284,7 @@ RULES:
 - CRITICAL: Do NOT reference internal terms like "Source of Truth", "Philosophical Guide", or any internal system labels.
 - Do NOT include word count, character count, or any meta-commentary about the response itself.
 - Use markdown formatting: **bold** for philosopher names/section headers, *italics* for schools/emphasis.
+- The work under analysis is a ${workType.toUpperCase()}. Refer to it as such throughout. Do not describe it using the vocabulary of another art form.
 
 ${lang === 'en' ? '' : `═══ MANDATORY LANGUAGE RULE ═══
 Write the ENTIRE response in ${languageName(lang)}.
