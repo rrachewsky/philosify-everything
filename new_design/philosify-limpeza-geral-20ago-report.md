@@ -267,4 +267,4 @@ escolha dele vence (cleanup do hook). Comportamento exato da sua decisão.
 | 3 | Versionar as funções extraídas (`db/functions/`) + commit (e) | eu, após o 2 |
 | 4 | Verificação pós-SQL: painel de cinema em `panel_analyses` + `analysis_id` numa cobrança real | eu/Roberto |
 | 5 | ~~Tail da janela Books/Cinema/Graph~~ **feito 20 ago**: Books 18:10 por artefato (`fetchedAt`), Cinema 21:15 ao vivo; só o Graph resta por simetria (janela 00:25 UTC se quiser prova ao vivo) | — |
-| 6 | Ticker 360px em aparelho real | Roberto |
+| 6 | ~~Ticker 360px em aparelho real~~ **confirmado pelo Roberto, 20 ago** | — |

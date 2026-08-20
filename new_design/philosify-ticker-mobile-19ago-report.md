@@ -3,7 +3,8 @@
 **Status: DEPLOYADO em 20 ago 2026** (ordem de limpeza geral: rodada de testes
 confirmada como não iniciada, deploys liberados). Commit `3938c56` + follow-up
 de touch targets `2d27554`; Pages `4485a1f2`. Verificado no build de produção a
-360px: linha de 11px, alvos de toque de 45px. O texto abaixo é o registro
+360px: linha de 11px, alvos de toque de 45px. **Confirmado pelo Roberto em
+aparelho real (20 ago): linha única, ok.** O texto abaixo é o registro
 original da proposta (19 ago), mantido como estava.
 
 ## 1. O bug (screenshot do Roberto)
