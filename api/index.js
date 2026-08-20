@@ -4549,6 +4549,12 @@ export default {
       }
     }
 
+    // Each heavy sweep gets its own 5-minute window (own invocation, own
+    // subrequest budget). At minute 0 of hours 0/6/12/18 breaking news,
+    // Top Books, Top Cinema, History Graph and the Constellation sweep all
+    // used to share one invocation and its subrequest cap.
+    // Windows: breaking 0/20/40 · constellation 5/35 · books 10 · cinema 15 · graph 25.
+
     // Breaking news refresh — every 20 minutes (cron runs every 5 min, so check minutes)
     if (now.getUTCMinutes() % 20 < 5) {
       ctx.waitUntil(
@@ -4619,10 +4625,9 @@ export default {
       );
     }
 
-    // Top Books feed refresh — every 6 hours (0, 6, 12, 18 UTC)
-    // Gate on minute < 5 to avoid redundant fetches from */5 cron
+    // Top Books feed refresh — every 6 hours (0, 6, 12, 18 UTC), minute-10 window
     const minute = now.getUTCMinutes();
-    if (hour % 6 === 0 && minute < 5) {
+    if (hour % 6 === 0 && minute >= 10 && minute < 15) {
       ctx.waitUntil(
         fetchTopBooks(env).catch((err) =>
           console.error("[Cron] Top Books refresh failed:", err.message),
@@ -4630,8 +4635,8 @@ export default {
       );
     }
 
-    // Top Cinema feed refresh — every 3 hours (0, 3, 6, 9, 12, 15, 18, 21 UTC)
-    if (hour % 3 === 0 && minute < 5) {
+    // Top Cinema feed refresh — every 3 hours (0, 3, 6, 9, 12, 15, 18, 21 UTC), minute-15 window
+    if (hour % 3 === 0 && minute >= 15 && minute < 20) {
       ctx.waitUntil(
         fetchTopFilms(env).catch((err) =>
           console.error("[Cron] Top Cinema refresh failed:", err.message),
@@ -4639,8 +4644,8 @@ export default {
       );
     }
 
-    // History Graph cache refresh — every 6 hours (0, 6, 12, 18 UTC)
-    if (hour % 6 === 0 && minute < 5) {
+    // History Graph cache refresh — every 6 hours (0, 6, 12, 18 UTC), minute-25 window
+    if (hour % 6 === 0 && minute >= 25 && minute < 30) {
       ctx.waitUntil(
         refreshGraphCache(env).catch((err) =>
           console.error("[Cron] History Graph refresh failed:", err.message),
@@ -4649,8 +4654,9 @@ export default {
     }
 
     // Constellation of Ideas: Tier 2 LLM extraction sweep — every 30 minutes
+    // (minutes 5 and 35, off the breaking-news windows)
     // Processes analyses that have Tier 1 but not Tier 2 extraction
-    if (minute % 30 < 5) {
+    if (minute % 30 >= 5 && minute % 30 < 10) {
       ctx.waitUntil(
         (async () => {
           try {

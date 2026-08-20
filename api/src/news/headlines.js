@@ -510,7 +510,12 @@ ${batch}`;
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.2, maxOutputTokens: 8192 },
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 8192,
+          // JSON mode: the API refuses to emit prose/fences around the payload
+          responseMimeType: "application/json",
+        },
       }),
     });
 
@@ -521,8 +526,18 @@ ${batch}`;
 
     const data = await res.json();
     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    const jsonStr = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const summaries = JSON.parse(jsonStr);
+    // Belt over JSON mode: strip fences and slice to the outermost array,
+    // so stray prose before/after the payload can't kill the parse
+    const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const start = cleaned.indexOf("[");
+    const end = cleaned.lastIndexOf("]");
+    if (start === -1 || end <= start) {
+      throw new Error(`no JSON array in response (${cleaned.length} chars)`);
+    }
+    const summaries = JSON.parse(cleaned.slice(start, end + 1));
+    if (!Array.isArray(summaries)) {
+      throw new Error("parsed payload is not an array");
+    }
 
     const map = {};
     for (const s of summaries) map[s.id] = s;
