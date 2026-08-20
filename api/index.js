@@ -3157,6 +3157,7 @@ export default {
                 env,
                 reservation.reservationId,
                 resultData.id,
+                user.userId,
               );
               console.log(
                 "[Credits] Reservation confirmed - first view of cached analysis, credit consumed",
@@ -3191,6 +3192,7 @@ export default {
                 env,
                 reservation.reservationId,
                 resultData.id,
+                user.userId,
               );
               console.log(
                 "[Credits] Reservation confirmed - credit consumed, logged to history",
@@ -3458,7 +3460,7 @@ export default {
               balanceResult = await releaseReservation(env, reservation.reservationId, "cached_review", resultData.id);
               charged = false;
             } else if (resultData.cached && !resultData.isReview) {
-              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id);
+              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id, user.userId);
               charged = true;
             } else if (resultData.saveFailed) {
               balanceResult = await releaseReservation(env, reservation.reservationId, "failed");
@@ -3468,7 +3470,7 @@ export default {
               balanceResult = await releaseReservation(env, reservation.reservationId, "already_owned", resultData.id);
               charged = false;
             } else {
-              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id);
+              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id, user.userId);
               charged = true;
             }
 

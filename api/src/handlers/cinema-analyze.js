@@ -115,7 +115,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
                 }, 402, origin, env);
               }
               // Confirm immediately for cached content
-              await confirmReservation(env, reservation.reservationId, analysisIdToLog);
+              await confirmReservation(env, reservation.reservationId, analysisIdToLog, userId);
               console.log(`[CinemaAnalyze] Charged 1 credit for first-time cached view: ${userId}`);
             }
 
@@ -157,7 +157,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
             balance: reservation.newTotal || 0,
           }, 402, origin, env);
         }
-        await confirmReservation(env, reservation.reservationId, analysis.id);
+        await confirmReservation(env, reservation.reservationId, analysis.id, userId);
         console.log(`[CinemaAnalyze] Charged 1 credit for first-time DB cached view: ${userId}`);
       }
 

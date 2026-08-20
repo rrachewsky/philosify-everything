@@ -37,12 +37,17 @@ export async function confirmReservation(env, reservationId, analysisId, userId)
       return { success: false, newTotal: 0, credits: 0, freeRemaining: 0 };
     }
 
-    // If there's a non-UUID description, patch the most recent credit_history
-    // entry for this reservation so it shows a readable description in history
-    if (description) {
+    // Patch the credit_history entry created by this confirmation:
+    // - analysis_id for real analyses (the RPC's INSERT never wrote it — D3),
+    //   so the statement row links to the analysis going forward;
+    // - metadata.description for non-UUID ids (panels, colloquiums).
+    // Best-effort and non-blocking, like the rest of this path.
+    const patch = {};
+    if (safeAnalysisId) patch.analysis_id = safeAnalysisId;
+    if (description) patch.metadata = { description };
+    if (Object.keys(patch).length > 0) {
       try {
         const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
-        // Find and update the credit_history entry created by this confirmation
         // SECURITY: Always scope to user_id to prevent cross-user data modification
         const userFilter = userId ? `&user_id=eq.${userId}` : '';
         const filter = result.history_id
@@ -52,20 +57,30 @@ export async function confirmReservation(env, reservationId, analysisId, userId)
             : null;
         if (!filter) {
           console.warn('[Credits] No history_id and no userId — skipping credit_history patch');
-          return;
+        } else {
+          const patchRes = await fetch(`${sbUrl}/rest/v1/credit_history?${filter}`, {
+            method: "PATCH",
+            headers: {
+              apikey: sbKey,
+              Authorization: `Bearer ${sbKey}`,
+              "Content-Type": "application/json",
+              Prefer: "return=minimal",
+            },
+            body: JSON.stringify(patch),
+          });
+          if (patchRes.ok) {
+            console.log(
+              `[Credits] credit_history patched (${Object.keys(patch).join(", ")}) for reservation ${reservationId}`,
+            );
+          } else {
+            const patchBody = await patchRes.text().catch(() => "");
+            console.warn(
+              `[Credits] credit_history patch FAILED: ${patchRes.status} ${patchBody.slice(0, 200)}`,
+            );
+          }
         }
-        await fetch(`${sbUrl}/rest/v1/credit_history?${filter}`, {
-          method: "PATCH",
-          headers: {
-            apikey: sbKey,
-            Authorization: `Bearer ${sbKey}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-          body: JSON.stringify({ metadata: { description } }),
-        });
       } catch (e) {
-        console.warn(`[Credits] Failed to set description on credit_history: ${e.message}`);
+        console.warn(`[Credits] Failed to patch credit_history: ${e.message}`);
       }
     }
 

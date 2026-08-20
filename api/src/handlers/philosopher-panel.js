@@ -261,9 +261,12 @@ export async function handlePhilosopherPanel(
       ]);
 
       // ── Save to DB for history ──
+      // Non-fatal either way — KV has the data, history just won't show this
+      // one. But never silent: fetch does not throw on 4xx/5xx, and a CHECK
+      // constraint violation used to be logged as a save.
       try {
         const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
-        await fetch(`${sbUrl}/rest/v1/panel_analyses`, {
+        const dbRes = await fetch(`${sbUrl}/rest/v1/panel_analyses`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -281,9 +284,15 @@ export async function handlePhilosopherPanel(
             lang,
           }),
         });
-        console.log(`[PhilosopherPanel] Saved to panel_analyses: ${panelId}`);
+        if (dbRes.ok) {
+          console.log(`[PhilosopherPanel] Saved to panel_analyses: ${panelId}`);
+        } else {
+          const dbBody = await dbRes.text().catch(() => "");
+          console.error(
+            `[PhilosopherPanel] panel_analyses INSERT FAILED (non-fatal): ${dbRes.status} ${dbBody.slice(0, 300)} — panel ${panelId} (${mediaType}) lives in KV only`,
+          );
+        }
       } catch (dbErr) {
-        // Non-fatal — KV has the data, history just won't show this one
         console.error(`[PhilosopherPanel] DB save failed (non-fatal): ${dbErr.message}`);
       }
 

@@ -94,7 +94,7 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
                   balance: reservation.newTotal || 0,
                 });
               }
-              await confirmReservation(env, reservation.reservationId, result.id);
+              await confirmReservation(env, reservation.reservationId, result.id, user.userId);
               console.log(`[NewsAnalyze] Charged 1 credit for first-time cached view: ${user.userId}`);
             }
 
