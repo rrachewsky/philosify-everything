@@ -120,7 +120,11 @@ export function PanelPermalink() {
           shareText={
             panel.mediaType === 'news'
               ? t('share.shareNewsText', { title: panel.title })
-              : t('share.shareMusicText', { title: panel.title, artist: panel.artist })
+              : panel.mediaType === 'cinema'
+                ? t('share.shareFilmText', { title: panel.title, artist: panel.artist })
+                : panel.mediaType === 'literature'
+                  ? t('share.shareLiteratureText', { title: panel.title, artist: panel.artist })
+                  : t('share.shareMusicText', { title: panel.title, artist: panel.artist })
           }
         />
       </div>
