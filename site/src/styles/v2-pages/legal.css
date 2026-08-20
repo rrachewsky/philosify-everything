@@ -5,8 +5,17 @@
    the module title uppercase; i18n titles arrive in sentence case) */
 .v2 .pg-legal h1.mod { text-transform: uppercase; }
 
-/* Cross-document link in the ticker (mockup: silver, no underline) */
-.v2 .pg-legal .tick a { color: var(--silver); text-decoration: none; }
+/* Cross-document link below the reading well (was the ticker's retired
+   `stat` slot; mockup register: silver, no underline) */
+.v2 .pg-legal .crossdoc { margin-top: 30px; }
+.v2 .pg-legal .crossdoc a {
+  color: var(--silver);
+  text-decoration: none;
+  font: 500 10.5px/1 var(--fu);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.v2 .pg-legal .crossdoc a:hover { color: var(--ink); }
 
 /* Reading well 720px + sticky Contents rail */
 .v2 .pg-legal .legalgrid {

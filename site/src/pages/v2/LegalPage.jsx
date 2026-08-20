@@ -133,17 +133,7 @@ export default function LegalPage({ doc = 'terms' }) {
     <PageShell variant="interior" nav={<NavAccount />} footer={null}>
       <div className="pg-legal">
         <ModuleHeader title={title}>
-          <Ticker
-            stat={
-              isTerms ? (
-                <Link to="/pp">{t('v2.legal.privacyLink', 'Privacy Policy')} →</Link>
-              ) : (
-                <Link to="/tos">{t('v2.legal.termsLink', 'Terms of Service')} →</Link>
-              )
-            }
-          >
-            {t('v2.legal.updated', 'Last updated // 27 Jul 2026')}
-          </Ticker>
+          <Ticker>{t('v2.legal.updated', 'Last updated // 27 Jul 2026')}</Ticker>
         </ModuleHeader>
 
         <div className="legalgrid">
@@ -160,6 +150,17 @@ export default function LegalPage({ doc = 'terms' }) {
             </aside>
           )}
         </div>
+
+        {/* Cross-document link. Lived in the retired Ticker `stat` prop
+            (right-side stats removed by the C.4 ruling), so it never
+            rendered; in the body it survives the one-line ticker clip. */}
+        <p className="crossdoc">
+          {isTerms ? (
+            <Link to="/pp">{t('v2.legal.privacyLink', 'Privacy Policy')} →</Link>
+          ) : (
+            <Link to="/tos">{t('v2.legal.termsLink', 'Terms of Service')} →</Link>
+          )}
+        </p>
       </div>
       <V2ModalsHost />
     </PageShell>
