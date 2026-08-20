@@ -97,6 +97,12 @@ A biographical film about survival under persecution has VALUE as historical tes
   },
 };
 
+// The media types this builder serves, derived from MEDIA itself. The API
+// whitelist in philosopher-panel.js is built from this list (plus "news",
+// which has its own builder), so the two can never diverge again — the
+// class of bug where the handler accepts a type the template refuses.
+export const PANEL_MEDIA_TYPES = Object.keys(MEDIA);
+
 /**
  * Build the philosopher panel analysis prompt.
  *

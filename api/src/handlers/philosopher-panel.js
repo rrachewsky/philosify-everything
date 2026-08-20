@@ -13,13 +13,18 @@ import { getUserFromAuth } from "../auth/index.js";
 import { checkRateLimit } from "../rate-limit/index.js";
 import { getDebateAestheticGuide } from "../guides/index.js";
 import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
-import { buildPhilosopherPanelPrompt } from "../ai/prompts/philosopher-panel-template.js";
+import { buildPhilosopherPanelPrompt, PANEL_MEDIA_TYPES } from "../ai/prompts/philosopher-panel-template.js";
 import { buildNewsPanelPrompt } from "../ai/prompts/news-panel-template.js";
 import { callClaude, callGrok, callGemini } from "../ai/models/index.js";
 import { PHILOSOPHERS } from "../handlers/colloquium.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
 const PANEL_COST = 3; // credits
+
+// API whitelist derived from the template's MEDIA table — the template is
+// the single source of truth. "news" is the one addition: it routes to
+// news-panel-template.js in the same if/else that consumes this list.
+export const SUPPORTED_MEDIA_TYPES = ["news", ...PANEL_MEDIA_TYPES];
 
 /**
  * POST /api/philosopher-panel
@@ -81,8 +86,10 @@ export async function handlePhilosopherPanel(
     if (mediaType !== "news" && mediaType !== "cinema" && !artist) {
       return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "Artist/author is required" });
     }
-    if (!mediaType || !["music", "literature", "news", "cinema"].includes(mediaType)) {
-      return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "mediaType must be 'music', 'literature', 'news', or 'cinema'" });
+    if (!mediaType || !SUPPORTED_MEDIA_TYPES.includes(mediaType)) {
+      return errorResponse(env, origin, 'INVALID_INPUT', lang, {
+        message: `mediaType must be one of: ${SUPPORTED_MEDIA_TYPES.map((t) => `'${t}'`).join(", ")}`,
+      });
     }
     if (!Array.isArray(userPicks) || userPicks.length !== 3) {
       return errorResponse(env, origin, 'INVALID_INPUT', lang, { message: "Exactly 3 philosophers must be chosen" });
