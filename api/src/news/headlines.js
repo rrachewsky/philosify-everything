@@ -482,6 +482,34 @@ export async function fetchBreakingNews(env) {
 // Search results skip this (user is active, latency matters)
 // ============================================================
 
+// First complete top-level JSON array in `text`, by bracket depth and
+// string-aware scanning. Content before or after it (prose, a duplicated
+// second array, a truncated tail) is ignored; an unterminated array throws.
+function extractFirstJsonArray(text) {
+  const start = text.indexOf("[");
+  if (start === -1) throw new Error(`no JSON array in response (${text.length} chars)`);
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (escaped) {
+      escaped = false;
+    } else if (ch === "\\") {
+      if (inString) escaped = true;
+    } else if (ch === '"') {
+      inString = !inString;
+    } else if (!inString) {
+      if (ch === "[") depth++;
+      else if (ch === "]") {
+        depth--;
+        if (depth === 0) return text.slice(start, i + 1);
+      }
+    }
+  }
+  throw new Error("unterminated JSON array in response");
+}
+
 export async function summarizeArticles(articles, lang, env) {
   const apiKey = await getSecret(env.GEMINI_API_KEY);
   if (!apiKey || articles.length === 0) return articles;
@@ -526,15 +554,12 @@ ${batch}`;
 
     const data = await res.json();
     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    // Belt over JSON mode: strip fences and slice to the outermost array,
-    // so stray prose before/after the payload can't kill the parse
+    // Belt over JSON mode: strip fences and take the FIRST complete array by
+    // bracket depth. The model sometimes appends a duplicate (or truncated)
+    // copy after a valid array — a first-[ to last-] slice spans both and
+    // dies with "unexpected character after JSON".
     const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const start = cleaned.indexOf("[");
-    const end = cleaned.lastIndexOf("]");
-    if (start === -1 || end <= start) {
-      throw new Error(`no JSON array in response (${cleaned.length} chars)`);
-    }
-    const summaries = JSON.parse(cleaned.slice(start, end + 1));
+    const summaries = JSON.parse(extractFirstJsonArray(cleaned));
     if (!Array.isArray(summaries)) {
       throw new Error("parsed payload is not an array");
     }
