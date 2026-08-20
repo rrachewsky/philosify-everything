@@ -1160,3 +1160,26 @@ Pages `a7c418ea` (branch production — leva 890d5f0 ao site vivo).
 
 **Estado: ordem executada por inteiro. 21/21 regenerados e verificados. 51 créditos.
 Chave protegida intacta. 4f20208a intocado. Histórico de análises recuperado.**
+
+# ORDEM DE LIMPEZA GERAL — EXECUTADA (19-20 Ago). Registro.
+
+Execução completa em `philosify-limpeza-geral-20ago-report.md`. Resumo do que
+toca este diário:
+
+- **D3 (credit_history.analysis_id)**: população implementada no worker — o
+  `confirmReservation` faz PATCH da linha recém-criada com o UUID; os call
+  sites com UUID passam `userId`. SQL da coluna (`ADD COLUMN IF NOT EXISTS`)
+  aguarda aval no gate. As funções de crédito continuam só no banco até a
+  extração (`db/extract_credit_functions.sql`) rodar no SQL Editor.
+- **Candidato da ETAPA 2 ("derivar a lista branca de :84 das chaves de
+  MEDIA") executado**: `PANEL_MEDIA_TYPES` exportado do template, whitelist
+  `["news", ...PANEL_MEDIA_TYPES]`, 14 testes cobrindo recusa e o release das
+  3 reservas no dia da divergência. A classe do bug está morta.
+- **panel_analyses**: INSERT agora loga status+corpo em falha (era o
+  silêncio que escondeu o 400 da constraint); o `ADD 'cinema'` ao CHECK
+  aguarda o gate. Sem backfill dos 21, conforme decidido.
+- Commits `3938c56` `2d27554` `d2f4563` `75131b9` `593257b` `7ef4737` +
+  follow-up `a1723eb` (parser de tradução, pós-verificação); worker
+  `3be860c0` → `abbf8ebe`; Pages `4485a1f2`. Verificação do cron staggered
+  em produção: breaking/Constellation/Cinema ao vivo, Books por artefato
+  (`fetchedAt` 18:10) — detalhe no relatório da limpeza.
