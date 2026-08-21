@@ -2,6 +2,27 @@
 // Sistema de Análise Filosófica Musical Objetivista
 // Modular architecture with proper separation of concerns
 
+// TEMP DIAGNOSTIC (21 Aug 2026): the music-analysis invocation exhausts the
+// paid-plan subrequest cap (~1000) somewhere before the credit confirm; no
+// visible loop in the path explains it. Count fetches per isolate and name
+// the URL every 25th call so one live run identifies the eater. Remove once
+// the culprit is fixed. Counter is isolate-global: concurrent requests
+// interleave, which is acceptable for diagnosis at this traffic level.
+const __origFetch = globalThis.fetch.bind(globalThis);
+let __subreqCount = 0;
+globalThis.fetch = (input, init) => {
+  __subreqCount++;
+  if (__subreqCount % 25 === 0) {
+    try {
+      const target = String(
+        (input && typeof input === "object" && "url" in input ? input.url : input) || "",
+      ).slice(0, 100);
+      console.log(`[SubreqDiag] fetch #${__subreqCount} this isolate → ${target}`);
+    } catch {}
+  }
+  return __origFetch(input, init);
+};
+
 import {
   getCorsHeaders,
   jsonResponse,
