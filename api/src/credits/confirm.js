@@ -40,34 +40,57 @@ export async function confirmReservation(env, reservationId, analysisId, userId)
     // Patch the credit_history entry created by this confirmation:
     // - analysis_id for real analyses (the RPC's INSERT never wrote it — D3),
     //   so the statement row links to the analysis going forward;
-    // - metadata.description for non-UUID ids (panels, colloquiums).
-    // Best-effort and non-blocking, like the rest of this path.
-    const patch = {};
-    if (safeAnalysisId) patch.analysis_id = safeAnalysisId;
-    if (description) patch.metadata = { description };
-    if (Object.keys(patch).length > 0) {
+    // - metadata.description for non-UUID ids (panels, colloquiums), merged
+    //   into the RPC's metadata, never replacing it.
+    // The RPC returns no history_id (see db/functions/confirm_reservation.sql)
+    // and its INSERT uses type 'analysis', so the row is located by GET first
+    // and patched by id. Best-effort and non-blocking, like the rest of this path.
+    if (safeAnalysisId || description) {
       try {
         const { url: sbUrl, key: sbKey } = await getSupabaseCredentials(env);
-        // SECURITY: Always scope to user_id to prevent cross-user data modification
-        const userFilter = userId ? `&user_id=eq.${userId}` : '';
-        const filter = result.history_id
-          ? `id=eq.${result.history_id}${userFilter}`
-          : userId
-            ? `user_id=eq.${userId}&type=eq.consume&order=created_at.desc&limit=1`
-            : null;
-        if (!filter) {
-          console.warn('[Credits] No history_id and no userId — skipping credit_history patch');
+        const authHeaders = { apikey: sbKey, Authorization: `Bearer ${sbKey}` };
+        let rowId = null;
+        let existingMeta = null;
+        if (userId) {
+          const findRes = await fetch(
+            `${sbUrl}/rest/v1/credit_history?user_id=eq.${userId}&type=eq.analysis&order=created_at.desc&limit=1&select=id,metadata`,
+            { headers: authHeaders },
+          );
+          if (findRes.ok) {
+            const rows = await findRes.json().catch(() => []);
+            if (Array.isArray(rows) && rows.length > 0) {
+              rowId = rows[0].id;
+              existingMeta = rows[0].metadata;
+            }
+          } else {
+            console.warn(
+              `[Credits] credit_history lookup FAILED: ${findRes.status}`,
+            );
+          }
+        }
+        if (!rowId) {
+          console.warn(
+            "[Credits] credit_history row not found — skipping patch",
+          );
         } else {
-          const patchRes = await fetch(`${sbUrl}/rest/v1/credit_history?${filter}`, {
-            method: "PATCH",
-            headers: {
-              apikey: sbKey,
-              Authorization: `Bearer ${sbKey}`,
-              "Content-Type": "application/json",
-              Prefer: "return=minimal",
+          const patch = {};
+          if (safeAnalysisId) patch.analysis_id = safeAnalysisId;
+          if (description) {
+            patch.metadata = { ...(existingMeta || {}), description };
+          }
+          // SECURITY: Always scope to user_id to prevent cross-user data modification
+          const patchRes = await fetch(
+            `${sbUrl}/rest/v1/credit_history?id=eq.${rowId}&user_id=eq.${userId}`,
+            {
+              method: "PATCH",
+              headers: {
+                ...authHeaders,
+                "Content-Type": "application/json",
+                Prefer: "return=minimal",
+              },
+              body: JSON.stringify(patch),
             },
-            body: JSON.stringify(patch),
-          });
+          );
           if (patchRes.ok) {
             console.log(
               `[Credits] credit_history patched (${Object.keys(patch).join(", ")}) for reservation ${reservationId}`,

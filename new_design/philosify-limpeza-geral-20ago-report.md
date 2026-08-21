@@ -186,6 +186,20 @@ INSERT é o follow-up limpo.
 `credit_history patch FAILED: 400` no tail — alto e inofensivo, some quando
 o SQL rodar.
 
+**Correção pós-extração (21 ago, worker `20bd9049`):** o corpo extraído de
+`confirm_reservation` desmentiu duas suposições do patch original e expôs
+uma terceira falha: (i) o filtro de fallback procurava `type=eq.consume`,
+mas o RPC insere `type = 'analysis'` — o PATCH casava **zero linhas** e o
+PostgREST devolve 204 mesmo assim, ou seja, log de sucesso sem efeito;
+(ii) o RPC não devolve `history_id` (RETURNS TABLE sem essa coluna), então o
+ramo "primário" era código morto; (iii) o patch de `metadata` para painéis
+substituía o jsonb inteiro, apagando `reservation_id`/`credit_type` da
+auditoria. Reescrito: GET localiza a linha (`type=eq.analysis`, mais
+recente do usuário, `select=id,metadata`), o metadata novo é **merge** com o
+existente, e o PATCH vai por `id` + `user_id`. A extração do 4.3 pagou o
+próprio custo aqui — sem o corpo versionado, a verificação teria "passado"
+em cima de um no-op silencioso.
+
 **4.3 — `db/extract_credit_functions.sql`** (só leitura, rode quando quiser):
 ```sql
 SELECT p.proname AS function_name,
@@ -276,7 +290,7 @@ escolha dele vence (cleanup do hook). Comportamento exato da sua decisão.
 
 | # | O quê | De quem |
 |---|---|---|
-| 1 | Rodar 4.1 + 4.2 no SQL Editor (aprovação = rodar) — **confirmação pendente** de que os dois blocos rodaram (o 4.3 veio, os ALTERs não foram confirmados) | Roberto |
+| 1 | ~~Rodar 4.1 + 4.2 no SQL Editor~~ **confirmado pelo Roberto, 21 ago ("1 e 2 sucesso")** | — |
 | 2 | ~~Rodar a extração 4.3 e colar a saída~~ **feito 21 ago** | — |
 | 3 | ~~Versionar as funções extraídas~~ **feito 21 ago**: `db/functions/` com as 5, commit (e) | — |
 | 4 | Verificação pós-SQL: painel de cinema em `panel_analyses` + `analysis_id` numa cobrança real | eu/Roberto |
