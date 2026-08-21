@@ -257,14 +257,28 @@ escolha dele vence (cleanup do hook). Comportamento exato da sua decisão.
    idempotência interna, não verifiquei — fora de escopo.
 5. `LegalPage` importava `Link` só para a prop morta; o import continua usado
    pelo novo bloco `.crossdoc`.
+6. **(21 ago, na extração 4.3) `cleanup_stale_reservations` NÃO reembolsa.**
+   O reaper global — exatamente o que o cron roda a cada 5 min
+   (`api/index.js:4577`, varrendo pendentes >10 min) — marca a reserva
+   `released` com razão `timeout` **sem devolver o crédito** (nenhum UPDATE
+   em `credits`), ao contrário de `release_reservation` e
+   `cleanup_user_stale_reservations`, que devolvem. Usuário cuja análise
+   morre e que não volta a bater na API perde 1 crédito em silêncio, com
+   trilha de auditoria que parece reembolso. As variantes com reembolso só
+   salvam quem retorna (os call sites com `maxAge 0` em balance etc. chegam
+   primeiro). Anotado em `db/functions/cleanup_stale_reservations.sql`;
+   qualquer correção é SQL vivo → gate.
+7. **(21 ago) `confirm_reservation` destoa das irmãs:** é a única sem
+   `SECURITY DEFINER` e sem `search_path` fixado, e o `p_analysis_id` dela é
+   TEXT (UUID em `release_reservation`). Anotado no arquivo versionado.
 
 ## Pendências em aberto
 
 | # | O quê | De quem |
 |---|---|---|
-| 1 | Rodar 4.1 + 4.2 no SQL Editor (aprovação = rodar) | Roberto |
-| 2 | Rodar a extração 4.3 e colar a saída | Roberto |
-| 3 | Versionar as funções extraídas (`db/functions/`) + commit (e) | eu, após o 2 |
+| 1 | Rodar 4.1 + 4.2 no SQL Editor (aprovação = rodar) — **confirmação pendente** de que os dois blocos rodaram (o 4.3 veio, os ALTERs não foram confirmados) | Roberto |
+| 2 | ~~Rodar a extração 4.3 e colar a saída~~ **feito 21 ago** | — |
+| 3 | ~~Versionar as funções extraídas~~ **feito 21 ago**: `db/functions/` com as 5, commit (e) | — |
 | 4 | Verificação pós-SQL: painel de cinema em `panel_analyses` + `analysis_id` numa cobrança real | eu/Roberto |
 | 5 | ~~Tail da janela Books/Cinema/Graph~~ **feito 20 ago**: Books 18:10 por artefato (`fetchedAt`), Cinema 21:15 ao vivo; só o Graph resta por simetria (janela 00:25 UTC se quiser prova ao vivo) | — |
 | 6 | ~~Ticker 360px em aparelho real~~ **confirmado pelo Roberto, 20 ago** | — |
