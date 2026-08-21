@@ -389,7 +389,13 @@
  .v2 footer a{padding:10px 2px;margin:-10px -2px}
  /* module template rows wrap instead of overflowing (except .tick:
     a ticker is a single sliding line and never wraps) */
+ /* .state stacks deliberately, not by accidental wrap (Roberto, 20 Aug):
+    row 1 label+timer, row 2 the progress hairline, row 3 Cancel below.
+    The Cancel anchor keeps a ~45px tap area the ticker way — padding +
+    negative margin — with min-height:0 outranking the global 44px rule. */
  .v2 .state{flex-wrap:wrap;row-gap:10px}
+ .v2 .state .bar{flex-basis:100%}
+ .v2 .state a{min-height:0;padding:17px 14px;margin:-17px -14px}
  .v2 .audio{flex-wrap:wrap;row-gap:10px}
  .v2 .actions{flex-wrap:wrap;row-gap:16px}
  .v2 .vgrid{gap:16px}

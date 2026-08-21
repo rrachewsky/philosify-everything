@@ -87,3 +87,27 @@ prova final.
 - `LegalPage` passa `stat={...}` ao `Ticker`, mas o componente ignora essa prop
   desde a decisão C.4 (30 jul) — o link "Privacy Policy →/Terms of Service →" do
   ticker do Legal nunca renderiza. Não toquei.
+
+## 7. Adendo (21 ago) — Telemetry `.state`: Cancelar embaixo do Analisando
+
+Roberto, do aparelho real: no campo `[Analisando · timer · Cancelar]`, o
+Cancelar deveria ficar embaixo do Analisando. O componente é o `Telemetry`
+(`.state` no kit v2) — no mobile ele quebrava por acaso (`flex-wrap:wrap` a
+≤640px), sem ordem definida.
+
+Fix em `v2-components.css` (bloco ≤640px), 2 declarações:
+
+- `.v2 .state .bar{flex-basis:100%}` — a hairline de progresso ocupa linha
+  própria e força o empilhamento determinístico: linha 1 ANALISANDO + timer,
+  linha 2 barra, linha 3 CANCELAR;
+- `.v2 .state a{min-height:0;padding:17px 14px;margin:-17px -14px}` — mesma
+  receita do ticker: neutraliza o `min-height:44px` global do `responsive.css`
+  e devolve o alvo de toque de ~45px sem inflar a linha de 11px. A caixa de
+  toque fica só em volta do texto (100px de largura) — a linha inteira NÃO é
+  tocável, para um toque perdido não cancelar a análise.
+
+Verificado a 360px (dev + build de produção `535f2105`): label/timer top 183,
+barra 203 (linha própria, 286px), Cancelar embaixo com caixa de 45px;
+`elementFromPoint` acerta a ±14px do texto e erra a +28px. Desktop 1280px
+inalterado (linha única, tudo a top 167). Screenshots:
+`telemetry-360-stacked.png` (dev) e `telemetry-360-PRODUCTION.png`.
