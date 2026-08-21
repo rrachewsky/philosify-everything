@@ -1,14 +1,17 @@
--- Extracted from live Supabase via pg_get_functiondef (db/extract_credit_functions.sql), 21 Aug 2026.
--- The database is the executing copy; this file exists so the repo is no longer blind to it.
+-- Mirror of the live Supabase function. Applied 21 Aug 2026 via
+-- migrations/confirm_reservation_cast_fix.sql (Roberto, SQL Editor:
+-- "Success"). Previous body (extracted same day) assigned the TEXT
+-- parameter to the UUID column with no cast — every confirm failed with
+-- 42804 and the reservation leaked to the reaper. Changes: ::uuid cast in
+-- the credit_reservations UPDATE; analysis_id written directly in the
+-- credit_history INSERT (makes the worker-side PATCH in confirm.js a
+-- redundant belt).
 --
--- Divergences from its siblings, recorded as found (NOT fixed here):
--- * no SECURITY DEFINER and no pinned search_path — the only credit function
---   without both;
--- * p_analysis_id is TEXT here, UUID in release_reservation;
--- * the credit_history INSERT writes analysis_id only into metadata jsonb,
---   never into the analysis_id column (added 21 Aug) — the worker PATCHes the
---   row after the RPC (api/src/credits/confirm.js). Moving the write into
---   this INSERT is the clean follow-up, gated like any live-SQL change.
+-- Still divergent from its siblings, deliberately untouched here:
+-- * no SECURITY DEFINER and no pinned search_path;
+-- * p_analysis_id is TEXT (UUID in release_reservation) — changing the
+--   parameter type would CREATE a second overload instead of replacing,
+--   and PostgREST RPC calls would become ambiguous.
 
 CREATE OR REPLACE FUNCTION public.confirm_reservation(p_reservation_id uuid, p_analysis_id text)
  RETURNS TABLE(success boolean, message text, total integer, purchased integer, free integer)
@@ -47,7 +50,7 @@ BEGIN
 
   UPDATE credit_reservations
   SET status = 'confirmed',
-      analysis_id = p_analysis_id,
+      analysis_id = p_analysis_id::uuid,
       confirmed_at = NOW()
   WHERE id = p_reservation_id;
 
@@ -61,14 +64,15 @@ BEGIN
     purchased_before, purchased_after,
     free_before, free_after,
     total_before, total_after,
-    status, metadata
+    status, metadata, analysis_id
   ) VALUES (
     v_user_id, 'analysis', -1,
     v_purchased + (CASE WHEN v_credit_type = 'paid' THEN 1 ELSE 0 END), v_purchased,
     v_free + (CASE WHEN v_credit_type = 'free' THEN 1 ELSE 0 END), v_free,
     v_total + 1, v_total,
     'completed',
-    jsonb_build_object('reservation_id', p_reservation_id, 'analysis_id', p_analysis_id, 'credit_type', v_credit_type)
+    jsonb_build_object('reservation_id', p_reservation_id, 'analysis_id', p_analysis_id, 'credit_type', v_credit_type),
+    p_analysis_id::uuid
   );
 
   RETURN QUERY SELECT TRUE, 'Reservation confirmed'::TEXT, v_total, v_purchased, v_free;
