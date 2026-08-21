@@ -407,19 +407,34 @@ export async function handleBookAnalyze(
     if (saveFailed) {
       console.error(`[BookAnalysis] CRITICAL: Analysis generated but save failed!`);
     } else {
-      // Constellation Graph Enrichment (Tier 1: rule-based extraction)
-      try {
-        const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
-        const extractionResult = await extractRuleBased(
-          { id: savedRecord.id, ...analysis },
-          "literature",
-          env,
+      // Constellation Graph Enrichment (Tier 1: rule-based extraction).
+      // Best-effort — deferred with a head start so the credit confirm in
+      // index.js claims its subrequests first (same starvation class as the
+      // music path, 21 Aug).
+      const enrich = async () => {
+        try {
+          const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
+          const extractionResult = await extractRuleBased(
+            { id: savedRecord.id, ...analysis },
+            "literature",
+            env,
+          );
+          console.log(
+            `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
+          );
+        } catch (err) {
+          console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+        }
+      };
+      if (ctx?.waitUntil) {
+        ctx.waitUntil(
+          (async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+            await enrich();
+          })(),
         );
-        console.log(
-          `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
-        );
-      } catch (err) {
-        console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+      } else {
+        await enrich();
       }
     }
 

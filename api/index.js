@@ -3159,9 +3159,15 @@ export default {
                 resultData.id,
                 user.userId,
               );
-              console.log(
-                "[Credits] Reservation confirmed - first view of cached analysis, credit consumed",
-              );
+              if (balanceResult?.success) {
+                console.log(
+                  "[Credits] Reservation confirmed - first view of cached analysis, credit consumed",
+                );
+              } else {
+                console.error(
+                  "[Credits] Confirm FAILED after cached first view - reservation left pending, sweeper will handle it",
+                );
+              }
               charged = true;
             } else if (resultData.saveFailed) {
               // RELEASE reservation - don't charge if save failed (can't cache for next time)
@@ -3194,9 +3200,15 @@ export default {
                 resultData.id,
                 user.userId,
               );
-              console.log(
-                "[Credits] Reservation confirmed - credit consumed, logged to history",
-              );
+              if (balanceResult?.success) {
+                console.log(
+                  "[Credits] Reservation confirmed - credit consumed, logged to history",
+                );
+              } else {
+                console.error(
+                  "[Credits] Confirm FAILED after new analysis - reservation left pending, sweeper will handle it",
+                );
+              }
               charged = true;
 
               // Admin notification (best-effort): email bob@philosify.org when a fresh analysis is generated

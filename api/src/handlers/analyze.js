@@ -761,71 +761,89 @@ export async function handleAnalyze(
         `[Philosify] ✓ Analysis saved: ${savedRecord.id} (song_id: ${savedRecord.song_id})`,
       );
 
-      // 8. Auto-create collective and add analysis (fire and forget)
-      // This enables artist fan clubs with analysis feeds
-      if (metadata?.spotify_artist_id && metadata?.artist) {
-        try {
-          const { groupId, created } = await autoCreateCollective(
-            env,
-            metadata.spotify_artist_id,
-            metadata.artist,
-            metadata.artist_image_url || null,
-          );
+      // 8+9 (collective, constellation) are best-effort enrichment. Awaited
+      // inline they can exhaust the invocation's subrequest budget before
+      // index.js confirms the credit (seen live 21 Aug: Collective hit the
+      // cap and the confirm starved, leaving the reservation pending). The
+      // budget is shared either way, so the head start exists to let the
+      // financial path claim its few subrequests first.
+      const enrich = async () => {
+        // 8. Auto-create collective and add analysis
+        // This enables artist fan clubs with analysis feeds
+        if (metadata?.spotify_artist_id && metadata?.artist) {
+          try {
+            const { groupId, created } = await autoCreateCollective(
+              env,
+              metadata.spotify_artist_id,
+              metadata.artist,
+              metadata.artist_image_url || null,
+            );
 
-          if (groupId && savedRecord.id) {
-            // Extract verdict snippet (first 200 chars of summary or philosophical analysis)
-            const verdictSnippet = (
-              analysis.summary ||
-              analysis.philosophical_analysis ||
-              ""
-            )
-              .replace(/<[^>]*>/g, "") // Strip HTML
-              .substring(0, 200);
+            if (groupId && savedRecord.id) {
+              // Extract verdict snippet (first 200 chars of summary or philosophical analysis)
+              const verdictSnippet = (
+                analysis.summary ||
+                analysis.philosophical_analysis ||
+                ""
+              )
+                .replace(/<[^>]*>/g, "") // Strip HTML
+                .substring(0, 200);
 
-            // Extract schools array from schools_of_thought string
-            const schoolsArray = (analysis.schools_of_thought || "")
-              .split(/<br\s*\/?>/i)
-              .map((s) => s.replace(/<[^>]*>/g, "").trim())
-              .filter(Boolean);
+              // Extract schools array from schools_of_thought string
+              const schoolsArray = (analysis.schools_of_thought || "")
+                .split(/<br\s*\/?>/i)
+                .map((s) => s.replace(/<[^>]*>/g, "").trim())
+                .filter(Boolean);
 
-            await addAnalysisToCollective(env, groupId, {
-              analysisId: savedRecord.id,
-              songName: song,
-              score: analysis.final_score || analysis.scorecard?.final_score,
-              schools: schoolsArray,
-              verdictSnippet,
-              userId,
-              language: lang || "en",
-            });
+              await addAnalysisToCollective(env, groupId, {
+                analysisId: savedRecord.id,
+                songName: song,
+                score: analysis.final_score || analysis.scorecard?.final_score,
+                schools: schoolsArray,
+                verdictSnippet,
+                userId,
+                language: lang || "en",
+              });
 
-            console.log(
-              `[Collective] ✓ Analysis added to ${created ? "new" : "existing"} collective for "${metadata.artist}"`,
+              console.log(
+                `[Collective] ✓ Analysis added to ${created ? "new" : "existing"} collective for "${metadata.artist}"`,
+              );
+            }
+          } catch (err) {
+            // Don't fail the analysis if collective creation fails
+            console.error(
+              `[Collective] Error adding to collective:`,
+              err.message,
             );
           }
-        } catch (err) {
-          // Don't fail the analysis if collective creation fails
-          console.error(
-            `[Collective] Error adding to collective:`,
-            err.message,
-          );
         }
-      }
 
-      // 9. Constellation Graph Enrichment (Tier 1: rule-based extraction)
-      // Extracts philosopher mentions and connections from the analysis text
-      try {
-        const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
-        const extractionResult = await extractRuleBased(
-          { id: savedRecord.id, ...analysis },
-          "music",
-          env,
+        // 9. Constellation Graph Enrichment (Tier 1: rule-based extraction)
+        // Extracts philosopher mentions and connections from the analysis text
+        try {
+          const { extractRuleBased } = await import("../extractors/constellation-rule-extractor.js");
+          const extractionResult = await extractRuleBased(
+            { id: savedRecord.id, ...analysis },
+            "music",
+            env,
+          );
+          console.log(
+            `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
+          );
+        } catch (err) {
+          // Non-fatal — the analysis is already saved. Log and continue.
+          console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+        }
+      };
+      if (ctx?.waitUntil) {
+        ctx.waitUntil(
+          (async () => {
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+            await enrich();
+          })(),
         );
-        console.log(
-          `[Constellation] Tier 1: ${extractionResult.conceptLinks} links, ${extractionResult.edgeCandidates} edges`,
-        );
-      } catch (err) {
-        // Non-fatal — the analysis is already saved. Log and continue.
-        console.warn("[Constellation] Tier 1 extraction failed:", err.message);
+      } else {
+        await enrich();
       }
     }
 

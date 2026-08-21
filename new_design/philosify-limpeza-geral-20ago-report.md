@@ -286,7 +286,33 @@ escolha dele vence (cleanup do hook). Comportamento exato da sua decisão.
    `SECURITY DEFINER` e sem `search_path` fixado, e o `p_analysis_id` dela é
    TEXT (UUID em `release_reservation`). Anotado no arquivo versionado.
 
-## Pendências em aberto
+## Verificação pós-SQL (21 ago) — e o que a primeira tentativa expôs
+
+A primeira cobrança real de verificação (análise Grok de "A Hard Day's
+Night", 43s, salvou ✓) **estourou o cap de subrequests da invocação antes do
+confirm**: o auto-create do Collective bateu no limite, e daí em diante
+Constellation, **confirm do crédito**, e-mail e release do lock morreram de
+fome. Três consequências corrigidas no worker `062cfc02`:
+
+1. **Enrichment antes do dinheiro.** No caminho da música (e de books), o
+   Collective + Constellation Tier 1 eram `await`ados dentro do handler,
+   ANTES do confirm em `index.js` — cinema e news já confirmavam primeiro.
+   Agora ambos vão para `ctx.waitUntil` com 3s de head start: o caminho
+   financeiro reclama seus poucos subrequests primeiro; a enrichment fica
+   com o resto do orçamento (que é compartilhado de qualquer forma).
+2. **Log mentiroso.** `index.js` imprimia "Reservation confirmed - credit
+   consumed" incondicionalmente — inclusive quando o confirm tinha acabado
+   de falhar (foi o caso). Os dois pontos agora checam
+   `balanceResult?.success` e falham alto.
+3. A reserva órfã (`cdceb8f9`) ficou `pending`; o cleanup por-usuário
+   (idade 0, roda no balance) devolve o crédito no próximo request do
+   Roberto — análise real entregue de graça. É a face benigna do achado 6
+   (reaper global sem reembolso): quem volta é reembolsado, quem some perde
+   o crédito.
+
+A classe maior — quanto do orçamento de subrequests o caminho de análise
+consome e quão perto do cap ele vive — fica anotada como investigação
+futura, não coube nesta janela.
 
 | # | O quê | De quem |
 |---|---|---|
