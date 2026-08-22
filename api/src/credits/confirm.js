@@ -107,14 +107,19 @@ export async function confirmReservation(env, reservationId, analysisId, userId)
       }
     }
 
+    // The RPC returns (total, purchased, free) — see
+    // db/functions/confirm_reservation.sql. The legacy names (new_total,
+    // credits, free_remaining) belong to release_reservation and were read
+    // here by mistake, yielding undefined balances since forever.
+    const newTotal = result.total ?? result.new_total;
     console.log(
-      `[Credits] Reservation ${reservationId} confirmed. Balance: ${result.new_total}`,
+      `[Credits] Reservation ${reservationId} confirmed. Balance: ${newTotal}`,
     );
     return {
       success: true,
-      newTotal: result.new_total,
-      credits: result.credits,
-      freeRemaining: result.free_remaining,
+      newTotal,
+      credits: result.purchased ?? result.credits,
+      freeRemaining: result.free ?? result.free_remaining,
     };
   } catch (error) {
     console.error(`[Credits] Failed to confirm reservation: ${error.message}`);

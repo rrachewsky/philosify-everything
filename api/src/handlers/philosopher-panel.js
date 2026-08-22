@@ -304,6 +304,7 @@ export async function handlePhilosopherPanel(
           env,
           res.reservationId,
           panelDesc,
+          userId,
         );
       }
 
