@@ -311,8 +311,48 @@ fome. Três consequências corrigidas no worker `062cfc02`:
    o crédito.
 
 A classe maior — quanto do orçamento de subrequests o caminho de análise
-consome e quão perto do cap ele vive — fica anotada como investigação
-futura, não coube nesta janela.
+consome e quão perto do cap ele vive — foi resolvida na sequência (abaixo).
+
+### O dia 21 ago inteiro, em ordem
+
+1. **4.1 verificado ✓** — painel de cinema (Rio Bravo) entrou em
+   `panel_analyses` (`5aeadca4`). Painéis de cinema persistem.
+2. **Bug crítico no RPC, pego ao vivo**: TODA `confirm_reservation` falhava
+   com `column "analysis_id" is of type uuid but expression is of type
+   text` — o UPDATE atribui o parâmetro TEXT à coluna UUID sem cast; o
+   EXCEPTION engole; a reserva fica pendente; o reaper (então sem
+   reembolso) comia o crédito. Dois usuários diferentes no mesmo tail.
+   **Correção aplicada pelo Roberto (gate)**:
+   `migrations/confirm_reservation_cast_fix.sql` (cast `::uuid` +
+   `analysis_id` gravado direto no INSERT do extrato) e
+   `migrations/cleanup_stale_reservations_refund.sql` (reaper global agora
+   reembolsa, `SKIP LOCKED`). Espelhos em `db/functions/` atualizados.
+   5 créditos do Roberto foram consumidos nesse dia com produto entregue
+   (2 análises + painel) mas sem linha de extrato; sem restituição a fazer.
+3. **Mistério dos subrequests resolvido — não há loop.** O contador
+   `[SubreqDiag]` (worker `4b6bf959`) mostrou a análise inteira do
+   "Voyage, Voyage" consumindo ~30-40 fetches — e estourando mesmo assim.
+   Conclusão: **o worker roda no plano FREE (50 subrequests/invocação)** e
+   cada `.get()` do Secrets Store conta. O `getSecret` NÃO cacheava (o
+   comentário no `supabase.js` dizendo que sim era falso) → cada operação
+   Supabase custava 2 subrequests de secret além do fetch → ~20 por
+   análise só de secrets. O confirm, último da fila, morria de fome.
+   Também explica: o cron do minuto 0 pré-stagger, e o "Enriched 36/50"
+   do Cinema (o cap comeu os 14 últimos atores em silêncio).
+4. **Correção**: `getSecret` agora cacheia por isolate (promise em
+   WeakMap, compartilhada por chamadas concorrentes, descartada em
+   rejeição) — worker `29871455`. Economia ≈ 20 subrequests por análise;
+   o caminho volta a caber com folga nos 50.
+5. **Recomendação em aberto (decisão do Roberto)**: Workers Paid
+   (US$ 5/mês) sobe o teto para 1000 e mata a classe inteira — o site
+   opera hoje a ~70-90% do orçamento free nos caminhos pesados.
+6. O `[SubreqDiag]` continua no worker até a rodada final de verificação
+   passar; sai no commit seguinte.
+
+Ruídos anotados no caminho (pré-existentes, sem ação): sondas de bot
+buscando shells `.php` no `api.philosify.org` (respondidas sem erro);
+`[Ads] Record impression error 409` (nonce duplicado — idempotência
+funcionando, log barulhento); `[CORS Debug]` verboso em cada search.
 
 | # | O quê | De quem |
 |---|---|---|
