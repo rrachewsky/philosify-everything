@@ -1,9 +1,9 @@
 // ============================================================
 // SUPABASE CLIENT HELPER
 // ============================================================
-// Resolves credentials fresh each call. getSecret already caches
-// at the secrets layer — no module-level cache here to avoid
-// stale credentials persisting across Worker isolate reuses.
+// Resolves credentials through getSecret each call. getSecret caches
+// resolved Secrets Store values per isolate (each .get() is a subrequest —
+// see secrets.js), so calling this freely costs nothing after warm-up.
 
 import { getSecret } from "./secrets.js";
 
