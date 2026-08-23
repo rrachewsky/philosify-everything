@@ -91,20 +91,8 @@
 .v2 .pg-literature .panel-analysis__section-body p{margin:0 0 12px}
 .v2 .pg-literature .panel-analysis__section-body p:last-child{margin-bottom:0}
 
-/* ---------- Actions row: reused share triggers, monochrome --- */
+/* ---------- Actions row (share triggers styled once in the kit) ---- */
 .v2 .pg-literature .actions{flex-wrap:wrap;align-items:center;row-gap:12px}
-.v2 .pg-literature .actions .share-dm-button,
-.v2 .pg-literature .actions .share-community-btn{background:none;border:0;padding:0;margin:0;cursor:pointer;
- color:var(--low);font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;
- display:inline-flex;align-items:center;gap:0}
-.v2 .pg-literature .actions .share-dm-button:hover,
-.v2 .pg-literature .actions .share-community-btn:hover{color:var(--ink)}
-.v2 .pg-literature .actions .share-dm-button:disabled{opacity:.4;cursor:default}
-.v2 .pg-literature .actions .share-dm-button svg,
-.v2 .pg-literature .actions .share-community-btn svg{display:none}
-.v2 .pg-literature .actions .share-community-container{display:inline-flex;flex-direction:column}
-.v2 .pg-literature .actions .share-community-error{font:400 11px var(--fu);color:var(--warn);
- text-transform:none;letter-spacing:.03em;margin-top:6px}
 
 /* ---------- Ad slot wrapper (mockup .slot; internals untouched) */
 .v2 .pg-literature .adwrap{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px}

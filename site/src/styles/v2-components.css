@@ -232,6 +232,22 @@
    invisible on device, and mobile has no hover to rescue it). */
 .v2 .actions a{color:var(--dim);text-decoration:none;cursor:pointer}
 .v2 .actions a:hover{color:var(--ink)}
+/* Share triggers reused inside the actions row (DM, community) — same
+   control tier as the anchors above. ONE copy: music, cinema, literature
+   and news each carried a byte-identical block of this, which is how the
+   --low contrast bug shipped four times (fixed here 23 Aug). */
+.v2 .actions .share-dm-button,
+.v2 .actions .share-community-btn{background:none;border:0;padding:0;margin:0;cursor:pointer;
+ color:var(--dim);font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;
+ display:inline-flex;align-items:center;gap:0}
+.v2 .actions .share-dm-button:hover,
+.v2 .actions .share-community-btn:hover{color:var(--ink)}
+.v2 .actions .share-dm-button:disabled{opacity:.4;cursor:default}
+.v2 .actions .share-dm-button svg,
+.v2 .actions .share-community-btn svg{display:none}
+.v2 .actions .share-community-container{display:inline-flex;flex-direction:column}
+.v2 .actions .share-community-error{font:400 11px var(--fu);color:var(--warn);
+ text-transform:none;letter-spacing:.03em;margin-top:6px}
 .v2 .slot{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px;display:flex;align-items:center;gap:16px;
  font:400 12px var(--fu);color:var(--mid)}
 .v2 .slot .tag{font:500 9.5px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;color:var(--low);border:1px solid var(--line);padding:4px 8px}
