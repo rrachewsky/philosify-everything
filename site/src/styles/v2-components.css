@@ -323,15 +323,18 @@
    so the canvas shows through (Law §2.1: ground is the black canvas). */
 .v2 footer{background:none;text-align:left;border-top:0;margin:0;border-radius:0}
 .v2 footer a{font:inherit;transition:none}
+/* Footer text sat at --low and read as illegible on device (23 Aug) —
+   the nav links are controls, and even the © line must be readable.
+   Chrome tier at rest, links hover to white. */
 .v2 footer.landing{margin-top:auto;padding:32px 6px 38px;display:flex;justify-content:space-between;align-items:center;
- color:var(--low);font:400 12px/1 var(--fu);letter-spacing:.06em}
+ color:var(--dim);font:400 12px/1 var(--fu);letter-spacing:.06em}
 .v2 footer.landing .brandline{display:flex;align-items:center;gap:5px;color:var(--ink);
  font:400 11px var(--fd);letter-spacing:.14em}
 .v2 footer.module{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:26px 48px 38px;display:flex;justify-content:space-between;align-items:center;
- border-top:1px solid var(--line);color:var(--low);font:400 12px/1 var(--fu);letter-spacing:.06em}
+ border-top:1px solid var(--line);color:var(--dim);font:400 12px/1 var(--fu);letter-spacing:.06em}
 .v2 footer nav{display:flex;gap:22px}
-.v2 footer a{color:var(--low);text-decoration:none}
-.v2 footer a:hover{color:var(--dim)}
+.v2 footer a{color:var(--dim);text-decoration:none}
+.v2 footer a:hover{color:var(--ink)}
 
 /* ---------- Theme bar (landing) ------------------------------- */
 .v2 .themebar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:5;
