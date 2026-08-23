@@ -188,7 +188,10 @@
 /* Chrome voice: placeholders in Inter at the low register (30 Jul audit) */
 .v2 input.f::placeholder,.v2 textarea.f::placeholder{color:var(--low);opacity:1}
 .v2 input.f:focus,.v2 textarea.f:focus{border-color:var(--strong)}
-.v2 label.f{display:block;font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--low);margin:16px 0 7px}
+/* Form labels are read, not ambient — chrome tier (Roberto, 23 Aug:
+   "só os textos" — reading texts rise, controls like .mhead .x and
+   inactive .tab stay whispered by his ruling). */
+.v2 label.f{display:block;font:500 10px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:16px 0 7px}
 
 /* Explicit post-scan panel convocation (30 Jul): secondary button with
    the cost pill — cost-transparency silver, the region's one silver. */
@@ -285,7 +288,7 @@
 .v2 .hrow .id{font:400 11px var(--fd);color:var(--low)}
 .v2 .hrow .t{font:400 12.5px var(--fd);letter-spacing:.08em;color:var(--ink)}
 .v2 .hrow .m{font:500 9.5px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-.v2 .hrow .d{font:400 12px var(--fu);color:var(--low)}
+.v2 .hrow .d{font:400 12px var(--fu);color:var(--dim)}
 .v2 .mnote{font:400 11.5px var(--fu);color:var(--mid);margin-top:16px;letter-spacing:.03em}
 
 /* ---------- Auth (auth mockup; card renamed from .acard) ------ */
@@ -314,7 +317,7 @@
 /* ---------- Landing pieces (master) --------------------------- */
 /* Masthead, tagline and account rail retired (C.3): the brand and the
    session chrome live only in the fixed header band. */
-.v2 .selectline{font:500 10.5px/1 var(--fu);letter-spacing:.22em;text-transform:uppercase;color:var(--low)}
+.v2 .selectline{font:500 10.5px/1 var(--fu);letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
 .v2 .modules{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 
 /* ---------- Footers ------------------------------------------- */
