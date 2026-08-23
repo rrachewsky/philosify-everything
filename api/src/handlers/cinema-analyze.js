@@ -420,6 +420,20 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
       // Also log save status for debugging
       console.log(`[CinemaAnalyze] Save status - Supabase: ${savedRecord ? 'OK (ID: ' + savedRecord.id + ')' : 'FAILED'}, KV key: ${cacheKey}`);
 
+      // Confirm credit (skipped for already-owned films) BEFORE the
+      // enrichment below — the financial path claims its subrequests first
+      // (same ordering fix as music/books, 21 Aug). The real analysis UUID
+      // links the statement row; the description string is the fallback
+      // when the Supabase save failed but KV kept the analysis.
+      if (reservation) {
+        await confirmReservation(
+          env,
+          reservation.reservationId,
+          savedRecord?.id || `cinema-analysis:${title.substring(0, 50)}`,
+          userId,
+        );
+      }
+
       // Constellation Graph Enrichment (Tier 1: rule-based extraction)
       if (savedRecord?.id) {
         try {
@@ -435,11 +449,6 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
         } catch (err) {
           console.warn("[Constellation] Tier 1 extraction failed:", err.message);
         }
-      }
-
-      // Confirm credit (skipped for already-owned films)
-      if (reservation) {
-        await confirmReservation(env, reservation.reservationId, `cinema-analysis:${title.substring(0, 50)}`);
       }
 
       return jsonResponse(result, 200, origin, env);
