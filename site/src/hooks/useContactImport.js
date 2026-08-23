@@ -179,9 +179,15 @@ export function useContactImport() {
         }
       }
 
-      // Fall back to WhatsApp
+      // Fall back to WhatsApp. Top-level navigation on mobile — wa.me only
+      // deep-links into the app from the tab itself, not from window.open
+      // (same fix as ShareButton, 23 Aug).
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        window.location.href = whatsappUrl;
+      } else {
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      }
       return true;
     },
     [getInviteLink, t]

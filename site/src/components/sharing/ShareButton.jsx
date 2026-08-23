@@ -70,19 +70,24 @@ export function ShareButton({ analysisId, songName, artist, shareUrl: directShar
 
     switch (platform) {
       case 'whatsapp': {
+        // wa.me deep-links into the installed app on both OSes — but only
+        // on a top-level navigation (see the open logic below). The old
+        // Android intent:// with a hard package pin sent users without the
+        // exact package to the Play Store instead of falling back.
         const whatsappText = encodeURIComponent(shareText + '\n\n' + shareUrl);
-        const isAndroid = /Android/i.test(navigator.userAgent);
-        targetUrl = isAndroid
-          ? `intent://send?text=${whatsappText}#Intent;package=com.whatsapp;scheme=whatsapp;end`
-          : `https://wa.me/?text=${whatsappText}`;
+        targetUrl = `https://wa.me/?text=${whatsappText}`;
         break;
       }
 
       case 'whatsapp-business': {
+        // Business is a distinct package only on Android; the intent falls
+        // back to wa.me (any WhatsApp) when it is not installed, instead of
+        // dumping the user on the Play Store page.
         const wabText = encodeURIComponent(shareText + '\n\n' + shareUrl);
         const isAndroidWab = /Android/i.test(navigator.userAgent);
+        const wabFallback = encodeURIComponent(`https://wa.me/?text=${wabText}`);
         targetUrl = isAndroidWab
-          ? `intent://send?text=${wabText}#Intent;package=com.whatsapp.w4b;scheme=whatsapp;end`
+          ? `intent://send?text=${wabText}#Intent;package=com.whatsapp.w4b;scheme=whatsapp;S.browser_fallback_url=${wabFallback};end`
           : `https://wa.me/?text=${wabText}`;
         break;
       }
@@ -138,8 +143,19 @@ export function ShareButton({ analysisId, songName, artist, shareUrl: directShar
         return;
     }
 
-    // Open share URL
-    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+    // App deep links must be TOP-LEVEL navigations: universal links
+    // (wa.me), intent:// and viber:// do not fire from window.open into a
+    // new tab — the user lands on the app's download page instead (bug
+    // reported live, 23 Aug). On mobile, navigate the tab itself; the
+    // browser hands off to the app and Back returns to the site. Desktop
+    // keeps the new tab (wa.me → WhatsApp Web, line.me → web share).
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isAppDeepLink = ['whatsapp', 'whatsapp-business', 'viber', 'line'].includes(platform);
+    if (isMobile && isAppDeepLink) {
+      window.location.href = targetUrl;
+    } else {
+      window.open(targetUrl, '_blank', 'noopener,noreferrer');
+    }
     setToast({ type: 'success', message: t('share.shareSuccess') });
     setLoading(false);
   };
