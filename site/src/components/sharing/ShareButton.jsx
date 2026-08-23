@@ -70,12 +70,18 @@ export function ShareButton({ analysisId, songName, artist, shareUrl: directShar
 
     switch (platform) {
       case 'whatsapp': {
-        // wa.me deep-links into the installed app on both OSes — but only
-        // on a top-level navigation (see the open logic below). The old
-        // Android intent:// with a hard package pin sent users without the
-        // exact package to the Play Store instead of falling back.
+        // Android: pin the regular package (Beta shares it) — bare wa.me
+        // resolves to whatever app the user set as default for WhatsApp
+        // links, which sent BOTH buttons to Business on a device that has
+        // both apps (Roberto, 23 Aug). The fallback covers the pin's old
+        // failure mode: no regular WhatsApp → wa.me, never the Play Store.
+        // iOS: wa.me (no package targeting exists there).
         const whatsappText = encodeURIComponent(shareText + '\n\n' + shareUrl);
-        targetUrl = `https://wa.me/?text=${whatsappText}`;
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const waFallback = encodeURIComponent(`https://wa.me/?text=${whatsappText}`);
+        targetUrl = isAndroid
+          ? `intent://send?text=${whatsappText}#Intent;package=com.whatsapp;scheme=whatsapp;S.browser_fallback_url=${waFallback};end`
+          : `https://wa.me/?text=${whatsappText}`;
         break;
       }
 
