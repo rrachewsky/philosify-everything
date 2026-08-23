@@ -227,7 +227,10 @@
 .v2 .xcard .body{display:none;margin-top:14px;font:400 16.5px/1.75 var(--fp);color:var(--ink)}
 .v2 .xcard.open .body{display:block}
 .v2 .actions{display:flex;gap:22px;margin-top:24px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase}
-.v2 .actions a{color:var(--low);text-decoration:none;cursor:pointer}
+/* Actions are controls the user must FIND — chrome tier at rest (ruling
+   31 Jul: functional text never whispers; --low resting state was near
+   invisible on device, and mobile has no hover to rescue it). */
+.v2 .actions a{color:var(--dim);text-decoration:none;cursor:pointer}
 .v2 .actions a:hover{color:var(--ink)}
 .v2 .slot{border:1px dashed var(--strong);padding:16px 20px;margin-top:24px;display:flex;align-items:center;gap:16px;
  font:400 12px var(--fu);color:var(--mid)}
@@ -436,5 +439,6 @@ html:is(:lang(zh),:lang(ja),:lang(ko),:lang(hi),:lang(ar),:lang(he),:lang(fa),:l
    own colours, with the same clear space. Change it there, once. */
 .v2 .sharetray{border:1px solid var(--line);background:var(--bgcell);margin-top:14px}
 .v2 .sharetray .share-button__container{align-items:flex-start;gap:14px;padding:18px 20px}
+/* Instruction copy the user must read — chrome tier, not whisper. */
 .v2 .sharetray .share-button__container p{font:500 10.5px/1.6 var(--fu);letter-spacing:.14em;
- text-transform:uppercase;color:var(--low);margin:0}
+ text-transform:uppercase;color:var(--dim);margin:0}
