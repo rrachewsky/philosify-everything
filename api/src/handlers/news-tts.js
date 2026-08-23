@@ -1,7 +1,7 @@
 // ============================================================
-// NEWS/PANEL TTS — Parallel chunk generation with voice rotation.
-// Splits long texts into chunks, generates in parallel with
-// different voices per chunk, adds silence gaps, concatenates.
+// NEWS/PANEL TTS — Parallel chunk generation, one voice per audio.
+// Splits long texts into chunks, generates in parallel with a single
+// hash-picked voice, adds silence gaps, concatenates.
 // ============================================================
 
 import { jsonResponse, getCorsHeaders, sanitizeErrorMessage } from "../utils/index.js";
@@ -167,7 +167,8 @@ function expandAcronyms(text, lang) {
   return result;
 }
 
-// Rotate through Gemini TTS voices for each chunk
+// Gemini TTS voices — one is chosen per audio (from the content hash),
+// never rotated within an audio (see handleNewsTTS).
 const VOICES = ["Puck", "Charon", "Kore", "Fenrir", "Aoede"];
 
 async function ttsCall(text, apiKey, voiceName = "Puck") {
@@ -326,13 +327,17 @@ export async function handleNewsTTS(request, env, origin) {
       remaining = remaining.substring(splitAt + 1).trim();
     }
 
-    console.log(`[NewsTTS] ${chunks.length} chunks, generating in parallel with voice rotation...`);
+    // ONE voice for the whole audio, picked from the content hash — varied
+    // across audios, never within one. Chunks are length-slices of a single
+    // narration; per-chunk rotation changed the narrator mid-story and each
+    // Gemini voice sits at a different loudness (Roberto, 23 Aug: sections
+    // 1-2 male and quiet, section 3 female and much louder).
+    const voice = VOICES[parseInt(textHash.substring(0, 8), 16) % VOICES.length];
+    console.log(`[NewsTTS] ${chunks.length} chunks, generating in parallel, voice: ${voice}`);
 
-    // Generate all chunks in parallel, each with a different voice
     const pcmResults = await Promise.all(
       chunks.map((chunk, i) => {
-        const voice = VOICES[i % VOICES.length];
-        console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunk.length} chars, voice: ${voice}`);
+        console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunk.length} chars`);
         return ttsCall(chunk, apiKey, voice);
       })
     );
