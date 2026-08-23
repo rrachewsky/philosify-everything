@@ -399,6 +399,17 @@ funcionando, log barulhento); `[CORS Debug]` verboso em cada search.
   (`com.whatsapp` / `com.whatsapp.w4b`) com fallback wa.me, nunca Play
   Store. Viber/Line herdaram a navegação correta; mesmo fix no convite
   de contatos.
+- **Passada de contraste — texto funcional nunca sussurra** (`97eccf4`,
+  `aed7baa`, `4c71ed8`, `df6b794`; Pages final `e3565b1f`). Relato do
+  aparelho: textos em `--low` (#5E5E65 sobre #070708, ~2,4:1) quase
+  imperceptíveis. Subiram para o tier chrome (`--dim`): fileira de ações
+  (Compartilhar etc.), instruções do share tray, botões de DM/comunidade
+  (as 4 alas carregavam cópia byte-idêntica página a página em --low —
+  consolidadas numa regra do kit), rodapé inteiro (© + Terms/Privacy,
+  hover branco), rótulos de formulário, datas do histórico, selectline.
+  **Regra ratificada pelo Roberto ("eu só quero os textos")**: textos de
+  leitura sobem; controles sussurrados por desenho (X de modal, abas
+  inativas) e ambientes (HUD, tags, chevrons, placeholders) ficam.
 
 | # | O quê | De quem |
 |---|---|---|
