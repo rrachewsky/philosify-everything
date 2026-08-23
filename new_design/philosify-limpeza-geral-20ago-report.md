@@ -354,6 +354,36 @@ buscando shells `.php` no `api.philosify.org` (respondidas sem erro);
 `[Ads] Record impression error 409` (nonce duplicado — idempotência
 funcionando, log barulhento); `[CORS Debug]` verboso em cada search.
 
+### 23 ago — release quebrado, ciclo do confirm fechado, TTS diagnosticado
+
+- **Confirm + patch VERIFICADOS ✓** (painel Realize, 14:32 UTC): 3 confirms
+  com `credit_history patched (metadata)` e `Balance: 197` real. As
+  correções de 21-22 ago (cast, userId no painel, mapeamento de colunas)
+  todas provadas em produção.
+- **Terceiro bug de banco da família**: `release_reservation` falha com
+  `column reference "free_remaining" is ambiguous` — os nomes do RETURNS
+  TABLE colidem com as colunas de `credits` sob o
+  `variable_conflict=error` padrão do plpgsql. Releases diretos (re-view
+  de cache, análise falhada) **provavelmente falham desde sempre**,
+  mascarados por log incondicional, vazando reservas para o reaper (que
+  até 21 ago não reembolsava: re-view de cache = cobrança silenciosa).
+  O confirm escapou porque o autor qualificou as colunas com alias.
+  SQL no gate: `migrations/release_reservation_variable_conflict.sql`
+  (`#variable_conflict use_column`, corpo idêntico).
+- **TTS lento diagnosticado com evidência** (relato do Roberto: 4-5 min,
+  "para e recomeça"): tail pegou `POST /api/news/tts - Canceled` (3
+  chunks Gemini disparados, cliente desconectado, nada salvo) seguido de
+  retry `Ok` em ~2 min com `Done: 24.7MB → R2 SAVED`. A geração
+  (~100-120s) fica em cima do corte de ~100s da borda Cloudflare (524):
+  às vezes entrega, às vezes morre e o player retenta, duplicando
+  gerações e queimando chamadas Gemini. Sem trava de deduplicação por
+  chave de cache. Agravante: WAV cru de 24,7 MB. **Fix arquitetural para
+  próxima ordem**: `/api/tts` devolve 202 + chave de job, gera em
+  `ctx.waitUntil`, player consulta status; mínimo: trava KV por chave.
+- Aprendizado de schema: `credits.total` é coluna gerada também no banco
+  vivo; o "zero balance" após edição manual era cache do frontend
+  (CreditsContext não recarrega sozinho).
+
 | # | O quê | De quem |
 |---|---|---|
 | 1 | ~~Rodar 4.1 + 4.2 no SQL Editor~~ **confirmado pelo Roberto, 21 ago ("1 e 2 sucesso")** | — |
