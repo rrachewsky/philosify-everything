@@ -383,6 +383,22 @@ funcionando, log barulhento); `[CORS Debug]` verboso em cada search.
 - Aprendizado de schema: `credits.total` é coluna gerada também no banco
   vivo; o "zero balance" após edição manual era cache do frontend
   (CreditsContext não recarrega sozinho).
+- **TTS voz única por áudio** (`3200e4b`, worker `6cf107d3`): o
+  news/panel TTS rodava as vozes por chunk (Puck/Charon/Kore...) — o
+  narrador trocava de voz no meio e cada voz tem loudness própria
+  (relato: seções 1-2 masculinas baixas, seção 3 feminina alta). Voz
+  agora é escolhida uma vez por áudio, do hash do conteúdo; o WAV
+  defeituoso foi purgado do R2. Normalização DSP + arquitetura assíncrona
+  (202+polling) ficam para a ordem do TTS.
+- **Share do WhatsApp consertado e confirmado no aparelho** (`fdd3306` +
+  `fcae972`, Pages `382847b1`): deep links de app não disparam de
+  `window.open` — em nova aba o wa.me vira página de download. No mobile
+  a navegação agora é de nível superior; e com os dois apps instalados
+  (um número em cada), o wa.me puro resolvia para o handler padrão
+  (Business) — cada botão pina seu pacote no Android
+  (`com.whatsapp` / `com.whatsapp.w4b`) com fallback wa.me, nunca Play
+  Store. Viber/Line herdaram a navegação correta; mesmo fix no convite
+  de contatos.
 
 | # | O quê | De quem |
 |---|---|---|
