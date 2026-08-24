@@ -410,6 +410,15 @@ funcionando, log barulhento); `[CORS Debug]` verboso em cada search.
   **Regra ratificada pelo Roberto ("eu só quero os textos")**: textos de
   leitura sobem; controles sussurrados por desenho (X de modal, abas
   inativas) e ambientes (HUD, tags, chevrons, placeholders) ficam.
+- **Fileira de ações nivelada no mobile** (`22f1668`, Pages `92a3c965`,
+  **confirmado pelo Roberto 24 ago**): o min-height:44px global inflava
+  `<a>` e `<button>` diferente (botão centraliza o texto na caixa de
+  toque, link deixava no topo) — "Compartilhar" desnivelado do "via DM".
+  Links da fileira agora são inline-flex centralizados; lado a lado
+  nivelados quando cabem, quebra alinhada pela esquerda quando não.
+  Medido a 360px: texto dos dois na mesma altura exata, taps de 44px
+  intactos. Mesmo mecanismo do ticker (memória
+  responsive-css-touch-target-hazard confirmada de novo).
 
 | # | O quê | De quem |
 |---|---|---|
