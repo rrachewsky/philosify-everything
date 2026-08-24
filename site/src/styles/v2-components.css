@@ -229,11 +229,16 @@
 .v2 .xcard .chev{font:400 11px var(--fu);color:var(--low);letter-spacing:.1em}
 .v2 .xcard .body{display:none;margin-top:14px;font:400 16.5px/1.75 var(--fp);color:var(--ink)}
 .v2 .xcard.open .body{display:block}
-.v2 .actions{display:flex;gap:22px;margin-top:24px;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase}
+.v2 .actions{display:flex;gap:22px;margin-top:24px;align-items:center;font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase}
 /* Actions are controls the user must FIND — chrome tier at rest (ruling
    31 Jul: functional text never whispers; --low resting state was near
    invisible on device, and mobile has no hover to rescue it). */
-.v2 .actions a{color:var(--dim);text-decoration:none;cursor:pointer}
+/* inline-flex + centering so anchors and buttons stay LEVEL when the
+   global ≤560px min-height:44px inflates them: buttons center text in
+   the tap box, plain anchors leave it at the top — the ticker's 44px
+   mechanism again, seen here as "Compartilhar" riding higher than
+   "via DM" on mobile (Roberto, 23 Aug). */
+.v2 .actions a{display:inline-flex;align-items:center;color:var(--dim);text-decoration:none;cursor:pointer}
 .v2 .actions a:hover{color:var(--ink)}
 /* Share triggers reused inside the actions row (DM, community) — same
    control tier as the anchors above. ONE copy: music, cinema, literature
