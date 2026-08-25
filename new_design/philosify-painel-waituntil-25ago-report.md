@@ -1,10 +1,11 @@
 # Painel com waitUntil: gate aplicado e no ar (25 ago)
 
-**Status: itens 1 e 2 deployados e verificados em produção** (worker
-`philosify-api-production`, versão `9118ddd8-6903-4195-8466-288626669851`, health
-OK em `api.philosify.org` e workers.dev). **Item 3 preparado, NÃO aplicado** —
-bloco no §4, aguardando o "Success" de Roberto. Base: diagnóstico aprovado de
-`philosify-painel-creditos-25ago-report.md`; código anterior `d8681ba`.
+**Status: gate completo.** Itens 1 e 2 deployados e verificados em produção
+(worker `philosify-api-production`, versão `9118ddd8-6903-4195-8466-288626669851`,
+health OK em `api.philosify.org` e workers.dev). **Item 3 aplicado por Roberto no
+SQL Editor em 25 ago ("Success. No rows returned" — resposta padrão de DDL);
+espelhos em `db/functions/` atualizados na sequência.** Base: diagnóstico
+aprovado de `philosify-painel-creditos-25ago-report.md`; código anterior `d8681ba`.
 
 ---
 
@@ -125,7 +126,7 @@ para o Grok, mas é o segundo bloqueio visto em produção.
 
 ---
 
-## 4. Item 3 — migração do reembolso visível (RODAR SÓ APÓS APROVAÇÃO)
+## 4. Item 3 — migração do reembolso visível (APLICADA em 25 ago)
 
 Arquivo: `migrations/credit_refund_history.sql` (gated). O que faz: os três
 caminhos de devolução — `release_reservation`, `cleanup_stale_reservations`

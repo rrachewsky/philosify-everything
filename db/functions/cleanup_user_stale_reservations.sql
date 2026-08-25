@@ -1,6 +1,10 @@
--- Extracted from live Supabase via pg_get_functiondef (db/extract_credit_functions.sql), 21 Aug 2026.
--- The database is the executing copy; this file exists so the repo is no longer blind to it.
--- Unlike cleanup_stale_reservations (the global reaper), this one DOES refund.
+-- Mirror of the live Supabase function. Applied 25 Aug 2026 via
+-- migrations/credit_refund_history.sql (Roberto, SQL Editor: "Success");
+-- previous body extracted 21 Aug (already refunded, unlike the pre-21-Aug
+-- global reaper). Change on 25 Aug: best-effort type='refund' INSERT into
+-- credit_history per reaped reservation, in its own exception sub-block —
+-- a history failure raises a WARNING and never blocks the sweep or undoes
+-- the refund.
 
 CREATE OR REPLACE FUNCTION public.cleanup_user_stale_reservations(p_user_id uuid, p_age_minutes integer DEFAULT 5)
  RETURNS TABLE(released_count integer, new_total integer, message text)
@@ -12,6 +16,9 @@ DECLARE
   v_released_count INTEGER := 0;
   v_reservation RECORD;
   v_new_total INTEGER;
+  v_purchased INTEGER;
+  v_free INTEGER;
+  v_total INTEGER;
 BEGIN
   -- Find and release stale reservations for this user
   FOR v_reservation IN
@@ -41,6 +48,30 @@ BEGIN
         release_reason = 'user_timeout_cleanup',
         released_at = NOW()
     WHERE id = v_reservation.id;
+
+    -- Statement line for the refund. Best-effort: never blocks the sweep.
+    BEGIN
+      SELECT total, purchased, free_remaining
+      INTO v_total, v_purchased, v_free
+      FROM credits
+      WHERE user_id = p_user_id;
+      INSERT INTO credit_history (
+        user_id, type, amount,
+        purchased_before, purchased_after,
+        free_before, free_after,
+        total_before, total_after,
+        status, metadata
+      ) VALUES (
+        p_user_id, 'refund', 1,
+        v_purchased - (CASE WHEN v_reservation.credit_type = 'paid' THEN 1 ELSE 0 END), v_purchased,
+        v_free - (CASE WHEN v_reservation.credit_type = 'free' THEN 1 ELSE 0 END), v_free,
+        v_total - 1, v_total,
+        'completed',
+        jsonb_build_object('reservation_id', v_reservation.id, 'reason', 'user_timeout_cleanup', 'credit_type', v_reservation.credit_type)
+      );
+    EXCEPTION WHEN OTHERS THEN
+      RAISE WARNING 'refund history insert failed for reservation %: %', v_reservation.id, SQLERRM;
+    END;
 
     v_released_count := v_released_count + 1;
   END LOOP;
