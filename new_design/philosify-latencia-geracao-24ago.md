@@ -1,15 +1,20 @@
-# Latência de geração — diagnóstico e opções (24 ago 2026)
+# Latência de geração — diagnóstico e plano de aceleração (24 ago 2026)
 
 **Sintoma relatado (Roberto, 24 ago):** análises normais levavam ~40–50s, painel dos
 filósofos ~60s, áudios ~60s. Agora os três fluxos passam de 120s.
 
+**Decisão do Roberto (24 ago):** *"não quero trocar os modelos. Segue com o Grok na
+análise e o Gemini no tts."* — Todo o plano abaixo respeita essa condição: **nenhuma
+troca de modelo, nenhuma redução de effort/tokens, nenhuma mudança que toque a
+qualidade do resultado.** Só engenharia de pipeline.
+
 **Fato central:** nenhum commit recente tocou o caminho de IA. Os IDs de modelo estão
-fixos desde 9–20 de julho (`grok-4.5`, `claude-opus-4-8`, `gpt-5.5`, `gemini-3.5-flash`)
-e os commits de agosto no worker só **aceleraram** o pipeline (cache de secrets,
-enriquecimento diferido). A regressão simultânea nos três fluxos aponta para
-**latência do lado dos provedores** (xAI, Anthropic, Gemini TTS preview — todos serviços
-de carga compartilhada), **amplificada pela nossa arquitetura de retry/fallback e pelo
-teto de ~100s da borda Cloudflare**.
+fixos desde 9–20 de julho (`grok-4.5`, `claude-opus-4-8`, `gpt-5.5`, `gemini-3.5-flash`,
+TTS `gemini-3.1-flash-tts-preview`) e os commits de agosto no worker só **aceleraram**
+o pipeline (cache de secrets, enriquecimento diferido). A regressão simultânea nos
+três fluxos aponta para **latência do lado dos provedores**, **amplificada pelos
+multiplicadores da nossa arquitetura** — retries escondidos, o teto de ~100s da borda
+Cloudflare e loops de retry do cliente que recomeçam a geração do zero.
 
 ---
 
@@ -17,60 +22,66 @@ teto de ~100s da borda Cloudflare**.
 
 ### 1.1 Análise normal de música (`/api/analyze`)
 
-Pipeline sequencial: cache Supabase (~1–2s) → letra Genius/Letras (~2–5s) → Spotify
-(~1–2s) → guia no KV (<1s) → **chamada de IA (o grosso)** → parse + save (~2–3s).
+Pipeline **sequencial**: cache Supabase (~1–2s) → letra Genius/Letras (~2–5s) →
+Spotify (~1–2s) → guia no KV (<1s) → **chamada de IA (o grosso)** → proof + save +
+PATCH de metadata (~2–4s).
 
 A chamada de IA (`api/src/ai/orchestrator.js`):
 
 | Modelo | ID em produção | Tipo | Timeout | max_tokens |
 |---|---|---|---|---|
 | grok (padrão) | `grok-4.5` | reasoning | 90s | 8000 |
-| claude | `claude-opus-4-8` | adaptive thinking, effort medium | **nenhum** (SDK: 10 min) | 16000 |
-| openai | `gpt-5.5` | reasoning | 120s | 8000 |
-| gemini | `gemini-3.5-flash` | — | 55–90s | — |
+| claude (fallback) | `claude-opus-4-8` | adaptive thinking, effort medium | **nenhum** (SDK: 10 min) | 16000 |
+| openai (fallback) | `gpt-5.5` | reasoning | 120s | 8000 |
+| gemini (fallback) | `gemini-3.5-flash` | — | 55–90s | — |
 
-Todos os quatro são da categoria pesada/reasoning — não há um "modo rápido" em produção.
+**Multiplicador nº 1 — retry escondido:** o orquestrador faz **2 tentativas por
+modelo** antes do fallback. Um timeout do Grok (90s) ou um JSON incompleto custa uma
+geração inteira a mais: 90s + 40–60s = 130–150s — exatamente o "mais de 120s".
+No tail aparece como `[Orchestrator] Attempt 2/2`; o usuário não vê nada.
 
-**O multiplicador escondido:** o orquestrador faz **2 tentativas por modelo** e depois
-desce a cadeia de fallback (2 tentativas em cada). Uma única falha silenciosa
-(timeout de 90s do Grok, ou JSON incompleto que reprova em
-`isCompleteNormalizedAnalysis`) custa **uma geração inteira a mais**:
-90s (timeout) + 40–60s (retry com sucesso) = 130–150s — exatamente o "mais de 120s".
-O usuário não vê nada disso; no tail aparece como `[Orchestrator] Attempt 2/2` ou
-troca de modelo.
-
-**O segundo multiplicador:** a borda da Cloudflare corta respostas em ~100s (erro 524).
-Se a geração total passa disso, o cliente recebe erro/retenta e o tempo percebido
-dobra. Já flagramos esse padrão no TTS em 22 ago (Canceled ~100s → retry → ~2min).
+**Multiplicador nº 2 — o teto da borda:** a Cloudflare corta respostas em ~100s (524).
+Geração que passa disso morre na entrega e o cliente retenta do zero.
 
 ### 1.2 Painel dos filósofos (`/api/philosopher-panel`)
 
-Uma única chamada gera o texto inteiro (~4–5k tokens) com a **configuração mais lenta
-de todo o stack**: Claude Opus 4.8 + adaptive thinking (effort medium, max 16k tokens).
-Só o thinking pode levar 30–60s; a escrita de ~4k tokens vem depois.
+Uma única chamada gera ~4–5k tokens com Claude Opus 4.8 + adaptive thinking (effort
+medium) — a configuração mais pesada do stack; fallback Grok → Gemini.
 
-Agravante: `callClaude` **não configura timeout** — o default do SDK Anthropic é
-10 minutos. Se a Anthropic está lenta/sobrecarregada, o worker espera em vez de cair
-para o fallback (Grok → Gemini); quem "resolve" é a borda aos ~100s, com 524 e retry
-do cliente do zero.
+Agravantes de engenharia (independentes do modelo):
+- `callClaude` **não configura timeout** — default do SDK Anthropic é 10 minutos. Se a
+  Anthropic engasga, o worker espera; quem "resolve" é a borda aos ~100s, com 524.
+- **Sem trava de duplicata em voo**: um retry do cliente após 524 dispara uma SEGUNDA
+  geração completa em paralelo — e as duas reservam e confirmam 3 créditos cada.
+- Reservas e confirmações de crédito: 3 RPCs sequenciais em cada ponta (~1–3s no total).
 
-### 1.3 Áudios — dois pipelines distintos
+### 1.3 Áudios — dois pipelines, ambos Gemini *(corrigido em 24 ago)*
 
-- **Áudio de análise (`/api/tts`, OpenAI TTS):** os chunks de ~4000 chars são gerados
-  **em sequência** (`api/src/handlers/tts.js:407`). Análise longa = 3–4 chunks ×
-  20–40s cada = 60–160s. É o único lugar onde a lentidão é 100% nossa, não do provedor.
-- **Áudio de painel/notícia (`/api/news/tts`, Gemini TTS preview):** chunks já em
-  paralelo — o tempo total é o chunk mais lento (30–90s, o preview varia muito) e o
-  teto de 100s da borda; passou disso, o player retenta e paga tudo de novo, porque a
-  primeira resposta morre antes de gravar no R2.
+> Correção do diagnóstico da manhã: o `/api/tts` vivo roteia para `handleGeminiTTS`
+> (`api/src/tts/gemini.js`); o handler OpenAI em `handlers/tts.js` só atende a rota
+> legacy `/api/tts-legacy`. Roberto está certo: **é Gemini nos dois áudios.**
+
+- **Áudio de análise (`/api/tts` → podcast 4 vozes):** os 4 chunks de TTS já saem
+  **em paralelo**, com retry/backoff por chunk (1s/2s/4s em 429/5xx). Antes do TTS há
+  passos seriais de LLM: tradução (se precisar) + geração das perguntas da
+  apresentadora via `gemini-2.5-flash` (~5–15s somados). Tempo total ≈ pré-passos +
+  chunk mais lento (o preview de TTS varia de 30 a 90s sob carga).
+- **Áudio de painel/notícia (`/api/news/tts`):** chunks de ~3000 chars em paralelo,
+  **mas sem nenhum retry** — um único 429/503 do Gemini derruba o áudio inteiro e o
+  usuário paga tudo de novo no retry.
+
+**Multiplicador nº 3 — o loop de retry do cliente:** `ttsCache.js` aborta aos 120s e
+retenta até 2× (2s de intervalo). Nenhum dos dois handlers recebe `ctx`, então quando
+o cliente desconecta (524/abort) a geração em andamento **não termina nem grava no
+R2** — o retry recomeça do zero em vez de achar cache. Foi exatamente o comportamento
+visto no aparelho em 22 ago ("parou em 2 minutos e recomeçou").
 
 ---
 
-## 2. Como confirmar a causa (antes de mexer em qualidade)
+## 2. Como confirmar a causa (medição, custo zero)
 
-Temos histórico gravado: cada análise salva `analysis_duration_ms` (tempo puro da IA,
-sem letra/Spotify/save). Um SELECT no SQL Editor mostra a tendência por dia e por
-modelo — se a média subiu sem deploy nosso, é o provedor; leitura pura, sem gate:
+Cada análise grava `analysis_duration_ms` (tempo puro da IA). Um SELECT no SQL Editor
+mostra a tendência por dia e modelo — leitura pura, sem gate:
 
 ```sql
 select date_trunc('day', created_at) as dia,
@@ -86,53 +97,66 @@ order by 1 desc, 2;
 ```
 
 Complemento: uma análise disparada com o tail ligado mostra na hora se houve
-`Attempt 2` ou troca de modelo (o multiplicador escondido do §1.1).
+`Attempt 2` ou troca de modelo.
 
 ---
 
-## 3. Opções de aceleração × efeito na qualidade
+## 3. Plano de aceleração — modelos e qualidade intocados
 
-Guarda-costas que ficam de pé em qualquer cenário: o gate de completude
-(`isCompleteNormalizedAnalysis`), a validação de cache (`validateAndCleanCache`) e o
-guia como framework vinculante nos system prompts. Modelo mais rápido afeta
-**profundidade da prosa**, não a estrutura do scorecard.
+Nada abaixo muda modelo, prompt, effort, temperatura ou max_tokens. A qualidade sai
+idêntica byte a byte no caminho feliz; o que muda é a eliminação dos multiplicadores.
 
-### Camada A — custo zero de qualidade (só engenharia)
+### P1 — Análise de música
 
-| # | Mudança | Ganho | Efeito na qualidade |
-|---|---|---|---|
-| A1 | Timeout explícito no `callClaude` (~70s) | Painel cai para o fallback antes da borda matar tudo; elimina o pior caso de 100s+retry | Nenhum quando o Claude responde; no fallback o painel sai do Grok 4.5 (mesmo rigor, sabor diferente) |
-| A2 | Após **timeout**, não repetir o mesmo modelo — cair direto para o próximo (retry só para JSON incompleto) | Corta o cenário 90s+90s; pior caso cai pela metade | Nenhum — o modelo que estourou timeout raramente responde na 2ª |
-| A3 | Paralelizar chunks do `/api/tts` (igual ao news-tts) | Áudio de análise: de N×chunk para 1×chunk (~3–4× mais rápido) | Nenhum — mesmas vozes, mesmo texto |
-| A4 | Padrão job assíncrono (202 + polling) para os dois TTS — já especificado no relatório da limpeza | Mata o loop 524→retry, o maior multiplicador de tempo percebido | Nenhum |
+| # | Mudança | Onde | Ganho esperado | Risco |
+|---|---|---|---|---|
+| P1.1 | **Paralelizar letra + Spotify + guia** após o cache miss (`Promise.all` de 3 passos hoje seriais) | `handlers/analyze.js` | −3 a −6s em toda análise nova | Baixo; se a letra falhar, 2–3 subrequests gastos à toa (raro) |
+| P1.2 | **Timeout não repete o modelo**: após timeout, cair direto para o próximo da cadeia (retry na mesma IA só para JSON incompleto, que é erro de parse, não de carga) | `ai/orchestrator.js` | Pior caso cai de 180s+ para ~100s | Nenhum — modelo que estourou 90s raramente responde na 2ª |
+| P1.3 | **Timeout explícito no `callClaude` (~70s)** — vale para o fallback da música e para o painel | `ai/models/claude.js` | Elimina espera de até 10 min quando a Anthropic engasga | Nenhum |
+| P1.4 | **Adiar o PATCH de metadata do guide proof** para `ctx.waitUntil` (hoje segura a resposta) | `handlers/analyze.js` | −1 a −2s | Nenhum — é auditoria interna, não afeta o payload |
 
-### Camada B — troca de modelo/regime (ganho grande, custo honesto)
+### P2 — Painel dos filósofos
 
-| # | Mudança (tudo via var no wrangler.toml, reversível) | Ganho | Efeito na qualidade |
-|---|---|---|---|
-| B1 | Painel: `CLAUDE_EFFORT=low` (Opus 4.8 mantido) | ~30–50% mais rápido | Menos deliberação interna; texto sai parecido, dialética ocasionalmente mais rasa |
-| B2 | Painel: `CLAUDE_MODEL=claude-sonnet-5` | Bem mais rápido que Opus | Prosa continua alta; perde um grau de nuance filosófica nos embates mais finos |
-| B3 | Música: `GROK_MODEL=grok-4-1-fast-reasoning` | Muito mais rápido que grok-4.5 | Justificativas um pouco menos profundas; scorecard/estrutura protegidos pelo gate |
-| B4 | Reduzir max_tokens da análise (8000→~5000) | Escrita proporcionalmente mais curta | Ensaios mais enxutos; **risco**: truncar → JSON incompleto → retry (anula o ganho — só com teste) |
+| # | Mudança | Onde | Ganho esperado | Risco |
+|---|---|---|---|---|
+| P2.1 | P1.3 (timeout no Claude) — com 70s, o fallback Grok entra **antes** de a borda matar a resposta | `ai/models/claude.js` | Fim dos travamentos de 4+ min; pior caso ~70+60s com resposta entregue | Nos dias lentos da Anthropic, mais painéis sairão do Grok (mesmo rigor, voz um pouco diferente — o campo `model` do blob registra) |
+| P2.2 | **Trava de duplicata em voo**: marcador KV `panelgen:<cacheKey>` no início; retry que chega com geração em andamento espera e faz poll do cache (~3s × 30) em vez de gerar de novo | `handlers/philosopher-panel.js` | Retry pós-524 vira espera barata; **elimina cobrança dupla de 3+3 créditos** | Baixo; TTL curto no marcador para não travar em caso de crash |
+| P2.3 | Micro: reservas de crédito em paralelo (confirmações ficam sequenciais — o PATCH do extrato lê "a última linha" e não pode correr) | `handlers/philosopher-panel.js` | −0,5 a −1,5s | Baixo |
 
-### O que NÃO resolve
+### P3 — Áudios (Gemini mantido nos dois)
 
-- **Workers Paid ($5/mês):** compra orçamento de subrequests, não velocidade de IA.
-  Continua recomendado pelo problema do teto de 50, mas não é o remédio daqui.
-- **Encurtar o guia:** o Claude já tem prompt caching; nos outros o ganho de prefill é
-  de ~1–3s. Mexeria no coração filosófico por troco.
+| # | Mudança | Onde | Ganho esperado | Risco |
+|---|---|---|---|---|
+| P3.1 | **Passar `ctx` aos dois handlers e terminar a geração via `waitUntil` mesmo com cliente desconectado**, gravando no R2 | `index.js`, `tts/gemini.js`, `handlers/news-tts.js` | O retry do cliente (120s) vira **cache HIT** em vez de regeneração — corta o pior caso de 4–5 min para ~2 min | Baixo |
+| P3.2 | **Retry/backoff por chunk no news-tts** (mesma escada 1s/2s/4s que o podcast já usa) | `handlers/news-tts.js` | Um 429 isolado deixa de derrubar o áudio inteiro | Nenhum |
+| P3.3 | **Trava de duplicata em voo por cache key** (mesmo desenho de P2.2) | ambos handlers TTS | Retries concorrentes não disparam gerações paralelas do mesmo áudio | Baixo |
+| P3.4 | **Prefetch na renderização** (opcional, decisão de custo): chamar `preloadTTS` quando a análise/painel renderiza, não no clique em Ouvir. O áudio gera enquanto o usuário lê; no clique, já está no R2 | `V2AudioBar.jsx` ×3, `TTSBar.jsx` | Tempo percebido ≈ **zero** para quem ouve depois de ler | **Custa quota Gemini TTS de áudios que nunca serão ouvidos** — decisão do Roberto |
+| P3.5 | Futuro já especificado (ordem própria): 202 + job + polling | — | Mata o loop 524 por completo | Refactor maior, frontend incluso |
+
+### Limite honesto do que a engenharia entrega
+
+O **piso** de cada fluxo é a latência do provedor no caminho feliz, e isso não se
+move sem trocar modelo/configuração — que está vetado:
+- Música: grok-4.5 responde em ~40–80s conforme a carga da xAI.
+- Painel: Opus 4.8 com thinking fica em ~60–90s.
+- Áudio: o chunk mais lento do TTS preview, 30–90s.
+
+O que o plano remove é tudo que hoje transforma esses 40–90s em 120–300s: o retry
+que dobra, a espera de 10 min sem timeout, o 524 que recomeça do zero, a dupla
+geração concorrente e os passos seriais desnecessários. Com P1–P3 aplicados, o tempo
+volta a ser ≈ o tempo do provedor — e nos dias em que o provedor estiver lento, o
+sistema degrada com elegância (fallback rápido, retry barato) em vez de multiplicar.
 
 ---
 
-## 4. Recomendação
+## 4. Ordem de execução proposta
 
-1. **Medir primeiro** (custo zero): Roberto roda o SELECT do §2 + uma análise com tail
-   ligado. Isso separa "provedor lento" de "retry escondido" com prova.
-2. **Camada A inteira na sequência** — nenhum item custa qualidade e, juntos, atacam os
-   dois multiplicadores (retry duplicado e 524).
-3. **Camada B só se A não bastar**, começando por B1 (effort low no painel), que é a
-   mudança mais reversível e de maior alavancagem — o painel é hoje o fluxo com a
-   configuração mais pesada do stack.
+1. **Medir** (§2): SELECT do histórico + uma análise com tail — separa provedor de
+   retry escondido com prova, e vira a régua do antes/depois.
+2. **Lote 1 (servidor, sem decisão pendente):** P1.1–P1.4, P2.1–P2.3, P3.1–P3.3 —
+   um deploy do worker, zero mudança de qualidade.
+3. **Lote 2 (decisão do Roberto):** P3.4 (prefetch — custa quota TTS de áudios não
+   ouvidos) e, em ordem futura própria, P3.5 (202+polling).
 
-**Status:** diagnóstico entregue; nenhuma mudança aplicada — aguardando decisão do
-Roberto sobre medir (§2) e sobre quais camadas executar.
+**Status:** estudo entregue; nenhuma mudança aplicada — aguardando o go do Roberto
+para o Lote 1 e a decisão sobre P3.4.
