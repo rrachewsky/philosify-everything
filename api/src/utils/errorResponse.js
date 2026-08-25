@@ -89,7 +89,10 @@ function getStatusCodeFromErrorKey(errorKey) {
     
     // 405 - Method Not Allowed
     METHOD_NOT_ALLOWED: 405,
-    
+
+    // 409 - Conflict
+    PANEL_IN_PROGRESS: 409,
+
     // 429 - Too Many Requests
     RATE_LIMIT_EXCEEDED: 429,
     TOO_MANY_REQUESTS: 429,

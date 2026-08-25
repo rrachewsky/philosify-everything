@@ -181,9 +181,9 @@ export async function handlePhilosopherPanel(
         }
       }
       console.warn(`[PhilosopherPanel] Poll timed out waiting for in-flight generation of "${cacheKey}"`);
-      return errorResponse(env, origin, 'ANALYSIS_FAILED', lang, {
-        message: "This panel is already being generated. Please try again in a minute.",
-      });
+      // 409 + own i18n key: the app displays the `error` field, so the user
+      // reads "still being generated, try again" instead of a fake failure.
+      return errorResponse(env, origin, 'PANEL_IN_PROGRESS', lang);
     }
     // TTL covers a worst-case generation (Claude timeout + Grok fallback);
     // if this invocation crashes, the lock self-clears.
@@ -225,7 +225,14 @@ export async function handlePhilosopherPanel(
       });
     }
 
-    try {
+    // The whole generate → cache → persist → confirm sequence is one job so
+    // it can ride on ctx.waitUntil below: if the client disconnects
+    // mid-generation (25 Aug incident: mobile drop at ~2 min), the job still
+    // finishes in the background — cache written, the 3 credits confirmed
+    // exactly once, lock released — and the user's retry lands in the
+    // in-flight poller above as a free cache HIT instead of a second charged
+    // generation with 3 reservations stranded for the reaper.
+    async function generatePanel() {
       // ── Load guide ──
       const guide = await getDebateAestheticGuide(env);
 
@@ -360,40 +367,63 @@ export async function handlePhilosopherPanel(
         );
       }
 
-      // ── Return result ──
-      return jsonResponse(
-        {
-          success: true,
-          cached: false,
-          panel: panelData,
-          credits: lastConfirm?.credits ?? null,
-          remaining: lastConfirm?.newTotal ?? null,
-        },
-        200,
-        origin,
-        env,
-      );
-    } catch (err) {
-      // Release all credits on failure
-      console.error(`[PhilosopherPanel] Analysis failed: ${err.message}`);
-      for (const res of reservations) {
-        try {
-          await releaseReservation(env, res.reservationId, "failed");
-        } catch (releaseErr) {
-          console.error(`[PhilosopherPanel] Release on failure failed: ${releaseErr.message}`);
+      return { panelData, lastConfirm };
+    }
+
+    // The job resolves to an outcome and never rejects: a rejection inside
+    // waitUntil after the response is gone would be an unhandled rejection
+    // with nobody left to release the credits — so failure handling (release
+    // all 3 reservations) lives INSIDE the job and runs in background too.
+    const generationJob = (async () => {
+      try {
+        const { panelData, lastConfirm } = await generatePanel();
+        return { ok: true, panelData, lastConfirm };
+      } catch (err) {
+        console.error(`[PhilosopherPanel] Analysis failed: ${err.message}`);
+        for (const res of reservations) {
+          try {
+            await releaseReservation(env, res.reservationId, "failed");
+          } catch (releaseErr) {
+            console.error(`[PhilosopherPanel] Release on failure failed: ${releaseErr.message}`);
+          }
         }
+        return { ok: false, message: err.message };
+      } finally {
+        // Pollers read the cache entry, not the lock — this is just hygiene
+        // so a follow-up request doesn't wait on a finished generation.
+        try {
+          await env.PHILOSIFY_KV.delete(lockKey);
+        } catch { /* TTL clears it */ }
       }
+    })();
+
+    // Registered BEFORE the await: if the client disconnects while we wait,
+    // the runtime keeps the job alive to completion. With ctx null (legacy
+    // caller) the await below is the same inline wait as before.
+    if (ctx?.waitUntil) ctx.waitUntil(generationJob);
+
+    const outcome = await generationJob;
+
+    if (!outcome.ok) {
       // Sanitize error message to prevent leaking internal details
       return errorResponse(env, origin, 'ANALYSIS_FAILED', lang, {
-        message: sanitizeErrorMessage(err.message, getLocalizedError('ANALYSIS_FAILED', lang))
+        message: sanitizeErrorMessage(outcome.message, getLocalizedError('ANALYSIS_FAILED', lang))
       });
-    } finally {
-      // Pollers read the cache entry, not the lock — this is just hygiene so
-      // a follow-up request doesn't wait on a finished generation.
-      try {
-        await env.PHILOSIFY_KV.delete(lockKey);
-      } catch { /* TTL clears it */ }
     }
+
+    // ── Return result ──
+    return jsonResponse(
+      {
+        success: true,
+        cached: false,
+        panel: outcome.panelData,
+        credits: outcome.lastConfirm?.credits ?? null,
+        remaining: outcome.lastConfirm?.newTotal ?? null,
+      },
+      200,
+      origin,
+      env,
+    );
   } catch (err) {
     console.error(`[PhilosopherPanel] Request error: ${err.message}`);
     // Sanitize error message to prevent leaking internal details
