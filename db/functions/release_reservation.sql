@@ -1,14 +1,17 @@
--- Mirror of the live Supabase function. Applied 25 Aug 2026 via
--- migrations/credit_refund_history.sql (Roberto, SQL Editor: "Success").
--- Two changes over the 21 Aug extraction:
--- * #variable_conflict use_column — the gated 23 Aug fix (migrations/
---   release_reservation_variable_conflict.sql) rode along in the same
---   migration; direct releases (cached re-view, failed analysis) no longer
---   die at runtime on `column reference "free_remaining" is ambiguous`.
--- * Best-effort type='refund' INSERT into credit_history after the refund,
---   in its own exception sub-block — the statement now shows returned
---   credits; a history failure raises a WARNING and never blocks or
---   undoes the refund.
+-- TARGET body — NOT a verified mirror of the live function. The 25 Aug
+-- migration (credit_refund_history.sql) reported "Success", but the
+-- same-day verification (DO block: reserve → release 'failed') still got
+-- `column reference "free_remaining" is ambiguous` from the function that
+-- actually executes — a body WITHOUT #variable_conflict, which dies before
+-- the refund INSERT. Likely cause: identity-argument drift made CREATE OR
+-- REPLACE add a second overload instead of replacing (inventory pending);
+-- a duplicate also breaks the worker's PostgREST call by named params.
+-- Treat the live DB as unknown until migrations/
+-- release_reservation_rebuild.sql (drop all overloads + recreate one
+-- canonical, column-qualified body) runs and reverification passes — then
+-- this file gets replaced by the applied body.
+-- (Note corrected 25 Aug: the previous header wrongly claimed the body
+-- below was live.)
 -- Note: p_analysis_id is UUID here but TEXT in confirm_reservation.
 
 CREATE OR REPLACE FUNCTION public.release_reservation(p_reservation_id uuid, p_reason character varying DEFAULT 'analysis_failed'::character varying, p_analysis_id uuid DEFAULT NULL::uuid)
