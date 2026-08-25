@@ -309,6 +309,50 @@ lockdown de permissões (REVOKE PUBLIC/anon/authenticated, GRANT `service_role`
 PostgREST, e a verificação final (3 linhas, overloads=1, diretiva na release,
 INSERT de refund nas três, ACL só owner + service_role) como último statement.
 
+### Go/no-go da rebuild v2 — auditoria de chamadores (código, completa)
+
+Quem chama cada função, com qual credencial:
+
+| Função | Chamador (único) | Credencial |
+|---|---|---|
+| `reserve_credit` | `api/src/credits/reserve.js:13` via `callRpc` | service key → `service_role` |
+| `confirm_reservation` | `api/src/credits/confirm.js:29` via `callRpc` | service key → `service_role` |
+| `release_reservation` | `api/src/credits/release.js:22` via `callRpc` | service key → `service_role` |
+| `cleanup_user_stale_reservations` | `api/src/credits/release.js:61` via `callRpc` | service key → `service_role` |
+| `cleanup_stale_reservations` | `api/src/credits/release.js:97` via `callRpc` (cron) | service key → `service_role` |
+
+Fatos que fecham a auditoria:
+- `callRpc` usa `getSupabaseCredentials`, que retorna **sempre**
+  `SUPABASE_SERVICE_KEY` (`api/src/utils/supabase.js:60-71`) — não existe
+  caminho com anon key ou JWT de usuário para esses RPCs.
+- Todos os demais módulos do worker (painel, analyze, unsafe-zone, colloquium)
+  passam pelo módulo `credits/` (ex.: `unsafe-zone.js:20` importa de
+  `../credits/index.js`) — nenhum chama RPC de crédito direto.
+- `site/src`: **zero** referências às cinco funções e zero uso de `.rpc(` —
+  o frontend nunca toca o Supabase para créditos; tudo via worker.
+
+**Veredito: GO — a rebuild v2 pode rodar como está.** O lockdown (REVOKE
+PUBLIC/anon/authenticated + GRANT `service_role`) não remove acesso de nenhum
+chamador real. A saída do pré-ACL segue pendente de colagem (duas tentativas
+não chegaram — provavelmente o tamanho da saída; o inventário com `corpo`
+completo é enorme) e entra aqui quando vier; ela documenta o estado anterior,
+mas não muda o veredito, que se apoia no que o sistema efetivamente CHAMA.
+
+Saída esperada da verificação final da rebuild, linha a linha (ordenada por
+nome):
+
+| funcao | overloads | assinatura | tem_diretiva | tem_refund_insert | acl |
+|---|---|---|---|---|---|
+| cleanup_stale_reservations | 1 | `p_max_age_minutes integer` | false | true | owner (postgres) + service_role; sem PUBLIC/anon/authenticated |
+| cleanup_user_stale_reservations | 1 | `p_user_id uuid, p_age_minutes integer` | false | true | idem |
+| release_reservation | 1 | `p_reservation_id uuid, p_reason character varying, p_analysis_id uuid` | **true** | true | idem |
+
+(`tem_diretiva` é esperado true SÓ na release — os reapers não carregam a
+diretiva porque não precisam: corpos qualificados por alias e sem colisão de
+nomes OUT. O texto exato do `acl` varia na renderização, algo como
+`{postgres=X/postgres,service_role=X/postgres}` — o que importa é não haver
+`=X/` sem grantee (PUBLIC) nem `anon`/`authenticated`.)
+
 ### Lição registrada
 
 "Success" de DDL não é verificação. `CREATE OR REPLACE` com assinatura errada
