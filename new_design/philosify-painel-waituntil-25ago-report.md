@@ -353,7 +353,56 @@ nomes OUT. O texto exato do `acl` varia na renderização, algo como
 `{postgres=X/postgres,service_role=X/postgres}` — o que importa é não haver
 `=X/` sem grantee (PUBLIC) nem `anon`/`authenticated`.)
 
-### Inventário + pré-ACL colados (item 1 fechado)
+### ⚠️ ALERTA (25 ago, antes da rebuild): a aba do SQL Editor pode não ser produção
+
+No bloco DO de verificação, `credits` de bob@bobrach.com mostrou
+**purchased 10 + free 7 = 17**; o app, na mesma conta, mostra **29**
+(10 + 19, confirmado pelo tail do worker no teste do gate + refund do reaper).
+Se a conta é a mesma, a sessão do SQL Editor usada para o teste DO e para o
+inventário estava em OUTRO projeto Supabase — e todo o diagnóstico abaixo
+("migração nunca chegou", inventário, GO) foi feito **no banco errado**.
+Status do item 3: **estado desconhecido** até a checagem de identidade passar.
+A rebuild NÃO roda antes disso.
+
+Refs conhecidos no repositório: `fgaavfxspnymfcpywqkz` (env do frontend —
+morto, HTTP 000/NXDOMAIN, já apontado no relatório wp4) e
+`zunugudeytbdzlidosgr` (vivo, HTTP 401 no /auth/v1/health; aparece em
+`tests/check-transactions.js` e docs — candidato a produção, não confirmado).
+A URL de produção do worker vive só no Cloudflare Secrets Store (valor não
+legível) — **o ref definitivo sai da checagem de identidade abaixo**, e fica
+registrado aqui como referência permanente quando confirmar.
+
+**Checagem de identidade** (uma célula, rodar na MESMA aba do inventário E
+depois na aba aberta pelo dashboard do projeto candidato; junto com cada
+saída, copiar o ref da URL do navegador —
+`supabase.com/dashboard/project/<ref>/sql`):
+
+```sql
+SELECT current_database()
+       || ' >> '
+       || COALESCE(
+            string_agg(
+              u.email || ': purchased ' || COALESCE(c.purchased::text, '-')
+                      || ' + free ' || COALESCE(c.free_remaining::text, '-')
+                      || ' = ' || COALESCE((c.purchased + c.free_remaining)::text, '-'),
+              ' || ' ORDER BY u.email),
+            'NENHUMA CONTA rachewsky/bobrach NESTE BANCO')
+FROM auth.users u
+LEFT JOIN credits c ON c.user_id = u.id
+WHERE u.email ILIKE '%rachewsky%' OR u.email ILIKE '%bobrach%';
+```
+
+Decisão: conta do celular com **29** ⇒ a aba é produção, diagnóstico de pé,
+GO da rebuild mantido. Outro número ou conta ausente ⇒ aba errada: abrir o SQL
+Editor pelo dashboard do projeto certo, **rerodar o inventário lá** e refazer o
+diagnóstico do zero antes de qualquer migração.
+
+**Regra permanente (vale para toda migração futura):** antes de rodar qualquer
+SQL, conferir o ref na URL da aba do SQL Editor contra o ref de produção
+registrado nesta seção. "Success" sem conferência de ref não vale nada — este
+gate é a prova.
+
+### Inventário + pré-ACL colados (SOB SUSPEITA — ver alerta acima; item 1 fechado condicionalmente)
 
 Saída de 25 ago (compacta, uma linha por função — **sem overloads**):
 
