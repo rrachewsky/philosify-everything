@@ -153,24 +153,76 @@ export async function handlePhilosopherPanel(
 
     console.log(`[PhilosopherPanel] Cache MISS for "${cacheKey}" → generating new analysis`);
 
-    // ── Reserve 3 credits ──
-    const reservations = [];
-    for (let i = 0; i < PANEL_COST; i++) {
-      const reservation = await reserveCredit(env, userId);
-      if (!reservation.success) {
-        // Rollback any successful reservations
-        for (const prev of reservations) {
-          try {
-            await releaseReservation(env, prev.reservationId, "failed");
-          } catch (releaseErr) {
-            console.error(`[PhilosopherPanel] Rollback release failed: ${releaseErr.message}`);
-          }
+    // ── In-flight duplicate guard ──
+    // A client retry after the ~100s edge cutoff used to start a SECOND full
+    // generation in parallel — and both reserved and confirmed 3 credits each.
+    // The lock makes the second request wait on the first one's cache entry
+    // instead: it returns as a free cache HIT, or times out with no charge.
+    // KV get/put is not atomic across PoPs, but the retry that matters comes
+    // from the same client seconds later — same PoP, lock visible.
+    const lockKey = `panellock:${cacheKey}`;
+    const inFlight = await env.PHILOSIFY_KV.get(lockKey);
+    if (inFlight) {
+      console.log(
+        `[PhilosopherPanel] Generation already in flight (since ${inFlight}) — polling cache instead of double-generating`,
+      );
+      for (let i = 0; i < 20; i++) {
+        await new Promise((r) => setTimeout(r, 4000));
+        const ready = await env.PHILOSIFY_KV.get(cacheKey);
+        if (ready) {
+          const cached = JSON.parse(ready);
+          console.log(`[PhilosopherPanel] In-flight generation finished — returning as cache HIT (no charge)`);
+          return jsonResponse(
+            { success: true, cached: true, panel: cached, credits: 0, remaining: null },
+            200,
+            origin,
+            env,
+          );
         }
-        return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
-          needed: PANEL_COST,
-        });
       }
-      reservations.push(reservation);
+      console.warn(`[PhilosopherPanel] Poll timed out waiting for in-flight generation of "${cacheKey}"`);
+      return errorResponse(env, origin, 'ANALYSIS_FAILED', lang, {
+        message: "This panel is already being generated. Please try again in a minute.",
+      });
+    }
+    // TTL covers a worst-case generation (Claude timeout + Grok fallback);
+    // if this invocation crashes, the lock self-clears.
+    await env.PHILOSIFY_KV.put(lockKey, new Date().toISOString(), { expirationTtl: 240 });
+
+    // ── Reserve 3 credits (in parallel — the RPC serializes on the balance
+    // row, so concurrent reserves stay atomic; ~1s saved vs sequential) ──
+    const settled = await Promise.allSettled(
+      Array.from({ length: PANEL_COST }, () => reserveCredit(env, userId)),
+    );
+    const reservations = settled
+      .filter((s) => s.status === "fulfilled" && s.value?.success)
+      .map((s) => s.value);
+
+    if (reservations.length < PANEL_COST) {
+      // Rollback any successful reservations
+      for (const prev of reservations) {
+        try {
+          await releaseReservation(env, prev.reservationId, "failed");
+        } catch (releaseErr) {
+          console.error(`[PhilosopherPanel] Rollback release failed: ${releaseErr.message}`);
+        }
+      }
+      try {
+        await env.PHILOSIFY_KV.delete(lockKey);
+      } catch { /* TTL clears it */ }
+      const hadError = settled.some((s) => s.status === "rejected");
+      if (hadError) {
+        console.error(
+          `[PhilosopherPanel] Reserve failed with errors: ${settled
+            .filter((s) => s.status === "rejected")
+            .map((s) => s.reason?.message)
+            .join("; ")}`,
+        );
+        return errorResponse(env, origin, 'INTERNAL_ERROR', lang);
+      }
+      return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
+        needed: PANEL_COST,
+      });
     }
 
     try {
@@ -335,6 +387,12 @@ export async function handlePhilosopherPanel(
       return errorResponse(env, origin, 'ANALYSIS_FAILED', lang, {
         message: sanitizeErrorMessage(err.message, getLocalizedError('ANALYSIS_FAILED', lang))
       });
+    } finally {
+      // Pollers read the cache entry, not the lock — this is just hygiene so
+      // a follow-up request doesn't wait on a finished generation.
+      try {
+        await env.PHILOSIFY_KV.delete(lockKey);
+      } catch { /* TTL clears it */ }
     }
   } catch (err) {
     console.error(`[PhilosopherPanel] Request error: ${err.message}`);

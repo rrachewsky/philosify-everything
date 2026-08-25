@@ -2333,7 +2333,7 @@ LANGUAGE: Speak ONLY in ${langName}.
 /**
  * Main handler function for Gemini TTS endpoint
  */
-export async function handleGeminiTTS(request, env, origin) {
+export async function handleGeminiTTS(request, env, origin, ctx = null) {
   const corsHeaders = getCorsHeaders(origin, env);
   const jsonResponse = (data, status) =>
     new Response(JSON.stringify(data), {
@@ -2389,6 +2389,38 @@ export async function handleGeminiTTS(request, env, origin) {
     // ============================================================
     // CACHE MISS - Validate content and generate new audio
     // ============================================================
+
+    // ── In-flight duplicate guard ──
+    // The player aborts at 120s and retries; without the lock each retry
+    // started a full parallel regeneration of the 4-voice podcast. With it,
+    // the retry polls R2 and picks up the first generation's result (which
+    // now completes under waitUntil even after the client disconnects).
+    const lockKey = `ttslock:${cacheKey}`;
+    const inFlight = await env.PHILOSIFY_KV?.get(lockKey);
+    if (inFlight) {
+      console.log(`[TTS] Generation already in flight (since ${inFlight}) — polling R2`);
+      for (let i = 0; i < 17; i++) {
+        await new Promise((r) => setTimeout(r, 5000));
+        const ready = await getFromR2Cache(env, cacheKey);
+        if (ready) {
+          console.log(`[TTS] In-flight generation finished — serving from R2`);
+          return new Response(ready, {
+            status: 200,
+            headers: {
+              "Content-Type": "audio/wav",
+              "Content-Length": ready.byteLength.toString(),
+              "Cache-Control": "public, max-age=31536000",
+              "X-TTS-Cache": "HIT",
+              "X-TTS-Audio-Url": getR2PublicUrl(env, cacheKey),
+              ...corsHeaders,
+            },
+          });
+        }
+      }
+      console.warn(`[TTS] Poll timed out waiting for in-flight generation of ${cacheKey}`);
+      return jsonResponse({ error: "TTS generation in progress — try again shortly" }, 503);
+    }
+
     const sections = extractSectionsFromResult(result);
     const totalContent =
       (sections.historicalContext || "").length +
@@ -2404,37 +2436,42 @@ export async function handleGeminiTTS(request, env, origin) {
       `[TTS] Processing: ${totalContent} chars, target: ${targetLang}, source: ${sourceLang}`,
     );
 
-    const wavAudio = await generateGeminiTTS(
-      sections,
-      targetLang,
-      sourceLang,
-      env,
-    );
+    // TTL covers a worst-case generation; self-clears on crash.
+    await env.PHILOSIFY_KV?.put(lockKey, new Date().toISOString(), { expirationTtl: 300 });
 
-    console.log(`[TTS] ✓ Generated ${wavAudio.byteLength} bytes of WAV audio`);
-
-    // ============================================================
-    // SAVE TO R2 AND UPDATE ANALYSIS
-    // ============================================================
     const audioUrl = getR2PublicUrl(env, cacheKey);
-
-    // Save to R2 with metadata (don't await - run in background)
     const r2Metadata = {
       song: result?.song || result?.song_name || result?.title || "unknown",
       artist: result?.artist || result?.author || "unknown",
       language: targetLang,
       model: result?.model || result?.generated_by || "unknown",
     };
-    saveToR2Cache(env, cacheKey, wavAudio, r2Metadata).catch((err) => {
-      console.error("[TTS] Background R2 save failed:", err.message);
-    });
 
-    // Update analysis with audio URL (don't await - run in background)
-    if (analysisId) {
-      updateAnalysisAudioUrl(env, analysisId, audioUrl).catch((err) => {
-        console.error("[TTS] Background audio_url update failed:", err.message);
+    const generation = generateGeminiTTS(sections, targetLang, sourceLang, env);
+
+    // Persistence and lock cleanup ride on waitUntil: even if the client
+    // aborts at 120s, the podcast finishes and lands in R2, so the retry
+    // becomes a cache HIT instead of a full regeneration. Previously the R2
+    // save was fire-and-forget with nothing keeping the invocation alive.
+    const persist = generation
+      .then(async (wavAudio) => {
+        await saveToR2Cache(env, cacheKey, wavAudio, r2Metadata);
+        if (analysisId) {
+          await updateAnalysisAudioUrl(env, analysisId, audioUrl).catch((err) => {
+            console.error("[TTS] Background audio_url update failed:", err.message);
+          });
+        }
+      })
+      .catch((err) => console.error(`[TTS] Background completion failed: ${err.message}`))
+      .finally(async () => {
+        try { await env.PHILOSIFY_KV?.delete(lockKey); } catch { /* TTL clears it */ }
       });
-    }
+    if (ctx?.waitUntil) ctx.waitUntil(persist);
+
+    const wavAudio = await generation;
+    if (!ctx?.waitUntil) await persist;
+
+    console.log(`[TTS] ✓ Generated ${wavAudio.byteLength} bytes of WAV audio`);
 
     return new Response(wavAudio, {
       status: 200,

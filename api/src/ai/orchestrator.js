@@ -293,6 +293,19 @@ export async function analyzePhilosophy(
           break;
         }
 
+        // A timeout is a load signal, not a transient glitch: the same model
+        // almost never answers a second identical call in time, and the retry
+        // costs a full generation window (seen live: 90s Grok timeout + 40-60s
+        // retry = the "over 120s" analyses). Fall through to the next model
+        // immediately; same-model retry stays for parse/completeness failures.
+        if (error?.isTimeout || /timeout|timed\s*out/i.test(error?.message || "")) {
+          console.warn(
+            `[Orchestrator] Model ${key} timed out — skipping same-model retry, moving to next model`,
+          );
+          lastError = error;
+          break;
+        }
+
         console.warn(
           `[Orchestrator] Model ${key} attempt ${attempt} failed: ${error.message}`,
         );

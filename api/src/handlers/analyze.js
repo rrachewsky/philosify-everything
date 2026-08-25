@@ -537,9 +537,38 @@ export async function handleAnalyze(
 
     // === NO CACHE - GENERATE NEW ANALYSIS ===
 
-    // 1. Fetch lyrics
-    console.log(`[Philosify] Fetching lyrics: ${song} - ${artist}`);
-    const rawLyrics = await getLyrics(song, artist, env);
+    // 1-3. Lyrics, Spotify metadata and guide are independent of each other —
+    // fetch them in parallel. Same subrequest count as the old serial order,
+    // ~3-6s less wall time on every fresh analysis. Validation below keeps the
+    // original order (lyrics gate first, then metadata, then guide).
+    console.log(
+      `[Philosify] Fetching lyrics, Spotify metadata and guide in parallel: ${song} - ${artist}`,
+    );
+    const [rawLyrics, fetchedMetadata, guide] = await Promise.all([
+      getLyrics(song, artist, env),
+      (async () => {
+        try {
+          if (spotify_id) {
+            console.log(`[Philosify] Using direct spotify_id: ${spotify_id}`);
+            const byId = await getSpotifyMetadataById(spotify_id, env);
+            if (byId) return byId;
+            console.warn(
+              `[Philosify] ID lookup failed for ${spotify_id}, falling back to name search...`,
+            );
+          } else {
+            console.log(
+              `[Philosify] Searching Spotify: "${song}" - "${artist}"`,
+            );
+          }
+          return await getSpotifyMetadata(song, artist || "", env);
+        } catch (err) {
+          // Metadata is enrichment, not a gate — never let it sink the analysis
+          console.warn(`[Philosify] Spotify metadata fetch failed: ${err.message}`);
+          return null;
+        }
+      })(),
+      getGuideForLanguage(env, lang),
+    ]);
 
     // MISSING LYRICS IS A FIRST-CLASS STATE, NEVER A FALLBACK (ruling 31 Jul).
     // Both sources are title-exact: Genius validates artist AND title over its
@@ -573,23 +602,8 @@ export async function handleAnalyze(
       `[Philosify] ✓ Lyrics found and sanitized (${lyrics.length} chars)`,
     );
 
-    // 2. Spotify metadata
-    let metadata = null;
-    if (spotify_id) {
-      console.log(`[Philosify] Using direct spotify_id: ${spotify_id}`);
-      metadata = await getSpotifyMetadataById(spotify_id, env);
-
-      if (!metadata) {
-        console.warn(
-          `[Philosify] ID lookup failed for ${spotify_id}, falling back to name search...`,
-        );
-        // Fallback: Try searching by name if ID lookup failed (e.g. region lock or glitch)
-        metadata = await getSpotifyMetadata(song, artist || "", env);
-      }
-    } else {
-      console.log(`[Philosify] Searching Spotify: "${song}" - "${artist}"`);
-      metadata = await getSpotifyMetadata(song, artist || "", env);
-    }
+    // 2. Spotify metadata (fetched above in parallel)
+    let metadata = fetchedMetadata;
 
     if (metadata) {
       console.log(
@@ -606,9 +620,7 @@ export async function handleAnalyze(
       );
     }
 
-    // 3. Load guide
-    console.log(`[Philosify] Loading guide from KV for language: ${lang}`);
-    const guide = await getGuideForLanguage(env, lang);
+    // 3. Guide (fetched above in parallel)
     if (!guide) {
       return errorResponse(env, origin, 'GUIDE_NOT_LOADED', lang, {
         message: getMessage(lang, "guideNotLoaded"),
@@ -700,43 +712,67 @@ export async function handleAnalyze(
             `[Philosify] ✓ Guide proof regenerated with analysis ID (Signature: ${guideProof.signature.substring(0, 16)}...)`,
           );
 
-          // Update database with regenerated guide proof including modelo
+          // Persist the regenerated proof. Audit metadata doesn't need to
+          // hold the response hostage, so the PATCH runs under waitUntil —
+          // but audit that runs after the response needs its own guarantee:
+          // 2 attempts, and an unmissable AUDIT GAP log if both fail, so
+          // "faster" never silently means "less audited".
           const supabaseUrl = await getSecret(env.SUPABASE_URL);
           const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+          const proofToPersist = guideProof;
 
           if (supabaseUrl && supabaseKey) {
-            const updateResponse = await fetch(
-              `${supabaseUrl}/rest/v1/analyses?id=eq.${savedRecord.id}`,
-              {
-                method: "PATCH",
-                headers: {
-                  apikey: supabaseKey,
-                  Authorization: `Bearer ${supabaseKey}`,
-                  "Content-Type": "application/json",
-                  Prefer: "return=minimal",
-                },
-                body: JSON.stringify({
-                  metadata: {
-                    guide_sha256: guideProof.sha256,
-                    guide_signature: guideProof.signature,
-                    guide_version: guideProof.version,
-                    guide_modelo: guideProof.modelo,
-                    ...(analysis?.schools_of_thought
-                      ? { schools_of_thought: analysis.schools_of_thought }
-                      : {}),
-                  },
-                }),
-              },
-            );
+            const persistGuideProof = async () => {
+              for (let attempt = 1; attempt <= 2; attempt++) {
+                try {
+                  const updateResponse = await fetch(
+                    `${supabaseUrl}/rest/v1/analyses?id=eq.${savedRecord.id}`,
+                    {
+                      method: "PATCH",
+                      headers: {
+                        apikey: supabaseKey,
+                        Authorization: `Bearer ${supabaseKey}`,
+                        "Content-Type": "application/json",
+                        Prefer: "return=minimal",
+                      },
+                      body: JSON.stringify({
+                        metadata: {
+                          guide_sha256: proofToPersist.sha256,
+                          guide_signature: proofToPersist.signature,
+                          guide_version: proofToPersist.version,
+                          guide_modelo: proofToPersist.modelo,
+                          ...(analysis?.schools_of_thought
+                            ? { schools_of_thought: analysis.schools_of_thought }
+                            : {}),
+                        },
+                      }),
+                    },
+                  );
 
-            if (updateResponse.ok) {
-              console.log(
-                `[Philosify] ✓ Guide proof updated in database with modelo: ${guideProof.modelo}`,
-              );
-            } else {
+                  if (updateResponse.ok) {
+                    console.log(
+                      `[Philosify] ✓ Guide proof updated in database with modelo: ${proofToPersist.modelo}`,
+                    );
+                    return;
+                  }
+                  console.error(
+                    `[Philosify] Guide proof PATCH failed (attempt ${attempt}/2): ${updateResponse.status}`,
+                  );
+                } catch (err) {
+                  console.error(
+                    `[Philosify] Guide proof PATCH error (attempt ${attempt}/2): ${err.message}`,
+                  );
+                }
+              }
               console.error(
-                `[Philosify] Failed to update guide proof in database: ${updateResponse.status}`,
+                `[Philosify] ✗✗✗ AUDIT GAP ✗✗✗ Guide proof for analysis ${savedRecord.id} NOT persisted after 2 attempts — metadata is missing guide_sha256/signature`,
               );
+            };
+
+            if (ctx?.waitUntil) {
+              ctx.waitUntil(persistGuideProof());
+            } else {
+              await persistGuideProof();
             }
           }
         }

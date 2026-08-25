@@ -171,34 +171,61 @@ function expandAcronyms(text, lang) {
 // never rotated within an audio (see handleNewsTTS).
 const VOICES = ["Puck", "Charon", "Kore", "Fenrir", "Aoede"];
 
-async function ttsCall(text, apiKey, voiceName = "Puck") {
-  const res = await fetch(`${TTS_URL}?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text }] }],
-      generationConfig: {
-        responseModalities: ["AUDIO"],
-        speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName } },
-        },
-      },
-    }),
-  });
+// Retry ladder matches the podcast pipeline (tts/gemini.js): a single 429/5xx
+// from the TTS preview used to sink the WHOLE audio — every other chunk's work
+// thrown away and the user paying full regeneration on retry.
+async function ttsCall(text, apiKey, voiceName = "Puck", label = "chunk") {
+  const MAX_ATTEMPTS = 3;
+  const RETRY_DELAYS = [1000, 2000, 4000];
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`TTS ${res.status}: ${err.substring(0, 150)}`);
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetch(`${TTS_URL}?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text }] }],
+          generationConfig: {
+            responseModalities: ["AUDIO"],
+            speechConfig: {
+              voiceConfig: { prebuiltVoiceConfig: { voiceName } },
+            },
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        if ((res.status === 429 || res.status >= 500) && attempt < MAX_ATTEMPTS) {
+          console.warn(
+            `[NewsTTS] ${label} got ${res.status} (attempt ${attempt}/${MAX_ATTEMPTS}) — retrying in ${RETRY_DELAYS[attempt - 1]}ms`,
+          );
+          await new Promise((r) => setTimeout(r, RETRY_DELAYS[attempt - 1]));
+          continue;
+        }
+        throw new Error(`TTS ${res.status}: ${err.substring(0, 150)}`);
+      }
+
+      const data = await res.json();
+      const b64 = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+      if (!b64) throw new Error("No audio data");
+
+      const bin = atob(b64);
+      const pcm = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) pcm[i] = bin.charCodeAt(i);
+      return pcm;
+    } catch (error) {
+      // 4xx (except 429, handled above) is a request problem — retrying the
+      // identical call can't fix it. Network errors and "No audio data" can.
+      const permanent = /^TTS 4(?!29)/.test(error.message || "");
+      if (permanent || attempt >= MAX_ATTEMPTS) throw error;
+      console.warn(
+        `[NewsTTS] ${label} error (attempt ${attempt}/${MAX_ATTEMPTS}): ${error.message} — retrying in ${RETRY_DELAYS[attempt - 1]}ms`,
+      );
+      await new Promise((r) => setTimeout(r, RETRY_DELAYS[attempt - 1]));
+    }
   }
-
-  const data = await res.json();
-  const b64 = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-  if (!b64) throw new Error("No audio data");
-
-  const bin = atob(b64);
-  const pcm = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) pcm[i] = bin.charCodeAt(i);
-  return pcm;
+  throw new Error("TTS retries exhausted");
 }
 
 // 0.3s silence at 24000 Hz, 16-bit mono = 14400 bytes
@@ -262,7 +289,7 @@ async function saveToR2(env, key, buffer) {
   }
 }
 
-export async function handleNewsTTS(request, env, origin) {
+export async function handleNewsTTS(request, env, origin, ctx = null) {
   const cors = getCorsHeaders(origin, env);
 
   try {
@@ -291,6 +318,32 @@ export async function handleNewsTTS(request, env, origin) {
         headers: { "Content-Type": "audio/wav", ...cors },
       });
     }
+
+    // ── In-flight duplicate guard ──
+    // The player aborts at 120s and retries; without the lock each retry
+    // started a full parallel regeneration. With it, the retry polls R2 and
+    // picks up the first generation's result (which now completes under
+    // waitUntil even after the client disconnects).
+    const lockKey = `ttslock:${r2Key}`;
+    const inFlight = await env.PHILOSIFY_KV?.get(lockKey);
+    if (inFlight) {
+      console.log(`[NewsTTS] Generation already in flight (since ${inFlight}) — polling R2`);
+      for (let i = 0; i < 17; i++) {
+        await new Promise((r) => setTimeout(r, 5000));
+        const ready = await getFromR2(env, r2Key);
+        if (ready) {
+          console.log(`[NewsTTS] In-flight generation finished — serving from R2`);
+          return new Response(ready, {
+            status: 200,
+            headers: { "Content-Type": "audio/wav", ...cors },
+          });
+        }
+      }
+      console.warn(`[NewsTTS] Poll timed out waiting for in-flight generation of ${r2Key}`);
+      return errorResponse(env, origin, 'NEWS_TTS_FAILED', userLang);
+    }
+    // TTL covers a worst-case generation; self-clears on crash.
+    await env.PHILOSIFY_KV?.put(lockKey, new Date().toISOString(), { expirationTtl: 300 });
 
     const apiKey = await getSecret(env.GEMINI_API_KEY);
 
@@ -335,28 +388,42 @@ export async function handleNewsTTS(request, env, origin) {
     const voice = VOICES[parseInt(textHash.substring(0, 8), 16) % VOICES.length];
     console.log(`[NewsTTS] ${chunks.length} chunks, generating in parallel, voice: ${voice}`);
 
-    const pcmResults = await Promise.all(
-      chunks.map((chunk, i) => {
-        console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunk.length} chars`);
-        return ttsCall(chunk, apiKey, voice);
-      })
-    );
+    const generation = (async () => {
+      const pcmResults = await Promise.all(
+        chunks.map((chunk, i) => {
+          console.log(`[NewsTTS] Chunk ${i + 1}/${chunks.length}: ${chunk.length} chars`);
+          return ttsCall(chunk, apiKey, voice, `chunk ${i + 1}/${chunks.length}`);
+        })
+      );
 
-    // Interleave PCM arrays with silence gaps between chunks
-    const allPcm = [];
-    const gap = silenceGap();
-    for (let i = 0; i < pcmResults.length; i++) {
-      allPcm.push(pcmResults[i]);
-      if (i < pcmResults.length - 1) {
-        allPcm.push(gap);
+      // Interleave PCM arrays with silence gaps between chunks
+      const allPcm = [];
+      const gap = silenceGap();
+      for (let i = 0; i < pcmResults.length; i++) {
+        allPcm.push(pcmResults[i]);
+        if (i < pcmResults.length - 1) {
+          allPcm.push(gap);
+        }
       }
-    }
 
-    const wav = buildWav(allPcm);
-    console.log(`[NewsTTS] Done: ${wav.byteLength} bytes`);
+      const wav = buildWav(allPcm);
+      console.log(`[NewsTTS] Done: ${wav.byteLength} bytes`);
+      return wav;
+    })();
 
-    // Save to R2 for future requests
-    await saveToR2(env, r2Key, wav);
+    // Persistence and lock cleanup ride on waitUntil: even if the client
+    // aborts at 120s, the generation finishes and lands in R2, so the retry
+    // becomes a cache HIT instead of a full regeneration.
+    const persist = generation
+      .then((wav) => saveToR2(env, r2Key, wav))
+      .catch((e) => console.error(`[NewsTTS] Background completion failed: ${e.message}`))
+      .finally(async () => {
+        try { await env.PHILOSIFY_KV?.delete(lockKey); } catch { /* TTL clears it */ }
+      });
+    if (ctx?.waitUntil) ctx.waitUntil(persist);
+
+    const wav = await generation;
+    if (!ctx?.waitUntil) await persist;
 
     return new Response(wav, {
       status: 200,

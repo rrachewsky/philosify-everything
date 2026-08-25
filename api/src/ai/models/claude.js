@@ -21,9 +21,18 @@ export async function callClaude(prompt, targetLanguage, env, options = {}) {
   const effort = env.CLAUDE_EFFORT || 'medium';
   const maxTokens = 16000;
 
-  console.log(`[Claude] Using model: ${model}, effort: ${effort}, max: ${maxTokens}`);
+  // Explicit timeout so callers fall back to the next model instead of
+  // waiting on the SDK default (10 minutes) — the Cloudflare edge kills the
+  // client connection at ~100s anyway, so anything past ~75s is wasted wall
+  // time. Healthy Opus panel/analysis calls land in 40-60s; this only fires
+  // on genuinely bad provider days. maxRetries 0: the SDK would otherwise
+  // retry timeouts internally, stacking 2-3 full windows before we ever see
+  // the error. Tunable via CLAUDE_TIMEOUT_MS without a code change.
+  const timeoutMs = Number(env.CLAUDE_TIMEOUT_MS) || 75000;
 
-  const client = new Anthropic({ apiKey });
+  console.log(`[Claude] Using model: ${model}, effort: ${effort}, max: ${maxTokens}, timeout: ${timeoutMs}ms`);
+
+  const client = new Anthropic({ apiKey, timeout: timeoutMs, maxRetries: 0 });
 
   const systemPrompt = `You are a philosophical analyst specialized in Objectivist philosophy, providing EDUCATIONAL analysis of cultural works (music, films, literature, news).
 
@@ -122,6 +131,18 @@ State every verdict plainly as the guide's conclusion. Never hedge with "some ma
     // Claude returns errors in format: {type: "error", error: {type: "invalid_request_error", message: "..."}}
     const errorMessage = error.message || error.error?.message || JSON.stringify(error);
     const errorType = error.type || error.error?.type || '';
+
+    // Timeout must be classified BEFORE the content-filter check — callers
+    // (orchestrator, panel chain) route timeouts straight to the next model.
+    if (
+      error?.name === 'APIConnectionTimeoutError' ||
+      /timed\s*out|timeout/i.test(errorMessage)
+    ) {
+      console.error(`[Claude] ⚠️ Request timeout after ${timeoutMs}ms`);
+      const timeoutError = new Error(`Claude API timeout after ${timeoutMs}ms`);
+      timeoutError.isTimeout = true;
+      throw timeoutError;
+    }
 
     if (
       errorMessage.includes('content filtering') ||

@@ -791,7 +791,7 @@ export default {
           return jsonResponse({ error: "Too many requests" }, 429, origin, env);
         }
 
-        return handleGeminiTTS(request, env, origin);
+        return handleGeminiTTS(request, env, origin, ctx);
       }
 
       // Legacy OpenAI TTS endpoint (kept for backward compatibility)
@@ -3655,7 +3655,7 @@ export default {
             429, origin, env,
           );
         }
-        return handleNewsTTS(request, env, origin);
+        return handleNewsTTS(request, env, origin, ctx);
       }
 
       // ============================================================
