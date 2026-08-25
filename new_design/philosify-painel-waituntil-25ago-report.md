@@ -353,6 +353,41 @@ nomes OUT. O texto exato do `acl` varia na renderização, algo como
 `{postgres=X/postgres,service_role=X/postgres}` — o que importa é não haver
 `=X/` sem grantee (PUBLIC) nem `anon`/`authenticated`.)
 
+### Inventário + pré-ACL colados (item 1 fechado)
+
+Saída de 25 ago (compacta, uma linha por função — **sem overloads**):
+
+| Função | Overloads | Assinatura | diretiva | refund_insert | proacl |
+|---|---|---|---|---|---|
+| cleanup_stale_reservations | 1 | `p_max_age_minutes integer` | false | **false** | `{postgres=X/postgres,service_role=X/postgres}` |
+| cleanup_user_stale_reservations | 1 | `p_user_id uuid, p_age_minutes integer` | false | **false** | `{postgres=X/postgres,service_role=X/postgres}` |
+| confirm_reservation | 1 | `p_reservation_id uuid, p_analysis_id text` | false | false | `{=X/postgres,postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}` |
+| release_reservation | 1 | `p_reservation_id uuid, p_reason character varying, p_analysis_id uuid` | false | **false** | `{postgres=X/postgres,service_role=X/postgres}` |
+| reserve_credit | 1 | `p_user_id uuid` | false | false | `{postgres=X/postgres,service_role=X/postgres}` |
+
+**Diagnóstico fechado — hipótese da duplicata REFUTADA; venceu a "não
+executou", em versão ampliada.** Há UMA release_reservation, com assinatura
+idêntica à da migração — o CREATE OR REPLACE teria substituído. E os dois
+reapers também estão sem o INSERT de refund: **nenhum dos três blocos da
+credit_refund_history.sql chegou a este banco.** O "Success" foi real, mas em
+outro lugar — aba do SQL Editor apontada para outro projeto/branch, ou Run numa
+aba errada. Prova de que este banco recebe migrações quando elas rodam de fato:
+a de 21 ago (refund do reaper) está viva — reembolsou o incidente 26→29 ao vivo.
+
+**Go/no-go final: GO, rebuild v2 sem ajuste.** A auditoria de chamadores
+(acima) mostra uso exclusivo do worker via service_role, e o ACL vivo confirma
+que as três funções do escopo **já estão** no estado exato que a seção 5
+produz (`{postgres, service_role}`) — a rebuild reproduz o estado, não abre nem
+fecha nada. Instrução operacional: rodar a rebuild **na mesma aba/sessão** onde
+o inventário rodou (sessão comprovadamente no banco certo); a verificação final
+do último statement é a prova de aplicação neste banco.
+
+**Achado colateral (fora do escopo, candidato a gate futuro):**
+`confirm_reservation` tem EXECUTE para PUBLIC, anon e authenticated sem nenhum
+chamador que precise (worker-only como as demais) — exposição desnecessária de
+função que grava em credit_history; e é também a única sem SECURITY DEFINER.
+Lockdown recomendado em ordem própria.
+
 ### Lição registrada
 
 "Success" de DDL não é verificação. `CREATE OR REPLACE` com assinatura errada
