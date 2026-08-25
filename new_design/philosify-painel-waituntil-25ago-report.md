@@ -265,6 +265,50 @@ contendo `reservation_id` e `reason 'failed'`, e `saldo_depois` = `saldo_antes`.
 Só então: espelho `db/functions/release_reservation.sql` substituído pelo corpo
 aplicado, e este relatório marcado como gate completo.
 
+### Atualização (mesma noite) — rebuild v2 e pré-ACL
+
+Pendências de dados: a saída do inventário (Passo 1) e o pré-ACL abaixo ainda
+não foram colados — a contagem de overloads e a transcrição de papéis entram
+aqui quando chegarem.
+
+**`credits.total` (checagem pedida por Roberto): existe e é seguro usar.**
+Definição: `GENERATED ALWAYS AS (purchased + free_remaining) STORED`
+(`migrations/schema_reference.sql:41,141`). Prova comportamental no banco vivo:
+`reserve_credit` (que faz `SELECT ... total FROM credits`) retornou
+`success=true` no próprio teste DO de 25 ago, e `confirm_reservation` (lê
+`c.total`) funciona em produção (tail do painel: "Balance: 26"). A rebuild
+mantém `c.total`.
+
+**Pré-ACL (rodar ANTES da rebuild e colar a saída):**
+
+```sql
+SELECT p.proname,
+       pg_get_function_identity_arguments(p.oid) AS assinatura,
+       p.proacl
+FROM pg_proc p
+JOIN pg_namespace n ON n.oid = p.pronamespace
+WHERE n.nspname = 'public'
+  AND p.proname IN ('release_reservation','reserve_credit','confirm_reservation',
+                    'cleanup_stale_reservations','cleanup_user_stale_reservations')
+ORDER BY p.proname, p.oid;
+```
+
+Leitura: `proacl` NULL = privilégios default (owner + EXECUTE para PUBLIC);
+array = grants explícitos. Se aparecer `anon`/`authenticated` como grantee em
+alguma delas, parar e revisar antes da rebuild — o código do worker só chama
+via service key (`service_role`), então ninguém mais deveria precisar.
+
+**Rebuild v2** (`migrations/release_reservation_rebuild.sql`, gated, não
+commitada até aplicar): além do drop-all + recriação da `release_reservation`,
+agora cobre **os dois reapers** com o mesmo tratamento — depois de um "Success"
+que foi no-op, a confiança na substituição silenciosa acabou; se os REPLACEs
+deles funcionaram, a recriação é no-op, e se criaram duplicatas o cron de 5 min
+está falhando em ambiguidade do PostgREST e a rebuild conserta junto. Inclui:
+lockdown de permissões (REVOKE PUBLIC/anon/authenticated, GRANT `service_role`
+— apertar pode, abrir não), `NOTIFY pgrst` pós-COMMIT para o cache do
+PostgREST, e a verificação final (3 linhas, overloads=1, diretiva na release,
+INSERT de refund nas três, ACL só owner + service_role) como último statement.
+
 ### Lição registrada
 
 "Success" de DDL não é verificação. `CREATE OR REPLACE` com assinatura errada
