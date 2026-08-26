@@ -364,13 +364,22 @@ inventário estava em OUTRO projeto Supabase — e todo o diagnóstico abaixo
 Status do item 3: **estado desconhecido** até a checagem de identidade passar.
 A rebuild NÃO roda antes disso.
 
-Refs conhecidos no repositório: `fgaavfxspnymfcpywqkz` (env do frontend —
-morto, HTTP 000/NXDOMAIN, já apontado no relatório wp4) e
-`zunugudeytbdzlidosgr` (vivo, HTTP 401 no /auth/v1/health; aparece em
-`tests/check-transactions.js` e docs — candidato a produção, não confirmado).
-A URL de produção do worker vive só no Cloudflare Secrets Store (valor não
-legível) — **o ref definitivo sai da checagem de identidade abaixo**, e fica
-registrado aqui como referência permanente quando confirmar.
+**REF DE PRODUÇÃO CONFIRMADO (26 ago): `zunugudeytbdzlidosgr`** — prova
+comportamental no tail do worker de produção, cron de 26 ago 23:25 UTC:
+`[SubreqDiag] fetch → https://zunugudeytbdzlidosgr.supabase.co/rest/v1/...`.
+É o próprio worker declarando com qual banco fala. Referência permanente:
+**toda migração roda em `supabase.com/dashboard/project/zunugudeytbdzlidosgr`**
+— conferir o ref na URL da aba antes de qualquer Run.
+(Contexto: `fgaavfxspnymfcpywqkz`, o ref no env do frontend, está morto —
+HTTP 000/NXDOMAIN, stale config já apontada no relatório wp4.)
+
+Consequência para a checagem de identidade: se a aba do inventário ERA
+`zunugudeytbdzlidosgr`, o inventário é verdade de produção (migração
+realmente não aplicou; rebuild GO) e a divergência 29→17 precisa de outra
+explicação — candidata natural: consumo real de créditos entre o gate e o
+teste DO (12 créditos = 4 painéis ou 12 análises; `credit_history` responde).
+Se a aba era outro ref, aba errada confirmada — inventário refeito no projeto
+certo.
 
 **Checagem de identidade** (uma célula, rodar na MESMA aba do inventário E
 depois na aba aberta pelo dashboard do projeto candidato; junto com cada
