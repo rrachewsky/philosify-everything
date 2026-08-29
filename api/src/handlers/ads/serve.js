@@ -870,3 +870,50 @@ async function checkUserPremium(env, userId) {
     return false;
   }
 }
+
+// ============================================================
+// IP ANONYMIZATION REAPER (privacy)
+// ip_address on ads.ad_impressions only serves same-day frequency
+// capping (selectProportionalAd) and the click fraud check minutes/
+// hours after the impression (handleAdClick). Past 48h it is retained
+// personal data with no function — null it out in bounded batches.
+// Called from scheduled() on the */5 cron.
+// ============================================================
+export async function anonymizeOldImpressionIps(env, batchSize = 500) {
+  try {
+    const supabase = await getServiceSupabase(env);
+    const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+
+    const { data: rows } = await supabase
+      .from('ads.ad_impressions')
+      .select('id', {
+        filter: `created_at=lt.${cutoff}&ip_address=not.is.null`,
+        limit: batchSize,
+      });
+
+    const ids = (rows || []).map((r) => r.id);
+    if (ids.length === 0) return { anonymized: 0 };
+
+    const { data: updated, error } = await supabase
+      .from('ads.ad_impressions')
+      .update({ ip_address: null }, `id=in.(${ids.join(',')})`);
+    if (error) {
+      console.error('[Ads] IP anonymization failed:', error.message);
+      return { anonymized: 0, error: error.message };
+    }
+
+    // The client collapses the returned representation to its first row, so an
+    // exact affected count is unavailable — but null/undefined here means the
+    // UPDATE matched 0 rows despite candidates in the SELECT.
+    if (updated == null) {
+      console.warn(`[Ads] IP anonymization: UPDATE affected 0 rows (${ids.length} candidates)`);
+      return { anonymized: 0 };
+    }
+
+    console.log(`[Ads] IP anonymization: ${ids.length} impressions older than 48h`);
+    return { anonymized: ids.length };
+  } catch (err) {
+    console.error('[Ads] IP anonymization error:', err.message);
+    return { anonymized: 0, error: err.message };
+  }
+}

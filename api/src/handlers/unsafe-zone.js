@@ -681,3 +681,77 @@ export async function handleUnsafeZoneClear(request, env, origin) {
     return jsonResponse({ error: 'Failed to clear conversation' }, 500, origin, env);
   }
 }
+
+// ============================================================
+// DELETE ONE SESSION — DELETE /api/unsafe-zone/session/:id
+// Physically deletes one session (any status) owned by the user.
+// ============================================================
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export async function handleUnsafeZoneDeleteSession(request, env, origin, sessionId) {
+  try {
+    const user = await getUserFromAuth(request, env);
+    if (!user?.userId) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+    }
+
+    // The id comes from the URL path — validate before it touches a filter
+    if (!sessionId || !UUID_RE.test(sessionId)) {
+      return jsonResponse({ error: 'Invalid session id' }, 400, origin, env);
+    }
+
+    const supabase = await getServiceSupabase(env);
+
+    // Ownership check (same pattern as handleUnsafeZoneGetSession)
+    const { data: sessions } = await supabase
+      .from('unsafe_zone_sessions')
+      .select('id', {
+        filter: `id=eq.${sessionId}&user_id=eq.${user.userId}`,
+        limit: 1,
+      });
+    const session = Array.isArray(sessions) ? sessions[0] : sessions;
+    if (!session) {
+      return jsonResponse({ error: 'Session not found' }, 404, origin, env);
+    }
+
+    const { error } = await supabase
+      .from('unsafe_zone_sessions')
+      .delete(`id=eq.${sessionId}&user_id=eq.${user.userId}`);
+    if (error) {
+      console.error('[UnsafeZone] Delete session failed:', error.message);
+      return jsonResponse({ error: 'Failed to delete session' }, 500, origin, env);
+    }
+
+    return jsonResponse({ success: true }, 200, origin, env);
+  } catch (err) {
+    console.error('[UnsafeZone] Delete session error:', err);
+    return jsonResponse({ error: 'Failed to delete session' }, 500, origin, env);
+  }
+}
+
+// ============================================================
+// DELETE ALL SESSIONS — DELETE /api/unsafe-zone/history
+// Physically deletes ALL of the user's sessions.
+// ============================================================
+export async function handleUnsafeZoneDeleteAll(request, env, origin) {
+  try {
+    const user = await getUserFromAuth(request, env);
+    if (!user?.userId) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+    }
+
+    const supabase = await getServiceSupabase(env);
+    const { error } = await supabase
+      .from('unsafe_zone_sessions')
+      .delete(`user_id=eq.${user.userId}`);
+    if (error) {
+      console.error('[UnsafeZone] Delete all failed:', error.message);
+      return jsonResponse({ error: 'Failed to delete sessions' }, 500, origin, env);
+    }
+
+    return jsonResponse({ success: true }, 200, origin, env);
+  } catch (err) {
+    console.error('[UnsafeZone] Delete all error:', err);
+    return jsonResponse({ error: 'Failed to delete sessions' }, 500, origin, env);
+  }
+}

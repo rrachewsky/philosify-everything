@@ -21,10 +21,6 @@ const DISPLAY_NAME_MAX = 50;
  */
 export async function handleGetProfile(request, env, origin) {
   console.log("[Profile] GET request received");
-  console.log(
-    "[Profile] Cookie header:",
-    request.headers.get("Cookie")?.substring(0, 50) + "...",
-  );
 
   const auth = await getSupabaseForUser(request, env);
   if (!auth) {

@@ -66,6 +66,15 @@
 
 /* History list */
 .v2 .pg-unsafe-zone .uz-history label.f{margin-top:0}
+/* Per-session delete (pacote pré-privacy, item 1): border moves to the
+   wrapper so the row line runs under the delete button too */
+.v2 .pg-unsafe-zone .hrowline{display:flex;align-items:stretch;border-bottom:1px solid var(--line)}
+.v2 .pg-unsafe-zone .hrowline .hrow{flex:1;min-width:0;border-bottom:0}
+.v2 .pg-unsafe-zone .hdel{flex:none;width:36px;background:none;border:0;border-left:1px solid var(--line);
+ color:var(--low);font:400 16px/1 var(--fu);cursor:pointer}
+.v2 .pg-unsafe-zone .hdel:hover{color:var(--warn)}
+/* Danger link in the actions row */
+.v2 .pg-unsafe-zone .actions .uz-danger{color:var(--warn)}
 
 @media (max-width:640px){
  .v2 .pg-unsafe-zone .hrow{grid-template-columns:44px 1fr auto;gap:10px}

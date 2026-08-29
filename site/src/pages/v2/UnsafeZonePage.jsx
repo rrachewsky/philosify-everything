@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { PageShell, MarkerLine, Ticker, Pill, Button } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
+import { ConfirmModal } from './ideas/IdeasModals.jsx';
 import { useAuth } from '../../hooks/useAuth';
 import { useCreditsContext } from '../../contexts/CreditsContext';
 import { setPendingAction, getPendingAction, clearPendingAction } from '../../utils/pendingAction.js';
@@ -104,6 +105,8 @@ function UnsafeZoneConsole({ user }) {
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null); // {type:'one',id,active} | {type:'all',active}
+  const [deleting, setDeleting] = useState(false);
 
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -322,6 +325,16 @@ function UnsafeZoneConsole({ user }) {
           window.dispatchEvent(new CustomEvent('v2-open-buy-credits'));
           return;
         }
+        if (response.status === 404) {
+          // Session was deleted elsewhere — official state is gone; reset, keep the draft
+          setSessionId(null);
+          setMessages([]);
+          setTurn(0);
+          setTurnsRemaining(INITIAL_TURNS);
+          setInput(savedInput);
+          setError(null);
+          return;
+        }
         if (response.status === 400 && data.error?.includes('no longer active')) {
           // Session expired or ended — reset to start fresh, keep the draft
           setSessionId(null);
@@ -433,6 +446,58 @@ function UnsafeZoneConsole({ user }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showHistory]);
 
+  // ---- Delete one session (DELETE /api/unsafe-zone/session/:id) ----
+  const deleteSession = useCallback(
+    async (id) => {
+      if (deleting) return;
+      setDeleting(true);
+      setError(null);
+      try {
+        const resp = await fetchWithSessionRetry(`${getApiUrl()}/api/unsafe-zone/session/${id}`, {
+          method: 'DELETE',
+        });
+        if (!resp.ok) throw new Error('delete failed');
+        setHistory((prev) => prev.filter((s) => s.id !== id));
+        if (id === sessionId) {
+          // The open conversation was deleted — reset the console
+          setSessionId(null);
+          setMessages([]);
+          setTurn(0);
+          setTurnsRemaining(INITIAL_TURNS);
+          setWarning(null);
+        }
+      } catch {
+        setError(t('v2.unsafe-zone.deleteError', 'Failed to delete. Please try again.'));
+      } finally {
+        setDeleting(false);
+      }
+    },
+    [deleting, sessionId, t]
+  );
+
+  // ---- Delete ALL sessions (DELETE /api/unsafe-zone/history) ----
+  const deleteAllSessions = useCallback(async () => {
+    if (deleting) return;
+    setDeleting(true);
+    setError(null);
+    try {
+      const resp = await fetchWithSessionRetry(`${getApiUrl()}/api/unsafe-zone/history`, {
+        method: 'DELETE',
+      });
+      if (!resp.ok) throw new Error('delete failed');
+      setHistory([]);
+      setSessionId(null);
+      setMessages([]);
+      setTurn(0);
+      setTurnsRemaining(INITIAL_TURNS);
+      setWarning(null);
+    } catch {
+      setError(t('v2.unsafe-zone.deleteError', 'Failed to delete. Please try again.'));
+    } finally {
+      setDeleting(false);
+    }
+  }, [deleting, t]);
+
   // ---- Derived display state ----
   const inConversation = messages.length > 0;
   const isLoadingConversation = !conversationLoaded && !!user;
@@ -476,29 +541,45 @@ function UnsafeZoneConsole({ user }) {
               <div className="mnote">{t('v2.unsafe-zone.noHistory', 'No past sessions')}</div>
             ) : (
               history.map((session) => (
-                <a
-                  key={session.id}
-                  className="hrow"
-                  href="#session"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    resumeSession(session.id);
-                  }}
-                >
-                  <span className="id">{shortCode(session.id, 6)}</span>
-                  <span className="t">
-                    {session.preview || t('v2.unsafe-zone.untitled', 'Untitled session')}
-                  </span>
-                  <span className="m">
-                    {session.turnCount} {t('v2.unsafe-zone.turns', 'turns')}
-                  </span>
-                  <span className="d">{new Date(session.updatedAt).toLocaleDateString()}</span>
-                  <Pill>
-                    {session.status === 'active'
-                      ? t('v2.unsafe-zone.active', 'Active')
-                      : t('v2.unsafe-zone.completed', 'Completed')}
-                  </Pill>
-                </a>
+                <div key={session.id} className="hrowline">
+                  <a
+                    className="hrow"
+                    href="#session"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      resumeSession(session.id);
+                    }}
+                  >
+                    <span className="id">{shortCode(session.id, 6)}</span>
+                    <span className="t">
+                      {session.preview || t('v2.unsafe-zone.untitled', 'Untitled session')}
+                    </span>
+                    <span className="m">
+                      {session.turnCount} {t('v2.unsafe-zone.turns', 'turns')}
+                    </span>
+                    <span className="d">{new Date(session.updatedAt).toLocaleDateString()}</span>
+                    <Pill>
+                      {session.status === 'active'
+                        ? t('v2.unsafe-zone.active', 'Active')
+                        : t('v2.unsafe-zone.completed', 'Completed')}
+                    </Pill>
+                  </a>
+                  <button
+                    type="button"
+                    className="hdel"
+                    title={t('v2.unsafe-zone.deleteSession', 'Delete session')}
+                    aria-label={t('v2.unsafe-zone.deleteSession', 'Delete session')}
+                    onClick={() =>
+                      setConfirmDelete({
+                        type: 'one',
+                        id: session.id,
+                        active: session.status === 'active',
+                      })
+                    }
+                  >
+                    ×
+                  </button>
+                </div>
               ))
             )}
             {error && <div className="uz-err">{error}</div>}
@@ -513,6 +594,21 @@ function UnsafeZoneConsole({ user }) {
               >
                 {t('v2.unsafe-zone.backToChat', 'Back to conversation')}
               </a>
+              {history.length > 0 && (
+                <a
+                  href="#delete-all"
+                  className="uz-danger"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setConfirmDelete({
+                      type: 'all',
+                      active: !!sessionId || history.some((s) => s.status === 'active'),
+                    });
+                  }}
+                >
+                  {t('v2.unsafe-zone.deleteAll', 'Delete all sessions')}
+                </a>
+              )}
             </div>
           </div>
         ) : (
@@ -654,6 +750,39 @@ function UnsafeZoneConsole({ user }) {
           </>
         )}
       </div>
+
+      {confirmDelete && (
+        <ConfirmModal
+          text={
+            confirmDelete.type === 'all'
+              ? confirmDelete.active
+                ? t(
+                    'v2.unsafe-zone.confirmDeleteAllActive',
+                    "Delete ALL of your sessions? Your active session's unused turns will be lost without refund. This cannot be undone."
+                  )
+                : t(
+                    'v2.unsafe-zone.confirmDeleteAll',
+                    'Permanently delete ALL of your sessions? This cannot be undone.'
+                  )
+              : confirmDelete.active
+                ? t(
+                    'v2.unsafe-zone.confirmDeleteOneActive',
+                    'This session is still active — any unused turns will be lost without refund. Delete it anyway? This cannot be undone.'
+                  )
+                : t(
+                    'v2.unsafe-zone.confirmDeleteOne',
+                    'Permanently delete this session? This cannot be undone.'
+                  )
+          }
+          onClose={() => setConfirmDelete(null)}
+          onConfirm={() => {
+            const target = confirmDelete;
+            setConfirmDelete(null);
+            if (target.type === 'all') deleteAllSessions();
+            else deleteSession(target.id);
+          }}
+        />
+      )}
     </div>
   );
 }

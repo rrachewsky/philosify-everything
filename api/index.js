@@ -3993,10 +3993,19 @@ export default {
         const { handleUnsafeZoneHistory } = await import("./src/handlers/unsafe-zone.js");
         return handleUnsafeZoneHistory(request, env, origin);
       }
+      if (url.pathname === "/api/unsafe-zone/history" && request.method === "DELETE") {
+        const { handleUnsafeZoneDeleteAll } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZoneDeleteAll(request, env, origin);
+      }
       if (url.pathname.startsWith("/api/unsafe-zone/session/") && request.method === "GET") {
         const sessionId = url.pathname.split("/api/unsafe-zone/session/")[1];
         const { handleUnsafeZoneGetSession } = await import("./src/handlers/unsafe-zone.js");
         return handleUnsafeZoneGetSession(request, env, origin, sessionId);
+      }
+      if (url.pathname.startsWith("/api/unsafe-zone/session/") && request.method === "DELETE") {
+        const sessionId = url.pathname.split("/api/unsafe-zone/session/")[1];
+        const { handleUnsafeZoneDeleteSession } = await import("./src/handlers/unsafe-zone.js");
+        return handleUnsafeZoneDeleteSession(request, env, origin, sessionId);
       }
       if (url.pathname === "/api/unsafe-zone/end" && request.method === "POST") {
         const { handleUnsafeZoneEnd } = await import("./src/handlers/unsafe-zone.js");
@@ -4613,6 +4622,21 @@ export default {
           err.message,
         ),
       ),
+    );
+
+    // Privacy reaper: anonymize ad-impression IPs older than 48h (every 5 min).
+    // Same-day frequency capping and the post-impression click check are the
+    // only readers; past 48h the IP has no function. Bounded batches (500)
+    // keep each run inside the cron's subrequest budget.
+    ctx.waitUntil(
+      (async () => {
+        try {
+          const { anonymizeOldImpressionIps } = await import("./src/handlers/ads/serve.js");
+          await anonymizeOldImpressionIps(env, 500);
+        } catch (err) {
+          console.error("[Cron] Impression IP anonymization failed:", err.message);
+        }
+      })(),
     );
 
     // User-proposed colloquium: staggered philosopher replies (every 5 min)
