@@ -133,7 +133,7 @@ export default function LegalPage({ doc = 'terms' }) {
     <PageShell variant="interior" nav={<NavAccount />} footer={null}>
       <div className="pg-legal">
         <ModuleHeader title={title}>
-          <Ticker>{t('v2.legal.updated', 'Last updated // 27 Jul 2026')}</Ticker>
+          <Ticker>{t('v2.legal.updated', 'Last updated // 29 Aug 2026')}</Ticker>
         </ModuleHeader>
 
         <div className="legalgrid">
