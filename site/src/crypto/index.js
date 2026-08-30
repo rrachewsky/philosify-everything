@@ -18,6 +18,7 @@ export {
   clearKeyPair,
   hasKeyPair,
   getPublicKeyBase64,
+  publicKeyFromBase64,
 } from './keys.js';
 export { encryptMessage, decryptMessage, deriveSharedSecret } from './encryption.js';
 export {

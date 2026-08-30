@@ -246,3 +246,9 @@ secret_name = "TMDB_API_KEY"
 binding = "STRIPE_ADS_WEBHOOK_SECRET"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "STRIPE_ADS_WEBHOOK_SECRET"
+
+# SENTRY_DSN - Worker error reporting (Sentry)
+[[env.production.secrets_store_secrets]]
+binding = "SENTRY_DSN"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "SENTRY_DSN"

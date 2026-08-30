@@ -1,6 +1,8 @@
 // Sentry Error Monitoring for Cloudflare Workers
 // Lightweight error tracking without official SDK
 
+import { getSecret } from './secrets.js';
+
 /**
  * Send error to Sentry
  * @param {Error} error - The error object
@@ -8,15 +10,14 @@
  * @param {Object} env - Cloudflare environment with SENTRY_DSN
  */
 export async function captureException(error, context = {}, env = {}) {
-  // Skip if no Sentry DSN configured
-  if (!env.SENTRY_DSN) {
+  // Skip if no Sentry DSN configured (Secrets Store binding or .dev.vars string)
+  const dsn = env.SENTRY_DSN ? await getSecret(env.SENTRY_DSN) : null;
+  if (!dsn) {
     console.error('[Sentry] No DSN configured, skipping error report:', error);
     return;
   }
 
   try {
-    // Parse DSN
-    const dsn = env.SENTRY_DSN;
     const dsnMatch = dsn.match(/https:\/\/(.+)@(.+)\/(\d+)/);
     
     if (!dsnMatch) {
@@ -131,10 +132,10 @@ function sanitizeHeaders(headers) {
  * Capture a message
  */
 export async function captureMessage(message, level = 'info', context = {}, env = {}) {
-  if (!env.SENTRY_DSN) return;
+  const dsn = env.SENTRY_DSN ? await getSecret(env.SENTRY_DSN) : null;
+  if (!dsn) return;
 
   try {
-    const dsn = env.SENTRY_DSN;
     const dsnMatch = dsn.match(/https:\/\/(.+)@(.+)\/(\d+)/);
     if (!dsnMatch) return;
 

@@ -1397,7 +1397,22 @@
       "loadingConfessions": "고백 불러오는 중...",
       "deletePost": "게시물 삭제",
       "deleteTitle": "게시물 삭제",
-      "deleteConfirm": "이 게시물을 삭제하시겠습니까? 되돌릴 수 없습니다."
+      "deleteConfirm": "이 게시물을 삭제하시겠습니까? 되돌릴 수 없습니다.",
+      "keypairError": "암호화 키를 준비하지 못했습니다. 페이지를 새로고침한 후 다시 시도해 주세요.",
+      "roomPending": "종단 간 암호화 방입니다. 접근 키는 다른 멤버의 브라우저를 통해 전달됩니다. 곧 다시 방문해 주세요.",
+      "roomError": "암호화 방을 준비하지 못했습니다. 새로고침 후 다시 시도해 주세요.",
+      "noKeyError": "방 키가 아직 도착하지 않았습니다. 게시가 잠겨 있습니다.",
+      "report": "신고",
+      "reportTitle": "게시물 신고",
+      "reportWarning": "신고하면 이 게시물의 읽을 수 있는 사본이 운영진에게 전송됩니다.",
+      "reportReasonPlaceholder": "이 게시물을 신고하는 이유는 무엇인가요?",
+      "reportSend": "신고 보내기",
+      "reportSending": "보내는 중…",
+      "reportSuccess": "신고가 전송되었습니다.",
+      "reportClose": "닫기",
+      "reportStale": "신고하는 동안 게시물이 변경되었습니다. 새 내용을 확인하고 다시 시도해 주세요.",
+      "reportRateLimited": "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+      "reportError": "신고를 보내지 못했습니다. 다시 시도해 주세요."
     },
     "debate": {
       "title": "토론",

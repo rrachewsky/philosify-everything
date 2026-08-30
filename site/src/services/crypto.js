@@ -23,6 +23,7 @@ import {
   cacheGroupKey,
   getCachedGroupKey,
   clearGroupKeyCache,
+  publicKeyFromBase64,
 } from '@/crypto';
 import * as cryptoApi from '@/services/api/crypto';
 import * as dmApi from '@/services/api/dm';
@@ -481,37 +482,123 @@ export async function decryptGroupDM(encryptedContent, nonce, conversationId) {
 }
 
 // ============================================================
-// UNDERGROUND ENCRYPTION
+// UNDERGROUND ENCRYPTION (mandatory E2E — pacote pré-privacy item 5)
 // ============================================================
-// Underground uses a shared room key for all unlocked users.
-// Simpler than per-conversation keys since it's a single room.
+// One shared room key for every unlocked member. The raw key exists
+// ONLY in members' browsers; the server stores per-member wrapped
+// copies plus the key's SHA-256 fingerprint (underground_room).
+// A wrapped copy is NEVER used before its fingerprint is verified.
 
 let undergroundRoomKey = null;
 
 /**
- * Set the Underground room key (received when unlocking).
- * @param {string} encryptedKey - Base64 encrypted room key
+ * SHA-256 of the raw room key, lowercase hex — exactly the format
+ * the backend validates (FINGERPRINT_REGEX, 64 hex chars).
+ * @param {Uint8Array} rawKey
+ * @returns {Promise<string>}
  */
-export async function setUndergroundRoomKey(encryptedKey) {
-  if (!encryptedKey || !isReady()) {
-    return;
-  }
+export async function computeRoomKeyFingerprint(rawKey) {
+  const digest = await window.crypto.subtle.digest('SHA-256', rawKey);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
 
+/**
+ * Generate a candidate room key for room-init (design §2.2).
+ * The caller MUST either adopt the rawKey (winner) or discard it
+ * with discardRoomKeyCandidate (loser).
+ * @returns {Promise<{rawKey: Uint8Array, fingerprint: string, encryptedKeyForSelf: string} | null>}
+ */
+export async function generateUndergroundRoomKey() {
+  if (!isReady()) {
+    await initializeE2E();
+  }
   const keyPair = await getStoredKeyPair();
-  if (!keyPair) {
-    return;
-  }
+  if (!keyPair) return null;
 
+  const rawKey = generateGroupKey();
+  const fingerprint = await computeRoomKeyFingerprint(rawKey);
+  const encryptedKeyForSelf = encryptGroupKeyForMember(rawKey, keyPair.publicKey);
+  return { rawKey, fingerprint, encryptedKeyForSelf };
+}
+
+/** Adopt a raw room key (room-init winner / orphan-winner self-heal). */
+export function adoptUndergroundRoomKey(rawKey) {
+  undergroundRoomKey = rawKey;
+  logger.log('[E2E] Underground room key adopted');
+}
+
+/** Zero and drop a candidate key that lost the room-init race. */
+export function discardRoomKeyCandidate(rawKey) {
   try {
-    undergroundRoomKey = decryptGroupKey(encryptedKey, keyPair.publicKey, keyPair.privateKey);
-    logger.log('[E2E] Underground room key set');
-  } catch (error) {
-    logger.error('[E2E] Failed to decrypt Underground room key:', error);
+    if (rawKey && typeof rawKey.fill === 'function') rawKey.fill(0);
+  } catch {
+    // best effort — the reference is dropped either way
   }
 }
 
 /**
- * Encrypt a post for Underground.
+ * Set the room key from the member's wrapped copy — ONLY after the
+ * fingerprint check passes (design §2.3; a wrong copy is a DoS
+ * attempt or corruption: discard and let the caller trigger rekey).
+ * @param {string} encryptedKey - Base64 wrapped room key
+ * @param {string} expectedFingerprint - hex fingerprint from underground_room
+ * @returns {Promise<boolean>} true = key verified and adopted
+ */
+export async function setUndergroundRoomKey(encryptedKey, expectedFingerprint) {
+  if (!encryptedKey || !expectedFingerprint) return false;
+  if (!isReady()) {
+    await initializeE2E();
+  }
+  const keyPair = await getStoredKeyPair();
+  if (!keyPair) return false;
+
+  let candidate = null;
+  try {
+    candidate = decryptGroupKey(encryptedKey, keyPair.publicKey, keyPair.privateKey);
+  } catch (error) {
+    logger.error('[E2E] Failed to decrypt Underground room key:', error);
+    return false;
+  }
+
+  const fingerprint = await computeRoomKeyFingerprint(candidate);
+  if (fingerprint !== expectedFingerprint.toLowerCase()) {
+    logger.error('[E2E] Underground room key fingerprint MISMATCH — discarding copy');
+    discardRoomKeyCandidate(candidate);
+    return false;
+  }
+
+  undergroundRoomKey = candidate;
+  logger.log('[E2E] Underground room key verified and set');
+  return true;
+}
+
+/** Whether this browser currently holds the verified room key. */
+export function hasUndergroundRoomKey() {
+  return !!undergroundRoomKey;
+}
+
+/**
+ * Wrap the room key for another member's public key (distributor
+ * flow, design §2.3).
+ * @param {string} publicKeyBase64
+ * @returns {string | null}
+ */
+export function wrapUndergroundRoomKeyFor(publicKeyBase64) {
+  if (!undergroundRoomKey || !publicKeyBase64) return null;
+  try {
+    const publicKey = publicKeyFromBase64(publicKeyBase64);
+    return encryptGroupKeyForMember(undergroundRoomKey, publicKey);
+  } catch (error) {
+    logger.error('[E2E] Failed to wrap Underground room key:', error);
+    return null;
+  }
+}
+
+/**
+ * Encrypt a post for Underground. Null when the key is absent —
+ * the caller must surface the pending state, never send plaintext.
  * @param {string} plaintext - Post content
  * @returns {{ encrypted_content: string, nonce: string } | null}
  */
@@ -561,6 +648,7 @@ export function decryptUndergroundPost(encryptedContent, nonce) {
 export function clearAllCaches() {
   publicKeyCache.clear();
   clearGroupKeyCache();
+  discardRoomKeyCandidate(undergroundRoomKey);
   undergroundRoomKey = null;
   logger.log('[E2E] All caches cleared');
 }
@@ -584,7 +672,13 @@ export default {
   encryptCollectiveMessage,
   decryptCollectiveMessage,
   // Underground
+  computeRoomKeyFingerprint,
+  generateUndergroundRoomKey,
+  adoptUndergroundRoomKey,
+  discardRoomKeyCandidate,
   setUndergroundRoomKey,
+  hasUndergroundRoomKey,
+  wrapUndergroundRoomKeyFor,
   encryptUndergroundPost,
   decryptUndergroundPost,
   // Cleanup

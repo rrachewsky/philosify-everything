@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useUnderground } from '../../hooks/useUnderground.js';
 import { TranslateButton } from '../common/TranslateButton.jsx';
 import { ConfirmModal } from '../common/ConfirmModal.jsx';
+import { Modal } from '../common/Modal.jsx';
 
 const REACTIONS = [
   { key: 'fire', emoji: '\u{1F525}', label: 'Fire' },
@@ -66,6 +67,19 @@ const Icons = {
     >
       <polyline points="3 6 5 6 21 6" />
       <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    </svg>
+  ),
+  Flag: () => (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+      <line x1="4" y1="22" x2="4" y2="15" />
     </svg>
   ),
 };
@@ -146,6 +160,7 @@ function UndergroundPost({
   onDelete,
   onEdit,
   onReply,
+  onReport,
   isEditing,
   onSaveEdit,
   onCancelEdit,
@@ -230,6 +245,19 @@ function UndergroundPost({
           <button className="chat-msg-action" onClick={handleCopy} title="Copy" aria-label="Copy">
             <Icons.Copy />
           </button>
+          {/* Report — only for posts the reader actually decrypted: the
+              voluntary-plaintext report attests OUR readable copy (§2.8);
+              without plaintext there is nothing to attest (would 400). */}
+          {!isOwn && !post.decryptionFailed && post.content && (
+            <button
+              className="chat-msg-action"
+              onClick={() => onReport?.(post)}
+              title={t('community.underground.report')}
+              aria-label={t('community.underground.report')}
+            >
+              <Icons.Flag />
+            </button>
+          )}
           {isOwn && (
             <button
               className="chat-msg-action chat-msg-action--danger"
@@ -315,17 +343,107 @@ function UndergroundPost({
   );
 }
 
+// ReportModal — voluntary-plaintext report (design §2.8). The reporter's
+// own decrypted copy is sent to moderation; the warning says so in full.
+function ReportModal({ post, onClose, onSubmit, t }) {
+  const [reason, setReason] = useState('');
+  const [state, setState] = useState('idle'); // idle | sending | success | stale | ratelimited | error
+
+  const handleSend = async () => {
+    const trimmed = reason.trim();
+    if (!trimmed || state === 'sending') return;
+    setState('sending');
+    try {
+      await onSubmit(post, trimmed);
+      setState('success');
+    } catch (err) {
+      if (err.code === 'REPORT_STALE') setState('stale'); // service already retried once
+      else if (err.status === 429) setState('ratelimited');
+      else setState('error');
+    }
+  };
+
+  return (
+    <Modal
+      isOpen={!!post}
+      onClose={onClose}
+      title={t('community.underground.reportTitle')}
+      maxWidth="440px"
+    >
+      {state === 'success' ? (
+        <>
+          <p className="text-white-70 mb-6 leading-normal text-sm">
+            {t('community.underground.reportSuccess')}
+          </p>
+          <div className="flex gap-3 justify-end">
+            <button className="form-button flex-1" onClick={onClose}>
+              {t('community.underground.reportClose')}
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="underground-report-warning">
+            {t('community.underground.reportWarning')}
+          </div>
+          <textarea
+            className="underground-input__textarea"
+            value={reason}
+            onChange={(e) => setReason(e.target.value.slice(0, 500))}
+            placeholder={t('community.underground.reportReasonPlaceholder')}
+            maxLength={500}
+            rows={3}
+            disabled={state === 'sending'}
+            autoFocus
+          />
+          <div className="underground-input__charcount">{reason.length}/500</div>
+          {state === 'stale' && (
+            <div className="underground-error">{t('community.underground.reportStale')}</div>
+          )}
+          {state === 'ratelimited' && (
+            <div className="underground-error">{t('community.underground.reportRateLimited')}</div>
+          )}
+          {state === 'error' && (
+            <div className="underground-error">{t('community.underground.reportError')}</div>
+          )}
+          <div className="flex gap-3 justify-end">
+            <button
+              className="form-button form-button--cancel flex-1"
+              onClick={onClose}
+              disabled={state === 'sending'}
+            >
+              {t('community.dm.cancel')}
+            </button>
+            <button
+              className="form-button form-button--danger flex-1"
+              onClick={handleSend}
+              disabled={!reason.trim() || state === 'sending'}
+            >
+              {state === 'sending'
+                ? t('community.underground.reportSending')
+                : t('community.underground.reportSend')}
+            </button>
+          </div>
+        </>
+      )}
+    </Modal>
+  );
+}
+
 export function UndergroundFeed() {
   const { t } = useTranslation();
   const {
     posts,
     loading,
     error,
+    errorCode,
+    roomStatus,
     hasMore,
     posting,
     needsNickname,
     myNickname,
     settingNickname,
+    reportPost,
     createPost,
     editPost,
     toggleReaction,
@@ -341,6 +459,7 @@ export function UndergroundFeed() {
 
   const [newPost, setNewPost] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [reportTarget, setReportTarget] = useState(null);
   const feedRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -354,7 +473,7 @@ export function UndergroundFeed() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const content = newPost.trim();
-    if (!content || posting) return;
+    if (!content || posting || roomStatus !== 'ready') return;
 
     try {
       await createPost(content, { replyToId: replyingTo?.id || null });
@@ -429,6 +548,16 @@ export function UndergroundFeed() {
         </div>
       )}
 
+      {/* Room key state (mandatory E2E) — honest pending message (design §2.3) */}
+      {roomStatus === 'pending' && (
+        <div className="underground-room-status">
+          {t('community.underground.roomPending')}
+        </div>
+      )}
+      {roomStatus === 'error' && (
+        <div className="underground-error">{t('community.underground.roomError')}</div>
+      )}
+
       {/* Reply bar above input */}
       {replyingTo && (
         <div className="chat-reply-bar">
@@ -462,14 +591,14 @@ export function UndergroundFeed() {
           }
           maxLength={1000}
           rows={3}
-          disabled={posting}
+          disabled={posting || roomStatus !== 'ready'}
         />
         <div className="underground-input__footer">
           <span className="underground-input__charcount">{newPost.length}/1000</span>
           <button
             type="submit"
             className="underground-input__submit"
-            disabled={!newPost.trim() || posting}
+            disabled={!newPost.trim() || posting || roomStatus !== 'ready'}
           >
             {posting
               ? t('community.underground.posting')
@@ -479,7 +608,11 @@ export function UndergroundFeed() {
       </form>
 
       {/* Error display */}
-      {error && <div className="underground-error">{error}</div>}
+      {error && (
+        <div className="underground-error">
+          {errorCode === 'E2E_NO_ROOM_KEY' ? t('community.underground.noKeyError') : error}
+        </div>
+      )}
 
       {/* Posts feed */}
       <div className="underground-posts" ref={feedRef}>
@@ -500,6 +633,7 @@ export function UndergroundFeed() {
               onDelete={handleDeleteRequest}
               onEdit={handleEditRequest}
               onReply={handleReply}
+              onReport={setReportTarget}
               isEditing={editingPost?.id === post.id}
               onSaveEdit={handleSaveEdit}
               onCancelEdit={handleCancelEdit}
@@ -529,6 +663,15 @@ export function UndergroundFeed() {
         cancelText={t('community.dm.cancel')}
         confirmVariant="danger"
       />
+
+      {reportTarget && (
+        <ReportModal
+          post={reportTarget}
+          onClose={() => setReportTarget(null)}
+          onSubmit={reportPost}
+          t={t}
+        />
+      )}
     </div>
   );
 }

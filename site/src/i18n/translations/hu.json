@@ -1503,7 +1503,22 @@
       "loadingConfessions": "Vallomások betöltése...",
       "deletePost": "Bejegyzés törlése",
       "deleteTitle": "Bejegyzés törlése",
-      "deleteConfirm": "Törli ezt a bejegyzést? Ez a művelet nem vonható vissza."
+      "deleteConfirm": "Törli ezt a bejegyzést? Ez a művelet nem vonható vissza.",
+      "keypairError": "Nem sikerült előkészíteni a titkosítási kulcsaidat. Töltsd újra az oldalt, és próbáld újra.",
+      "roomPending": "Végpontok között titkosított szoba. A hozzáférési kulcsodat egy másik tag böngészője fogja kézbesíteni — nézz vissza hamarosan.",
+      "roomError": "Nem sikerült előkészíteni a titkosított szobát. Töltsd újra az oldalt a próbához.",
+      "noKeyError": "A szobakulcsod még nem érkezett meg — a közzététel zárolva van.",
+      "report": "Jelentés",
+      "reportTitle": "Bejegyzés jelentése",
+      "reportWarning": "A jelentéssel a bejegyzés olvasható másolata a moderációhoz kerül.",
+      "reportReasonPlaceholder": "Miért jelented ezt a bejegyzést?",
+      "reportSend": "Jelentés küldése",
+      "reportSending": "Küldés…",
+      "reportSuccess": "Jelentés elküldve.",
+      "reportClose": "Bezárás",
+      "reportStale": "A bejegyzés megváltozott a jelentés közben. Nézd át az új tartalmat, és próbáld újra.",
+      "reportRateLimited": "Túl sok kérés. Várj egy kicsit, és próbáld újra.",
+      "reportError": "A jelentés küldése nem sikerült. Próbáld újra."
     },
     "debate": {
       "title": "Viták",

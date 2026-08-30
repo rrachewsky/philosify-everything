@@ -1508,7 +1508,22 @@
       "loadingConfessions": "Loading confessions...",
       "deletePost": "Delete Post",
       "deleteTitle": "Delete Post",
-      "deleteConfirm": "Delete this post? This cannot be undone."
+      "deleteConfirm": "Delete this post? This cannot be undone.",
+      "keypairError": "Could not prepare your encryption keys. Reload and try again.",
+      "roomPending": "End-to-end encrypted room. Your access key will be delivered by another member's browser — check back soon.",
+      "roomError": "Could not prepare the encrypted room. Reload to try again.",
+      "noKeyError": "Your room key has not arrived yet — posting is locked.",
+      "report": "Report",
+      "reportTitle": "Report post",
+      "reportWarning": "By reporting, a readable copy of this post will be sent to moderation.",
+      "reportReasonPlaceholder": "Why are you reporting this post?",
+      "reportSend": "Send report",
+      "reportSending": "Sending…",
+      "reportSuccess": "Report sent.",
+      "reportClose": "Close",
+      "reportStale": "The post changed while you were reporting. Review the new content and try again.",
+      "reportRateLimited": "Too many requests. Please wait a moment and try again.",
+      "reportError": "Failed to send the report. Try again."
     },
     "debate": {
       "title": "Debates",

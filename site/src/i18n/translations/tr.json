@@ -1503,7 +1503,22 @@
       "loadingConfessions": "İtiraflar yükleniyor...",
       "deletePost": "Gönderiyi Sil",
       "deleteTitle": "Gönderiyi Sil",
-      "deleteConfirm": "Bu gönderi silinsin mi? Bu işlem geri alınamaz."
+      "deleteConfirm": "Bu gönderi silinsin mi? Bu işlem geri alınamaz.",
+      "keypairError": "Şifreleme anahtarlarınız hazırlanamadı. Sayfayı yenileyin ve tekrar deneyin.",
+      "roomPending": "Uçtan uca şifreli oda. Erişim anahtarınız başka bir üyenin tarayıcısı tarafından teslim edilecek — yakında tekrar gelin.",
+      "roomError": "Şifreli oda hazırlanamadı. Tekrar denemek için sayfayı yenileyin.",
+      "noKeyError": "Oda anahtarınız henüz gelmedi — paylaşım kilitli.",
+      "report": "Bildir",
+      "reportTitle": "Gönderiyi bildir",
+      "reportWarning": "Bildirdiğinizde bu gönderinin okunabilir bir kopyası moderasyona gönderilecek.",
+      "reportReasonPlaceholder": "Bu gönderiyi neden bildiriyorsunuz?",
+      "reportSend": "Bildirimi gönder",
+      "reportSending": "Gönderiliyor…",
+      "reportSuccess": "Bildirim gönderildi.",
+      "reportClose": "Kapat",
+      "reportStale": "Siz bildirirken gönderi değişti. Yeni içeriği inceleyin ve tekrar deneyin.",
+      "reportRateLimited": "Çok fazla istek. Biraz bekleyip tekrar deneyin.",
+      "reportError": "Bildirim gönderilemedi. Tekrar deneyin."
     },
     "debate": {
       "title": "Tartışmalar",

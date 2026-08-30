@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { undergroundService } from '../services/api/underground.js';
+import * as cryptoService from '@/services/crypto';
 import { useAuth } from './useAuth.js';
 import { getRealtimeClient, waitForAuth } from '../services/realtime.js';
 
@@ -19,6 +20,8 @@ export function useUnderground() {
   const [needsNickname, setNeedsNickname] = useState(false);
   const [myNickname, setMyNickname] = useState(null);
   const [settingNickname, setSettingNickname] = useState(false);
+  const [roomStatus, setRoomStatus] = useState(null); // 'ready' | 'pending' | 'error' | null
+  const [errorCode, setErrorCode] = useState(null);
   const [editingPost, setEditingPost] = useState(null);
   const [replyingTo, setReplyingTo] = useState(null);
   const channelRef = useRef(null);
@@ -46,8 +49,16 @@ export function useUnderground() {
         const channel = sb
           .channel('underground', { config: { private: true } })
           .on('broadcast', { event: 'new-post' }, ({ payload }) => {
+            // E2E: realtime payloads carry ciphertext only — decrypt here
+            const decrypted = cryptoService.decryptUndergroundPost(
+              payload.encrypted_content,
+              payload.nonce,
+            );
             const newPost = {
               ...payload,
+              encryptedContent: payload.encrypted_content,
+              content: decrypted,
+              decryptionFailed: !decrypted,
               myReactions: [],
             };
             setPosts((prev) => {
@@ -61,12 +72,18 @@ export function useUnderground() {
           })
           .on('broadcast', { event: 'post-edited' }, ({ payload }) => {
             console.log('[useUnderground] Post edited broadcast:', payload?.id);
+            // E2E: decrypt the edited ciphertext for display
+            const decrypted = cryptoService.decryptUndergroundPost(
+              payload.encrypted_content,
+              payload.nonce,
+            );
             setPosts((prev) =>
               prev.map((p) =>
                 p.id === payload.id
                   ? {
                       ...p,
-                      content: payload.content,
+                      content: decrypted,
+                      decryptionFailed: !decrypted,
                       encryptedContent: payload.encrypted_content,
                       nonce: payload.nonce,
                       isEncrypted: payload.is_encrypted,
@@ -122,6 +139,7 @@ export function useUnderground() {
 
       setNeedsNickname(false);
       setMyNickname(result.myNickname || null);
+      setRoomStatus(result.roomStatus || null);
       setPosts(result.posts || []);
       setHasMore((result.posts || []).length >= 30);
     } catch (err) {
@@ -156,6 +174,7 @@ export function useUnderground() {
       if (!isAuthenticated || posting) return;
       setPosting(true);
       setError(null);
+      setErrorCode(null);
 
       const replyToId = options.replyToId || null;
 
@@ -179,6 +198,7 @@ export function useUnderground() {
         if (replyingTo) setReplyingTo(null);
       } catch (err) {
         setError(err.message);
+        setErrorCode(err.code || null);
         throw err;
       } finally {
         setPosting(false);
@@ -192,6 +212,7 @@ export function useUnderground() {
     async (postId, newContent) => {
       if (!isAuthenticated) return;
       setError(null);
+      setErrorCode(null);
 
       // Optimistic update
       setPosts((prev) =>
@@ -213,6 +234,7 @@ export function useUnderground() {
       } catch (err) {
         // Revert on failure — reload from server
         setError(err.message);
+        setErrorCode(err.code || null);
         loadPosts();
       }
     },
@@ -293,6 +315,12 @@ export function useUnderground() {
     [isAuthenticated, loadPosts]
   );
 
+  // Report a post (design §2.8) — the modal owns the lifecycle
+  const reportPost = useCallback(
+    (post, reason) => undergroundService.reportPost(post, reason),
+    []
+  );
+
   // Auto-load on mount
   useEffect(() => {
     if (isAuthenticated) {
@@ -304,11 +332,14 @@ export function useUnderground() {
     posts,
     loading,
     error,
+    errorCode,
+    roomStatus,
     hasMore,
     posting,
     needsNickname,
     myNickname,
     settingNickname,
+    reportPost,
     createPost,
     editPost,
     toggleReaction,

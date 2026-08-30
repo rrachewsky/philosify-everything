@@ -5,6 +5,7 @@ import { config } from '@/config';
 import { PaymentModal } from '../payment/PaymentModal.jsx';
 import { setPendingAction, getPendingAction, clearPendingAction } from '@utils/pendingAction.js';
 import { logger } from '@utils';
+import * as cryptoService from '@/services/crypto';
 
 export function SpaceLock({ space, onUnlocked }) {
   const { t } = useTranslation();
@@ -29,6 +30,16 @@ export function SpaceLock({ space, onUnlocked }) {
     setError(null);
 
     try {
+      // UNDERGROUND E2E (design §2.1): register a keypair BEFORE unlocking —
+      // the backend rejects keyless unlocks with 409 KEYPAIR_REQUIRED.
+      if (space === 'underground') {
+        try {
+          await cryptoService.ensureUserKeys();
+        } catch (err) {
+          logger.warn('[SpaceLock] ensureUserKeys failed:', err.message);
+        }
+      }
+
       const response = await fetch(`${config.apiUrl}/api/spaces/${space}/unlock`, {
         method: 'POST',
         credentials: 'include',
@@ -42,6 +53,10 @@ export function SpaceLock({ space, onUnlocked }) {
           setShowBuyCredits(true);
           setLoading(false);
           return;
+        }
+        if (response.status === 409 && data.code === 'KEYPAIR_REQUIRED') {
+          // ensureUserKeys could not register the key (network/API failure)
+          throw new Error(t('community.underground.keypairError'));
         }
         throw new Error(data.error || 'Failed to unlock space');
       }

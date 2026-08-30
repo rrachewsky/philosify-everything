@@ -1428,7 +1428,22 @@
       "loadingConfessions": "Chargement des confessions...",
       "deletePost": "Supprimer la publication",
       "deleteTitle": "Supprimer la publication",
-      "deleteConfirm": "Supprimer cette publication ? Cette action est irréversible."
+      "deleteConfirm": "Supprimer cette publication ? Cette action est irréversible.",
+      "keypairError": "Impossible de préparer vos clés de chiffrement. Rechargez et réessayez.",
+      "roomPending": "Salle chiffrée de bout en bout. Votre clé d'accès sera remise par le navigateur d'un autre membre — revenez bientôt.",
+      "roomError": "Impossible de préparer la salle chiffrée. Rechargez pour réessayer.",
+      "noKeyError": "Votre clé de salle n'est pas encore arrivée — la publication est verrouillée.",
+      "report": "Signaler",
+      "reportTitle": "Signaler la publication",
+      "reportWarning": "En signalant, une copie lisible de cette publication sera transmise à la modération.",
+      "reportReasonPlaceholder": "Pourquoi signalez-vous cette publication ?",
+      "reportSend": "Envoyer le signalement",
+      "reportSending": "Envoi…",
+      "reportSuccess": "Signalement envoyé.",
+      "reportClose": "Fermer",
+      "reportStale": "La publication a changé pendant votre signalement. Vérifiez le nouveau contenu et réessayez.",
+      "reportRateLimited": "Trop de requêtes. Patientez un instant et réessayez.",
+      "reportError": "Échec de l'envoi du signalement. Réessayez."
     },
     "debate": {
       "title": "Débats",

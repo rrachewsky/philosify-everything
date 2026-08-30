@@ -1423,7 +1423,22 @@
       "loadingConfessions": "Carregando confissões...",
       "deletePost": "Excluir Post",
       "deleteTitle": "Excluir Post",
-      "deleteConfirm": "Excluir este post? Esta ação não pode ser desfeita."
+      "deleteConfirm": "Excluir este post? Esta ação não pode ser desfeita.",
+      "keypairError": "Não foi possível preparar suas chaves de criptografia. Recarregue e tente de novo.",
+      "roomPending": "Sala cifrada de ponta a ponta. Sua chave de acesso será entregue pelo navegador de outro membro — volte em breve.",
+      "roomError": "Não foi possível preparar a sala cifrada. Recarregue para tentar de novo.",
+      "noKeyError": "Sua chave da sala ainda não chegou — publicar está bloqueado.",
+      "report": "Denunciar",
+      "reportTitle": "Denunciar post",
+      "reportWarning": "Ao denunciar, uma cópia legível deste post será enviada à moderação.",
+      "reportReasonPlaceholder": "Por que você está denunciando este post?",
+      "reportSend": "Enviar denúncia",
+      "reportSending": "Enviando…",
+      "reportSuccess": "Denúncia enviada.",
+      "reportClose": "Fechar",
+      "reportStale": "O post mudou enquanto você denunciava. Revise o novo conteúdo e tente de novo.",
+      "reportRateLimited": "Muitas tentativas. Aguarde um momento e tente de novo.",
+      "reportError": "Falha ao enviar a denúncia. Tente de novo."
     },
     "debate": {
       "title": "Debates",

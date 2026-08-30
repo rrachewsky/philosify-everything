@@ -1503,7 +1503,22 @@
       "loadingConfessions": "Bekentenissen laden...",
       "deletePost": "Bericht verwijderen",
       "deleteTitle": "Bericht verwijderen",
-      "deleteConfirm": "Dit bericht verwijderen? Dit kan niet ongedaan worden gemaakt."
+      "deleteConfirm": "Dit bericht verwijderen? Dit kan niet ongedaan worden gemaakt.",
+      "keypairError": "Je encryptiesleutels konden niet worden voorbereid. Herlaad en probeer opnieuw.",
+      "roomPending": "End-to-end versleutelde ruimte. Je toegangssleutel wordt bezorgd door de browser van een ander lid — kom snel terug.",
+      "roomError": "De versleutelde ruimte kon niet worden voorbereid. Herlaad om het opnieuw te proberen.",
+      "noKeyError": "Je ruimtesleutel is nog niet aangekomen — posten is vergrendeld.",
+      "report": "Rapporteren",
+      "reportTitle": "Post rapporteren",
+      "reportWarning": "Bij het rapporteren wordt een leesbare kopie van deze post naar de moderatie gestuurd.",
+      "reportReasonPlaceholder": "Waarom rapporteer je deze post?",
+      "reportSend": "Rapport versturen",
+      "reportSending": "Versturen…",
+      "reportSuccess": "Rapport verstuurd.",
+      "reportClose": "Sluiten",
+      "reportStale": "De post is veranderd tijdens het rapporteren. Bekijk de nieuwe inhoud en probeer opnieuw.",
+      "reportRateLimited": "Te veel verzoeken. Wacht even en probeer opnieuw.",
+      "reportError": "Rapport versturen mislukt. Probeer opnieuw."
     },
     "debate": {
       "title": "Debatten",

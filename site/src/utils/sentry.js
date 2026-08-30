@@ -90,11 +90,10 @@ export function captureMessage(message, level = 'info', context = {}) {
 /**
  * Set user context
  */
-export function setUser(userId, email) {
+export function setUser(userId) {
   if (import.meta.env.PROD) {
     Sentry.setUser({
       id: userId,
-      email: email,
     });
   }
 }

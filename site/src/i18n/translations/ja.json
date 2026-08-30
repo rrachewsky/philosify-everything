@@ -1402,7 +1402,22 @@
       "loadingConfessions": "告白を読み込み中...",
       "deletePost": "投稿を削除",
       "deleteTitle": "投稿を削除",
-      "deleteConfirm": "この投稿を削除しますか？元に戻せません。"
+      "deleteConfirm": "この投稿を削除しますか？元に戻せません。",
+      "keypairError": "暗号鍵を準備できませんでした。ページを再読み込みして、もう一度お試しください。",
+      "roomPending": "エンドツーエンド暗号化ルーム。あなたのアクセス鍵は他のメンバーのブラウザから届きます。しばらくしてからまたお越しください。",
+      "roomError": "暗号化ルームを準備できませんでした。再読み込みしてお試しください。",
+      "noKeyError": "ルーム鍵がまだ届いていません。投稿はロックされています。",
+      "report": "報告",
+      "reportTitle": "投稿を報告",
+      "reportWarning": "報告すると、この投稿の読める形のコピーがモデレーションに送信されます。",
+      "reportReasonPlaceholder": "この投稿を報告する理由は？",
+      "reportSend": "報告を送信",
+      "reportSending": "送信中…",
+      "reportSuccess": "報告を送信しました。",
+      "reportClose": "閉じる",
+      "reportStale": "報告中に投稿が変更されました。新しい内容を確認して、もう一度お試しください。",
+      "reportRateLimited": "リクエストが多すぎます。少し待ってからお試しください。",
+      "reportError": "報告の送信に失敗しました。もう一度お試しください。"
     },
     "debate": {
       "title": "ディベート",

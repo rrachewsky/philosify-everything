@@ -1503,7 +1503,22 @@
       "loadingConfessions": "正在加载忏悔...",
       "deletePost": "删除帖子",
       "deleteTitle": "删除帖子",
-      "deleteConfirm": "删除此帖子？此操作无法撤销。"
+      "deleteConfirm": "删除此帖子？此操作无法撤销。",
+      "keypairError": "无法准备您的加密密钥。请刷新页面后重试。",
+      "roomPending": "端到端加密房间。您的访问密钥将由另一位成员的浏览器送达——请稍后再来。",
+      "roomError": "无法准备加密房间。请刷新页面重试。",
+      "noKeyError": "您的房间密钥尚未送达——发帖已锁定。",
+      "report": "举报",
+      "reportTitle": "举报帖子",
+      "reportWarning": "举报后，此帖子的可读副本将发送给管理方。",
+      "reportReasonPlaceholder": "您为什么举报此帖子？",
+      "reportSend": "发送举报",
+      "reportSending": "发送中…",
+      "reportSuccess": "举报已发送。",
+      "reportClose": "关闭",
+      "reportStale": "举报期间帖子已更改。请查看新内容后重试。",
+      "reportRateLimited": "请求过多。请稍等片刻后重试。",
+      "reportError": "举报发送失败。请重试。"
     },
     "debate": {
       "title": "辩论",
