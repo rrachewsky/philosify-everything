@@ -61,13 +61,14 @@ async function getPosts(before) {
 
   const data = await response.json();
 
-  // Nickname gate — room orchestration only makes sense past it
+  // Nickname gate — the room key only matters past it
   if (data.needsNickname) {
     return data;
   }
 
-  // Mandatory E2E: verify/obtain the room key before decrypting
-  data.roomStatus = await ensureRoomReady(data);
+  // MODO A: the server delivers the room key on GET. Store it, then decrypt.
+  const held = cryptoService.setUndergroundRoomKeyFromServer(data.roomKey);
+  data.roomStatus = held ? 'ready' : 'error';
 
   // Decrypt posts
   if (data.posts && data.posts.length > 0) {
@@ -77,143 +78,9 @@ async function getPosts(before) {
   return data;
 }
 
-/**
- * Room-key orchestration (design §2.2/§2.3/§2.6), runs on every load:
- * ensureUserKeys → init-if-empty → verify copy vs fingerprint
- * (mismatch → automatic rekey) → distributor sweep when keyed.
- * @returns {Promise<'ready' | 'pending' | 'error'>}
- */
-async function ensureRoomReady(data) {
-  try {
-    // Keypair first — also covers pre-E2E members on their next visit
-    await cryptoService.ensureUserKeys();
-
-    // Already holding the verified key from a previous load this session
-    if (cryptoService.hasUndergroundRoomKey()) {
-      runDistributorSweep();
-      return 'ready';
-    }
-
-    // Room does not exist yet — this client attempts to found it
-    if (!data.roomInitialized) {
-      const candidate = await cryptoService.generateUndergroundRoomKey();
-      if (!candidate) return 'error';
-
-      const result = await roomInit(candidate.fingerprint, candidate.encryptedKeyForSelf);
-      if (result.winner) {
-        cryptoService.adoptUndergroundRoomKey(candidate.rawKey);
-        logger.log('[Underground] Room founded by this client');
-        return 'ready';
-      }
-      // Lost the race. One exception: if the winning fingerprint IS ours,
-      // we are the orphan winner healed server-side (backend room-init) —
-      // the hash binds the key, so adopting our own candidate is safe.
-      if (result.fingerprint === candidate.fingerprint) {
-        cryptoService.adoptUndergroundRoomKey(candidate.rawKey);
-        logger.log('[Underground] Orphan-winner self-heal: candidate adopted');
-        runDistributorSweep();
-        return 'ready';
-      }
-      cryptoService.discardRoomKeyCandidate(candidate.rawKey);
-      logger.log('[Underground] Lost room-init race — pending delivery');
-      return 'pending';
-    }
-
-    // Room exists. No wrapped copy for us yet → pending delivery.
-    if (!data.encryptedRoomKey) {
-      return 'pending';
-    }
-
-    // Verify the wrapped copy BEFORE any use (design §2.3). A failure
-    // means our keypair changed or the copy is wrong → automatic rekey
-    // puts us back in the pending pool (design §2.6).
-    const ok = await cryptoService.setUndergroundRoomKey(
-      data.encryptedRoomKey,
-      data.roomFingerprint,
-    );
-    if (!ok) {
-      logger.warn('[Underground] Room key copy invalid — requesting rekey');
-      try {
-        await rekey();
-      } catch (err) {
-        logger.warn('[Underground] rekey failed:', err.message);
-      }
-      return 'pending';
-    }
-
-    runDistributorSweep();
-    return 'ready';
-  } catch (err) {
-    logger.error('[Underground] Room orchestration failed:', err.message);
-    return 'error';
-  }
-}
-
-/** Fire-and-forget: wrap the room key for pending members (design §2.3). */
-function runDistributorSweep() {
-  (async () => {
-    try {
-      const pending = await getPendingKeys();
-      if (!pending.length) return;
-      const keys = pending
-        .map((p) => ({
-          userId: p.userId,
-          encryptedKey: cryptoService.wrapUndergroundRoomKeyFor(p.publicKey),
-        }))
-        .filter((k) => k.encryptedKey);
-      if (!keys.length) return;
-      await distributeKeys(keys);
-      logger.log(`[Underground] Distributed room key to ${keys.length} member(s)`);
-    } catch (err) {
-      logger.log('[Underground] Distributor sweep skipped:', err.message);
-    }
-  })();
-}
-
-async function roomInit(fingerprint, encryptedKey) {
-  const response = await fetch(`${API_BASE}/underground/room-init`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fingerprint, encryptedKey }),
-    credentials: 'include',
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Failed to initialize room');
-  return data; // { winner, fingerprint }
-}
-
-async function getPendingKeys() {
-  const response = await fetch(`${API_BASE}/underground/pending-keys`, {
-    method: 'GET',
-    credentials: 'include',
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Failed to list pending members');
-  return data.pending || [];
-}
-
-async function distributeKeys(keys) {
-  const response = await fetch(`${API_BASE}/underground/distribute-keys`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ keys }),
-    credentials: 'include',
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Failed to distribute keys');
-  return data;
-}
-
-/** Reset own wrapped copy — back to the pending pool (design §2.6). */
-async function rekey() {
-  const response = await fetch(`${API_BASE}/underground/rekey`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Failed to reset key');
-  return data;
-}
+// (MODO A) Removed: ensureRoomReady, runDistributorSweep, roomInit,
+// getPendingKeys, distributeKeys, rekey. The server delivers the single
+// room key on GET; there is no per-member key flow anymore.
 
 /**
  * Create a new anonymous post (with E2E encryption if available)
@@ -359,37 +226,18 @@ async function setNickname(nickname) {
 }
 
 /**
- * Report a post — sends the reporter's OWN decrypted copy (design §2.8).
- * The UI warns explicitly before calling this. Field shapes: the post
- * object carries camelCase encryptedContent/nonce (as mapped by the
- * backend GET and preserved through decryptPostIfNeeded); the request
- * body uses the endpoint's snake_case ciphertext_ref/nonce_ref.
- * Retries ONCE on REPORT_STALE (post edited between read and report).
+ * Report a post (MODO A): {post_id, reason}. No plaintext leaves the client —
+ * the server decrypts on demand on the moderation path. The UI warns that
+ * moderation can read the post.
  */
-async function reportPost(post, reason, _retried = false) {
+async function reportPost(post, reason) {
   const response = await fetch(`${API_BASE}/underground/report`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      post_id: post.id,
-      reason,
-      plaintext: post.content,
-      ciphertext_ref: post.encryptedContent,
-      nonce_ref: post.nonce,
-    }),
+    body: JSON.stringify({ post_id: post.id, reason }),
     credentials: 'include',
   });
   const data = await response.json().catch(() => ({}));
-
-  if (response.status === 409 && data.code === 'REPORT_STALE' && !_retried) {
-    // Post changed since we read it — refetch, re-decrypt, resend once
-    const fresh = await getPosts();
-    const updated = (fresh.posts || []).find((p) => p.id === post.id);
-    if (updated && updated.content && !updated.decryptionFailed) {
-      return reportPost(updated, reason, true);
-    }
-  }
-
   if (!response.ok) {
     const err = new Error(data.error || 'Failed to submit report');
     err.code = data.code;
@@ -407,7 +255,6 @@ export const undergroundService = {
   deletePost,
   setNickname,
   reportPost,
-  rekey,
 };
 
 export default undergroundService;

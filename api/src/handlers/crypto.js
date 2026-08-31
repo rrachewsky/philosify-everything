@@ -13,7 +13,11 @@ import { getSupabaseForUser, addRefreshedCookieToResponse } from '../utils/supab
 import { getSupabaseCredentials } from '../utils/supabase.js';
 
 // Base64 public key should be ~44 characters
-const PUBLIC_KEY_REGEX = /^[A-Za-z0-9+/]{43}=$/;
+// X25519 public key in canonical base64. Clients encode with libsodium
+// to_base64 (URLSAFE_NO_PADDING) and decode with from_base64 (same variant),
+// which rejects '+', '/' and '='. So the ONLY accepted format is URL-safe,
+// no padding, 43 chars — a single canonical format across all E2E modules.
+const PUBLIC_KEY_REGEX = /^[A-Za-z0-9_-]{43}$/;
 
 /**
  * GET /api/crypto/keys/:userId - Get a user's public key
@@ -83,11 +87,22 @@ export async function handleRegisterPublicKey(request, env, origin) {
     // Check if key already exists
     const { data: existing } = await supabase
       .from('user_public_keys')
-      .select('key_version')
+      .select('key_version, public_key')
       .eq('user_id', userId)
       .single();
 
     if (existing) {
+      // Idempotent: ensureUserKeys now ALWAYS re-registers on unlock/load,
+      // so re-posting the SAME key must not churn key_version.
+      if (existing.public_key === publicKey) {
+        let response = jsonResponse(
+          { success: true, keyVersion: existing.key_version, unchanged: true },
+          200,
+          origin,
+          env,
+        );
+        return addRefreshedCookieToResponse(response, setCookieHeader);
+      }
       // Update existing key (key rotation)
       const { error } = await supabase
         .from('user_public_keys')

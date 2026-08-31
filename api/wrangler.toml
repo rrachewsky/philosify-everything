@@ -252,3 +252,17 @@ secret_name = "STRIPE_ADS_WEBHOOK_SECRET"
 binding = "SENTRY_DSN"
 store_id = "aa556a30980842c785cb0e1cbb0bb933"
 secret_name = "SENTRY_DSN"
+
+# UNDERGROUND_ROOM_KEK - KEK that wraps the Underground room key at rest (MODO A)
+[[env.production.secrets_store_secrets]]
+binding = "UNDERGROUND_ROOM_KEK"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "UNDERGROUND_ROOM_KEK"
+
+# ADMIN_USER_IDS - allowlist (UUIDs separados por vírgula/espaço) para o caminho
+# de moderação por sessão autenticada (Underground admin decrypt). x-admin-secret
+# segue válido para automação.
+[[env.production.secrets_store_secrets]]
+binding = "ADMIN_USER_IDS"
+store_id = "aa556a30980842c785cb0e1cbb0bb933"
+secret_name = "ADMIN_USER_IDS"

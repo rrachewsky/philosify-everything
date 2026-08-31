@@ -183,6 +183,9 @@ test-*.ps1
 !.dev.vars.example
 !wrangler.toml.example
 
+# Underground MODO A source (o padrão amplo *key* acima o pegava por engano)
+!api/src/utils/roomKey.js
+
 # Keep legitimate source files (override *secret*, *token*, *password* rules)
 !**/ResetPasswordPage.jsx
 !**/ForgotPasswordModal.jsx

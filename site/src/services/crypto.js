@@ -58,27 +58,29 @@ export async function ensureUserKeys() {
   // Check if we have stored keys
   const hasKeys = await hasKeyPair();
 
+  let publicKeyBase64;
   if (hasKeys) {
-    const publicKey = await getPublicKeyBase64();
+    publicKeyBase64 = await getPublicKeyBase64();
     logger.log('[E2E] Using existing keypair');
-    return publicKey;
+  } else {
+    logger.log('[E2E] Generating new keypair...');
+    const keyPair = generateKeyPair();
+    await storeKeyPair(keyPair);
+    const { to_base64 } = await import('libsodium-wrappers').then((m) => m.default);
+    publicKeyBase64 = to_base64(keyPair.publicKey);
   }
 
-  // Generate new keypair
-  logger.log('[E2E] Generating new keypair...');
-  const keyPair = generateKeyPair();
-  await storeKeyPair(keyPair);
-
-  // Register public key with server
-  const { to_base64 } = await import('libsodium-wrappers').then((m) => m.default);
-  const publicKeyBase64 = to_base64(keyPair.publicKey);
-
+  // ALWAYS register with the server. A local keypair does NOT imply the
+  // server has it: E2E-optional-era keys were never pushed, and a prior
+  // registration may have failed silently — either way, unlock rejects the
+  // member with 409 KEYPAIR_REQUIRED. Registration is idempotent server-side
+  // (same key → no version churn), so re-calling is cheap and self-heals.
   try {
     await cryptoApi.registerPublicKey(publicKeyBase64);
     logger.log('[E2E] Public key registered with server');
   } catch (error) {
     logger.error('[E2E] Failed to register public key:', error);
-    // Don't throw - key is stored locally, can retry later
+    // Not fatal here: unlock surfaces 409 and the next attempt retries.
   }
 
   return publicKeyBase64;
@@ -482,118 +484,41 @@ export async function decryptGroupDM(encryptedContent, nonce, conversationId) {
 }
 
 // ============================================================
-// UNDERGROUND ENCRYPTION (mandatory E2E — pacote pré-privacy item 5)
+// UNDERGROUND ENCRYPTION — MODO A (at-rest, worker-held room key)
 // ============================================================
-// One shared room key for every unlocked member. The raw key exists
-// ONLY in members' browsers; the server stores per-member wrapped
-// copies plus the key's SHA-256 fingerprint (underground_room).
-// A wrapped copy is NEVER used before its fingerprint is verified.
+// One shared room key held by the WORKER (KEK-wrapped at rest) and
+// delivered raw on GET /api/underground. No per-member keys, no
+// fingerprint, no rekey. The raw key lives in memory here only to
+// encrypt/decrypt posts (secretbox). Losing it in the browser is
+// harmless — the next load re-delivers it.
 
 let undergroundRoomKey = null;
 
 /**
- * SHA-256 of the raw room key, lowercase hex — exactly the format
- * the backend validates (FINGERPRINT_REGEX, 64 hex chars).
- * @param {Uint8Array} rawKey
- * @returns {Promise<string>}
+ * Store the room key delivered by the server (base64 url-safe → raw bytes).
+ * @param {string|null} roomKeyBase64
+ * @returns {boolean} true = a usable key is now held
  */
-export async function computeRoomKeyFingerprint(rawKey) {
-  const digest = await window.crypto.subtle.digest('SHA-256', rawKey);
-  return Array.from(new Uint8Array(digest))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-}
-
-/**
- * Generate a candidate room key for room-init (design §2.2).
- * The caller MUST either adopt the rawKey (winner) or discard it
- * with discardRoomKeyCandidate (loser).
- * @returns {Promise<{rawKey: Uint8Array, fingerprint: string, encryptedKeyForSelf: string} | null>}
- */
-export async function generateUndergroundRoomKey() {
-  if (!isReady()) {
-    await initializeE2E();
+export function setUndergroundRoomKeyFromServer(roomKeyBase64) {
+  if (!roomKeyBase64) {
+    undergroundRoomKey = null;
+    return false;
   }
-  const keyPair = await getStoredKeyPair();
-  if (!keyPair) return null;
-
-  const rawKey = generateGroupKey();
-  const fingerprint = await computeRoomKeyFingerprint(rawKey);
-  const encryptedKeyForSelf = encryptGroupKeyForMember(rawKey, keyPair.publicKey);
-  return { rawKey, fingerprint, encryptedKeyForSelf };
-}
-
-/** Adopt a raw room key (room-init winner / orphan-winner self-heal). */
-export function adoptUndergroundRoomKey(rawKey) {
-  undergroundRoomKey = rawKey;
-  logger.log('[E2E] Underground room key adopted');
-}
-
-/** Zero and drop a candidate key that lost the room-init race. */
-export function discardRoomKeyCandidate(rawKey) {
   try {
-    if (rawKey && typeof rawKey.fill === 'function') rawKey.fill(0);
-  } catch {
-    // best effort — the reference is dropped either way
-  }
-}
-
-/**
- * Set the room key from the member's wrapped copy — ONLY after the
- * fingerprint check passes (design §2.3; a wrong copy is a DoS
- * attempt or corruption: discard and let the caller trigger rekey).
- * @param {string} encryptedKey - Base64 wrapped room key
- * @param {string} expectedFingerprint - hex fingerprint from underground_room
- * @returns {Promise<boolean>} true = key verified and adopted
- */
-export async function setUndergroundRoomKey(encryptedKey, expectedFingerprint) {
-  if (!encryptedKey || !expectedFingerprint) return false;
-  if (!isReady()) {
-    await initializeE2E();
-  }
-  const keyPair = await getStoredKeyPair();
-  if (!keyPair) return false;
-
-  let candidate = null;
-  try {
-    candidate = decryptGroupKey(encryptedKey, keyPair.publicKey, keyPair.privateKey);
+    // publicKeyFromBase64 is a generic sodium.from_base64 (URLSAFE_NO_PADDING),
+    // matching the worker's delivery encoding.
+    undergroundRoomKey = publicKeyFromBase64(roomKeyBase64);
+    return true;
   } catch (error) {
-    logger.error('[E2E] Failed to decrypt Underground room key:', error);
+    logger.error('[Underground] Failed to decode delivered room key:', error);
+    undergroundRoomKey = null;
     return false;
   }
-
-  const fingerprint = await computeRoomKeyFingerprint(candidate);
-  if (fingerprint !== expectedFingerprint.toLowerCase()) {
-    logger.error('[E2E] Underground room key fingerprint MISMATCH — discarding copy');
-    discardRoomKeyCandidate(candidate);
-    return false;
-  }
-
-  undergroundRoomKey = candidate;
-  logger.log('[E2E] Underground room key verified and set');
-  return true;
 }
 
-/** Whether this browser currently holds the verified room key. */
+/** Whether this browser currently holds the room key. */
 export function hasUndergroundRoomKey() {
   return !!undergroundRoomKey;
-}
-
-/**
- * Wrap the room key for another member's public key (distributor
- * flow, design §2.3).
- * @param {string} publicKeyBase64
- * @returns {string | null}
- */
-export function wrapUndergroundRoomKeyFor(publicKeyBase64) {
-  if (!undergroundRoomKey || !publicKeyBase64) return null;
-  try {
-    const publicKey = publicKeyFromBase64(publicKeyBase64);
-    return encryptGroupKeyForMember(undergroundRoomKey, publicKey);
-  } catch (error) {
-    logger.error('[E2E] Failed to wrap Underground room key:', error);
-    return null;
-  }
 }
 
 /**
@@ -648,7 +573,6 @@ export function decryptUndergroundPost(encryptedContent, nonce) {
 export function clearAllCaches() {
   publicKeyCache.clear();
   clearGroupKeyCache();
-  discardRoomKeyCandidate(undergroundRoomKey);
   undergroundRoomKey = null;
   logger.log('[E2E] All caches cleared');
 }
@@ -671,14 +595,9 @@ export default {
   initializeCollectiveEncryption,
   encryptCollectiveMessage,
   decryptCollectiveMessage,
-  // Underground
-  computeRoomKeyFingerprint,
-  generateUndergroundRoomKey,
-  adoptUndergroundRoomKey,
-  discardRoomKeyCandidate,
-  setUndergroundRoomKey,
+  // Underground (MODO A)
+  setUndergroundRoomKeyFromServer,
   hasUndergroundRoomKey,
-  wrapUndergroundRoomKeyFor,
   encryptUndergroundPost,
   decryptUndergroundPost,
   // Cleanup

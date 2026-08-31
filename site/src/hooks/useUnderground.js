@@ -20,7 +20,7 @@ export function useUnderground() {
   const [needsNickname, setNeedsNickname] = useState(false);
   const [myNickname, setMyNickname] = useState(null);
   const [settingNickname, setSettingNickname] = useState(false);
-  const [roomStatus, setRoomStatus] = useState(null); // 'ready' | 'pending' | 'error' | null
+  const [roomStatus, setRoomStatus] = useState(null); // 'ready' | 'error' | null
   const [errorCode, setErrorCode] = useState(null);
   const [editingPost, setEditingPost] = useState(null);
   const [replyingTo, setReplyingTo] = useState(null);

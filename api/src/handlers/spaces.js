@@ -94,28 +94,9 @@ export async function handleUnlockSpace(request, env, origin, space) {
       return addRefreshedCookieToResponse(response, setCookieHeader);
     }
 
-    // UNDERGROUND E2E (item 5, desenho §2.1): unlock requires a registered
-    // public key so the room key can be wrapped for this member. Scoped to
-    // this space only — the forum flow is untouched. Checked BEFORE any
-    // credit reservation so a keyless user is never charged.
-    if (space === "underground") {
-      const { data: pubkey } = await supabase
-        .from("user_public_keys")
-        .select("user_id")
-        .eq("user_id", userId)
-        .maybeSingle();
-      if (!pubkey) {
-        return jsonResponse(
-          {
-            error: "A public key must be registered before unlocking",
-            code: "KEYPAIR_REQUIRED",
-          },
-          409,
-          origin,
-          env,
-        );
-      }
-    }
+    // (MODO A) The Underground no longer requires a registered keypair to
+    // unlock — the worker holds the single room key and delivers it on GET.
+    // The keypair gate (409 KEYPAIR_REQUIRED) was removed here.
 
     // Reserve ALL credits atomically before attempting insert
     const reservations = [];

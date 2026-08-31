@@ -154,11 +154,8 @@ import {
   handleDeleteUndergroundPost,
   handleEditUndergroundPost,
   handleSetUndergroundNickname,
-  handleUndergroundRoomInit,
-  handleUndergroundPendingKeys,
-  handleUndergroundDistributeKeys,
-  handleUndergroundRekey,
   handleUndergroundReport,
+  handleUndergroundAdminDecrypt,
 } from "./src/handlers/underground.js";
 import {
   handleGetSpaceStatus,
@@ -1310,22 +1307,16 @@ export default {
         return handleSetUndergroundNickname(request, env, origin);
       }
 
-      // Underground E2E key flow (pacote pré-privacy, item 5).
-      // Exact paths kept BEFORE the regex matchers below.
-      if (url.pathname === "/api/underground/room-init" && request.method === "POST") {
-        return handleUndergroundRoomInit(request, env, origin);
-      }
-      if (url.pathname === "/api/underground/pending-keys" && request.method === "GET") {
-        return handleUndergroundPendingKeys(request, env, origin);
-      }
-      if (url.pathname === "/api/underground/distribute-keys" && request.method === "POST") {
-        return handleUndergroundDistributeKeys(request, env, origin);
-      }
-      if (url.pathname === "/api/underground/rekey" && request.method === "POST") {
-        return handleUndergroundRekey(request, env, origin);
-      }
+      // Underground report + moderation (MODO A). Exact paths kept BEFORE
+      // the regex matchers below.
       if (url.pathname === "/api/underground/report" && request.method === "POST") {
         return handleUndergroundReport(request, env, origin);
+      }
+      if (
+        url.pathname === "/api/underground/admin/decrypt" &&
+        request.method === "POST"
+      ) {
+        return handleUndergroundAdminDecrypt(request, env, origin);
       }
 
       const undergroundReactMatch = url.pathname.match(

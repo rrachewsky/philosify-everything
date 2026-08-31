@@ -245,9 +245,9 @@ function UndergroundPost({
           <button className="chat-msg-action" onClick={handleCopy} title="Copy" aria-label="Copy">
             <Icons.Copy />
           </button>
-          {/* Report — only for posts the reader actually decrypted: the
-              voluntary-plaintext report attests OUR readable copy (§2.8);
-              without plaintext there is nothing to attest (would 400). */}
+          {/* Report — only for posts the reader decrypted (a failed/absent
+              decrypt has nothing to point moderation at). MODO A sends just
+              {post_id, reason}; the server decrypts for moderation. */}
           {!isOwn && !post.decryptionFailed && post.content && (
             <button
               className="chat-msg-action"
@@ -343,11 +343,11 @@ function UndergroundPost({
   );
 }
 
-// ReportModal — voluntary-plaintext report (design §2.8). The reporter's
-// own decrypted copy is sent to moderation; the warning says so in full.
+// ReportModal (MODO A) — sends {post_id, reason}. No plaintext leaves the
+// client; moderation can read the post server-side. The warning says so.
 function ReportModal({ post, onClose, onSubmit, t }) {
   const [reason, setReason] = useState('');
-  const [state, setState] = useState('idle'); // idle | sending | success | stale | ratelimited | error
+  const [state, setState] = useState('idle'); // idle | sending | success | ratelimited | error
 
   const handleSend = async () => {
     const trimmed = reason.trim();
@@ -357,8 +357,7 @@ function ReportModal({ post, onClose, onSubmit, t }) {
       await onSubmit(post, trimmed);
       setState('success');
     } catch (err) {
-      if (err.code === 'REPORT_STALE') setState('stale'); // service already retried once
-      else if (err.status === 429) setState('ratelimited');
+      if (err.status === 429) setState('ratelimited');
       else setState('error');
     }
   };
@@ -397,9 +396,6 @@ function ReportModal({ post, onClose, onSubmit, t }) {
             autoFocus
           />
           <div className="underground-input__charcount">{reason.length}/500</div>
-          {state === 'stale' && (
-            <div className="underground-error">{t('community.underground.reportStale')}</div>
-          )}
           {state === 'ratelimited' && (
             <div className="underground-error">{t('community.underground.reportRateLimited')}</div>
           )}
@@ -548,12 +544,7 @@ export function UndergroundFeed() {
         </div>
       )}
 
-      {/* Room key state (mandatory E2E) — honest pending message (design §2.3) */}
-      {roomStatus === 'pending' && (
-        <div className="underground-room-status">
-          {t('community.underground.roomPending')}
-        </div>
-      )}
+      {/* Room key delivery failed (transient) — retriable error */}
       {roomStatus === 'error' && (
         <div className="underground-error">{t('community.underground.roomError')}</div>
       )}

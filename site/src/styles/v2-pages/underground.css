@@ -125,11 +125,7 @@
  font-variant-numeric:tabular-nums}
 .v2 .underground-reaction--active .underground-reaction__count{color:var(--ink-hi)}
 
-/* ---------- E2E room state + report (pacote pré-privacy, item 5) */
-/* Honest pending banner: quiet chrome, not an error */
-.v2 .underground-room-status{margin:8px 16px;border:1px solid var(--line);background:var(--bg-cell,transparent);
- padding:12px 16px;font:400 12.5px/1.7 var(--f-prose);color:var(--ink-text)}
-/* Report warning — explicit and highlighted (design §2.8) */
+/* ---------- Report warning (MODO A: moderation can read the post) ---- */
 .v2 .underground-report-warning{border:1px solid var(--warn);color:var(--warn);
  padding:10px 14px;margin:0 0 12px;font:500 12px/1.7 var(--f-ui);letter-spacing:.03em}
 
