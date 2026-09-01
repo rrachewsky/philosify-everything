@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Effective Date:** [upon publication]
+**Effective Date:** September 1, 2026
 
 Philosify (philosify.org) is operated by **Global Goods Corp** ("Philosify", "we"). This policy describes what personal data we collect, why, and what your choices are. It governs alongside the [Terms of Service](/tos).
 
@@ -41,7 +41,7 @@ The Unsafe Zone is built for personal introspection, so it gets specific rules:
 ## 5. Community and Encryption
 
 - **Direct messages** are end-to-end encrypted when both parties have encryption keys (keys are generated in your browser and never leave it). Messages sent without keys are stored readable by the server. Metadata (who talked to whom, when) is always visible to the server to operate the feature.
-- **Underground** posts are end-to-end encrypted with a shared room key held only by members who unlocked the space. Posts display your chosen pseudonym to other members. Philosify cannot read Underground posts.
+- **Underground** posts are encrypted at rest: your browser encrypts each post, and our database stores only ciphertext. The room key is generated and held by Philosify (protected by a separate key-encryption key) and delivered over TLS to members who unlocked the space. Posts display your chosen pseudonym to other members — your identity is hidden from fellow members, not from the platform. As the room's operator, Philosify can access a post's content and authorship, and does so only for moderation (when a post is reported) or under legal obligation; every such access is recorded in an audit log.
 - **Public and semi-public spaces:** the Ágora chat, colloquium proposals (shown with your display name), the quiz leaderboard (nickname and score), and analyses you share via public link are visible to others by design. Shared analysis links do not expose your identity to viewers.
 
 ## 6. Cookies and Local Storage
@@ -50,7 +50,7 @@ We use only essential cookies: an authentication session cookie (HttpOnly, 7 day
 
 ## 7. Error Monitoring
 
-We use Sentry to detect errors and, for a sample of sessions, to replay anonymized interaction sequences (all text masked) so we can fix bugs. Error reports are associated with your user ID only — never your e-mail.
+We use Sentry to detect errors and, for a sample of sessions, to replay anonymized interaction sequences (all text masked) so we can fix bugs. Error reports are associated with your user ID only — never your e-mail. Security events (such as blocked suspicious requests) may include the IP address and browser data of the request, used solely for fraud and abuse prevention.
 
 ## 8. Notifications
 
