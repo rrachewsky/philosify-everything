@@ -2336,7 +2336,9 @@
       "signInErrorDefault": "Giriş başarısız. Lütfen tekrar deneyin.",
       "signUpErrorDefault": "Hesap oluşturulamadı. Lütfen tekrar deneyin.",
       "signingIn": "Giriş yapılıyor…",
-      "termsLink": "Hizmet Şartları"
+      "termsLink": "Hizmet Şartları",
+      "showPassword": "Şifreyi göster",
+      "hidePassword": "Şifreyi gizle"
     },
     "cinema": {
       "analyzeAnother": "Başka birini analiz et",

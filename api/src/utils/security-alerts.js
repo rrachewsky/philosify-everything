@@ -229,56 +229,60 @@ export async function sendPaymentReceiptEmail(env, { userEmail, credits, newBala
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin: 0; padding: 0; background-color: #f6f6f7; font-family: Georgia, 'Times New Roman', serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f6f6f7; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; background-color: #070708; font-family: -apple-system, 'Segoe UI', Roboto, Inter, Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #070708; padding: 40px 20px;">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 500px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 500px; background-color: #0d0d0f; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
           
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #0a2a3a 0%, #0d3d4d 100%); padding: 30px 40px; text-align: center;">
-              <img src="https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/logo-everything.jpg" alt="Philosify" style="max-width: 120px; height: auto; margin-bottom: 10px;" />
-              <p style="margin: 0; color: rgba(0,200,200,0.9); font-size: 14px; font-style: italic;">Discover the philosophy in music</p>
+            <td style="background-color: #0d0d0f; padding: 32px 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <img src="https://philosify.org/brand/philosify-logo-lockup.png" alt="Philosify" width="190" style="width: 190px; max-width: 72%; height: auto;" />
             </td>
+          </tr>
+
+          <!-- Accent line (cyan) -->
+          <tr>
+            <td style="height: 2px; background-color: #00f0ff; line-height: 2px; font-size: 0;">&nbsp;</td>
           </tr>
           
           <!-- Content -->
           <tr>
-            <td style="padding: 40px;">
-              <h2 style="margin: 0 0 20px 0; color: #111; font-size: 22px; font-weight: normal;">Payment Confirmed ✓</h2>
+            <td style="padding: 36px 40px 32px; background-color: #0d0d0f;">
+              <h2 style="margin: 0 0 20px 0; color: #00f0ff; font-family: Michroma, 'Segoe UI', Arial, sans-serif; font-size: 19px; font-weight: normal; letter-spacing: 1px;">Payment Confirmed ✓</h2>
               
-              <p style="margin: 0 0 25px 0; color: #444; font-size: 16px; line-height: 1.6;">
+              <p style="margin: 0 0 25px 0; color: rgba(255,255,255,0.72); font-size: 15px; line-height: 1.7;">
                 Thank you for your purchase! Your credits have been added to your account.
               </p>
               
               <!-- Receipt Box -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fafafa; border-radius: 6px; margin-bottom: 25px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #121216; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; margin-bottom: 25px;">
                 <tr>
                   <td style="padding: 25px;">
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                          <span style="color: #666; font-size: 14px;">Date</span>
+                        <td style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                          <span style="color: rgba(255,255,255,0.55); font-size: 14px;">Date</span>
                         </td>
-                        <td style="padding: 8px 0; border-bottom: 1px solid #eee; text-align: right;">
-                          <span style="color: #111; font-size: 14px; font-weight: bold;">${date}</span>
+                        <td style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: right;">
+                          <span style="color: #ffffff; font-size: 14px; font-weight: bold;">${date}</span>
                         </td>
                       </tr>
                       <tr>
-                        <td style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                          <span style="color: #666; font-size: 14px;">Credits Purchased</span>
+                        <td style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                          <span style="color: rgba(255,255,255,0.55); font-size: 14px;">Credits Purchased</span>
                         </td>
-                        <td style="padding: 8px 0; border-bottom: 1px solid #eee; text-align: right;">
-                          <span style="color: #00c8c8; font-size: 18px; font-weight: bold;">+${credits}</span>
+                        <td style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: right;">
+                          <span style="color: #00f0ff; font-size: 18px; font-weight: bold;">+${credits}</span>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding: 8px 0;">
-                          <span style="color: #666; font-size: 14px;">New Balance</span>
+                          <span style="color: rgba(255,255,255,0.55); font-size: 14px;">New Balance</span>
                         </td>
                         <td style="padding: 8px 0; text-align: right;">
-                          <span style="color: #111; font-size: 18px; font-weight: bold;">${newBalance} credits</span>
+                          <span style="color: #ffffff; font-size: 18px; font-weight: bold;">${newBalance} credits</span>
                         </td>
                       </tr>
                     </table>
@@ -290,7 +294,7 @@ export async function sendPaymentReceiptEmail(env, { userEmail, credits, newBala
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding: 10px 0 25px 0;">
-                    <a href="https://philosify.org" style="display: inline-block; background-color: #00c8c8; color: #0a2a3a; text-decoration: none; padding: 14px 35px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                    <a href="https://philosify.org" style="display: inline-block; background-color: #00f0ff; color: #070708; text-decoration: none; padding: 14px 35px; border-radius: 8px; font-size: 15px; font-weight: bold; letter-spacing: 0.5px;">
                       Start Analyzing →
                     </a>
                   </td>
@@ -298,8 +302,8 @@ export async function sendPaymentReceiptEmail(env, { userEmail, credits, newBala
               </table>
               
               ${receiptUrl ? `
-              <p style="margin: 0; color: #888; font-size: 13px; text-align: center;">
-                <a href="${receiptUrl}" style="color: #00c8c8; text-decoration: none;">View Stripe Receipt →</a>
+              <p style="margin: 0; color: rgba(255,255,255,0.4); font-size: 13px; text-align: center;">
+                <a href="${receiptUrl}" style="color: #00f0ff; text-decoration: none;">View Stripe Receipt →</a>
               </p>
               ` : ''}
             </td>
@@ -307,8 +311,8 @@ export async function sendPaymentReceiptEmail(env, { userEmail, credits, newBala
           
           <!-- Footer -->
           <tr>
-            <td style="background-color: #fafafa; padding: 25px 40px; border-top: 1px solid #eee;">
-              <p style="margin: 0; color: #888; font-size: 12px; text-align: center; line-height: 1.6;">
+            <td style="background-color: #0b0b0d; padding: 25px 40px; border-top: 1px solid rgba(255,255,255,0.06);">
+              <p style="margin: 0; color: rgba(255,255,255,0.4); font-size: 12px; text-align: center; line-height: 1.6;">
                 Questions? Reply to this email or contact us at bob@philosify.org
               </p>
             </td>

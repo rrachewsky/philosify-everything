@@ -2251,7 +2251,9 @@
       "signInErrorDefault": "Accesso fallito. Riprova.",
       "signUpErrorDefault": "Creazione account fallita. Riprova.",
       "signingIn": "Accesso…",
-      "termsLink": "Termini di servizio"
+      "termsLink": "Termini di servizio",
+      "showPassword": "Mostra password",
+      "hidePassword": "Nascondi password"
     },
     "cinema": {
       "analyzeAnother": "Analizza un altro",

@@ -2269,7 +2269,9 @@
       "signInErrorDefault": "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
       "signUpErrorDefault": "Konto konnte nicht erstellt werden. Bitte versuche es erneut.",
       "signingIn": "Anmeldung…",
-      "termsLink": "Nutzungsbedingungen"
+      "termsLink": "Nutzungsbedingungen",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort verbergen"
     },
     "cinema": {
       "analyzeAnother": "Einen anderen analysieren",

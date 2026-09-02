@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { isValidEmail } from '../../utils/validation.js';
 import { AuthShell } from './auth/AuthShell.jsx';
+import { PasswordInput } from '../../components/common';
 
 export default function SignInPage() {
   const { t } = useTranslation();
@@ -100,10 +101,9 @@ export default function SignInPage() {
               <label className="f" htmlFor="signinPassword">
                 {t('v2.auth.password', 'Password')}
               </label>
-              <input
+              <PasswordInput
                 className="f"
                 id="signinPassword"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required

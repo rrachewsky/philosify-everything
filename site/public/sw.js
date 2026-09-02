@@ -1,7 +1,7 @@
 // Service Worker for Philosify PWA
 // IMPORTANT: Increment version to force cache invalidation when site updates
-const CACHE_NAME = 'philosify-v12';
-const RUNTIME_CACHE = 'philosify-runtime-v11';
+const CACHE_NAME = 'philosify-v13';
+const RUNTIME_CACHE = 'philosify-runtime-v12';
 
 // API URL for fetching push notification content
 // API URL for fetching push notification content

@@ -21,38 +21,59 @@ export function useAuth() {
   const mountedRef = useRef(true);
   const refreshTimerRef = useRef(null);
   const prevUserIdRef = useRef(null);
+  const rtBackoffRef = useRef(0); // exponential-backoff attempt counter for realtime-token
 
-  // Fetch realtime token from dedicated endpoint and schedule refresh
-  const fetchRealtimeToken = useCallback(async () => {
+  // Fetch realtime token from dedicated endpoint and schedule refresh.
+  // On 401 (stale cookie) try a one-shot session refresh then retry; if it
+  // still fails, use bounded exponential backoff so a stale session can't spin
+  // an unthrottled 401 loop. Success resets the backoff.
+  const fetchRealtimeToken = useCallback(async (afterRefresh = false) => {
+    const MAX_BACKOFF_ATTEMPTS = 6;
+    const scheduleBackoff = () => {
+      if (!mountedRef.current) return;
+      const attempt = rtBackoffRef.current;
+      if (attempt >= MAX_BACKOFF_ATTEMPTS) return; // give up until next auth/visibility event
+      rtBackoffRef.current = attempt + 1;
+      const delay = Math.min(30000, 1000 * 2 ** attempt);
+      if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
+      refreshTimerRef.current = setTimeout(() => fetchRealtimeToken(), delay);
+    };
+
     try {
       const res = await fetch(`${getApiUrl()}/auth/realtime-token`, {
         credentials: 'include',
       });
 
+      // Stale cookie — try one session refresh, then retry immediately.
+      if (res.status === 401 && !afterRefresh) {
+        const refreshed = await fetch(`${getApiUrl()}/auth/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+          .then((r) => r.ok)
+          .catch(() => false);
+        if (refreshed && mountedRef.current) {
+          return fetchRealtimeToken(true);
+        }
+      }
+
       if (!res.ok) {
         logger.warn('[useAuth] Realtime token fetch failed:', res.status);
-        if (mountedRef.current) {
-          setRealtimeToken(null);
-          // Clear any scheduled refresh on auth failure (401) to stop retry loop
-          if (res.status === 401 && refreshTimerRef.current) {
-            clearTimeout(refreshTimerRef.current);
-            refreshTimerRef.current = null;
-          }
-        }
+        if (mountedRef.current) setRealtimeToken(null);
+        scheduleBackoff();
         return;
       }
 
       const { token, expiresAt } = await res.json();
 
       if (mountedRef.current && token) {
+        rtBackoffRef.current = 0; // success resets backoff
         setRealtimeToken(token);
         // Update the shared Realtime client (no WebSocket teardown)
         setRealtimeAuth(token);
 
         // Schedule refresh 60s before expiry
-        if (refreshTimerRef.current) {
-          clearTimeout(refreshTimerRef.current);
-        }
+        if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
         if (expiresAt) {
           const nowSeconds = Math.floor(Date.now() / 1000);
           const refreshInMs = Math.max((expiresAt - nowSeconds - 60) * 1000, 10000);
@@ -64,9 +85,8 @@ export function useAuth() {
       }
     } catch (err) {
       logger.warn('[useAuth] Realtime token fetch error:', err.message);
-      if (mountedRef.current) {
-        setRealtimeToken(null);
-      }
+      if (mountedRef.current) setRealtimeToken(null);
+      scheduleBackoff();
     }
   }, []);
 
@@ -201,10 +221,12 @@ export function useAuth() {
     if (user) {
       if (user.id !== prevUserIdRef.current) {
         prevUserIdRef.current = user.id;
+        rtBackoffRef.current = 0; // fresh session — reset backoff
         fetchRealtimeToken();
       }
     } else {
       prevUserIdRef.current = null;
+      rtBackoffRef.current = 0;
       // Clear token and timer when user is null (logged out)
       setRealtimeToken(null);
       if (refreshTimerRef.current) {

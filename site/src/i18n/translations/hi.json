@@ -2208,7 +2208,9 @@
       "signInErrorDefault": "साइन इन विफल। कृपया पुनः प्रयास करें।",
       "signUpErrorDefault": "खाता बनाना विफल। कृपया पुनः प्रयास करें।",
       "signingIn": "साइन इन हो रहा है…",
-      "termsLink": "सेवा की शर्तें"
+      "termsLink": "सेवा की शर्तें",
+      "showPassword": "पासवर्ड दिखाएं",
+      "hidePassword": "पासवर्ड छिपाएं"
     },
     "cinema": {
       "analyzeAnother": "एक और विश्लेषण करें",

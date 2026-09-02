@@ -2250,7 +2250,9 @@
       "signInErrorDefault": "Ошибка входа. Попробуйте снова.",
       "signUpErrorDefault": "Ошибка создания аккаунта. Попробуйте снова.",
       "signingIn": "Вход…",
-      "termsLink": "Условия использования"
+      "termsLink": "Условия использования",
+      "showPassword": "Показать пароль",
+      "hidePassword": "Скрыть пароль"
     },
     "cinema": {
       "analyzeAnother": "Анализировать другой",

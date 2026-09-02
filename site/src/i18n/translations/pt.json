@@ -2256,7 +2256,9 @@
       "signInErrorDefault": "Falha ao entrar. Tente novamente.",
       "signUpErrorDefault": "Falha ao criar conta. Tente novamente.",
       "signingIn": "Entrando…",
-      "termsLink": "Termos de Serviço"
+      "termsLink": "Termos de Serviço",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha"
     },
     "cinema": {
       "analyzeAnother": "Analisar outro",

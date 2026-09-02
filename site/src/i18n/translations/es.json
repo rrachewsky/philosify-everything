@@ -2277,7 +2277,9 @@
       "signInErrorDefault": "Error al iniciar sesión. Inténtalo de nuevo.",
       "signUpErrorDefault": "Error al crear la cuenta. Inténtalo de nuevo.",
       "signingIn": "Iniciando sesión…",
-      "termsLink": "Términos de Servicio"
+      "termsLink": "Términos de Servicio",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña"
     },
     "cinema": {
       "analyzeAnother": "Analizar otra",

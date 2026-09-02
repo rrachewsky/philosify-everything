@@ -2208,7 +2208,9 @@
       "signInErrorDefault": "ورود ناموفق بود. لطفاً دوباره تلاش کنید.",
       "signUpErrorDefault": "ایجاد حساب ناموفق بود. لطفاً دوباره تلاش کنید.",
       "signingIn": "در حال ورود…",
-      "termsLink": "شرایط خدمات"
+      "termsLink": "شرایط خدمات",
+      "showPassword": "نمایش رمز عبور",
+      "hidePassword": "پنهان کردن رمز عبور"
     },
     "cinema": {
       "analyzeAnother": "تحلیل فیلم دیگر",

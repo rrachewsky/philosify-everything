@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { isValidEmail, isValidPassword, doPasswordsMatch } from '../../utils/validation.js';
 import { AuthShell } from './auth/AuthShell.jsx';
+import { PasswordInput } from '../../components/common';
 
 export default function SignUpPage() {
   const { t } = useTranslation();
@@ -137,10 +138,9 @@ export default function SignUpPage() {
               <label className="f" htmlFor="signupPassword">
                 {t('v2.auth.password', 'Password')}
               </label>
-              <input
+              <PasswordInput
                 className="f"
                 id="signupPassword"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -149,10 +149,9 @@ export default function SignUpPage() {
               <label className="f" htmlFor="signupConfirmPassword">
                 {t('v2.auth.confirmPassword', 'Confirm password')}
               </label>
-              <input
+              <PasswordInput
                 className="f"
                 id="signupConfirmPassword"
-                type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required

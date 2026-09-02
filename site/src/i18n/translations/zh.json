@@ -2336,7 +2336,9 @@
       "signInErrorDefault": "登录失败。请重试。",
       "signUpErrorDefault": "账户创建失败。请重试。",
       "signingIn": "登录中…",
-      "termsLink": "服务条款"
+      "termsLink": "服务条款",
+      "showPassword": "显示密码",
+      "hidePassword": "隐藏密码"
     },
     "cinema": {
       "analyzeAnother": "分析另一部电影",

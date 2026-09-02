@@ -49,7 +49,7 @@ function App() {
   const pageTitle =
     result && !result.error
       ? `${result.song || result.song_name} - ${result.artist} | Philosify`
-      : 'Philosify - Philosophical Music Analysis';
+      : `Philosify — ${t('v2.landing.tagline')}`;
 
   const pageDescription =
     result && !result.error

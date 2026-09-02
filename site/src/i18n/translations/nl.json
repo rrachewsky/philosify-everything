@@ -2336,7 +2336,9 @@
       "signInErrorDefault": "Inloggen mislukt. Probeer het opnieuw.",
       "signUpErrorDefault": "Account aanmaken mislukt. Probeer het opnieuw.",
       "signingIn": "Inloggen…",
-      "termsLink": "Servicevoorwaarden"
+      "termsLink": "Servicevoorwaarden",
+      "showPassword": "Wachtwoord tonen",
+      "hidePassword": "Wachtwoord verbergen"
     },
     "cinema": {
       "analyzeAnother": "Analyseer een andere",

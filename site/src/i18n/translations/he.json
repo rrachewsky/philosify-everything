@@ -2219,7 +2219,9 @@
       "signInErrorDefault": "ההתחברות נכשלה. אנא נסה שוב.",
       "signUpErrorDefault": "יצירת החשבון נכשלה. אנא נסה שוב.",
       "signingIn": "מתחבר…",
-      "termsLink": "תנאי השירות"
+      "termsLink": "תנאי השירות",
+      "showPassword": "הצג סיסמה",
+      "hidePassword": "הסתר סיסמה"
     },
     "cinema": {
       "analyzeAnother": "נתח סרט אחר",

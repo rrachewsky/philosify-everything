@@ -616,13 +616,12 @@ async function handleGetSession(request, env, origin) {
  * No getUser() call — lightweight, server-side expiry check only.
  */
 async function handleGetRealtimeToken(request, env, origin) {
-  // SECURITY: Cryptographically verify the JWT before returning it.
-  // Previously this only checked the cookie's expires_at without verifying
-  // the token's signature, which could allow tampered tokens to be forwarded.
-  const user = await getUserFromAuth(request, env);
-
-  if (!user) {
-    return new Response(JSON.stringify({ error: "Not authenticated" }), {
+  // Returns a valid Supabase access token for Realtime. Refreshes when the
+  // cookie's access token is expired (30s buffer) — mirrors handleGetSession —
+  // so the Realtime client never ends up holding a stale/expired token, which
+  // previously caused a perpetual 401 loop (broadcasts only arrived after F5).
+  const unauthorized = () =>
+    new Response(JSON.stringify({ error: "Not authenticated" }), {
       status: 401,
       headers: {
         "Content-Type": "application/json",
@@ -632,28 +631,56 @@ async function handleGetRealtimeToken(request, env, origin) {
         ...getCorsHeaders(origin, env),
       },
     });
-  }
 
   const session = getSessionFromCookie(request);
+  if (!session?.access_token) return unauthorized();
 
-  return new Response(
-    JSON.stringify({
-      token: session.access_token,
-      expiresAt: session.expires_at,
-    }),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store, max-age=0",
-        Pragma: "no-cache",
-        Expires: "0",
-        "Strict-Transport-Security":
-          "max-age=31536000; includeSubDomains; preload",
-        ...getCorsHeaders(origin, env),
-      },
-    },
-  );
+  let accessToken = session.access_token;
+  let expiresAt = session.expires_at;
+  let setCookieHeader = null;
+
+  const now = Math.floor(Date.now() / 1000);
+  const isExpired = expiresAt > 0 && expiresAt - 30 < now;
+
+  if (isExpired && session.refresh_token) {
+    // Expired: refresh via the refresh token and rotate the cookie.
+    try {
+      const supabaseUrl = await getSecret(env.SUPABASE_URL);
+      const supabaseAnonKey = await getSecret(env.SUPABASE_ANON_KEY);
+      const tempClient = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+      const { data, error } = await tempClient.auth.refreshSession({
+        refresh_token: session.refresh_token,
+      });
+      if (error || !data.session) return unauthorized();
+      accessToken = data.session.access_token; // fresh from Supabase — trusted
+      expiresAt = data.session.expires_at;
+      setCookieHeader = buildAuthCookie(data.session, isProduction(env));
+    } catch {
+      return unauthorized();
+    }
+  } else {
+    // Not expired: keep the cryptographic verification of the cookie token.
+    const user = await getUserFromAuth(request, env);
+    if (!user) return unauthorized();
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store, max-age=0",
+    Pragma: "no-cache",
+    Expires: "0",
+    "Strict-Transport-Security":
+      "max-age=31536000; includeSubDomains; preload",
+    ...getCorsHeaders(origin, env),
+  };
+  if (setCookieHeader) headers["Set-Cookie"] = setCookieHeader;
+
+  return new Response(JSON.stringify({ token: accessToken, expiresAt }), {
+    status: 200,
+    headers,
+  });
 }
 
 /**

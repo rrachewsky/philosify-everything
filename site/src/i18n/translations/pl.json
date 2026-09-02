@@ -2336,7 +2336,9 @@
       "signInErrorDefault": "Logowanie nie powiodło się. Spróbuj ponownie.",
       "signUpErrorDefault": "Tworzenie konta nie powiodło się. Spróbuj ponownie.",
       "signingIn": "Logowanie…",
-      "termsLink": "Regulamin"
+      "termsLink": "Regulamin",
+      "showPassword": "Pokaż hasło",
+      "hidePassword": "Ukryj hasło"
     },
     "cinema": {
       "analyzeAnother": "Analizuj inny",

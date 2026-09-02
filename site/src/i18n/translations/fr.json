@@ -2261,7 +2261,9 @@
       "signInErrorDefault": "Échec de la connexion. Veuillez réessayer.",
       "signUpErrorDefault": "Échec de la création du compte. Veuillez réessayer.",
       "signingIn": "Connexion…",
-      "termsLink": "Conditions d'Utilisation"
+      "termsLink": "Conditions d'Utilisation",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe"
     },
     "cinema": {
       "analyzeAnother": "Analyser un autre",

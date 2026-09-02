@@ -21,3 +21,18 @@
 
 /* Signup legal disclaimer under the .aalt line */
 .v2 .pg-auth .aalt.adisc { margin-top: 12px; font-size: 11px; line-height: 1.7; }
+
+/* Password show/hide toggle (component: PasswordInput). The kit inputs use
+   `input.f` (not `.form-input`), so the global toggle CSS doesn't reach them;
+   scope it here. Logical props (inset-inline-end / padding-inline-end) keep the
+   eye on the trailing side under RTL (ar/fa/he). Tokens: --ink-low → --ink-hi
+   (same as the account-modal toggle). */
+.v2 .pg-auth .password-input-wrapper { position: relative; width: 100%; }
+.v2 .pg-auth .password-input-wrapper input.f { padding-inline-end: 44px; }
+.v2 .pg-auth .password-toggle-btn {
+  position: absolute; inset-inline-end: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: 0; color: var(--ink-low); cursor: pointer;
+  padding: 2px; display: flex; align-items: center; justify-content: center;
+}
+.v2 .pg-auth .password-toggle-btn:hover,
+.v2 .pg-auth .password-toggle-btn:focus-visible { color: var(--ink-hi); outline: none; }

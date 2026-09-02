@@ -2230,7 +2230,9 @@
       "signInErrorDefault": "로그인 실패. 다시 시도해주세요.",
       "signUpErrorDefault": "계정 생성 실패. 다시 시도해주세요.",
       "signingIn": "로그인 중…",
-      "termsLink": "서비스 약관"
+      "termsLink": "서비스 약관",
+      "showPassword": "비밀번호 표시",
+      "hidePassword": "비밀번호 숨기기"
     },
     "cinema": {
       "analyzeAnother": "다른 영화 분석",

@@ -2229,7 +2229,9 @@
       "signInErrorDefault": "فشل تسجيل الدخول. حاول مرة أخرى.",
       "signUpErrorDefault": "فشل إنشاء الحساب. حاول مرة أخرى.",
       "signingIn": "جاري تسجيل الدخول…",
-      "termsLink": "شروط الخدمة"
+      "termsLink": "شروط الخدمة",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور"
     },
     "cinema": {
       "analyzeAnother": "تحليل فيلم آخر",

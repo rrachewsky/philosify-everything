@@ -2351,7 +2351,9 @@
       "signInErrorDefault": "Failed to sign in. Please try again.",
       "signUpErrorDefault": "Failed to create account. Please try again.",
       "signingIn": "Signing in…",
-      "termsLink": "Terms of Service"
+      "termsLink": "Terms of Service",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
     },
     "cinema": {
       "analyzeAnother": "Analyze another",

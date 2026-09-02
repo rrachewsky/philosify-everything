@@ -6,9 +6,8 @@
 import { getSecret } from "../utils/secrets.js";
 import { jsonResponse } from "../utils/index.js";
 
-// New logo URL on R2
-const LOGO_URL =
-  "https://pub-2485a0b8727445bbb7148e85a0db3edf.r2.dev/logo-everything.jpg";
+// v2 brand lockup (light-on-dark), served from philosify.org (stable, not R2)
+const LOGO_URL = "https://philosify.org/brand/philosify-logo-lockup.png";
 
 // Email translations for all 18 supported languages
 const EMAIL_TRANSLATIONS = {
@@ -779,91 +778,84 @@ function generateEmailHtml(translations, confirmationUrl) {
   </xml>
   <![endif]-->
 </head>
-<body style="margin: 0; padding: 0; background-color: #0a0020; font-family: Georgia, 'Times New Roman', serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0020; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; background-color: #070708; font-family: -apple-system, 'Segoe UI', Roboto, Inter, Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #070708; padding: 40px 20px;">
     <tr>
       <td align="center">
-        <!-- Outer glow wrapper -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 520px;">
+        <!-- Main card -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 520px; background-color: #0d0d0f; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
+
+          <!-- Header with Logo -->
           <tr>
-            <td style="padding: 2px; background: linear-gradient(135deg, rgba(0,240,255,0.3) 0%, rgba(124,58,237,0.25) 50%, rgba(0,200,220,0.3) 100%); border-radius: 14px;">
-              <!-- Main card -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0c051e; border-radius: 12px; overflow: hidden;">
-                
-                <!-- Header with Logo -->
+            <td style="padding: 32px 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <img src="${LOGO_URL}" alt="Philosify" width="190" style="width: 190px; max-width: 72%; height: auto;" />
+            </td>
+          </tr>
+
+          <!-- Accent line (cyan) -->
+          <tr>
+            <td style="height: 2px; background-color: #00f0ff; line-height: 2px; font-size: 0;">&nbsp;</td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 36px 40px 32px; background-color: #0d0d0f;">
+              <!-- Title -->
+              <h2 style="margin: 0 0 20px 0; color: #00f0ff; font-family: Michroma, 'Segoe UI', Arial, sans-serif; font-size: 19px; font-weight: normal; letter-spacing: 1px; text-align: center;">${translations.title}</h2>
+
+              <!-- Body text -->
+              <p style="margin: 0 0 28px 0; color: rgba(255,255,255,0.72); font-size: 15px; line-height: 1.8; text-align: center;">
+                ${translations.body}
+              </p>
+
+              <!-- CTA Button (Bulletproof: works in Outlook, Gmail, Apple Mail, etc.) -->
+              <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="background-color: #0a0020; padding: 32px 40px 24px; text-align: center; border-bottom: 1px solid rgba(120,100,180,0.2);">
-                    <img src="${LOGO_URL}" alt="Philosify" style="max-width: 80px; height: auto;" />
-                  </td>
-                </tr>
-                
-                <!-- Accent line (cyan-purple gradient simulation) -->
-                <tr>
-                  <td style="height: 2px; background: linear-gradient(90deg, transparent, #00f0ff, #7c3aed, #00f0ff, transparent);"></td>
-                </tr>
-                
-                <!-- Content -->
-                <tr>
-                  <td style="padding: 36px 40px 32px; background-color: #0c051e;">
-                    <!-- Title -->
-                    <h2 style="margin: 0 0 20px 0; color: #00f0ff; font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; font-size: 22px; font-weight: bold; letter-spacing: 1px; text-align: center;">${translations.title}</h2>
-                    
-                    <!-- Body text -->
-                    <p style="margin: 0 0 28px 0; color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.8; text-align: center;">
-                      ${translations.body}
-                    </p>
-                    
-                    <!-- CTA Button (Bulletproof: works in Outlook, Gmail, Apple Mail, etc.) -->
-                    <table width="100%" cellpadding="0" cellspacing="0">
+                  <td align="center" style="padding: 8px 0 32px 0;">
+                    <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                       <tr>
-                        <td align="center" style="padding: 8px 0 32px 0;">
-                          <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-                            <tr>
-                              <td align="center" bgcolor="#00f0ff" style="border-radius: 8px; background-color: #00f0ff;">
-                                <!--[if mso]>
-                                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="16%" strokecolor="#00f0ff" fillcolor="#00f0ff">
-                                  <w:anchorlock/>
-                                  <center style="color:#0a0020;font-family:'Trebuchet MS','Segoe UI',sans-serif;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;">${translations.button}</center>
-                                </v:roundrect>
-                                <![endif]-->
-                                <!--[if !mso]><!-->
-                                <a href="${confirmationUrl}" style="background-color: #00f0ff; border-radius: 8px; color: #0a0020; display: inline-block; font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; font-size: 14px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; padding: 14px 48px; text-decoration: none; mso-hide: all;">
-                                  ${translations.button}
-                                </a>
-                                <!--<![endif]-->
-                              </td>
-                            </tr>
-                          </table>
+                        <td align="center" bgcolor="#00f0ff" style="border-radius: 8px; background-color: #00f0ff;">
+                          <!--[if mso]>
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="16%" strokecolor="#00f0ff" fillcolor="#00f0ff">
+                            <w:anchorlock/>
+                            <center style="color:#070708;font-family:'Segoe UI',Arial,sans-serif;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;">${translations.button}</center>
+                          </v:roundrect>
+                          <![endif]-->
+                          <!--[if !mso]><!-->
+                          <a href="${confirmationUrl}" style="background-color: #00f0ff; border-radius: 8px; color: #070708; display: inline-block; font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; padding: 14px 48px; text-decoration: none; mso-hide: all;">
+                            ${translations.button}
+                          </a>
+                          <!--<![endif]-->
                         </td>
                       </tr>
                     </table>
-                    
-                    <!-- Divider -->
-                    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 20px 0;">
-                      <tr>
-                        <td style="height: 1px; background: linear-gradient(90deg, transparent, rgba(120,100,180,0.25), transparent);"></td>
-                      </tr>
-                    </table>
-                    
-                    <!-- Footer text -->
-                    <p style="margin: 0; color: rgba(255,255,255,0.35); font-size: 12px; text-align: center; line-height: 1.6;">
-                      ${translations.footer}
-                    </p>
                   </td>
                 </tr>
-                
-                <!-- Footer bar -->
-                <tr>
-                  <td style="background-color: #080318; padding: 20px 40px; border-top: 1px solid rgba(120,100,180,0.15);">
-                    <p style="margin: 0; color: rgba(255,255,255,0.25); font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; font-size: 11px; text-align: center; letter-spacing: 0.5px;">
-                      &copy; Philosify &bull; <a href="https://philosify.org" style="color: #00f0ff; text-decoration: none;">philosify.org</a>
-                    </p>
-                  </td>
-                </tr>
-                
               </table>
+
+              <!-- Divider -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 20px 0;">
+                <tr>
+                  <td style="height: 1px; background-color: rgba(255,255,255,0.08);"></td>
+                </tr>
+              </table>
+
+              <!-- Footer text -->
+              <p style="margin: 0; color: rgba(255,255,255,0.4); font-size: 12px; text-align: center; line-height: 1.6;">
+                ${translations.footer}
+              </p>
             </td>
           </tr>
+
+          <!-- Footer bar -->
+          <tr>
+            <td style="background-color: #0b0b0d; padding: 20px 40px; border-top: 1px solid rgba(255,255,255,0.06);">
+              <p style="margin: 0; color: rgba(255,255,255,0.3); font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; text-align: center; letter-spacing: 0.5px;">
+                &copy; Philosify &bull; <a href="https://philosify.org" style="color: #00f0ff; text-decoration: none;">philosify.org</a>
+              </p>
+            </td>
+          </tr>
+
         </table>
       </td>
     </tr>

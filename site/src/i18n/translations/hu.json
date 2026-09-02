@@ -2336,7 +2336,9 @@
       "signInErrorDefault": "Bejelentkezés sikertelen. Kérjük, próbáld újra.",
       "signUpErrorDefault": "Fiók létrehozása sikertelen. Kérjük, próbáld újra.",
       "signingIn": "Bejelentkezés…",
-      "termsLink": "Szolgáltatási feltételek"
+      "termsLink": "Szolgáltatási feltételek",
+      "showPassword": "Jelszó megjelenítése",
+      "hidePassword": "Jelszó elrejtése"
     },
     "cinema": {
       "analyzeAnother": "Másik elemzése",

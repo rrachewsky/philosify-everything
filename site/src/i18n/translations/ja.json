@@ -2235,7 +2235,9 @@
       "signInErrorDefault": "ログインに失敗しました。もう一度お試しください。",
       "signUpErrorDefault": "アカウント作成に失敗しました。もう一度お試しください。",
       "signingIn": "ログイン中…",
-      "termsLink": "利用規約"
+      "termsLink": "利用規約",
+      "showPassword": "パスワードを表示",
+      "hidePassword": "パスワードを非表示"
     },
     "cinema": {
       "analyzeAnother": "別の映画を分析",
