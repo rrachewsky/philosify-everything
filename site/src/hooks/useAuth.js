@@ -127,7 +127,9 @@ export function useAuth() {
         const res = await fetch(`${getApiUrl()}/auth/exchange-code`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code }),
+          // language: sets preferred_language for OAuth users (whose metadata has
+          // none) so their localized auth emails (incl. password reset) match the UI.
+          body: JSON.stringify({ code, language: i18n.language || 'en' }),
           credentials: 'include', // sends pkce_id cookie
         });
 
@@ -166,7 +168,11 @@ export function useAuth() {
       const res = await fetch(`${getApiUrl()}/auth/exchange`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ access_token: accessToken, refresh_token: refreshToken }),
+        body: JSON.stringify({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          language: i18n.language || 'en',
+        }),
         credentials: 'include',
       });
 

@@ -54,7 +54,7 @@
 }
 
 .music-sidebar__title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: #00e0f0;
@@ -216,7 +216,7 @@
 }
 
 .music-selected__song {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #00f0ff;
@@ -271,7 +271,7 @@
 }
 
 .music-results__header {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.5);
@@ -343,7 +343,7 @@
   border: none;
   border-radius: 12px;
   color: #ffffff;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1px;
@@ -418,7 +418,7 @@
 }
 
 .music-timer__time {
-  font-family: 'Orbitron', monospace;
+  font-family: 'Inter', monospace;
   font-size: 24px;
   font-weight: 600;
   color: #00f0ff;
@@ -461,7 +461,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   color: #22c55e;
@@ -487,7 +487,7 @@
 }
 
 .music-analysis__section-title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 600;
   color: #ec4899;
@@ -530,7 +530,7 @@
 }
 
 .music-analysis__score-value {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   color: #00f0ff;
@@ -558,7 +558,7 @@
   border: 1px solid rgba(0, 180, 200, 0.4);
   border-radius: 8px;
   color: #00d0e0;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.8px;
@@ -685,7 +685,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: #00f0ff;
@@ -701,7 +701,7 @@
 }
 
 .scorecard-branch__score {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-weight: 700;
   color: #ec4899;
@@ -814,7 +814,7 @@
 }
 
 .book-manual-entry__title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   color: #00f0ff;
@@ -935,7 +935,7 @@
 }
 
 .philosopher-picker__title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 700;
   color: #c4b5fd;
@@ -1108,7 +1108,7 @@
   border: 1px solid rgba(139, 92, 246, 0.6);
   border-radius: 8px;
   color: #fff;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -1185,7 +1185,7 @@
 }
 
 .panel-analysis__section-title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 13px;
   color: #00f0ff;
@@ -1501,7 +1501,7 @@
 }
 
 .news-highlights__header {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -1601,7 +1601,7 @@
   border: 1px solid rgba(0, 240, 255, 0.3);
   border-radius: 6px;
   color: #00f0ff;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -1644,7 +1644,7 @@
   border: 1px solid rgba(120, 100, 180, 0.3);
   border-radius: 6px;
   color: rgba(196, 181, 253, 0.8);
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1679,7 +1679,7 @@
 }
 
 .news-source-unlock__title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: #e0d6ff;
@@ -1687,7 +1687,7 @@
 }
 
 .news-source-unlock__desc {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
   color: rgba(196, 181, 253, 0.7);
   margin: 0 0 1.5rem;
@@ -1696,7 +1696,7 @@
 }
 
 .news-source-unlock__default {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.75rem;
   color: rgba(196, 181, 253, 0.5);
   margin: 0 0 1.5rem;
@@ -1709,7 +1709,7 @@
 }
 
 .news-source-unlock__no-credits {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   margin-top: 1rem;
   font-size: 0.75rem;
   color: rgba(255, 100, 100, 0.8);
@@ -1724,7 +1724,7 @@
 }
 
 .news-source-actions__btn {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   flex: 1;
   padding: 0.5rem 0.75rem;
   background: rgba(120, 100, 180, 0.15);
@@ -1756,7 +1756,7 @@
 }
 
 .news-source-category__title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   color: rgba(0, 240, 255, 0.8);
@@ -1803,7 +1803,7 @@
 }
 
 .news-source-item__name {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.7rem;
   color: #e0d6ff;
   white-space: nowrap;
@@ -1820,7 +1820,7 @@
 }
 
 .news-source-footer__count {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.8rem;
   color: rgba(196, 181, 253, 0.6);
 }
@@ -1841,7 +1841,7 @@
 }
 
 .quiz-start__intro h3 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: #00f0ff;
@@ -1901,7 +1901,7 @@
 .quiz-progress__stats {
   display: flex;
   justify-content: space-between;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   color: #00f0ff;
@@ -1973,7 +1973,7 @@
   height: 28px;
   background: rgba(0, 240, 255, 0.15);
   border-radius: 6px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 700;
   color: #00f0ff;
@@ -2032,7 +2032,7 @@
 }
 
 .quiz-feedback__result span:nth-child(2) {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -2066,7 +2066,7 @@
 }
 
 .quiz-feedback__explanation h4 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: #00f0ff;
@@ -2114,7 +2114,7 @@
 }
 
 .quiz-paused__message h3 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 700;
   color: #ec4899;
@@ -2167,7 +2167,7 @@
 }
 
 .quiz-ended__header h3 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 700;
   color: #00f0ff;
@@ -2198,7 +2198,7 @@
 }
 
 .quiz-ended__stat-value {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 28px;
   font-weight: 700;
   color: #00f0ff;

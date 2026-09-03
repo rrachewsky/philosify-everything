@@ -2,7 +2,6 @@
    LANDING.CSS - Full-Screen Vertical Landing Page Styles
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 
 .landing-screen {
   position: fixed;
@@ -41,7 +40,7 @@ html:has(.landing-screen) {
 .landing-auth-link {
   background: none;
   border: none;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -60,7 +59,7 @@ html:has(.landing-screen) {
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%);
   border: 1px solid rgba(0, 240, 255, 0.4);
   border-radius: 20px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 1px;
@@ -111,7 +110,7 @@ html:has(.landing-screen) {
 /* All profile elements use same style as sign in links */
 .landing-username,
 .landing-balance {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -466,7 +465,7 @@ html:has(.landing-screen) {
 .landing-flip-counter {
   color: rgba(255, 255, 255, 0.5);
   font-size: 12px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Selected Track Display */
@@ -527,7 +526,7 @@ html:has(.landing-screen) {
   padding: 18px 32px;
   border: none;
   border-radius: 50px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -747,7 +746,7 @@ html:has(.landing-screen) {
 .landing-timer-mark {
   position: absolute;
   transform: translateX(-50%);
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 8px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.4);
@@ -791,7 +790,7 @@ html:has(.landing-screen) {
 }
 
 .landing-chronometer {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 2px;
@@ -815,7 +814,7 @@ html:has(.landing-screen) {
 }
 
 .landing-timer-label {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -940,7 +939,7 @@ html:has(.landing-screen) {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: rgba(255, 255, 255, 0.7);
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 7px; /* Font size for language icons */
   font-weight: 600;
   letter-spacing: 0.2px;
@@ -1177,7 +1176,7 @@ html:has(.landing-screen) {
     padding: 4px 8px !important;
     border-radius: 4px !important;
     font-size: 9px !important; /* Reduced from 11px */
-    font-family: 'Orbitron', sans-serif !important; /* Same font as auth buttons */
+    font-family: 'Inter', sans-serif !important; /* Same font as auth buttons */
     font-weight: 500 !important; /* Same as auth buttons */
     letter-spacing: 1px !important; /* Same as auth buttons */
     border: none !important; /* No border by default */
@@ -1295,7 +1294,7 @@ body:has(.landing-screen)::-webkit-scrollbar {
 
 /* ===== Philosify Ads Ateliê — advertiser portal link (bottom-left) ===== */
 /* Same column as the auth/profile links (left: 57px = 1.5cm) and identical
-   typography: Orbitron 11px/500 inherited from .landing-auth-link, zero
+   typography: Inter 11px/500 inherited from .landing-auth-link, zero
    padding/margin like the profile links, cyan like History/Buy Credits. */
 .landing-ads-atelier {
   position: fixed;

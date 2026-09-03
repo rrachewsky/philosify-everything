@@ -151,7 +151,7 @@
 
 /* The label at the end */
 .hotspot-line__label {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -292,7 +292,7 @@
     background: none;
     border: none;
     color: #00f0ff;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 9px;
     font-weight: 600;
     letter-spacing: 1.5px;
@@ -312,7 +312,7 @@
 
   .pwa-install-success {
     color: #00ff88;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 9px;
     font-weight: 600;
     letter-spacing: 1.5px;
@@ -385,7 +385,7 @@
   .mobile-label {
     background: none;
     border: none;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 600;
     line-height: 1;
@@ -587,7 +587,7 @@
   .logo-authenticated ~ .mobile-category-labels .mobile-label {
     background: none;
     border: none;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 600;
     line-height: 1;

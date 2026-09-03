@@ -2290,6 +2290,7 @@ export default {
             // Send payment receipt email to user (best effort, don't block response)
             sendPaymentReceiptEmail(env, {
               userEmail: user.email,
+              userId: user.userId,
               credits: credits,
               newBalance: paymentResult.new_balance,
               sessionId: session.id,
@@ -2497,6 +2498,7 @@ export default {
                 ctx.waitUntil(
                   sendPaymentReceiptEmail(env, {
                     userEmail: customerEmail,
+                    userId: userId,
                     credits: credits,
                     newBalance: paymentResult.new_balance,
                     sessionId: session.id,

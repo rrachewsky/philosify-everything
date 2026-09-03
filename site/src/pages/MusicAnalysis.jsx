@@ -15,7 +15,6 @@ import { Play, Pause, SkipBack, SkipForward, User, Headphones, Sparkles } from '
 
 // Inject Google Fonts
 const fontStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap');
 `;
 
 // Keyframes CSS
@@ -350,7 +349,7 @@ function NeonButton({ children, onClick, variant = 'primary', disabled = false, 
         borderRadius: '0.75rem',
         padding: '1rem 2rem',
         color: '#ffffff',
-        fontFamily: "'Orbitron', sans-serif",
+        fontFamily: "'Inter', sans-serif",
         fontSize: '1rem',
         fontWeight: 600,
         textTransform: 'uppercase',
@@ -526,7 +525,7 @@ function ProgressBar({ progress, onProgressChange }) {
           marginTop: '0.5rem',
           fontSize: '0.75rem',
           color: 'rgba(255, 255, 255, 0.6)',
-          fontFamily: "'Exo 2', sans-serif",
+          fontFamily: "'Inter', sans-serif",
         }}
       >
         <span>1:14</span>
@@ -647,7 +646,7 @@ export default function MusicAnalysis() {
           background: 'linear-gradient(180deg, #050011 0%, #0a0020 40%, #0d0025 70%, #000814 100%)',
           position: 'relative',
           overflow: 'hidden',
-          fontFamily: "'Exo 2', sans-serif",
+          fontFamily: "'Inter', sans-serif",
           color: '#ffffff',
         }}
       >
@@ -716,7 +715,7 @@ export default function MusicAnalysis() {
             <div>
               <h1
                 style={{
-                  fontFamily: "'Orbitron', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontSize: 'clamp(1.75rem, 6vw, 2.25rem)',
                   fontWeight: 700,
                   background: 'linear-gradient(135deg, #ff00aa 0%, #9d00ff 50%, #7c3aed 100%)',
@@ -776,7 +775,7 @@ export default function MusicAnalysis() {
             >
               <h2
                 style={{
-                  fontFamily: "'Orbitron', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontSize: 'clamp(1.25rem, 5vw, 1.5rem)',
                   fontWeight: 700,
                   color: '#00f0ff',
@@ -790,7 +789,7 @@ export default function MusicAnalysis() {
               </h2>
               <p
                 style={{
-                  fontFamily: "'Exo 2', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontSize: '0.9rem',
                   color: '#ff00aa',
                   textTransform: 'uppercase',

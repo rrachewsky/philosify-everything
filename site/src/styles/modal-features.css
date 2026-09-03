@@ -11,7 +11,7 @@
 
 .legal-modal,
 .legal-modal * {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 /* ===== CURRENT BALANCE (PaymentSuccess) ===== */
@@ -48,7 +48,7 @@
 }
 
 .current-balance-label {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 9px;
   color: rgba(255, 255, 255, 0.5);
   margin-bottom: 6px;
@@ -57,7 +57,7 @@
 }
 
 .current-balance-amount {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 36px;
   font-weight: 700;
   color: #00f0ff;
@@ -114,7 +114,7 @@
 }
 
 .legal-modal h2 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   color: #00e0f0;
   font-size: 20px;
   margin-bottom: 16px;
@@ -130,7 +130,7 @@
 }
 
 .legal-content h3 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   color: rgba(180, 160, 220, 0.9);
   font-size: 12px;
   margin-top: 24px;

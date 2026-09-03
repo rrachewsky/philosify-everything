@@ -62,19 +62,19 @@ async function sendEmail(env, to, subject, html) {
 function wrapHtml(content) {
   return `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;background:#070708;color:#e0e0e0;">
-<div style="max-width:600px;margin:0 auto;padding:40px 20px;">
-<div style="text-align:center;margin-bottom:30px;">
-<h1 style="color:#00f0ff;font-family:Michroma,'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:normal;letter-spacing:1px;margin:0;">Philosify Ads</h1>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"></head>
+<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,sans-serif;background-color:#070708;color:#e0e0e0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#070708" style="background-color:#070708;"><tr><td align="center" bgcolor="#070708" style="background-color:#070708;padding:44px 20px;">
+<div style="max-width:520px;margin:0 auto;text-align:left;">
+<div style="text-align:center;margin-bottom:28px;">
+<h1 style="color:#00f0ff;font-family:Michroma,'Segoe UI',Arial,sans-serif;font-size:20px;font-weight:normal;letter-spacing:1px;margin:0;">Philosify Ads</h1>
 </div>
-<div style="background:#0d0d0f;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:30px;">
 ${content}
+<div style="text-align:center;margin-top:32px;color:rgba(255,255,255,0.35);font-size:12px;">
+<p style="margin:0;">Philosify Ads Platform &mdash; <a href="${ADS_URL}" style="color:#00f0ff;text-decoration:none;">ads.philosify.org</a></p>
 </div>
-<div style="text-align:center;margin-top:30px;color:rgba(255,255,255,0.4);font-size:12px;">
-<p>Philosify Ads Platform &mdash; <a href="${ADS_URL}" style="color:#00f0ff;">ads.philosify.org</a></p>
 </div>
-</div>
+</td></tr></table>
 </body>
 </html>`;
 }

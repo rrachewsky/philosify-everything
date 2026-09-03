@@ -132,7 +132,7 @@ export function ComingSoonSidebar({ isOpen, onClose, category }) {
           filter: grayscale(0.3);
         }
         .coming-soon-content__title {
-          font-family: 'Orbitron', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 24px;
           font-weight: 700;
           color: #00f0ff;
@@ -145,7 +145,7 @@ export function ComingSoonSidebar({ isOpen, onClose, category }) {
           padding: 8px 20px;
           background: linear-gradient(135deg, #ec4899 0%, #7c3aed 100%);
           border-radius: 20px;
-          font-family: 'Orbitron', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 11px;
           font-weight: 600;
           color: #ffffff;

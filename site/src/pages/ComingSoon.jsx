@@ -130,7 +130,7 @@ export function ComingSoon({ category = 'books' }) {
         }
 
         .coming-soon-title {
-          font-family: 'Orbitron', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 2.5rem;
           font-weight: 800;
           letter-spacing: 4px;
@@ -144,7 +144,7 @@ export function ComingSoon({ category = 'books' }) {
           border: 1px solid rgba(236, 72, 153, 0.5);
           border-radius: 20px;
           padding: 8px 20px;
-          font-family: 'Orbitron', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 12px;
           font-weight: 600;
           letter-spacing: 2px;
@@ -166,7 +166,7 @@ export function ComingSoon({ category = 'books' }) {
           border: 1px solid rgba(0, 240, 255, 0.4);
           border-radius: 12px;
           padding: 14px 28px;
-          font-family: 'Orbitron', sans-serif;
+          font-family: 'Inter', sans-serif;
           font-size: 13px;
           font-weight: 600;
           letter-spacing: 1px;

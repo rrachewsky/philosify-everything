@@ -883,6 +883,9 @@ async function handleTokenExchange(request, env, origin, isProd) {
     expires_at: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
   };
 
+  // Fill preferred_language when absent (OAuth implicit fallback + email-link flows).
+  await backfillPreferredLanguage(env, session, data.user, body.language);
+
   // Set HttpOnly cookie and return user. Also clear any lingering pkce_id cookie
   // from a Google OAuth round-trip so it can't be reused.
   const response = jsonResponse(
@@ -900,6 +903,39 @@ async function handleTokenExchange(request, env, origin, isProd) {
 
   console.log(`[Auth Proxy] Token exchange successful: ${data.user.id}`);
   return response;
+}
+
+// The 18 UI languages Philosify localizes auth emails into.
+const AUTH_EMAIL_LANGS = new Set([
+  "ar", "de", "en", "es", "fa", "fr", "he", "hi", "hu",
+  "it", "ja", "ko", "nl", "pl", "pt", "ru", "tr", "zh",
+]);
+
+// Best-effort: stamp preferred_language into user_metadata for accounts that lack it
+// (Google OAuth users especially), so their localized auth emails — password reset
+// included — match the UI language they signed in with. Only fills a gap; never
+// overwrites an existing preference, and never throws into the auth flow.
+async function backfillPreferredLanguage(env, session, user, rawLang) {
+  try {
+    const lang = String(rawLang || "").split("-")[0].toLowerCase();
+    if (!AUTH_EMAIL_LANGS.has(lang)) return;
+    if (user?.user_metadata?.preferred_language) return;
+    if (!session?.access_token) return;
+    const supabaseUrl = await getSecret(env.SUPABASE_URL);
+    const anonKey = await getSecret(env.SUPABASE_ANON_KEY);
+    if (!supabaseUrl || !anonKey) return;
+    await fetch(`${supabaseUrl}/auth/v1/user`, {
+      method: "PUT",
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${session.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: { preferred_language: lang } }),
+    });
+  } catch (e) {
+    console.warn("[Auth Proxy] preferred_language backfill skipped:", e.message);
+  }
 }
 
 /**
@@ -950,6 +986,9 @@ async function handleCodeExchange(request, env, origin, isProd) {
 
   try {
     const { session, user } = await exchangePkceCode(env, code, codeVerifier);
+
+    // OAuth users arrive with no preferred_language — stamp it from the UI language.
+    await backfillPreferredLanguage(env, session, user, body.language);
 
     // Set session cookie + clear pkce_id cookie
     const response = jsonResponse(

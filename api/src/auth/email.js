@@ -7,14 +7,14 @@ import { getSecret } from "../utils/secrets.js";
 import { jsonResponse } from "../utils/index.js";
 
 // v2 brand lockup (light-on-dark), served from philosify.org (stable, not R2)
-const LOGO_URL = "https://philosify.org/brand/philosify-logo-lockup.png";
+const LOGO_URL = "https://philosify.org/brand/philosify-logo-lockup-transparent.png";
 
 // Email translations for all 18 supported languages
 const EMAIL_TRANSLATIONS = {
   en: {
     confirmSignup: {
       subject: "Confirm your Philosify account",
-      title: "Welcome to Philosify! 🎵",
+      title: "Welcome to Philosify!",
       body: "Thank you for signing up! Please confirm your email address to start discovering the philosophy in your favorite music.",
       button: "Confirm Email",
       footer:
@@ -22,7 +22,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Your Philosify login link",
-      title: "Sign In to Philosify 🔑",
+      title: "Your login link",
       body: "Click the button below to sign in to your account. This link will expire in 1 hour.",
       button: "Sign In Now",
       footer:
@@ -30,15 +30,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Reset your Philosify password",
-      title: "Reset Your Password 🔒",
+      title: "Password reset",
       body: "We received a request to reset your password. Click the button below to create a new password.",
-      button: "Reset Password",
+      button: "Set a new password",
       footer:
         "If you didn't request a password reset, you can safely ignore this email.",
     },
     emailChange: {
       subject: "Confirm your new email address",
-      title: "Confirm Email Change 📧",
+      title: "Email change",
       body: "You requested to change your email address. Click the button below to confirm this new email.",
       button: "Confirm New Email",
       footer:
@@ -46,7 +46,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "You've been invited to Philosify",
-      title: "You're Invited! 🎶",
+      title: "You're Invited!",
       body: "You've been invited to join Philosify - discover the philosophy hidden in your favorite music.",
       button: "Accept Invitation",
       footer:
@@ -56,7 +56,7 @@ const EMAIL_TRANSLATIONS = {
   pt: {
     confirmSignup: {
       subject: "Confirme sua conta Philosify",
-      title: "Bem-vindo ao Philosify! 🎵",
+      title: "Bem-vindo ao Philosify!",
       body: "Obrigado por se cadastrar! Por favor, confirme seu endereço de e-mail para começar a descobrir a filosofia nas suas músicas favoritas.",
       button: "Confirmar E-mail",
       footer:
@@ -64,7 +64,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Seu link de login do Philosify",
-      title: "Entrar no Philosify 🔑",
+      title: "Seu link de acesso",
       body: "Clique no botão abaixo para entrar na sua conta. Este link expira em 1 hora.",
       button: "Entrar Agora",
       footer:
@@ -72,15 +72,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Redefinir sua senha do Philosify",
-      title: "Redefinir Sua Senha 🔒",
+      title: "Redefinição de senha",
       body: "Recebemos uma solicitação para redefinir sua senha. Clique no botão abaixo para criar uma nova senha.",
-      button: "Redefinir Senha",
+      button: "Definir nova senha",
       footer:
         "Se você não solicitou a redefinição de senha, pode ignorar este e-mail com segurança.",
     },
     emailChange: {
       subject: "Confirme seu novo endereço de e-mail",
-      title: "Confirmar Alteração de E-mail 📧",
+      title: "Alteração de e-mail",
       body: "Você solicitou a alteração do seu endereço de e-mail. Clique no botão abaixo para confirmar o novo e-mail.",
       button: "Confirmar Novo E-mail",
       footer:
@@ -88,7 +88,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Você foi convidado para o Philosify",
-      title: "Você Foi Convidado! 🎶",
+      title: "Você Foi Convidado!",
       body: "Você foi convidado para se juntar ao Philosify - descubra a filosofia escondida nas suas músicas favoritas.",
       button: "Aceitar Convite",
       footer:
@@ -98,7 +98,7 @@ const EMAIL_TRANSLATIONS = {
   es: {
     confirmSignup: {
       subject: "Confirma tu cuenta de Philosify",
-      title: "¡Bienvenido a Philosify! 🎵",
+      title: "¡Bienvenido a Philosify!",
       body: "¡Gracias por registrarte! Por favor, confirma tu dirección de correo electrónico para comenzar a descubrir la filosofía en tus canciones favoritas.",
       button: "Confirmar Correo",
       footer:
@@ -106,7 +106,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Tu enlace de inicio de sesión de Philosify",
-      title: "Iniciar Sesión en Philosify 🔑",
+      title: "Tu enlace de acceso",
       body: "Haz clic en el botón de abajo para iniciar sesión en tu cuenta. Este enlace expira en 1 hora.",
       button: "Iniciar Sesión",
       footer:
@@ -114,15 +114,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Restablecer tu contraseña de Philosify",
-      title: "Restablecer Tu Contraseña 🔒",
+      title: "Restablecimiento de contraseña",
       body: "Recibimos una solicitud para restablecer tu contraseña. Haz clic en el botón de abajo para crear una nueva.",
-      button: "Restablecer Contraseña",
+      button: "Crear nueva contraseña",
       footer:
         "Si no solicitaste restablecer tu contraseña, puedes ignorar este correo con seguridad.",
     },
     emailChange: {
       subject: "Confirma tu nueva dirección de correo",
-      title: "Confirmar Cambio de Correo 📧",
+      title: "Cambio de correo",
       body: "Solicitaste cambiar tu dirección de correo electrónico. Haz clic en el botón de abajo para confirmar.",
       button: "Confirmar Nuevo Correo",
       footer:
@@ -130,7 +130,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Has sido invitado a Philosify",
-      title: "¡Estás Invitado! 🎶",
+      title: "¡Estás Invitado!",
       body: "Has sido invitado a unirte a Philosify - descubre la filosofía oculta en tus canciones favoritas.",
       button: "Aceptar Invitación",
       footer:
@@ -140,7 +140,7 @@ const EMAIL_TRANSLATIONS = {
   de: {
     confirmSignup: {
       subject: "Bestätige dein Philosify-Konto",
-      title: "Willkommen bei Philosify! 🎵",
+      title: "Willkommen bei Philosify!",
       body: "Danke für deine Anmeldung! Bitte bestätige deine E-Mail-Adresse, um die Philosophie in deiner Lieblingsmusik zu entdecken.",
       button: "E-Mail bestätigen",
       footer:
@@ -148,7 +148,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Dein Philosify-Anmeldelink",
-      title: "Bei Philosify anmelden 🔑",
+      title: "Dein Anmeldelink",
       body: "Klicke auf den Button unten, um dich anzumelden. Dieser Link läuft in 1 Stunde ab.",
       button: "Jetzt anmelden",
       footer:
@@ -156,15 +156,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Setze dein Philosify-Passwort zurück",
-      title: "Passwort zurücksetzen 🔒",
+      title: "Passwort-Zurücksetzung",
       body: "Wir haben eine Anfrage zum Zurücksetzen deines Passworts erhalten. Klicke unten, um ein neues zu erstellen.",
-      button: "Passwort zurücksetzen",
+      button: "Neues Passwort festlegen",
       footer:
         "Wenn du das nicht angefordert hast, kannst du diese E-Mail ignorieren.",
     },
     emailChange: {
       subject: "Bestätige deine neue E-Mail-Adresse",
-      title: "E-Mail-Änderung bestätigen 📧",
+      title: "E-Mail-Änderung",
       body: "Du hast eine Änderung deiner E-Mail-Adresse angefordert. Klicke unten, um die neue E-Mail zu bestätigen.",
       button: "Neue E-Mail bestätigen",
       footer:
@@ -172,7 +172,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Du wurdest zu Philosify eingeladen",
-      title: "Du bist eingeladen! 🎶",
+      title: "Du bist eingeladen!",
       body: "Du wurdest eingeladen, Philosify beizutreten - entdecke die Philosophie in deiner Lieblingsmusik.",
       button: "Einladung annehmen",
       footer:
@@ -182,7 +182,7 @@ const EMAIL_TRANSLATIONS = {
   fr: {
     confirmSignup: {
       subject: "Confirmez votre compte Philosify",
-      title: "Bienvenue sur Philosify ! 🎵",
+      title: "Bienvenue sur Philosify !",
       body: "Merci de vous être inscrit ! Veuillez confirmer votre adresse e-mail pour découvrir la philosophie dans vos musiques préférées.",
       button: "Confirmer l'e-mail",
       footer:
@@ -190,7 +190,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Votre lien de connexion Philosify",
-      title: "Se connecter à Philosify 🔑",
+      title: "Votre lien de connexion",
       body: "Cliquez sur le bouton ci-dessous pour vous connecter. Ce lien expire dans 1 heure.",
       button: "Se connecter",
       footer:
@@ -198,15 +198,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Réinitialisez votre mot de passe Philosify",
-      title: "Réinitialiser votre mot de passe 🔒",
+      title: "Réinitialisation du mot de passe",
       body: "Nous avons reçu une demande de réinitialisation de votre mot de passe. Cliquez ci-dessous pour en créer un nouveau.",
-      button: "Réinitialiser",
+      button: "Définir un nouveau mot de passe",
       footer:
         "Si vous n'avez pas fait cette demande, vous pouvez ignorer cet e-mail.",
     },
     emailChange: {
       subject: "Confirmez votre nouvelle adresse e-mail",
-      title: "Confirmer le changement d'e-mail 📧",
+      title: "Changement d'e-mail",
       body: "Vous avez demandé à changer votre adresse e-mail. Cliquez ci-dessous pour confirmer.",
       button: "Confirmer le nouvel e-mail",
       footer:
@@ -214,7 +214,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Vous êtes invité sur Philosify",
-      title: "Vous êtes invité ! 🎶",
+      title: "Vous êtes invité !",
       body: "Vous avez été invité à rejoindre Philosify - découvrez la philosophie cachée dans vos musiques préférées.",
       button: "Accepter l'invitation",
       footer:
@@ -224,28 +224,28 @@ const EMAIL_TRANSLATIONS = {
   it: {
     confirmSignup: {
       subject: "Conferma il tuo account Philosify",
-      title: "Benvenuto su Philosify! 🎵",
+      title: "Benvenuto su Philosify!",
       body: "Grazie per esserti registrato! Conferma il tuo indirizzo email per scoprire la filosofia nella tua musica preferita.",
       button: "Conferma Email",
       footer: "Se non hai creato un account, puoi ignorare questa email.",
     },
     magicLink: {
       subject: "Il tuo link di accesso Philosify",
-      title: "Accedi a Philosify 🔑",
+      title: "Il tuo link di accesso",
       body: "Clicca sul pulsante qui sotto per accedere. Questo link scade tra 1 ora.",
       button: "Accedi Ora",
       footer: "Se non hai richiesto questo link, puoi ignorare questa email.",
     },
     resetPassword: {
       subject: "Reimposta la tua password Philosify",
-      title: "Reimposta la Password 🔒",
+      title: "Reimpostazione password",
       body: "Abbiamo ricevuto una richiesta per reimpostare la tua password. Clicca qui sotto per crearne una nuova.",
-      button: "Reimposta Password",
+      button: "Imposta nuova password",
       footer: "Se non hai richiesto questo, puoi ignorare questa email.",
     },
     emailChange: {
       subject: "Conferma il tuo nuovo indirizzo email",
-      title: "Conferma Cambio Email 📧",
+      title: "Cambio email",
       body: "Hai richiesto di cambiare il tuo indirizzo email. Clicca qui sotto per confermare.",
       button: "Conferma Nuova Email",
       footer:
@@ -253,7 +253,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Sei stato invitato su Philosify",
-      title: "Sei Invitato! 🎶",
+      title: "Sei Invitato!",
       body: "Sei stato invitato a unirti a Philosify - scopri la filosofia nascosta nella tua musica preferita.",
       button: "Accetta Invito",
       footer: "Se non ti aspettavi questo invito, puoi ignorare questa email.",
@@ -262,7 +262,7 @@ const EMAIL_TRANSLATIONS = {
   ja: {
     confirmSignup: {
       subject: "Philosifyアカウントを確認してください",
-      title: "Philosifyへようこそ！🎵",
+      title: "Philosifyへようこそ！",
       body: "ご登録ありがとうございます！メールアドレスを確認して、お気に入りの音楽の哲学を発見しましょう。",
       button: "メールを確認",
       footer:
@@ -270,7 +270,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Philosifyログインリンク",
-      title: "Philosifyにサインイン 🔑",
+      title: "ログインリンク",
       body: "下のボタンをクリックしてサインインしてください。このリンクは1時間で期限切れになります。",
       button: "サインイン",
       footer:
@@ -278,14 +278,14 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Philosifyパスワードをリセット",
-      title: "パスワードをリセット 🔒",
+      title: "パスワードのリセット",
       body: "パスワードリセットのリクエストを受け取りました。下のボタンをクリックして新しいパスワードを作成してください。",
-      button: "パスワードをリセット",
+      button: "新しいパスワードを設定",
       footer: "リクエストしていない場合は、このメールを無視してください。",
     },
     emailChange: {
       subject: "新しいメールアドレスを確認してください",
-      title: "メール変更を確認 📧",
+      title: "メールアドレスの変更",
       body: "メールアドレスの変更をリクエストしました。下のボタンをクリックして確認してください。",
       button: "新しいメールを確認",
       footer:
@@ -293,7 +293,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Philosifyに招待されました",
-      title: "招待されました！🎶",
+      title: "招待されました！",
       body: "Philosifyに招待されました - お気に入りの音楽に隠された哲学を発見しましょう。",
       button: "招待を受け入れる",
       footer:
@@ -303,35 +303,35 @@ const EMAIL_TRANSLATIONS = {
   ko: {
     confirmSignup: {
       subject: "Philosify 계정을 확인하세요",
-      title: "Philosify에 오신 것을 환영합니다! 🎵",
+      title: "Philosify에 오신 것을 환영합니다!",
       body: "가입해 주셔서 감사합니다! 이메일 주소를 확인하고 좋아하는 음악의 철학을 발견하세요.",
       button: "이메일 확인",
       footer: "계정을 만들지 않았다면 이 이메일을 무시해도 됩니다.",
     },
     magicLink: {
       subject: "Philosify 로그인 링크",
-      title: "Philosify에 로그인 🔑",
+      title: "로그인 링크",
       body: "아래 버튼을 클릭하여 로그인하세요. 이 링크는 1시간 후에 만료됩니다.",
       button: "지금 로그인",
       footer: "이 링크를 요청하지 않았다면 이 이메일을 무시해도 됩니다.",
     },
     resetPassword: {
       subject: "Philosify 비밀번호 재설정",
-      title: "비밀번호 재설정 🔒",
+      title: "비밀번호 재설정",
       body: "비밀번호 재설정 요청을 받았습니다. 아래 버튼을 클릭하여 새 비밀번호를 만드세요.",
-      button: "비밀번호 재설정",
+      button: "새 비밀번호 설정",
       footer: "요청하지 않았다면 이 이메일을 무시해도 됩니다.",
     },
     emailChange: {
       subject: "새 이메일 주소를 확인하세요",
-      title: "이메일 변경 확인 📧",
+      title: "이메일 변경",
       body: "이메일 주소 변경을 요청했습니다. 아래 버튼을 클릭하여 확인하세요.",
       button: "새 이메일 확인",
       footer: "이 변경을 요청하지 않았다면 즉시 지원팀에 연락하세요.",
     },
     invite: {
       subject: "Philosify에 초대되었습니다",
-      title: "초대되었습니다! 🎶",
+      title: "초대되었습니다!",
       body: "Philosify에 초대되었습니다 - 좋아하는 음악에 숨겨진 철학을 발견하세요.",
       button: "초대 수락",
       footer: "이 초대를 예상하지 않았다면 이 이메일을 무시해도 됩니다.",
@@ -340,35 +340,35 @@ const EMAIL_TRANSLATIONS = {
   zh: {
     confirmSignup: {
       subject: "确认您的 Philosify 账户",
-      title: "欢迎来到 Philosify！🎵",
+      title: "欢迎来到 Philosify！",
       body: "感谢您的注册！请确认您的电子邮件地址，开始发现您喜爱音乐中的哲学。",
       button: "确认邮箱",
       footer: "如果您没有创建账户，可以忽略此邮件。",
     },
     magicLink: {
       subject: "您的 Philosify 登录链接",
-      title: "登录 Philosify 🔑",
+      title: "您的登录链接",
       body: "点击下方按钮登录您的账户。此链接将在1小时后过期。",
       button: "立即登录",
       footer: "如果您没有请求此链接，可以忽略此邮件。",
     },
     resetPassword: {
       subject: "重置您的 Philosify 密码",
-      title: "重置密码 🔒",
+      title: "重置密码",
       body: "我们收到了重置密码的请求。点击下方按钮创建新密码。",
-      button: "重置密码",
+      button: "设置新密码",
       footer: "如果您没有请求重置密码，可以忽略此邮件。",
     },
     emailChange: {
       subject: "确认您的新邮箱地址",
-      title: "确认邮箱更改 📧",
+      title: "邮箱更改",
       body: "您请求更改邮箱地址。点击下方按钮确认新邮箱。",
       button: "确认新邮箱",
       footer: "如果您没有请求此更改，请立即联系客服。",
     },
     invite: {
       subject: "您已被邀请加入 Philosify",
-      title: "您被邀请了！🎶",
+      title: "您被邀请了！",
       body: "您已被邀请加入 Philosify - 发现您喜爱音乐中隐藏的哲学。",
       button: "接受邀请",
       footer: "如果您没有预期收到此邀请，可以忽略此邮件。",
@@ -377,7 +377,7 @@ const EMAIL_TRANSLATIONS = {
   ru: {
     confirmSignup: {
       subject: "Подтвердите свой аккаунт Philosify",
-      title: "Добро пожаловать в Philosify! 🎵",
+      title: "Добро пожаловать в Philosify!",
       body: "Спасибо за регистрацию! Пожалуйста, подтвердите свой email, чтобы начать открывать философию в любимой музыке.",
       button: "Подтвердить email",
       footer:
@@ -385,7 +385,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Ваша ссылка для входа в Philosify",
-      title: "Войти в Philosify 🔑",
+      title: "Ваша ссылка для входа",
       body: "Нажмите кнопку ниже, чтобы войти. Ссылка действительна 1 час.",
       button: "Войти сейчас",
       footer:
@@ -393,15 +393,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Сброс пароля Philosify",
-      title: "Сбросить пароль 🔒",
+      title: "Сброс пароля",
       body: "Мы получили запрос на сброс вашего пароля. Нажмите кнопку ниже, чтобы создать новый.",
-      button: "Сбросить пароль",
+      button: "Задать новый пароль",
       footer:
         "Если вы не запрашивали сброс, можете проигнорировать это письмо.",
     },
     emailChange: {
       subject: "Подтвердите новый email адрес",
-      title: "Подтвердить смену email 📧",
+      title: "Смена email",
       body: "Вы запросили изменение email адреса. Нажмите кнопку ниже для подтверждения.",
       button: "Подтвердить новый email",
       footer:
@@ -409,7 +409,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Вас пригласили в Philosify",
-      title: "Вы приглашены! 🎶",
+      title: "Вы приглашены!",
       body: "Вас пригласили присоединиться к Philosify - откройте философию, скрытую в любимой музыке.",
       button: "Принять приглашение",
       footer:
@@ -419,35 +419,35 @@ const EMAIL_TRANSLATIONS = {
   ar: {
     confirmSignup: {
       subject: "تأكيد حساب Philosify الخاص بك",
-      title: "مرحباً بك في Philosify! 🎵",
+      title: "مرحباً بك في Philosify!",
       body: "شكراً لتسجيلك! يرجى تأكيد عنوان بريدك الإلكتروني لبدء اكتشاف الفلسفة في موسيقاك المفضلة.",
       button: "تأكيد البريد الإلكتروني",
       footer: "إذا لم تقم بإنشاء حساب، يمكنك تجاهل هذا البريد الإلكتروني.",
     },
     magicLink: {
       subject: "رابط تسجيل الدخول إلى Philosify",
-      title: "تسجيل الدخول إلى Philosify 🔑",
+      title: "رابط تسجيل الدخول",
       body: "انقر على الزر أدناه لتسجيل الدخول. ستنتهي صلاحية هذا الرابط خلال ساعة واحدة.",
       button: "سجل الدخول الآن",
       footer: "إذا لم تطلب هذا الرابط، يمكنك تجاهل هذا البريد الإلكتروني.",
     },
     resetPassword: {
       subject: "إعادة تعيين كلمة مرور Philosify",
-      title: "إعادة تعيين كلمة المرور 🔒",
+      title: "إعادة تعيين كلمة المرور",
       body: "تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بك. انقر أدناه لإنشاء كلمة مرور جديدة.",
-      button: "إعادة تعيين كلمة المرور",
+      button: "تعيين كلمة مرور جديدة",
       footer: "إذا لم تطلب ذلك، يمكنك تجاهل هذا البريد الإلكتروني.",
     },
     emailChange: {
       subject: "تأكيد عنوان بريدك الإلكتروني الجديد",
-      title: "تأكيد تغيير البريد الإلكتروني 📧",
+      title: "تغيير البريد الإلكتروني",
       body: "لقد طلبت تغيير عنوان بريدك الإلكتروني. انقر أدناه للتأكيد.",
       button: "تأكيد البريد الجديد",
       footer: "إذا لم تطلب هذا التغيير، يرجى الاتصال بالدعم فوراً.",
     },
     invite: {
       subject: "لقد تمت دعوتك إلى Philosify",
-      title: "أنت مدعو! 🎶",
+      title: "أنت مدعو!",
       body: "لقد تمت دعوتك للانضمام إلى Philosify - اكتشف الفلسفة المخفية في موسيقاك المفضلة.",
       button: "قبول الدعوة",
       footer: "إذا لم تكن تتوقع هذه الدعوة، يمكنك تجاهل هذا البريد الإلكتروني.",
@@ -456,35 +456,35 @@ const EMAIL_TRANSLATIONS = {
   he: {
     confirmSignup: {
       subject: "אשר את חשבון ה-Philosify שלך",
-      title: "ברוכים הבאים ל-Philosify! 🎵",
+      title: "ברוכים הבאים ל-Philosify!",
       body: "תודה שנרשמת! אנא אשר את כתובת האימייל שלך כדי להתחיל לגלות את הפילוסופיה במוזיקה האהובה עליך.",
       button: "אשר אימייל",
       footer: "אם לא יצרת חשבון, אתה יכול להתעלם מאימייל זה.",
     },
     magicLink: {
       subject: "קישור הכניסה שלך ל-Philosify",
-      title: "התחבר ל-Philosify 🔑",
+      title: "קישור ההתחברות שלך",
       body: "לחץ על הכפתור למטה כדי להתחבר. קישור זה יפוג בעוד שעה.",
       button: "התחבר עכשיו",
       footer: "אם לא ביקשת קישור זה, אתה יכול להתעלם מאימייל זה.",
     },
     resetPassword: {
       subject: "איפוס סיסמת Philosify שלך",
-      title: "איפוס סיסמה 🔒",
+      title: "איפוס סיסמה",
       body: "קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ למטה כדי ליצור סיסמה חדשה.",
-      button: "איפוס סיסמה",
+      button: "הגדרת סיסמה חדשה",
       footer: "אם לא ביקשת זאת, אתה יכול להתעלם מאימייל זה.",
     },
     emailChange: {
       subject: "אשר את כתובת האימייל החדשה שלך",
-      title: "אישור שינוי אימייל 📧",
+      title: "שינוי אימייל",
       body: "ביקשת לשנות את כתובת האימייל שלך. לחץ למטה כדי לאשר.",
       button: "אשר אימייל חדש",
       footer: "אם לא ביקשת שינוי זה, אנא פנה לתמיכה מיד.",
     },
     invite: {
       subject: "הוזמנת ל-Philosify",
-      title: "אתה מוזמן! 🎶",
+      title: "אתה מוזמן!",
       body: "הוזמנת להצטרף ל-Philosify - גלה את הפילוסופיה המוסתרת במוזיקה האהובה עליך.",
       button: "קבל הזמנה",
       footer: "אם לא ציפית להזמנה זו, אתה יכול להתעלם מאימייל זה.",
@@ -493,7 +493,7 @@ const EMAIL_TRANSLATIONS = {
   hi: {
     confirmSignup: {
       subject: "अपने Philosify खाते की पुष्टि करें",
-      title: "Philosify में आपका स्वागत है! 🎵",
+      title: "Philosify में आपका स्वागत है!",
       body: "साइन अप करने के लिए धन्यवाद! कृपया अपनी पसंदीदा संगीत में दर्शन खोजना शुरू करने के लिए अपना ईमेल पता पुष्टि करें।",
       button: "ईमेल की पुष्टि करें",
       footer:
@@ -501,7 +501,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "आपका Philosify लॉगिन लिंक",
-      title: "Philosify में साइन इन करें 🔑",
+      title: "आपका लॉगिन लिंक",
       body: "साइन इन करने के लिए नीचे दिए गए बटन पर क्लिक करें। यह लिंक 1 घंटे में समाप्त हो जाएगा।",
       button: "अभी साइन इन करें",
       footer:
@@ -509,15 +509,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "अपना Philosify पासवर्ड रीसेट करें",
-      title: "पासवर्ड रीसेट करें 🔒",
+      title: "पासवर्ड रीसेट",
       body: "हमें आपका पासवर्ड रीसेट करने का अनुरोध मिला। नया पासवर्ड बनाने के लिए नीचे क्लिक करें।",
-      button: "पासवर्ड रीसेट करें",
+      button: "नया पासवर्ड सेट करें",
       footer:
         "अगर आपने यह अनुरोध नहीं किया है, तो आप इस ईमेल को अनदेखा कर सकते हैं।",
     },
     emailChange: {
       subject: "अपने नए ईमेल पते की पुष्टि करें",
-      title: "ईमेल परिवर्तन की पुष्टि करें 📧",
+      title: "ईमेल परिवर्तन",
       body: "आपने अपना ईमेल पता बदलने का अनुरोध किया। पुष्टि करने के लिए नीचे क्लिक करें।",
       button: "नए ईमेल की पुष्टि करें",
       footer:
@@ -525,7 +525,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "आपको Philosify में आमंत्रित किया गया है",
-      title: "आप आमंत्रित हैं! 🎶",
+      title: "आप आमंत्रित हैं!",
       body: "आपको Philosify में शामिल होने के लिए आमंत्रित किया गया है - अपनी पसंदीदा संगीत में छिपे दर्शन की खोज करें।",
       button: "निमंत्रण स्वीकार करें",
       footer:
@@ -535,7 +535,7 @@ const EMAIL_TRANSLATIONS = {
   fa: {
     confirmSignup: {
       subject: "حساب Philosify خود را تأیید کنید",
-      title: "به Philosify خوش آمدید! 🎵",
+      title: "به Philosify خوش آمدید!",
       body: "از ثبت نام شما متشکریم! لطفاً آدرس ایمیل خود را تأیید کنید تا فلسفه موسیقی مورد علاقه خود را کشف کنید.",
       button: "تأیید ایمیل",
       footer:
@@ -543,7 +543,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "لینک ورود Philosify شما",
-      title: "ورود به Philosify 🔑",
+      title: "پیوند ورود شما",
       body: "برای ورود روی دکمه زیر کلیک کنید. این لینک تا یک ساعت دیگر منقضی می‌شود.",
       button: "اکنون وارد شوید",
       footer:
@@ -551,15 +551,15 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "بازنشانی رمز عبور Philosify",
-      title: "بازنشانی رمز عبور 🔒",
+      title: "بازنشانی رمز عبور",
       body: "درخواست بازنشانی رمز عبور شما را دریافت کردیم. برای ایجاد رمز جدید روی دکمه زیر کلیک کنید.",
-      button: "بازنشانی رمز عبور",
+      button: "تنظیم رمز عبور جدید",
       footer:
         "اگر این درخواست را نداده‌اید، می‌توانید این ایمیل را نادیده بگیرید.",
     },
     emailChange: {
       subject: "آدرس ایمیل جدید خود را تأیید کنید",
-      title: "تأیید تغییر ایمیل 📧",
+      title: "تغییر ایمیل",
       body: "شما درخواست تغییر آدرس ایمیل خود را داده‌اید. برای تأیید روی دکمه زیر کلیک کنید.",
       button: "تأیید ایمیل جدید",
       footer:
@@ -567,7 +567,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "شما به Philosify دعوت شده‌اید",
-      title: "شما دعوت شده‌اید! 🎶",
+      title: "شما دعوت شده‌اید!",
       body: "شما به پیوستن به Philosify دعوت شده‌اید - فلسفه پنهان در موسیقی مورد علاقه خود را کشف کنید.",
       button: "پذیرش دعوت",
       footer:
@@ -577,7 +577,7 @@ const EMAIL_TRANSLATIONS = {
   hu: {
     confirmSignup: {
       subject: "Erősítsd meg Philosify fiókodat",
-      title: "Üdvözlünk a Philosify-ban! 🎵",
+      title: "Üdvözlünk a Philosify-ban!",
       body: "Köszönjük a regisztrációt! Kérjük, erősítsd meg e-mail címedet, hogy felfedezhesd a filozófiát kedvenc zenéidben.",
       button: "E-mail megerősítése",
       footer:
@@ -585,7 +585,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Philosify bejelentkezési linked",
-      title: "Bejelentkezés a Philosify-ba 🔑",
+      title: "Bejelentkezési linked",
       body: "Kattints az alábbi gombra a bejelentkezéshez. Ez a link 1 óra múlva lejár.",
       button: "Bejelentkezés most",
       footer:
@@ -593,14 +593,14 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Philosify jelszó visszaállítása",
-      title: "Jelszó visszaállítása 🔒",
+      title: "Jelszó visszaállítása",
       body: "Jelszó-visszaállítási kérelmet kaptunk. Kattints az alábbi gombra új jelszó létrehozásához.",
-      button: "Jelszó visszaállítása",
+      button: "Új jelszó beállítása",
       footer: "Ha nem kérted ezt, figyelmen kívül hagyhatod ezt az e-mailt.",
     },
     emailChange: {
       subject: "Erősítsd meg új e-mail címedet",
-      title: "E-mail változtatás megerősítése 📧",
+      title: "E-mail módosítása",
       body: "E-mail cím változtatását kérted. Kattints az alábbi gombra a megerősítéshez.",
       button: "Új e-mail megerősítése",
       footer:
@@ -608,7 +608,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Meghívtak a Philosify-ba",
-      title: "Meghívást kaptál! 🎶",
+      title: "Meghívást kaptál!",
       body: "Meghívtak a Philosify-hoz való csatlakozásra - fedezd fel a kedvenc zenéidben rejlő filozófiát.",
       button: "Meghívás elfogadása",
       footer:
@@ -618,7 +618,7 @@ const EMAIL_TRANSLATIONS = {
   nl: {
     confirmSignup: {
       subject: "Bevestig je Philosify-account",
-      title: "Welkom bij Philosify! 🎵",
+      title: "Welkom bij Philosify!",
       body: "Bedankt voor je aanmelding! Bevestig je e-mailadres om de filosofie in je favoriete muziek te ontdekken.",
       button: "E-mail bevestigen",
       footer:
@@ -626,7 +626,7 @@ const EMAIL_TRANSLATIONS = {
     },
     magicLink: {
       subject: "Je Philosify inloglink",
-      title: "Inloggen bij Philosify 🔑",
+      title: "Je inloglink",
       body: "Klik op de knop hieronder om in te loggen. Deze link verloopt over 1 uur.",
       button: "Nu inloggen",
       footer:
@@ -634,14 +634,14 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Reset je Philosify wachtwoord",
-      title: "Wachtwoord resetten 🔒",
+      title: "Wachtwoord resetten",
       body: "We hebben een verzoek ontvangen om je wachtwoord te resetten. Klik hieronder om een nieuw wachtwoord aan te maken.",
-      button: "Wachtwoord resetten",
+      button: "Nieuw wachtwoord instellen",
       footer: "Als je dit niet hebt aangevraagd, kun je deze e-mail negeren.",
     },
     emailChange: {
       subject: "Bevestig je nieuwe e-mailadres",
-      title: "E-mailwijziging bevestigen 📧",
+      title: "E-mailwijziging",
       body: "Je hebt gevraagd om je e-mailadres te wijzigen. Klik hieronder om te bevestigen.",
       button: "Nieuwe e-mail bevestigen",
       footer:
@@ -649,7 +649,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Je bent uitgenodigd voor Philosify",
-      title: "Je bent uitgenodigd! 🎶",
+      title: "Je bent uitgenodigd!",
       body: "Je bent uitgenodigd om lid te worden van Philosify - ontdek de filosofie verborgen in je favoriete muziek.",
       button: "Uitnodiging accepteren",
       footer:
@@ -659,28 +659,28 @@ const EMAIL_TRANSLATIONS = {
   pl: {
     confirmSignup: {
       subject: "Potwierdź swoje konto Philosify",
-      title: "Witamy w Philosify! 🎵",
+      title: "Witamy w Philosify!",
       body: "Dziękujemy za rejestrację! Proszę potwierdź swój adres e-mail, aby zacząć odkrywać filozofię w ulubionej muzyce.",
       button: "Potwierdź e-mail",
       footer: "Jeśli nie zakładałeś konta, możesz zignorować ten e-mail.",
     },
     magicLink: {
       subject: "Twój link logowania Philosify",
-      title: "Zaloguj się do Philosify 🔑",
+      title: "Twój link do logowania",
       body: "Kliknij przycisk poniżej, aby się zalogować. Ten link wygaśnie za 1 godzinę.",
       button: "Zaloguj się teraz",
       footer: "Jeśli nie prosiłeś o ten link, możesz zignorować ten e-mail.",
     },
     resetPassword: {
       subject: "Zresetuj hasło Philosify",
-      title: "Resetuj hasło 🔒",
+      title: "Resetowanie hasła",
       body: "Otrzymaliśmy prośbę o zresetowanie hasła. Kliknij poniżej, aby utworzyć nowe.",
-      button: "Resetuj hasło",
+      button: "Ustaw nowe hasło",
       footer: "Jeśli o to nie prosiłeś, możesz zignorować ten e-mail.",
     },
     emailChange: {
       subject: "Potwierdź swój nowy adres e-mail",
-      title: "Potwierdź zmianę e-maila 📧",
+      title: "Zmiana e-maila",
       body: "Poprosiłeś o zmianę adresu e-mail. Kliknij poniżej, aby potwierdzić.",
       button: "Potwierdź nowy e-mail",
       footer:
@@ -688,7 +688,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Zostałeś zaproszony do Philosify",
-      title: "Jesteś zaproszony! 🎶",
+      title: "Jesteś zaproszony!",
       body: "Zostałeś zaproszony do Philosify - odkryj filozofię ukrytą w ulubionej muzyce.",
       button: "Przyjmij zaproszenie",
       footer:
@@ -698,14 +698,14 @@ const EMAIL_TRANSLATIONS = {
   tr: {
     confirmSignup: {
       subject: "Philosify hesabınızı onaylayın",
-      title: "Philosify'a hoş geldiniz! 🎵",
+      title: "Philosify'a hoş geldiniz!",
       body: "Kayıt olduğunuz için teşekkürler! Favori müziklerinizdeki felsefeyi keşfetmeye başlamak için e-posta adresinizi onaylayın.",
       button: "E-postayı Onayla",
       footer: "Hesap oluşturmadıysanız, bu e-postayı görmezden gelebilirsiniz.",
     },
     magicLink: {
       subject: "Philosify giriş bağlantınız",
-      title: "Philosify'a Giriş Yap 🔑",
+      title: "Giriş bağlantınız",
       body: "Giriş yapmak için aşağıdaki düğmeye tıklayın. Bu bağlantı 1 saat içinde sona erecek.",
       button: "Şimdi Giriş Yap",
       footer:
@@ -713,14 +713,14 @@ const EMAIL_TRANSLATIONS = {
     },
     resetPassword: {
       subject: "Philosify şifrenizi sıfırlayın",
-      title: "Şifreyi Sıfırla 🔒",
+      title: "Şifre sıfırlama",
       body: "Şifrenizi sıfırlama isteği aldık. Yeni şifre oluşturmak için aşağıya tıklayın.",
-      button: "Şifreyi Sıfırla",
+      button: "Yeni şifre belirle",
       footer: "Bunu talep etmediyseniz, bu e-postayı görmezden gelebilirsiniz.",
     },
     emailChange: {
       subject: "Yeni e-posta adresinizi onaylayın",
-      title: "E-posta Değişikliğini Onayla 📧",
+      title: "E-posta değişikliği",
       body: "E-posta adresinizi değiştirme isteğinde bulundunuz. Onaylamak için aşağıya tıklayın.",
       button: "Yeni E-postayı Onayla",
       footer:
@@ -728,7 +728,7 @@ const EMAIL_TRANSLATIONS = {
     },
     invite: {
       subject: "Philosify'a davet edildiniz",
-      title: "Davet Edildiniz! 🎶",
+      title: "Davet Edildiniz!",
       body: "Philosify'a katılmaya davet edildiniz - favori müziklerinizdeki gizli felsefeyi keşfedin.",
       button: "Daveti Kabul Et",
       footer:
@@ -769,93 +769,50 @@ function generateEmailHtml(translations, confirmationUrl) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
   <!--[if gte mso 9]>
-  <xml>
-    <o:OfficeDocumentSettings>
-      <o:AllowPNG/>
-      <o:PixelsPerInch>96</o:PixelsPerInch>
-    </o:OfficeDocumentSettings>
-  </xml>
+  <xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
   <![endif]-->
 </head>
-<body style="margin: 0; padding: 0; background-color: #070708; font-family: -apple-system, 'Segoe UI', Roboto, Inter, Arial, sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #070708; padding: 40px 20px;">
+<body style="margin:0;padding:0;background-color:#070708;color:#ffffff;font-family:-apple-system,'Segoe UI',Roboto,Inter,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#070708" style="background-color:#070708;">
     <tr>
-      <td align="center">
-        <!-- Main card -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 520px; background-color: #0d0d0f; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
-
-          <!-- Header with Logo -->
+      <td align="center" bgcolor="#070708" style="background-color:#070708;padding:48px 24px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#070708" style="max-width:440px;background-color:#070708;">
           <tr>
-            <td style="padding: 32px 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06);">
-              <img src="${LOGO_URL}" alt="Philosify" width="190" style="width: 190px; max-width: 72%; height: auto;" />
+            <td align="center" bgcolor="#070708" style="background-color:#070708;padding:0 0 28px;">
+              <img src="${LOGO_URL}" alt="Philosify" width="200" style="width:200px;max-width:64%;height:auto;display:block;border:0;" />
             </td>
           </tr>
-
-          <!-- Accent line (cyan) -->
           <tr>
-            <td style="height: 2px; background-color: #00f0ff; line-height: 2px; font-size: 0;">&nbsp;</td>
-          </tr>
-
-          <!-- Content -->
-          <tr>
-            <td style="padding: 36px 40px 32px; background-color: #0d0d0f;">
-              <!-- Title -->
-              <h2 style="margin: 0 0 20px 0; color: #00f0ff; font-family: Michroma, 'Segoe UI', Arial, sans-serif; font-size: 19px; font-weight: normal; letter-spacing: 1px; text-align: center;">${translations.title}</h2>
-
-              <!-- Body text -->
-              <p style="margin: 0 0 28px 0; color: rgba(255,255,255,0.72); font-size: 15px; line-height: 1.8; text-align: center;">
-                ${translations.body}
-              </p>
-
-              <!-- CTA Button (Bulletproof: works in Outlook, Gmail, Apple Mail, etc.) -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding: 8px 0 32px 0;">
-                    <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
-                      <tr>
-                        <td align="center" bgcolor="#00f0ff" style="border-radius: 8px; background-color: #00f0ff;">
-                          <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:48px;v-text-anchor:middle;width:240px;" arcsize="16%" strokecolor="#00f0ff" fillcolor="#00f0ff">
-                            <w:anchorlock/>
-                            <center style="color:#070708;font-family:'Segoe UI',Arial,sans-serif;font-size:14px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;">${translations.button}</center>
-                          </v:roundrect>
-                          <![endif]-->
-                          <!--[if !mso]><!-->
-                          <a href="${confirmationUrl}" style="background-color: #00f0ff; border-radius: 8px; color: #070708; display: inline-block; font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; padding: 14px 48px; text-decoration: none; mso-hide: all;">
-                            ${translations.button}
-                          </a>
-                          <!--<![endif]-->
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Divider -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 20px 0;">
-                <tr>
-                  <td style="height: 1px; background-color: rgba(255,255,255,0.08);"></td>
-                </tr>
-              </table>
-
-              <!-- Footer text -->
-              <p style="margin: 0; color: rgba(255,255,255,0.4); font-size: 12px; text-align: center; line-height: 1.6;">
-                ${translations.footer}
-              </p>
+            <td align="center" bgcolor="#070708" style="background-color:#070708;padding:0 0 12px;">
+              <h1 style="margin:0;color:#ffffff;font-family:Michroma,'Segoe UI',Arial,sans-serif;font-size:16px;font-weight:normal;letter-spacing:0.5px;">${translations.title}</h1>
             </td>
           </tr>
-
-          <!-- Footer bar -->
           <tr>
-            <td style="background-color: #0b0b0d; padding: 20px 40px; border-top: 1px solid rgba(255,255,255,0.06);">
-              <p style="margin: 0; color: rgba(255,255,255,0.3); font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; text-align: center; letter-spacing: 0.5px;">
-                &copy; Philosify &bull; <a href="https://philosify.org" style="color: #00f0ff; text-decoration: none;">philosify.org</a>
-              </p>
+            <td align="center" bgcolor="#070708" style="background-color:#070708;padding:0 0 26px;">
+              <p style="margin:0;color:rgba(255,255,255,0.62);font-size:15px;line-height:1.6;">${translations.body}</p>
             </td>
           </tr>
-
+          <tr>
+            <td align="center" bgcolor="#070708" style="background-color:#070708;padding:0 0 30px;">
+              <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${confirmationUrl}" style="height:46px;v-text-anchor:middle;width:240px;" arcsize="12%" strokecolor="#00f0ff" fillcolor="#070708">
+                <w:anchorlock/>
+                <center style="color:#00f0ff;font-family:'Segoe UI',Arial,sans-serif;font-size:14px;font-weight:bold;letter-spacing:0.5px;">${translations.button}</center>
+              </v:roundrect>
+              <![endif]-->
+              <!--[if !mso]><!-->
+              <a href="${confirmationUrl}" style="display:inline-block;border:1px solid #00f0ff;border-radius:6px;color:#00f0ff;font-family:'Segoe UI',Arial,sans-serif;font-size:14px;font-weight:600;letter-spacing:0.5px;padding:12px 38px;text-decoration:none;mso-hide:all;">${translations.button}</a>
+              <!--<![endif]-->
+            </td>
+          </tr>
+          <tr>
+            <td align="center" bgcolor="#070708" style="background-color:#070708;padding:0;">
+              <p style="margin:0;color:rgba(255,255,255,0.30);font-size:12px;line-height:1.6;">${translations.footer}</p>
+            </td>
+          </tr>
         </table>
       </td>
     </tr>
@@ -1089,7 +1046,7 @@ export async function handleAuthEmail(request, env, origin) {
     }
 
     const result = await resendResponse.json();
-    console.log(`[AuthEmail] ✅ Email sent successfully: ${result.id}`);
+    console.log(`[AuthEmail]  Email sent successfully: ${result.id}`);
 
     // Return success to Supabase
     return jsonResponse(

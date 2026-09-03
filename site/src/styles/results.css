@@ -2,7 +2,6 @@
    RESULTS.CSS - Cyberpunk Glassmorphism Results Page
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap');
 
 /* ===== CYBERPUNK KEYFRAMES ===== */
 @keyframes cyber-glow-pulse {
@@ -110,7 +109,7 @@
   border: 1px solid rgba(124, 58, 237, 0.4);
   border-radius: 25px;
   color: rgba(255, 255, 255, 0.9);
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -129,7 +128,7 @@
 /* ===== BASE STYLES ===== */
 .results,
 .results * {
-  font-family: 'Exo 2', Georgia, serif;
+  font-family: 'Inter', Georgia, serif;
 }
 
 /* ===== STATUS OVERLAY (Loading/Error) ===== */
@@ -248,7 +247,7 @@
 }
 
 .result-card-title {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 16px;
   color: #00f0ff;
@@ -273,7 +272,7 @@
 
 /* Song/Artist titles in tech specs */
 .result-card h2 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 24px;
   font-weight: 700;
   color: #fff;
@@ -282,7 +281,7 @@
 }
 
 .result-card h3 {
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   color: #ff00aa;
   text-shadow: 0 0 15px rgba(255, 0, 170, 0.5);
@@ -344,7 +343,7 @@
 .scorecard-table th {
   background: rgba(0, 240, 255, 0.1);
   padding: 14px 12px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 12px;
   text-transform: uppercase;
@@ -389,7 +388,7 @@
 }
 
 .scorecard-axis {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 13px;
   color: #a855f7;
@@ -399,7 +398,7 @@
 }
 
 .scorecard-score {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 18px;
   color: #00f0ff;
@@ -452,7 +451,7 @@
 }
 
 .guide-proof-label {
-  font-family: 'Orbitron', monospace;
+  font-family: 'Inter', monospace;
   font-size: 9px;
   font-weight: 600;
   color: rgba(168, 85, 247, 0.8);
@@ -477,7 +476,7 @@
 
 /* ===== FINAL SCORES ===== */
 .text-xl {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 28px !important;
   font-weight: 700 !important;
   color: #00f0ff !important;
@@ -506,7 +505,7 @@
 }
 
 .tech-specs-label {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 11px;
   text-transform: uppercase;
@@ -586,7 +585,7 @@
   color: #000;
   border: none;
   border-radius: 50px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 700;
   text-transform: uppercase;
@@ -661,7 +660,7 @@
   color: #fff;
   border: 1px solid rgba(124, 58, 237, 0.5);
   border-radius: 25px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -703,7 +702,7 @@
 }
 
 .listen-speed-label {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 600;
   color: #00f0ff;
@@ -767,7 +766,7 @@
 }
 
 .listen-speed-mark {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   color: #00f0ff;
   font-weight: 500;
@@ -875,7 +874,7 @@
 .listen-timer-mark {
   position: absolute;
   transform: translateX(-50%);
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 8px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.4);
@@ -909,7 +908,7 @@
 }
 
 .listen-chronometer {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 2px;
@@ -933,7 +932,7 @@
 }
 
 .listen-timer-label {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -1003,7 +1002,7 @@
 }
 
 .listen-progress__time {
-  font-family: 'Orbitron', monospace;
+  font-family: 'Inter', monospace;
   font-size: 10px;
   font-weight: 500;
   color: #00f0ff;
