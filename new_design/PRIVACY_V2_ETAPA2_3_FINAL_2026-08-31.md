@@ -81,10 +81,26 @@ publica a política de privacidade v2 em todos os idiomas
   ponta a ponta quando ambas as partes têm chaves.
 ```
 
-## 7. Após teu OK
+## 7. EXECUTADO (2026-09-01)
 
-commit (autor Bob, sem IA) → push → `npm run build` já feito → deploy do site
-(`wrangler pages deploy dist --project-name=philosify-frontend --branch=production`) →
-**teste de aceitação:** /pp carrega a v2 com "31 ago 2026"; /tos intacto com "29 ago 2026".
+**Ajuste de data (OK do Bob):** data do deploy = **1º de setembro de 2026**. Effective Date nos 18
+`legal.privacy.content` e os 18 `v2.legal.privacyUpdated` atualizados (formato localizado); canônico
+`docs/philosify-privacy-v2-canonical-EN.md` = "September 1, 2026". `termsUpdated` **intacto** em 29 ago (/tos).
+Invariantes re-verificados **18/18 OK**. Rebuild **verde** (32.9s).
 
-**Sem commit e sem deploy até teu OK.**
+- **Commit:** `956a4b8de7b11a88357c3c317fd406a2529a0db6` (autor Bob Rach, sem IA) — 23 arquivos
+  (18 JSON + LegalPage.jsx + canônico + 3 relatórios).
+- **Push:** `1707857..956a4b8` → `origin/redesign/v2`.
+- **Deploy:** Cloudflare Pages `--branch=production` → deployment **`8e0cef26`**
+  (https://8e0cef26.philosify-frontend.pages.dev) → philosify.org.
+
+### Teste de aceitação (navegador, philosify.org) — ✅ PASSOU
+- **/pp:** heading "POLÍTICA DE PRIVACIDADE"; ticker **"Última atualização // 1 set 2026"**;
+  Effective Date "1º de setembro de 2026"; conteúdo v2 (audit + Global Goods Corp); §5 "cifradas em
+  repouso" + "ponta a ponta" (DMs). **Não** exibe a data do ToS.
+- **/tos:** heading "TERMOS DE SERVIÇO"; ticker **"Última atualização // 29 ago 2026"** (intacto).
+- **Split do ticker confirmado:** /pp e /tos exibem datas diferentes do mesmo componente. A "mentira
+  visual" está resolvida.
+
+**Fora do commit (uncommitted, não relacionados):** docs/LAUNCH_READINESS_REPORT, docs/MARKET_LAUNCH_PLAN,
+new_design/RELATORIO_SUPERVISOR_FECHAMENTO_MODO_A, philosify-modules-review.html, printscreen 01/.
