@@ -1,8 +1,11 @@
 // AnalysisDiscussion - View analysis details and comment thread
 // Shows analysis info at top with 2-level threaded comments below
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { collectiveService } from '../../services/api/collective.js';
+import * as cryptoService from '@/services/crypto';
+import { useAuth } from '../../hooks/useAuth.js';
+import { getRealtimeClient, waitForAuth } from '../../services/realtime.js';
 import { CommentThread } from './CommentThread.jsx';
 import { ConfirmModal } from '../common/ConfirmModal.jsx';
 
@@ -25,6 +28,7 @@ function calculatePhilosophicalNote(finalScore) {
 
 export function AnalysisDiscussion({ collectiveAnalysisId, onBack, onUserClick }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [analysis, setAnalysis] = useState(null);
   const [groupId, setGroupId] = useState(null); // For E2E encryption
   const [comments, setComments] = useState([]);
@@ -34,6 +38,8 @@ export function AnalysisDiscussion({ collectiveAnalysisId, onBack, onUserClick }
   const [sending, setSending] = useState(false);
   const [replyingTo, setReplyingTo] = useState(null); // { id, displayName }
   const [deleteTarget, setDeleteTarget] = useState(null); // commentId to delete
+  const channelRef = useRef(null);
+  const clientRef = useRef(null);
 
   // Load analysis and comments (with E2E decryption)
   const loadData = useCallback(async () => {
@@ -54,6 +60,96 @@ export function AnalysisDiscussion({ collectiveAnalysisId, onBack, onUserClick }
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // Realtime: comentários ao vivo no tópico privado do grupo (padrão useUnderground).
+  // A trigger AFTER INSERT em collective_comments emite 'new-comment' (snake_case) para
+  // 'collective:<groupId>'; AFTER DELETE emite 'comment-deleted'. O tópico é por grupo,
+  // então filtramos por collective_analysis_id. Sem re-fetch: só estado local.
+  useEffect(() => {
+    if (!groupId || !collectiveAnalysisId) return;
+
+    let cancelled = false;
+
+    async function initRealtime() {
+      try {
+        await waitForAuth(); // token antes de assinar canal privado
+        if (cancelled) return;
+
+        const sb = await getRealtimeClient();
+        if (cancelled) return;
+        clientRef.current = sb;
+
+        const channel = sb
+          .channel(`collective:${groupId}`, { config: { private: true } })
+          .on('broadcast', { event: 'new-comment' }, async ({ payload }) => {
+            if (!payload || payload.collective_analysis_id !== collectiveAnalysisId) return;
+
+            // Mapeia snake_case da trigger para o shape que CommentThread consome
+            const incoming = {
+              id: payload.id,
+              userId: payload.user_id,
+              parentId: payload.parent_id,
+              displayName: payload.display_name,
+              isEncrypted: !!payload.is_encrypted,
+              encryptedContent: payload.is_encrypted ? payload.encrypted_content : null,
+              nonce: payload.is_encrypted ? payload.nonce : null,
+              createdAt: payload.created_at,
+              isMine: !!user?.id && payload.user_id === user.id,
+              content: payload.is_encrypted ? null : payload.content,
+            };
+
+            // E2E: payload traz só ciphertext — decripta aqui (mesma função do serviço)
+            if (incoming.isEncrypted) {
+              const decrypted = await cryptoService.decryptCollectiveMessage(
+                incoming.encryptedContent,
+                incoming.nonce,
+                groupId
+              );
+              if (decrypted) {
+                incoming.content = decrypted;
+                incoming.decrypted = true;
+              } else {
+                incoming.content = '[Unable to decrypt]';
+                incoming.decryptionFailed = true;
+              }
+            }
+            if (cancelled) return;
+
+            setComments((prev) => {
+              if (prev.some((c) => c.id === incoming.id)) return prev; // eco do remetente
+              return [...prev, incoming];
+            });
+          })
+          .on('broadcast', { event: 'comment-deleted' }, ({ payload }) => {
+            if (!payload || payload.collective_analysis_id !== collectiveAnalysisId) return;
+            setComments((prev) =>
+              prev.filter((c) => c.id !== payload.id && c.parentId !== payload.id)
+            );
+          })
+          .subscribe((status, err) => {
+            console.log(
+              '[AnalysisDiscussion] Subscription status:',
+              status,
+              err ? `error: ${err.message}` : ''
+            );
+          });
+
+        channelRef.current = channel;
+      } catch (err) {
+        console.error('[AnalysisDiscussion] Realtime init error:', err);
+      }
+    }
+
+    initRealtime();
+
+    return () => {
+      cancelled = true;
+      if (channelRef.current && clientRef.current) {
+        clientRef.current.removeChannel(channelRef.current);
+      }
+      channelRef.current = null;
+    };
+  }, [groupId, collectiveAnalysisId, user?.id]);
 
   // Submit a new comment or reply (with E2E encryption)
   const handleSubmit = async () => {
