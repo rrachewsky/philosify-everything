@@ -7,7 +7,15 @@
    Tokens/aliases only — no raw colors.
    ============================================================ */
 
-.v2 .pg-community{margin-top:22px;margin-bottom:70px}
+.v2 .pg-community{margin-top:22px;margin-bottom:0;flex:1 1 0px;display:flex;flex-direction:column}
+
+/* The community page is a viewport-tall flex column so the panel host can
+   grow to the space available (Bob's ruling, 14 Sep): big window = the
+   panel fills the viewport; small window = a 480px floor keeps the composer
+   whole and the page scrolls to it. Scoped with :has() so other v2 pages
+   keep their block layout. */
+.v2 .page:has(> .pg-community){display:flex;flex-direction:column;box-sizing:border-box;
+ min-height:100vh;min-height:100dvh;padding-bottom:24px}
 
 /* Tab bar — v2 .tabs/.tab chrome with unread + lock annotations */
 .v2 .pg-community .tabs{flex-wrap:wrap}
@@ -26,9 +34,13 @@
    an ordinary theme-aware cell — the forced always-dark ground of
    the WP3 "framed" era is superseded. */
 .v2 .pg-community .panelhost{position:relative;display:flex;flex-direction:column;
- height:min(70vh,760px);margin-top:16px;border:1px solid var(--line);
+ flex:1 1 0px;min-height:max(480px,70vh);margin-top:16px;border:1px solid var(--line);
  background:var(--bgcell);overflow:hidden}
 .v2 .pg-community .panelhost > *{min-height:0}
+/* Discussion open: floor = header + analysis card + 12.5rem list + composer,
+   so the list keeps ~4 comments and the composer stays inside the panel
+   (the page scrolls to it on short windows). */
+.v2 .pg-community .panelhost:has(> .analysis-discussion){min-height:max(600px,70vh)}
 
 /* Signed-out gate inside the host */
 .v2 .pg-community .authgate{flex:1;display:flex;flex-direction:column;align-items:center;
@@ -36,5 +48,6 @@
 .v2 .pg-community .authgate p{font:400 12.5px/1.65 var(--fd);letter-spacing:.06em;color:var(--mid)}
 
 @media (max-width:700px){
-  .v2 .pg-community .panelhost{height:min(76vh,700px)}
+  .v2 .pg-community .panelhost{min-height:max(480px,76vh)}
+  .v2 .pg-community .panelhost:has(> .analysis-discussion){min-height:max(600px,76vh)}
 }

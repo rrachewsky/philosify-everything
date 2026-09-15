@@ -27,6 +27,7 @@ export async function getConversations() {
   const res = await fetch(`${API_BASE}/dm/conversations`, {
     method: 'GET',
     credentials: 'include',
+    cache: 'no-store', // bypass HTTP cache lock (see underground.js getPosts)
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));

@@ -127,8 +127,14 @@ export function useUnderground() {
     setLoading(true);
     setError(null);
 
+    // A fetch that never settles must become a visible error, not an eternal
+    // "loading" (Chrome cache-lock incident, 14 Sep).
+    const LOAD_TIMEOUT_MS = 15000;
+    const abort = new AbortController();
+    const timer = setTimeout(() => abort.abort(), LOAD_TIMEOUT_MS);
+
     try {
-      const result = await undergroundService.getPosts();
+      const result = await undergroundService.getPosts(undefined, { signal: abort.signal });
 
       // Check if user needs to set nickname
       if (result.needsNickname) {
@@ -143,8 +149,13 @@ export function useUnderground() {
       setPosts(result.posts || []);
       setHasMore((result.posts || []).length >= 30);
     } catch (err) {
-      setError(err.message);
+      setError(
+        err.name === 'AbortError'
+          ? 'Timed out loading confessions. Please try again.'
+          : err.message
+      );
     } finally {
+      clearTimeout(timer);
       setLoading(false);
     }
   }, [isAuthenticated]);

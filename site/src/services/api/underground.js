@@ -44,14 +44,20 @@ async function decryptPostIfNeeded(post) {
 /**
  * Get underground posts (paginated, with E2E decryption)
  * @param {string} [before] - ISO timestamp cursor
+ * @param {Object} [options]
+ * @param {AbortSignal} [options.signal] - Caller-owned timeout/abort
  */
-async function getPosts(before) {
+async function getPosts(before, options = {}) {
   const url = new URL(`${API_BASE}/underground`);
   if (before) url.searchParams.set('before', before);
 
   const response = await fetch(url.toString(), {
     method: 'GET',
     credentials: 'include',
+    // Bypass the HTTP cache: Chrome queues identical GETs behind a stalled
+    // writer for the same cache entry (Underground stuck on "loading", 14 Sep).
+    cache: 'no-store',
+    signal: options.signal,
   });
 
   if (!response.ok) {

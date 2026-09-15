@@ -20,6 +20,10 @@ export function jsonResponse(data, status = 200, originOrCors = 'https://philosi
     status,
     headers: {
       'Content-Type': 'application/json',
+      // Private API JSON: never cached by browser/intermediaries. Also keeps
+      // Chrome from creating per-URL cache entries whose lock queues identical
+      // GETs behind a stalled writer (Underground "loading forever", 14 Sep).
+      'Cache-Control': 'no-store',
       // HSTS is included via getCorsHeaders() spread below — no duplicate needed
       ...cors
     }
