@@ -37,10 +37,22 @@
  flex:1 1 0px;min-height:max(480px,70vh);margin-top:16px;border:1px solid var(--line);
  background:var(--bgcell);overflow:hidden}
 .v2 .pg-community .panelhost > *{min-height:0}
-/* Discussion open: floor = header + analysis card + 12.5rem list + composer,
-   so the list keeps ~4 comments and the composer stays inside the panel
-   (the page scrolls to it on short windows). */
-.v2 .pg-community .panelhost:has(> .analysis-discussion){min-height:max(600px,70vh)}
+/* Discussion open: the composer is the panel's fixed footer and the panel
+   fits the viewport (flex:1 of the 100dvh page column). The floor is the
+   smallest layout that still holds header + compact card + 2-line composer
+   with counter/button (measured 15 Sep, prod); below it the page scrolls. */
+.v2 .pg-community .panelhost:has(> .analysis-discussion){min-height:300px}
+/* Short viewport with a discussion open: the page chrome above the panel
+   (module title, rail, ticker, subline, top margins ≈ 135px) gives way so
+   the composer stays inside the first screen down to ~500px of viewport
+   height. Tabs stay for navigation. Scoped to the open discussion only. */
+@media (max-height:720px){
+ .v2 .page:has(.analysis-discussion){padding-top:calc(var(--hdrh) + env(safe-area-inset-top,0px) + 10px)}
+ .v2 .page:has(.analysis-discussion) .mod,.v2 .page:has(.analysis-discussion) .mrail,
+ .v2 .page:has(.analysis-discussion) .tick,.v2 .page:has(.analysis-discussion) .subline{display:none}
+ .v2 .page:has(.analysis-discussion) .pg-community{margin-top:0}
+ .v2 .page:has(.analysis-discussion) .panelhost{margin-top:8px}
+}
 
 /* Signed-out gate inside the host */
 .v2 .pg-community .authgate{flex:1;display:flex;flex-direction:column;align-items:center;
@@ -49,5 +61,5 @@
 
 @media (max-width:700px){
   .v2 .pg-community .panelhost{min-height:max(480px,76vh)}
-  .v2 .pg-community .panelhost:has(> .analysis-discussion){min-height:max(600px,76vh)}
+  .v2 .pg-community .panelhost:has(> .analysis-discussion){min-height:300px}
 }
