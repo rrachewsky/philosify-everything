@@ -77,3 +77,6 @@ mensagem trouxe o menu de decisão do ponto 3c literal — `[(a) URL: … | (b) 
 (c) aceito como coberto pelo build]` — sem uma opção marcada. Por isso **nenhum painel foi gerado e nenhum crédito foi
 gasto**; o ponto 3c permanece registrado como "não verificado em produção, coberto pelo build" até o Bob indicar (a) ou
 (b). Se a intenção era (c), este relatório já reflete o estado final. Placar mantido: 12 ok · 1 coberto pelo build.
+
+**Decisão do Bob (17/09): (c) — `/panel/:id` aceito como coberto pelo build.** Aceite da Metodologia **COMPLETO e
+definitivo**: 12 pontos verificados em produção, 1 coberto pelo build, nenhuma divergência. Nada mais pendente neste ciclo.
