@@ -214,6 +214,14 @@
 /* Section label of the verdict card + its declared score — the "PHILOSOPHICAL
    POSITIONS" family (ruling 31 Jul): read, not ambient. */
 .v2 .vlabel{font:500 10.5px/1 var(--fu);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mid)}
+/* Methodology entry link (ruling 1 Sep 2026): the yardstick one click away
+   from every verdict. Same tracked-uppercase register as the label. */
+.v2 .vhead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.v2 .mlink{font:500 10.5px/1 var(--fu);letter-spacing:.18em;text-transform:uppercase;color:var(--silver);text-decoration:none;white-space:nowrap;
+ min-height:0} /* min-height:0 beats responsive.css a{min-height:44px} at ≤560px — the link is a flex item in .vhead */
+.v2 .mlink:hover{color:var(--ink)}
+.v2 .methrow{margin:14px 0 0}
+.v2 .methline{margin-top:10px}
 .v2 .vgrid{display:flex;gap:28px;align-items:baseline;margin-top:12px;flex-wrap:wrap}
 .v2 .note9{font:400 42px/1 var(--fd);color:var(--silver)}
 .v2 .classif{font:400 18px/1.35 var(--fd);letter-spacing:.08em;color:var(--ink)}

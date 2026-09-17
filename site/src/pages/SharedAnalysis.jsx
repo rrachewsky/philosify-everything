@@ -21,6 +21,7 @@ import {
   formatSignedScore,
   verdictRationale,
 } from '../components/v2';
+import { MethodologyLink } from '../components/v2/MethodologyLink.jsx';
 import { ShareButton } from '../components/sharing/ShareButton';
 // The verdict is stored in canonical English; this is the existing map from
 // classification to the UI's own wording. Reused rather than copied — there are
@@ -413,7 +414,8 @@ export function SharedAnalysis() {
 
       {/* News wears the four-box anatomy; everything else the verdict stack. */}
       {isNews ? (
-        <div className="scan">
+        <>
+          <div className="scan">
           {theFacts && (
             <div className="cell static facts">
               <h2>{t('news.theFactsTitle', 'The Facts')}</h2>
@@ -438,7 +440,11 @@ export function SharedAnalysis() {
               <Prose text={analysis.philosify_opinion || meta.philosify_opinion} />
             </div>
           )}
-        </div>
+          </div>
+          <p className="methrow">
+            <MethodologyLink />
+          </p>
+        </>
       ) : (
         <>
           {(finalScore != null || analysis?.classification) && (

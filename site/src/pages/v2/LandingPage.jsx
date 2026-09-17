@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { GridVeil } from '../../components/common';
 import { HudFrame, HeaderBar, Cell, FooterV2, ThemeBar } from '../../components/v2';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
+import { MethodologyLink } from '../../components/v2/MethodologyLink.jsx';
 import { CATALOG } from '../../config/catalog';
 import '../../styles/v2-components.css';
 
@@ -54,6 +55,9 @@ export default function LandingPage() {
         <div className="selectline rv" style={{ animationDelay: '.18s' }}>
           {t('v2.landing.select', 'Select a module')}
         </div>
+        <div className="methline rv" style={{ animationDelay: '.2s' }}>
+          <MethodologyLink />
+        </div>
 
         <main className="modules" style={{ marginTop: 14 }}>
           {MODULES.map(([slug, title, desc], i) => (
@@ -90,6 +94,9 @@ export default function LandingPage() {
           </a>
           <a href="/pp" onClick={(e) => { e.preventDefault(); navigate('/pp'); }}>
             {t('v2.landing.privacy', 'Privacy')}
+          </a>
+          <a href="/methodology" onClick={(e) => { e.preventDefault(); navigate('/methodology'); }}>
+            {t('v2.legal.methodologyLink', 'Methodology')}
           </a>
           <a href="#c">© 2026</a>
         </FooterV2>

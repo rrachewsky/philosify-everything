@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageShell, Button } from '../../components/v2';
+import { MethodologyLink } from '../../components/v2/MethodologyLink.jsx';
 import { ShareButton } from '../../components/sharing/ShareButton';
 import PanelAnalysisCards from '../../components/results/PanelAnalysisCards.jsx';
 import { useSharedContentLanguage } from '../../hooks';
@@ -106,6 +107,10 @@ export function PanelPermalink() {
       </div>
 
       <PanelAnalysisCards analysis={panel.analysis} />
+
+      <p className="methrow">
+        <MethodologyLink />
+      </p>
 
       {/* Whoever arrives by a link must be able to pass it on. The link is this
           very route — the same one the modules' share button now generates — so

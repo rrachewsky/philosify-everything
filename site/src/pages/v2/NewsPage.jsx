@@ -21,6 +21,7 @@ import {
 } from '../../components/v2';
 import { NavAccount } from '../../components/v2/NavAccount.jsx';
 import { V2ModalsHost } from '../../components/v2/CommerceModals.jsx';
+import { MethodologyLink } from '../../components/v2/MethodologyLink.jsx';
 import { ShareButton } from '../../components/sharing/ShareButton';
 import { ShareToDMButton } from '../../components/sharing/ShareToDMButton';
 import { ShareToCommunityButton } from '../../components/sharing/ShareToCommunityButton';
@@ -728,6 +729,9 @@ export default function NewsPage() {
                     </div>
                   )}
                 </div>
+                <p className="methrow">
+                  <MethodologyLink />
+                </p>
                 <TTSBar result={activeScan} lang={userLang} t={t} />
                 <div className="actions">
                   {activeScan.id && (

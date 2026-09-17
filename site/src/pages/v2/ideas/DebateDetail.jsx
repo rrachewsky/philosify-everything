@@ -10,6 +10,7 @@ import InlineAdSlot from '../../../components/ads/InlineAdSlot.jsx';
 import { ReplyMsg } from './Transcript.jsx';
 import { InviteModal, ConfirmModal } from './IdeasModals.jsx';
 import { VerdictAudio } from './VerdictAudio.jsx';
+import { MethodologyLink } from '../../../components/v2/MethodologyLink.jsx';
 import { formatTimeAgo, formatChrono, useChronometer, chronoProgress } from './utils.js';
 
 export function DebateDetail({ debate, lang, user, onBack }) {
@@ -107,7 +108,10 @@ export function DebateDetail({ debate, lang, user, onBack }) {
       {/* Wrap-up — after all replies so the debate reads first */}
       {debate.wrapup ? (
         <div className="verdict">
-          <span className="vlabel">{t('v2.ideas.wrapupTitle', 'Philosify verdict')}</span>
+          <div className="vhead">
+            <span className="vlabel">{t('v2.ideas.wrapupTitle', 'Philosify verdict')}</span>
+            <MethodologyLink />
+          </div>
           {debate.wrapupAudioUrl && <VerdictAudio threadId={ad.id} />}
           {!debate.wrapupAudioUrl && ad.isOwner && (
             <div className="arow">

@@ -11,6 +11,7 @@ import InlineAdSlot from '../../../components/ads/InlineAdSlot.jsx';
 import { ReplyMsg, PhilosopherPoll } from './Transcript.jsx';
 import { AddPhilosopherModal, InviteModal, ConfirmModal } from './IdeasModals.jsx';
 import { VerdictAudio } from './VerdictAudio.jsx';
+import { MethodologyLink } from '../../../components/v2/MethodologyLink.jsx';
 import { formatTimeAgo, formatCountdown, formatChrono, useChronometer, chronoProgress } from './utils.js';
 
 export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
@@ -307,7 +308,10 @@ export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
           {/* Verdict — after the transcript so the debate reads first */}
           {localizedWrapup ? (
             <div className="verdict">
-              <span className="vlabel">{t('v2.ideas.wrapupTitle', 'Philosify verdict')}</span>
+              <div className="vhead">
+                <span className="vlabel">{t('v2.ideas.wrapupTitle', 'Philosify verdict')}</span>
+                <MethodologyLink />
+              </div>
               {verdictAudioEndpoint && (
                 <VerdictAudio
                   audioUrl={verdictAudioEndpoint}

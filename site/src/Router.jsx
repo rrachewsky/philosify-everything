@@ -40,6 +40,7 @@ const UnsafeZonePage = lazy(() => import('./pages/v2/UnsafeZonePage'));
 const SignInPage = lazy(() => import('./pages/v2/SignInPage'));
 const SignUpPage = lazy(() => import('./pages/v2/SignUpPage'));
 const LegalPage = lazy(() => import('./pages/v2/LegalPage'));
+const MethodologyPage = lazy(() => import('./pages/v2/MethodologyPage'));
 
 // Dev-only v2 component gallery (WP2 acceptance surface; absent from builds)
 const V2Gallery = import.meta.env.DEV ? lazy(() => import('./pages/V2Gallery')) : null;
@@ -157,6 +158,7 @@ export function Router() {
           {/* Legal pages (v2, real ToS/PP text via i18n) */}
           <Route path="/tos" element={<LegalPage doc="terms" />} />
           <Route path="/pp" element={<LegalPage doc="privacy" />} />
+          <Route path="/methodology" element={<MethodologyPage />} />
 
           {/* Reset password shows app behind the modal overlay */}
           <Route

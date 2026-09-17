@@ -3,6 +3,7 @@
 // rationale), AudioBar, ExpandableSection, ActionsRow, AdSlot, TrackCard.
 import { useState } from 'react';
 import DOMPurify from 'dompurify';
+import { MethodologyLink } from './MethodologyLink.jsx';
 
 // Display formatting: true minus sign for negative scores (tabular numerals).
 export function formatSignedScore(score) {
@@ -85,7 +86,10 @@ export function verdictRationale(result, t, band) {
 export function Verdict({ label = 'Philosify Verdict', note, classification, scoreLine, rationale }) {
   return (
     <div className="verdict">
-      <span className="vlabel">{label}</span>
+      <div className="vhead">
+        <span className="vlabel">{label}</span>
+        <MethodologyLink />
+      </div>
       <div className="vgrid">
         {note != null && <span className="note9">{note}</span>}
         {classification && <span className="classif">{classification}</span>}

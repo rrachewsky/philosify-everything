@@ -45,6 +45,34 @@
 .v2 .pg-legal .prose ul,
 .v2 .pg-legal .prose ol { margin: 0 0 16px; padding-left: 24px; }
 .v2 .pg-legal .prose a { color: var(--ink); }
+.v2 .pg-legal .prose em { color: var(--dim); }
+
+/* /methodology — the five-axes table, reading register, cell rules */
+.v2 .pg-legal .prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 16px;
+}
+.v2 .pg-legal .prose th,
+.v2 .pg-legal .prose td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  vertical-align: top;
+  text-align: start;
+  font: 400 14.5px/1.5 var(--fp);
+  color: var(--ink);
+}
+.v2 .pg-legal .prose th {
+  font: 500 10px/1 var(--fu);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--low);
+  background: var(--bgcell);
+}
+.v2 .pg-legal .prose td:nth-child(2) {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
 
 /* Contents rail (mockup aside: sticky cell with left-rule links) */
 .v2 .pg-legal .toc {
