@@ -342,7 +342,7 @@
 /* Footer text sat at --low and read as illegible on device (23 Aug) —
    the nav links are controls, and even the © line must be readable.
    Chrome tier at rest, links hover to white. */
-.v2 footer.landing{margin-top:auto;padding:32px 6px 38px;display:flex;justify-content:space-between;align-items:center;
+.v2 footer.landing{margin-top:auto;padding:32px 6px 38px;display:flex;flex-wrap:wrap;gap:16px 22px;justify-content:space-between;align-items:center;
  color:var(--dim);font:400 12px/1 var(--fu);letter-spacing:.06em}
 .v2 footer.landing .brandline{display:flex;align-items:center;gap:5px;color:var(--ink);
  font:400 11px var(--fd);letter-spacing:.14em}
@@ -352,12 +352,17 @@
 .v2 footer a{color:var(--dim);text-decoration:none}
 .v2 footer a:hover{color:var(--ink)}
 
-/* ---------- Theme bar (landing) ------------------------------- */
-.v2 .themebar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:5;
- display:flex;gap:6px;padding:6px;border:1px solid var(--line);border-radius:999px;
- background:var(--bg);backdrop-filter:blur(8px)}
+/* ---------- Theme bar (landing footer, inline) ----------------
+   Ruling 17 Sep 2026: in the flow, never fixed — a fixed pill covered
+   cards and footer links on every viewport that scrolls. */
+.v2 .themebar{display:flex;gap:6px;padding:6px;border:1px solid var(--line);border-radius:999px;
+ background:var(--bg)}
+.v2 .themebar.inline{flex:none;margin-left:auto}
 .v2 .themebar button{font:500 10.5px/1 var(--fu);letter-spacing:.12em;text-transform:uppercase;
- color:var(--low);background:none;border:0;border-radius:999px;padding:8px 16px;cursor:pointer}
+ color:var(--dim);background:none;border:0;border-radius:999px;padding:8px 16px;cursor:pointer}
+/* inactive label sits at --dim like the footer links beside it (Bob, 17 Sep:
+   --low read as disabled); hover lifts to ink */
+.v2 .themebar button:hover{color:var(--ink)}
 /* C.5 shadow sweep: ring drawn with outline, not box-shadow */
 .v2 .themebar button.on{color:var(--ink);outline:1px solid var(--strong);outline-offset:-1px}
 
@@ -370,7 +375,7 @@
 /* ---------- Breakpoints (landing master) ---------------------- */
 @media (max-width:900px){.v2 .modules{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:860px){.v2 .page{padding-left:26px;padding-right:26px}.v2 .navr{right:60px}.v2 .hdr .hud-status{display:none}}
-@media (max-width:600px){.v2 .modules{grid-template-columns:1fr}.v2 .themebar{bottom:12px}}
+@media (max-width:600px){.v2 .modules{grid-template-columns:1fr}}
 
 /* ---------- WP6.1 mobile pass (360-430 baseline) ---------------
    Flex-item min-width guard: the landing mounts .page as a flex-column
@@ -382,7 +387,6 @@
    (its .hdr height/padding already carry the env() terms); remaining
    fixed chrome respects safe-area insets. */
 .v2 .hc.bl,.v2 .hc.br{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
-.v2 .themebar{bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 .v2 .page{padding-left:max(48px,env(safe-area-inset-left,0px));padding-right:max(48px,env(safe-area-inset-right,0px))}
 
 /* Long unbreakable data (song titles, hashes, session codes) wraps */
@@ -417,6 +421,9 @@
   top:calc(var(--hdrh) + env(safe-area-inset-top,0px) + 8px);
   grid-template-columns:repeat(4,1fr);min-width:0;max-height:min(58vh,420px);overflow-y:auto}
  .v2 .acctmenu.langgrid a{padding:13px 8px}
+ /* footer stacks as a column here: the switch is its last line, left-
+    aligned like the link rows, 44px touch targets */
+ .v2 .themebar.inline{margin-left:0}
  .v2 .themebar button{padding:13px 18px}
  .v2 .btnp{padding:16px 24px}
  .v2 .btns{padding:15px 23px}

@@ -75,7 +75,7 @@ export default function LandingPage() {
           ))}
         </main>
 
-        <FooterV2 variant="landing">
+        <FooterV2 variant="landing" end={<ThemeBar variant="inline" />}>
           <a href="https://philosify.org">philosify.org</a>
           <a href="https://ads.philosify.org" target="_blank" rel="noopener noreferrer">
             {t('v2.landing.adsAtelier', 'Ads Ateliê')}
@@ -102,7 +102,6 @@ export default function LandingPage() {
         </FooterV2>
       </div>
 
-      <ThemeBar />
       <V2ModalsHost />
     </div>
   );

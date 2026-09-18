@@ -194,7 +194,7 @@ export default function V2Gallery() {
         </ModalV2>
       </Section>
 
-      <ThemeBar />
+      <ThemeBar variant="inline" />
     </PageShell>
   );
 }

@@ -1,8 +1,9 @@
 // FooterV2 - v2 footer, links only (ruling 30 Jul 2026: no lockup here —
-// the brand lives in the permanent fixed bar).
+// the brand lives in the permanent fixed bar). `end` renders after the
+// nav as the footer's last item (landing: the inline theme switch).
 import { useTranslation } from 'react-i18next';
 
-export function FooterV2({ variant = 'module', links, children }) {
+export function FooterV2({ variant = 'module', links, children, end }) {
   const { t } = useTranslation();
   return (
     <footer className={variant}>
@@ -18,6 +19,7 @@ export function FooterV2({ variant = 'module', links, children }) {
           </>
         )}
       </nav>
+      {end}
     </footer>
   );
 }
