@@ -1395,6 +1395,7 @@
       "chooseIdentityDesc": "アンダーグラウンドのニックネームを選択してください。投稿では本名の代わりにこの名前が表示されます。",
       "nicknamePlaceholder": "ニックネームを入力（3-12文字）",
       "nicknameHint": "英数字のみ",
+      "nicknameInvalid": "英数字のみ、3〜12文字",
       "setting": "設定中...",
       "enterUnderground": "アンダーグラウンドに入る",
       "postingAs": "投稿者名",

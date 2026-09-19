@@ -246,8 +246,8 @@ export function useColloquium() {
       try {
         const data = await colloquiumService.accessColloquium(threadId);
         if (data.success) {
-          // Notify credit system
-          window.dispatchEvent(new CustomEvent('credits-changed'));
+          // Notify credit system with the balance the endpoint returned
+          window.dispatchEvent(new CustomEvent('credits-changed', { detail: { balance: data.balance } }));
           // Reload the full thread now that we have access
           await openColloquium(threadId, { silent: true });
         } else if (data.error) {
@@ -277,7 +277,7 @@ export function useColloquium() {
     try {
       const data = await colloquiumService.participateColloquium(threadId);
       if (data.success) {
-        window.dispatchEvent(new CustomEvent('credits-changed'));
+        window.dispatchEvent(new CustomEvent('credits-changed', { detail: { balance: data.balance } }));
         setAccessState((prev) => (prev ? { ...prev, canParticipate: true } : prev));
       } else if (data.error) {
         setError(data.error);

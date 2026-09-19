@@ -84,13 +84,23 @@ const Icons = {
   ),
 };
 
+// Same rule as the API (NICKNAME_REGEX): letters and digits, 3–12, no underscore
+const NICKNAME_RE = /^[A-Za-z0-9]{3,12}$/;
+
 function NicknameSetup({ onSubmit, loading, error, t }) {
   const [nickname, setNickname] = useState('');
+  const [localError, setLocalError] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (loading) return;
     const trimmed = nickname.trim();
-    if (!trimmed || loading) return;
+    // Own v2 message instead of the browser's native validation balloon
+    if (!NICKNAME_RE.test(trimmed)) {
+      setLocalError(t('community.underground.nicknameInvalid'));
+      return;
+    }
+    setLocalError(null);
     onSubmit(trimmed);
   };
 
@@ -100,23 +110,26 @@ function NicknameSetup({ onSubmit, loading, error, t }) {
         <h3>{t('community.underground.chooseIdentity')}</h3>
         <p>{t('community.underground.chooseIdentityDesc')}</p>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <input
           type="text"
           className="underground-nickname-setup__input"
           value={nickname}
-          onChange={(e) => setNickname(e.target.value.slice(0, 12))}
+          onChange={(e) => {
+            setNickname(e.target.value.slice(0, 12));
+            if (localError) setLocalError(null);
+          }}
           placeholder={t('community.underground.nicknamePlaceholder')}
-          minLength={3}
           maxLength={12}
-          pattern="[a-zA-Z0-9]+"
           disabled={loading}
           autoFocus
         />
         <div className="underground-nickname-setup__hint">
           {t('community.underground.nicknameHint')}
         </div>
-        {error && <div className="underground-nickname-setup__error">{error}</div>}
+        {(localError || error) && (
+          <div className="underground-nickname-setup__error">{localError || error}</div>
+        )}
         <button
           type="submit"
           className="underground-nickname-setup__submit"
@@ -612,9 +625,14 @@ export function UndergroundFeed() {
         )}
 
         {posts.map((post) => {
-          // Own post detection: supports both camelCase (API) and snake_case (realtime)
+          // Own post detection: the GET feed is pseudonymous (no user ids), so the
+          // API sends isOwn; realtime payloads carry snake_case user_id; nickname
+          // is the last resort (one nickname per user in the room).
           const postUserId = post.userId || post.user_id;
-          const isOwn = postUserId === userId;
+          const isOwn =
+            post.isOwn === true ||
+            (!!postUserId && postUserId === userId) ||
+            (!!myNickname && post.nickname === myNickname);
           return (
             <UndergroundPost
               key={post.id}

@@ -1496,6 +1496,7 @@
       "chooseIdentityDesc": "Yeraltı için bir takma ad seçin. Gönderilerinizde gerçek adınız yerine bu gösterilecek.",
       "nicknamePlaceholder": "Takma ad girin (3-12 karakter)",
       "nicknameHint": "Sadece harf ve rakamlar",
+      "nicknameInvalid": "Sadece harf ve rakamlar, 3 ile 12 karakter arası",
       "setting": "AYARLANIYOR...",
       "enterUnderground": "YERALTINA GİR",
       "postingAs": "Olarak yayınlanıyor",

@@ -1429,6 +1429,7 @@
       "chooseIdentityDesc": "Wähle einen Spitznamen für Den Untergrund. Er wird in deinen Beiträgen anstelle deines echten Namens angezeigt.",
       "nicknamePlaceholder": "Spitzname eingeben (3-12 Zeichen)",
       "nicknameHint": "Nur Buchstaben und Zahlen",
+      "nicknameInvalid": "Nur Buchstaben und Zahlen, 3 bis 12 Zeichen",
       "setting": "WIRD EINGESTELLT...",
       "enterUnderground": "DEN UNTERGRUND BETRETEN",
       "postingAs": "Posten als",

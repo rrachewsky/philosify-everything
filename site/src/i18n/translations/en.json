@@ -1501,6 +1501,7 @@
       "chooseIdentityDesc": "Pick a nickname for The Underground. This will be shown on your posts instead of your real name.",
       "nicknamePlaceholder": "Enter nickname (3-12 chars)",
       "nicknameHint": "Letters and numbers only",
+      "nicknameInvalid": "Letters and numbers only, 3 to 12 characters",
       "setting": "SETTING...",
       "enterUnderground": "ENTER THE UNDERGROUND",
       "postingAs": "Posting as",

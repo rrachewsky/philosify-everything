@@ -67,7 +67,14 @@
 .v2 .pg-ideas .translate-error{font:400 11px var(--fu);color:var(--warn);margin-left:10px}
 
 /* ---------- Verdict / audio ---------------------------------- */
-.v2 .pg-ideas .vprose{margin-top:16px}
+/* .vprose is rendered HTML (markdownLite), not raw text: block spacing
+   comes from the elements, not from pre-wrap */
+.v2 .pg-ideas .vprose{margin-top:16px;white-space:normal}
+.v2 .pg-ideas .vprose p{margin:0 0 14px}
+.v2 .pg-ideas .vprose p:last-child{margin-bottom:0}
+.v2 .pg-ideas .vprose h3,.v2 .pg-ideas .vprose h4{font:500 11px/1 var(--fu);letter-spacing:.18em;
+ text-transform:uppercase;color:var(--ink-mid);margin:22px 0 10px}
+.v2 .pg-ideas .vprose ul,.v2 .pg-ideas .vprose ol{margin:0 0 14px;padding-inline-start:22px}
 .v2 .pg-ideas .vaudio{margin-top:14px}
 .v2 .pg-ideas .atime{font-variant-numeric:tabular-nums;color:var(--low)}
 .v2 .pg-ideas .aseek{position:relative;flex:1;height:12px;background:none;cursor:pointer;align-self:center}

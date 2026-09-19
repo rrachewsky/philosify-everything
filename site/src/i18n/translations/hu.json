@@ -1496,6 +1496,7 @@
       "chooseIdentityDesc": "Válassz egy becenevet az Alvilághoz. Ez jelenik meg a bejegyzéseidnél a valódi neved helyett.",
       "nicknamePlaceholder": "Adj meg egy becenevet (3-12 karakter)",
       "nicknameHint": "Csak betűk és számok",
+      "nicknameInvalid": "Csak betűk és számok, 3–12 karakter",
       "setting": "BEÁLLÍTÁS...",
       "enterUnderground": "BELÉPÉS AZ ALVILÁGBA",
       "postingAs": "Közzététel mint",

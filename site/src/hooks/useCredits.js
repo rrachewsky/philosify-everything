@@ -83,10 +83,19 @@ export function useCredits(user, initialBalance = null) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]); // Intentionally only depend on userId
 
-  // Listen for credit changes and refresh balance (forced, bypass debounce)
+  // Listen for credit changes. A dispatcher that already holds the balance
+  // the endpoint returned passes it as detail.balance (no round trip);
+  // otherwise refetch, forced (bypass debounce).
   useEffect(() => {
-    const handleCreditsChanged = () => {
-      fetchBalance(true); // Force refresh after credit change
+    const handleCreditsChanged = (e) => {
+      const b = e?.detail?.balance;
+      if (b && typeof b.total !== 'undefined') {
+        setBalance(b);
+        balanceRef.current = b;
+        lastFetchRef.current = Date.now();
+      } else {
+        fetchBalance(true);
+      }
     };
 
     window.addEventListener('credits-changed', handleCreditsChanged);

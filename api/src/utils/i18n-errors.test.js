@@ -62,11 +62,17 @@ describe('i18n Error Messages', () => {
     expect(getLocalizedError('ANALYSIS_FAILED', 'es')).toBe('Análisis falló');
   });
 
+  // Intentional EN duplicates: the Underground and the Collective comments
+  // raise the same condition from different handlers, each under its own
+  // namespaced key so the code paths stay independent.
+  const INTENTIONAL_EN_DUPLICATES = new Set(['UNDERGROUND_ENCRYPTED_CONTENT_TOO_LARGE']);
+
   it('should have no duplicate English values across error keys', () => {
     const englishMessages = new Set();
     const duplicates = [];
 
     for (const [key, messages] of Object.entries(ERROR_MESSAGES_I18N)) {
+      if (INTENTIONAL_EN_DUPLICATES.has(key)) continue;
       const englishMsg = messages.en;
       if (englishMessages.has(englishMsg)) {
         duplicates.push({ key, message: englishMsg });
@@ -92,10 +98,13 @@ describe('i18n Error Messages', () => {
   });
 
   it('should not be empty or just whitespace', () => {
+    // Ideographic scripts say it in two characters (zh FORBIDDEN = "禁止");
+    // the 3-character floor only makes sense for alphabetic languages.
+    const MIN_LENGTH = { zh: 2, ja: 2, ko: 2 };
     for (const [errorKey, messages] of Object.entries(ERROR_MESSAGES_I18N)) {
       for (const [lang, message] of Object.entries(messages)) {
         expect(message.trim()).toBeTruthy();
-        expect(message.length).toBeGreaterThan(2);
+        expect(message.length).toBeGreaterThanOrEqual(MIN_LENGTH[lang] ?? 3);
       }
     }
   });

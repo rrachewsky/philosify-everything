@@ -1437,6 +1437,7 @@
       "chooseIdentityDesc": "Elige un apodo para El Underground. Se mostrará en tus publicaciones en lugar de tu nombre real.",
       "nicknamePlaceholder": "Ingresa un apodo (3-12 caracteres)",
       "nicknameHint": "Solo letras y números",
+      "nicknameInvalid": "Solo letras y números, de 3 a 12 caracteres",
       "setting": "CONFIGURANDO...",
       "enterUnderground": "ENTRAR AL UNDERGROUND",
       "postingAs": "Publicando como",

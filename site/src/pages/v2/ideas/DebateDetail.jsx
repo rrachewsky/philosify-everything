@@ -11,6 +11,7 @@ import { ReplyMsg } from './Transcript.jsx';
 import { InviteModal, ConfirmModal } from './IdeasModals.jsx';
 import { VerdictAudio } from './VerdictAudio.jsx';
 import { MethodologyLink } from '../../../components/v2/MethodologyLink.jsx';
+import { renderMarkdownLite } from '../../../utils/markdownLite.js';
 import { formatTimeAgo, formatChrono, useChronometer, chronoProgress } from './utils.js';
 
 export function DebateDetail({ debate, lang, user, onBack }) {
@@ -127,7 +128,11 @@ export function DebateDetail({ debate, lang, user, onBack }) {
               </Button>
             </div>
           )}
-          <div className="prose vprose">{debate.wrapup}</div>
+          {/* Wrap-up arrives as markdown — rendered through the shared path, not as raw text */}
+          <div
+            className="prose vprose"
+            dangerouslySetInnerHTML={{ __html: renderMarkdownLite(debate.wrapup) }}
+          />
           <TranslateButton text={debate.wrapup} />
           <ShareButton
             shareUrl={`${window.location.origin}/debate/${ad.id}?lang=${i18n.resolvedLanguage || i18n.language}`}

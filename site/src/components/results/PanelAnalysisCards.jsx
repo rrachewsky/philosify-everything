@@ -1,4 +1,4 @@
-import DOMPurify from 'dompurify';
+import { renderMarkdownLite } from '../../utils/markdownLite.js';
 
 /**
  * Parse philosopher panel markdown into structured sections and render as cards.
@@ -83,18 +83,10 @@ function parsePanelSections(markdown) {
   return sections;
 }
 
+// Section bodies go through the shared markdown path (sub-headings, lists,
+// bold/italic), sanitized like every other analysis surface.
 function renderBody(text) {
-  if (!text) return '';
-  return DOMPurify.sanitize(
-    text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br/>')
-      .replace(/^/, '<p>')
-      .replace(/$/, '</p>'),
-    { ADD_TAGS: ['hl'] }
-  );
+  return renderMarkdownLite(text, { dropTitle: false });
 }
 
 export default function PanelAnalysisCards({ analysis }) {

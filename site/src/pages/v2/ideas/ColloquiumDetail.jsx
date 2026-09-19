@@ -12,6 +12,7 @@ import { ReplyMsg, PhilosopherPoll } from './Transcript.jsx';
 import { AddPhilosopherModal, InviteModal, ConfirmModal } from './IdeasModals.jsx';
 import { VerdictAudio } from './VerdictAudio.jsx';
 import { MethodologyLink } from '../../../components/v2/MethodologyLink.jsx';
+import { renderMarkdownLite } from '../../../utils/markdownLite.js';
 import { formatTimeAgo, formatCountdown, formatChrono, useChronometer, chronoProgress } from './utils.js';
 
 export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
@@ -320,7 +321,11 @@ export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
                   canParticipate={canParticipate}
                 />
               )}
-              <div className="prose vprose">{localizedWrapup}</div>
+              {/* Verdict arrives as markdown — rendered through the shared path, not as raw text */}
+              <div
+                className="prose vprose"
+                dangerouslySetInnerHTML={{ __html: renderMarkdownLite(localizedWrapup) }}
+              />
               <InlineAdSlot
                 key={`colloquium-verdict-${ac.id}`}
                 userId={user?.id}

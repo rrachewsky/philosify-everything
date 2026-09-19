@@ -1379,6 +1379,7 @@
       "chooseIdentityDesc": "בחר כינוי למחתרת. הוא יוצג בפוסטים שלך במקום שמך האמיתי.",
       "nicknamePlaceholder": "הכנס כינוי (3-12 תווים)",
       "nicknameHint": "אותיות ומספרים בלבד",
+      "nicknameInvalid": "אותיות ומספרים בלבד, 3 עד 12 תווים",
       "setting": "מגדיר...",
       "enterUnderground": "כניסה למחתרת",
       "postingAs": "מפרסם בתור",

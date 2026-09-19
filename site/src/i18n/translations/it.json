@@ -1411,6 +1411,7 @@
       "chooseIdentityDesc": "Scegli un soprannome per L'Underground. Verrà mostrato nei tuoi post al posto del tuo vero nome.",
       "nicknamePlaceholder": "Inserisci un soprannome (3-12 caratteri)",
       "nicknameHint": "Solo lettere e numeri",
+      "nicknameInvalid": "Solo lettere e numeri, da 3 a 12 caratteri",
       "setting": "IMPOSTAZIONE...",
       "enterUnderground": "ENTRA NELL'UNDERGROUND",
       "postingAs": "Pubblicando come",

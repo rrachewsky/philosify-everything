@@ -1416,6 +1416,7 @@
       "chooseIdentityDesc": "Escolha um apelido para O Underground. Ele será exibido nas suas postagens em vez do seu nome real.",
       "nicknamePlaceholder": "Digite um apelido (3-12 caracteres)",
       "nicknameHint": "Apenas letras e números",
+      "nicknameInvalid": "Apenas letras e números, de 3 a 12 caracteres",
       "setting": "DEFININDO...",
       "enterUnderground": "ENTRAR NO UNDERGROUND",
       "postingAs": "Postando como",

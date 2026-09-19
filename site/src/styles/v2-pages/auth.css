@@ -36,3 +36,12 @@
 }
 .v2 .pg-auth .password-toggle-btn:hover,
 .v2 .pg-auth .password-toggle-btn:focus-visible { color: var(--ink-hi); outline: none; }
+
+/* Browser autofill paints its own pale blue over the field; keep the v2
+   inset surface and ink (same trick as account.css). */
+.v2 .pg-auth input.f:-webkit-autofill,
+.v2 .pg-auth input.f:-webkit-autofill:hover,
+.v2 .pg-auth input.f:-webkit-autofill:focus{
+ -webkit-text-fill-color:var(--ink);
+ -webkit-box-shadow:0 0 0 1000px var(--inset) inset;
+ transition:background-color 9999s ease-out}

@@ -1496,6 +1496,7 @@
       "chooseIdentityDesc": "Wybierz pseudonim dla Podziemia. Będzie wyświetlany w twoich postach zamiast prawdziwego imienia.",
       "nicknamePlaceholder": "Wprowadź pseudonim (3-12 znaków)",
       "nicknameHint": "Tylko litery i cyfry",
+      "nicknameInvalid": "Tylko litery i cyfry, od 3 do 12 znaków",
       "setting": "USTAWIANIE...",
       "enterUnderground": "WEJDŹ DO PODZIEMIA",
       "postingAs": "Publikowanie jako",

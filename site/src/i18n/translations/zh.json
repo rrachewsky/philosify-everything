@@ -1496,6 +1496,7 @@
       "chooseIdentityDesc": "为地下空间选择一个昵称。你的帖子将显示此昵称而非真实姓名。",
       "nicknamePlaceholder": "输入昵称（3-12个字符）",
       "nicknameHint": "仅限字母和数字",
+      "nicknameInvalid": "仅限字母和数字，3 到 12 个字符",
       "setting": "设置中...",
       "enterUnderground": "进入地下空间",
       "postingAs": "发布者",

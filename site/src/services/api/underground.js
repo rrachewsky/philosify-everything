@@ -213,7 +213,7 @@ async function deletePost(postId) {
 
 /**
  * Set Underground nickname
- * @param {string} nickname - 3-20 chars, alphanumeric/underscore/hyphen
+ * @param {string} nickname - 3-12 chars, letters and digits only (API: NICKNAME_REGEX)
  */
 async function setNickname(nickname) {
   const response = await fetch(`${API_BASE}/underground/nickname`, {

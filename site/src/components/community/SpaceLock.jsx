@@ -48,6 +48,11 @@ export function SpaceLock({ space, onUnlocked }) {
         throw new Error(data.error || 'Failed to unlock space');
       }
 
+      // Header balance: notify the credits system (uses the returned balance
+      // when the API sends one, otherwise it refetches)
+      const data = await response.json().catch(() => ({}));
+      window.dispatchEvent(new CustomEvent('credits-changed', { detail: { balance: data.balance } }));
+
       // Notify parent to refresh access
       onUnlocked?.(space);
     } catch (err) {

@@ -1496,6 +1496,7 @@
       "chooseIdentityDesc": "Kies een bijnaam voor De Ondergrond. Deze wordt weergegeven bij je berichten in plaats van je echte naam.",
       "nicknamePlaceholder": "Voer een bijnaam in (3-12 tekens)",
       "nicknameHint": "Alleen letters en cijfers",
+      "nicknameInvalid": "Alleen letters en cijfers, 3 tot 12 tekens",
       "setting": "INSTELLEN...",
       "enterUnderground": "BETREED DE ONDERGROND",
       "postingAs": "Plaatsen als",

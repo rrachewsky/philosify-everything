@@ -109,11 +109,12 @@ export async function handleGetUndergroundPosts(request, env, origin) {
       return addRefreshedCookieToResponse(response, setCookieHeader);
     }
 
-    // Fetch posts (show nickname, not user_id)
+    // Fetch posts (show nickname, not user_id — user_id is read only to
+    // compute isOwn server-side; it never leaves the worker)
     let query = supabase
       .from("underground_posts")
       .select(
-        "id, nickname, content, encrypted_content, nonce, is_encrypted, created_at, edited_at, reply_to_id, reaction_fire, reaction_think, reaction_heart, reaction_skull",
+        "id, user_id, nickname, content, encrypted_content, nonce, is_encrypted, created_at, edited_at, reply_to_id, reaction_fire, reaction_think, reaction_heart, reaction_skull",
       )
       .order("created_at", { ascending: false })
       .limit(PAGE_SIZE);
@@ -189,6 +190,8 @@ export async function handleGetUndergroundPosts(request, env, origin) {
     const postsWithReactions = (posts || []).map((p) => ({
       id: p.id,
       nickname: p.nickname,
+      // Own-post flag computed here (pseudonymous feed: no user ids in the payload)
+      isOwn: !!p.user_id && p.user_id === userId,
       content: p.is_encrypted ? null : p.content,
       encryptedContent: p.is_encrypted ? p.encrypted_content : null,
       nonce: p.is_encrypted ? p.nonce : null,

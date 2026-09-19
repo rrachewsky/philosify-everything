@@ -1421,6 +1421,7 @@
       "chooseIdentityDesc": "Choisissez un pseudonyme pour Le Souterrain. Il sera affiché sur vos publications à la place de votre vrai nom.",
       "nicknamePlaceholder": "Entrez un pseudonyme (3-12 caractères)",
       "nicknameHint": "Lettres et chiffres uniquement",
+      "nicknameInvalid": "Lettres et chiffres uniquement, de 3 à 12 caractères",
       "setting": "CONFIGURATION...",
       "enterUnderground": "ENTRER DANS LE SOUTERRAIN",
       "postingAs": "Publication en tant que",
