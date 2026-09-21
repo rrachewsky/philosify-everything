@@ -142,6 +142,16 @@ UNION ALL SELECT 'collective_comments', count(*) FROM public.collective_comments
 -- Só rodar com: 1-A rows = 0 nas três, 1-C = 0, 1-D = 0, 1-E = 0, 1-F = 0.
 -- O bloco refaz todas essas checagens; se alguma falhar, RAISE EXCEPTION e
 -- nada é alterado (o DO inteiro roda em uma transação).
+--
+-- HISTÓRICO (21/09/2026): a PRIMEIRA versão deste bloco abortou em produção com
+--   SQLSTATE 2BP01 (dependent_objects_still_exist) no DROP TABLE sem CASCADE:
+--   a policy RLS "Members can view their groups" (em analysis_groups) referencia
+--   group_members no seu USING — dependência cruzada entre as próprias tabelas
+--   mortas, que o pré-flight listava (1-G) mas não tratava como gate.
+--   Foi o gate anti-CASCADE funcionando como desenhado: nada foi alterado.
+--   Versão canônica abaixo (corrigida pelo supervisor, executada com sucesso):
+--   dropa as policies das 3 tabelas ANTES dos DROP TABLE, colhidas de
+--   pg_policies em loop (nunca por nome digitado); o resto é idêntico.
 
 DO $$
 DECLARE
@@ -149,6 +159,7 @@ DECLARE
   v_t      text;
   v_n      bigint;
   v_fn     record;
+  v_pol    record;
   v_fns    oid[] := ARRAY[]::oid[];
 BEGIN
   -- Gate 0: as três tabelas existem (se alguma já não existir, aborta:
@@ -222,6 +233,19 @@ BEGIN
   IF v_n <> 0 THEN
     RAISE EXCEPTION 'GATE 5: % função(ões) citam as tabelas — abortado', v_n;
   END IF;
+
+  -- Policies RLS das 3 tabelas ANTES dos DROP TABLE (ver HISTÓRICO/2BP01 acima).
+  -- Colhidas do catálogo; somem de qualquer forma com a tabela, mas a policy de
+  -- analysis_groups que cita group_members impede o DROP sem CASCADE.
+  FOR v_pol IN
+    SELECT schemaname, tablename, policyname
+    FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = ANY (v_tables)
+    ORDER BY tablename, policyname
+  LOOP
+    EXECUTE format('DROP POLICY %I ON %I.%I', v_pol.policyname, v_pol.schemaname, v_pol.tablename);
+    RAISE NOTICE 'policy removida: %.% / %', v_pol.schemaname, v_pol.tablename, v_pol.policyname;
+  END LOOP;
 
   -- DROP (filhas primeiro; sem CASCADE — dependência inesperada aborta aqui).
   DROP TABLE public.group_chat_messages;
