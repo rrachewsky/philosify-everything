@@ -1,0 +1,1074 @@
+diff --git a/api/index.js b/api/index.js
+index c30af47..71f7a4c 100644
+--- a/api/index.js
++++ b/api/index.js
+@@ -113,16 +113,6 @@ import {
+   handleDeleteChatMessage,
+   handleEditChatMessage,
+ } from "./src/handlers/chat.js";
+-import {
+-  handleCreateGroup,
+-  handleListGroups,
+-  handleJoinGroup,
+-  handleGetGroupDetail,
+-  handleGetGroupChat,
+-  handleSendGroupMessage,
+-  handleLeaveGroup,
+-  handleKickMember,
+-} from "./src/handlers/groups.js";
+ import {
+   handleListCollectives,
+   handleBrowseCollectives,
+@@ -1076,55 +1066,6 @@ export default {
+         return handleEditChatMessage(request, env, origin, chatMsgMatch[1]);
+       }
+ 
+-      // Group analysis (authenticated)
+-      if (url.pathname === "/api/groups" && request.method === "POST") {
+-        return handleCreateGroup(request, env, origin);
+-      }
+-      if (url.pathname === "/api/groups" && request.method === "GET") {
+-        return handleListGroups(request, env, origin);
+-      }
+-      if (url.pathname === "/api/groups/join" && request.method === "POST") {
+-        return handleJoinGroup(request, env, origin);
+-      }
+-
+-      // Group detail + chat routes: /api/groups/:id, /api/groups/:id/chat, etc.
+-      const groupDetailMatch = url.pathname.match(
+-        /^\/api\/groups\/([0-9a-f-]+)$/i,
+-      );
+-      if (groupDetailMatch && request.method === "GET") {
+-        return handleGetGroupDetail(request, env, origin, groupDetailMatch[1]);
+-      }
+-
+-      const groupChatMatch = url.pathname.match(
+-        /^\/api\/groups\/([0-9a-f-]+)\/chat$/i,
+-      );
+-      if (groupChatMatch && request.method === "GET") {
+-        return handleGetGroupChat(request, env, origin, groupChatMatch[1]);
+-      }
+-      if (groupChatMatch && request.method === "POST") {
+-        return handleSendGroupMessage(request, env, origin, groupChatMatch[1]);
+-      }
+-
+-      const groupLeaveMatch = url.pathname.match(
+-        /^\/api\/groups\/([0-9a-f-]+)\/leave$/i,
+-      );
+-      if (groupLeaveMatch && request.method === "POST") {
+-        return handleLeaveGroup(request, env, origin, groupLeaveMatch[1]);
+-      }
+-
+-      const groupKickMatch = url.pathname.match(
+-        /^\/api\/groups\/([0-9a-f-]+)\/members\/([0-9a-f-]+)$/i,
+-      );
+-      if (groupKickMatch && request.method === "DELETE") {
+-        return handleKickMember(
+-          request,
+-          env,
+-          origin,
+-          groupKickMatch[1],
+-          groupKickMatch[2],
+-        );
+-      }
+-
+       // ========================================
+       // USER PROFILE (authenticated)
+       // ========================================
+diff --git a/api/src/handlers/groups.js b/api/src/handlers/groups.js
+deleted file mode 100644
+index 43920a0..0000000
+--- a/api/src/handlers/groups.js
++++ /dev/null
+@@ -1,559 +0,0 @@
+-// ============================================================
+-// HANDLER - GROUP ANALYSIS
+-// ============================================================
+-// POST   /api/groups          - Create a group for an analysis
+-// GET    /api/groups          - List user's groups
+-// POST   /api/groups/join     - Join a group by invite code
+-// GET    /api/groups/:id      - Get group detail (analysis + members + chat)
+-// GET    /api/groups/:id/chat - Fetch group chat (paginated)
+-// POST   /api/groups/:id/chat - Send message to group
+-// POST   /api/groups/:id/leave - Leave a group
+-// DELETE /api/groups/:id/members/:userId - Kick a member (owner only)
+-
+-import { jsonResponse, sanitizeMessage } from '../utils/index.js';
+-import { getSupabaseForUser, addRefreshedCookieToResponse } from '../utils/supabase-user.js';
+-import { checkRateLimit } from '../rate-limit/index.js';
+-
+-const MAX_MESSAGE_LENGTH = 500;
+-const MAX_GROUP_NAME_LENGTH = 100;
+-const INVITE_CODE_LENGTH = 6;
+-const PAGE_SIZE = 50;
+-const URL_PATTERN =
+-    /https?:\/\/|www\.|[a-z0-9-]+\.(com|org|net|io|co|xyz|me|app|dev|gg|tv|info|biz|link)/i;
+-const UUID_RE =
+-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+-
+-/**
+- * Generate a random invite code (A-Z, 0-9)
+- */
+-function generateInviteCode() {
+-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+-    const array = new Uint8Array(INVITE_CODE_LENGTH);
+-    crypto.getRandomValues(array);
+-    return Array.from(array, (byte) => chars[byte % chars.length]).join('');
+-}
+-
+-/**
+- * POST /api/groups - Create a group for an analysis
+- * Body: { analysisId: string, name: string }
+- */
+-export async function handleCreateGroup(request, env, origin) {
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, email, setCookieHeader } = auth;
+-    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+-    const rateLimitOk = await checkRateLimit(env, `group-create:${userId}:${ip}`, true);
+-    if (!rateLimitOk) {
+-        return jsonResponse({ error: 'Too many requests' }, 429, origin, env);
+-    }
+-
+-    try {
+-        const body = await request.json();
+-        const { analysisId, name } = body;
+-
+-        if (!analysisId) {
+-            return jsonResponse({ error: 'analysisId is required' }, 400, origin, env);
+-        }
+-
+-        const groupName = (name || '').trim();
+-        if (!groupName || groupName.length > MAX_GROUP_NAME_LENGTH) {
+-            return jsonResponse({ error: 'Group name is required (max 100 chars)' }, 400, origin, env);
+-        }
+-
+-        // Generate invite code (retry on collision)
+-        let inviteCode;
+-        let attempts = 0;
+-        const maxAttempts = 5;
+-
+-        while (attempts < maxAttempts) {
+-            attempts++;
+-            inviteCode = generateInviteCode();
+-
+-            const { data: group, error } = await supabase
+-                .from('analysis_groups')
+-                .insert({
+-                    analysis_id: analysisId,
+-                    owner_id: userId,
+-                    name: groupName,
+-                    invite_code: inviteCode,
+-                })
+-                .select('id, name, invite_code, invite_expires_at, created_at')
+-                .single();
+-
+-            if (error) {
+-                if (error.code === '23505' && error.message.includes('invite_code')) {
+-                    console.log(`[Groups] Invite code collision on attempt ${attempts}, retrying...`);
+-                    continue;
+-                }
+-                console.error('[Groups] Failed to create group:', error.message);
+-                return jsonResponse({ error: 'Failed to create group' }, 500, origin, env);
+-            }
+-
+-            // Add owner as member
+-            const displayName = email ? email.split('@')[0] : 'Anonymous';
+-            await supabase
+-                .from('group_members')
+-                .insert({
+-                    group_id: group.id,
+-                    user_id: userId,
+-                    role: 'owner',
+-                    display_name: displayName,
+-                });
+-
+-            console.log(`[Groups] Created group "${groupName}" (${inviteCode}) for analysis ${analysisId}`);
+-
+-            let response = jsonResponse({ success: true, group }, 201, origin, env);
+-            return addRefreshedCookieToResponse(response, setCookieHeader);
+-        }
+-
+-        return jsonResponse({ error: 'Failed to generate invite code' }, 500, origin, env);
+-    } catch (err) {
+-        console.error('[Groups] Create exception:', err.message);
+-        return jsonResponse({ error: 'Failed to create group' }, 500, origin, env);
+-    }
+-}
+-
+-/**
+- * GET /api/groups - List user's groups
+- */
+-export async function handleListGroups(request, env, origin) {
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, setCookieHeader } = auth;
+-
+-    try {
+-        // Get group IDs user belongs to
+-        const { data: memberships, error: memberError } = await supabase
+-            .from('group_members')
+-            .select('group_id')
+-            .eq('user_id', userId);
+-
+-        if (memberError) {
+-            console.error('[Groups] Failed to fetch memberships:', memberError.message);
+-            return jsonResponse({ error: 'Failed to load groups' }, 500, origin, env);
+-        }
+-
+-        const groupIds = (memberships || []).map((m) => m.group_id);
+-
+-        if (groupIds.length === 0) {
+-            let response = jsonResponse({ groups: [] }, 200, origin, env);
+-            return addRefreshedCookieToResponse(response, setCookieHeader);
+-        }
+-
+-        const { data: groups, error: groupError } = await supabase
+-            .from('analysis_groups')
+-            .select('id, name, invite_code, invite_expires_at, owner_id, analysis_id, created_at')
+-            .in('id', groupIds)
+-            .order('created_at', { ascending: false });
+-
+-        if (groupError) {
+-            console.error('[Groups] Failed to fetch groups:', groupError.message);
+-            return jsonResponse({ error: 'Failed to load groups' }, 500, origin, env);
+-        }
+-
+-        let response = jsonResponse({ groups: groups || [] }, 200, origin, env);
+-        return addRefreshedCookieToResponse(response, setCookieHeader);
+-    } catch (err) {
+-        console.error('[Groups] List exception:', err.message);
+-        return jsonResponse({ error: 'Failed to load groups' }, 500, origin, env);
+-    }
+-}
+-
+-/**
+- * POST /api/groups/join - Join a group by invite code
+- * Body: { code: string }
+- */
+-export async function handleJoinGroup(request, env, origin) {
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, email, setCookieHeader } = auth;
+-
+-    try {
+-        const body = await request.json();
+-        const code = (body.code || '').trim().toUpperCase();
+-
+-        if (!code || code.length !== INVITE_CODE_LENGTH) {
+-            return jsonResponse({ error: 'Invalid invite code' }, 400, origin, env);
+-        }
+-
+-        // Find group by invite code
+-        const { data: group, error: groupError } = await supabase
+-            .from('analysis_groups')
+-            .select('id, name, invite_code, invite_expires_at, owner_id')
+-            .eq('invite_code', code)
+-            .single();
+-
+-        if (groupError || !group) {
+-            return jsonResponse({ error: 'Invalid invite code' }, 404, origin, env);
+-        }
+-
+-        // Check if invite has expired
+-        if (group.invite_expires_at && new Date(group.invite_expires_at) < new Date()) {
+-            return jsonResponse({ error: 'This invite code has expired' }, 410, origin, env);
+-        }
+-
+-        // Check if already a member
+-        const { data: existing } = await supabase
+-            .from('group_members')
+-            .select('id')
+-            .eq('group_id', group.id)
+-            .eq('user_id', userId)
+-            .single();
+-
+-        if (existing) {
+-            return jsonResponse({ success: true, group, alreadyMember: true }, 200, origin, env);
+-        }
+-
+-        // Add as member
+-        const displayName = email ? email.split('@')[0] : 'Anonymous';
+-        const { error: insertError } = await supabase
+-            .from('group_members')
+-            .insert({
+-                group_id: group.id,
+-                user_id: userId,
+-                role: 'member',
+-                display_name: displayName,
+-            });
+-
+-        if (insertError) {
+-            console.error('[Groups] Failed to join group:', insertError.message);
+-            return jsonResponse({ error: 'Failed to join group' }, 500, origin, env);
+-        }
+-
+-        console.log(`[Groups] User ${userId} joined group ${group.id} via code ${code}`);
+-
+-        let response = jsonResponse({ success: true, group, alreadyMember: false }, 200, origin, env);
+-        return addRefreshedCookieToResponse(response, setCookieHeader);
+-    } catch (err) {
+-        console.error('[Groups] Join exception:', err.message);
+-        return jsonResponse({ error: 'Failed to join group' }, 500, origin, env);
+-    }
+-}
+-
+-/**
+- * GET /api/groups/:id - Get group detail
+- * Returns group info, analysis, members, and recent chat
+- */
+-export async function handleGetGroupDetail(request, env, origin, groupId) {
+-    // SECURITY: Validate groupId as UUID
+-    if (!UUID_RE.test(groupId)) {
+-        return jsonResponse({ error: 'Invalid group ID' }, 400, origin, env);
+-    }
+-
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, setCookieHeader } = auth;
+-
+-    try {
+-        // Verify membership
+-        const { data: membership } = await supabase
+-            .from('group_members')
+-            .select('id, role')
+-            .eq('group_id', groupId)
+-            .eq('user_id', userId)
+-            .single();
+-
+-        if (!membership) {
+-            return jsonResponse({ error: 'You are not a member of this group' }, 403, origin, env);
+-        }
+-
+-        // Fetch group info
+-        const { data: group, error: groupError } = await supabase
+-            .from('analysis_groups')
+-            .select('id, name, invite_code, invite_expires_at, owner_id, analysis_id, created_at')
+-            .eq('id', groupId)
+-            .single();
+-
+-        if (groupError || !group) {
+-            return jsonResponse({ error: 'Group not found' }, 404, origin, env);
+-        }
+-
+-        // Fetch members
+-        const { data: members } = await supabase
+-            .from('group_members')
+-            .select('id, user_id, display_name, role, joined_at')
+-            .eq('group_id', groupId)
+-            .order('joined_at', { ascending: true });
+-
+-        // Fetch recent group chat messages
+-        const { data: messages } = await supabase
+-            .from('group_chat_messages')
+-            .select('id, user_id, display_name, message, created_at')
+-            .eq('group_id', groupId)
+-            .order('created_at', { ascending: false })
+-            .limit(PAGE_SIZE);
+-
+-        // Fetch the analysis
+-        const { data: analysis } = await supabase
+-            .from('analyses')
+-            .select('*, songs(title, artist, spotify_id)')
+-            .eq('id', group.analysis_id)
+-            .single();
+-
+-        // Flatten song data if present
+-        let enrichedAnalysis = null;
+-        if (analysis) {
+-            const songData = analysis.songs;
+-            enrichedAnalysis = {
+-                ...analysis,
+-                song: songData?.title,
+-                song_name: songData?.title,
+-                artist: songData?.artist || analysis.artist,
+-                spotify_id: songData?.spotify_id || analysis.spotify_id,
+-            };
+-            delete enrichedAnalysis.songs;
+-        }
+-
+-        let response = jsonResponse({
+-            group,
+-            analysis: enrichedAnalysis,
+-            members: members || [],
+-            messages: (messages || []).reverse(), // Oldest first for display
+-            userRole: membership.role,
+-        }, 200, origin, env);
+-        return addRefreshedCookieToResponse(response, setCookieHeader);
+-    } catch (err) {
+-        console.error('[Groups] Detail exception:', err.message);
+-        return jsonResponse({ error: 'Failed to load group' }, 500, origin, env);
+-    }
+-}
+-
+-/**
+- * GET /api/groups/:id/chat - Fetch group chat messages (paginated)
+- */
+-export async function handleGetGroupChat(request, env, origin, groupId) {
+-    // SECURITY: Validate groupId as UUID
+-    if (!UUID_RE.test(groupId)) {
+-        return jsonResponse({ error: 'Invalid group ID' }, 400, origin, env);
+-    }
+-
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, setCookieHeader } = auth;
+-    const url = new URL(request.url);
+-    const before = url.searchParams.get('before');
+-
+-    try {
+-        // Verify membership
+-        const { data: membership } = await supabase
+-            .from('group_members')
+-            .select('id')
+-            .eq('group_id', groupId)
+-            .eq('user_id', userId)
+-            .single();
+-
+-        if (!membership) {
+-            return jsonResponse({ error: 'You are not a member of this group' }, 403, origin, env);
+-        }
+-
+-        let query = supabase
+-            .from('group_chat_messages')
+-            .select('id, user_id, display_name, message, created_at')
+-            .eq('group_id', groupId)
+-            .order('created_at', { ascending: false })
+-            .limit(PAGE_SIZE);
+-
+-        if (before) {
+-            const ISO_TIMESTAMP_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+-            if (!ISO_TIMESTAMP_RE.test(before)) {
+-                return jsonResponse({ error: 'Invalid cursor format' }, 400, origin, env);
+-            }
+-            query = query.lt('created_at', before);
+-        }
+-
+-        const { data, error } = await query;
+-
+-        if (error) {
+-            console.error('[Groups] Failed to fetch chat:', error.message);
+-            return jsonResponse({ error: 'Failed to load messages' }, 500, origin, env);
+-        }
+-
+-        let response = jsonResponse({ messages: data || [] }, 200, origin, env);
+-        return addRefreshedCookieToResponse(response, setCookieHeader);
+-    } catch (err) {
+-        console.error('[Groups] Chat fetch exception:', err.message);
+-        return jsonResponse({ error: 'Failed to load messages' }, 500, origin, env);
+-    }
+-}
+-
+-/**
+- * POST /api/groups/:id/chat - Send message to group chat
+- * Body: { message: string }
+- */
+-export async function handleSendGroupMessage(request, env, origin, groupId) {
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, email, setCookieHeader } = auth;
+-
+-    // Rate limit
+-    const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+-    const rateLimitOk = await checkRateLimit(env, `groupchat:${userId}:${ip}`, true);
+-    if (!rateLimitOk) {
+-        return jsonResponse({ error: 'Too many messages. Please slow down.' }, 429, origin, env);
+-    }
+-
+-    try {
+-        // Verify membership
+-        const { data: membership } = await supabase
+-            .from('group_members')
+-            .select('id')
+-            .eq('group_id', groupId)
+-            .eq('user_id', userId)
+-            .single();
+-
+-        if (!membership) {
+-            return jsonResponse({ error: 'You are not a member of this group' }, 403, origin, env);
+-        }
+-
+-        const body = await request.json();
+-        const message = sanitizeMessage((body.message || '').trim());
+-
+-        if (!message || message.length === 0) {
+-            return jsonResponse({ error: 'Message cannot be empty' }, 400, origin, env);
+-        }
+-
+-        if (message.length > MAX_MESSAGE_LENGTH) {
+-            return jsonResponse({ error: `Message too long (max ${MAX_MESSAGE_LENGTH} chars)` }, 400, origin, env);
+-        }
+-
+-        // SECURITY: Block URLs in group chat (consistent with global chat)
+-        if (URL_PATTERN.test(message)) {
+-            return jsonResponse({ error: 'Links are not allowed in group chat.' }, 400, origin, env);
+-        }
+-
+-        const displayName = email ? email.split('@')[0] : 'Anonymous';
+-
+-        const { data, error } = await supabase
+-            .from('group_chat_messages')
+-            .insert({
+-                group_id: groupId,
+-                user_id: userId,
+-                display_name: displayName,
+-                message: message,
+-            })
+-            .select('id, user_id, display_name, message, created_at')
+-            .single();
+-
+-        if (error) {
+-            console.error('[Groups] Failed to send message:', error.message);
+-            return jsonResponse({ error: 'Failed to send message' }, 500, origin, env);
+-        }
+-
+-        let response = jsonResponse({ success: true, message: data }, 201, origin, env);
+-        return addRefreshedCookieToResponse(response, setCookieHeader);
+-    } catch (err) {
+-        console.error('[Groups] Send exception:', err.message);
+-        return jsonResponse({ error: 'Failed to send message' }, 500, origin, env);
+-    }
+-}
+-
+-/**
+- * POST /api/groups/:id/leave - Leave a group
+- */
+-export async function handleLeaveGroup(request, env, origin, groupId) {
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, setCookieHeader } = auth;
+-
+-    try {
+-        // Check if user is the owner
+-        const { data: group } = await supabase
+-            .from('analysis_groups')
+-            .select('owner_id')
+-            .eq('id', groupId)
+-            .single();
+-
+-        if (group && group.owner_id === userId) {
+-            return jsonResponse({ error: 'Group owner cannot leave. Delete the group instead.' }, 400, origin, env);
+-        }
+-
+-        const { error } = await supabase
+-            .from('group_members')
+-            .delete()
+-            .eq('group_id', groupId)
+-            .eq('user_id', userId);
+-
+-        if (error) {
+-            console.error('[Groups] Failed to leave group:', error.message);
+-            return jsonResponse({ error: 'Failed to leave group' }, 500, origin, env);
+-        }
+-
+-        console.log(`[Groups] User ${userId} left group ${groupId}`);
+-
+-        let response = jsonResponse({ success: true }, 200, origin, env);
+-        return addRefreshedCookieToResponse(response, setCookieHeader);
+-    } catch (err) {
+-        console.error('[Groups] Leave exception:', err.message);
+-        return jsonResponse({ error: 'Failed to leave group' }, 500, origin, env);
+-    }
+-}
+-
+-/**
+- * DELETE /api/groups/:id/members/:memberId - Kick a member (owner only)
+- */
+-export async function handleKickMember(request, env, origin, groupId, memberUserId) {
+-    const auth = await getSupabaseForUser(request, env);
+-    if (!auth) {
+-        return jsonResponse({ error: 'Unauthorized' }, 401, origin, env);
+-    }
+-
+-    const { client: supabase, userId, setCookieHeader } = auth;
+-
+-    try {
+-        // Verify caller is the owner
+-        const { data: group } = await supabase
+-            .from('analysis_groups')
+-            .select('owner_id')
+-            .eq('id', groupId)
+-            .single();
+-
+-        if (!group || group.owner_id !== userId) {
+-            return jsonResponse({ error: 'Only the group owner can kick members' }, 403, origin, env);
+-        }
+-
+-        // Cannot kick yourself
+-        if (memberUserId === userId) {
+-            return jsonResponse({ error: 'Cannot kick yourself' }, 400, origin, env);
+-        }
+-
+-        const { error } = await supabase
+-            .from('group_members')
+-            .delete()
+-            .eq('group_id', groupId)
+-            .eq('user_id', memberUserId);
+-
+-        if (error) {
+-            console.error('[Groups] Failed to kick member:', error.message);
+-            return jsonResponse({ error: 'Failed to kick member' }, 500, origin, env);
+-        }
+-
+-        console.log(`[Groups] Owner ${userId} kicked ${memberUserId} from group ${groupId}`);
+-
+-        let response = jsonResponse({ success: true }, 200, origin, env);
+-        return addRefreshedCookieToResponse(response, setCookieHeader);
+-    } catch (err) {
+-        console.error('[Groups] Kick exception:', err.message);
+-        return jsonResponse({ error: 'Failed to kick member' }, 500, origin, env);
+-    }
+-}
+diff --git a/site/src/hooks/index.js b/site/src/hooks/index.js
+index 9c57388..8aa3d86 100644
+--- a/site/src/hooks/index.js
++++ b/site/src/hooks/index.js
+@@ -11,7 +11,6 @@ export { useTransactions } from './useTransactions.js';
+ export { useAnalysisHistory } from './useAnalysisHistory.js';
+ export { useAccountHistory } from './useAccountHistory.js';
+ export { useChat } from './useChat.js';
+-export { useCollective } from './useCollective.js';
+ export { useColloquium } from './useColloquium.js';
+ export { useCommunity } from './useCommunity.js';
+ export { useCrypto } from './useCrypto.js';
+diff --git a/site/src/hooks/useCollective.js b/site/src/hooks/useCollective.js
+deleted file mode 100644
+index 07419fe..0000000
+--- a/site/src/hooks/useCollective.js
++++ /dev/null
+@@ -1,202 +0,0 @@
+-// ============================================================
+-// useCollective Hook - Collective Detail with Supabase Realtime
+-// ============================================================
+-// Uses shared Realtime client singleton for instant message/member updates.
+-// Token management handled by useAuth + realtime.js centrally.
+-
+-import { useState, useEffect, useCallback, useRef } from 'react';
+-import { collectiveService } from '../services/api/collective.js';
+-import { useAuth } from './useAuth.js';
+-import { getRealtimeClient, waitForAuth } from '../services/realtime.js';
+-
+-export function useCollective(groupId) {
+-  const { user, isAuthenticated } = useAuth();
+-  const [group, setGroup] = useState(null);
+-  const [members, setMembers] = useState([]);
+-  const [messages, setMessages] = useState([]);
+-  const [userRole, setUserRole] = useState(null);
+-  const [loading, setLoading] = useState(false);
+-  const [error, setError] = useState(null);
+-  const [sending, setSending] = useState(false);
+-  const [hasMore, setHasMore] = useState(true);
+-  const chatChannelRef = useRef(null);
+-  const clientRef = useRef(null);
+-  const initedRef = useRef(false);
+-
+-  // Initialize Realtime broadcast subscriptions (private, authenticated)
+-  // waitForAuth() gates on token. Token refresh handled by setRealtimeAuth().
+-  useEffect(() => {
+-    if (!isAuthenticated || !groupId) return;
+-    if (initedRef.current) return;
+-
+-    let cancelled = false;
+-    initedRef.current = true;
+-
+-    async function initRealtime() {
+-      try {
+-        await waitForAuth(); // Ensure token is set before subscribing to private channel
+-        if (cancelled) return;
+-
+-        const sb = await getRealtimeClient();
+-        if (cancelled) return;
+-        clientRef.current = sb;
+-
+-        // Single channel for both messages and member changes (private)
+-        const channel = sb
+-          .channel(`collective:${groupId}`, { config: { private: true } })
+-          .on('broadcast', { event: 'new-message' }, ({ payload }) => {
+-            setMessages((prev) => {
+-              if (prev.some((m) => m.id === payload.id)) return prev;
+-              return [...prev, payload];
+-            });
+-          })
+-          .on('broadcast', { event: 'member-joined' }, ({ payload }) => {
+-            setMembers((prev) => {
+-              if (prev.some((m) => m.id === payload.id)) return prev;
+-              return [...prev, payload];
+-            });
+-          })
+-          .on('broadcast', { event: 'member-left' }, ({ payload }) => {
+-            setMembers((prev) => prev.filter((m) => m.id !== payload.id));
+-          })
+-          .on('broadcast', { event: 'comment-deleted' }, ({ payload }) => {
+-            console.log('[useCollective] Comment deleted broadcast:', payload?.id);
+-            setMessages((prev) => prev.filter((m) => m.id !== payload.id));
+-          })
+-          .subscribe((status, err) => {
+-            console.log(
+-              '[useCollective] Subscription status:',
+-              status,
+-              err ? `error: ${err.message}` : ''
+-            );
+-          });
+-
+-        chatChannelRef.current = channel;
+-      } catch (err) {
+-        console.error('[useCollective] Realtime init error:', err);
+-        initedRef.current = false;
+-      }
+-    }
+-
+-    initRealtime();
+-
+-    return () => {
+-      cancelled = true;
+-      if (chatChannelRef.current && clientRef.current) {
+-        clientRef.current.removeChannel(chatChannelRef.current);
+-      }
+-      chatChannelRef.current = null;
+-      initedRef.current = false;
+-    };
+-  }, [isAuthenticated, groupId]);
+-
+-  // Load group detail
+-  const loadDetail = useCallback(async () => {
+-    if (!isAuthenticated || !groupId) return;
+-    setLoading(true);
+-    setError(null);
+-
+-    try {
+-      const data = await collectiveService.getCollectiveDetail(groupId);
+-      setGroup(data.group);
+-      setMembers(data.members || []);
+-      setMessages(data.messages || []);
+-      setUserRole(data.userRole);
+-      setHasMore((data.messages || []).length >= 50);
+-    } catch (err) {
+-      setError(err.message);
+-    } finally {
+-      setLoading(false);
+-    }
+-  }, [isAuthenticated, groupId]);
+-
+-  // Load older messages
+-  const loadMore = useCallback(async () => {
+-    if (!hasMore || loading || messages.length === 0) return;
+-
+-    const oldestTimestamp = messages[0]?.created_at;
+-    if (!oldestTimestamp) return;
+-
+-    setLoading(true);
+-    try {
+-      const { messages: older } = await collectiveService.getCollectiveChat(
+-        groupId,
+-        oldestTimestamp
+-      );
+-      const reversed = (older || []).reverse();
+-      setMessages((prev) => [...reversed, ...prev]);
+-      setHasMore((older || []).length >= 50);
+-    } catch (err) {
+-      setError(err.message);
+-    } finally {
+-      setLoading(false);
+-    }
+-  }, [hasMore, loading, messages, groupId]);
+-
+-  // Send message
+-  const sendMessage = useCallback(
+-    async (text, analysisId) => {
+-      if (!isAuthenticated || sending) return;
+-      setSending(true);
+-      setError(null);
+-
+-      try {
+-        await collectiveService.sendCollectiveMessage(groupId, text, analysisId);
+-      } catch (err) {
+-        setError(err.message);
+-        throw err;
+-      } finally {
+-        setSending(false);
+-      }
+-    },
+-    [isAuthenticated, sending, groupId]
+-  );
+-
+-  // Leave group
+-  const leaveGroup = useCallback(async () => {
+-    try {
+-      await collectiveService.leaveCollective(groupId);
+-    } catch (err) {
+-      setError(err.message);
+-      throw err;
+-    }
+-  }, [groupId]);
+-
+-  // Kick member
+-  const kickMember = useCallback(
+-    async (targetUserId) => {
+-      try {
+-        await collectiveService.kickMember(groupId, targetUserId);
+-      } catch (err) {
+-        setError(err.message);
+-        throw err;
+-      }
+-    },
+-    [groupId]
+-  );
+-
+-  // Auto-load on mount
+-  useEffect(() => {
+-    if (isAuthenticated && groupId) {
+-      loadDetail();
+-    }
+-  }, [isAuthenticated, groupId, loadDetail]);
+-
+-  return {
+-    group,
+-    members,
+-    messages,
+-    userRole,
+-    loading,
+-    error,
+-    sending,
+-    hasMore,
+-    sendMessage,
+-    loadMore,
+-    leaveGroup,
+-    kickMember,
+-    userId: user?.id,
+-  };
+-}
+-
+-export default useCollective;
+diff --git a/site/src/services/api/groups.js b/site/src/services/api/groups.js
+deleted file mode 100644
+index e7d505e..0000000
+--- a/site/src/services/api/groups.js
++++ /dev/null
+@@ -1,196 +0,0 @@
+-// ============================================================
+-// GROUPS SERVICE
+-// ============================================================
+-// API calls for group analysis functionality.
+-//
+-// Usage:
+-//   import { groupsService } from '@/services/api/groups';
+-//   await groupsService.createGroup(analysisId, 'My Group');
+-//   await groupsService.joinGroup('PH3K9X');
+-
+-import { config } from '@/config';
+-
+-const API_BASE = `${config.apiUrl}/api`;
+-
+-/**
+- * Create a group for an analysis
+- * @param {string} analysisId - UUID of the analysis
+- * @param {string} name - Group name
+- */
+-async function createGroup(analysisId, name) {
+-  const response = await fetch(`${API_BASE}/groups`, {
+-    method: 'POST',
+-    headers: { 'Content-Type': 'application/json' },
+-    body: JSON.stringify({ analysisId, name }),
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to create group');
+-  }
+-
+-  return response.json();
+-}
+-
+-/**
+- * List user's groups
+- */
+-async function getMyGroups() {
+-  const response = await fetch(`${API_BASE}/groups`, {
+-    method: 'GET',
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to load groups');
+-  }
+-
+-  return response.json();
+-}
+-
+-/**
+- * Join a group by invite code
+- * @param {string} code - 6-character invite code
+- */
+-async function joinGroup(code) {
+-  const response = await fetch(`${API_BASE}/groups/join`, {
+-    method: 'POST',
+-    headers: { 'Content-Type': 'application/json' },
+-    body: JSON.stringify({ code }),
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to join group');
+-  }
+-
+-  return response.json();
+-}
+-
+-/**
+- * Get group detail (analysis, members, recent chat)
+- * @param {string} groupId - UUID of the group
+- */
+-async function getGroupDetail(groupId) {
+-  const response = await fetch(`${API_BASE}/groups/${groupId}`, {
+-    method: 'GET',
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to load group');
+-  }
+-
+-  return response.json();
+-}
+-
+-/**
+- * Fetch group chat messages (paginated)
+- * @param {string} groupId - UUID of the group
+- * @param {string} [before] - ISO timestamp cursor for pagination
+- */
+-async function getGroupChat(groupId, before) {
+-  const url = new URL(`${API_BASE}/groups/${groupId}/chat`);
+-  if (before) {
+-    url.searchParams.set('before', before);
+-  }
+-
+-  const response = await fetch(url.toString(), {
+-    method: 'GET',
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to load messages');
+-  }
+-
+-  return response.json();
+-}
+-
+-/**
+- * Send a message to a group chat
+- * @param {string} groupId - UUID of the group
+- * @param {string} message - Message text
+- */
+-async function sendGroupMessage(groupId, message) {
+-  const response = await fetch(`${API_BASE}/groups/${groupId}/chat`, {
+-    method: 'POST',
+-    headers: { 'Content-Type': 'application/json' },
+-    body: JSON.stringify({ message }),
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to send message');
+-  }
+-
+-  return response.json();
+-}
+-
+-/**
+- * Leave a group
+- * @param {string} groupId - UUID of the group
+- */
+-async function leaveGroup(groupId) {
+-  const response = await fetch(`${API_BASE}/groups/${groupId}/leave`, {
+-    method: 'POST',
+-    headers: { 'Content-Type': 'application/json' },
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to leave group');
+-  }
+-
+-  return response.json();
+-}
+-
+-/**
+- * Kick a member from a group (owner only)
+- * @param {string} groupId - UUID of the group
+- * @param {string} memberUserId - UUID of the member to kick
+- */
+-async function kickMember(groupId, memberUserId) {
+-  const response = await fetch(`${API_BASE}/groups/${groupId}/members/${memberUserId}`, {
+-    method: 'DELETE',
+-    credentials: 'include',
+-  });
+-
+-  if (!response.ok) {
+-    const data = await response.json().catch(() => ({}));
+-    throw new Error(data.error || 'Failed to kick member');
+-  }
+-
+-  return response.json();
+-}
+-
+-export {
+-  createGroup,
+-  getMyGroups,
+-  joinGroup,
+-  getGroupDetail,
+-  getGroupChat,
+-  sendGroupMessage,
+-  leaveGroup,
+-  kickMember,
+-};
+-
+-export const groupsService = {
+-  createGroup,
+-  getMyGroups,
+-  joinGroup,
+-  getGroupDetail,
+-  getGroupChat,
+-  sendGroupMessage,
+-  leaveGroup,
+-  kickMember,
+-};
+-
+-export default groupsService;
+diff --git a/site/src/services/api/index.js b/site/src/services/api/index.js
+index f32376e..ba3506e 100644
+--- a/site/src/services/api/index.js
++++ b/site/src/services/api/index.js
+@@ -5,5 +5,4 @@ export * from './bookSearch.js';
+ export * from './payment.js';
+ export * from './pricing.js';
+ export * from './chat.js';
+-export * from './groups.js';
+ export * from './crypto.js';

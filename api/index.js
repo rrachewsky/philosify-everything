@@ -114,16 +114,6 @@ import {
   handleEditChatMessage,
 } from "./src/handlers/chat.js";
 import {
-  handleCreateGroup,
-  handleListGroups,
-  handleJoinGroup,
-  handleGetGroupDetail,
-  handleGetGroupChat,
-  handleSendGroupMessage,
-  handleLeaveGroup,
-  handleKickMember,
-} from "./src/handlers/groups.js";
-import {
   handleListCollectives,
   handleBrowseCollectives,
   handleJoinCollective,
@@ -1074,55 +1064,6 @@ export default {
       }
       if (chatMsgMatch && request.method === "PATCH") {
         return handleEditChatMessage(request, env, origin, chatMsgMatch[1]);
-      }
-
-      // Group analysis (authenticated)
-      if (url.pathname === "/api/groups" && request.method === "POST") {
-        return handleCreateGroup(request, env, origin);
-      }
-      if (url.pathname === "/api/groups" && request.method === "GET") {
-        return handleListGroups(request, env, origin);
-      }
-      if (url.pathname === "/api/groups/join" && request.method === "POST") {
-        return handleJoinGroup(request, env, origin);
-      }
-
-      // Group detail + chat routes: /api/groups/:id, /api/groups/:id/chat, etc.
-      const groupDetailMatch = url.pathname.match(
-        /^\/api\/groups\/([0-9a-f-]+)$/i,
-      );
-      if (groupDetailMatch && request.method === "GET") {
-        return handleGetGroupDetail(request, env, origin, groupDetailMatch[1]);
-      }
-
-      const groupChatMatch = url.pathname.match(
-        /^\/api\/groups\/([0-9a-f-]+)\/chat$/i,
-      );
-      if (groupChatMatch && request.method === "GET") {
-        return handleGetGroupChat(request, env, origin, groupChatMatch[1]);
-      }
-      if (groupChatMatch && request.method === "POST") {
-        return handleSendGroupMessage(request, env, origin, groupChatMatch[1]);
-      }
-
-      const groupLeaveMatch = url.pathname.match(
-        /^\/api\/groups\/([0-9a-f-]+)\/leave$/i,
-      );
-      if (groupLeaveMatch && request.method === "POST") {
-        return handleLeaveGroup(request, env, origin, groupLeaveMatch[1]);
-      }
-
-      const groupKickMatch = url.pathname.match(
-        /^\/api\/groups\/([0-9a-f-]+)\/members\/([0-9a-f-]+)$/i,
-      );
-      if (groupKickMatch && request.method === "DELETE") {
-        return handleKickMember(
-          request,
-          env,
-          origin,
-          groupKickMatch[1],
-          groupKickMatch[2],
-        );
       }
 
       // ========================================
