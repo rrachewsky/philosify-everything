@@ -1,7 +1,7 @@
 import { useState, useEffect, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Router } from './Router';
-import { LanguageProvider, CreditsProvider } from './contexts';
+import { LanguageProvider, AuthProvider, CreditsProvider } from './contexts';
 import { ErrorBoundary } from './components/common';
 import { logger } from './utils';
 import { initPWA } from './utils/pwa';
@@ -43,7 +43,8 @@ try {
 }
 
 // App wrapper that initializes i18n and PWA
-// Note: Auth is handled via HttpOnly cookies - no client-side initialization needed
+// Note: Auth is handled via HttpOnly cookies; AuthProvider runs the single
+// session check for the whole tree (CreditsProvider reads it).
 function AppWithInitialization() {
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState(null);
@@ -112,9 +113,11 @@ function AppWithInitialization() {
   return (
     <ErrorBoundary>
       <LanguageProvider>
-        <CreditsProvider>
-          <Router />
-        </CreditsProvider>
+        <AuthProvider>
+          <CreditsProvider>
+            <Router />
+          </CreditsProvider>
+        </AuthProvider>
       </LanguageProvider>
     </ErrorBoundary>
   );
