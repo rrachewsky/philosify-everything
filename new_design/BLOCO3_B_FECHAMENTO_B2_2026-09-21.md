@@ -69,26 +69,43 @@ Não há motivo previsto: o código que as usava saiu em `a9f6e5c`.
 
 ## 5. Pendências
 
-- **Anexos A e B**: a mensagem do Bob trouxe o resumo dos resultados, não as saídas brutas. Os blocos abaixo ficam
-  marcados para colagem; quando o Bob colar, entram neste arquivo em commit próprio.
+- **Anexo B** (passo 3): colado pelo Bob em 22/09, verbatim — preenchido abaixo.
+- **Anexo A** (1-G, DDL de rollback): a mensagem de 22/09 anunciou o arquivo como anexo ("segue anexado como .md"),
+  mas nenhum arquivo chegou na conversa nem apareceu no repo, em Downloads ou no Desktop. Continua **PENDENTE**;
+  entra em commit próprio quando chegar. Sem ele, o rollback estrutural depende do que o Bob guardou no SQL Editor.
 - Fila herdada: contador de comentários ≠ visíveis no Coletivo; `useCinemaSidebar.js:18`; `useDM` 2×; post `09aca247…` da Roberto.
 - Próximo: **Bloco 3(c)** — inventário e espelhos de todos os objetos do banco fora do repo (proposta em `BLOCO3_C_INVENTARIO_BANCO_2026-09-21.md`).
 
 ---
 
-## Anexo A — saída do 1-G (DDL de rollback) — **AGUARDANDO COLAGEM DO BOB**
+## Anexo A — saída do 1-G (DDL de rollback) — **AINDA PENDENTE (22/09)**
 
 > Colar aqui, integral, a saída dos dois SELECTs do bloco 1-G (policies / índices / constraints / publicações,
 > e a lista de colunas das três tabelas), exatamente como o SQL Editor devolveu.
+> 22/09: o Bob anunciou o arquivo `.md` como anexo, mas ele não chegou. Nada foi inventado aqui.
 
 ```
 [PENDENTE — colar a saída do 1-G]
 ```
 
-## Anexo B — saída do passo 3 — **AGUARDANDO COLAGEM DO BOB**
+## Anexo B — saída do passo 3 — colada pelo Bob em 22/09 (verbatim)
 
-> Colar aqui a saída dos blocos 3-A, 3-B, 3-C e 3-D (as duas queries), como o SQL Editor devolveu.
+Saída consolidada dos blocos 3-A, 3-B, 3-C e 3-D, como o Bob a trouxe (ordem alfabética do SQL Editor):
 
 ```
-[PENDENTE — colar a saída do passo 3]
+| check_                                                   | resultado |
+| funcao_orfa_restante                                     | 0         |
+| policies_orfas                                           | 0         |
+| tabelas_restantes                                        | 0         |
+| trigger_viva_archive_collective_comment_trigger          | ok        |
+| trigger_viva_broadcast_collective_comment_delete_trigger | ok        |
+| trigger_viva_broadcast_collective_comment_trigger        | ok        |
+| trigger_viva_broadcast_collective_member_trigger         | ok        |
+| vivo_collective_analyses                                 | 43        |
+| vivo_collective_comments                                 | 1         |
+| vivo_collective_groups                                   | 37        |
+| vivo_collective_members                                  | 17        |
 ```
+
+Leitura: `tabelas_restantes` 0 (3-A), `funcao_orfa_restante` 0 (3-B), `policies_orfas` 0 (3-C); vivo 37 / 17 / 43 / 1
+idêntico à linha de base 1-H; as 4 triggers de `collective_*` presentes (3-D). Bate linha a linha com a §3.
