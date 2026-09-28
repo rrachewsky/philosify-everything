@@ -1,3 +1,4 @@
+-- Conferido contra o dump de 22/09/2026 (Bloco 3(c), I-1b): corpo vivo IDENTICO a este arquivo (modulo whitespace).
 -- Mirror of the live Supabase function. Applied 21 Aug 2026 via
 -- migrations/confirm_reservation_cast_fix.sql (Roberto, SQL Editor:
 -- "Success"). Previous body (extracted same day) assigned the TEXT

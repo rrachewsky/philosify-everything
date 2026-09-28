@@ -1,3 +1,4 @@
+-- Conferido contra o dump de 22/09/2026 (Bloco 3(c), I-1b): corpo vivo IDENTICO a este arquivo (modulo whitespace).
 -- Extracted from live Supabase via pg_get_functiondef (db/extract_credit_functions.sql), 21 Aug 2026.
 -- The database is the executing copy; this file exists so the repo is no longer blind to it.
 

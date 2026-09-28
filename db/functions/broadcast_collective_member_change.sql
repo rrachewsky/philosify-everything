@@ -1,3 +1,4 @@
+-- Conferido contra o dump de 22/09/2026 (Bloco 3(c), I-1b): corpo vivo IDENTICO a este arquivo (modulo whitespace).
 -- Espelho de produção 16/09/2026 — origem não versionada (trigger criada fora do repo).
 -- Fonte: dump A/B do Bob (pg_get_functiondef + pg_get_triggerdef), new_design/DUMPS_AB_TRIGGER_MEMBER_JOINED_2026-09-16.md
 -- NÃO reaplicar; documentação. Eventos 'member-joined' / 'member-left' em 'collective:<group_id>'.

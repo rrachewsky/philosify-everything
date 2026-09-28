@@ -183,6 +183,11 @@ test-*.ps1
 !.dev.vars.example
 !wrangler.toml.example
 
+# Espelhos do banco (db/): nomes de objetos, nunca segredos
+!db/functions/*.sql
+!db/triggers/*.sql
+!db/policies/*.sql
+
 # Underground MODO A source (o padrão amplo *key* acima o pegava por engano)
 !api/src/utils/roomKey.js
 
