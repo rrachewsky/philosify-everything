@@ -379,7 +379,13 @@ function MessageBubble({
           </div>
         ) : (
           <>
-            {message.message}
+            {message.decryptionFailed ? (
+              <span className="dm-message__undecryptable">
+                {t('community.dm.undecryptable')}
+              </span>
+            ) : (
+              message.message
+            )}
             {message.editedAt && (
               <span className="dm-message__edited">{t('community.dm.edited')}</span>
             )}

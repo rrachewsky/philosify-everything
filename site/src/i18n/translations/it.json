@@ -1284,6 +1284,7 @@
       "deleteConversationConfirm": "Eliminare l'intera conversazione con {{name}}? L'azione non può essere annullata.",
       "cancel": "ANNULLA",
       "delete": "ELIMINA",
+      "undecryptable": "Messaggio cifrato per un'altra chiave",
       "copied": "Copiato!",
       "edited": "(modificato)",
       "forwarded": "Inoltrato",

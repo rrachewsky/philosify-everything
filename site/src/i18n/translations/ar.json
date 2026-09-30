@@ -1262,6 +1262,7 @@
       "deleteConversationConfirm": "حذف محادثتك بالكامل مع {{name}}؟ لا يمكن التراجع عن هذا.",
       "cancel": "إلغاء",
       "delete": "حذف",
+      "undecryptable": "رسالة مشفّرة لمفتاح آخر",
       "copied": "تم النسخ!",
       "edited": "(معدل)",
       "forwarded": "مُعاد توجيهه",

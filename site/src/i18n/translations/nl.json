@@ -1369,6 +1369,7 @@
       "deleteConversationConfirm": "Je hele gesprek met {{name}} verwijderen? Dit kan niet ongedaan worden gemaakt.",
       "cancel": "ANNULEREN",
       "delete": "VERWIJDEREN",
+      "undecryptable": "Bericht versleuteld voor een andere sleutel",
       "copied": "Gekopieerd!",
       "edited": "(bewerkt)",
       "forwarded": "Doorgestuurd",

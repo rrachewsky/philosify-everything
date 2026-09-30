@@ -83,20 +83,27 @@ export async function leaveConversation(conversationId) {
 // MESSAGES
 // ============================================================
 
-/** Decrypt a single message if encrypted */
-async function decryptMessageIfNeeded(message) {
+/**
+ * Decrypt a single message if encrypted.
+ * peerIdForOwn: in a direct conversation, the partner's id. My OWN messages were
+ * encrypted with X25519(myPrivate, partnerPublic); decrypting them needs that SAME
+ * partner public key, never mine (senderId === me derives a different secret and
+ * yields '[Unable to decrypt]').
+ */
+async function decryptMessageIfNeeded(message, peerIdForOwn = null) {
   if (!message.isEncrypted || !message.encryptedContent || !message.nonce) {
     return message;
   }
 
   const crypto = await getCryptoService();
+  const pairwisePeerId = message.isMine && peerIdForOwn ? peerIdForOwn : message.senderId;
 
   try {
     // Try pairwise decryption first (for direct conversations)
     const decrypted = await crypto.decryptDM(
       message.encryptedContent,
       message.nonce,
-      message.senderId
+      pairwisePeerId
     );
     if (decrypted) {
       return { ...message, message: decrypted, decrypted: true };
@@ -124,8 +131,11 @@ async function decryptMessageIfNeeded(message) {
   return { ...message, message: '[Unable to decrypt]', decryptionFailed: true };
 }
 
-/** Get messages for a conversation (with decryption) */
-export async function getMessages(conversationId, before) {
+/**
+ * Get messages for a conversation (with decryption).
+ * opts.peerIdForOwn: partner of a direct conversation (to decrypt my own messages).
+ */
+export async function getMessages(conversationId, before, { peerIdForOwn = null } = {}) {
   const params = new URLSearchParams();
   if (before) params.set('before', before);
   const query = params.toString();
@@ -142,13 +152,16 @@ export async function getMessages(conversationId, before) {
   // Preload public keys for senders (for pairwise decryption)
   const crypto = await getCryptoService();
   const senderIds = [...new Set(data.messages?.map((m) => m.senderId).filter(Boolean))];
+  if (peerIdForOwn && !senderIds.includes(peerIdForOwn)) senderIds.push(peerIdForOwn);
   if (senderIds.length > 0) {
     await crypto.preloadPublicKeys(senderIds);
   }
 
   // Decrypt messages
   if (data.messages && data.messages.length > 0) {
-    data.messages = await Promise.all(data.messages.map(decryptMessageIfNeeded));
+    data.messages = await Promise.all(
+      data.messages.map((m) => decryptMessageIfNeeded(m, peerIdForOwn))
+    );
   }
 
   return data;

@@ -1294,6 +1294,7 @@
       "deleteConversationConfirm": "Supprimer toute votre conversation avec {{name}} ? Cette action est irréversible.",
       "cancel": "ANNULER",
       "delete": "SUPPRIMER",
+      "undecryptable": "Message chiffré pour une autre clé",
       "copied": "Copié !",
       "edited": "(modifié)",
       "forwarded": "Transféré",

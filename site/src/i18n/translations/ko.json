@@ -1263,6 +1263,7 @@
       "deleteConversationConfirm": "{{name}}님과의 대화를 모두 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
       "cancel": "취소",
       "delete": "삭제",
+      "undecryptable": "다른 키로 암호화된 메시지",
       "copied": "복사됨!",
       "edited": "(수정됨)",
       "forwarded": "전달됨",

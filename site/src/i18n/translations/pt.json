@@ -1284,6 +1284,7 @@
       "deleteConversationConfirm": "Excluir toda a sua conversa com {{name}}? Isso não pode ser desfeito.",
       "cancel": "CANCELAR",
       "delete": "EXCLUIR",
+      "undecryptable": "Mensagem cifrada para outra chave",
       "copied": "Copiado!",
       "edited": "(editado)",
       "forwarded": "Encaminhado",

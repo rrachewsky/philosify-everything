@@ -478,6 +478,8 @@
 .v2 .dm-message__bubble--analysis{padding:0;border:0;background:none}
 .v2 .dm-message__edited{font:500 8px/1 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;
  color:var(--ink-low);margin-left:6px}
+.v2 .dm-message__undecryptable{font:500 9px/1.6 var(--f-ui);letter-spacing:.12em;
+ text-transform:uppercase;color:var(--ink-low)}
 .v2 .dm-message__time{font:400 9px var(--f-ui);color:var(--ink-low);margin-top:4px;
  font-variant-numeric:tabular-nums}
 .v2 .dm-message__copy-feedback{position:absolute;top:-24px;left:50%;transform:translateX(-50%);

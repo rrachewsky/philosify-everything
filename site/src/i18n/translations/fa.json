@@ -1241,6 +1241,7 @@
       "deleteConversationConfirm": "تمام گفتگوی شما با {{name}} حذف شود؟ این عمل قابل بازگشت نیست.",
       "cancel": "لغو",
       "delete": "حذف",
+      "undecryptable": "پیام برای کلید دیگری رمزگذاری شده است",
       "copied": "کپی شد!",
       "edited": "(ویرایش شده)",
       "forwarded": "ارسال شده",

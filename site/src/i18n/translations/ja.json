@@ -1268,6 +1268,7 @@
       "deleteConversationConfirm": "{{name}}との会話をすべて削除しますか？この操作は元に戻せません。",
       "cancel": "キャンセル",
       "delete": "削除",
+      "undecryptable": "別の鍵で暗号化されたメッセージ",
       "copied": "コピーしました！",
       "edited": "(編集済み)",
       "forwarded": "転送済み",

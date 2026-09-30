@@ -1305,6 +1305,7 @@
       "deleteConversationConfirm": "¿Eliminar toda tu conversación con {{name}}? Esta acción no se puede deshacer.",
       "cancel": "CANCELAR",
       "delete": "ELIMINAR",
+      "undecryptable": "Mensaje cifrado para otra clave",
       "copied": "¡Copiado!",
       "edited": "(editado)",
       "forwarded": "Reenviado",

@@ -1302,6 +1302,7 @@
       "deleteConversationConfirm": "Deine gesamte Unterhaltung mit {{name}} löschen? Dies kann nicht rückgängig gemacht werden.",
       "cancel": "ABBRECHEN",
       "delete": "LÖSCHEN",
+      "undecryptable": "Nachricht für einen anderen Schlüssel verschlüsselt",
       "copied": "Kopiert!",
       "edited": "(bearbeitet)",
       "forwarded": "Weitergeleitet",

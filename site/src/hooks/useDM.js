@@ -65,6 +65,14 @@ export function useDM() {
     }
   }, []);
 
+  // Partner of a direct conversation (null for groups or when members are not loaded).
+  // Needed to decrypt my OWN messages: they were encrypted with the partner's public key.
+  const directPeerId = useCallback(
+    (conv) =>
+      conv?.type === 'direct' ? conv.members?.find((m) => m.id !== user?.id)?.id || null : null,
+    [user?.id]
+  );
+
   // Open conversation by ID
   const openConversation = useCallback(
     async (conversationId) => {
@@ -77,7 +85,9 @@ export function useDM() {
       setActiveConversation(fromList || { id: conversationId });
 
       try {
-        const data = await dmService.getMessages(conversationId);
+        const data = await dmService.getMessages(conversationId, undefined, {
+          peerIdForOwn: directPeerId(fromList),
+        });
         setMessages(data.messages || []);
         setHasMoreMessages((data.messages || []).length >= 50);
 
@@ -98,7 +108,7 @@ export function useDM() {
         setLoadingMessages(false);
       }
     },
-    [conversations]
+    [conversations, directPeerId]
   );
 
   // Load more messages (pagination)
@@ -110,7 +120,9 @@ export function useDM() {
 
     setLoadingMessages(true);
     try {
-      const data = await dmService.getMessages(activeConversation.id, oldestMessage.createdAt);
+      const data = await dmService.getMessages(activeConversation.id, oldestMessage.createdAt, {
+        peerIdForOwn: directPeerId(activeConversation),
+      });
       const newMessages = data.messages || [];
       setMessages((prev) => [...newMessages, ...prev]);
       setHasMoreMessages(newMessages.length >= 50);
@@ -119,7 +131,7 @@ export function useDM() {
     } finally {
       setLoadingMessages(false);
     }
-  }, [activeConversation, loadingMessages, messages]);
+  }, [activeConversation, loadingMessages, messages, directPeerId]);
 
   // Send a message (with optional reply)
   const sendMessage = useCallback(
@@ -151,6 +163,9 @@ export function useDM() {
         if (data.message) {
           const messageWithReplyPreview = {
             ...data.message,
+            // The worker never returns plaintext for an encrypted row (message: null);
+            // the sender already has the text just typed.
+            message: data.message.isEncrypted ? text.trim() : data.message.message,
             replyPreview: replyingTo
               ? {
                   id: replyingTo.id,
@@ -319,7 +334,9 @@ export function useDM() {
         setActiveConversation(conv);
 
         // Load messages for this conversation
-        const msgData = await dmService.getMessages(conv.id);
+        const msgData = await dmService.getMessages(conv.id, undefined, {
+          peerIdForOwn: directPeerId(conv),
+        });
         const existingMessages = msgData.messages || [];
         setMessages(existingMessages);
         setHasMoreMessages(existingMessages.length >= 50);
@@ -365,7 +382,7 @@ export function useDM() {
         setLoadingMessages(false);
       }
     },
-    [user?.id]
+    [user?.id, directPeerId]
   );
 
   // Create a new group conversation

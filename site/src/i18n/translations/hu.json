@@ -1369,6 +1369,7 @@
       "deleteConversationConfirm": "Törlöd a teljes beszélgetést {{name}} felhasználóval? Ez a művelet nem vonható vissza.",
       "cancel": "MÉGSE",
       "delete": "TÖRLÉS",
+      "undecryptable": "Az üzenet másik kulccsal van titkosítva",
       "copied": "Másolva!",
       "edited": "(szerkesztve)",
       "forwarded": "Továbbítva",
