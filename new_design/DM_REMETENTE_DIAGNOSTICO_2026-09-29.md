@@ -314,3 +314,5 @@ Aba nova em `philosify.org/community?tab=messages`, sessão do Bob (bob@bobrach.
 **Veredito:** o elo era a aba com bundle anterior (prints às 12:59/13:00, deploy aterrissando às 12:59). Com o bundle novo, a leitura das próprias mensagens está resolvida, histórico incluído. Falta só o Bob exercitar o **envio** (edição 2) pela aba aberta: enviar uma mensagem e ver o balão preenchido na hora, depois F5. Não enviei mensagem em nome do Bob.
 
 **Teste 2 do Bob (13:1x): "working".** Envio novo com balão preenchido na hora e leitura própria após F5, nas duas direções. Ciclo fechado; commit abaixo.
+
+**Smoke do Bob após o deploy:** Underground funcionando normalmente no bundle novo (`ef6b8fc4`). Nenhuma regressão fora do DM.

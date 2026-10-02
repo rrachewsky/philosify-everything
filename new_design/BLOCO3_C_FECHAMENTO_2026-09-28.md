@@ -94,3 +94,24 @@ Sem resposta, não commito.
 ## 7. OK do Bob (28/09/2026)
 
 Aprovado o commit com as três decisões: os 3 `.LIVE_2026-09-22.sql` entram; os md de status e vereditos entram; `.gitignore` recebe a negação para `db/` (adianta parte do 3(d), revisão completa segue na fila). Parecer do supervisor sobre o I-4 registrado em `db/INVENTARIO_2026-09-22.md` § I-4.
+
+## 8. Execução (28/09/2026)
+
+| Passo | Resultado |
+|---|---|
+| `.gitignore` | negação `!db/functions/*.sql`, `!db/triggers/*.sql`, `!db/policies/*.sql` após `!wrangler.toml.example` (arquivo é CRLF; mantido) |
+| Parecer do supervisor | registrado em `db/INVENTARIO_2026-09-22.md` § I-4, antes do commit |
+| Stage | 161 novos + 4 modificados (3 espelhos carimbados + `.gitignore`); os 7 arquivos de chave/token incluídos |
+| Commit | `b9b35c0` · `db: espelhos de funcoes, triggers e policies (inventario de 22/09)` · autor Bob Rach · sem autoria de IA |
+| Push | `9e810d9..b9b35c0 redesign/v2 -> origin/redesign/v2`; o branch não tinha upstream e passou a rastrear `origin/redesign/v2` |
+| `git status` após push | limpo: 0 untracked, 0 modificados, local = remoto |
+
+**Estado do 3(c):** encerrado. Nada mais pendente deste bloco.
+
+**Fica para depois, fora do bloco, cada item com OK próprio:**
+
+1. Fila de decisão, 13 itens, em `db/INVENTARIO_2026-09-22.md` § I-4. Gravidade alta: divergência das duas funções de cleanup (repo × banco, 25/08); INSERT contornável em `direct_messages`; bucket `tts-audio` escrevível por `public` (confirmar GRANTs).
+2. 3(d): revisão completa do `.gitignore` (as regras `*key*`/`*token*` seguem valendo fora de `db/`).
+3. 3(c)-bis: DDL de tabelas, índices, constraints e `audit.deleted_logs`.
+
+Esta seção foi escrita após o commit e está fora dele; entra no próximo commit de docs quando houver.
