@@ -8,6 +8,7 @@ export { Ticker } from './Ticker.jsx';
 export { BreakingTicker } from './BreakingTicker.jsx';
 export { ModuleHeader, MarkerLine } from './ModuleHeader.jsx';
 export { Telemetry, analysisProgress } from './Telemetry.jsx';
+export { TtsAudioBar } from './TtsAudioBar.jsx';
 export { ModalV2 } from './Modal.jsx';
 export {
   Verdict,

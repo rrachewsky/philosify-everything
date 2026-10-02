@@ -427,3 +427,31 @@ OK do Bob → aplico (1 componente novo, 4 wrappers, CSS compartilhado + 3 remo�
 1. **OK na B** como proposta, ou ajustes: espessura do preenchimento (2 px), cabeça de leitura (sim/não), `expectedMs` da barra estimada (45 s), reticências fora de `audioPreparing`.
 2. Confirmação de que os prints de 30/09 eram do **News** (bate com A1). Se algum print for de música/cinema/literatura com o fio vazio, a medição de console da seção A2 fecha a dúvida antes de eu aplicar.
 3. As 4 chaves novas de news (`pause/play/cancel/seek`) localizadas nos 18 idiomas: no mesmo ciclo ou depois.
+
+---
+
+## Execução (02/10/2026, após o OK consolidado do Bob)
+
+Decisões do Bob: preenchimento 2 px **com** cabeça de leitura; `expectedMs` 45 s; reticências fora de `audioPreparing` nos 18; chaves novas de news localizadas no mesmo ciclo pela terminologia das chaves de música. Prints de 30/09 confirmados como News.
+
+| Passo | Resultado |
+|---|---|
+| Componente | `site/src/components/v2/TtsAudioBar.jsx` novo (B3, com uma correção de lint: `hasProgress = duration > 0`, sem ler ref no render); export em `components/v2/index.js` |
+| Wrappers | `pages/v2/music/V2AudioBar.jsx`, `cinema/V2AudioBar.jsx`, `literature/V2AudioBar.jsx`, `news/TTSBar.jsx` reescritos como mapeamento i18n → `TtsAudioBar` |
+| CSS | bloco compartilhado em `v2-components.css` após `.v2 .audio .aline` (`.aseek`, `::before`, `i` 2 px, `i::after` cabeça 1×9, `.atime`, `.aspeed`, `.aerrtxt`) + `.aseek{flex-basis:60%}` na media query mobile; removidos os 3 blocos "Audio bar extras" de `music.css`, `cinema.css`, `literature.css` |
+| i18n | 18 arquivos: `v2.news.audioPreparing` sem reticências; `v2.news.pause/play/seek` copiados de `v2.music` do mesmo idioma (`cancel` e `speed` já existiam em news, logo 3 chaves novas, não 4). Validado por `JSON.parse` e releitura |
+| Lint | `eslint` nos 6 arquivos de código: limpo |
+| Build | `vite build` OK em 32 s; chunks novos `index-DKV63omd.js`, `MusicPage-DV1YkSVv.js`, `NewsPage-CDLCS5rY.js`, `CinemaPage-XOp1qAn-.js`, `LiteraturePage-DTSJ8V06.js` |
+| Deploy | comando entregue ao Bob (abaixo); sem commit até o aceite |
+
+**Deploy (Bob, no terminal da sessão):**
+
+```
+cd site && npx wrangler pages deploy dist --project-name=philosify-frontend --branch=production
+```
+
+Depois: Ctrl+F5 e os 6 testes de aceite da seção B6. Com o "ok": commit `audio: telemetria do tts no padrao da analise (cronometro, barra e progresso visivel)`, push, hash.
+
+**Deploy (02/10):** Bob mandou o comando; deployment `359b68aa.philosify-frontend.pages.dev`, branch `production`. Verificado ao vivo: `philosify.org/` referencia `index-DKV63omd.js`; o componente vai no chunk próprio `TtsAudioBar-AZdCTDZE.js` e o CSS compartilhado em `Button-LTHWTS6R.css`, ambos servidos com `aseek` (1 e 1 ocorrências). Aguardando o aceite com play real nas 4 superfícies.
+
+**Aceite do Bob (02/10): "ok".** Ciclo fechado; commit abaixo.
