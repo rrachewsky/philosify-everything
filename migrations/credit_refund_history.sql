@@ -1,3 +1,8 @@
+-- ESTADO (06/10/2026): o "Success" de 25/08 NAO chegou ao banco (provado em 27/08 e no dump de 22/09).
+--   Parte 1 (release_reservation): SUPERADA por migrations/tarefa2_item1_release_reservation.sql (29/08).
+--   Partes 2 e 3 (reapers): APLICADAS pelo Bob em 06/10/2026 via new_design/CREDITOS_ETAPA1_REAPERS_2026-10-05.md § 4
+--   (mesmos corpos), verificadas e provadas. NAO rodar este arquivo: a parte 1 regrediria a release_reservation.
+--
 -- Refunds visible in the statement: release_reservation and both reapers
 -- write a type='refund' row to credit_history when returning a credit.
 -- (25 Aug 2026. GATED: run only after Roberto's approval — SQL Editor.)

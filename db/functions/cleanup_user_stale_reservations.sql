@@ -1,5 +1,11 @@
--- Mirror of the live Supabase function. Applied 25 Aug 2026 via
--- migrations/credit_refund_history.sql (Roberto, SQL Editor: "Success");
+-- Espelho do corpo VIVO em producao. Aplicado pelo Bob em 06/10/2026 (SQL Editor), verificado:
+-- tem_refund_insert = t, tem_snapshot = t, overloads = 1, ACL intocada (postgres + service_role);
+-- prova funcional TESTE OK (reserva envelhecida -> reaper -> credito devolvido + 1 linha refund 'user_timeout_cleanup').
+-- O "Success" de 25/08 (migrations/credit_refund_history.sql) NUNCA chegou ao banco: o dump de 22/09
+-- (inventario I-1b) mostrou o corpo vivo sem o INSERT. Migracao, verificacao e rollback exato em
+-- new_design/CREDITOS_ETAPA1_REAPERS_2026-10-05.md (§ 4-7).
+--
+-- Historico: corpo-alvo redigido em 25 Aug 2026 (migrations/credit_refund_history.sql);
 -- previous body extracted 21 Aug (already refunded, unlike the pre-21-Aug
 -- global reaper). Change on 25 Aug: best-effort type='refund' INSERT into
 -- credit_history per reaped reservation, in its own exception sub-block —

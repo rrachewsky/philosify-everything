@@ -143,10 +143,10 @@ Conferência public: **59 corpos = 59 do I-0 e do I-1a. Bate.** Nomes idênticos
 | `confirm_reservation.sql` | idêntico (módulo whitespace) | idem |
 | `broadcast_collective_member_change.sql` | idêntico (módulo whitespace) | idem |
 | `release_reservation.sql` | **divergente de forma**: só comentários (o repo tem 9 linhas de `--` que o banco não tem) e a assinatura quebrada em 4 linhas no repo vs 1 no banco. **Código executável idêntico** (conferido com comentários removidos). | `release_reservation.LIVE_2026-09-22.sql` gravado ao lado; espelho intocado |
-| `cleanup_stale_reservations.sql` | **DIVERGENTE SUBSTANTIVA**: o corpo vivo **não tem** o bloco best-effort que insere a linha `type='refund'` em `credit_history` por reserva varrida (nem as 3 variáveis `v_purchased/v_free/v_total`). O cabeçalho do espelho diz que esse bloco foi aplicado em 25/08 via `migrations/credit_refund_history.sql` (commit `d871ed7`). | `cleanup_stale_reservations.LIVE_2026-09-22.sql` gravado ao lado; espelho intocado |
-| `cleanup_user_stale_reservations.sql` | **DIVERGENTE SUBSTANTIVA**: mesma ausência do bloco de `credit_history` (`reason='user_timeout_cleanup'`). Mesma origem declarada (25/08, `d871ed7`). | `cleanup_user_stale_reservations.LIVE_2026-09-22.sql` gravado ao lado; espelho intocado |
+| `cleanup_stale_reservations.sql` | **RESOLVIDO 06/10/2026** (alvo de 25/08 aplicado pelo Bob; `new_design/CREDITOS_ETAPA1_REAPERS_2026-10-05.md`). Achado de 22/09: **DIVERGENTE SUBSTANTIVA**: o corpo vivo **não tem** o bloco best-effort que insere a linha `type='refund'` em `credit_history` por reserva varrida (nem as 3 variáveis `v_purchased/v_free/v_total`). O cabeçalho do espelho diz que esse bloco foi aplicado em 25/08 via `migrations/credit_refund_history.sql` (commit `d871ed7`). | `cleanup_stale_reservations.LIVE_2026-09-22.sql` gravado ao lado; espelho intocado |
+| `cleanup_user_stale_reservations.sql` | **RESOLVIDO 06/10/2026** (idem). Achado de 22/09: **DIVERGENTE SUBSTANTIVA**: mesma ausência do bloco de `credit_history` (`reason='user_timeout_cleanup'`). Mesma origem declarada (25/08, `d871ed7`). | `cleanup_user_stale_reservations.LIVE_2026-09-22.sql` gravado ao lado; espelho intocado |
 
-**Leitura das duas divergências substantivas (sem resolver):** repo e banco contam histórias diferentes sobre 25/08. Ou a migration `credit_refund_history.sql` nunca chegou a essas duas funções (só a `release_reservation`, que tem o bloco), ou foi aplicada e depois sobrescrita por uma versão anterior. Efeito prático hoje: reservas varridas por timeout devolvem o crédito **sem linha de extrato** em `credit_history`. Decisão do Bob: qual é a verdade a manter, e se o bloco deve ser reaplicado (fila, OK próprio).
+**Leitura das duas divergências substantivas (RESOLVIDO 06/10/2026: a verdade era o alvo de 25/08; a migration nunca chegou às duas funções, só a `release_reservation` foi refeita em 29/08. Reaplicado e provado em produção, `new_design/CREDITOS_ETAPA1_REAPERS_2026-10-05.md`. Os `.LIVE` saíram do repo.)** Texto de 22/09: repo e banco contam histórias diferentes sobre 25/08. Ou a migration `credit_refund_history.sql` nunca chegou a essas duas funções (só a `release_reservation`, que tem o bloco), ou foi aplicada e depois sobrescrita por uma versão anterior. Efeito prático hoje: reservas varridas por timeout devolvem o crédito **sem linha de extrato** em `credit_history`. Decisão do Bob: qual é a verdade a manter, e se o bloco deve ser reaplicado (fila, OK próprio).
 
 **Outros achados de leitura dos corpos (registro, sem ação):**
 - `get_shared_analysis` e `track_referral`: o corpo vivo tem literais de string quebrados em duas linhas (ex.: `'Share link not` + quebra + `found'::TEXT`). É assim que está no banco; as mensagens de erro saem com quebra de linha e indentação dentro. Provável colagem de terminal com wrap.
@@ -373,7 +373,7 @@ Uma tabela, 9 colunas, RLS ligado, 1 policy (service_role), alimentada pelas 4 t
 
 | # | Achado | Origem | Gravidade (leitura minha) |
 |---|---|---|---|
-| 1 | `cleanup_stale_reservations` e `cleanup_user_stale_reservations`: corpo vivo sem o INSERT de reembolso em `credit_history` que o espelho de 25/08 documenta. Reservas varridas por timeout devolvem crédito sem extrato | I-1b | alta: repo e banco discordam; decidir a verdade e se reaplica |
+| 1 | **RESOLVIDO 06/10/2026** (`new_design/CREDITOS_ETAPA1_REAPERS_2026-10-05.md`). `cleanup_stale_reservations` e `cleanup_user_stale_reservations`: corpo vivo sem o INSERT de reembolso em `credit_history` que o espelho de 25/08 documenta. Reservas varridas por timeout devolvem crédito sem extrato | I-1b | era alta: repo e banco discordam; decidir a verdade e se reaplica |
 | 2 | `direct_messages`: policy `Users can send messages` contorna a checagem de membro da conversa (PERMISSIVE por OR) | I-3 | alta: qualquer logado insere em qualquer conversa |
 | 3 | `storage.objects` bucket `tts-audio`: policy "Service role full access" é `TO public`, FOR ALL | I-3 | alta se GRANTs permitirem anon/authenticated; confirmar GRANTs |
 | 4 | `panel_analyses`: INSERT `TO public WITH CHECK (true)` | I-3 | média |
@@ -393,6 +393,6 @@ Uma tabela, 9 colunas, RLS ligado, 1 policy (service_role), alimentada pelas 4 t
 | `db/functions/reserve_credit.sql` | idêntico |
 | `db/functions/confirm_reservation.sql` | idêntico |
 | `db/functions/release_reservation.sql` | divergente de forma (comentários e quebra da assinatura); executável idêntico; `.LIVE_2026-09-22.sql` ao lado |
-| `db/functions/cleanup_stale_reservations.sql` | **DIVERGENTE SUBSTANTIVA** (sem INSERT em credit_history); `.LIVE_2026-09-22.sql` ao lado |
-| `db/functions/cleanup_user_stale_reservations.sql` | **DIVERGENTE SUBSTANTIVA** (sem INSERT em credit_history); `.LIVE_2026-09-22.sql` ao lado |
+| `db/functions/cleanup_stale_reservations.sql` | **RESOLVIDO 06/10/2026**: banco = espelho (alvo de 25/08 aplicado); `.LIVE` removido |
+| `db/functions/cleanup_user_stale_reservations.sql` | **RESOLVIDO 06/10/2026**: banco = espelho (alvo de 25/08 aplicado); `.LIVE` removido |
 | `db/functions/broadcast_collective_member_change.sql` | idêntico |
