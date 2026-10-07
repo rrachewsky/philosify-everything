@@ -17,7 +17,7 @@ import { jsonResponse } from '../utils/index.js';
 import { getServiceSupabase } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
 import { getSecret } from '../utils/secrets.js';
-import { reserveCredit, confirmReservation, releaseReservation } from '../credits/index.js';
+import { reserveCredit, confirmReservation, releaseReservation, CREDIT_SOURCES } from '../credits/index.js';
 
 // ============================================================
 // Constants
@@ -133,10 +133,13 @@ async function reserveCredits(env, userId, amount) {
 // ============================================================
 // Confirm all reservations (on successful AI response)
 // ============================================================
-async function confirmAllReservations(env, reservationIds, description) {
+async function confirmAllReservations(env, userId, reservationIds, description) {
+  const batchId = crypto.randomUUID(); // one statement group for the N credits
   for (const id of reservationIds) {
     try {
-      await confirmReservation(env, id, description);
+      await confirmReservation(env, id, null, userId, {
+        source: CREDIT_SOURCES.UNSAFE_ZONE, description, batchId,
+      });
     } catch (error) {
       console.error(`[UnsafeZone] Failed to confirm reservation ${id}:`, error.message);
     }
@@ -443,8 +446,8 @@ export async function handleUnsafeZone(request, env, origin) {
     console.log(`[UnsafeZone] ${model} — ${u.input_tokens + u.output_tokens} tokens (${u.input_tokens} in, ${u.output_tokens} out)`);
 
     // AI succeeded — confirm all reservations
-    const description = `unsafe-zone:${turnInfo.isFirstTurn ? 'start' : 'extension'}:${session.id}`;
-    await confirmAllReservations(env, reservationIds, description);
+    const description = `${turnInfo.isFirstTurn ? 'start' : 'extension'}:${session.id}`;
+    await confirmAllReservations(env, user.userId, reservationIds, description);
     console.log(`[UnsafeZone] Confirmed ${reservationIds.length} reservations for ${turnInfo.isFirstTurn ? 'new session' : 'extension'}`);
 
     // Save conversation to session

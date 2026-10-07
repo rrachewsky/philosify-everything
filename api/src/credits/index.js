@@ -4,7 +4,7 @@
 
 // Reservation pattern (Auth + Capture)
 export { reserveCredit } from "./reserve.js";
-export { confirmReservation } from "./confirm.js";
+export { confirmReservation, CREDIT_SOURCES } from "./confirm.js";
 export {
   releaseReservation,
   cleanupStaleReservations,

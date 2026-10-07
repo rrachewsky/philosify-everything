@@ -413,8 +413,8 @@ Commit `creditos: origem em todo confirm, quiz cobra so com pergunta, preambulo 
 | Passo | Data | Resultado |
 |---|---|---|
 | Diff redigido | 07/10 | este arquivo; nada aplicado |
-| OK do Bob | — | — |
-| Aplicado + vitest + dry-run | — | — |
-| Deploy (comando do Bob) | — | — |
-| Aceite | — | — |
-| Commit | — | — |
+| OK do Bob | 07/10 | ordem dupla: commit do banco (`dfa0259`) + OK no diff como descrito |
+| Aplicado + vitest + dry-run | 07/10 | 12 arquivos + mock do `philosopher-panel.test.js` (exporta `CREDIT_SOURCES` via `importActual`); vitest 139/139; grep: 20/20 confirms com `source`, único `cleanup…, 0` restante é o cancel explícito (`api/index.js:762`); `wrangler deploy --dry-run --env production` fecha o bundle |
+| Deploy (comando do Bob) | 07/10 | `wrangler deploy --env production`: `philosify-api-production`, Version ID `86aa5f65-a7f5-4032-b1b6-3f5398ce4d11`; 5 crons mantidos; health 200 |
+| Aceite | 07/10 | Bob: cinema cobrando com `source` e uuid bruto em `metadata` (`analysis_id` NULL pela FK, saldo debitado; linha de 19:07); painel com 3 linhas no mesmo `batch_id` (19:12, 324 ms) |
+| Commit | 07/10 | por ordem do Bob; hash no chat |

@@ -6,7 +6,7 @@ import { languageName } from '../ai/prompts/languages.js';
 import { jsonResponse, sanitizeErrorMessage } from '../utils/index.js';
 import { getServiceSupabase, callRpc } from '../utils/supabase.js';
 import { getUserFromAuth } from '../auth/index.js';
-import { reserveCredit, confirmReservation, releaseReservation } from '../credits/index.js';
+import { reserveCredit, confirmReservation, releaseReservation, CREDIT_SOURCES } from '../credits/index.js';
 import { getSecret } from '../utils/secrets.js';
 import { isValidUUID } from '../utils/validation.js';
 
@@ -708,8 +708,6 @@ export async function handleQuizStart(request, env) {
       return errorResponse('Failed to start quiz', 500, origin, env);
     }
 
-    await confirmReservation(env, reservation.reservationId, `quiz:start:${session.id}`);
-
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId);
 
     const validated = await getValidatedQuestion(supabase, env, user.userId, 1, lang, allExcluded, 0, null);
@@ -718,6 +716,11 @@ export async function handleQuizStart(request, env) {
       await releaseReservation(env, reservation.reservationId, 'quiz-no-valid-questions');
       return errorResponse('No questions available', 500, origin, env);
     }
+
+    // Charge only once a question exists (27 Aug finding 5: confirm-then-release charged without a quiz)
+    await confirmReservation(env, reservation.reservationId, null, user.userId, {
+      source: CREDIT_SOURCES.QUIZ, description: `start:${session.id}`,
+    });
 
     const { question, translatedText, clientOptions, optionMap } = validated;
 
@@ -951,13 +954,19 @@ export async function handleQuizContinue(request, env) {
       return jsonResponse({ error: 'Insufficient credits', code: 'INSUFFICIENT_CREDITS' }, 402, origin, env);
     }
 
-    await confirmReservation(env, reservation.reservationId, `quiz:continue:${sessionId}`);
-
     const allExcluded = await getExcludedQuestionIds(supabase, user.userId, session.answered_question_ids || []);
     const questionNum = (session.answered_question_ids || []).length;
 
     const validated = await getValidatedQuestion(supabase, env, user.userId, session.current_difficulty, lang, allExcluded, questionNum, session.question_option_maps);
-    if (!validated) return errorResponse('No more questions available', 500, origin, env);
+    if (!validated) {
+      await releaseReservation(env, reservation.reservationId, 'quiz-no-valid-questions');
+      return errorResponse('No more questions available', 500, origin, env);
+    }
+
+    // Charge only once a question exists (same defect as start: confirmed, then nothing delivered)
+    await confirmReservation(env, reservation.reservationId, null, user.userId, {
+      source: CREDIT_SOURCES.QUIZ, description: `continue:${sessionId}`,
+    });
 
     const { question: nextQuestion, translatedText, clientOptions, optionMap } = validated;
 

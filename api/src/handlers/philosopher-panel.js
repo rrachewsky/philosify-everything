@@ -12,7 +12,7 @@ import { getLocalizedError } from "../utils/i18n-errors.js";
 import { getUserFromAuth } from "../auth/index.js";
 import { checkRateLimit } from "../rate-limit/index.js";
 import { getDebateAestheticGuide } from "../guides/index.js";
-import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
+import { reserveCredit, confirmReservation, releaseReservation, CREDIT_SOURCES } from "../credits/index.js";
 import { buildPhilosopherPanelPrompt, PANEL_MEDIA_TYPES } from "../ai/prompts/philosopher-panel-template.js";
 import { buildNewsPanelPrompt } from "../ai/prompts/news-panel-template.js";
 import { callClaude, callGrok, callGemini } from "../ai/models/index.js";
@@ -357,13 +357,15 @@ export async function handlePhilosopherPanel(
 
       // ── Confirm all credits ──
       let lastConfirm;
-      const panelDesc = `Panel: ${title.substring(0, 60)} (${mediaType})`;
+      const panelDesc = `${title.substring(0, 60)} (${mediaType})`;
+      const batchId = crypto.randomUUID(); // one statement group for the 3 credits
       for (const res of reservations) {
         lastConfirm = await confirmReservation(
           env,
           res.reservationId,
-          panelDesc,
+          panelId,
           userId,
+          { source: CREDIT_SOURCES.PANEL, description: panelDesc, batchId },
         );
       }
 

@@ -35,6 +35,7 @@ import { getUserFromAuth } from "./src/auth/index.js";
 import {
   reserveCredit,
   confirmReservation,
+  CREDIT_SOURCES,
   releaseReservation,
   cleanupStaleReservations,
   cleanupUserStaleReservations,
@@ -2978,10 +2979,12 @@ export default {
           );
         }
 
-        // Cleanup ALL pending reservations for THIS user (handles cancel-and-retry)
-        // Using 0 minutes ensures cancelled request reservations are freed immediately
-        // so the user isn't double-charged on retry
-        await cleanupUserStaleReservations(env, user.userId, 0);
+        // Cleanup stale reservations for THIS user (handles cancel-and-retry).
+        // 2 minutes, not 0: age 0 swept reservations still IN FLIGHT from another
+        // feature (e.g. the 3 panel credits) and their later confirm failed. Trade-off
+        // accepted 06 Oct 2026: an orphan from an aborted attempt may hold 1 credit for
+        // up to 2 min on an immediate retry. Explicit cancel endpoints keep 0.
+        await cleanupUserStaleReservations(env, user.userId, 2);
 
         // SECURITY: Atomic deduplication lock to prevent race conditions
         // Uses Supabase INSERT ON CONFLICT for true atomicity (KV is eventually consistent)
@@ -3136,6 +3139,7 @@ export default {
                 reservation.reservationId,
                 resultData.id,
                 user.userId,
+                { source: CREDIT_SOURCES.MUSIC, description: `${song} — ${artist}` },
               );
               if (balanceResult?.success) {
                 console.log(
@@ -3177,6 +3181,7 @@ export default {
                 reservation.reservationId,
                 resultData.id,
                 user.userId,
+                { source: CREDIT_SOURCES.MUSIC, description: `${song} — ${artist}` },
               );
               if (balanceResult?.success) {
                 console.log(
@@ -3390,8 +3395,8 @@ export default {
           );
         }
 
-        // Cleanup pending reservations
-        await cleanupUserStaleReservations(env, user.userId, 0);
+        // Cleanup stale reservations (2 min, not 0 — see the music preamble)
+        await cleanupUserStaleReservations(env, user.userId, 2);
 
         // Atomic deduplication lock
         const normalizeForKey = (str) =>
@@ -3450,7 +3455,10 @@ export default {
               balanceResult = await releaseReservation(env, reservation.reservationId, "cached_review", resultData.id);
               charged = false;
             } else if (resultData.cached && !resultData.isReview) {
-              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id, user.userId);
+              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id, user.userId, {
+                source: CREDIT_SOURCES.BOOK,
+                description: `${title} — ${author}`,
+              });
               charged = true;
             } else if (resultData.saveFailed) {
               balanceResult = await releaseReservation(env, reservation.reservationId, "failed");
@@ -3460,7 +3468,10 @@ export default {
               balanceResult = await releaseReservation(env, reservation.reservationId, "already_owned", resultData.id);
               charged = false;
             } else {
-              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id, user.userId);
+              balanceResult = await confirmReservation(env, reservation.reservationId, resultData.id, user.userId, {
+                source: CREDIT_SOURCES.BOOK,
+                description: `${title} — ${author}`,
+              });
               charged = true;
             }
 

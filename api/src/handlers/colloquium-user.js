@@ -27,6 +27,7 @@ import { checkRateLimit } from "../rate-limit/index.js";
 import {
   reserveCredit,
   confirmReservation,
+  CREDIT_SOURCES,
   releaseReservation,
   cleanupUserStaleReservations,
 } from "../credits/index.js";
@@ -637,7 +638,9 @@ export async function handleColloquiumAccess(request, env, origin, threadId) {
       const confirmed = await confirmReservation(
         env,
         reservation.reservationId,
-        `colloquium:access:${threadId}`,
+        null,
+        userId,
+        { source: CREDIT_SOURCES.COLLOQUIUM_ACCESS, description: `thread:${threadId}` },
       );
 
       let response = jsonResponse(
@@ -777,11 +780,14 @@ export async function handleColloquiumParticipate(
 
       // Confirm all credits
       let lastConfirm;
+      const batchId = crypto.randomUUID();
       for (const res of reservations) {
         lastConfirm = await confirmReservation(
           env,
           res.reservationId,
-          `colloquium:participate:${threadId}`,
+          null,
+          userId,
+          { source: CREDIT_SOURCES.COLLOQUIUM_PARTICIPATE, description: `thread:${threadId}`, batchId },
         );
       }
 
@@ -919,11 +925,14 @@ export async function handleAddPhilosopher(
     try {
       // Confirm credits BEFORE starting background generation
       let lastConfirm;
+      const batchId = crypto.randomUUID();
       for (const res of reservations) {
         lastConfirm = await confirmReservation(
           env,
           res.reservationId,
-          `colloquium:philosopher:${threadId}:${philosopher.name}`,
+          null,
+          userId,
+          { source: CREDIT_SOURCES.COLLOQUIUM_PHILOSOPHER, description: `${philosopher.name} · thread:${threadId}`, batchId },
         );
       }
 
@@ -1071,11 +1080,14 @@ export async function handleProposeColloquium(request, env, origin, ctx) {
 
       // Confirm all 5 credits
       let lastConfirm;
+      const batchId = crypto.randomUUID();
       for (const res of reservations) {
         lastConfirm = await confirmReservation(
           env,
           res.reservationId,
-          `colloquium:propose:${result.threadId}`,
+          null,
+          userId,
+          { source: CREDIT_SOURCES.COLLOQUIUM_PROPOSE, description: `thread:${result.threadId}`, batchId },
         );
       }
 
@@ -1590,11 +1602,14 @@ export async function handleProposeOpenDebate(request, env, origin, ctx) {
 
       // Confirm all 3 credits
       let lastConfirm;
+      const batchId = crypto.randomUUID();
       for (const res of reservations) {
         lastConfirm = await confirmReservation(
           env,
           res.reservationId,
-          `colloquium:open-debate:${thread.id}`,
+          null,
+          userId,
+          { source: CREDIT_SOURCES.OPEN_DEBATE, description: `thread:${thread.id}`, batchId },
         );
       }
 

@@ -105,7 +105,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
             // SECURITY: First-time view of cached content - charge 1 credit
             if (!isReview) {
-              const { reserveCredit, confirmReservation, releaseReservation } = await import("../credits/index.js");
+              const { reserveCredit, confirmReservation, releaseReservation, CREDIT_SOURCES } = await import("../credits/index.js");
               const reservation = await reserveCredit(env, userId);
               if (!reservation.success) {
                 return jsonResponse({
@@ -115,7 +115,9 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
                 }, 402, origin, env);
               }
               // Confirm immediately for cached content
-              await confirmReservation(env, reservation.reservationId, analysisIdToLog, userId);
+              await confirmReservation(env, reservation.reservationId, analysisIdToLog, userId, {
+                source: CREDIT_SOURCES.CINEMA, description: title,
+              });
               console.log(`[CinemaAnalyze] Charged 1 credit for first-time cached view: ${userId}`);
             }
 
@@ -148,7 +150,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
 
       // SECURITY: First-time view of cached content - charge 1 credit
       if (!isReview) {
-        const { reserveCredit, confirmReservation } = await import("../credits/index.js");
+        const { reserveCredit, confirmReservation, CREDIT_SOURCES } = await import("../credits/index.js");
         const reservation = await reserveCredit(env, userId);
         if (!reservation.success) {
           return jsonResponse({
@@ -157,7 +159,9 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
             balance: reservation.newTotal || 0,
           }, 402, origin, env);
         }
-        await confirmReservation(env, reservation.reservationId, analysis.id, userId);
+        await confirmReservation(env, reservation.reservationId, analysis.id, userId, {
+          source: CREDIT_SOURCES.CINEMA, description: title,
+        });
         console.log(`[CinemaAnalyze] Charged 1 credit for first-time DB cached view: ${userId}`);
       }
 
@@ -254,7 +258,7 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
     const alreadyOwned = await checkUserOwnsFilm(env, user.userId, tmdb_id, title, director);
 
     // Reserve 1 credit (skipped when the user already owns this film)
-    const { reserveCredit, confirmReservation, releaseReservation } = await import("../credits/index.js");
+    const { reserveCredit, confirmReservation, releaseReservation, CREDIT_SOURCES } = await import("../credits/index.js");
     let reservation = null;
     if (alreadyOwned) {
       console.log(`[CinemaAnalyze] User already owns this film — new variant generated free`);
@@ -429,8 +433,9 @@ export async function handleCinemaAnalyze(request, env, origin, ctx) {
         await confirmReservation(
           env,
           reservation.reservationId,
-          savedRecord?.id || `cinema-analysis:${title.substring(0, 50)}`,
+          savedRecord?.id || null,
           userId,
+          { source: CREDIT_SOURCES.CINEMA, description: title },
         );
       }
 

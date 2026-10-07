@@ -8,7 +8,7 @@
 import { jsonResponse } from "../utils/index.js";
 import { errorResponse } from "../utils/errorResponse.js";
 import { getUserFromAuth } from "../auth/index.js";
-import { reserveCredit, confirmReservation, releaseReservation } from "../credits/index.js";
+import { reserveCredit, confirmReservation, releaseReservation, CREDIT_SOURCES } from "../credits/index.js";
 import { getSupabaseCredentials } from "../utils/supabase.js";
 
 // ============================================================
@@ -373,7 +373,9 @@ export async function handleUnlockNewsPreferences(request, env, origin) {
       const confirm = await confirmReservation(
         env,
         reservation.reservationId,
-        "News source customization unlock"
+        null,
+        user.userId,
+        { source: CREDIT_SOURCES.NEWS_SOURCES, description: "News source customization unlock" },
       );
 
       console.log(`[NewsPreferences] User ${user.userId} unlocked source customization`);

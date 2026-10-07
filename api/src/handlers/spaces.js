@@ -12,6 +12,7 @@ import {
 import {
   reserveCredit,
   confirmReservation,
+  CREDIT_SOURCES,
   releaseReservation,
 } from "../credits/index.js";
 
@@ -189,9 +190,12 @@ export async function handleUnlockSpace(request, env, origin, space) {
         return addRefreshedCookieToResponse(response, setCookieHeader);
       }
 
-      // Confirm all credits
+      // Confirm all credits (one statement group)
+      const batchId = crypto.randomUUID();
       for (const r of reservations) {
-        await confirmReservation(env, r.reservationId, `space:${space}`);
+        await confirmReservation(env, r.reservationId, null, userId, {
+          source: CREDIT_SOURCES.SPACE, description: space, batchId,
+        });
       }
 
       console.log(

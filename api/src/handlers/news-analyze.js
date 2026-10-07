@@ -86,7 +86,7 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
 
             // First-time view - charge 1 credit
             if (!isReview) {
-              const { reserveCredit, confirmReservation } = await import("../credits/index.js");
+              const { reserveCredit, confirmReservation, CREDIT_SOURCES } = await import("../credits/index.js");
               const reservation = await reserveCredit(env, user.userId);
               if (!reservation.success) {
                 return errorResponse(env, origin, 'INSUFFICIENT_CREDITS', lang, {
@@ -94,7 +94,9 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
                   balance: reservation.newTotal || 0,
                 });
               }
-              await confirmReservation(env, reservation.reservationId, result.id, user.userId);
+              await confirmReservation(env, reservation.reservationId, result.id, user.userId, {
+                source: CREDIT_SOURCES.NEWS, description: title,
+              });
               console.log(`[NewsAnalyze] Charged 1 credit for first-time cached view: ${user.userId}`);
             }
 
@@ -119,7 +121,7 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
     console.log(`[NewsAnalyze] Cache MISS — analyzing: "${title}" (${model}/${lang})`);
 
     // Reserve 1 credit
-    const { reserveCredit, confirmReservation, releaseReservation } = await import("../credits/index.js");
+    const { reserveCredit, confirmReservation, releaseReservation, CREDIT_SOURCES } = await import("../credits/index.js");
     const reservation = await reserveCredit(env, user.userId);
 
     if (!reservation.success) {
@@ -380,7 +382,9 @@ export async function handleNewsAnalyze(request, env, origin, ctx) {
       }
 
       // Confirm credit
-      await confirmReservation(env, reservation.reservationId, `news-analysis:${title.substring(0, 50)}`);
+      await confirmReservation(env, reservation.reservationId, result?.id || null, user.userId, {
+        source: CREDIT_SOURCES.NEWS, description: title,
+      });
 
       return jsonResponse(result, 200, origin, env);
     } catch (err) {

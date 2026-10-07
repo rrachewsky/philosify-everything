@@ -30,7 +30,8 @@ vi.mock('../rate-limit/index.js', () => ({
 vi.mock('../guides/index.js', () => ({
   getDebateAestheticGuide: vi.fn(async () => 'guide text'),
 }));
-vi.mock('../credits/index.js', () => ({
+vi.mock('../credits/index.js', async () => ({
+  CREDIT_SOURCES: (await vi.importActual('../credits/confirm.js')).CREDIT_SOURCES,
   reserveCredit: (...a) => reserveCredit(...a),
   confirmReservation: (...a) => confirmReservation(...a),
   releaseReservation: (...a) => releaseReservation(...a),

@@ -1,8 +1,8 @@
 // ============================================================
 // CREDITS - RELEASE RESERVATION
 // ============================================================
-// Releases reservation and returns credit to user.
-// Does NOT write to credit_history (internal audit only).
+// Releases reservation and returns credit to user. Since 29 Aug (release_reservation)
+// and 06 Oct 2026 (both reapers) every refund writes a type='refund' row to credit_history.
 
 import { callRpc } from "../utils/supabase.js";
 
