@@ -420,7 +420,50 @@
     "saving": "Saving...",
     "saveProfile": "Save Profile",
     "profileSaved": "Profile saved!",
-    "saved": "Saved"
+    "saved": "Saved",
+    "statement": {
+      "title": "Statement",
+      "balance": "Balance",
+      "colDate": "Date",
+      "colMovement": "Movement",
+      "colAmount": "Amount",
+      "colBalance": "Balance",
+      "loading": "Loading statement…",
+      "empty": "No movements yet",
+      "error": "Could not load the statement",
+      "retry": "Try again",
+      "loadMore": "Load more",
+      "receipt": "Receipt",
+      "legacyCharge": "Analysis",
+      "source": {
+        "music": "Music analysis",
+        "book": "Book analysis",
+        "cinema": "Film analysis",
+        "news": "News analysis",
+        "news_sources": "News sources",
+        "panel": "Philosopher Panel",
+        "colloquium_access": "Colloquium · access",
+        "colloquium_participate": "Colloquium · participation",
+        "colloquium_philosopher": "Colloquium · philosopher",
+        "colloquium_propose": "Colloquium · proposal",
+        "open_debate": "Open debate",
+        "quiz": "Quiz",
+        "space": "Space access",
+        "unsafe_zone": "Unsafe Zone"
+      },
+      "kind": {
+        "purchase": "Credit purchase",
+        "bonus": "Signup bonus",
+        "refund": "Credit returned",
+        "chargeback": "Stripe refund",
+        "adjustment": "Adjustment"
+      },
+      "reason": {
+        "timeout": "timed out",
+        "cached": "analysis already existed",
+        "failed": "analysis failed"
+      }
+    }
   },
   "transactions": {
     "purchase": "Purchased {{count}} credits",
@@ -2421,7 +2464,8 @@
       "history": "HISTORY",
       "historyError": "Could not load history.",
       "loading": "Loading…",
-      "note": "Prices bind to live Stripe products. Any action that spends credits shows its cost before the click."
+      "note": "Prices bind to live Stripe products. Any action that spends credits shows its cost before the click.",
+      "viewStatement": "View statement"
     },
     "community": {
       "locked": "Locked",

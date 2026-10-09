@@ -420,7 +420,50 @@
     "saving": "保存中...",
     "saveProfile": "保存个人资料",
     "profileSaved": "个人资料已保存！",
-    "saved": "已保存"
+    "saved": "已保存",
+    "statement": {
+      "title": "账单",
+      "balance": "余额",
+      "colDate": "日期",
+      "colMovement": "明细",
+      "colAmount": "金额",
+      "colBalance": "余额",
+      "loading": "正在加载账单…",
+      "empty": "暂无记录",
+      "error": "无法加载账单",
+      "retry": "重试",
+      "loadMore": "加载更多",
+      "receipt": "收据",
+      "legacyCharge": "分析",
+      "source": {
+        "music": "音乐分析",
+        "book": "书籍分析",
+        "cinema": "电影分析",
+        "news": "新闻分析",
+        "news_sources": "新闻来源",
+        "panel": "哲学家面板",
+        "colloquium_access": "研讨会 · 访问",
+        "colloquium_participate": "研讨会 · 参与",
+        "colloquium_philosopher": "研讨会 · 哲学家",
+        "colloquium_propose": "研讨会 · 提案",
+        "open_debate": "公开辩论",
+        "quiz": "测验",
+        "space": "空间访问",
+        "unsafe_zone": "危险区域"
+      },
+      "kind": {
+        "purchase": "购买积分",
+        "bonus": "注册奖励",
+        "refund": "积分已退还",
+        "chargeback": "Stripe 退款",
+        "adjustment": "调整"
+      },
+      "reason": {
+        "timeout": "超时",
+        "cached": "分析已存在",
+        "failed": "分析失败"
+      }
+    }
   },
   "transactions": {
     "purchase": "购买了 {{count}} 个积分",
@@ -2406,7 +2449,8 @@
       "history": "历史记录",
       "historyError": "无法加载历史记录。",
       "loading": "加载中…",
-      "note": "价格与Stripe实时商品绑定。任何消耗积分的操作都会在点击前显示其费用。"
+      "note": "价格与Stripe实时商品绑定。任何消耗积分的操作都会在点击前显示其费用。",
+      "viewStatement": "查看账单"
     },
     "community": {
       "locked": "已锁定",

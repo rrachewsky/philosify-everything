@@ -420,7 +420,50 @@
     "saving": "שומר...",
     "saveProfile": "שמור פרופיל",
     "profileSaved": "הפרופיל נשמר!",
-    "saved": "נשמר"
+    "saved": "נשמר",
+    "statement": {
+      "title": "דף חשבון",
+      "balance": "יתרה",
+      "colDate": "תאריך",
+      "colMovement": "תנועה",
+      "colAmount": "סכום",
+      "colBalance": "יתרה",
+      "loading": "טוען דף חשבון…",
+      "empty": "אין תנועות עדיין",
+      "error": "לא ניתן לטעון את דף החשבון",
+      "retry": "נסה שוב",
+      "loadMore": "טען עוד",
+      "receipt": "קבלה",
+      "legacyCharge": "ניתוח",
+      "source": {
+        "music": "ניתוח מוזיקה",
+        "book": "ניתוח ספר",
+        "cinema": "ניתוח סרט",
+        "news": "ניתוח חדשות",
+        "news_sources": "מקורות חדשות",
+        "panel": "פאנל פילוסופים",
+        "colloquium_access": "קולוקוויום · גישה",
+        "colloquium_participate": "קולוקוויום · השתתפות",
+        "colloquium_philosopher": "קולוקוויום · פילוסוף",
+        "colloquium_propose": "קולוקוויום · הצעה",
+        "open_debate": "דיון פתוח",
+        "quiz": "חידון",
+        "space": "גישה למרחב",
+        "unsafe_zone": "אזור לא בטוח"
+      },
+      "kind": {
+        "purchase": "רכישת קרדיטים",
+        "bonus": "בונוס הרשמה",
+        "refund": "קרדיט הוחזר",
+        "chargeback": "החזר Stripe",
+        "adjustment": "התאמה"
+      },
+      "reason": {
+        "timeout": "פג הזמן",
+        "cached": "הניתוח כבר היה קיים",
+        "failed": "הניתוח נכשל"
+      }
+    }
   },
   "transactions": {
     "purchase": "נרכשו {{count}} קרדיטים",
@@ -2289,7 +2332,8 @@
       "history": "היסטוריה",
       "historyError": "לא ניתן לטעון את ההיסטוריה.",
       "loading": "טוען…",
-      "note": "המחירים מקושרים למוצרי Stripe חיים. כל פעולה שצורכת קרדיטים מציגה את עלותה לפני הלחיצה."
+      "note": "המחירים מקושרים למוצרי Stripe חיים. כל פעולה שצורכת קרדיטים מציגה את עלותה לפני הלחיצה.",
+      "viewStatement": "הצג דף חשבון"
     },
     "community": {
       "locked": "נעול",

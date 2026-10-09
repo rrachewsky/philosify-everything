@@ -75,6 +75,34 @@
  border:1px solid var(--line);border-radius:999px;padding:5px 10px;transition:.16s}
 .v2.acct-surface .acct-receipt:hover{color:var(--ink-hi);border-color:var(--line-strong)}
 
+/* ---------- Statement (Etapa 3): 4 columns, running balance ---- */
+/* date · movement · amount · balance. The pane heading carries the
+   balance numeral, the pane's one silvered element (Law §2.3). */
+.v2.acct-surface .acct-stmt-head{display:flex;align-items:baseline;
+ justify-content:space-between;gap:14px}
+.v2.acct-surface .acct-stmt-balance{font:400 11px var(--f-ui);letter-spacing:.08em;
+ text-transform:none;color:var(--ink-mid)}
+.v2.acct-surface .acct-stmt-n{font:400 14px var(--f-disp);color:var(--silver);
+ font-variant-numeric:tabular-nums}
+.v2.acct-surface .acct-stmt .acct-row{grid-template-columns:auto minmax(0,1fr) auto auto}
+.v2.acct-surface .acct-stmt .acct-date{margin-top:0;white-space:nowrap;
+ font-variant-numeric:tabular-nums}
+.v2.acct-surface .acct-stmt .acct-amt{min-width:28px;text-align:right}
+.v2.acct-surface .acct-bal{font:400 12px/1 var(--f-ui);letter-spacing:.04em;
+ color:var(--ink-mid);font-variant-numeric:tabular-nums;min-width:32px;text-align:right}
+.v2.acct-surface .acct-stmt-cols{padding:6px 6px;border-bottom:1px solid var(--line)}
+.v2.acct-surface .acct-stmt-cols:hover{background:none}
+.v2.acct-surface .acct-stmt-cols span{font:500 10px/1 var(--f-ui);letter-spacing:.16em;
+ text-transform:uppercase;color:var(--ink-low)}
+.v2.acct-surface .acct-stmt-cols span:nth-child(n+3){text-align:right}
+.v2.acct-surface .acct-more-row{display:flex;justify-content:center;padding:16px 0 4px}
+/* "load more" / "try again": text control in the .aspeed register (whispers) */
+.v2.acct-surface .acct-more{background:none;border:0;padding:0;cursor:pointer;
+ color:var(--mid);font:400 11.5px var(--f-ui);letter-spacing:.12em;
+ text-transform:uppercase;transition:color .16s}
+.v2.acct-surface .acct-more:hover{color:var(--ink)}
+.v2.acct-surface .acct-more:disabled{opacity:.5;cursor:default}
+
 /* ---------- Notification preferences --------------------------- */
 .v2.acct-surface .acct-note{font:400 12.5px/1.65 var(--f-ui);letter-spacing:.02em;
  color:var(--ink-text);margin:4px 0 16px}
@@ -131,6 +159,15 @@ html:is(:lang(zh),:lang(ja),:lang(ko),:lang(hi),:lang(ar),:lang(he),:lang(fa),:l
  .v2.pay-surface{padding:calc(4vh + env(safe-area-inset-top,0px)) 12px
   calc(16px + env(safe-area-inset-bottom,0px))}
  .v2.acct-surface .acct-row{padding:12px 2px}
+ /* statement: movement + amount on line 1; date + balance whisper on line 2 */
+ .v2.acct-surface .acct-stmt .acct-row{grid-template-columns:minmax(0,1fr) auto;row-gap:3px}
+ .v2.acct-surface .acct-stmt .acct-date{grid-row:2;grid-column:1}
+ .v2.acct-surface .acct-stmt .acct-cell{grid-row:1;grid-column:1}
+ .v2.acct-surface .acct-stmt .acct-right{grid-row:1;grid-column:2}
+ .v2.acct-surface .acct-bal{grid-row:2;grid-column:2;font-size:11px;color:var(--ink-low);
+  min-width:0}
+ .v2.acct-surface .acct-bal::before{content:attr(data-label) " ";text-transform:lowercase}
+ .v2.acct-surface .acct-stmt-cols{display:none}
  .v2.acct-surface .acct-phone-row{flex-wrap:wrap}
  .v2.acct-surface .acct-phone-area{flex:1 1 110px}
  .v2.acct-surface select.f{font-size:16px} /* iOS: sub-16px inputs zoom on focus */

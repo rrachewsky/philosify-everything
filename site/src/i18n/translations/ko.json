@@ -420,7 +420,50 @@
     "saving": "저장 중...",
     "saveProfile": "프로필 저장",
     "profileSaved": "프로필이 저장되었습니다!",
-    "saved": "저장됨"
+    "saved": "저장됨",
+    "statement": {
+      "title": "거래 내역",
+      "balance": "잔액",
+      "colDate": "날짜",
+      "colMovement": "내역",
+      "colAmount": "금액",
+      "colBalance": "잔액",
+      "loading": "거래 내역을 불러오는 중…",
+      "empty": "아직 내역이 없습니다",
+      "error": "거래 내역을 불러올 수 없습니다",
+      "retry": "다시 시도",
+      "loadMore": "더 보기",
+      "receipt": "영수증",
+      "legacyCharge": "분석",
+      "source": {
+        "music": "음악 분석",
+        "book": "도서 분석",
+        "cinema": "영화 분석",
+        "news": "뉴스 분석",
+        "news_sources": "뉴스 출처",
+        "panel": "철학자 패널",
+        "colloquium_access": "콜로키움 · 접근",
+        "colloquium_participate": "콜로키움 · 참여",
+        "colloquium_philosopher": "콜로키움 · 철학자",
+        "colloquium_propose": "콜로키움 · 제안",
+        "open_debate": "공개 토론",
+        "quiz": "퀴즈",
+        "space": "스페이스 접근",
+        "unsafe_zone": "위험 구역"
+      },
+      "kind": {
+        "purchase": "크레딧 구매",
+        "bonus": "가입 보너스",
+        "refund": "크레딧 반환",
+        "chargeback": "Stripe 환불",
+        "adjustment": "조정"
+      },
+      "reason": {
+        "timeout": "시간 초과",
+        "cached": "분석이 이미 존재했음",
+        "failed": "분석 실패"
+      }
+    }
   },
   "transactions": {
     "purchase": "{{count}} 크레딧 구매",
@@ -2300,7 +2343,8 @@
       "history": "기록",
       "historyError": "기록을 불러올 수 없습니다.",
       "loading": "로딩 중…",
-      "note": "가격은 Stripe의 실제 상품과 연동됩니다. 크레딧을 사용하는 모든 작업은 클릭 전에 비용을 표시합니다."
+      "note": "가격은 Stripe의 실제 상품과 연동됩니다. 크레딧을 사용하는 모든 작업은 클릭 전에 비용을 표시합니다.",
+      "viewStatement": "거래 내역 보기"
     },
     "community": {
       "locked": "잠김",

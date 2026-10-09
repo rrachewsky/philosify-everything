@@ -1,11 +1,13 @@
-// AccountModal - Account settings with Profile, History, Notifications and Security tabs
+// AccountModal - Account settings with Profile, Statement, Notifications and Security tabs
+// Statement (Etapa 3, 08/10/2026): the credit statement from /api/credits/history —
+// one source, origin per charge, batches as one item, running balance per row.
 // v2 skin (WP6.2): Console-for-Thinking modal anatomy (mwrap/mhead/mbody kit,
 // new_design/philosify-modals.html). Behavior, props contract, hooks and
 // handlers are unchanged from the legacy surface — only the skin moved.
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PasswordInput } from '../common';
-import { useAuth, useAccountHistory } from '@/hooks';
+import { useAuth, useCreditStatement } from '@/hooks';
 import { profileService } from '@/services/api/profile.js';
 import { config } from '@/config';
 import { isValidPassword } from '@utils/validation.js';
@@ -50,24 +52,50 @@ const COUNTRY_CODES = [
   { code: '+63', label: '+63 (PH)' },
 ];
 
-// v2 chrome carries no emojis (Design Law): strip pictographs from the
-// hook-formatted descriptions at render time. Data and behavior untouched.
-const stripPictographs = (s) =>
-  String(s || '')
-    .replace(/\p{Extended_Pictographic}/gu, '')
-    .replace(/️/gu, '') // stray emoji variation selectors
-    .replace(/\s+/g, ' ')
-    .trim();
+// Statement row helpers (pure, i18n-free)
+const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 
-export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDebate }) {
-  const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState('history');
+// Free text shown next to the source label. Internal ids never reach the
+// screen: "thread:<uuid>" segments, quiz "start:/continue:<id>" and the
+// English unlock note of news_sources are dropped; titles and names stay.
+const cleanDescription = (item) => {
+  if (item.kind !== 'charge' || !item.description) return '';
+  if (item.source === 'news_sources' || item.source === 'quiz') return '';
+  return String(item.description)
+    .replace(/\s*·?\s*thread:[0-9a-f-]{36}/gi, '')
+    .replace(UUID_RE, '')
+    .trim();
+};
+
+// release/reaper reasons collapse to three user-facing buckets
+const reasonBucket = (reason) => {
+  if (!reason) return null;
+  if (/timeout/.test(reason)) return 'timeout';
+  if (reason === 'cached' || reason === 'cached_review' || reason === 'already_owned') return 'cached';
+  return 'failed';
+};
+
+export function AccountModal({
+  isOpen,
+  onClose,
+  user,
+  onViewAnalysis,
+  onViewDebate,
+  initialTab = 'profile',
+}) {
+  const { t, i18n } = useTranslation();
+  const [activeTab, setActiveTab] = useState(initialTab);
   const {
-    items: historyItems,
-    loading: historyLoading,
-    error: historyError,
-    formatDescription,
-  } = useAccountHistory(user);
+    items: stmtItems,
+    balance: stmtBalance,
+    hasMore: stmtHasMore,
+    loading: stmtLoading,
+    loaded: stmtLoaded,
+    loadingMore: stmtLoadingMore,
+    error: stmtError,
+    loadMore: stmtLoadMore,
+    refresh: stmtRefresh,
+  } = useCreditStatement(user, { enabled: isOpen && activeTab === 'statement' });
   const { updatePassword, loading: authLoading } = useAuth();
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -298,65 +326,40 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
     }
   };
 
-  const formatDate = (date) => {
-    return new Intl.DateTimeFormat('en-US', {
+  const formatDate = (iso) => {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return new Intl.DateTimeFormat(i18n.language || 'en', {
+      day: '2-digit',
       month: 'short',
-      day: 'numeric',
-      year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    }).format(date);
+    }).format(d);
   };
 
-  // Determine if a credit item links to a debate (has thread_id in metadata)
-  const getDebateThreadId = (item) => {
-    if (item.kind === 'credit' && item.metadata?.thread_id) {
-      return item.metadata.thread_id;
+  // Movement label: localized origin (source/kind) + free description (never translated)
+  const movementLabel = (item) => {
+    const S = 'account.statement';
+    const legacy = t(`${S}.legacyCharge`, { defaultValue: 'Analysis' });
+    let label;
+    if (item.kind === 'charge') {
+      label = item.source ? t(`${S}.source.${item.source}`, { defaultValue: legacy }) : legacy;
+    } else if (item.kind === 'refund') {
+      label = t(`${S}.kind.refund`, { defaultValue: 'Credit returned' });
+      const bucket = reasonBucket(item.reason);
+      if (bucket) label += ` · ${t(`${S}.reason.${bucket}`, { defaultValue: bucket })}`;
+    } else {
+      label = t(`${S}.kind.${item.kind}`, { defaultValue: item.kind });
     }
-    return null;
+    const desc = cleanDescription(item);
+    return desc ? `${label} · ${desc}` : label;
   };
 
-  const renderRight = (item) => {
-    const credits = Number(item.credits || item.amount || 0);
-    const isNavigable = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone' || getDebateThreadId(item);
-
-    // Quiz — show credits consumed but no arrow (not navigable)
-    if (item.kind === 'quiz') {
-      return credits > 0 ? <span className="acct-amt neg">-{credits}</span> : null;
-    }
-
-    if (isNavigable) {
-      return (
-        <span className="acct-right">
-          {credits > 0 && <span className="acct-amt neg">-{credits}</span>}
-          <span className="acct-arrow" aria-hidden="true">&#8250;</span>
-        </span>
-      );
-    }
-
-    // For non-clickable items (purchases, etc.)
-    const amt = Number(item.amount || 0);
-    const receiptUrl =
-      item.kind === 'credit' && item.type === 'purchase' ? item.metadata?.receipt_url : null;
-    return (
-      <span className="acct-right">
-        <span className={`acct-amt ${amt >= 0 ? 'pos' : 'neg'}`}>
-          {amt >= 0 ? '+' : ''}
-          {amt}
-        </span>
-        {receiptUrl && (
-          <a
-            className="acct-receipt"
-            href={receiptUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {t('account.receipt', { defaultValue: 'Receipt' })} &#8594;
-          </a>
-        )}
-      </span>
-    );
+  const rowHandler = (item) => {
+    const link = item.link;
+    if (!link) return null;
+    if (link.kind === 'debate') return () => onViewDebate?.(link.id);
+    return () => onViewAnalysis?.(link.id, link.mediaType, link.kind);
   };
 
   if (!isOpen) return null;
@@ -388,12 +391,12 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
               {t('account.profile', { defaultValue: 'Profile' })}
             </button>
             <button
-              className={`tab ${activeTab === 'history' ? 'on' : ''}`}
+              className={`tab ${activeTab === 'statement' ? 'on' : ''}`}
               role="tab"
-              aria-selected={activeTab === 'history'}
-              onClick={() => setActiveTab('history')}
+              aria-selected={activeTab === 'statement'}
+              onClick={() => setActiveTab('statement')}
             >
-              {t('account.history', { defaultValue: 'History' })}
+              {t('account.statement.title', { defaultValue: 'Statement' })}
             </button>
             <button
               className={`tab ${activeTab === 'notifications' ? 'on' : ''}`}
@@ -512,38 +515,55 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
             </div>
           )}
 
-          {/* History Tab */}
-          {activeTab === 'history' && (
+          {/* Statement Tab */}
+          {activeTab === 'statement' && (
             <div className="acct-pane">
-              {historyLoading ? (
-                <div className="mnote">{t('account.loading', { defaultValue: 'Loading...' })}</div>
-              ) : historyError ? (
-                <div className="aerr">{historyError}</div>
-              ) : historyItems.length === 0 ? (
+              <div className="acct-sec acct-stmt-head">
+                <span>{t('account.statement.title', { defaultValue: 'Statement' })}</span>
+                {stmtBalance && (
+                  <span className="acct-stmt-balance">
+                    {t('account.statement.balance', { defaultValue: 'Balance' })} ·{' '}
+                    <span className="acct-stmt-n">{stmtBalance.total}</span>
+                  </span>
+                )}
+              </div>
+              {stmtLoading || !stmtLoaded ? (
                 <div className="mnote">
-                  {t('account.noTransactions', { defaultValue: 'No history yet' })}
+                  {t('account.statement.loading', { defaultValue: 'Loading statement…' })}
+                </div>
+              ) : stmtError && stmtItems.length === 0 ? (
+                <div className="aerr">
+                  {t('account.statement.error', { defaultValue: 'Could not load the statement' })}
+                  {' '}
+                  <button type="button" className="acct-more" onClick={stmtRefresh}>
+                    {t('account.statement.retry', { defaultValue: 'Try again' })}
+                  </button>
+                </div>
+              ) : stmtItems.length === 0 ? (
+                <div className="mnote">
+                  {t('account.statement.empty', { defaultValue: 'No movements yet' })}
                 </div>
               ) : (
-                <div className="acct-rows">
-                  {historyItems.map((item) => {
-                    const isInteraction = item.kind === 'analysis' || item.kind === 'panel' || item.kind === 'debate' || item.kind === 'unsafe-zone';
-                    const debateThreadId = item.kind === 'debate' ? item.id : getDebateThreadId(item);
-                    const isClickable = (isInteraction || !!debateThreadId) && item.kind !== 'quiz';
-                    const handler = isInteraction
-                      ? () => onViewAnalysis?.(item.analysisId || item.id, item.mediaType, item.kind)
-                      : debateThreadId
-                        ? () => onViewDebate?.(debateThreadId)
-                        : null;
-                    const title = isInteraction
-                      ? t('account.viewAnalysis', { defaultValue: 'View this analysis' })
-                      : debateThreadId
+                <div className="acct-rows acct-stmt">
+                  <div className="acct-row acct-stmt-cols" aria-hidden="true">
+                    <span>{t('account.statement.colDate', { defaultValue: 'Date' })}</span>
+                    <span>{t('account.statement.colMovement', { defaultValue: 'Movement' })}</span>
+                    <span>{t('account.statement.colAmount', { defaultValue: 'Amount' })}</span>
+                    <span>{t('account.statement.colBalance', { defaultValue: 'Balance' })}</span>
+                  </div>
+                  {stmtItems.map((item) => {
+                    const handler = rowHandler(item);
+                    const title = handler
+                      ? item.link.kind === 'debate'
                         ? t('account.viewDebate', { defaultValue: 'View this debate' })
-                        : undefined;
+                        : t('account.viewAnalysis', { defaultValue: 'View this analysis' })
+                      : undefined;
+                    const positive = item.amount >= 0;
                     return (
                       <div
                         key={item.id}
-                        className={`acct-row ${isClickable ? 'clickable' : ''}`}
-                        {...(isClickable && {
+                        className={`acct-row ${handler ? 'clickable' : ''}`}
+                        {...(handler && {
                           onClick: handler,
                           role: 'button',
                           tabIndex: 0,
@@ -551,16 +571,55 @@ export function AccountModal({ isOpen, onClose, user, onViewAnalysis, onViewDeba
                           title,
                         })}
                       >
+                        <span className="acct-date">{formatDate(item.at)}</span>
                         <span className="acct-cell">
-                          <span className="acct-desc">
-                            {stripPictographs(formatDescription(item, historyItems))}
-                          </span>
-                          <span className="acct-date">{item.date ? formatDate(item.date) : ''}</span>
+                          <span className="acct-desc">{movementLabel(item)}</span>
                         </span>
-                        {renderRight(item)}
+                        <span className="acct-right">
+                          <span className={`acct-amt ${positive ? 'pos' : 'neg'}`}>
+                            {positive ? '+' : '\u2212'}
+                            {Math.abs(item.amount)}
+                          </span>
+                          {item.receipt_url && (
+                            <a
+                              className="acct-receipt"
+                              href={item.receipt_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {t('account.statement.receipt', { defaultValue: 'Receipt' })}
+                            </a>
+                          )}
+                          {handler && (
+                            <span className="acct-arrow" aria-hidden="true">
+                              &#8250;
+                            </span>
+                          )}
+                        </span>
+                        <span
+                          className="acct-bal"
+                          data-label={t('account.statement.balance', { defaultValue: 'Balance' })}
+                        >
+                          {item.balance_after}
+                        </span>
                       </div>
                     );
                   })}
+                  {stmtHasMore && (
+                    <div className="acct-more-row">
+                      <button
+                        type="button"
+                        className="acct-more"
+                        disabled={stmtLoadingMore}
+                        onClick={stmtLoadMore}
+                      >
+                        {stmtLoadingMore
+                          ? t('account.statement.loading', { defaultValue: 'Loading statement…' })
+                          : t('account.statement.loadMore', { defaultValue: 'Load more' })}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

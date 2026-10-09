@@ -9,7 +9,7 @@ export { useSharedContentLanguage } from './useSharedContentLanguage.js';
 export { useToast } from './useToast.js';
 export { useTransactions } from './useTransactions.js';
 export { useAnalysisHistory } from './useAnalysisHistory.js';
-export { useAccountHistory } from './useAccountHistory.js';
+export { useCreditStatement } from './useCreditStatement.js';
 export { useChat } from './useChat.js';
 export { useColloquium } from './useColloquium.js';
 export { useCommunity } from './useCommunity.js';

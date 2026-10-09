@@ -420,7 +420,50 @@
     "saving": "Speichern...",
     "saveProfile": "Profil speichern",
     "profileSaved": "Profil gespeichert!",
-    "saved": "Gespeichert"
+    "saved": "Gespeichert",
+    "statement": {
+      "title": "Kontoauszug",
+      "balance": "Guthaben",
+      "colDate": "Datum",
+      "colMovement": "Bewegung",
+      "colAmount": "Betrag",
+      "colBalance": "Guthaben",
+      "loading": "Kontoauszug wird geladen…",
+      "empty": "Noch keine Bewegungen",
+      "error": "Kontoauszug konnte nicht geladen werden",
+      "retry": "Erneut versuchen",
+      "loadMore": "Mehr laden",
+      "receipt": "Quittung",
+      "legacyCharge": "Analyse",
+      "source": {
+        "music": "Musikanalyse",
+        "book": "Buchanalyse",
+        "cinema": "Filmanalyse",
+        "news": "Nachrichtenanalyse",
+        "news_sources": "Nachrichtenquellen",
+        "panel": "Philosophen-Panel",
+        "colloquium_access": "Kolloquium · Zugang",
+        "colloquium_participate": "Kolloquium · Teilnahme",
+        "colloquium_philosopher": "Kolloquium · Philosoph",
+        "colloquium_propose": "Kolloquium · Vorschlag",
+        "open_debate": "Offene Debatte",
+        "quiz": "Quiz",
+        "space": "Zugang zum Raum",
+        "unsafe_zone": "Unsichere Zone"
+      },
+      "kind": {
+        "purchase": "Credit-Kauf",
+        "bonus": "Anmeldebonus",
+        "refund": "Credit zurückerstattet",
+        "chargeback": "Stripe-Rückerstattung",
+        "adjustment": "Anpassung"
+      },
+      "reason": {
+        "timeout": "Zeit abgelaufen",
+        "cached": "Analyse existierte bereits",
+        "failed": "Analyse fehlgeschlagen"
+      }
+    }
   },
   "transactions": {
     "purchase": "{{count}} Credits gekauft",
@@ -2339,7 +2382,8 @@
       "history": "VERLAUF",
       "historyError": "Verlauf konnte nicht geladen werden.",
       "loading": "Wird geladen…",
-      "note": "Die Preise sind an Live-Stripe-Produkte gebunden. Jede Aktion, die Credits verbraucht, zeigt ihre Kosten vor dem Klick an."
+      "note": "Die Preise sind an Live-Stripe-Produkte gebunden. Jede Aktion, die Credits verbraucht, zeigt ihre Kosten vor dem Klick an.",
+      "viewStatement": "Kontoauszug ansehen"
     },
     "community": {
       "locked": "Gesperrt",

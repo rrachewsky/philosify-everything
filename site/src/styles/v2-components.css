@@ -313,6 +313,8 @@
 .v2 .hrow .m{font:500 9.5px/1 var(--fu);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 .v2 .hrow .d{font:400 12px var(--fu);color:var(--dim)}
 .v2 .mnote{font:400 11.5px var(--fu);color:var(--mid);margin-top:16px;letter-spacing:.03em}
+.v2 .mnote .mnote-link{color:var(--mid);text-decoration:none;border-bottom:1px solid var(--line);transition:color .16s}
+.v2 .mnote .mnote-link:hover{color:var(--ink);border-color:var(--line-strong)}
 
 /* ---------- Auth (auth mockup; card renamed from .acard) ------ */
 .v2 .awrap{max-width:400px;margin:0 auto;padding-top:6vh}

@@ -1,6 +1,7 @@
 // CommerceModals - shared v2 transaction modals (Buy Credits + quick History),
 // mounted once per page via <V2ModalsHost/>. Opened by window events:
 //   v2-open-buy-credits   v2-open-history
+// Buy Credits links to the statement (v2-open-statement, handled by NavAccount).
 // Buy Credits binds the live packs (Addendum 3): USD packs from
 // CREDIT_PACKAGES via GET /api/pricing localization; checkout via the
 // existing Stripe service (unchanged underneath).
@@ -131,6 +132,22 @@ export function V2ModalsHost() {
             'Prices bind to live Stripe products. Any action that spends credits shows its cost before the click.'
           )}
           {balance ? ` · ${t('v2.nav.balance', 'Balance')}: ${balance.total}` : ''}
+          {isAuthenticated && (
+            <>
+              {' · '}
+              <a
+                className="mnote-link"
+                href="#statement"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(null);
+                  window.dispatchEvent(new CustomEvent('v2-open-statement'));
+                }}
+              >
+                {t('v2.commerce.viewStatement', 'View statement')}
+              </a>
+            </>
+          )}
         </div>
       </ModalV2>
 

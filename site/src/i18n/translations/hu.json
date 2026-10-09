@@ -420,7 +420,50 @@
     "saving": "Mentés...",
     "saveProfile": "Profil mentése",
     "profileSaved": "Profil mentve!",
-    "saved": "Mentve"
+    "saved": "Mentve",
+    "statement": {
+      "title": "Kivonat",
+      "balance": "Egyenleg",
+      "colDate": "Dátum",
+      "colMovement": "Tétel",
+      "colAmount": "Összeg",
+      "colBalance": "Egyenleg",
+      "loading": "Kivonat betöltése…",
+      "empty": "Még nincs tétel",
+      "error": "A kivonat nem tölthető be",
+      "retry": "Újra",
+      "loadMore": "Továbbiak betöltése",
+      "receipt": "Nyugta",
+      "legacyCharge": "Elemzés",
+      "source": {
+        "music": "Zeneelemzés",
+        "book": "Könyvelemzés",
+        "cinema": "Filmelemzés",
+        "news": "Hírelemzés",
+        "news_sources": "Hírforrások",
+        "panel": "Filozófus Panel",
+        "colloquium_access": "Kollokvium · hozzáférés",
+        "colloquium_participate": "Kollokvium · részvétel",
+        "colloquium_philosopher": "Kollokvium · filozófus",
+        "colloquium_propose": "Kollokvium · javaslat",
+        "open_debate": "Nyílt vita",
+        "quiz": "Kvíz",
+        "space": "Tér hozzáférés",
+        "unsafe_zone": "Veszélyes Zóna"
+      },
+      "kind": {
+        "purchase": "Kreditvásárlás",
+        "bonus": "Regisztrációs bónusz",
+        "refund": "Kredit visszaadva",
+        "chargeback": "Stripe-visszatérítés",
+        "adjustment": "Kiigazítás"
+      },
+      "reason": {
+        "timeout": "időtúllépés",
+        "cached": "az elemzés már létezett",
+        "failed": "az elemzés sikertelen"
+      }
+    }
   },
   "transactions": {
     "purchase": "{{count}} kredit vásárlása",
@@ -2406,7 +2449,8 @@
       "history": "ELŐZMÉNYEK",
       "historyError": "Nem sikerült betölteni az előzményeket.",
       "loading": "Betöltés…",
-      "note": "Az árak az élő Stripe termékekhez kötődnek. Minden kreditet költő művelet a kattintás előtt mutatja a költségét."
+      "note": "Az árak az élő Stripe termékekhez kötődnek. Minden kreditet költő művelet a kattintás előtt mutatja a költségét.",
+      "viewStatement": "Kivonat megtekintése"
     },
     "community": {
       "locked": "Zárolva",

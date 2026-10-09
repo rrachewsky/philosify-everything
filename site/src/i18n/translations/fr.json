@@ -420,7 +420,50 @@
     "saving": "Enregistrement...",
     "saveProfile": "Enregistrer le Profil",
     "profileSaved": "Profil enregistré !",
-    "saved": "Enregistré"
+    "saved": "Enregistré",
+    "statement": {
+      "title": "Relevé",
+      "balance": "Solde",
+      "colDate": "Date",
+      "colMovement": "Mouvement",
+      "colAmount": "Montant",
+      "colBalance": "Solde",
+      "loading": "Chargement du relevé…",
+      "empty": "Aucun mouvement pour l'instant",
+      "error": "Impossible de charger le relevé",
+      "retry": "Réessayer",
+      "loadMore": "Charger plus",
+      "receipt": "Reçu",
+      "legacyCharge": "Analyse",
+      "source": {
+        "music": "Analyse de musique",
+        "book": "Analyse de livre",
+        "cinema": "Analyse de film",
+        "news": "Analyse d'actualité",
+        "news_sources": "Sources d'actualités",
+        "panel": "Panneau de Philosophes",
+        "colloquium_access": "Colloque · accès",
+        "colloquium_participate": "Colloque · participation",
+        "colloquium_philosopher": "Colloque · philosophe",
+        "colloquium_propose": "Colloque · proposition",
+        "open_debate": "Débat ouvert",
+        "quiz": "Quiz",
+        "space": "Accès à un espace",
+        "unsafe_zone": "Zone Dangereuse"
+      },
+      "kind": {
+        "purchase": "Achat de crédits",
+        "bonus": "Bonus d'inscription",
+        "refund": "Crédit restitué",
+        "chargeback": "Remboursement Stripe",
+        "adjustment": "Ajustement"
+      },
+      "reason": {
+        "timeout": "délai dépassé",
+        "cached": "l'analyse existait déjà",
+        "failed": "l'analyse a échoué"
+      }
+    }
   },
   "transactions": {
     "purchase": "Acheté {{count}} crédits",
@@ -2331,7 +2374,8 @@
       "history": "HISTORIQUE",
       "historyError": "Impossible de charger l'historique.",
       "loading": "Chargement…",
-      "note": "Les prix sont liés aux produits Stripe en direct. Toute action qui dépense des crédits affiche son coût avant le clic."
+      "note": "Les prix sont liés aux produits Stripe en direct. Toute action qui dépense des crédits affiche son coût avant le clic.",
+      "viewStatement": "Voir le relevé"
     },
     "community": {
       "locked": "Verrouillé",

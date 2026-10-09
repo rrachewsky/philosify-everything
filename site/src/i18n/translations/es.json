@@ -420,7 +420,50 @@
     "saving": "Guardando...",
     "saveProfile": "Guardar Perfil",
     "profileSaved": "¡Perfil guardado!",
-    "saved": "Guardado"
+    "saved": "Guardado",
+    "statement": {
+      "title": "Extracto",
+      "balance": "Saldo",
+      "colDate": "Fecha",
+      "colMovement": "Movimiento",
+      "colAmount": "Importe",
+      "colBalance": "Saldo",
+      "loading": "Cargando extracto…",
+      "empty": "Aún no hay movimientos",
+      "error": "No se pudo cargar el extracto",
+      "retry": "Intentar de nuevo",
+      "loadMore": "Cargar más",
+      "receipt": "Recibo",
+      "legacyCharge": "Análisis",
+      "source": {
+        "music": "Análisis de música",
+        "book": "Análisis de libro",
+        "cinema": "Análisis de película",
+        "news": "Análisis de noticia",
+        "news_sources": "Fuentes de noticias",
+        "panel": "Panel de Filósofos",
+        "colloquium_access": "Coloquio · acceso",
+        "colloquium_participate": "Coloquio · participación",
+        "colloquium_philosopher": "Coloquio · filósofo",
+        "colloquium_propose": "Coloquio · propuesta",
+        "open_debate": "Debate abierto",
+        "quiz": "Quiz",
+        "space": "Acceso a espacio",
+        "unsafe_zone": "Zona Insegura"
+      },
+      "kind": {
+        "purchase": "Compra de créditos",
+        "bonus": "Bono de registro",
+        "refund": "Crédito devuelto",
+        "chargeback": "Reembolso Stripe",
+        "adjustment": "Ajuste"
+      },
+      "reason": {
+        "timeout": "tiempo agotado",
+        "cached": "el análisis ya existía",
+        "failed": "el análisis falló"
+      }
+    }
   },
   "transactions": {
     "purchase": "Compró {{count}} créditos",
@@ -2347,7 +2390,8 @@
       "history": "HISTORIAL",
       "historyError": "No se pudo cargar el historial.",
       "loading": "Cargando…",
-      "note": "Los precios provienen de productos activos de Stripe. Toda acción que gasta créditos muestra su costo antes del clic."
+      "note": "Los precios provienen de productos activos de Stripe. Toda acción que gasta créditos muestra su costo antes del clic.",
+      "viewStatement": "Ver extracto"
     },
     "community": {
       "locked": "Bloqueado",

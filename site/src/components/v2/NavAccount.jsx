@@ -1,14 +1,14 @@
 // NavAccount - shared v2 top-right chrome: language pill, balance,
 // account menu (History / Buy Credits / Logout) or Sign in when logged out.
-// Opens the shared transaction modals via the v2-open-* window events.
+// Opens the shared transaction modals via the v2-open-* window events;
+// v2-open-statement opens the AccountModal on its Statement tab.
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { useCreditsContext } from '../../contexts/CreditsContext';
 import { changeLanguageWithPreload } from '../../i18n/config.js';
-// Full account surface (Profile / History+transactions / Notifications /
-// Security) reused untouched — legacy skin, flagged for a future v2 mockup.
+// Full account surface (Profile / Statement / Notifications / Security).
 import { AccountModal } from '../account';
 
 const LOCALES = [
@@ -23,6 +23,7 @@ export function NavAccount() {
   const { balance } = useCreditsContext();
   const [menu, setMenu] = useState(null); // 'acct' | 'lang' | null
   const [acctOpen, setAcctOpen] = useState(false);
+  const [acctTab, setAcctTab] = useState('profile');
   const rootRef = useRef(null);
 
   // AccountModal history rows → URL targets (Addendum 1 replay pattern)
@@ -38,6 +39,17 @@ export function NavAccount() {
     setAcctOpen(false);
     navigate(`/ideas?debate=${id}`);
   };
+
+  // Buy Credits modal → “View statement”: open the account surface on its tab
+  useEffect(() => {
+    const openStatement = () => {
+      setMenu(null);
+      setAcctTab('statement');
+      setAcctOpen(true);
+    };
+    window.addEventListener('v2-open-statement', openStatement);
+    return () => window.removeEventListener('v2-open-statement', openStatement);
+  }, []);
 
   useEffect(() => {
     const close = (e) => {
@@ -127,6 +139,7 @@ export function NavAccount() {
                 onClick={(e) => {
                   e.preventDefault();
                   setMenu(null);
+                  setAcctTab('profile');
                   setAcctOpen(true);
                 }}
               >
@@ -175,6 +188,7 @@ export function NavAccount() {
           isOpen={acctOpen}
           onClose={() => setAcctOpen(false)}
           user={user}
+          initialTab={acctTab}
           onViewAnalysis={viewAnalysis}
           onViewDebate={viewDebate}
         />

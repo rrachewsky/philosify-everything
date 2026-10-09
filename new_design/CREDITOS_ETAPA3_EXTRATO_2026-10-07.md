@@ -197,7 +197,7 @@ Ordem de deploy: **worker primeiro** (endpoint novo coexiste com `/api/history` 
 | Deploy worker | 08/10 | version c6acfeb9-c9a1-4980-baf4-40479c3fbd2f · prod: /api/health ok · /api/credits/history → 401 sem cookie · /api/history → 404 |
 | Deploy site | 09/10 | pages deploy e8b8ec3d (branch production) · bundle assets/index-CnBHb3rj.js · curl em philosify.org cai no challenge do Cloudflare (403), verificação do domínio feita no navegador |
 | Aceite § 5 | 09/10 | ACEITE do Bob: aba em Configurações da conta verificada; lote do painel agrupado em um item −3; filme clicável; linhas antigas rotuladas; saldo por linha sem salto |
-| Commits | — | — |
+| Commits | 09/10 | (1) worker + teste + este md: fc653e7 · (2) site + i18n + css: o commit que traz esta linha |
 
 ## 9. Ajustes encontrados ao escrever o código (contrato aprovado mantido)
 

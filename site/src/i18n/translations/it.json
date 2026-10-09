@@ -420,7 +420,50 @@
     "saving": "Salvataggio...",
     "saveProfile": "Salva Profilo",
     "profileSaved": "Profilo salvato!",
-    "saved": "Salvato"
+    "saved": "Salvato",
+    "statement": {
+      "title": "Estratto conto",
+      "balance": "Saldo",
+      "colDate": "Data",
+      "colMovement": "Movimento",
+      "colAmount": "Importo",
+      "colBalance": "Saldo",
+      "loading": "Caricamento estratto conto…",
+      "empty": "Ancora nessun movimento",
+      "error": "Impossibile caricare l'estratto conto",
+      "retry": "Riprova",
+      "loadMore": "Carica altri",
+      "receipt": "Ricevuta",
+      "legacyCharge": "Analisi",
+      "source": {
+        "music": "Analisi musicale",
+        "book": "Analisi di libro",
+        "cinema": "Analisi di film",
+        "news": "Analisi di notizia",
+        "news_sources": "Fonti di notizie",
+        "panel": "Panel dei Filosofi",
+        "colloquium_access": "Colloquio · accesso",
+        "colloquium_participate": "Colloquio · partecipazione",
+        "colloquium_philosopher": "Colloquio · filosofo",
+        "colloquium_propose": "Colloquio · proposta",
+        "open_debate": "Dibattito aperto",
+        "quiz": "Quiz",
+        "space": "Accesso a spazio",
+        "unsafe_zone": "Zona Insicura"
+      },
+      "kind": {
+        "purchase": "Acquisto di crediti",
+        "bonus": "Bonus di registrazione",
+        "refund": "Credito restituito",
+        "chargeback": "Rimborso Stripe",
+        "adjustment": "Rettifica"
+      },
+      "reason": {
+        "timeout": "tempo scaduto",
+        "cached": "l'analisi esisteva già",
+        "failed": "analisi fallita"
+      }
+    }
   },
   "transactions": {
     "purchase": "Acquistati {{count}} crediti",
@@ -2321,7 +2364,8 @@
       "history": "CRONOLOGIA",
       "historyError": "Impossibile caricare la cronologia.",
       "loading": "Caricamento…",
-      "note": "I prezzi provengono da prodotti Stripe attivi. Ogni azione che spende crediti mostra il costo prima del clic."
+      "note": "I prezzi provengono da prodotti Stripe attivi. Ogni azione che spende crediti mostra il costo prima del clic.",
+      "viewStatement": "Vedi estratto conto"
     },
     "community": {
       "locked": "Bloccato",

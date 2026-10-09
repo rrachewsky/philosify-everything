@@ -420,7 +420,50 @@
     "saving": "Opslaan...",
     "saveProfile": "Profiel opslaan",
     "profileSaved": "Profiel opgeslagen!",
-    "saved": "Opgeslagen"
+    "saved": "Opgeslagen",
+    "statement": {
+      "title": "Overzicht",
+      "balance": "Saldo",
+      "colDate": "Datum",
+      "colMovement": "Mutatie",
+      "colAmount": "Bedrag",
+      "colBalance": "Saldo",
+      "loading": "Overzicht laden…",
+      "empty": "Nog geen mutaties",
+      "error": "Overzicht kon niet worden geladen",
+      "retry": "Opnieuw proberen",
+      "loadMore": "Meer laden",
+      "receipt": "Bon",
+      "legacyCharge": "Analyse",
+      "source": {
+        "music": "Muziekanalyse",
+        "book": "Boekanalyse",
+        "cinema": "Filmanalyse",
+        "news": "Nieuwsanalyse",
+        "news_sources": "Nieuwsbronnen",
+        "panel": "Filosofenpanel",
+        "colloquium_access": "Colloquium · toegang",
+        "colloquium_participate": "Colloquium · deelname",
+        "colloquium_philosopher": "Colloquium · filosoof",
+        "colloquium_propose": "Colloquium · voorstel",
+        "open_debate": "Open debat",
+        "quiz": "Quiz",
+        "space": "Toegang tot ruimte",
+        "unsafe_zone": "Onveilige Zone"
+      },
+      "kind": {
+        "purchase": "Creditaankoop",
+        "bonus": "Registratiebonus",
+        "refund": "Credit teruggegeven",
+        "chargeback": "Stripe-terugbetaling",
+        "adjustment": "Correctie"
+      },
+      "reason": {
+        "timeout": "time-out",
+        "cached": "analyse bestond al",
+        "failed": "analyse mislukt"
+      }
+    }
   },
   "transactions": {
     "purchase": "Purchased {{count}} credits",
@@ -2406,7 +2449,8 @@
       "history": "GESCHIEDENIS",
       "historyError": "Kon geschiedenis niet laden.",
       "loading": "Laden…",
-      "note": "Prijzen zijn gekoppeld aan live Stripe-producten. Elke actie die credits kost, toont de kosten vóór de klik."
+      "note": "Prijzen zijn gekoppeld aan live Stripe-producten. Elke actie die credits kost, toont de kosten vóór de klik.",
+      "viewStatement": "Overzicht bekijken"
     },
     "community": {
       "locked": "Vergrendeld",

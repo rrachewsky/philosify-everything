@@ -420,7 +420,50 @@
     "saving": "جارٍ الحفظ...",
     "saveProfile": "حفظ الملف الشخصي",
     "profileSaved": "تم حفظ الملف الشخصي!",
-    "saved": "تم الحفظ"
+    "saved": "تم الحفظ",
+    "statement": {
+      "title": "كشف الحساب",
+      "balance": "الرصيد",
+      "colDate": "التاريخ",
+      "colMovement": "الحركة",
+      "colAmount": "المبلغ",
+      "colBalance": "الرصيد",
+      "loading": "جارٍ تحميل كشف الحساب…",
+      "empty": "لا توجد حركات بعد",
+      "error": "تعذر تحميل كشف الحساب",
+      "retry": "حاول مجددًا",
+      "loadMore": "تحميل المزيد",
+      "receipt": "الإيصال",
+      "legacyCharge": "تحليل",
+      "source": {
+        "music": "تحليل موسيقى",
+        "book": "تحليل كتاب",
+        "cinema": "تحليل فيلم",
+        "news": "تحليل خبر",
+        "news_sources": "مصادر الأخبار",
+        "panel": "لجنة الفلاسفة",
+        "colloquium_access": "ندوة · وصول",
+        "colloquium_participate": "ندوة · مشاركة",
+        "colloquium_philosopher": "ندوة · فيلسوف",
+        "colloquium_propose": "ندوة · اقتراح",
+        "open_debate": "نقاش مفتوح",
+        "quiz": "اختبار",
+        "space": "الوصول إلى مساحة",
+        "unsafe_zone": "المنطقة الخطرة"
+      },
+      "kind": {
+        "purchase": "شراء رصيد",
+        "bonus": "مكافأة التسجيل",
+        "refund": "تمت إعادة الرصيد",
+        "chargeback": "استرداد Stripe",
+        "adjustment": "تعديل"
+      },
+      "reason": {
+        "timeout": "انتهت المهلة",
+        "cached": "التحليل موجود مسبقًا",
+        "failed": "فشل التحليل"
+      }
+    }
   },
   "transactions": {
     "purchase": "تم شراء {{count}} رصيد",
@@ -2299,7 +2342,8 @@
       "history": "السجل",
       "historyError": "تعذر تحميل السجل.",
       "loading": "جاري التحميل…",
-      "note": "الأسعار مرتبطة بمنتجات Stripe المباشرة. أي إجراء يستهلك أرصدة يعرض تكلفته قبل النقر."
+      "note": "الأسعار مرتبطة بمنتجات Stripe المباشرة. أي إجراء يستهلك أرصدة يعرض تكلفته قبل النقر.",
+      "viewStatement": "عرض كشف الحساب"
     },
     "community": {
       "locked": "مقفل",

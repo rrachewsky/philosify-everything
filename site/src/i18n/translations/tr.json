@@ -420,7 +420,50 @@
     "saving": "Kaydediliyor...",
     "saveProfile": "Profili Kaydet",
     "profileSaved": "Profil kaydedildi!",
-    "saved": "Kaydedildi"
+    "saved": "Kaydedildi",
+    "statement": {
+      "title": "Hesap Özeti",
+      "balance": "Bakiye",
+      "colDate": "Tarih",
+      "colMovement": "İşlem",
+      "colAmount": "Tutar",
+      "colBalance": "Bakiye",
+      "loading": "Hesap özeti yükleniyor…",
+      "empty": "Henüz işlem yok",
+      "error": "Hesap özeti yüklenemedi",
+      "retry": "Tekrar dene",
+      "loadMore": "Daha fazla yükle",
+      "receipt": "Makbuz",
+      "legacyCharge": "Analiz",
+      "source": {
+        "music": "Müzik analizi",
+        "book": "Kitap analizi",
+        "cinema": "Film analizi",
+        "news": "Haber analizi",
+        "news_sources": "Haber kaynakları",
+        "panel": "Filozof Paneli",
+        "colloquium_access": "Kolokyum · erişim",
+        "colloquium_participate": "Kolokyum · katılım",
+        "colloquium_philosopher": "Kolokyum · filozof",
+        "colloquium_propose": "Kolokyum · öneri",
+        "open_debate": "Açık tartışma",
+        "quiz": "Quiz",
+        "space": "Alana erişim",
+        "unsafe_zone": "Güvensiz Bölge"
+      },
+      "kind": {
+        "purchase": "Kredi satın alma",
+        "bonus": "Kayıt bonusu",
+        "refund": "Kredi iade edildi",
+        "chargeback": "Stripe iadesi",
+        "adjustment": "Düzeltme"
+      },
+      "reason": {
+        "timeout": "süre doldu",
+        "cached": "analiz zaten mevcuttu",
+        "failed": "analiz başarısız oldu"
+      }
+    }
   },
   "transactions": {
     "purchase": "Purchased {{count}} credits",
@@ -2406,7 +2449,8 @@
       "history": "GEÇMİŞ",
       "historyError": "Geçmiş yüklenemedi.",
       "loading": "Yükleniyor…",
-      "note": "Fiyatlar canlı Stripe ürünlerine bağlıdır. Kredi harcayan her işlem, tıklamadan önce maliyetini gösterir."
+      "note": "Fiyatlar canlı Stripe ürünlerine bağlıdır. Kredi harcayan her işlem, tıklamadan önce maliyetini gösterir.",
+      "viewStatement": "Hesap özetini gör"
     },
     "community": {
       "locked": "Kilitli",

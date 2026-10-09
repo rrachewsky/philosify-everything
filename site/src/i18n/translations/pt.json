@@ -420,7 +420,50 @@
     "saving": "Salvando...",
     "saveProfile": "Salvar Perfil",
     "profileSaved": "Perfil salvo!",
-    "saved": "Salvo"
+    "saved": "Salvo",
+    "statement": {
+      "title": "Extrato",
+      "balance": "Saldo",
+      "colDate": "Data",
+      "colMovement": "Movimento",
+      "colAmount": "Valor",
+      "colBalance": "Saldo",
+      "loading": "Carregando extrato…",
+      "empty": "Nenhum movimento ainda",
+      "error": "Não foi possível carregar o extrato",
+      "retry": "Tentar de novo",
+      "loadMore": "Carregar mais",
+      "receipt": "Recibo",
+      "legacyCharge": "Análise",
+      "source": {
+        "music": "Análise de música",
+        "book": "Análise de livro",
+        "cinema": "Análise de filme",
+        "news": "Análise de notícia",
+        "news_sources": "Fontes de notícias",
+        "panel": "Painel de Filósofos",
+        "colloquium_access": "Colóquio · acesso",
+        "colloquium_participate": "Colóquio · participação",
+        "colloquium_philosopher": "Colóquio · filósofo",
+        "colloquium_propose": "Colóquio · proposta",
+        "open_debate": "Debate aberto",
+        "quiz": "Quiz",
+        "space": "Acesso a espaço",
+        "unsafe_zone": "Zona Insegura"
+      },
+      "kind": {
+        "purchase": "Compra de créditos",
+        "bonus": "Bônus de cadastro",
+        "refund": "Crédito devolvido",
+        "chargeback": "Reembolso Stripe",
+        "adjustment": "Ajuste"
+      },
+      "reason": {
+        "timeout": "tempo esgotado",
+        "cached": "análise já existia",
+        "failed": "análise falhou"
+      }
+    }
   },
   "transactions": {
     "purchase": "Comprou {{count}} créditos",
@@ -2326,7 +2369,8 @@
       "history": "HISTÓRICO",
       "historyError": "Não foi possível carregar o histórico.",
       "loading": "Carregando…",
-      "note": "Os preços vêm de produtos ativos do Stripe. Toda ação que gasta créditos mostra o custo antes do clique."
+      "note": "Os preços vêm de produtos ativos do Stripe. Toda ação que gasta créditos mostra o custo antes do clique.",
+      "viewStatement": "Ver extrato"
     },
     "community": {
       "locked": "Bloqueado",

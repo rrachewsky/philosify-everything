@@ -420,7 +420,50 @@
     "saving": "Zapisywanie...",
     "saveProfile": "Zapisz profil",
     "profileSaved": "Profil zapisany!",
-    "saved": "Zapisano"
+    "saved": "Zapisano",
+    "statement": {
+      "title": "Wyciąg",
+      "balance": "Saldo",
+      "colDate": "Data",
+      "colMovement": "Operacja",
+      "colAmount": "Kwota",
+      "colBalance": "Saldo",
+      "loading": "Ładowanie wyciągu…",
+      "empty": "Brak operacji",
+      "error": "Nie udało się wczytać wyciągu",
+      "retry": "Spróbuj ponownie",
+      "loadMore": "Wczytaj więcej",
+      "receipt": "Paragon",
+      "legacyCharge": "Analiza",
+      "source": {
+        "music": "Analiza muzyki",
+        "book": "Analiza książki",
+        "cinema": "Analiza filmu",
+        "news": "Analiza wiadomości",
+        "news_sources": "Źródła wiadomości",
+        "panel": "Panel Filozofów",
+        "colloquium_access": "Kolokwium · dostęp",
+        "colloquium_participate": "Kolokwium · udział",
+        "colloquium_philosopher": "Kolokwium · filozof",
+        "colloquium_propose": "Kolokwium · propozycja",
+        "open_debate": "Otwarta debata",
+        "quiz": "Quiz",
+        "space": "Dostęp do przestrzeni",
+        "unsafe_zone": "Niebezpieczna Strefa"
+      },
+      "kind": {
+        "purchase": "Zakup kredytów",
+        "bonus": "Bonus rejestracyjny",
+        "refund": "Kredyt zwrócony",
+        "chargeback": "Zwrot Stripe",
+        "adjustment": "Korekta"
+      },
+      "reason": {
+        "timeout": "przekroczono czas",
+        "cached": "analiza już istniała",
+        "failed": "analiza nie powiodła się"
+      }
+    }
   },
   "transactions": {
     "purchase": "Purchased {{count}} credits",
@@ -2406,7 +2449,8 @@
       "history": "HISTORIA",
       "historyError": "Nie udało się załadować historii.",
       "loading": "Ładowanie…",
-      "note": "Ceny są powiązane z aktualnymi produktami Stripe. Każde działanie zużywające kredyty pokazuje swój koszt przed kliknięciem."
+      "note": "Ceny są powiązane z aktualnymi produktami Stripe. Każde działanie zużywające kredyty pokazuje swój koszt przed kliknięciem.",
+      "viewStatement": "Zobacz wyciąg"
     },
     "community": {
       "locked": "Zablokowane",

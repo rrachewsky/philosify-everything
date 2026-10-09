@@ -420,7 +420,50 @@
     "saving": "保存中...",
     "saveProfile": "プロフィールを保存",
     "profileSaved": "プロフィールを保存しました！",
-    "saved": "保存済み"
+    "saved": "保存済み",
+    "statement": {
+      "title": "明細",
+      "balance": "残高",
+      "colDate": "日付",
+      "colMovement": "内容",
+      "colAmount": "金額",
+      "colBalance": "残高",
+      "loading": "明細を読み込み中…",
+      "empty": "まだ履歴はありません",
+      "error": "明細を読み込めませんでした",
+      "retry": "再試行",
+      "loadMore": "さらに読み込む",
+      "receipt": "領収書",
+      "legacyCharge": "分析",
+      "source": {
+        "music": "音楽の分析",
+        "book": "本の分析",
+        "cinema": "映画の分析",
+        "news": "ニュースの分析",
+        "news_sources": "ニュースソース",
+        "panel": "哲学者パネル",
+        "colloquium_access": "コロキウム · アクセス",
+        "colloquium_participate": "コロキウム · 参加",
+        "colloquium_philosopher": "コロキウム · 哲学者",
+        "colloquium_propose": "コロキウム · 提案",
+        "open_debate": "オープンディベート",
+        "quiz": "クイズ",
+        "space": "スペースへのアクセス",
+        "unsafe_zone": "危険地帯"
+      },
+      "kind": {
+        "purchase": "クレジット購入",
+        "bonus": "登録ボーナス",
+        "refund": "クレジット返却",
+        "chargeback": "Stripe 払い戻し",
+        "adjustment": "調整"
+      },
+      "reason": {
+        "timeout": "タイムアウト",
+        "cached": "分析は既に存在していました",
+        "failed": "分析に失敗しました"
+      }
+    }
   },
   "transactions": {
     "purchase": "{{count}}クレジットを購入",
@@ -2305,7 +2348,8 @@
       "history": "履歴",
       "historyError": "履歴を読み込めませんでした。",
       "loading": "読み込み中…",
-      "note": "価格はStripeの実際の商品に連動します。クレジットを消費する操作は、クリック前に必ず費用を表示します。"
+      "note": "価格はStripeの実際の商品に連動します。クレジットを消費する操作は、クリック前に必ず費用を表示します。",
+      "viewStatement": "明細を見る"
     },
     "community": {
       "locked": "ロック中",
