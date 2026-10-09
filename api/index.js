@@ -72,6 +72,7 @@ import {
 } from "./src/handlers/news-preferences.js";
 import { handlePanelHistory } from "./src/handlers/panel-history.js";
 import { handleUserHistory } from "./src/handlers/user-history.js";
+import { handleCreditStatement } from "./src/handlers/credit-statement.js";
 import { handleHistoryGraph, handleHistoryExtract, refreshGraphCache } from "./src/handlers/history-graph.js";
 import { refreshBreakingNews } from "./src/news/index.js";
 import { handleTTS } from "./src/handlers/tts.js";
@@ -1767,55 +1768,11 @@ export default {
         return handleTransactions(request, env, origin);
       }
 
-      // Account history (authenticated): purchases/refunds + other credit events
-      // Uses user's token so RLS is enforced (defense in depth)
-      if (url.pathname === "/api/history" && request.method === "GET") {
-        const auth = await getSupabaseForUser(request, env);
-        if (!auth) {
-          return jsonResponse({ error: "Unauthorized" }, 401, origin, env);
-        }
-
-        try {
-          const { client: supabase, userId, setCookieHeader } = auth;
-
-          // Query credit_history - RLS filters to user's records
-          const { data: creditHistory, error } = await supabase
-            .from("credit_history")
-            .select(
-              "id, type, amount, created_at, status, stripe_session_id, metadata",
-            )
-            .order("created_at", { ascending: false })
-            .limit(50);
-
-          if (error) {
-            console.error("[History] credit_history query failed:", error);
-            return jsonResponse(
-              { error: "Failed to load history" },
-              500,
-              origin,
-              env,
-            );
-          }
-
-          let response = jsonResponse(
-            {
-              success: true,
-              credits: creditHistory || [],
-            },
-            200,
-            origin,
-            env,
-          );
-          return addRefreshedCookieToResponse(response, setCookieHeader);
-        } catch (e) {
-          console.error("[History] Exception:", e.message);
-          return jsonResponse(
-            { error: "Failed to load history" },
-            500,
-            origin,
-            env,
-          );
-        }
+      // Credit statement (authenticated): credit_history as a paginated
+      // statement with origin, batches and running balance. Replaces the
+      // retired /api/history (Etapa 3, 08/10/2026).
+      if (url.pathname === "/api/credits/history" && request.method === "GET") {
+        return handleCreditStatement(request, env, origin);
       }
 
       // Check balance - uses user's token so RLS is enforced
