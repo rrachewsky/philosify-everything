@@ -4504,15 +4504,17 @@ export default {
       `[Cron] Scheduled event triggered at ${now.toISOString()} (hour: ${hour})`,
     );
 
-    // Hour 12: Question of the Day for Agora (every day at noon UTC)
-    if (hour === 12) {
+    // Noon block: Question of the Day + weekly Top 50. Gated by the EXACT cron
+    // expression, not by the hour: the "*/5" cron also runs at 12:00..12:55 and
+    // used to re-fire this block 12 times (10 Oct 2026).
+    if (event.cron === "0 12 * * *") {
       ctx.waitUntil(
         generateDailyQuestion(env).catch((err) =>
           console.error("[Cron] Daily question failed:", err.message),
         ),
       );
 
-      // Weekly: Top 10 Spotify refresh (Sundays only)
+      // Weekly: Top 50 ticker refresh from the public chart (Sundays only)
       if (now.getUTCDay() === 0) {
         ctx.waitUntil(handleScheduledTop10(env));
       }

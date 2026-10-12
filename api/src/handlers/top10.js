@@ -1,16 +1,32 @@
 // ============================================================
-// HANDLER - TOP 10 SPOTIFY (Automático)
+// HANDLER - TOP 50 (ticker de música)
 // ============================================================
-// Busca Top 10 Global do Spotify, analisa com GPT-4.1, e cacheia
+// Weekly refresh of the 50 tracks the music ticker shows.
+//
+// Source (10 Oct 2026, TOP50_SPOTIFY_DIAGNOSTICO_2026-10-09.md): the public
+// Spotify Global Daily chart as published by kworb.net. The Spotify Web API
+// stopped serving Spotify-owned editorial playlists (Top 50 Global included)
+// to apps without extended quota mode on 27 Nov 2024; the previous source was
+// a hand-made copy playlist that froze on 22 Jan 2026. The chart page carries
+// position, artist(s), title and the Spotify track id, which is all the ticker
+// needs. When extended quota mode is granted, the official playlist becomes
+// the primary source and this parser the fallback.
+//
+// Defensive contract: the parser must yield exactly 50 valid rows (positions
+// 1..50, 22-char Spotify ids, non-empty title/artist, no duplicate ids) or the
+// refresh throws and the previous week stays active. A failed week is loud in
+// the logs and never overwrites good data.
 
 import { getSecret } from "../utils/secrets.js";
 import { safeEq } from "../payments/crypto.js";
-import { getSpotifyToken } from "../spotify/index.js";
 import { getCorsHeaders } from "../utils/cors.js";
 import { handleAnalyze } from "./analyze.js";
 
-// Philosify's own playlist (copy of Top 50 Global)
-const TOP_50_GLOBAL_PLAYLIST = "3gkmUxBX2zrKL0eQv6mwN4"; // Philosify Top 50 Global
+const CHART_URL = "https://kworb.net/spotify/country/global_daily.html";
+const CHART_FETCH_TIMEOUT_MS = 20000;
+const TRACKS_WANTED = 50;
+// featured_songs keeps this many weeks of history; older weeks are purged on refresh.
+export const KEEP_WEEKS = 8;
 
 // Get current week start (Sunday)
 function getWeekStart() {
@@ -21,52 +37,95 @@ function getWeekStart() {
   return sunday.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
-// Fetch Top 10 from Spotify
-async function fetchSpotifyTop10(env) {
-  const clientId = await getSecret(env.SPOTIFY_CLIENT_ID);
-  const clientSecret = await getSecret(env.SPOTIFY_CLIENT_SECRET);
+// ------------------------------------------------------------
+// Chart parsing (pure, exported for vitest)
+// ------------------------------------------------------------
 
-  console.log(
-    `[Top10] Client ID present: ${!!clientId}, length: ${clientId?.length || 0}`,
-  );
-  console.log(
-    `[Top10] Client Secret present: ${!!clientSecret}, length: ${clientSecret?.length || 0}`,
-  );
+const SPOTIFY_ID_RE = /^[A-Za-z0-9]{22}$/;
 
-  const accessToken = await getSpotifyToken(clientId, clientSecret);
-  console.log(
-    `[Top10] Access token obtained: ${!!accessToken}, length: ${accessToken?.length || 0}`,
-  );
+function decodeEntities(s) {
+  return String(s)
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&nbsp;/g, " ")
+    .trim();
+}
 
-  const playlistUrl = `https://api.spotify.com/v1/playlists/${TOP_50_GLOBAL_PLAYLIST}/tracks?limit=50&fields=items(track(id,name,artists))`;
-  console.log(`[Top10] Fetching playlist: ${playlistUrl}`);
-
-  const response = await fetch(playlistUrl, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  console.log(`[Top10] Playlist response status: ${response.status}`);
-
-  if (!response.ok) {
-    const error = await response.text();
-    console.error(`[Top10] Playlist API error response: ${error}`);
-    throw new Error(`Spotify API error: ${response.status} - ${error}`);
+/**
+ * Parses the kworb "Spotify Daily Chart - Global" page.
+ * Row shape (one <tr> per track):
+ *   <td class="np">1</td> … <td class="text mp"><div>
+ *     <a href="../artist/ID.html">KAROL G</a> - <a href="../track/ID.html">BbY WOW</a>
+ *     (w/ <a href="../artist/ID.html">Judeline</a>, <a …>rusowsky</a>)</div></td> …
+ * Returns { chartDate, tracks } where tracks are the first `wanted` rows in chart
+ * order, each { position, song_title, artist, spotify_id }. Throws on any
+ * structural surprise: that is the signal to keep the previous week.
+ */
+export function parseChartPage(html, wanted = TRACKS_WANTED) {
+  if (typeof html !== "string" || html.length < 1000) {
+    throw new Error("chart page empty or too short");
   }
+  const tableStart = html.indexOf('id="spotifydaily"');
+  if (tableStart < 0) throw new Error("chart table #spotifydaily not found");
+  const chartDate = (html.match(/\b(\d{4}\/\d{2}\/\d{2})\b/) || [])[1] || null;
 
-  const data = await response.json();
-  console.log(`[Top10] Got ${data.items?.length || 0} tracks from playlist`);
+  const rows = html.slice(tableStart).match(/<tr[^>]*>[\s\S]*?<\/tr>/g) || [];
+  const tracks = [];
+  const seen = new Set();
+  for (const row of rows) {
+    if (tracks.length >= wanted) break;
+    const pos = (row.match(/<td class="np">\s*(\d+)\s*<\/td>/) || [])[1];
+    if (!pos) continue; // header row or layout row
+    const position = Number(pos);
+    if (position !== tracks.length + 1) {
+      throw new Error(`chart rows out of order: expected ${tracks.length + 1}, got ${position}`);
+    }
+    const cell = (row.match(/<td class="text mp">\s*<div>([\s\S]*?)<\/div>\s*<\/td>/) || [])[1];
+    if (!cell) throw new Error(`row ${position}: title cell not found`);
+    const track = cell.match(/<a href="\.\.\/track\/([A-Za-z0-9]+)\.html">([\s\S]*?)<\/a>/);
+    if (!track) throw new Error(`row ${position}: track link not found`);
+    const spotify_id = track[1];
+    const song_title = decodeEntities(track[2].replace(/<[^>]+>/g, ""));
+    const artists = [...cell.matchAll(/<a href="\.\.\/artist\/[A-Za-z0-9]+\.html">([\s\S]*?)<\/a>/g)]
+      .map((m) => decodeEntities(m[1].replace(/<[^>]+>/g, "")))
+      .filter(Boolean);
+    const artist = [...new Set(artists)].join(", ");
+    if (!SPOTIFY_ID_RE.test(spotify_id)) throw new Error(`row ${position}: bad spotify id ${spotify_id}`);
+    if (!song_title) throw new Error(`row ${position}: empty title`);
+    if (!artist) throw new Error(`row ${position}: empty artist`);
+    if (seen.has(spotify_id)) throw new Error(`row ${position}: duplicate spotify id ${spotify_id}`);
+    seen.add(spotify_id);
+    tracks.push({ position, song_title, artist, spotify_id, is_free: position <= 2 });
+  }
+  if (tracks.length !== wanted) {
+    throw new Error(`chart yielded ${tracks.length} valid rows, wanted ${wanted}`);
+  }
+  return { chartDate, tracks };
+}
 
-  return data.items
-    .filter((item) => item.track && item.track.id)
-    .map((item, index) => ({
-      position: index + 1,
-      song_title: item.track.name,
-      artist: item.track.artists.map((a) => a.name).join(", "),
-      spotify_id: item.track.id,
-      is_free: index < 2, // First 2 are free
-    }));
+// Fetch the chart page and parse it. Throws on HTTP/parse failure so the
+// caller keeps the previous week active.
+async function fetchChartTop50() {
+  console.log(`[Top10] Fetching chart: ${CHART_URL}`);
+  const response = await fetch(CHART_URL, {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (compatible; PhilosifyTicker/1.0; +https://philosify.org)",
+      Accept: "text/html",
+    },
+    signal: AbortSignal.timeout(CHART_FETCH_TIMEOUT_MS),
+  });
+  if (!response.ok) {
+    throw new Error(`chart page HTTP ${response.status}`);
+  }
+  const html = await response.text();
+  const { chartDate, tracks } = parseChartPage(html);
+  console.log(`[Top10] Chart ${chartDate ?? "(date not found)"}: ${tracks.length} valid rows`);
+  return { chartDate, tracks };
 }
 
 // Check if analysis exists in cache
@@ -205,21 +264,6 @@ async function saveFeaturedSongs(env, tracks, weekStart) {
     );
   }
 
-  // Deactivate previous week's entries
-  await fetch(
-    `${supabaseUrl}/rest/v1/featured_songs?week_start=neq.${weekStart}`,
-    {
-      method: "PATCH",
-      headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal",
-      },
-      body: JSON.stringify({ is_active: false }),
-    },
-  );
-
   // Prepare all tracks for batch insert
   const batchData = tracks.map((track) => ({
     position: track.position,
@@ -255,6 +299,37 @@ async function saveFeaturedSongs(env, tracks, weekStart) {
   );
 }
 
+// Cutoff (YYYY-MM-DD) for the history purge: weeks older than KEEP_WEEKS go.
+export function purgeCutoff(weekStart, keepWeeks = KEEP_WEEKS) {
+  const d = new Date(`${weekStart}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - keepWeeks * 7);
+  return d.toISOString().split("T")[0];
+}
+
+// Purge featured_songs history older than KEEP_WEEKS. Best effort: a failure
+// is logged and never fails the refresh (the active week is already saved).
+async function purgeOldWeeks(env, weekStart) {
+  const cutoff = purgeCutoff(weekStart);
+  const supabaseUrl = await getSecret(env.SUPABASE_URL);
+  const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
+  const res = await fetch(
+    `${supabaseUrl}/rest/v1/featured_songs?week_start=lt.${cutoff}&is_active=eq.false`,
+    {
+      method: "DELETE",
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        Prefer: "count=exact",
+      },
+    },
+  );
+  if (!res.ok) {
+    console.error(`[Top10] Purge failed: ${res.status} - ${(await res.text()).slice(0, 200)}`);
+    return;
+  }
+  console.log(`[Top10] Purged weeks before ${cutoff}: ${res.headers.get("content-range") ?? "?"}`);
+}
+
 // ============================================================
 // HANDLERS
 // ============================================================
@@ -268,7 +343,7 @@ export async function handleGetTop10(request, env, origin) {
     const supabaseKey = await getSecret(env.SUPABASE_SERVICE_KEY);
 
     const response = await fetch(
-      `${supabaseUrl}/rest/v1/featured_songs?is_active=eq.true&order=position.asc&select=position,song_title,artist,spotify_id,score,classification,is_free,analysis_id`,
+      `${supabaseUrl}/rest/v1/featured_songs?is_active=eq.true&order=position.asc&select=position,song_title,artist,spotify_id,score,classification,is_free,analysis_id,week_start,updated_at`,
       {
         headers: {
           apikey: supabaseKey,
@@ -281,13 +356,20 @@ export async function handleGetTop10(request, env, origin) {
       throw new Error(`Database error: ${response.status}`);
     }
 
-    const tracks = await response.json();
+    const rows = await response.json();
+    // week_start/updated_at come FROM THE TABLE: the age of the list is visible.
+    // (Until 10 Oct 2026 week_start was computed at request time and a frozen
+    // list looked current for 37 weeks.)
+    const week_start = rows[0]?.week_start ?? null;
+    const updated_at = rows[0]?.updated_at ?? null;
+    const tracks = rows.map(({ week_start: _w, updated_at: _u, ...t }) => t);
 
     return new Response(
       JSON.stringify({
         success: true,
-        week_start: getWeekStart(),
-        tracks: tracks,
+        week_start,
+        updated_at,
+        tracks,
       }),
       {
         status: 200,
@@ -347,20 +429,24 @@ export async function handleRefreshTop10(
     console.log("[Top10] Starting refresh...");
     const weekStart = getWeekStart();
 
-    // 1. Fetch tracks from Spotify playlist
-    console.log("[Top10] Fetching from Spotify...");
-    const tracks = await fetchSpotifyTop10(env);
-    console.log(`[Top10] ✓ Got ${tracks.length} tracks from Spotify`);
+    // 1. Fetch + validate the chart. Throws → catch below → previous week stays.
+    const { chartDate, tracks } = await fetchChartTop50();
 
     // 2. Save to database (no analysis needed - analysis happens when user clicks)
     await saveFeaturedSongs(env, tracks, weekStart);
 
-    console.log(`[Top10] ✓ Refresh complete! ${tracks.length} tracks saved`);
+    // 3. Purge history older than KEEP_WEEKS (best effort)
+    await purgeOldWeeks(env, weekStart).catch((err) =>
+      console.error(`[Top10] Purge threw: ${err.message}`),
+    );
+
+    console.log(`[Top10] ✓ Refresh complete! ${tracks.length} tracks saved (chart ${chartDate})`);
 
     return new Response(
       JSON.stringify({
         success: true,
         message: `Top ${tracks.length} refreshed for week ${weekStart}`,
+        chart_date: chartDate,
         tracks_processed: tracks.length,
         tracks: tracks.map((t) => ({
           position: t.position,
@@ -377,11 +463,15 @@ export async function handleRefreshTop10(
       },
     );
   } catch (error) {
-    console.error("[Top10] Refresh error:", error);
+    // LOUD on purpose: nothing was written, the previous week stays active.
+    console.error(
+      `[Top10] REFRESH FAILED — previous week kept active. ${error.message}`,
+    );
     return new Response(
       JSON.stringify({
         success: false,
         error: "Failed to refresh top songs",
+        detail: String(error.message).slice(0, 200),
       }),
       {
         status: 500,
