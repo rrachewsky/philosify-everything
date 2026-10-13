@@ -1,4 +1,12 @@
 -- ============================================================
+-- APLICADA em 12/10/2026 pelo Bob (SQL Editor), VASSOURA V2 — com REVOKE EXECUTE FROM PUBLIC
+-- adicionado antes do COMMIT (alinhamento a decisao de 06/10). Ficou 7 meses no repo sem aplicar
+-- (inventario de 22/09: "versionado no repo, AUSENTE no banco"). Espelhos vivos:
+--   db/functions/validate_dm_reply_target_same_conversation.sql
+--   db/triggers/public.direct_messages.validate_dm_reply_target_trigger.sql
+-- Relatorio: new_design/VASSOURA_2026-10-12_V2_DM_REPLY_GUARD.md. Este arquivo e historia; NAO reaplicar.
+-- ============================================================
+-- ============================================================
 -- DM_REPLY_CONVERSATION_GUARD_MIGRATION.sql
 -- ============================================================
 -- Hardens reply integrity:

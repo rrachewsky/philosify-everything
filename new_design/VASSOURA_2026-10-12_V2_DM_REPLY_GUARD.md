@@ -1,6 +1,6 @@
 # VASSOURA · V2 · guarda `validate_dm_reply_target` ausente no banco — análise + migração gated
 
-**Status:** V2a ANÁLISE pronta · 12/10/2026 · veredito: **a guarda ainda faz sentido, restaurar** · SQL de pré-flight para o Bob · migração (V2b) **gated** pelo pré-flight e pelo OK · nada no banco.
+**Status:** RESOLVIDO · guarda aplicada e provada pelo Bob em 12/10/2026 (com REVOKE FROM PUBLIC) · espelhos e inventário atualizados em 13/10 (V2c).
 **Fila:** inventário de 22/09 (`db/INVENTARIO_2026-09-22.md:182,189`): versionado no repo, ausente no banco.
 
 ---
@@ -170,8 +170,8 @@ Se `direct_messages` exigir outras colunas NOT NULL no INSERT (ex. `message_type
 | Passo | Data | Resultado |
 |---|---|---|
 | V2a análise + SQL | 12/10 | este arquivo; veredito: restaurar |
-| Pré-flight rodado pelo Bob | — | — |
+| Pré-flight rodado pelo Bob | 12/10 | (1) 0/0 · (2) `conversation_id` uuid NOT NULL + `reply_to_id` uuid nullable · (3) 0 órfãs / 0 cruzadas / 1 reply total (válida) · (4) 4 triggers; `archive_direct_message_trigger` é BEFORE DELETE (corrigido no § 2) |
 | OK do Bob no V2b (+ REVOKE?) | 13/10 | aprovado: restaurar verbatim COM o REVOKE EXECUTE FROM PUBLIC antes do COMMIT |
-| Migração + verificação | — | — |
-| Prova funcional | — | — |
-| V2c espelhos + inventário + commit | — | — |
+| Migração + verificação | 12/10 | Success: função + REVOKE FROM PUBLIC + trigger · 1 linha BEFORE INSERT OR UPDATE OF reply_to_id, conversation_id · secdef=true |
+| Prova funcional | 12/10 | Success: válida inserida; cruzada rejeitada (`%same conversation%`); inexistente rejeitada (`%non-existent%`); ROLLBACK limpo |
+| V2c espelhos + inventário + commit | 13/10 | espelhos novos (função com REVOKE anotado + trigger); migração com cabeçalho APLICADA; inventário :182/:189 RESOLVIDO; commit `dm: guarda de reply restaurada no banco` |
