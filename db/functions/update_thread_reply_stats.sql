@@ -1,6 +1,7 @@
 -- Espelho do banco (Supabase) — dump de 22/09/2026 via pg_get_functiondef (Bloco 3(c), I-1b, fatia public).
 -- O banco e a copia executante; este arquivo e documentacao. NAO reaplicar sem decisao.
 -- Reconhecimento no repo em 27/09/2026: NAO RECONHECIDA no repo (so existia no banco). Usada por 2 trigger(s) (I-1a).
+-- 12/10/2026 (VASSOURA V1): usada por 1 trigger (trg_update_thread_reply_stats); a gemea trigger_update_thread_stats foi dropada.
 
 CREATE OR REPLACE FUNCTION public.update_thread_reply_stats()
  RETURNS trigger
