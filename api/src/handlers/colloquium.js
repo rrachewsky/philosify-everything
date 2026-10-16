@@ -3920,11 +3920,13 @@ export async function generateAllPhilosopherReplies(
     }
   }
 
-  // Update reply count
+  // Touch last_reply_at only. reply_count is OWNED by the forum_replies trigger
+  // (update_thread_reply_stats, single since 12/10/2026): every manual write here
+  // either double-counted the trigger or counted the opening post as a reply
+  // (P1, new_design/POLIMENTO_2026-10-13_P1_COLLOQUIUM_REPLY_COUNT.md).
   await pg(env, "PATCH", "forum_threads", {
     filter: `id=eq.${threadId}`,
     body: {
-      reply_count: succeeded,
       last_reply_at: new Date().toISOString(),
     },
   });
@@ -4074,22 +4076,19 @@ export async function generateAllPhilosopherRebuttals(
     (r) => r.status === "fulfilled" && r.value?.success,
   ).length;
 
-  // Update reply count and mark rebuttals complete
+  // Mark rebuttals complete (reply_count: trigger-owned, see generateAllPhilosopherReplies)
   const currentThread = await pg(env, "GET", "forum_threads", {
     filter: `id=eq.${threadId}`,
-    select: "reply_count,metadata",
+    select: "metadata",
     limit: 1,
   });
 
-  const existingCount =
-    currentThread && currentThread[0] ? currentThread[0].reply_count || 0 : 0;
   const existingMeta =
     currentThread && currentThread[0] ? currentThread[0].metadata || {} : {};
 
   await pg(env, "PATCH", "forum_threads", {
     filter: `id=eq.${threadId}`,
     body: {
-      reply_count: existingCount + succeeded,
       last_reply_at: new Date().toISOString(),
       metadata: {
         ...existingMeta,
@@ -4327,7 +4326,6 @@ async function createColloquium(env) {
           },
         },
       },
-      reply_count: 2,
     },
   });
 
@@ -4499,7 +4497,7 @@ async function addPhilosopherReply(env) {
     // Notify frontend of new reply
     await broadcastColloquiumEvent(env, thread.id, "new-reply");
 
-    // Update philosopher_index and reply_count
+    // Update philosopher_index (reply_count: trigger-owned)
     // Use currentIndex (which may have skipped user-added philosophers)
     await pg(env, "PATCH", "forum_threads", {
       filter: `id=eq.${thread.id}`,
@@ -4508,7 +4506,6 @@ async function addPhilosopherReply(env) {
           ...metadata,
           philosopher_index: currentIndex + 1,
         },
-        reply_count: (existingReplies || []).length + 1,
         last_reply_at: new Date().toISOString(),
       },
     });
@@ -4707,11 +4704,10 @@ export async function createUserColloquium(
     }
   }
 
-  // Update reply count
+  // Touch last_reply_at only (reply_count: trigger-owned)
   await pg(env, "PATCH", "forum_threads", {
     filter: `id=eq.${thread.id}`,
     body: {
-      reply_count: selectedPhilosophers.length,
       last_reply_at: new Date().toISOString(),
     },
   });
@@ -5078,7 +5074,6 @@ export async function generateImmediateFirstReply(env, threadId) {
             ? true
             : freshMeta.rebuttals_complete,
       },
-      reply_count: 1,
       last_reply_at: new Date().toISOString(),
     },
   });
@@ -5276,7 +5271,6 @@ export async function checkPendingUserProposedReplies(env) {
                       ? true
                       : meta.rebuttals_complete,
                 },
-                reply_count: existingReplies.length + 1,
                 last_reply_at: new Date().toISOString(),
               },
             });
@@ -5483,23 +5477,18 @@ export async function checkPendingUserProposedReplies(env) {
             // Re-read thread metadata to avoid stale overwrites
             const freshThread = await pg(env, "GET", "forum_threads", {
               filter: `id=eq.${thread.id}`,
-              select: "metadata,reply_count",
+              select: "metadata",
               limit: 1,
             });
             const freshMeta =
               freshThread && freshThread[0]
                 ? freshThread[0].metadata || {}
                 : meta;
-            const freshCount =
-              freshThread && freshThread[0]
-                ? freshThread[0].reply_count || 0
-                : 0;
 
             await pg(env, "PATCH", "forum_threads", {
               filter: `id=eq.${thread.id}`,
               body: {
                 metadata: { ...freshMeta, pending_responses: updatedPR },
-                reply_count: freshCount + 1,
                 last_reply_at: new Date().toISOString(),
               },
             });
