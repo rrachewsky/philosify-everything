@@ -94,16 +94,45 @@ const formatModelName = (model) => {
 
 const sanitize = (html) => DOMPurify.sanitize(stripTrailingWordCount(html), { ADD_TAGS: ['hl'] });
 
-// Top-50 marquee rendered inside the v2 ticker line (mockup .tick anatomy)
+// Top-50 marquee rendered inside the v2 ticker line (mockup .tick anatomy).
+// Click contract (3e, 13 Oct 2026): the track opened is the one UNDER THE
+// POINTER AT CLICK TIME, resolved from the DOM, never the closure of the
+// anchor the gesture started on. With a mouse, :hover pauses the strip, so
+// both agree; with touch/pen there is no :hover and the strip keeps moving
+// between pointerdown and click — `hold` pauses it for the gesture and the
+// DOM lookup settles any residual drift. No index is ever computed.
 function Top50Line({ tracks, label, onSelect }) {
   const [runRef, duration] = useMarqueeDuration([tracks]);
+  const [held, setHeld] = useState(false);
   if (!tracks.length) return <span className="t50"><span className="lbl">{label}</span></span>;
   const items = tracks.map((tr, i) => ({ ...tr, rank: i + 1 }));
   const doubled = [...items, ...items];
+  const pick = (tr) =>
+    onSelect({
+      song: tr.song_title,
+      artist: tr.artist,
+      spotify_id: tr.spotify_id,
+      isFree: !!tr.is_free,
+    });
+  const handleClick = (e, fallback) => {
+    const el =
+      typeof e.clientX === "number" ? document.elementFromPoint(e.clientX, e.clientY) : null;
+    const a = el && el.closest ? el.closest(".t50-run a[data-i]") : null;
+    const idx = a ? Number(a.dataset.i) : NaN;
+    pick(Number.isInteger(idx) && doubled[idx] ? doubled[idx] : fallback);
+  };
+  const hold = () => setHeld(true);
+  const release = () => setHeld(false);
   return (
     <span className="t50">
       <span className="lbl">{label}</span>
-      <span className="t50-strip">
+      <span
+        className={`t50-strip${held ? " hold" : ""}`}
+        onPointerDown={hold}
+        onPointerUp={release}
+        onPointerCancel={release}
+        onPointerLeave={release}
+      >
         <span
           className="t50-run"
           ref={runRef}
@@ -112,14 +141,8 @@ function Top50Line({ tracks, label, onSelect }) {
           {doubled.map((tr, i) => (
             <a
               key={`${tr.spotify_id || tr.rank}-${i}`}
-              onClick={() =>
-                onSelect({
-                  song: tr.song_title,
-                  artist: tr.artist,
-                  spotify_id: tr.spotify_id,
-                  isFree: !!tr.is_free,
-                })
-              }
+              data-i={i}
+              onClick={(e) => handleClick(e, tr)}
             >
               #{tr.rank} {tr.song_title} — {tr.artist}
               {tr.is_free ? ' · FREE' : ''}

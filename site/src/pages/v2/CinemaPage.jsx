@@ -48,10 +48,14 @@ const openBuyCredits = () => window.dispatchEvent(new CustomEvent('v2-open-buy-c
 // Top 50 films strip inside the module ticker (GET /api/cinema/top,
 // refreshed every 5 minutes; items select the film — same as the sidebar's
 // TopCinemaTicker).
+// Click contract (3e, 13 Oct 2026, same as MusicPage.Top50Line): the item
+// opened is the one UNDER THE POINTER AT CLICK TIME, resolved from the DOM;
+// `hold` pauses the strip from pointerdown to pointerup (touch/pen have no :hover).
 function TopFilmsStrip({ onSelect }) {
   const { t } = useTranslation();
   const [films, setFilms] = useState([]);
   const [runRef, duration] = useMarqueeDuration([films]);
+  const [held, setHeld] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -79,10 +83,26 @@ function TopFilmsStrip({ onSelect }) {
   }
 
   const doubled = [...films, ...films];
+  const handleClick = (e, fallback) => {
+    e.preventDefault();
+    const el =
+      typeof e.clientX === 'number' ? document.elementFromPoint(e.clientX, e.clientY) : null;
+    const a = el && el.closest ? el.closest('.t50-run a[data-i]') : null;
+    const idx = a ? Number(a.dataset.i) : NaN;
+    onSelect(Number.isInteger(idx) && doubled[idx] ? doubled[idx] : fallback);
+  };
+  const hold = () => setHeld(true);
+  const release = () => setHeld(false);
   return (
     <span className="t50">
       <span className="lbl">{t('v2.cinema.top50', 'Top 50 >>>')}</span>
-      <span className="t50-strip">
+      <span
+        className={`t50-strip${held ? ' hold' : ''}`}
+        onPointerDown={hold}
+        onPointerUp={release}
+        onPointerCancel={release}
+        onPointerLeave={release}
+      >
         <span
           className="t50-run"
           ref={runRef}
@@ -92,10 +112,8 @@ function TopFilmsStrip({ onSelect }) {
             <a
               key={`${film.id}-${i}`}
               href="#top50"
-              onClick={(e) => {
-                e.preventDefault();
-                onSelect(film);
-              }}
+              data-i={i}
+              onClick={(e) => handleClick(e, film)}
             >
               #{(i % films.length) + 1} {film.title}
               {film.star ? ` — ${film.star}` : film.year ? ` — ${film.year}` : ''}

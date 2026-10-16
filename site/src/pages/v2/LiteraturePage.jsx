@@ -51,10 +51,14 @@ const openBuyCredits = () => window.dispatchEvent(new CustomEvent('v2-open-buy-c
 // Top 50 books strip inside the module ticker (GET /api/books/top,
 // refreshed every 5 minutes; items select the book — same as the sidebar's
 // TopBooksTicker).
+// Click contract (3e, 13 Oct 2026, same as MusicPage.Top50Line): the item
+// opened is the one UNDER THE POINTER AT CLICK TIME, resolved from the DOM;
+// `hold` pauses the strip from pointerdown to pointerup (touch/pen have no :hover).
 function TopBooksStrip({ onSelect }) {
   const { t } = useTranslation();
   const [books, setBooks] = useState([]);
   const [runRef, duration] = useMarqueeDuration([books]);
+  const [held, setHeld] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -82,10 +86,26 @@ function TopBooksStrip({ onSelect }) {
   }
 
   const doubled = [...books, ...books];
+  const handleClick = (e, fallback) => {
+    e.preventDefault();
+    const el =
+      typeof e.clientX === 'number' ? document.elementFromPoint(e.clientX, e.clientY) : null;
+    const a = el && el.closest ? el.closest('.t50-run a[data-i]') : null;
+    const idx = a ? Number(a.dataset.i) : NaN;
+    onSelect(Number.isInteger(idx) && doubled[idx] ? doubled[idx] : fallback);
+  };
+  const hold = () => setHeld(true);
+  const release = () => setHeld(false);
   return (
     <span className="t50">
       <span className="lbl">{t('v2.literature.top50', 'Top 50 >>>')}</span>
-      <span className="t50-strip">
+      <span
+        className={`t50-strip${held ? ' hold' : ''}`}
+        onPointerDown={hold}
+        onPointerUp={release}
+        onPointerCancel={release}
+        onPointerLeave={release}
+      >
         <span
           className="t50-run"
           ref={runRef}
@@ -95,10 +115,8 @@ function TopBooksStrip({ onSelect }) {
             <a
               key={`${book.id}-${i}`}
               href="#top50"
-              onClick={(e) => {
-                e.preventDefault();
-                onSelect(book);
-              }}
+              data-i={i}
+              onClick={(e) => handleClick(e, book)}
             >
               #{(i % books.length) + 1} {book.title}
               {book.author ? ` — ${book.author}` : ''}

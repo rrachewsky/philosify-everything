@@ -14,6 +14,8 @@
 .v2 .pg-cinema .t50-strip{flex:1;min-width:0;overflow:hidden;position:relative}
 .v2 .pg-cinema .t50-run{display:inline-flex;white-space:nowrap;animation:pgc-t50 linear infinite}
 .v2 .pg-cinema .t50-strip:hover .t50-run{animation-play-state:paused}
+/* touch/pen have no :hover — .hold pauses the strip from pointerdown to pointerup (3e) */
+.v2 .pg-cinema .t50-strip.hold .t50-run{animation-play-state:paused}
 .v2 .pg-cinema .t50-run a{color:var(--mid);text-decoration:none;cursor:pointer;margin-right:22px}
 .v2 .pg-cinema .t50-run a:hover{color:var(--ink)}
 @keyframes pgc-t50{from{transform:translateX(0)}to{transform:translateX(-50%)}}
