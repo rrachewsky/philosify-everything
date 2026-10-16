@@ -73,6 +73,12 @@
 .v2 .hdr .navr{position:absolute;top:calc(26px + env(safe-area-inset-top,0px))}
 .v2 .navr a{color:var(--dim);text-decoration:none;font:500 11px/1 var(--fu);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
 .v2 .navr a:hover{color:var(--ink)}
+/* session slot skeleton (3e): two neutral bars where "Balance · name" or
+   "Sign in · Sign up" will land once the session resolves. Same gap as the
+   nav, line-height of the 11px chrome; no text, no color, no motion. */
+.v2 .navr .navskel{display:flex;gap:26px;align-items:center}
+.v2 .navr .navskel span{display:block;height:9px;width:64px;background:var(--line);border-radius:2px}
+.v2 .navr .navskel span+span{width:112px}
 .v2 .acctmenu{display:none;position:absolute;right:0;top:26px;min-width:168px;background:var(--bg);border:1px solid var(--strong);padding:6px 0;z-index:9}
 .v2 .acctmenu.open{display:block}
 .v2 .acctmenu a{display:block;padding:10px 18px;color:var(--dim);letter-spacing:.14em}

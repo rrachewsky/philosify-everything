@@ -19,7 +19,11 @@ const LOCALES = [
 export function NavAccount() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { user, isAuthenticated, signOut } = useAuth();
+  // authLoading: the AuthProvider has not resolved the initial session yet
+  // (ctx.loading) — or a sign-out started here is in flight. Until then the
+  // session slot is a neutral skeleton: neither "Sign in" nor the e-mail
+  // (3e: the header used to paint signed-out, then flip to signed-in).
+  const { user, isAuthenticated, signOut, loading: authLoading } = useAuth();
   const { balance } = useCreditsContext();
   const [menu, setMenu] = useState(null); // 'acct' | 'lang' | null
   const [acctOpen, setAcctOpen] = useState(false);
@@ -92,7 +96,12 @@ export function NavAccount() {
         </span>
       </span>
 
-      {isAuthenticated ? (
+      {authLoading ? (
+        <span className="navskel" aria-hidden="true">
+          <span />
+          <span />
+        </span>
+      ) : isAuthenticated ? (
         <>
           <a
             href="#balance"
