@@ -308,7 +308,6 @@ export async function moderateBrief(env, brief, brandName = '') {
 
 const PLACEMENT_SIZES = {
   sidebar: { w: 300, h: 250, label: '300x250 sidebar ad' },
-  constellation: { w: 250, h: 250, label: '250x250 constellation panel ad' },
 };
 
 /**
@@ -321,7 +320,7 @@ const PLACEMENT_SIZES = {
  * @param {string} options.brief - Creative brief from the advertiser
  * @param {string} options.brandName - Company name
  * @param {string} options.targetUrl - Destination URL
- * @param {string} options.placement - 'sidebar' or 'constellation'
+ * @param {string} options.placement - 'sidebar'
  * @returns {Promise<{url: string, filename: string} | null>}
  */
 export async function generateAICreative(env, options) {

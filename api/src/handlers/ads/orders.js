@@ -12,6 +12,11 @@ import { getSecret } from '../../utils/secrets.js';
 // SECURITY: UUID validation for route parameters
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+// Contextual targeting only (B0, 16 Oct 2026; ratification 28 Jul 2026: module × language × market).
+// Behavioral keys (genres, philosophies, engagement) are gone from the sale; "content" is the
+// declared module axis until B1 binds it to the five positions.
+const TARGETING_KEYS = ['languages', 'countries', 'regions', 'us_states', 'br_states', 'content', 'cities', 'timezones'];
+
 /**
  * GET /api/ads/orders
  * List orders for the authenticated advertiser
@@ -66,6 +71,7 @@ export async function handleListOrders(request, env, corsHeaders) {
  * GET /api/ads/orders/:id
  * Get a specific order
  */
+
 export async function handleGetOrder(request, env, corsHeaders, orderId) {
   try {
     if (!UUID_RE.test(orderId)) {
@@ -125,6 +131,7 @@ export async function handleGetOrder(request, env, corsHeaders, orderId) {
  * POST /api/ads/orders
  * Create a new order (draft status, not yet paid)
  */
+
 export async function handleCreateOrder(request, env, corsHeaders) {
   try {
     const supabase = await getServiceSupabase(env);
@@ -161,14 +168,26 @@ export async function handleCreateOrder(request, env, corsHeaders) {
     }
 
     // Validate placement
-    if (!['sidebar', 'constellation'].includes(placement)) {
+    if (!['sidebar'].includes(placement)) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
     }
 
     // Validate duration
-    const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20, 30];
+    const validDurations = [5, 10, 15, 20, 30];
     if (!validDurations.includes(duration)) {
       return jsonResponse({ error: `Invalid duration for ${placement}` }, 400, corsHeaders);
+    }
+
+    // Validate targeting (B0: contextual only — language × market (+ declared content);
+    // behavioral keys genres/philosophies/engagement are no longer sold)
+    if (targeting !== undefined && targeting !== null) {
+      if (typeof targeting !== 'object' || Array.isArray(targeting)) {
+        return jsonResponse({ error: 'Invalid targeting format' }, 400, corsHeaders);
+      }
+      const unknown = Object.keys(targeting).filter((k) => !TARGETING_KEYS.includes(k));
+      if (unknown.length > 0) {
+        return jsonResponse({ error: `Targeting not available: ${unknown.join(', ')}` }, 400, corsHeaders);
+      }
     }
 
     // Validate impressions
@@ -314,6 +333,7 @@ export async function handleCreateOrder(request, env, corsHeaders) {
  * PUT /api/ads/orders/:id
  * Update an order (only allowed for draft/pending orders)
  */
+
 export async function handleUpdateOrder(request, env, corsHeaders, orderId) {
   try {
     if (!UUID_RE.test(orderId)) {
@@ -372,9 +392,9 @@ export async function handleUpdateOrder(request, env, corsHeaders, orderId) {
       if (typeof body.targeting !== 'object' || Array.isArray(body.targeting)) {
         return jsonResponse({ error: 'Invalid targeting format' }, 400, corsHeaders);
       }
-      const allowedKeys = ['genres','philosophies','languages','engagement','countries','regions','us_states','br_states','content','cities','timezones'];
+      const allowedKeys = TARGETING_KEYS;
       const keys = Object.keys(body.targeting);
-      if (keys.some(k => !allowedKeys.includes(k))) {
+      if (keys.some((k) => !allowedKeys.includes(k))) {
         return jsonResponse({ error: 'Unknown targeting keys' }, 400, corsHeaders);
       }
       if (JSON.stringify(body.targeting).length > 10000) {
@@ -415,6 +435,7 @@ export async function handleUpdateOrder(request, env, corsHeaders, orderId) {
  * POST /api/ads/orders/:id/checkout
  * Create Stripe checkout session for an order
  */
+
 export async function handleOrderCheckout(request, env, corsHeaders, orderId) {
   try {
     if (!UUID_RE.test(orderId)) {
@@ -512,6 +533,7 @@ export async function handleOrderCheckout(request, env, corsHeaders, orderId) {
  * POST /api/ads/orders/:id/pause
  * Pause an active order
  */
+
 export async function handlePauseOrder(request, env, corsHeaders, orderId) {
   try {
     if (!UUID_RE.test(orderId)) {
@@ -556,6 +578,7 @@ export async function handlePauseOrder(request, env, corsHeaders, orderId) {
  * POST /api/ads/orders/:id/resume
  * Resume a paused order
  */
+
 export async function handleResumeOrder(request, env, corsHeaders, orderId) {
   try {
     if (!UUID_RE.test(orderId)) {
@@ -605,6 +628,7 @@ export async function handleResumeOrder(request, env, corsHeaders, orderId) {
  * POST /api/ads/orders/:id/cancel
  * Cancel an order and request refund
  */
+
 export async function handleCancelOrder(request, env, corsHeaders, orderId) {
   try {
     if (!UUID_RE.test(orderId)) {
@@ -702,6 +726,7 @@ export async function handleCancelOrder(request, env, corsHeaders, orderId) {
  * Webhook handler for order payments
  * Called when Stripe checkout completes
  */
+
 export async function handleOrderPaymentWebhook(env, session) {
   try {
     const { order_id } = session.metadata;

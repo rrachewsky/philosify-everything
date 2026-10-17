@@ -995,11 +995,11 @@ export async function handleAgencyCreateClientCampaign(request, env, corsHeaders
       return jsonResponse({ error: 'Campaign name must be 2-100 characters' }, 400, corsHeaders);
     }
 
-    if (!['sidebar', 'constellation'].includes(placement)) {
+    if (!['sidebar'].includes(placement)) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
     }
 
-    const validDurations = placement === 'sidebar' ? [5, 10, 15, 20, 30] : [5];
+    const validDurations = [5, 10, 15, 20, 30];
     if (!validDurations.includes(duration)) {
       return jsonResponse({ error: 'Invalid duration for placement' }, 400, corsHeaders);
     }

@@ -61,63 +61,6 @@ function SidebarMockup({ t }) {
   );
 }
 
-// Visual mockup of Philosify constellation panel with ad
-function ConstellationMockup({ t }) {
-  return (
-    <div className="mockup mockup--constellation">
-      {/* Browser chrome */}
-      <div className="mockup__browser">
-        <div className="mockup__browser-dots">
-          <span></span><span></span><span></span>
-        </div>
-        <div className="mockup__browser-url">philosify.org/constellation</div>
-      </div>
-      
-      {/* Page content */}
-      <div className="mockup__page">
-        {/* Header */}
-        <div className="mockup__header">
-          <div className="mockup__logo">Philosify</div>
-          <div className="mockup__nav">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        
-        {/* Constellation view */}
-        <div className="mockup__constellation-layout">
-          {/* Star field visualization */}
-          <div className="mockup__starfield">
-            <div className="mockup__star mockup__star--1"></div>
-            <div className="mockup__star mockup__star--2"></div>
-            <div className="mockup__star mockup__star--3"></div>
-            <div className="mockup__star mockup__star--4"></div>
-            <div className="mockup__star mockup__star--5"></div>
-            <div className="mockup__star mockup__star--center"></div>
-            <svg className="mockup__connections">
-              <line x1="50%" y1="50%" x2="20%" y2="30%" />
-              <line x1="50%" y1="50%" x2="80%" y2="25%" />
-              <line x1="50%" y1="50%" x2="75%" y2="70%" />
-              <line x1="50%" y1="50%" x2="25%" y2="75%" />
-            </svg>
-          </div>
-          
-          {/* Side panel with ad */}
-          <div className="mockup__panel">
-            <div className="mockup__panel-title">{t('placements.mockupDiscover')}</div>
-            <div className="mockup__panel-item"></div>
-            <div className="mockup__panel-item"></div>
-            <div className="mockup__ad-slot mockup__ad-slot--highlight mockup__ad-slot--square">
-              <div className="mockup__ad-label">{t('placements.mockupYourAd')}</div>
-              <div className="mockup__ad-size">{t('placements.mockupAdSize250')}</div>
-            </div>
-            <div className="mockup__panel-item"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function getPlacements(t) {
   return [
     {
@@ -144,27 +87,6 @@ function getPlacements(t) {
         t('placements.sidebarFeature4'),
       ],
       MockupComponent: SidebarMockup,
-    },
-    {
-      id: 'constellation',
-      name: t('placements.constellationName'),
-      description: t('placements.constellationFullDesc'),
-      context: t('placements.constellationContext'),
-      durations: [
-        { seconds: 5, cpm: 8 },
-      ],
-      specs: {
-        dimensions: t('placements.constellationDimensions'),
-        formats: t('placements.constellationFormats'),
-        maxSize: t('placements.constellationMaxSize'),
-      },
-      features: [
-        t('placements.constellationFeature1'),
-        t('placements.constellationFeature2'),
-        t('placements.constellationFeature3'),
-        t('placements.constellationFeature4'),
-      ],
-      MockupComponent: ConstellationMockup,
     },
   ];
 }

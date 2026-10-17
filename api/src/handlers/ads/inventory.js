@@ -13,7 +13,7 @@ import { getAdvertiserFromRequest } from './utils.js';
  * Browse available inventory by date range and placement
  * 
  * Query params:
- * - placement: 'sidebar' | 'constellation' (optional, returns both if not specified)
+ * - placement: 'sidebar' (optional; the only placement since B0, 16 Oct 2026)
  * - start_date: YYYY-MM-DD (default: today)
  * - end_date: YYYY-MM-DD (default: 30 days from start)
  */
@@ -34,7 +34,7 @@ export async function handleGetInventory(request, env, corsHeaders) {
 
     // Add filters
     const filters = [`forecast_date=gte.${startDate}`, `forecast_date=lte.${endDate}`];
-    if (placement && ['sidebar', 'constellation'].includes(placement)) {
+    if (placement && ['sidebar'].includes(placement)) {
       filters.push(`placement=eq.${placement}`);
     }
 
@@ -66,10 +66,10 @@ export async function handleGetInventory(request, env, corsHeaders) {
     // Calculate totals
     const totals = {
       sidebar: { estimated: 0, reserved: 0, available: 0 },
-      constellation: { estimated: 0, reserved: 0, available: 0 },
     };
 
     for (const row of inventory || []) {
+      if (!totals[row.placement]) continue; // legacy constellation rows (pre-B0)
       totals[row.placement].estimated += row.estimated_impressions;
       totals[row.placement].reserved += row.reserved_impressions;
       totals[row.placement].available += row.available_impressions;
@@ -92,7 +92,7 @@ export async function handleGetInventory(request, env, corsHeaders) {
  * Check if specific inventory is available for an order
  * 
  * Body:
- * - placement: 'sidebar' | 'constellation'
+ * - placement: 'sidebar'
  * - impressions: number (minimum 1000)
  * - start_date: YYYY-MM-DD (optional for ASAP)
  * - end_date: YYYY-MM-DD (optional for ASAP)
@@ -103,7 +103,7 @@ export async function handleCheckAvailability(request, env, corsHeaders) {
     const { placement, impressions, start_date, end_date } = body;
 
     // Validate
-    if (!placement || !['sidebar', 'constellation'].includes(placement)) {
+    if (!placement || !['sidebar'].includes(placement)) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
     }
 
@@ -226,7 +226,7 @@ export async function handleGetPricing(request, env, corsHeaders) {
  * Get a price quote for an order
  * 
  * Body:
- * - placement: 'sidebar' | 'constellation'
+ * - placement: 'sidebar'
  * - duration: 5 | 10 | 15 | 20
  * - impressions: number
  * - creative_type: 'self' | 'philosify'
@@ -237,11 +237,11 @@ export async function handleGetQuote(request, env, corsHeaders) {
     const { placement, duration, impressions, creative_type } = body;
 
     // Validate
-    if (!placement || !['sidebar', 'constellation'].includes(placement)) {
+    if (!placement || !['sidebar'].includes(placement)) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
     }
 
-    const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20, 30];
+    const validDurations = [5, 10, 15, 20, 30];
     if (!duration || !validDurations.includes(duration)) {
       return jsonResponse({ error: `Invalid duration for ${placement}` }, 400, corsHeaders);
     }
@@ -361,11 +361,11 @@ export async function handleCalculateCart(request, env, corsHeaders) {
       const { placement, duration, impressions } = item;
 
       // Validate item
-      if (!placement || !['sidebar', 'constellation'].includes(placement)) {
+      if (!placement || !['sidebar'].includes(placement)) {
         return jsonResponse({ error: `Invalid placement: ${placement}` }, 400, corsHeaders);
       }
 
-      const validDurations = placement === 'constellation' ? [5] : [5, 10, 15, 20, 30];
+      const validDurations = [5, 10, 15, 20, 30];
       if (!duration || !validDurations.includes(duration)) {
         return jsonResponse({ error: `Invalid duration ${duration}s for ${placement}` }, 400, corsHeaders);
       }
@@ -432,7 +432,7 @@ export async function handleCalculateCart(request, env, corsHeaders) {
 // Same traffic assumptions as the migration seed (weekends run lighter).
 const FORECAST_BASELINE = {
   sidebar: { weekday: 5000, weekend: 3000 },
-  constellation: { weekday: 2500, weekend: 1500 },
+  // constellation: removed in B0 (16 Oct 2026) — no-ads zone; no new forecast rows
 };
 
 const isoDay = (date) => date.toISOString().split('T')[0];

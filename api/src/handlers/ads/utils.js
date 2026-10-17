@@ -218,9 +218,12 @@ export function normalizeTargetUrl(url) {
  * Get CPM for placement/duration (fallback values — DB pricing_config is source of truth)
  * These must match inventory.js DEFAULT_CPM and the pricing_config table
  */
+// B0 (16 Oct 2026): the "constellation" placement left the catalog — the
+// Constellation is a no-ads zone by the 28 Jul 2026 ratification. Until B1
+// (S1–S5) lands, "sidebar" is the only placement sold and served.
+export const ACTIVE_PLACEMENTS = ['sidebar'];
 export const DEFAULT_CPM = {
   sidebar: { 5: 600, 10: 800, 15: 1000, 20: 1200 },
-  constellation: { 5: 400 },
 };
 
 export function getCpmCents(placement, duration) {

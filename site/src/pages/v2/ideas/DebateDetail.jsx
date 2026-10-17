@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { Button, Pill, Telemetry } from '../../../components/v2';
 import { ShareButton } from '../../../components/sharing/ShareButton.jsx';
 import { TranslateButton } from '../../../components/common/TranslateButton.jsx';
-import InlineAdSlot from '../../../components/ads/InlineAdSlot.jsx';
 import { ReplyMsg } from './Transcript.jsx';
 import { InviteModal, ConfirmModal } from './IdeasModals.jsx';
 import { VerdictAudio } from './VerdictAudio.jsx';
@@ -14,7 +13,7 @@ import { MethodologyLink } from '../../../components/v2/MethodologyLink.jsx';
 import { renderMarkdownLite } from '../../../utils/markdownLite.js';
 import { formatTimeAgo, formatChrono, useChronometer, chronoProgress } from './utils.js';
 
-export function DebateDetail({ debate, lang, user, onBack }) {
+export function DebateDetail({ debate, lang, onBack }) {
   const { t, i18n } = useTranslation();
   const [replyText, setReplyText] = useState('');
   const [replying, setReplying] = useState(false);
@@ -164,18 +163,6 @@ export function DebateDetail({ debate, lang, user, onBack }) {
       )}
 
       {debate.error && <div className="ierr">{debate.error}</div>}
-
-      {/* Sponsored slot while the verdict generates (parity) */}
-      {debate.wrapupLoading && (
-        <InlineAdSlot
-          key={`ideas-debate-${ad.id}-${Number(debate.wrapupLoading)}`}
-          userId={user?.id}
-          placement="constellation"
-          layout="banner"
-          refreshKey={`ideas-debate-${ad.id}-${Number(debate.wrapupLoading)}`}
-          className="debate-footer-ad"
-        />
-      )}
 
       {/* Reply entry */}
       {!debate.wrapup && (

@@ -21,7 +21,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
  * - goal: 'reach' | 'engagement' | 'balanced' (default: 'balanced')
  * - start_date: YYYY-MM-DD (optional, default: tomorrow)
  * - end_date: YYYY-MM-DD (optional, default: calculated based on budget)
- * - placement_preference: 'sidebar' | 'constellation' | 'mixed' (default: 'mixed')
+ * - placement_preference: 'sidebar' | 'mixed' (default: 'mixed'; 'mixed' = sidebar since B0)
  * - duration_preference: 5 | 10 | 15 | 20 | 'mixed' (default: 'mixed')
  */
 export async function handleGeneratePlan(request, env, corsHeaders) {
@@ -97,8 +97,9 @@ export async function handleGeneratePlan(request, env, corsHeaders) {
           order: 'forecast_date.asc',
         });
       if (error) throw new Error(`inventory lookup: ${error.message}`);
-      const byPlacement = { sidebar: 0, constellation: 0 };
+      const byPlacement = { sidebar: 0 };
       for (const day of data || []) {
+        if (byPlacement[day.placement] === undefined) continue; // legacy constellation rows (pre-B0)
         byPlacement[day.placement] += day.available_impressions;
       }
       return byPlacement;
@@ -115,7 +116,7 @@ export async function handleGeneratePlan(request, env, corsHeaders) {
     // Self-heal: the forecast is a rolling window maintained by cron. If it has
     // lapsed there is nothing to allocate against and every plan comes back
     // empty, so fill the gap now rather than making the advertiser wait a day.
-    if (availableByPlacement.sidebar + availableByPlacement.constellation === 0) {
+    if (availableByPlacement.sidebar === 0) {
       try {
         const filled = await topUpInventoryForecast(env, 180);
         console.warn(`[Ads] Forecast window was empty — topped up ${filled.created} row(s)`);
@@ -141,7 +142,7 @@ export async function handleGeneratePlan(request, env, corsHeaders) {
     // hit the wall one step later ("Invalid plan: placements is empty") with no
     // way to tell what went wrong. Say which constraint bit.
     if (!plan.placements || plan.placements.length === 0) {
-      const totalAvailable = availableByPlacement.sidebar + availableByPlacement.constellation;
+      const totalAvailable = availableByPlacement.sidebar;
       let reason;
       if (totalAvailable === 0) {
         reason =
@@ -206,9 +207,8 @@ function generateOptimalPlan({
     case 'reach':
       // Maximize impressions - prefer cheaper options
       allocationStrategy = [
-        { placement: 'constellation', duration: 5, weight: 0.5 },
-        { placement: 'sidebar', duration: 5, weight: 0.3 },
-        { placement: 'sidebar', duration: 10, weight: 0.2 },
+        { placement: 'sidebar', duration: 5, weight: 0.6 },
+        { placement: 'sidebar', duration: 10, weight: 0.4 },
       ];
       break;
     case 'engagement':
@@ -223,10 +223,9 @@ function generateOptimalPlan({
     default:
       // Balanced mix
       allocationStrategy = [
-        { placement: 'sidebar', duration: 10, weight: 0.35 },
-        { placement: 'sidebar', duration: 5, weight: 0.25 },
-        { placement: 'constellation', duration: 5, weight: 0.25 },
-        { placement: 'sidebar', duration: 15, weight: 0.15 },
+        { placement: 'sidebar', duration: 10, weight: 0.45 },
+        { placement: 'sidebar', duration: 5, weight: 0.35 },
+        { placement: 'sidebar', duration: 15, weight: 0.2 },
       ];
   }
 

@@ -31,27 +31,14 @@ function matchTargeting(targeting, profile) {
   if (!targeting || Object.keys(targeting).length === 0) return true;
   if (!profile) return true; // No profile = show to everyone (untargeted)
 
-  // Genre matching
-  if (targeting.genres?.length > 0 && profile.genres?.length > 0) {
-    const overlap = targeting.genres.some(g => profile.genres.includes(g));
-    if (!overlap) return false;
-  }
-
-  // Philosophy matching
-  if (targeting.philosophies?.length > 0 && profile.philosophies?.length > 0) {
-    const overlap = targeting.philosophies.some(p => profile.philosophies.includes(p));
-    if (!overlap) return false;
-  }
+  // B0 (16 Oct 2026): genres / philosophies / engagement are no longer matched —
+  // behavioral targeting left the sale (contextual only). Legacy orders that still
+  // carry those keys deliver on their language/market keys alone.
 
   // Language matching
   if (targeting.languages?.length > 0 && profile.languages?.length > 0) {
     const overlap = targeting.languages.some(l => profile.languages.includes(l));
     if (!overlap) return false;
-  }
-
-  // Engagement matching
-  if (targeting.engagement?.length > 0 && profile.engagement_level) {
-    if (!targeting.engagement.includes(profile.engagement_level)) return false;
   }
 
   // Country matching
@@ -365,7 +352,7 @@ async function selectProportionalAd(supabase, placement, userId, ip, userProfile
  * Get next ad to display (called by Philosify frontend)
  * 
  * Query params:
- * - placement: 'sidebar' | 'constellation'
+ * - placement: 'sidebar' (the only placement since B0, 16 Oct 2026)
  * - user_id: Philosify user ID (optional, used for premium check and frequency cap)
  * - duration: preferred duration in seconds (optional, for sidebar only)
  * 
@@ -382,7 +369,7 @@ export async function handleServeAd(request, env, corsHeaders) {
     const preferredDuration = parseInt(url.searchParams.get('duration')) || null;
     const ip = request.headers.get('cf-connecting-ip') || 'unknown';
 
-    if (!placement || !['sidebar', 'constellation'].includes(placement)) {
+    if (!placement || !['sidebar'].includes(placement)) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
     }
 
@@ -484,13 +471,8 @@ export async function handleServeAdBatch(request, env, corsHeaders) {
     const totalDuration = parseInt(url.searchParams.get('total_duration')) || 20;
     const ip = request.headers.get('cf-connecting-ip') || 'unknown';
 
-    if (!placement || !['sidebar', 'constellation'].includes(placement)) {
+    if (!placement || !['sidebar'].includes(placement)) {
       return jsonResponse({ error: 'Invalid placement' }, 400, corsHeaders);
-    }
-
-    // Constellation only shows one ad
-    if (placement === 'constellation') {
-      return handleServeAd(request, env, corsHeaders);
     }
 
     const supabase = await getServiceSupabase(env);

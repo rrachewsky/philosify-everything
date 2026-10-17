@@ -56,10 +56,6 @@ function Landing() {
             </div>
             <div className="hero-metrics">
               <div className="metric-card">
-                <span className="metric-card__value">2</span>
-                <span className="metric-card__label">{t('landing.metricsFormats')}</span>
-              </div>
-              <div className="metric-card">
                 <span className="metric-card__value">{t('landing.metricsSelfServe')}</span>
               </div>
               <div className="metric-card">

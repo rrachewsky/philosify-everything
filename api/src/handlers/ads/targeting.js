@@ -49,10 +49,7 @@ export async function handleGetTargetingOptions(request, env, corsHeaders) {
       categories: grouped,
       // Provide structure info for UI
       structure: {
-        genres: { type: 'multi_select', category: 'genre' },
-        philosophies: { type: 'multi_select', category: 'philosophy' },
         languages: { type: 'multi_select', category: 'language' },
-        engagement: { type: 'multi_select', category: 'engagement' },
         content_types: { type: 'multi_select', category: 'content' },
         countries: { type: 'multi_select', category: 'country' },
         regions: { type: 'multi_select', category: 'region' },
@@ -95,18 +92,7 @@ export async function handleEstimateReach(request, env, corsHeaders) {
     let matchingUsers = totalUsers;
     let reachBreakdown = {};
 
-    // Estimate based on targeting criteria
-    if (targeting.genres && targeting.genres.length > 0) {
-      const { data } = await supabase
-        .from('ads.user_profiles')
-        .select('user_id', {
-          filter: `is_premium=eq.false&top_genres=ov.{${targeting.genres.join(',')}}`,
-        });
-      const genreMatch = data?.length || 0;
-      reachBreakdown.genres = genreMatch;
-      matchingUsers = Math.min(matchingUsers, genreMatch);
-    }
-
+    // Estimate based on targeting criteria (B0: contextual keys only)
     if (targeting.countries && targeting.countries.length > 0) {
       const { data } = await supabase
         .from('ads.user_profiles')
@@ -127,17 +113,6 @@ export async function handleEstimateReach(request, env, corsHeaders) {
       const langMatch = data?.length || 0;
       reachBreakdown.languages = langMatch;
       matchingUsers = Math.min(matchingUsers, langMatch);
-    }
-
-    if (targeting.engagement && targeting.engagement.length > 0) {
-      const { data } = await supabase
-        .from('ads.user_profiles')
-        .select('user_id', {
-          filter: `is_premium=eq.false&engagement_level=in.(${targeting.engagement.join(',')})`,
-        });
-      const engMatch = data?.length || 0;
-      reachBreakdown.engagement = engMatch;
-      matchingUsers = Math.min(matchingUsers, engMatch);
     }
 
     // Calculate reach percentage
@@ -307,13 +282,6 @@ function getTargetingRecommendations(targeting, matching, total) {
     recommendations.push({
       type: 'suggestion',
       message: 'Consider adding targeting criteria to reach a more relevant audience.',
-    });
-  }
-
-  if (targeting.genres?.length > 5) {
-    recommendations.push({
-      type: 'info',
-      message: 'Selecting many genres creates broad targeting. Consider focusing on 2-3 core genres.',
     });
   }
 

@@ -19,15 +19,6 @@ const DEMO_CREATIVES = {
     </svg>`),
     labelKey: 'sidebarInterstitial',
   },
-  constellation: {
-    url: 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="250" height="120" viewBox="0 0 250 120">
-      <defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f0f1a"/><stop offset="100%" stop-color="#1a1a2e"/></linearGradient></defs>
-      <rect width="250" height="120" fill="url(#g)" rx="8"/>
-      <text x="125" y="50" text-anchor="middle" fill="#c9a861" font-family="serif" font-size="16" font-weight="bold">Your Ad Here</text>
-      <text x="125" y="75" text-anchor="middle" fill="#888" font-family="sans-serif" font-size="11">250 x 120 — Constellation</text>
-    </svg>`),
-    labelKey: 'constellationPanel',
-  },
 };
 
 function PhilosifyShell({ placement, children }) {
@@ -66,39 +57,7 @@ function PhilosifyShell({ placement, children }) {
     );
   }
 
-  // Constellation placement
-  return (
-    <div className="preview-shell preview-shell--constellation">
-      <div className="preview-shell__browser">
-        <div className="preview-shell__dots">
-          <span /><span /><span />
-        </div>
-        <div className="preview-shell__url">philosify.org/constellation</div>
-      </div>
-      <div className="preview-shell__content preview-shell__content--constellation">
-        <div className="preview-shell__starfield">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="preview-shell__star"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-              }}
-            />
-          ))}
-          <div className="preview-shell__node" style={{ left: '30%', top: '40%' }}>Aristotle</div>
-          <div className="preview-shell__node" style={{ left: '60%', top: '25%' }}>Kant</div>
-          <div className="preview-shell__node" style={{ left: '45%', top: '65%' }}>Rand</div>
-        </div>
-        <div className="preview-shell__constellation-ad">
-          <span className="preview-shell__sponsored">{t('common.sponsored')}</span>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 }
 
 export default function AdPreview({
@@ -125,13 +84,6 @@ export default function AdPreview({
             onClick={() => setActivePlacement('sidebar')}
           >
             {t('adPreview.sidebar')}
-          </button>
-          <button
-            type="button"
-            className={`btn btn-sm ${activePlacement === 'constellation' ? 'btn-primary' : ''}`}
-            onClick={() => setActivePlacement('constellation')}
-          >
-            {t('adPreview.constellation')}
           </button>
           <span className="ad-preview__duration">{duration}s</span>
         </div>

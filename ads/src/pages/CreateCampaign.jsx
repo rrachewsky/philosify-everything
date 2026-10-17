@@ -6,14 +6,10 @@ import { api } from '@services/api';
 const PLACEMENTS = [
   { value: 'mixed', labelKey: 'create.placementMixed' },
   { value: 'sidebar', labelKey: 'create.placementSidebar' },
-  { value: 'constellation', labelKey: 'create.placementConstellation' },
 ];
 
 const TARGETING_OPTIONS = {
-  genres: ['Rock', 'Pop', 'Hip-Hop', 'Classical', 'Jazz', 'Electronic', 'R&B', 'Country', 'Latin', 'Metal', 'Folk', 'Blues', 'Indie', 'Punk', 'Reggae', 'Soul'],
-  philosophies: ['Objectivism', 'Stoicism', 'Existentialism', 'Nihilism', 'Marxism', 'Utilitarianism', 'Virtue Ethics', 'Pragmatism', 'Rationalism', 'Empiricism'],
   languages: ['English', 'Portuguese', 'Spanish', 'French', 'German', 'Italian', 'Russian', 'Japanese', 'Korean', 'Chinese', 'Arabic', 'Hindi', 'Hebrew', 'Dutch', 'Polish', 'Turkish', 'Hungarian', 'Persian'],
-  engagement: ['Casual', 'Regular', 'Power User'],
   countries: ['US', 'BR', 'GB', 'CA', 'DE', 'FR', 'AU', 'ES', 'IT', 'NL', 'JP', 'KR', 'IN', 'MX', 'AR', 'IL', 'PT', 'PL', 'TR', 'RU'],
   content: ['Music Analysis', 'Book Analysis', 'Cinema Analysis', 'Colloquium', 'News', 'Quiz'],
 };
@@ -44,10 +40,7 @@ function CreateCampaign() {
     start_date: '',
     end_date: '',
     targeting: {
-      genres: [],
-      philosophies: [],
       languages: [],
-      engagement: [],
       countries: [],
       content: [],
     },

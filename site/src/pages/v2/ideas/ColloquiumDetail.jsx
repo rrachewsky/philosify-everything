@@ -7,7 +7,6 @@ import { config } from '@/config';
 import { getLocalizedContent } from '../../../hooks/useColloquium.js';
 import { Button, Pill, Telemetry } from '../../../components/v2';
 import { ShareButton } from '../../../components/sharing/ShareButton.jsx';
-import InlineAdSlot from '../../../components/ads/InlineAdSlot.jsx';
 import { ReplyMsg, PhilosopherPoll } from './Transcript.jsx';
 import { AddPhilosopherModal, InviteModal, ConfirmModal } from './IdeasModals.jsx';
 import { VerdictAudio } from './VerdictAudio.jsx';
@@ -15,7 +14,7 @@ import { MethodologyLink } from '../../../components/v2/MethodologyLink.jsx';
 import { renderMarkdownLite } from '../../../utils/markdownLite.js';
 import { formatTimeAgo, formatCountdown, formatChrono, useChronometer, chronoProgress } from './utils.js';
 
-export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
+export function ColloquiumDetail({ coll, onBack, requireCredits }) {
   const { t, i18n } = useTranslation();
 
   const [showAddPhilosopher, setShowAddPhilosopher] = useState(false);
@@ -326,13 +325,6 @@ export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
                 className="prose vprose"
                 dangerouslySetInnerHTML={{ __html: renderMarkdownLite(localizedWrapup) }}
               />
-              <InlineAdSlot
-                key={`colloquium-verdict-${ac.id}`}
-                userId={user?.id}
-                placement="constellation"
-                layout="banner"
-                refreshKey={`coll-verdict-${ac.id}`}
-              />
               <ShareButton
                 shareUrl={`${window.location.origin}/debate/${ac.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
                 shareText={t('share.shareDebateText', {
@@ -362,24 +354,6 @@ export function ColloquiumDetail({ coll, user, onBack, requireCredits }) {
       )}
 
       {coll.error && <div className="ierr">{coll.error}</div>}
-
-      {/* Sponsored slot while philosophers generate / actions run (parity) */}
-      {hasAccess &&
-        !hasVerdict &&
-        (coll.actionLoading ||
-          coll.verdictLoading ||
-          ((collType === 'user_proposed' || collType === 'open_debate') &&
-            !allPhilosHaveSpoken &&
-            allPhilosOnPanel.length > 0)) && (
-          <InlineAdSlot
-            key={`ideas-colloquium-${ac.id}-${philosophers.length}-${Number(coll.actionLoading)}-${Number(coll.verdictLoading)}`}
-            userId={user?.id}
-            placement="constellation"
-            layout="banner"
-            refreshKey={`ideas-colloquium-${ac.id}-${philosophers.length}-${Number(coll.actionLoading)}-${Number(coll.verdictLoading)}`}
-            className="debate-footer-ad"
-          />
-        )}
 
       {/* Action bar */}
       {hasAccess && !hasVerdict && (

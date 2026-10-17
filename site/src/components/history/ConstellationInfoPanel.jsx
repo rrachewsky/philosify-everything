@@ -5,7 +5,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { TRADITION_COLORS, SCHOOL_COLORS } from '@hooks/useConstellation';
-import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 
 // Battle dimension keys for translation lookup
 // Format: [positiveKey, negativeKey, descriptionKey]
@@ -132,7 +131,7 @@ const getTranslatedName = (node, t) => {
   return translatedName || node.name;
 };
 
-function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear, t, userId }) {
+function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, formatYear, t }) {
   const connections = getNodeConnections(node.id);
   const schoolColor = SCHOOL_COLORS[node.school] || TRADITION_COLORS[node.tradition] || 'var(--ink-low)';
   const [imageError, setImageError] = React.useState(false);
@@ -148,27 +147,8 @@ function NodeDetails({ node, getNodeConnections, findPhilosopher, onNodeSelect, 
     }
   }, [node.id]);
 
-  // Scroll to top when constellation video ends
-  const handleVideoEnded = React.useCallback(() => {
-    if (contentRef.current) {
-      contentRef.current.scrollTop = 0;
-    }
-  }, []);
-
   return (
     <div ref={contentRef} style={styles.content}>
-      {/* Ad positioned at top - video only, 6cm × 8cm, centered, 1cm from top */}
-      <div style={styles.topAd}>
-        <InlineAdSlot
-          key={`constellation-panel-${node.id}`}
-          userId={userId}
-          placement="constellation"
-          layout="video"
-          refreshKey={`constellation-panel-${node.id}`}
-          className="constellation-top-ad"
-          onVideoEnded={handleVideoEnded}
-        />
-      </div>
       
       {/* Portrait + Header (compact layout) */}
       <div style={styles.headerWithPortrait}>
@@ -411,7 +391,6 @@ export function ConstellationInfoPanel({
   onNodeSelect,
   formatYear,
   isMobile = false,
-  userId,
 }) {
   const { t } = useTranslation();
   
@@ -444,7 +423,6 @@ export function ConstellationInfoPanel({
           onNodeSelect={onNodeSelect}
           formatYear={formatYear}
           t={t}
-          userId={userId}
         />
       )}
 
@@ -553,13 +531,6 @@ const styles = {
     overflowY: 'auto',
     flex: 1,
     WebkitOverflowScrolling: 'touch',
-  },
-
-  topAd: {
-    width: 227, // 6cm
-    height: 302, // 8cm
-    margin: '38px auto 20px', // 1cm from top, centered horizontally
-    flexShrink: 0,
   },
 
   header: {

@@ -6,7 +6,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebate } from '../../hooks/useDebate.js';
 import { useColloquium, getLocalizedContent } from '../../hooks/useColloquium.js';
-import { useAuth } from '../../hooks/useAuth.js';
 import { config } from '@/config';
 import { InvitePeopleModal } from './InvitePeopleModal.jsx';
 import { TranslateButton } from '../common/TranslateButton.jsx';
@@ -15,7 +14,6 @@ import { getPendingAction, clearPendingAction } from '@utils/pendingAction.js';
 import { logger } from '@utils';
 import { translateEra, translateSchool } from '../../data/philosopherI18n.js';
 import { ShareButton } from '../sharing/ShareButton.jsx';
-import InlineAdSlot from '../ads/InlineAdSlot.jsx';
 
 function formatTimeAgo(isoString, t) {
   const now = Date.now();
@@ -1200,7 +1198,6 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
   const { t, i18n } = useTranslation();
   const debate = useDebate();
   const coll = useColloquium();
-  const { user } = useAuth();
 
   // Local UI state
   const [showCreate, setShowCreate] = useState(false);
@@ -1764,13 +1761,6 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
                       />
                     )}
                     <div className="debate-wrapup__content">{localizedWrapup}</div>
-                    <InlineAdSlot
-                      key={`colloquium-verdict-${coll.activeColloquium?.id || 'unknown'}`}
-                      userId={user?.id}
-                      placement="constellation"
-                      layout="banner"
-                      refreshKey={`coll-verdict-${coll.activeColloquium?.id || 'unknown'}`}
-                    />
                     {/* Share verdict via WhatsApp, Telegram, etc. */}
                     <ShareButton
                       shareUrl={`${window.location.origin}/debate/${coll.activeColloquium?.id}?lang=${i18n.resolvedLanguage || i18n.language}`}
@@ -1831,23 +1821,6 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
             {coll.error && <div className="debate-panel__error">{coll.error}</div>}
           </div>
           {/* end scroll */}
-
-          {hasAccess &&
-            !hasVerdict &&
-            (coll.actionLoading ||
-              coll.verdictLoading ||
-              (((collType === 'user_proposed' || collType === 'open_debate') &&
-                !allPhilosHaveSpoken &&
-                allPhilosOnPanel.length > 0))) && (
-              <InlineAdSlot
-                key={`ideas-colloquium-${ac.id}-${philosophers.length}-${Number(coll.actionLoading)}-${Number(coll.verdictLoading)}`}
-                userId={user?.id}
-                placement="constellation"
-                layout="banner"
-                refreshKey={`ideas-colloquium-${ac.id}-${philosophers.length}-${Number(coll.actionLoading)}-${Number(coll.verdictLoading)}`}
-                className="debate-footer-ad"
-              />
-            )}
 
           {/* Action bar at bottom */}
           {hasAccess && !hasVerdict && (
@@ -2248,17 +2221,6 @@ export function DebatePanel({ deepLinkDebateId, clearDeepLinkDebate }) {
 
             {debate.error && <div className="debate-panel__error">{debate.error}</div>}
           </div>
-
-          {debate.wrapupLoading && (
-            <InlineAdSlot
-              key={`ideas-debate-${debate.activeDebate.id}-${Number(debate.wrapupLoading)}`}
-              userId={user?.id}
-              placement="constellation"
-              layout="banner"
-              refreshKey={`ideas-debate-${debate.activeDebate.id}-${Number(debate.wrapupLoading)}`}
-              className="debate-footer-ad"
-            />
-          )}
 
           {/* Reply input */}
           {!debate.wrapup && (
